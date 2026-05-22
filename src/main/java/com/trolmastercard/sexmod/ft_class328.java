@@ -1,0 +1,76 @@
+/*
+ * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
+ * 
+ * Could not load the following classes:
+ *  io.netty.buffer.ByteBuf
+ *  net.minecraftforge.fml.common.FMLCommonHandler
+ *  net.minecraftforge.fml.common.network.ByteBufUtils
+ *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
+ *  net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler
+ *  net.minecraftforge.fml.common.network.simpleimpl.MessageContext
+ */
+package com.trolmastercard.sexmod;
+
+import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.UUID;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+public class ft_class328
+implements IMessage {
+    boolean a;
+    UUID c;
+    NBTTagCompound b;
+
+    public ft_class328() {
+    }
+
+    public ft_class328(UUID uUID, NBTTagCompound nBTTagCompound) {
+        this.c = uUID;
+        this.b = nBTTagCompound;
+    }
+
+    public void fromBytes(ByteBuf byteBuf) {
+        this.c = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.b = ByteBufUtils.readTag((ByteBuf)byteBuf);
+        this.a = true;
+    }
+
+    public void toBytes(ByteBuf byteBuf) {
+        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
+        ByteBufUtils.writeTag((ByteBuf)byteBuf, (NBTTagCompound)this.b);
+    }
+
+    public static class a_inner329
+    implements IMessageHandler<ft_class328, IMessage> {
+        public IMessage a(ft_class328 ft_class3282, MessageContext messageContext) {
+            if (!ft_class3282.a) {
+                System.out.println("received an invalid message @UpdateEquipment :(");
+                return null;
+            }
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(ft_class3282.c);
+                for (GirlEntity em_class2582 : arrayList) {
+                    if (!(em_class2582 instanceof Fighter)) continue;
+                    ((Fighter)em_class2582).items.deserializeNBT(ft_class3282.b);
+                }
+            });
+            return null;
+        }
+
+                @Override
+        public IMessage onMessage(ft_class328 iMessage, MessageContext messageContext) {
+            return this.a((ft_class328)iMessage, messageContext);
+        }
+
+        private static RuntimeException a(RuntimeException runtimeException) {
+            return runtimeException;
+        }
+    }
+}
+
