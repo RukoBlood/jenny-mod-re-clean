@@ -15,7 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.Goblin.GoblinRenderer;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldRenderer;
+import com.trolmastercard.sexmod.girls.Kobold.bs_class97;
+import com.trolmastercard.sexmod.girls.Player.PlayerGoblinRenderer;
+import com.trolmastercard.sexmod.girls.Player.PlayerKoboldRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;

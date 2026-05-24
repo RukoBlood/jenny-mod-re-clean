@@ -7,6 +7,9 @@
 package com.trolmastercard.sexmod;
 
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -18,7 +21,7 @@ extends AnimatedGeoModel<CustomModelEntity> {
         if (cy_class1532.f) {
             return new ResourceLocation("sexmod", "geo/cross.geo.json");
         }
-        return CustomModels.k(cy_class1532.a());
+        return CustomModel.k(cy_class1532.a());
     }
 
     @Override
@@ -26,7 +29,7 @@ extends AnimatedGeoModel<CustomModelEntity> {
         if (cy_class1532.f) {
             return new ResourceLocation("sexmod", "textures/cross.png");
         }
-        return CustomModels.c(cy_class1532.a());
+        return CustomModel.c(cy_class1532.a());
     }
 
     @Override

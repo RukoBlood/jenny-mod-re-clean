@@ -11,6 +11,9 @@ package com.trolmastercard.sexmod;
 
 import java.util.UUID;
 import javax.annotation.Nonnull;
+
+import com.trolmastercard.sexmod.Packages.StartStandingSexAnimation;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -80,7 +83,7 @@ public class w_class427 {
     }
 
     void a(String string, UUID uUID, UUID uUID2) {
-        NetworkRegistry.networkWrapper.sendToServer((IMessage)new eu_class273(uUID, uUID2, string));
+        PackageHandler.networkWrapper.sendToServer((IMessage)new StartStandingSexAnimation(uUID, uUID2, string));
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

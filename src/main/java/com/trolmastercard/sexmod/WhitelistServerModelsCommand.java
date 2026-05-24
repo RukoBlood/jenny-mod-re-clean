@@ -6,6 +6,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -41,12 +42,12 @@ implements IClientCommand {
     @Override
     public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] stringArray) throws CommandException {
         boolean bl;
-        String string = CustomModels.g();
+        String string = CustomModel.g();
         if (string == null) {
             iCommandSender.sendMessage(new TextComponentString((Object)((Object)TextFormatting.YELLOW) + "This is a multiplayer feature only"));
             return;
         }
-        if (CustomModels.l(string)) {
+        if (CustomModel.l(string)) {
             iCommandSender.sendMessage(new TextComponentString((Object)((Object)TextFormatting.GREEN) + "Server is already whitelisted :)"));
             return;
         }
@@ -58,9 +59,9 @@ implements IClientCommand {
             iCommandSender.sendMessage(new TextComponentString((Object)((Object)TextFormatting.GREEN) + "/whitelistserver confirm"));
             return;
         }
-        CustomModels.h(string);
+        CustomModel.h(string);
         iCommandSender.sendMessage(new TextComponentString((Object)((Object)TextFormatting.GREEN) + "confirmed :)"));
-        CustomModels.a();
+        CustomModel.a();
     }
 
     private static CommandException a(CommandException commandException) {

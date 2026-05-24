@@ -8,6 +8,9 @@ package com.trolmastercard.sexmod;
 
 import java.io.IOException;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.Packages.ClaimTribe;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -69,7 +72,7 @@ extends GuiScreen {
         if (string.length() == 0) {
             return;
         }
-        NetworkRegistry.networkWrapper.sendToServer((IMessage)new g9_class354(this.e, Minecraft.getMinecraft().player.getPersistentID(), string));
+        PackageHandler.networkWrapper.sendToServer((IMessage)new ClaimTribe(this.e, Minecraft.getMinecraft().player.getPersistentID(), string));
         Minecraft.getMinecraft().player.closeScreen();
     }
 

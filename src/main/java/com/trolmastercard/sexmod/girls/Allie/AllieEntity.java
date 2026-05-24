@@ -9,9 +9,13 @@ package com.trolmastercard.sexmod.girls.Allie;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.MakeRichWish;
+import com.trolmastercard.sexmod.Packages.UploadInventoryToServerAlt;
+import com.trolmastercard.sexmod.Packages.dc_class174;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -109,7 +113,7 @@ extends GirlEntity {
         super.onUpdate();
         if (this.U != 1.0f && this.U != -69.0f && this.U <= 0.0f) {
             if (this.boolean_n()) {
-                NetworkRegistry.networkWrapper.sendToServer((IMessage)new cz_class154(this.girlID()));
+                PackageHandler.networkWrapper.sendToServer((IMessage)new UploadInventoryToServerAlt(this.girlID()));
                 HandlePlayerMovement.a(true);
             }
             this.U = -69.0f;
@@ -373,7 +377,7 @@ extends GirlEntity {
                         break;
                     }
                     this.setCurrentAction(Action.DEEPTHROAT_START);
-                    NetworkRegistry.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), this.getID(), false, true));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), this.getID(), false, true));
                     this.r = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
@@ -416,7 +420,7 @@ extends GirlEntity {
                 case "deepthroat_cumDone": {
                     if (!this.boolean_n()) break;
                     this.void_r();
-                    NetworkRegistry.networkWrapper.sendToServer((IMessage)new cz_class154(this.girlID()));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new UploadInventoryToServerAlt(this.girlID()));
                     break;
                 }
                 case "summon_normalMSG1": {
@@ -461,7 +465,7 @@ extends GirlEntity {
                     this.void_a(I18n.format("allie.dialogue.wishgranted", new Object[0]));
                     this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_PLOB));
                     if (!this.boolean_n()) break;
-                    NetworkRegistry.networkWrapper.sendToServer((IMessage)new bw_class103(this.getPositionVector()));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new MakeRichWish(this.getPositionVector()));
                     break;
                 }
                 case "disappear": {

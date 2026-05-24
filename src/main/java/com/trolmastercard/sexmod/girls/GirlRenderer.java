@@ -35,6 +35,8 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
@@ -159,7 +161,7 @@ implements c3_class112 {
     }
 
     @CheckReturnValue
-    protected static float a(GirlEntity em_class2582, float f) {
+    public static float a(GirlEntity em_class2582, float f) {
         return em_class2582.boolean_Q() ? em_class2582.java_lang_Float_I().floatValue() : Reference.Lerp(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f);
     }
 
@@ -233,7 +235,7 @@ implements c3_class112 {
         HashSet<String> hashSet = bl != false ? a_class4.b() : ((GirlEntity)this.j).Y();
         HashSet<String> hashSet2 = new HashSet<String>();
         for (String string : hashSet) {
-            CustomModels.b_inner96 b_inner962 = CustomModels.b(string);
+            CustomModel.b_inner96 b_inner962 = CustomModel.b(string);
             if (b_inner962 == null || !b_inner962.a() && bl2) continue;
             hashSet2.addAll(b_inner962.h());
         }

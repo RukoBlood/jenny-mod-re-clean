@@ -15,7 +15,10 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -92,9 +95,9 @@ extends Item {
         if (!entityInteract.getWorld().isRemote) {
             return;
         }
-        if (CustomModels.d) {
-            boolean bl = CustomModels.d = 0 != CustomModels.b(true);
-            if (CustomModels.d) {
+        if (CustomModel.d) {
+            boolean bl = CustomModel.d = 0 != CustomModel.b(true);
+            if (CustomModel.d) {
                 return;
             }
         }

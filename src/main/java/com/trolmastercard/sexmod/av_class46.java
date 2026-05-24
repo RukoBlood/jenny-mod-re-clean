@@ -15,6 +15,9 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+import com.trolmastercard.sexmod.girls.Galath.GalathCoin;
+import com.trolmastercard.sexmod.girls.Galath.GalathCoinModel;
+import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;

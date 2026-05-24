@@ -6,6 +6,7 @@ package com.trolmastercard.sexmod;
 import java.util.ConcurrentModificationException;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

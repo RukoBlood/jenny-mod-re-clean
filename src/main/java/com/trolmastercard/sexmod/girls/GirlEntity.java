@@ -30,9 +30,20 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.ChangeDataParameter;
+import com.trolmastercard.sexmod.Packages.ResetController;
+import com.trolmastercard.sexmod.Packages.ResetGirl;
+import com.trolmastercard.sexmod.Packages.TeleportPlayer;
+import com.trolmastercard.sexmod.SendChatMessage;
+import com.trolmastercard.sexmod.dc_class174;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
+import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -143,7 +154,7 @@ implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected void changeDataParameterFromClient(String string, String string2) {
-        NetworkRegistry.networkWrapper.sendToServer(new n_class415(this.girlID(), string, string2));
+        PackageHandler.networkWrapper.sendToServer(new ChangeDataParameter(this.girlID(), string, string2));
     }
 
     //f
@@ -362,9 +373,9 @@ implements IAnimatable {
     public void b(boolean bl) {
         this.i = bl;
         if (bl) {
-            fs_class327.b(this);
+            GirlID.PutGirlInList(this);
         } else {
-            fs_class327.a(this);
+            GirlID.RemoveGirlInList(this);
         }
     }
 
@@ -510,19 +521,19 @@ implements IAnimatable {
     }
 
     protected void G() {
-        if (!CustomModels.e) {
+        if (!CustomModel.e) {
             return;
         }
         HashSet<String> hashSet = this.Y();
         PlayerGirlEntity fy_class3352 = PlayerGirlEntity.a(this);
         HashSet<String> hashSet2 = new HashSet<String>();
-        String string = CustomModels.h();
+        String string = CustomModel.h();
         for (String string2 : hashSet) {
-            if (!"".equals(CustomModels.a(string2, string))) {
+            if (!"".equals(CustomModel.a(string2, string))) {
                 hashSet2.add(string2);
                 continue;
             }
-            HashSet<PlayerGirlEntity> hashSet3 = CustomModels.a(string2);
+            HashSet<PlayerGirlEntity> hashSet3 = CustomModel.a(string2);
             if (hashSet3 == null) {
                 hashSet2.add(string2);
                 continue;
@@ -647,7 +658,7 @@ implements IAnimatable {
 
     protected void a(boolean bl, boolean bl2, UUID uUID) {
         if (this.world.isRemote) {
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), uUID, bl, bl2));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), uUID, bl, bl2));
         } else {
             dc_class174.a_inner175.a(this.girlID(), uUID, bl, bl2);
         }
@@ -794,7 +805,7 @@ implements IAnimatable {
 
     @Override
     protected ResourceLocation getLootTable() {
-        return LootTableRegistry.JENNY_LOOT_TABLE;
+        return LootTableHandler.JENNY_LOOT_TABLE;
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -876,9 +887,9 @@ implements IAnimatable {
     protected void s() {
         if (this.world.isRemote && this.boolean_n()) {
             this.playerCamPos = null;
-            NetworkRegistry.networkWrapper.sendToServer(new s_class421(this.girlID(), true));
+            PackageHandler.networkWrapper.sendToServer(new ResetGirl(this.girlID(), true));
         } else if (!this.world.isRemote) {
-            s_class421.a_inner422.a((EntityPlayerMP)this.world.getPlayerEntityByUUID(this.getID()));
+            ResetGirl.a_inner422.a((EntityPlayerMP)this.world.getPlayerEntityByUUID(this.getID()));
         }
     }
 
@@ -955,7 +966,7 @@ implements IAnimatable {
         if (this.boolean_n()) {
             HandlePlayerMovement.a(true);
             Minecraft.getMinecraft().player.setInvisible(false);
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new s_class421(this.girlID()));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new ResetGirl(this.girlID()));
         }
     }
 
@@ -993,7 +1004,7 @@ implements IAnimatable {
 
     public void N() {
         this.ag();
-        NetworkRegistry.networkWrapper.sendToServer((IMessage)new a1_class7(this.girlID()));
+        PackageHandler.networkWrapper.sendToServer((IMessage)new ResetController(this.girlID()));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1026,7 +1037,7 @@ implements IAnimatable {
         newPos = newPos.add(0.0, y, 0.0);
         newPos = newPos.add(-Math.sin((double)this.r * (Math.PI / 180)) * z, 0.0, Math.cos((double)this.r * (Math.PI / 180)) * z);
         if (this.world.isRemote) {
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new a8_class16(entityPlayer.getPersistentID().toString(), newPos, this.r + yaw, pitch));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayer.getPersistentID().toString(), newPos, this.r + yaw, pitch));
             return;
         }
         entityPlayer.setPositionAndRotation(newPos.x, newPos.y, newPos.z, this.r + yaw, pitch);
@@ -1075,9 +1086,9 @@ implements IAnimatable {
 
     public void h(String string) {
         if (!this.world.isRemote) {
-            NetworkRegistry.networkWrapper.sendToAllAround((IMessage)new gh_class368(String.format("<%s> %s", this.java_lang_String_ab(), string), this.dimension, this.girlID()), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(String.format("<%s> %s", this.java_lang_String_ab(), string), this.dimension, this.girlID()), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
         } else if (this.boolean_n()) {
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new gh_class368(String.format("<%s> %s", this.java_lang_String_ab(), string), this.dimension, this.girlID()));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new SendChatMessage(String.format("<%s> %s", this.java_lang_String_ab(), string), this.dimension, this.girlID()));
         }
     }
 
@@ -1086,11 +1097,11 @@ implements IAnimatable {
             this.h(string);
         }
         if (!this.world.isRemote) {
-            NetworkRegistry.networkWrapper.sendToAllAround((IMessage)new gh_class368(string, this.dimension, this.girlID()), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(string, this.dimension, this.girlID()), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
             return;
         }
         if (this.boolean_n()) {
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new gh_class368(string, this.dimension, this.girlID()));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new SendChatMessage(string, this.dimension, this.girlID()));
         }
     }
 

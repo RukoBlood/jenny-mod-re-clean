@@ -25,8 +25,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.CommonProxy;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -74,8 +79,8 @@ public class Main {
         KoboldEntity.aY.clear();
         GalathMangTracker.clear();
         WorldGeneration.Generate().clear();
-        fs_class327.a();
-        CustomModels.e = false;
+        GirlID.ClearGirlList();
+        CustomModel.e = false;
         bj_class84.a();
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             Main.clientReset();

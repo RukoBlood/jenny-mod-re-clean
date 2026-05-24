@@ -7,6 +7,10 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.Packages.UploadInventoryToServer;
+import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -50,7 +54,7 @@ extends GuiContainer {
             itemStackArray[40] = ca_class1212.getSlot(4).getStack();
             itemStackArray[41] = ca_class1212.getSlot(5).getStack();
             itemStackArray[42] = ca_class1212.getSlot(6).getStack();
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new b1_class60(this.d.girlID(), this.a, itemStackArray));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new UploadInventoryToServer(this.d.girlID(), this.a, itemStackArray));
         }
     }
 

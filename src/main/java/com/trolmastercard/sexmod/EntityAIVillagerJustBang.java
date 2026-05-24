@@ -17,8 +17,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class EntityAIVillagerJustBang
-extends EntityAIBase {
+/*
+* Breed Villagers when horny potion is used on them
+* */
+public class EntityAIVillagerJustBang extends EntityAIBase {
     final private EntityVillager c;
     private EntityVillager d;
     final private World a;

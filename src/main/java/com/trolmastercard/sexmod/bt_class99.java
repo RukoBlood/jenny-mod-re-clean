@@ -4,31 +4,33 @@
 package com.trolmastercard.sexmod;
 
 import java.util.List;
+
+import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
+import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
-public class bt_class99
-extends EntityAIAvoidEntity<EntityPlayer> {
-    final ManglelieEntity a;
+public class bt_class99 extends EntityAIAvoidEntity<EntityPlayer> {
+    final ManglelieEntity manglelie;
     final float b;
 
-    public bt_class99(ManglelieEntity f8_class2932, float f, double d, double d2) {
-        super(f8_class2932, EntityPlayer.class, f, d, d2);
-        this.a = f8_class2932;
+    public bt_class99(ManglelieEntity entity, float f, double d, double d2) {
+        super(entity, EntityPlayer.class, f, d, d2);
+        this.manglelie = entity;
         this.b = f;
     }
 
     boolean a() {
-        if (this.a.java_util_UUID_v() != null) {
+        if (this.manglelie.java_util_UUID_v() != null) {
             return true;
         }
-        BlockPos blockPos = this.a.getPosition();
+        BlockPos blockPos = this.manglelie.getPosition();
         BlockPos blockPos2 = new BlockPos(this.b, this.b, this.b);
-        List<GalathEntity> list = this.a.world.getEntitiesWithinAABB(GalathEntity.class, new AxisAlignedBB(blockPos.add(blockPos2), blockPos.subtract(blockPos2)));
-        for (GalathEntity f__class2972 : list) {
-            if (f__class2972.world.isRemote || f__class2972.isDead || !f__class2972.maybeMountedByMangFn()) continue;
+        List<GalathEntity> list = this.manglelie.world.getEntitiesWithinAABB(GalathEntity.class, new AxisAlignedBB(blockPos.add(blockPos2), blockPos.subtract(blockPos2)));
+        for (GalathEntity galathEntity : list) {
+            if (galathEntity.world.isRemote || galathEntity.isDead || !galathEntity.maybeMountedByMangFn()) continue;
             return true;
         }
         return false;
@@ -52,13 +54,13 @@ extends EntityAIAvoidEntity<EntityPlayer> {
 
     @Override
     public void startExecuting() {
-        this.a.getDataManager().set(ManglelieEntity.ar, true);
+        this.manglelie.getDataManager().set(ManglelieEntity.ar, true);
         super.startExecuting();
     }
 
     @Override
     public void resetTask() {
-        this.a.getDataManager().set(ManglelieEntity.ar, false);
+        this.manglelie.getDataManager().set(ManglelieEntity.ar, false);
         super.resetTask();
     }
 

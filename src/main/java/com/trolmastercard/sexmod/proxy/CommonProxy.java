@@ -16,6 +16,10 @@ package com.trolmastercard.sexmod.proxy;
 import java.io.IOException;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.util.Handlers.EntityHandler;
+import com.trolmastercard.sexmod.util.Handlers.ItemHandler;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -27,8 +31,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CommonProxy {
     public void preInitRegistries(FMLPreInitializationEvent fMLPreInitializationEvent) {
         GameRegistry.registerWorldGenerator((IWorldGenerator) WorldGeneration.Generate(), 0);
-        EntityInitialize.Register();
-        ItemRegister.RegisterItems();
+        EntityHandler.Register();
+        ItemHandler.RegisterItems();
     }
 
     public void initRegistries(FMLInitializationEvent fMLInitializationEvent) throws IOException {
@@ -36,7 +40,7 @@ public class CommonProxy {
         SoundsHandler.RegisterSounds();
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new et_class272());
         bn_class89.a(false);
-        NetworkRegistry.RegisterMessages();
+        PackageHandler.RegisterMessages();
     }
 
     public void postInit(FMLPostInitializationEvent fMLPostInitializationEvent) throws IOException {
@@ -47,7 +51,7 @@ public class CommonProxy {
         if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()) {
             return;
         }
-        CustomModels.c(false);
+        CustomModel.c(false);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

@@ -1,0 +1,51 @@
+/*
+ * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
+ */
+package com.trolmastercard.sexmod.girls.Player;
+
+import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderManager;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
+
+public class PlayerJennyRenderer
+extends PlayerGirlRenderer {
+    public PlayerJennyRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
+        super(renderManager, animatedGeoModel);
+    }
+
+    @Override
+    protected void void_c() {
+        GlStateManager.translate(0.0f, -1.25f, 0.0f);
+        GlStateManager.scale(0.8f, 0.8f, 0.8f);
+    }
+
+    @Override
+    protected void a(boolean bl, boolean bl2) {
+        super.a(bl, bl2);
+        if (!bl && !bl2) {
+            GlStateManager.translate(0.0, -0.1, 0.05);
+            GlStateManager.rotate(40.0f, 1.0f, 0.0f, 0.0f);
+            GlStateManager.rotate(0.0f, 0.0f, 1.0f, 0.0f);
+            GlStateManager.rotate(0.0f, 0.0f, 0.0f, 1.0f);
+            return;
+        }
+        if (bl && !bl2) {
+            GlStateManager.translate(-0.025, -0.1, 0.0);
+            return;
+        }
+    }
+
+    @Override
+    protected void a(boolean bl) {
+        super.a(bl);
+        if (bl) {
+            GlStateManager.translate(0.15, 0.0, 0.0);
+        }
+    }
+
+    private static RuntimeException a(RuntimeException runtimeException) {
+        return runtimeException;
+    }
+}
+

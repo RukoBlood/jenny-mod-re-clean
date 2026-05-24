@@ -8,7 +8,7 @@
  */
 package com.trolmastercard.sexmod.events;
 
-import com.trolmastercard.sexmod.PlayerGirl;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.client.Minecraft;

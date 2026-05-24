@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.FakeWorld;
-import com.trolmastercard.sexmod.PlayerGirl;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.be_class78;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlModel;

@@ -10,6 +10,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
 import java.util.Map;

@@ -11,8 +11,12 @@ import java.util.UUID;
 import javax.vecmath.Vector4d;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.SendCompanionHome;
+import com.trolmastercard.sexmod.Packages.SendGirlToSex;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import net.minecraft.block.Block;
@@ -102,7 +106,7 @@ implements bh_class82,
 
     @Override
     protected ResourceLocation getLootTable() {
-        return LootTableRegistry.BIA_LOOT_TABLE;
+        return LootTableHandler.BIA_LOOT_TABLE;
     }
 
     @Override
@@ -485,7 +489,7 @@ implements bh_class82,
             case "doggy": 
             case "anal": {
                 this.void_r();
-                NetworkRegistry.networkWrapper.sendToServer((IMessage)new PacketSendGirlToBed(this.girlID()));
+                PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
                 return;
             }
         }
@@ -699,7 +703,7 @@ implements bh_class82,
                     break;
                 }
                 case "pearl": {
-                    NetworkRegistry.networkWrapper.sendToServer((IMessage)new gg_class366(this.girlID()));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "talk_hornyMSG1": {

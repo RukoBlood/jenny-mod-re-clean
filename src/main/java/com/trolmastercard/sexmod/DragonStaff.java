@@ -15,6 +15,9 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.Packages.GetTribeUIValues;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
@@ -42,8 +45,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class DragonStaff
-extends Item
+public class DragonStaff extends Item
 implements IAnimatable {
     final static public DragonStaff DRAGON_STAFF = new DragonStaff();
     final private AnimationFactory animationFactory = new AnimationFactory(this);
@@ -105,7 +107,7 @@ implements IAnimatable {
         @SideOnly(value=Side.CLIENT)
         void a() {
             Minecraft.getMinecraft().displayGuiScreen(new j_class411());
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new b3_class63());
+            PackageHandler.networkWrapper.sendToServer((IMessage)new GetTribeUIValues());
         }
 
         @SubscribeEvent

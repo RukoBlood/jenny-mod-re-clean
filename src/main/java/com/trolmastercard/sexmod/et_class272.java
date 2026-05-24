@@ -11,6 +11,7 @@ import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

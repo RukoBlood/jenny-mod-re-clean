@@ -9,9 +9,14 @@ package com.trolmastercard.sexmod.girls.Jenny;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.SendCompanionHome;
+import com.trolmastercard.sexmod.Packages.SendGirlToSex;
+import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
+import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import net.minecraft.block.state.IBlockState;
@@ -123,7 +128,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.playerCamPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
-            NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(false), (EntityPlayerMP)object);
+            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)object);
         }
         if (this.Z) {
             if (this.getPositionVector().distanceTo(this.net_minecraft_util_math_Vec3d_o()) < 0.6 || this.ad > 200) {
@@ -371,7 +376,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 this.void_r();
                 if (this.world.isRemote) {
-                    NetworkRegistry.networkWrapper.sendToServer(new PacketSendGirlToBed(this.girlID()));
+                    PackageHandler.networkWrapper.sendToServer(new SendGirlToSex(this.girlID()));
                     break;
                 }
                 this.s();
@@ -781,7 +786,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggyGoOnBedDone": {
-                    NetworkRegistry.networkWrapper.sendToServer((IMessage)new b0_class58(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
                     this.setCurrentAction(Action.WAITDOGGY);
                     break;
                 }
@@ -910,7 +915,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "pearl": {
-                    NetworkRegistry.networkWrapper.sendToServer((IMessage)new gg_class366(this.girlID()));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "boobjob_camera": {

@@ -12,7 +12,11 @@ package com.trolmastercard.sexmod;
 import java.util.List;
 import java.util.UUID;
 
+import com.trolmastercard.sexmod.Packages.SendCompanionHome;
+import com.trolmastercard.sexmod.Packages.SetNewHome;
+import com.trolmastercard.sexmod.Packages.bo_class90;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -118,13 +122,13 @@ public abstract class Fighter extends GirlEntity {
             this.goHome();
         } else if ("action.names.equipment".equals(string)) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new bo_class90(this.girlID(), player.getPersistentID()));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new bo_class90(this.girlID(), player.getPersistentID()));
         } else if ("action.names.gohome".equals(string)) {
             this.goHome();
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new gg_class366(this.girlID()));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
         } else if ("action.names.setnewhome".equals(string)) {
             this.SetHome();
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new a6_class13(this.girlID(), new Vec3d(this.getPosition())));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new SetNewHome(this.girlID(), new Vec3d(this.getPosition())));
         }
     }
 

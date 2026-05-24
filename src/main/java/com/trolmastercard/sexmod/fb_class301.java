@@ -8,7 +8,9 @@ package com.trolmastercard.sexmod;
 
 import java.util.UUID;
 
+import com.trolmastercard.sexmod.Packages.UploadInventoryToServer;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -51,7 +53,7 @@ extends GuiContainer {
             itemStackArray[39] = d4_class1622.getSlot(3).getStack();
             itemStackArray[40] = d4_class1622.getSlot(4).getStack();
             itemStackArray[41] = d4_class1622.getSlot(5).getStack();
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new b1_class60(this.b.girlID(), this.d, itemStackArray));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new UploadInventoryToServer(this.b.girlID(), this.d, itemStackArray));
         }
     }
 

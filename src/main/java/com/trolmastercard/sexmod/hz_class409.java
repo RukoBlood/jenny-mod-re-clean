@@ -14,8 +14,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 
-public class hz_class409
-extends EntityAIBase {
+public class hz_class409 extends EntityAIBase {
     protected EntityLiving c;
     protected BlockPos b = BlockPos.ORIGIN;
     protected BlockDoor d;

@@ -22,6 +22,7 @@ import java.util.List;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.Allie.AllieEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -65,9 +66,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class LampItem
-extends Item
-implements IAnimatable {
+public class LampItem extends Item implements IAnimatable {
     final static String e = "sexmodAllieInUse";
     final static String d = "sexmodAllieInUseTicks";
     final static public String j = "sexmodUses";
@@ -100,7 +99,7 @@ implements IAnimatable {
     @SubscribeEvent
     public static void a(ModelRegistryEvent modelRegistryEvent) {
         ModelLoader.setCustomModelResourceLocation((Item) LAMP_ITEM, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:allies_lamp"));
-        LAMP_ITEM.setTileEntityItemStackRenderer(new f0_class284());
+        LAMP_ITEM.setTileEntityItemStackRenderer(new LampRenderer());
     }
 
     @SideOnly(value=Side.CLIENT)

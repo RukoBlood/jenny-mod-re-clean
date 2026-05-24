@@ -10,6 +10,9 @@ package com.trolmastercard.sexmod;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -36,7 +39,7 @@ public class cn_class138 {
     float g = 2.0f;
     boolean c = false;
     final static private ResourceLocation e = new ResourceLocation("textures/map/map_background.png");
-    at_class43 d;
+    IRenderer d;
     ResourceLocation h;
     Vec3i b;
     float a = 0.0f;
@@ -126,7 +129,7 @@ public class cn_class138 {
                 GlStateManager.translate(0.44f, 1.3f, 1.0f);
             }
             Minecraft.getMinecraft().getTextureManager().bindTexture(this.h);
-            this.d.a().render(0.175f);
+            this.d.Render().render(0.175f);
             GlStateManager.popMatrix();
         }
         GlStateManager.pushMatrix();
@@ -203,7 +206,7 @@ public class cn_class138 {
             GlStateManager.translate(1.6f, 0.35f, 0.0f);
         }
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.h);
-        this.d.a().render(0.175f);
+        this.d.Render().render(0.175f);
         GlStateManager.popMatrix();
     }
 
@@ -219,7 +222,7 @@ public class cn_class138 {
         GlStateManager.pushMatrix();
         this.a(this.g, f, EnumHandSide.RIGHT);
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.h);
-        this.d.a().render(0.175f);
+        this.d.Render().render(0.175f);
         GlStateManager.disableBlend();
         GlStateManager.enableCull();
         GlStateManager.popMatrix();

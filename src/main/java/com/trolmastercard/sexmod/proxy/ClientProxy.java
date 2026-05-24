@@ -15,6 +15,8 @@ package com.trolmastercard.sexmod.proxy;
 import java.io.IOException;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.KeyBinding;
@@ -54,7 +56,7 @@ extends CommonProxy {
         SoundsHandler.RegisterSounds();
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new et_class272(true));
         bn_class89.a(true);
-        NetworkRegistry.RegisterMessages();
+        PackageHandler.RegisterMessages();
         Minecraft minecraft = Minecraft.getMinecraft();
         RenderManager renderManager = minecraft.getRenderManager();
         FakeWorld gj_class3722 = new FakeWorld();

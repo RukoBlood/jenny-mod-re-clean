@@ -14,6 +14,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+
+import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
+import com.trolmastercard.sexmod.world.gen.generators.WorldGenStructure;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
@@ -157,7 +161,7 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
         int n10 = b_inner3462.c.getX();
         n8 = n * 16 + (16 - n10) / 2;
         Biome biome = world.provider.getBiomeForCoords(new BlockPos(n8, 80, n7 = n2 * 16 + (16 - (n6 = b_inner3462.c.getZ())) / 2));
-        if (!b_inner3462.e.contains(biome)) {
+        if (!b_inner3462.biomes.contains(biome)) {
             return;
         }
         int n11 = Integer.MIN_VALUE;
@@ -281,7 +285,7 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
                     var25 = 90.0F;
                 }
 
-                (new b4_class65("goblin")).a(var1, var8.add(0, -1, 0).add(var23), var18);
+                (new WorldGenStructure("goblin")).a(var1, var8.add(0, -1, 0).add(var23), var18);
                 var20.add((double)var23.getX(), (double)var23.getY(), (double)var23.getZ());
                 var20 = new Vec3d((double)var8.getX() + var20.x + 0.5, (double)var8.getY() + var20.y, (double)var8.getZ() + var20.z + 0.5);
                 GoblinEntity var26 = new GoblinEntity(var1, true, var25, var20);
@@ -308,19 +312,19 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
 
     static class b_inner346 {
         final public String f;
-        final public b4_class65 b;
-        final public HashSet<Biome> e;
+        final public WorldGenStructure b;
+        final public HashSet<Biome> biomes;
         final public Vec3i c;
         final public boolean d;
         final public int a;
 
-        public b_inner346(String string, HashSet<Biome> hashSet, Vec3i vec3i, int n, boolean bl) {
+        public b_inner346(String string, HashSet<Biome> biome, Vec3i vec3i, int n, boolean bl) {
             this.f = string;
-            this.e = hashSet;
+            this.biomes = biome;
             this.c = vec3i;
             this.d = bl;
             this.a = n;
-            this.b = new b4_class65(string);
+            this.b = new WorldGenStructure(string);
         }
     }
 }

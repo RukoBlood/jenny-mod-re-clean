@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.at_class43;
+import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -11,7 +11,7 @@ import net.minecraft.entity.Entity;
 
 public class f1_class285
 extends ModelBase
-implements at_class43 {
+implements IRenderer {
     final private ModelRenderer a;
 
     public f1_class285() {
@@ -34,7 +34,7 @@ implements at_class43 {
     }
 
     @Override
-    public ModelRenderer a() {
+    public ModelRenderer Render() {
         return this.a;
     }
 }

@@ -12,7 +12,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.RemoveItems;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -86,7 +88,7 @@ public class KoboldInventoryUI extends GuiScreen {
         }
         for (ItemStack itemStack : this.entityPlayer.inventory.mainInventory) {
             if (!itemStack.getItem().equals(this.f[guiButton.id - 5].getItem()) || itemStack.getCount() < this.f[guiButton.id - 5].getCount() || itemStack.getMetadata() != this.f[guiButton.id - 5].getMetadata()) continue;
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new t_class423(this.entityPlayer.getPersistentID(), this.f[guiButton.id - 5]));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new RemoveItems(this.entityPlayer.getPersistentID(), this.f[guiButton.id - 5]));
             this.a(guiButton);
             return;
         }

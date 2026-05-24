@@ -23,8 +23,14 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 
+import com.trolmastercard.sexmod.Packages.UploadModelString;
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -62,34 +68,34 @@ extends GuiScreen {
     boolean p = false;
     gq_class381 q;
     static public List<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>> m = new ArrayList<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>>();
-    final UUID g;
+    final UUID ID;
     int i;
     int t;
     public boolean f = false;
     int d = 0;
     int e = 1;
 
-    public a_class4(@Nonnull GirlEntity em_class2582) {
+    public a_class4(@Nonnull GirlEntity girlEntity) {
         //Object object;
         this.mc = Minecraft.getMinecraft();
-        this.g = em_class2582.girlID();
-        PlayerGirlEntity fy_class3352 = PlayerGirlEntity.a(em_class2582);
-        if (fy_class3352 == null) {
-            fy_class3352 = PlayerGirlEntity.JENNY;
+        this.ID = girlEntity.girlID();
+        PlayerGirlEntity playerGirlEntity = PlayerGirlEntity.a(girlEntity);
+        if (playerGirlEntity == null) {
+            playerGirlEntity = PlayerGirlEntity.JENNY;
         }
         try {
-            Object object = fy_class3352.npcClass.getConstructor(World.class);
+            Object object = playerGirlEntity.npcClass.getConstructor(World.class);
             this.c = (GirlEntity)((Constructor)object).newInstance(this.mc.world);
             this.c.b(true);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
         this.e();
-        String object = em_class2582.java_lang_String_C();
+        String object = girlEntity.java_lang_String_C();
         this.c.getDataManager().set(GirlEntity.b, object);
         int n = 0;
         for (String string : this.c.Y()) {
-            gw_class389 gw_class3892 = CustomModels.e(string);
+            gw_class389 gw_class3892 = CustomModel.e(string);
             if (gw_class389.CUSTOM_BONE.equals((Object)gw_class3892)) {
                 ++n;
             }
@@ -134,13 +140,13 @@ extends GuiScreen {
     public static Map.Entry<gw_class389, Map.Entry<List<String>, Integer>> b(GirlEntity em_class2582) {
         ArrayList<String> arrayList = new ArrayList<String>();
         arrayList.add("cross");
-        arrayList.addAll((Collection) CustomModels.a(em_class2582).get((Object)gw_class389.CUSTOM_BONE));
+        arrayList.addAll((Collection) CustomModel.a(em_class2582).get((Object)gw_class389.CUSTOM_BONE));
         return new AbstractMap.SimpleEntry<gw_class389, Map.Entry<List<String>, Integer>>(gw_class389.CUSTOM_BONE, new AbstractMap.SimpleEntry(arrayList, 0));
     }
 
     void e() {
         m.clear();
-        List<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>> list = this.c.d(this.g);
+        List<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>> list = this.c.d(this.ID);
         this.i = list.size();
         m.addAll(list);
         for (gw_class389 gw_class3892 : gw_class389.values()) {
@@ -149,7 +155,7 @@ extends GuiScreen {
             object2.add("cross");
             m.add(new AbstractMap.SimpleEntry(gw_class3892, new AbstractMap.SimpleEntry(object2, 0)));
         }
-        for (Map.Entry entry : CustomModels.a(this.c).entrySet()) {
+        for (Map.Entry entry : CustomModel.a(this.c).entrySet()) {
             Map.Entry<gw_class389, Map.Entry<List<String>, Integer>> object = null;
             for (Map.Entry<gw_class389, Map.Entry<List<String>, Integer>> entry2 : m) {
                 if (!((gw_class389)((Object)entry.getKey())).equals((Object)entry2.getKey())) continue;
@@ -200,7 +206,7 @@ extends GuiScreen {
         int n3 = this.n - this.a(15.0f);
         int n4 = this.l - 20;
         this.drawTexturedModalRect(n3, n4, 100, this.a(n, n2, n3, n4, n3 + 20, n4 + 20) ? 40 : 20, 20, 20);
-        if (CustomModels.g() == null) {
+        if (CustomModel.g() == null) {
             this.b(n3, n, n2);
         }
         this.a(this.n, this.l, this.o, this.c, 1.2345679f);
@@ -244,7 +250,7 @@ extends GuiScreen {
             String string = entry2.getKey().get(n);
             hashSet.add(string);
         }
-        NetworkRegistry.networkWrapper.sendToServer((IMessage)new fw_class332(GirlEntity.a(hashSet), this.g, arrayList));
+        PackageHandler.networkWrapper.sendToServer((IMessage)new UploadModelString(GirlEntity.a(hashSet), this.ID, arrayList));
         this.mc.player.closeScreen();
     }
 
@@ -337,26 +343,26 @@ extends GuiScreen {
         if (this.a(n, n2, n5, n4 = this.l - 20, n5 + 20, n4 + 20)) {
             this.c();
         }
-        if (CustomModels.g() != null) {
+        if (CustomModel.g() != null) {
             return;
         }
         n4 = this.l - 40;
         if (this.a(n, n2, n5, n4, n5 + 20, n4 + 20)) {
             this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
             this.mc.player.closeScreen();
-            int n6 = CustomModels.b(true);
+            int n6 = CustomModel.b(true);
             if (n6 != 0) {
-                CustomModels.d = true;
+                CustomModel.d = true;
                 return;
             }
-            GirlEntity em_class2582 = GirlEntity.getGirlEntity(this.g);
+            GirlEntity em_class2582 = GirlEntity.getGirlEntity(this.ID);
             if (em_class2582 != null) {
                 a_class4.a(em_class2582);
             }
             return;
         }
         if (this.a(n, n2, n5, n4 -= 20, n5 + 20, n4 + 20)) {
-            Desktop.getDesktop().open(new File(CustomModels.d()));
+            Desktop.getDesktop().open(new File(CustomModel.d()));
             return;
         }
         if (this.a(n, n2, n5, n4 -= 20, n5 + 20, n4 + 20)) {
@@ -484,7 +490,7 @@ extends GuiScreen {
         if (minecraft.currentScreen instanceof a_class4) {
             return;
         }
-        boolean bl2 = bl = CustomModels.g() == null || CustomModels.b();
+        boolean bl2 = bl = CustomModel.g() == null || CustomModel.b();
         if (!bl) {
             minecraft.player.sendStatusMessage(new TextComponentString("You have to whitelist the server to use its custom models. " + (Object)((Object)TextFormatting.YELLOW) + "/whitelistserver"), true);
             return;
@@ -504,9 +510,9 @@ extends GuiScreen {
             if (!ClientProxy.keyBindings[1].isPressed()) {
                 return;
             }
-            if (CustomModels.d) {
-                boolean bl = CustomModels.d = 0 != CustomModels.b(true);
-                if (CustomModels.d) {
+            if (CustomModel.d) {
+                boolean bl = CustomModel.d = 0 != CustomModel.b(true);
+                if (CustomModel.d) {
                     return;
                 }
             }

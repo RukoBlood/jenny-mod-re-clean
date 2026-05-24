@@ -14,9 +14,9 @@ package com.trolmastercard.sexmod.gui;
 
 import java.util.Random;
 
-import com.trolmastercard.sexmod.NetworkRegistry;
+import com.trolmastercard.sexmod.Packages.GalathBackOffRape;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.cd_class125;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -96,7 +96,7 @@ public class EscapeMinigameUI extends Gui {
             return;
         }
         o = true;
-        NetworkRegistry.networkWrapper.sendToServer((IMessage)new cd_class125());
+        PackageHandler.networkWrapper.sendToServer((IMessage)new GalathBackOffRape());
         EscapeMinigameUI.d();
     }
 

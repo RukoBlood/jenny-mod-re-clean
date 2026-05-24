@@ -13,6 +13,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
@@ -83,12 +86,12 @@ public class j_class411 extends GuiScreen {
     void b() {
         IBlockState iBlockState = this.mc.world.getBlockState(this.c);
         if (iBlockState.getBlock() instanceof BlockBed || iBlockState.getBlock() instanceof BlockChest) {
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new h6_class397(this.c, !gm_class376.a(this.c)));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new SendBlocks(this.c, !gm_class376.a(this.c)));
         }
     }
 
     void d() {
-        NetworkRegistry.networkWrapper.sendToServer((IMessage)new fj_class315(!d));
+        PackageHandler.networkWrapper.sendToServer((IMessage)new SetTribeFollowMode(!d));
     }
 
     void c() {
@@ -100,17 +103,17 @@ public class j_class411 extends GuiScreen {
         Block block = this.e.getBlock();
         if (block instanceof BlockLog) {
             if (gm_class376.a(this.c)) {
-                NetworkRegistry.networkWrapper.sendToServer((IMessage)new au_class44(this.c));
+                PackageHandler.networkWrapper.sendToServer((IMessage)new CancelTask(this.c));
                 return;
             }
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new fc_class302(this.c));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new FallTree(this.c));
         }
         if ((objectArray = this.e()) != null) {
             if (gm_class376.a(this.c)) {
-                NetworkRegistry.networkWrapper.sendToServer((IMessage)new au_class44(this.c));
+                PackageHandler.networkWrapper.sendToServer((IMessage)new CancelTask(this.c));
                 return;
             }
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new e6_class226((BlockPos)objectArray[0], (EnumFacing)objectArray[1]));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new Mine((BlockPos)objectArray[0], (EnumFacing)objectArray[1]));
         }
     }
 

@@ -4,7 +4,7 @@
 package com.trolmastercard.sexmod.girls.Allie;
 
 import com.trolmastercard.sexmod.FakeWorld;
-import com.trolmastercard.sexmod.PlayerAllie;
+import com.trolmastercard.sexmod.girls.Player.PlayerAllie;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlModel;
 import net.minecraft.util.ResourceLocation;

@@ -11,6 +11,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
@@ -66,7 +67,7 @@ public class HornyPotion extends Potion {
             return;
         }
         entityPlayer.removePotionEffect(HORNY_POTION);
-        NetworkRegistry.networkWrapper.sendTo((IMessage)new bd_class76(entityPlayer), (EntityPlayerMP)entityPlayer);
+        PackageHandler.networkWrapper.sendTo((IMessage)new bd_class76(entityPlayer), (EntityPlayerMP)entityPlayer);
     }
 
     @SubscribeEvent

@@ -16,7 +16,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import com.trolmastercard.sexmod.Packages.InformOfOwnership;
+import com.trolmastercard.sexmod.Packages.ResetGirl;
+import com.trolmastercard.sexmod.Packages.SendBlocks;
+import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
+import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
+import com.trolmastercard.sexmod.girls.Player.PlayerBia;
+import com.trolmastercard.sexmod.girls.Player.PlayerEllie;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -41,8 +52,8 @@ public class q_class419 {
         if (!entityPlayerMP.capabilities.isCreativeMode && entityPlayerMP.capabilities.isFlying) {
             entityPlayerMP.capabilities.isFlying = false;
         }
-        NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(true), entityPlayerMP);
-        NetworkRegistry.networkWrapper.sendTo((IMessage)new gf_class364(GalathMangTracker.c(entityPlayerMP.getPersistentID())), entityPlayerMP);
+        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
+        PackageHandler.networkWrapper.sendTo((IMessage)new InformOfOwnership(GalathMangTracker.c(entityPlayerMP.getPersistentID())), entityPlayerMP);
         for (ItemStack object2 : entityPlayerMP.inventory.mainInventory) {
             if (object2.getItem() != LampItem.LAMP_ITEM || !object2.hasTagCompound()) continue;
             object2.getTagCompound().setUniqueId("user", UUID.randomUUID());
@@ -50,7 +61,7 @@ public class q_class419 {
         UUID uUID2 = KoboldManager.findTribeIdWith(entityPlayerMP.getPersistentID());
         if (uUID2 != null) {
             HashSet<BlockPos> hashSet = KoboldManager.d(uUID2);
-            NetworkRegistry.networkWrapper.sendTo((IMessage)new h6_class397(hashSet, true), entityPlayerMP);
+            PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, true), entityPlayerMP);
         }
         PlayerGirl.void_C();
         PlayerGirl playerGirl = PlayerGirl.d_(playerLoggedInEvent.player.getPersistentID());
@@ -59,7 +70,7 @@ public class q_class419 {
         if (playerGirl != null) {
             playerGirl.void_a(false);
             playerGirl.setCurrentAction(Action.NULL);
-            s_class421.a_inner422.a(playerGirl);
+            ResetGirl.a_inner422.a(playerGirl);
         }
         if ((uUID = playerLoggedInEvent.player.getPersistentID()).equals(b)) {
             this.a(world, (EntityPlayer)entityPlayerMP, uUID);
@@ -113,14 +124,14 @@ public class q_class419 {
                 }
                 if (girlEntity.getID() == null) continue;
                 if (girlEntity.getID().equals(entityPlayer.getPersistentID()) || girlEntity.getID().equals(entityPlayer.getUniqueID())) {
-                    s_class421.a_inner422.a(girlEntity);
+                    ResetGirl.a_inner422.a(girlEntity);
                     girlEntity.void_a(false);
                     girlEntity.setCurrentAction(Action.NULL);
                 }
                 if (!(girlEntity instanceof PlayerGirl) || !((PlayerGirl)girlEntity).java_util_UUID_m().equals(entityPlayer.getPersistentID()) || girlEntity.getID() == null) continue;
                 EntityPlayerMP entityPlayerMP = (EntityPlayerMP)playerLoggedOutEvent.player.world.getPlayerEntityByUUID(girlEntity.getID());
-                NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(true), entityPlayerMP);
-                s_class421.a_inner422.a(entityPlayerMP);
+                PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
+                ResetGirl.a_inner422.a(entityPlayerMP);
                 entityPlayer.setInvisible(false);
                 girlEntity.void_e((UUID)null);
             }

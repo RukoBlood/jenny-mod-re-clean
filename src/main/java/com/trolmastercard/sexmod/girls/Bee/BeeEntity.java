@@ -9,9 +9,13 @@ package com.trolmastercard.sexmod.girls.Bee;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.SendCompanionHome;
+import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.BeeInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIPanic;
@@ -160,7 +164,7 @@ extends Supporter {
             this.c(this.net_minecraft_util_math_Vec3d_aa());
             this.void_b(entityPlayer.rotationYaw - 180.0f);
             this.f.clearPath();
-            NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
             this.setCurrentAction(Action.CITIZEN_START);
             Vec3d vec3d = this.a(0.2);
             entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
@@ -345,7 +349,7 @@ extends Supporter {
             switch (soundKeyframeEvent.sound) {
                 case "pearl": {
                     if (!this.boolean_e() || this.currentAction() != Action.THROW_PEARL) break;
-                    NetworkRegistry.networkWrapper.sendToServer((IMessage)new gg_class366(this.girlID()));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "resetCumPercentage": {

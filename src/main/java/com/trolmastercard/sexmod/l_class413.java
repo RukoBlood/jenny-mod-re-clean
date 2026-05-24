@@ -14,6 +14,7 @@ import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -88,19 +89,19 @@ public class l_class413 {
         if (minecraft.gameSettings.thirdPersonView != 0) {
             return;
         }
-        GirlEntity em_class2582 = GirlEntity.a(minecraft.player.getPersistentID(), false);
-        if (em_class2582 == null) {
+        GirlEntity girlEntity = GirlEntity.a(minecraft.player.getPersistentID(), false);
+        if (girlEntity == null) {
             return;
         }
-        if (!em_class2582.currentAction().useBoyCam) {
+        if (!girlEntity.currentAction().useBoyCam) {
             return;
         }
-        if (em_class2582.boolean_m()) {
+        if (girlEntity.boolean_m()) {
             return;
         }
         this.b = minecraft.player.getPositionVector();
         this.a = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
-        Vec3d vec3d = em_class2582.boolean_Q() ? em_class2582.b("boyCam").add(em_class2582.net_minecraft_util_math_Vec3d_o()) : em_class2582.b("boyCam").add(Reference.a(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double)renderTickEvent.renderTickTime));
+        Vec3d vec3d = girlEntity.boolean_Q() ? girlEntity.b("boyCam").add(girlEntity.net_minecraft_util_math_Vec3d_o()) : girlEntity.b("boyCam").add(Reference.a(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)renderTickEvent.renderTickTime));
         minecraft.player.posX = vec3d.x;
         minecraft.player.posY = vec3d.y - (double)minecraft.player.getEyeHeight();
         minecraft.player.posZ = vec3d.z;

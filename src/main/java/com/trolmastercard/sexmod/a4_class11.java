@@ -3,11 +3,12 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.Slime.FriendlySlimeEntity;
+import com.trolmastercard.sexmod.girls.Slime.FriendlySlimeRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.EntityLivingBase;
 
 public class a4_class11
 implements LayerRenderer<FriendlySlimeEntity> {

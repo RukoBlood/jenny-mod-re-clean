@@ -17,6 +17,8 @@ import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4d;
 
+import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldStaffModel;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;

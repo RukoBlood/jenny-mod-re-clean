@@ -12,7 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
+import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;

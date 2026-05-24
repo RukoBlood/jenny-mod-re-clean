@@ -6,6 +6,9 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.Packages.RequestServerModelAvailability;
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -34,9 +37,9 @@ extends CommandBase {
 
     @Override
     public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] stringArray) throws CommandException {
-        CustomModels.b(false);
+        CustomModel.b(false);
         for (EntityPlayerMP entityPlayerMP : minecraftServer.getPlayerList().getPlayers()) {
-            minecraftServer.addScheduledTask(() -> NetworkRegistry.networkWrapper.sendTo((IMessage)new g6_class350(CustomModels.e()), entityPlayerMP));
+            minecraftServer.addScheduledTask(() -> PackageHandler.networkWrapper.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.e()), entityPlayerMP));
         }
     }
 }

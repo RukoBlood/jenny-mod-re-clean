@@ -11,6 +11,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,11 +42,11 @@ extends Item {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer entityPlayer, EnumHand enumHand) {
-        ItemStack itemStack = entityPlayer.getHeldItem(enumHand);
-        Vec3d vec3d = entityPlayer.getPositionEyes(0.0f);
-        Vec3d vec3d2 = entityPlayer.getLook(0.0f);
-        Vec3d vec3d3 = vec3d.add(vec3d2.x * 5.0, vec3d2.y * 5.0, vec3d2.z * 5.0);
-        RayTraceResult rayTraceResult = world.rayTraceBlocks(vec3d, vec3d3, false, false, true);
+        ItemStack heldItem = entityPlayer.getHeldItem(enumHand);
+        Vec3d eyesPos = entityPlayer.getPositionEyes(0.0f);
+        Vec3d look = entityPlayer.getLook(0.0f);
+        Vec3d vec3d3 = eyesPos.add(look.x * 5.0, look.y * 5.0, look.z * 5.0);
+        RayTraceResult rayTraceResult = world.rayTraceBlocks(eyesPos, vec3d3, false, false, true);
         if (rayTraceResult == null) {
             return new ActionResult<ItemStack>(EnumActionResult.FAIL, entityPlayer.getHeldItem(enumHand));
         }
@@ -53,7 +54,7 @@ extends Item {
             return new ActionResult<ItemStack>(EnumActionResult.FAIL, entityPlayer.getHeldItem(enumHand));
         }
         if (!entityPlayer.capabilities.isCreativeMode) {
-            itemStack.shrink(1);
+            heldItem.shrink(1);
         }
         if (!world.isRemote) {
             KoboldManager.a(world, rayTraceResult.hitVec);

@@ -13,7 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.trolmastercard.sexmod.Packages.ResetController;
+import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.Packages.SpawnEnergyBallParticlesAlt;
+import com.trolmastercard.sexmod.girls.Galath.EnergyBallEntity;
+import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
@@ -82,7 +88,7 @@ public enum h8_class399 {
         galath.bL = null;
         galath.b(0);
         galath.setCurrentAction(Action.FLY);
-        NetworkRegistry.networkWrapper.sendToAllTracking((IMessage)new a1_class7(galath.girlID()), (Entity)galath);
+        PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ResetController(galath.girlID()), (Entity)galath);
     }, f__class2972 -> {
         Vec3d vec3d = f__class2972.getPositionVector();
         Vec3d vec3d2 = f__class2972.O;
@@ -247,7 +253,7 @@ public enum h8_class399 {
             for (EntityWitherSkeleton by : f__class2972.bI) {
                 Vec3d d3 = by.getPositionVector();
                 by.world.removeEntity(by);
-                NetworkRegistry.networkWrapper.sendToAllTracking((IMessage)new bv_class101(d3, true), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(by.dimension, d3.x, d3.y, d3.z, 50.0));
+                PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(d3, true), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(by.dimension, d3.x, d3.y, d3.z, 50.0));
             }
             f__class2972.bI.clear();
             EntityPlayerMP d3 = (EntityPlayerMP)object2;
@@ -256,7 +262,7 @@ public enum h8_class399 {
             f__class2972.void_a(true);
             f__class2972.setCurrentAction(Action.RAPE_INTRO);
             byte by = (byte)MathHelper.floor((f__class2972.java_lang_Float_I().floatValue() + 180.0f) * 256.0f / 360.0f);
-            NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(false), d3);
+            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), d3);
             d3.connection.sendPacket(new SPacketEntityVelocity(d3.getEntityId(), 0.0, 0.0, 0.0));
             d3.connection.sendPacket(new SPacketEntity.S16PacketEntityLook(d3.getEntityId(), (byte)by, (byte)-14, true));
             return;

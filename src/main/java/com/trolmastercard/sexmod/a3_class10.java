@@ -7,6 +7,8 @@
 package com.trolmastercard.sexmod;
 
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
@@ -16,13 +18,13 @@ import net.minecraft.util.text.TextComponentString;
 
 public class a3_class10
 extends DamageSource {
-    GalathEntity a;
-    Vec3d b;
+    GalathEntity galathEntity;
+    Vec3d pos;
 
-    public a3_class10(GalathEntity f__class2972) {
+    public a3_class10(GalathEntity entity) {
         super("galath");
-        this.a = f__class2972;
-        this.b = f__class2972.getPositionVector();
+        this.galathEntity = entity;
+        this.pos = entity.getPositionVector();
     }
 
     @Override
@@ -43,19 +45,19 @@ extends DamageSource {
     @Override
     @Nullable
     public Entity getImmediateSource() {
-        return this.a;
+        return this.galathEntity;
     }
 
     @Override
     @Nullable
     public Entity getTrueSource() {
-        return this.a;
+        return this.galathEntity;
     }
 
     @Override
     @Nullable
     public Vec3d getDamageLocation() {
-        return this.b;
+        return this.pos;
     }
 }
 

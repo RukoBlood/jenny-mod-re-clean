@@ -13,6 +13,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
@@ -104,7 +106,7 @@ extends GuiListExtended {
             ++n3;
         }
         this.b.sort(Comparator.comparingInt(a_inner3822 -> f.indexOf(a_inner3822.d)));
-        List<String> list = CustomModels.a(this.d.c).get((Object)gw_class389.CUSTOM_BONE);
+        List<String> list = CustomModel.a(this.d.c).get((Object)gw_class389.CUSTOM_BONE);
         list.add(0, "cross");
         this.b.add(new a_inner382(this, n3 > 1));
         this.a();
@@ -291,7 +293,7 @@ extends GuiListExtended {
             n4 = this.c(n4, n, n2, n3);
             GirlEntity em_class2582 = this.this$0.d.d();
             CustomModelEntity cy_class1532 = this.f == 0 ? CustomModelEntity.a(gq_class381.access$300((gq_class381)this.this$0).world, em_class2582.girlID(), this.d) : new CustomModelEntity(em_class2582.world, em_class2582.girlID(), this.b.get(this.f));
-            CustomModels.b_inner96 b_inner962 = CustomModels.b(cy_class1532.a());
+            CustomModel.b_inner96 b_inner962 = CustomModel.b(cy_class1532.a());
             float f = cy_class1532.f || b_inner962 == null ? 1.0f : b_inner962.d();
             int n5 = b_inner962 == null ? 0 : (int)(-b_inner962.g());
             this.this$0.d.a(n4, n + 10 + (cy_class1532.f ? 0 : 6) + n5, 30.0f * f, cy_class1532);
@@ -309,7 +311,7 @@ extends GuiListExtended {
             this.a(string2, n4, n + 10);
             int n7 = n4 += this.c.getStringWidth(gq_class381.a);
             int n8 = n4;
-            String string3 = CustomModels.d(string);
+            String string3 = CustomModel.d(string);
             String string4 = string3.length() > gq_class381.a.length() ? string3.substring(0, gq_class381.a.length() - 3) + "..." : string3;
             this.a(string4, n4, n + 10);
             int n9 = n4 += this.c.getStringWidth(gq_class381.a);
@@ -359,7 +361,7 @@ extends GuiListExtended {
         }
 
         float a(int n) {
-            Map.Entry<gw_class389, Map.Entry<List<String>, Integer>> entry = this.this$0.d.c.d(this.this$0.d.g).get(n);
+            Map.Entry<gw_class389, Map.Entry<List<String>, Integer>> entry = this.this$0.d.c.d(this.this$0.d.ID).get(n);
             return (float)entry.getValue().getValue().intValue() / 100.0f;
         }
 
@@ -404,7 +406,7 @@ extends GuiListExtended {
                 gq_class381.access$600(this.this$0).getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                 ArrayList<String> arrayList = new ArrayList<String>();
                 arrayList.add("cross");
-                arrayList.addAll((Collection) CustomModels.a(this.this$0.d.c).get((Object)gw_class389.CUSTOM_BONE));
+                arrayList.addAll((Collection) CustomModel.a(this.this$0.d.c).get((Object)gw_class389.CUSTOM_BONE));
                 a_class4.m.add(a_class4.b(this.this$0.d.c));
             }
             if (!this.e) {

@@ -10,6 +10,8 @@ package com.trolmastercard.sexmod;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

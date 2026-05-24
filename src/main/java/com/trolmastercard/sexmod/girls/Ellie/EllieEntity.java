@@ -9,8 +9,12 @@ package com.trolmastercard.sexmod.girls.Ellie;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.SendCompanionHome;
+import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -80,7 +84,7 @@ implements bh_class82 {
 
     @Override
     protected ResourceLocation getLootTable() {
-        return LootTableRegistry.ELLIE_LOOT_TABLE;
+        return LootTableHandler.ELLIE_LOOT_TABLE;
     }
 
     boolean boolean_i() {
@@ -306,7 +310,7 @@ implements bh_class82 {
             vec3d = ck_class135.a(new Vec3d(0.0, 0.0, 0.1), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
             entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-            NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         }
         if ("cowgirl".equals(string)) {
             this.entityDataManager.set(D, 0);
@@ -327,7 +331,7 @@ implements bh_class82 {
             vec3d = ck_class135.a(new Vec3d(0.0, 1.0 - (double)entityPlayer.eyeHeight, -1.8125), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
             entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-            NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         }
     }
 
@@ -465,7 +469,7 @@ implements bh_class82 {
         this.Z = 16;
         this.setNoGravity(true);
         this.noClip = true;
-        NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(false), (EntityPlayerMP)entityPlayer);
+        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         this.tasks.removeTask(this.avoidWater);
         this.tasks.removeTask(this.o);
     }
@@ -861,7 +865,7 @@ implements bh_class82 {
                     break;
                 }
                 case "pearl": {
-                    NetworkRegistry.networkWrapper.sendToServer((IMessage)new gg_class366(this.girlID()));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "openSexUi": {

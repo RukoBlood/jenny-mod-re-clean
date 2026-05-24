@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.trolmastercard.sexmod.Packages.UpdatePlayerModel;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
@@ -69,7 +72,7 @@ extends GuiScreen {
             this.b = this.a.size() - 1;
         }
         if (guiButton.id == 0) {
-            NetworkRegistry.networkWrapper.sendToServer((IMessage)new b__class71(PlayerGirlEntity.a(this.a.get(this.b))));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.a(this.a.get(this.b))));
             EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
             ((EntityPlayer)entityPlayerSP).closeScreen();
             entityPlayerSP.eyeHeight = entityPlayerSP.getDefaultEyeHeight();
