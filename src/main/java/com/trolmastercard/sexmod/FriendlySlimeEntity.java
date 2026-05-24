@@ -9,6 +9,8 @@ package com.trolmastercard.sexmod;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -148,10 +150,10 @@ extends EntityLiving {
     }
 
     void a(EnumParticleTypes enumParticleTypes) {
-        double d = ModInfo.f.nextGaussian() * 0.02;
-        double d2 = ModInfo.f.nextGaussian() * 0.02;
-        double d3 = ModInfo.f.nextGaussian() * 0.02;
-        this.world.spawnParticle(enumParticleTypes, this.posX + (double)(ModInfo.f.nextFloat() * this.width * 2.0f) - (double)this.width, this.posY + 0.15 + (double)(ModInfo.f.nextFloat() * this.height), this.posZ + (double)(ModInfo.f.nextFloat() * this.width * 2.0f) - (double)this.width, d, d2, d3, new int[0]);
+        double d = Reference.RANDOM.nextGaussian() * 0.02;
+        double d2 = Reference.RANDOM.nextGaussian() * 0.02;
+        double d3 = Reference.RANDOM.nextGaussian() * 0.02;
+        this.world.spawnParticle(enumParticleTypes, this.posX + (double)(Reference.RANDOM.nextFloat() * this.width * 2.0f) - (double)this.width, this.posY + 0.15 + (double)(Reference.RANDOM.nextFloat() * this.height), this.posZ + (double)(Reference.RANDOM.nextFloat() * this.width * 2.0f) - (double)this.width, d, d2, d3, new int[0]);
     }
 
     @Override
@@ -354,7 +356,7 @@ extends EntityLiving {
                         if (this.a) {
                             this.c /= 3;
                         }
-                        float f = ModInfo.f.nextInt(360);
+                        float f = Reference.RANDOM.nextInt(360);
                         ((b_inner53)this.d.getMoveHelper()).a(f, false);
                         this.d.getJumpHelper().setJumping();
                         if (this.d.i()) {

@@ -8,6 +8,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

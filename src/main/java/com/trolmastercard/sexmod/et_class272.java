@@ -9,6 +9,8 @@ package com.trolmastercard.sexmod;
 import java.io.File;
 import java.util.ConcurrentModificationException;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

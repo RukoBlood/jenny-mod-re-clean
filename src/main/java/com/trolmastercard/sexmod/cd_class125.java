@@ -10,6 +10,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -17,8 +18,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class cd_class125
-implements IMessage {
+public class cd_class125 implements IMessage {
     boolean a = false;
 
     public void fromBytes(ByteBuf byteBuf) {

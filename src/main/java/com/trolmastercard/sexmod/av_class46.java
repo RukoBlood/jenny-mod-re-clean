@@ -14,6 +14,8 @@ import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -111,7 +113,7 @@ extends GeoItemRenderer<GalathCoin> {
             return 120.0f;
         }
         if (f2 <= 3000.0f) {
-            return b6_class67.a(120.0f, 240.0f, (f2 - 1000.0f) / 2000.0f);
+            return Reference.Lerp(120.0f, 240.0f, (f2 - 1000.0f) / 2000.0f);
         }
         return 240.0f;
     }
@@ -122,7 +124,7 @@ extends GeoItemRenderer<GalathCoin> {
             return 240.0f;
         }
         if (f2 <= 3000.0f) {
-            return b6_class67.a(240.0f, 120.0f, (f2 - 1000.0f) / 2000.0f);
+            return Reference.Lerp(240.0f, 120.0f, (f2 - 1000.0f) / 2000.0f);
         }
         return 120.0f;
     }
@@ -153,7 +155,7 @@ extends GeoItemRenderer<GalathCoin> {
             return av_class46.f;
         }
         if (f <= 3000.0f) {
-            return b6_class67.a(av_class46.f, e, (double)((f - 1000.0f) / 2000.0f));
+            return Reference.a(av_class46.f, e, (double)((f - 1000.0f) / 2000.0f));
         }
         return e;
     }
@@ -164,7 +166,7 @@ extends GeoItemRenderer<GalathCoin> {
             return e;
         }
         if (f <= 3000.0f) {
-            return b6_class67.a(e, av_class46.f, (double)((f - 1000.0f) / 2000.0f));
+            return Reference.a(e, av_class46.f, (double)((f - 1000.0f) / 2000.0f));
         }
         return av_class46.f;
     }

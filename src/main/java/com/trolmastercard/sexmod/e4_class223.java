@@ -3,14 +3,15 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class e4_class223
-extends GirlEntity {
+public abstract class e4_class223 extends GirlEntity {
     final static public DataParameter<String> N = EntityDataManager.createKey(e4_class223.class, DataSerializers.STRING).getSerializer().createKey(119);
     final static public DataParameter<BlockPos> K = EntityDataManager.createKey(e4_class223.class, DataSerializers.BLOCK_POS).getSerializer().createKey(120);
     final static public DataParameter<String> M = EntityDataManager.createKey(e4_class223.class, DataSerializers.STRING).getSerializer().createKey(121);
@@ -71,7 +72,7 @@ extends GirlEntity {
     }
 
     public static void void_a(StringBuilder stringBuilder, int n) {
-        int n2 = ModInfo.f.nextInt(n + 1);
+        int n2 = Reference.RANDOM.nextInt(n + 1);
         if (n2 < 10) {
             stringBuilder.append(0);
         }
@@ -80,7 +81,7 @@ extends GirlEntity {
     }
 
     public static void void_b(StringBuilder stringBuilder) {
-        double d = ModInfo.f.nextDouble();
+        double d = Reference.RANDOM.nextDouble();
         double d2 = Math.pow(Math.E, -Math.pow(-2.5 + 5.0 * d, 2.0));
         String string = String.format("%.2f", d2);
         String[] stringArray = string.split("\\.");
@@ -92,7 +93,7 @@ extends GirlEntity {
     }
 
     public static void b(StringBuilder stringBuilder, int n) {
-        int n2 = ModInfo.f.nextInt(n);
+        int n2 = Reference.RANDOM.nextInt(n);
         if (n2 < 10) {
             stringBuilder.append(0);
         }

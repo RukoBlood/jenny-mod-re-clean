@@ -10,6 +10,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

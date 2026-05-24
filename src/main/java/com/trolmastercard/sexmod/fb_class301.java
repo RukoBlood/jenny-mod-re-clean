@@ -7,6 +7,8 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;

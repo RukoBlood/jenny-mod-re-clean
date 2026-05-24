@@ -11,6 +11,8 @@ package com.trolmastercard.sexmod;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;

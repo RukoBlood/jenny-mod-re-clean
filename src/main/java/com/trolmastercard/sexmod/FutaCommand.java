@@ -12,6 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.Random;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

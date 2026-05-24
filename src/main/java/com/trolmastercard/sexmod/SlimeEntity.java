@@ -6,6 +6,10 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -196,7 +200,7 @@ extends GirlEntity {
         }
         SlimeEntity.a(EnumParticleTypes.SPELL_WITCH, (GirlEntity)this);
         if (ticks_birth == 0) {
-            this.PlaySound(SoundEventHandler.MISC_PLOB[0]);
+            this.PlaySound(SoundsHandler.MISC_PLOB[0]);
         }
     }
 
@@ -324,7 +328,7 @@ extends GirlEntity {
     }
 
     float float_f() {
-        return ModInfo.f.nextFloat() * 360.0f;
+        return Reference.RANDOM.nextFloat() * 360.0f;
     }
 
     @Override
@@ -430,41 +434,41 @@ extends GirlEntity {
                     break;
                 }
                 case "sexUiOn": {
-                    if (!this.boolean_n() || ds_class200.d) break;
-                    ds_class200.d();
+                    if (!this.boolean_n() || SexUI.shouldBeRendered) break;
+                    SexUI.d();
                     break;
                 }
                 case "bjiMSG10": {
                     if (!this.boolean_n()) break;
-                    this.a(-0.4, -0.8, -0.2, 60.0f, -3.0f);
+                    this.moveCamera(-0.4, -0.8, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "bjiMSG11": {
                     this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjiMSG12": {
-                    if (ModInfo.f.nextInt(5) == 0) {
+                    if (Reference.RANDOM.nextInt(5) == 0) {
                         this.a(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
                     this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjtMSG1": {
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "bjtDone": {
@@ -473,7 +477,7 @@ extends GirlEntity {
                 }
                 case "bjtReady": 
                 case "doggyfastReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -484,7 +488,7 @@ extends GirlEntity {
                 case "bjcMSG2": {
                     this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                     if (!this.boolean_n()) break;
-                    ds_class200.c();
+                    SexUI.c();
                     break;
                 }
                 case "doggyslowMSG2": {
@@ -499,7 +503,7 @@ extends GirlEntity {
                 case "bjcDone": 
                 case "doggyCumDone": {
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     this.void_r();
                     this.changeDataParameterFromClient("pregnant", String.valueOf(2400));
                     break;
@@ -514,11 +518,11 @@ extends GirlEntity {
                     break;
                 }
                 case "doggystartMSG1": {
-                    this.PlaySound(SoundEventHandler.MISC_TOUCH[0]);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH[0]);
                     break;
                 }
                 case "doggystartMSG2": {
-                    this.PlaySound(SoundEventHandler.MISC_TOUCH[1]);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH[1]);
                     break;
                 }
                 case "doggystartMSG3": {
@@ -526,25 +530,25 @@ extends GirlEntity {
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_SMALLINSERTS), 1.5f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.33f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     break;
                 }
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.33f);
-                    int n = ModInfo.f.nextInt(4);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
+                    int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = ModInfo.f.nextInt(2);
+                        n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                         } else {
@@ -554,17 +558,17 @@ extends GirlEntity {
                         this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.boolean_n()) {
-                        ds_class200.a(0.04);
+                        SexUI.addCumPercentage(0.04);
                     }
                     ++this.P;
                     if (this.P % 2 == 0) {
-                        int n = ModInfo.f.nextInt(2);
+                        int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                             break;
@@ -580,8 +584,8 @@ extends GirlEntity {
                     break;
                 }
                 case "doggycumMSG1": {
-                    this.a(SoundEventHandler.MISC_CUMINFLATION[0], 4.0f);
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 2.0f);
+                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                     break;
                 }
@@ -602,9 +606,9 @@ extends GirlEntity {
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.s);
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

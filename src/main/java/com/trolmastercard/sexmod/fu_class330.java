@@ -18,6 +18,9 @@ package com.trolmastercard.sexmod;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
@@ -132,7 +135,7 @@ public class fu_class330 {
             entityPlayer.rotationYaw = -90.0f;
         }
         if (rightClickBlock.getWorld().isRemote) {
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
             ei_class2512.void_H();
             return;
         }
@@ -260,7 +263,7 @@ public class fu_class330 {
         ei_class2512.getDataManager().set(GirlEntity.D, 0);
         ei_class2512.setCurrentAction(Action.STARTDOGGY);
         if (rightClickBlock.getWorld().isRemote && Minecraft.getMinecraft().player.getPersistentID().equals(entityPlayer.getPersistentID())) {
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
         }
     }
 
@@ -333,7 +336,7 @@ public class fu_class330 {
         minecraft.gameSettings.thirdPersonView = 2;
         minecraft.entityRenderer.loadEntityShader(null);
         ei_class2512.setCurrentAction(Action.STRIP);
-        d3_class161.a(false);
+        HandlePlayerMovement.a(false);
         minecraft.player.closeScreen();
     }
 

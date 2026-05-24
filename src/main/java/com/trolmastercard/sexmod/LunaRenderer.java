@@ -9,6 +9,10 @@ package com.trolmastercard.sexmod;
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -68,7 +72,7 @@ extends GirlRenderer {
             case "backHair": {
                 if (this.boolean_a()) break;
                 double d = this.r / gc_class360.c(45.0f);
-                float f = (float)b6_class67.b(0.0, 0.75, d);
+                float f = (float) Reference.Lerp(0.0, 0.75, d);
                 geoBone.setPositionZ(f);
                 geoBone.setPositionY(f);
                 geoBone.setRotationX(-this.r);
@@ -78,7 +82,7 @@ extends GirlRenderer {
             case "sideHairL": {
                 if (this.boolean_a()) break;
                 double d = this.r / gc_class360.c(45.0f);
-                float f = (float)b6_class67.b(0.0, (double)1.3f, d);
+                float f = (float) Reference.Lerp(0.0, (double)1.3f, d);
                 geoBone.setPositionZ(-f);
                 geoBone.setPositionY(f);
             }

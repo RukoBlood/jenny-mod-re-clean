@@ -3,13 +3,15 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
+
 public class h_class395
 extends f_class282 {
     int j = 0;
     int i = 0;
 
-    public h_class395(GirlEntity em_class2582) {
-        super(em_class2582);
+    public h_class395(GirlEntity girlEntity) {
+        super(girlEntity);
     }
 
     @Override
@@ -38,8 +40,8 @@ extends f_class282 {
     }
 
     @Override
-    protected void CompanionStates(States a_inner2832) {
-        switch (a_inner2832) {
+    protected void CompanionStates(States states) {
+        switch (states) {
             case FOLLOW: {
                 double d = this.entity.getDistance(this.player);
                 if ((double)this.pathNavigate.getPathSearchRange() > d) {

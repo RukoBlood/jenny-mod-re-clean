@@ -24,6 +24,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.proxy.CommonProxy;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -43,7 +47,7 @@ import software.bernie.geckolib3.GeckoLib;
 public class Main {
     @Mod.Instance
     static public Main instance;
-    @SidedProxy(clientSide="com.trolmastercard.sexmod.ClientProxy", serverSide="com.trolmastercard.sexmod.CommonProxy")
+    @SidedProxy(clientSide="com.trolmastercard.sexmod.proxy.ClientProxy", serverSide="com.trolmastercard.sexmod.proxy.CommonProxy")
     static public CommonProxy proxy;
     final static public Logger LOGGER;
 

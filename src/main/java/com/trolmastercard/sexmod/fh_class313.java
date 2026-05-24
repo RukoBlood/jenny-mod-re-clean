@@ -8,9 +8,8 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.b6_class67;
-import com.trolmastercard.sexmod.be_class78;
-import com.trolmastercard.sexmod.ds_class200;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -58,7 +57,7 @@ extends GuiScreen {
         }
         Minecraft minecraft = Minecraft.getMinecraft();
         int n = minecraft.gameSettings.guiScale;
-        float f = n == 1 ? (float)b6_class67.b(-1800.0, 1000.0, 0.5 * Math.cos(e / 25.0) + 0.5) : (n == 2 ? (float)b6_class67.b(-900.0, 750.0, 0.5 * Math.cos(e / 25.0) + 0.5) : (float)b6_class67.b(-900.0, 600.0, 0.5 * Math.cos((e += (double)(minecraft.getTickLength() * 0.75f)) / 25.0) + 0.5));
+        float f = n == 1 ? (float) Reference.Lerp(-1800.0, 1000.0, 0.5 * Math.cos(e / 25.0) + 0.5) : (n == 2 ? (float) Reference.Lerp(-900.0, 750.0, 0.5 * Math.cos(e / 25.0) + 0.5) : (float) Reference.Lerp(-900.0, 600.0, 0.5 * Math.cos((e += (double)(minecraft.getTickLength() * 0.75f)) / 25.0) + 0.5));
         GlStateManager.pushMatrix();
         if (n == 1) {
             GlStateManager.scale(2.0f, 2.0f, 2.0f);
@@ -79,7 +78,7 @@ extends GuiScreen {
         this.drawTexturedModalRect(f + 200.0f, 256.0f, 0, 0, 400, 256);
         this.drawTexturedModalRect(f + 200.0f, 512.0f, 0, 0, 400, 256);
         if (e > 30.0) {
-            ds_class200.c();
+            SexUI.c();
         }
         if (e > 69.0) {
             e = 0.0;

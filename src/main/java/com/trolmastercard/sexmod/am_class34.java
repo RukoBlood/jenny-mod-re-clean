@@ -11,6 +11,9 @@ package com.trolmastercard.sexmod;
 
 import java.util.ConcurrentModificationException;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -30,33 +33,33 @@ public class am_class34 {
             return;
         }
         UUID uUID = minecraft.player.getPersistentID();
-        GirlEntity em_class2582 = null;
+        GirlEntity girlEntity = null;
         try {
-            for (GirlEntity em_class2583 : GirlEntity.GirlEntityList()) {
+            for (GirlEntity entity : GirlEntity.GirlEntityList()) {
                 ai_class30 ai_class302;
-                if (em_class2583 == null || em_class2583.isDead || !em_class2583.world.isRemote || !(em_class2583 instanceof ai_class30) || !uUID.equals((ai_class302 = (ai_class30)((Object)em_class2583)).java_util_UUID_e())) continue;
-                em_class2582 = em_class2583;
+                if (entity == null || entity.isDead || !entity.world.isRemote || !(entity instanceof ai_class30) || !uUID.equals((ai_class302 = (ai_class30)((Object)entity)).java_util_UUID_e())) continue;
+                girlEntity = entity;
                 break;
             }
         } catch (ConcurrentModificationException concurrentModificationException) {
             // empty catch block
         }
-        if (em_class2582 == null) {
+        if (girlEntity == null) {
             return;
         }
-        Render render = minecraft.getRenderManager().getEntityRenderObject(em_class2582);
+        Render render = minecraft.getRenderManager().getEntityRenderObject(girlEntity);
         if (render == null) {
             return;
         }
         float f = minecraft.player.rotationYaw;
         GoblinRenderer.N = (float)((double)minecraft.player.movementInput.moveStrafe * GoblinRenderer.G.x);
         GoblinRenderer.N += -(f - GoblinRenderer.H) * 3.0f;
-        GoblinRenderer.N = b6_class67.a(GoblinRenderer.I, GoblinRenderer.N, 0.1f);
+        GoblinRenderer.N = Reference.Lerp(GoblinRenderer.I, GoblinRenderer.N, 0.1f);
         float f2 = -minecraft.player.rotationPitch;
         GoblinRenderer.x = (float)((double)minecraft.player.movementInput.moveForward * GoblinRenderer.G.z + (double)((float)minecraft.player.motionY) * GoblinRenderer.G.y);
         GoblinRenderer.x += -(f2 - GoblinRenderer.t) * 3.0f;
-        GoblinRenderer.x = b6_class67.a(GoblinRenderer.E, GoblinRenderer.x, 0.1f);
-        GoblinRenderer.a(em_class2582, renderWorldLastEvent.getPartialTicks());
+        GoblinRenderer.x = Reference.Lerp(GoblinRenderer.E, GoblinRenderer.x, 0.1f);
+        GoblinRenderer.a(girlEntity, renderWorldLastEvent.getPartialTicks());
         GoblinRenderer.H = f;
         GoblinRenderer.I = GoblinRenderer.N;
         GoblinRenderer.t = f2;
@@ -75,13 +78,13 @@ public class am_class34 {
         }
         UUID uUID = minecraft.player.getPersistentID();
         try {
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                if (!em_class2582.world.isRemote || em_class2582.isDead || !(em_class2582 instanceof ai_class30)) continue;
-                ai_class30 ai_class302 = (ai_class30)((Object)em_class2582);
-                if (em_class2582.currentAction() != Action.START_THROWING) continue;
-                em_class2582.b(true);
-                minecraft.getRenderManager().renderEntity(em_class2582, 0.0, 0.0, 0.0, uUID.equals(ai_class302.java_util_UUID_e()) ? -420.69f : 0.0f, minecraft.getRenderPartialTicks(), false);
-                em_class2582.b(false);
+            for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
+                if (!girlEntity.world.isRemote || girlEntity.isDead || !(girlEntity instanceof ai_class30)) continue;
+                ai_class30 ai_class302 = (ai_class30)((Object)girlEntity);
+                if (girlEntity.currentAction() != Action.START_THROWING) continue;
+                girlEntity.b(true);
+                minecraft.getRenderManager().renderEntity(girlEntity, 0.0, 0.0, 0.0, uUID.equals(ai_class302.java_util_UUID_e()) ? -420.69f : 0.0f, minecraft.getRenderPartialTicks(), false);
+                girlEntity.b(false);
                 return;
             }
         } catch (ConcurrentModificationException concurrentModificationException) {
@@ -116,11 +119,11 @@ public class am_class34 {
     public void a(RenderPlayerEvent.Pre pre) {
         UUID uUID = pre.getEntityPlayer().getPersistentID();
         try {
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                if (!(em_class2582 instanceof ai_class30)) continue;
-                ai_class30 ai_class302 = (ai_class30)((Object)em_class2582);
-                Action fp_class3242 = em_class2582.currentAction();
-                if (fp_class3242 != Action.PICK_UP && fp_class3242 != Action.START_THROWING || !uUID.equals(ai_class302.java_util_UUID_e())) continue;
+            for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
+                if (!(girlEntity instanceof ai_class30)) continue;
+                ai_class30 ai_class302 = (ai_class30)((Object)girlEntity);
+                Action action = girlEntity.currentAction();
+                if (action != Action.PICK_UP && action != Action.START_THROWING || !uUID.equals(ai_class302.java_util_UUID_e())) continue;
                 pre.setCanceled(true);
                 break;
             }

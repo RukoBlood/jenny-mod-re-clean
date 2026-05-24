@@ -3,6 +3,10 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -34,14 +38,14 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(GirlEntity em_class2582) {
-        if (em_class2582.world instanceof FakeWorld) {
+    public ResourceLocation getModelLocation(GirlEntity girlEntity) {
+        if (girlEntity.world instanceof FakeWorld) {
             return this.c[0];
         }
-        if (((b7_class68)((Object)em_class2582)).boolean_b()) {
+        if (((b7_class68)((Object) girlEntity)).boolean_b()) {
             return this.c[2];
         }
-        return this.c[em_class2582.getDataManager().get(GirlEntity.D)];
+        return this.c[girlEntity.getDataManager().get(GirlEntity.D)];
     }
 
     @Override
@@ -50,7 +54,7 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity em_class2582) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
         return new ResourceLocation("sexmod", "animations/galath/galath.animation.json");
     }
 
@@ -113,13 +117,13 @@ extends GirlModel<GirlEntity> {
         }
         float f2 = (float)(Math.sin(f * 0.3f) * 10.0);
         if (f2 > 0.0f && this.g < 0.0f || f2 < 0.0f && this.g > 0.0f) {
-            em_class2582.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_ALLIE_LIPSOUND));
+            em_class2582.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
         }
         this.g = f2;
     }
 
     f7_class292 a(GalathEntity f__class2972, float f) {
-        return b6_class67.a(this.a(f), f7_class292.d, (double)f__class2972.float_b(this.a.getRenderPartialTicks()));
+        return Reference.a(this.a(f), f7_class292.d, (double)f__class2972.float_b(this.a.getRenderPartialTicks()));
     }
 
     f7_class292 a(float f) {
@@ -138,7 +142,7 @@ extends GirlModel<GirlEntity> {
     }
 
     void void_d(GirlEntity em_class2582) {
-        if (em_class2582.C.getAnimationState() != AnimationState.Transitioning) {
+        if (em_class2582.actionController.getAnimationState() != AnimationState.Transitioning) {
             return;
         }
         AnimationProcessor animationProcessor = this.getAnimationProcessor();
@@ -311,8 +315,8 @@ extends GirlModel<GirlEntity> {
         float f2 = Minecraft.getMinecraft().getRenderPartialTicks();
         IBone iBone = this.getAnimationProcessor().getBone("rotationTool");
         f2_class286 f2_class2862 = ((b7_class68)((Object)em_class2582)).com_trolmastercard_sexmod_f2_class286_d();
-        iBone.setRotationX((float)b6_class67.b(f2_class2862.c + (double)f, f2_class2862.d + (double)f, (double)f2));
-        iBone.setRotationZ((float)b6_class67.b(f2_class2862.b, f2_class2862.a, (double)f2));
+        iBone.setRotationX((float) Reference.Lerp(f2_class2862.c + (double)f, f2_class2862.d + (double)f, (double)f2));
+        iBone.setRotationZ((float) Reference.Lerp(f2_class2862.b, f2_class2862.a, (double)f2));
     }
 
     @Override

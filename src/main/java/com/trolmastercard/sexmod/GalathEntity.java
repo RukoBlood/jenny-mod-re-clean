@@ -27,6 +27,12 @@ import java.util.Set;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockBanner;
@@ -481,7 +487,7 @@ b7_class68 {
         if (entityPlayer != null) {
             NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(true), (EntityPlayerMP)entityPlayer);
         }
-        GirlEntity.a((GirlEntity)this, SoundEventHandler.GIRLS_GALATH_DIALOG[0]);
+        GirlEntity.a((GirlEntity)this, SoundsHandler.GIRLS_GALATH_DIALOG[0]);
     }
 
     public Vec3d net_minecraft_util_math_Vec3d_B() {
@@ -569,7 +575,7 @@ b7_class68 {
         Vec3d vec3d3 = this.b("offhand").add(vec3d);
         ez_class281.b = 0.5f;
         for (float f = 0.0f; f < 1.0f; f += 0.2f) {
-            Vec3d vec3d4 = b6_class67.a(vec3d2, vec3d3, (double)f);
+            Vec3d vec3d4 = Reference.a(vec3d2, vec3d3, (double)f);
             Minecraft.getMinecraft().effectRenderer.addEffect(new ez_class281(this.world, vec3d4.x, vec3d4.y, vec3d4.z));
         }
     }
@@ -803,7 +809,7 @@ b7_class68 {
         float f = 0.1f;
         Random random = this.getRNG();
         for (float f2 = 0.0f; f2 < 1.0f; f2 += f) {
-            Vec3d vec3d4 = b6_class67.a(vec3d2, vec3d3, (double)f2);
+            Vec3d vec3d4 = Reference.a(vec3d2, vec3d3, (double)f2);
             for (int i = 0; i < 3; ++i) {
                 this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d4.x + random.nextDouble() * 0.25 * (double)(random.nextBoolean() ? 1 : -1), vec3d4.y + random.nextDouble() * 0.25 * (double)(random.nextBoolean() ? 1 : -1), vec3d4.z + random.nextDouble() * 0.25 * (double)(random.nextBoolean() ? 1 : -1), 0.0, 0.0, 0.0, new int[0]);
             }
@@ -819,7 +825,7 @@ b7_class68 {
         if (this.currentAction() == Action.GALATH_DE_SUMMON) {
             return;
         }
-        this.C.tickOffset = 0.0;
+        this.actionController.tickOffset = 0.0;
     }
 
     @Override
@@ -892,7 +898,7 @@ b7_class68 {
         this.setNoGravity(false);
         this.noClip = false;
         this.getNavigator().clearPath();
-        GalathEntity.a((GirlEntity)this, SoundEventHandler.GIRLS_GALATH_AAA, true);
+        GalathEntity.a((GirlEntity)this, SoundsHandler.GIRLS_GALATH_AAA, true);
     }
 
     void void_a(Entity entity) {
@@ -1064,7 +1070,7 @@ b7_class68 {
         BlockPos blockPos;
         int n = 0;
         do {
-            blockPos = entityPlayer.getPosition().add(ModInfo.f.nextInt(4), 0, ModInfo.f.nextInt(4));
+            blockPos = entityPlayer.getPosition().add(Reference.RANDOM.nextInt(4), 0, Reference.RANDOM.nextInt(4));
         } while (++n < 20 && !this.attemptTeleport(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
         if (n >= 20) {
             this.setPosition(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ);
@@ -1717,7 +1723,7 @@ b7_class68 {
             return;
         }
         this.a(entityLivingBase);
-        GirlEntity.a((GirlEntity)this, SoundEventHandler.GIRLS_GALATH_DIALOG[1], true);
+        GirlEntity.a((GirlEntity)this, SoundsHandler.GIRLS_GALATH_DIALOG[1], true);
         if (this.bZ != null) {
             this.bZ.e(this);
         }
@@ -1829,7 +1835,7 @@ b7_class68 {
         if (GalathCoin.GALATH_COIN.equals(entityPlayer.getHeldItem(EnumHand.OFF_HAND).getItem()) || GalathCoin.GALATH_COIN.equals(entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem())) {
             return false;
         }
-        this.PlaySound(SoundEventHandler.GIRLS_GALATH_HUH, new int[0]);
+        this.PlaySound(SoundsHandler.GIRLS_GALATH_HUH, new int[0]);
         String[] stringArray = !entityPlayer.onGround ? new String[]{"ride"} : (this.com_trolmastercard_sexmod_f8_class293_a(false) == null ? new String[]{"cowgirl", "anal", "ride"} : new String[]{"cowgirl", "anal", "threesome", "ride"});
         if (this.world.isRemote) {
             GalathEntity.a(entityPlayer, this.com_trolmastercard_sexmod_em_class258_af(), stringArray, false);
@@ -1847,7 +1853,7 @@ b7_class68 {
         }
         if ("anal".equals(string)) {
             fh_class313.b();
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
             be_class78.a(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                 this.c(entityPlayerSP.getPositionVector());
@@ -1860,7 +1866,7 @@ b7_class68 {
         }
         if ("cowgirl".equals(string)) {
             fh_class313.b();
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
             be_class78.a(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                 this.c(entityPlayerSP.getPositionVector());
@@ -1877,7 +1883,7 @@ b7_class68 {
                 return;
             }
             fh_class313.b();
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
             be_class78.a(1200, () -> {
                 Minecraft minecraft = Minecraft.getMinecraft();
                 EntityPlayerSP entityPlayerSP = minecraft.player;
@@ -1958,8 +1964,8 @@ b7_class68 {
         if (entityLivingBase == null) {
             return null;
         }
-        Vec3d vec3d = b6_class67.a(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
-        Vec3d vec3d2 = b6_class67.a(new Vec3d(f__class2972.lastTickPosX, f__class2972.lastTickPosY, f__class2972.lastTickPosZ), f__class2972.getPositionVector(), (double)f);
+        Vec3d vec3d = Reference.a(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.a(new Vec3d(f__class2972.lastTickPosX, f__class2972.lastTickPosY, f__class2972.lastTickPosZ), f__class2972.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         f__class2972.renderYawOffset = f2 = (float)gc_class360.b(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
         f__class2972.prevRenderYawOffset = f2;
@@ -1977,7 +1983,7 @@ b7_class68 {
         if (l < this.bc + 1000L) {
             return;
         }
-        this.PlaySound(SoundEventHandler.GIRLS_GALATH_UUH, new int[0]);
+        this.PlaySound(SoundsHandler.GIRLS_GALATH_UUH, new int[0]);
         this.bc = l;
     }
 
@@ -2160,7 +2166,7 @@ b7_class68 {
             this.createAnimation("animation.galath.pussy_licking", true, animationEvent, true);
             return true;
         }
-        if (fp_class3242 == Action.MORNING_BLOWJOB_SLOW && (this.S || d3_class161.d)) {
+        if (fp_class3242 == Action.MORNING_BLOWJOB_SLOW && (this.S || HandlePlayerMovement.isThrusting)) {
             this.aD = true;
             this.setCurrentAction(Action.MORNING_BLOWJOB_FAST);
             this.createAnimation("animation.shared.bed_soft", true, animationEvent, true);
@@ -2171,7 +2177,7 @@ b7_class68 {
             this.createAnimation("animation.shared.bed_slow", true, animationEvent, true);
             return true;
         }
-        if (fp_class3242 == Action.MORNING_BLOWJOB_FAST && !d3_class161.d) {
+        if (fp_class3242 == Action.MORNING_BLOWJOB_FAST && !HandlePlayerMovement.isThrusting) {
             this.setCurrentAction(Action.MORNING_BLOWJOB_SLOW);
             this.bt = true;
             this.createAnimation("animation.shared.bed_back", true, animationEvent, true);
@@ -2205,14 +2211,14 @@ b7_class68 {
         Action fp_class3242 = this.currentAction();
         AnimationController animationController = animationEvent.getController();
         animationController.setAnimationSpeed(1.0);
-        if (animationController.equals(this.s)) {
+        if (animationController.equals(this.eyesController)) {
             if (!fp_class3242.autoBlink || fp_class3242 == Action.GALATH_DE_SUMMON) {
                 return PlayState.STOP;
             }
             this.createAnimation("animation.galath.blink", true, animationEvent);
             return PlayState.CONTINUE;
         }
-        if (animationController.equals(this.E)) {
+        if (animationController.equals(this.movementController)) {
             if (fp_class3242 != Action.NULL) {
                 return PlayState.STOP;
             }
@@ -2365,82 +2371,82 @@ b7_class68 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
-        this.C = new bz_class107<>(this, "action", 0.0f, this::predicate);
-        this.E = new AnimationController<>(this, "movement", 5.0f, this::predicate);
-        this.s = new AnimationController<>(this, "eyes", 10.0f, this::predicate);
-        this.C.registerSoundListener(soundKeyframeEvent -> {
+        this.actionController = new bz_class107<>(this, "action", 0.0f, this::predicate);
+        this.movementController = new AnimationController<>(this, "movement", 5.0f, this::predicate);
+        this.eyesController = new AnimationController<>(this, "eyes", 10.0f, this::predicate);
+        this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "goodTiming": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_DIALOG[4]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_DIALOG[4]);
                     this.void_a("Good timing boy~");
                     break;
                 }
                 case "huh": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_HUH, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_HUH, new int[0]);
                     break;
                 }
                 case "giggle": {
                     Vec3d vec3d = this.net_minecraft_util_math_Vec3d_A();
-                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundEventHandler.a(SoundEventHandler.GIRLS_GALATH_GIGGLE), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
+                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.a(SoundsHandler.GIRLS_GALATH_GIGGLE), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
                     break;
                 }
                 case "dialog1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_DIALOG[1]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_DIALOG[1]);
                     break;
                 }
                 case "moan": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_MOAN, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_MOAN, new int[0]);
                     break;
                 }
                 case "breath": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_BREATHING, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_BREATHING, new int[0]);
                     break;
                 }
                 case "dialog5": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_DIALOG[5]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_DIALOG[5]);
                     break;
                 }
                 case "switchmoan": {
                     if (this.a6) {
-                        this.PlaySound(SoundEventHandler.GIRLS_GALATH_BREATHING, new int[0]);
+                        this.PlaySound(SoundsHandler.GIRLS_GALATH_BREATHING, new int[0]);
                     } else {
-                        this.PlaySound(this.getRNG().nextBoolean() ? SoundEventHandler.GIRLS_GALATH_MOAN : SoundEventHandler.GIRLS_GALATH_AHH, new int[0]);
+                        this.PlaySound(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_GALATH_MOAN : SoundsHandler.GIRLS_GALATH_AHH, new int[0]);
                     }
                     this.a6 = !this.a6;
                     break;
                 }
                 case "lightcharge": {
                     Vec3d vec3d = this.net_minecraft_util_math_Vec3d_A();
-                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundEventHandler.a(SoundEventHandler.GIRLS_GALATH_LIGHTCHARGE), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
+                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.a(SoundsHandler.GIRLS_GALATH_LIGHTCHARGE), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
                     break;
                 }
                 case "strongcharge": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_STRONGCHARGE, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_STRONGCHARGE, new int[0]);
                     break;
                 }
                 case "hmph": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_HMPH, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_HMPH, new int[0]);
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle0": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_GIGGLE[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_GIGGLE[0]);
                     break;
                 }
                 case "orgasm": {
-                    this.PlaySound(SoundEventHandler.GIRLS_GALATH_ORGASM, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_GALATH_ORGASM, new int[0]);
                     break;
                 }
                 case "pound": {
-                    this.PlaySound(SoundEventHandler.MISC_POUNDING, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                     break;
                 }
                 case "flap": {
                     Vec3d vec3d = this.net_minecraft_util_math_Vec3d_A();
-                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundEventHandler.a(SoundEventHandler.MISC_FLAP), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
+                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.a(SoundsHandler.MISC_FLAP), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
                     break;
                 }
                 case "startRenderSword": {
@@ -2489,10 +2495,10 @@ b7_class68 {
                     break;
                 }
                 case "poundRape": {
-                    this.PlaySound(SoundEventHandler.MISC_POUNDING, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                     if (!this.boolean_n()) break;
                     if (this.maybeMountedByMangFn()) {
-                        ds_class200.a(0.03f);
+                        SexUI.addCumPercentage(0.03f);
                         break;
                     }
                     NetworkRegistry.networkWrapper.sendToServer((IMessage)new g__class356(true));
@@ -2506,15 +2512,15 @@ b7_class68 {
                 case "enableRapeUI": {
                     if (!this.boolean_n()) break;
                     if (this.maybeMountedByMangFn()) {
-                        ds_class200.a(false);
+                        SexUI.a(false);
                         break;
                     }
-                    gb_class359.a();
+                    EscapeMinigameUI.a();
                     break;
                 }
                 case "removeUI": {
                     if (!this.boolean_n() || this.maybeMountedByMangFn()) break;
-                    gb_class359.d();
+                    EscapeMinigameUI.d();
                     break;
                 }
                 case "reloadRenderer": {
@@ -2527,12 +2533,12 @@ b7_class68 {
                     break;
                 }
                 case "corruptSwitch": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.CORRUPT_FAST);
                     break;
                 }
                 case "corrupt_hard": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.aT = true;
                     this.N();
                     break;
@@ -2543,7 +2549,7 @@ b7_class68 {
                     break;
                 }
                 case "addCum": {
-                    ds_class200.a(0.03);
+                    SexUI.addCumPercentage(0.03);
                     break;
                 }
                 case "clearcum": {
@@ -2559,7 +2565,7 @@ b7_class68 {
                     float f = this.java_lang_Float_I().floatValue() + 220.0f;
                     Vec3d vec3d = ck_class135.a(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
                     NetworkRegistry.networkWrapper.sendToServer((IMessage)new a8_class16(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "enableBoyCam": {
@@ -2588,7 +2594,7 @@ b7_class68 {
                             return vec3d.subtract(vec3d2).normalize();
                         }, em_class2582 -> em_class2582.b("futaCockTip").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.3f, 0.3f));
                     }
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_SMALLINSERTS), 3.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": {
@@ -2602,40 +2608,40 @@ b7_class68 {
                 case "blackScreenMaster": {
                     if (!Minecraft.getMinecraft().player.getPersistentID().equals(this.java_util_UUID_O())) break;
                     fh_class313.b();
-                    d3_class161.a(false);
+                    HandlePlayerMovement.a(false);
                     break;
                 }
                 case "flapControlled": {
                     if (!this.boolean_n()) break;
                     hf_class401.f();
-                    this.PlaySound(SoundEventHandler.MISC_FLAP, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_FLAP, new int[0]);
                     Minecraft minecraft = Minecraft.getMinecraft();
                     EntityPlayerSP entityPlayerSP = minecraft.player;
                     MovementInput movementInput = entityPlayerSP.movementInput;
                     Vec2f vec2f = movementInput.getMoveVector();
                     if (vec2f.x == 0.0f && vec2f.y == 0.0f) break;
-                    Vec3d vec3d = ck_class135.a(new Vec3d(-vec2f.x, 0.0, vec2f.y), b6_class67.a(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), b6_class67.a(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
+                    Vec3d vec3d = ck_class135.a(new Vec3d(-vec2f.x, 0.0, vec2f.y), Reference.Lerp(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), Reference.Lerp(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
                     NetworkRegistry.networkWrapper.sendToServer((IMessage)new ct_class144(vec3d, this.girlID()));
                     break;
                 }
                 case "clap": {
-                    this.PlaySound(SoundEventHandler.MISC_CLAP, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_CLAP, new int[0]);
                     break;
                 }
                 case "energysound": {
-                    this.PlaySound(SoundEventHandler.MISC_BEEW[1]);
+                    this.PlaySound(SoundsHandler.MISC_BEEW[1]);
                     break;
                 }
                 case "energy2": {
-                    this.PlaySound(SoundEventHandler.MISC_BEEW[2]);
+                    this.PlaySound(SoundsHandler.MISC_BEEW[2]);
                     break;
                 }
                 case "tpSound": {
-                    this.PlaySound(SoundEventHandler.MISC_WEOWEO[2]);
+                    this.PlaySound(SoundsHandler.MISC_WEOWEO[2]);
                     break;
                 }
                 case "lick": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_ALLIE_LIPSOUND));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
                     break;
                 }
                 case "setCoinLook": {
@@ -2650,18 +2656,18 @@ b7_class68 {
                 }
                 case "sexui": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "boostSound": {
-                    Minecraft.getMinecraft().player.playSound(SoundEventHandler.a(SoundEventHandler.GIRLS_GALATH_LIGHTCHARGE), 1.0f, 1.0f);
-                    Minecraft.getMinecraft().player.playSound(SoundEventHandler.a(SoundEventHandler.MISC_FLAP), 1.0f, 1.0f);
+                    Minecraft.getMinecraft().player.playSound(SoundsHandler.a(SoundsHandler.GIRLS_GALATH_LIGHTCHARGE), 1.0f, 1.0f);
+                    Minecraft.getMinecraft().player.playSound(SoundsHandler.a(SoundsHandler.MISC_FLAP), 1.0f, 1.0f);
                 }
             }
         });
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.s);
-        animationData.addAnimationController(this.E);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.eyesController);
+        animationData.addAnimationController(this.movementController);
     }
 
     private static Exception a(Exception exception) {
@@ -2797,7 +2803,7 @@ b7_class68 {
                     Vec3d vec3d2;
                     double d;
                     if (!(em_class2582 instanceof GalathEntity) || !em_class2582.world.isRemote || em_class2582.currentAction() != Action.SUMMON_SKELETON || (d = (double)((GalathEntity)em_class2582).ad) < 9.0 || d > 30.0) continue;
-                    Vec3d vec3d3 = b6_class67.a(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double)f);
+                    Vec3d vec3d3 = Reference.a(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double)f);
                     double d2 = (d - 9.0) / 21.0;
                     if (em_class2582.getDataManager().get(bN).booleanValue()) {
                         vec3d2 = em_class2582.b("energyBallR");

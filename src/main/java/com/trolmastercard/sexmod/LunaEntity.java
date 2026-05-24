@@ -14,6 +14,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
@@ -127,7 +134,7 @@ implements bh_class82,
     @Override
     public void SetHome() {
         this.void_a("Love it here owo");
-        this.PlaySound(SoundEventHandler.GIRLS_LUNA_OWO, new int[0]);
+        this.PlaySound(SoundsHandler.GIRLS_LUNA_OWO, new int[0]);
     }
 
     @Override
@@ -179,7 +186,7 @@ implements bh_class82,
 
     @SideOnly(value=Side.CLIENT)
     protected static void CreateGUI(EntityPlayer entityPlayer, GirlEntity girlEntity, String[] stringArray, ItemStack[] itemStackArray) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlGUI(girlEntity, entityPlayer, stringArray, itemStackArray, true));
+        Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(girlEntity, entityPlayer, stringArray, itemStackArray, true));
     }
 
     public void b(ItemStack itemStack) {
@@ -238,7 +245,7 @@ implements bh_class82,
             } else {
                 this.rotationYaw = this.java_lang_Float_I().floatValue();
                 this.setNoGravity(false);
-                Vec3d vec3d = b6_class67.a(this.getPositionVector(), this.net_minecraft_util_math_Vec3d_o(), 40 - this.aw);
+                Vec3d vec3d = Reference.a(this.getPositionVector(), this.net_minecraft_util_math_Vec3d_o(), 40 - this.aw);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
             }
         }
@@ -285,7 +292,7 @@ implements bh_class82,
             entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             entityPlayer.prevRotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             this.r = this.java_lang_Float_I().floatValue() + 180.0f;
-            this.a(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
+            this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
             this.entityDataManager.set(D, 0);
         }
         ++this.ab;
@@ -297,7 +304,7 @@ implements bh_class82,
         if (n == 0 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
             fh_class313.b();
             entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
         }
         if (n == 25 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
             Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
@@ -311,7 +318,7 @@ implements bh_class82,
         this.ar = true;
         BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
         if (blockPos == null) {
-            this.PlaySound(SoundEventHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+            this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
             NetworkRegistry.networkWrapper.sendToAllAround((IMessage)new gh_class368("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P());
         } else {
             Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
@@ -331,7 +338,7 @@ implements bh_class82,
                 n = i;
             }
             if (n == -1) {
-                this.PlaySound(SoundEventHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
                 this.void_a("Heh.. the bed is obscured.. but I already ate the fish so nya~ hehe");
                 return;
             }
@@ -538,18 +545,18 @@ implements bh_class82,
             this.a(true, true, uUID);
             this.changeDataParameterFromClient("animationFollowUp", "touch_boobs");
             this.changeDataParameterFromClient("currentModel", "0");
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
         }
         if ("action.names.sex".equals(string)) {
             this.void_e(uUID);
             this.a(true, true, uUID);
             this.changeDataParameterFromClient("animationFollowUp", "sex");
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
         }
         if ("action.names.headpat".equals(string)) {
             this.void_e(uUID);
             this.a(true, true, uUID);
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
             this.changeDataParameterFromClient("animationFollowUp", "headpat");
         }
     }
@@ -609,16 +616,16 @@ implements bh_class82,
 
     @Override
     protected void playHurtSound(DamageSource damageSource) {
-        this.PlaySound(SoundEventHandler.GIRLS_LUNA_OUU, new int[0]);
+        this.PlaySound(SoundsHandler.GIRLS_LUNA_OUU, new int[0]);
     }
 
     @Override
     @Nullable
     protected SoundEvent getDeathSound() {
         if (this.getRNG().nextFloat() * 100.0f > 95.0f) {
-            return SoundEventHandler.GIRLS_ALLIE_SCAWY[2];
+            return SoundsHandler.GIRLS_ALLIE_SCAWY[2];
         }
-        return SoundEventHandler.GIRLS_LUNA_OUU[12];
+        return SoundsHandler.GIRLS_LUNA_OUU[12];
     }
 
     @Override
@@ -761,7 +768,7 @@ implements bh_class82,
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -799,12 +806,12 @@ implements bh_class82,
                     break;
                 }
                 case "eat": {
-                    this.PlaySoundAtPosition(SoundEventHandler.a(SoundEventHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
+                    this.PlaySoundAtPosition(SoundsHandler.a(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
                     this.aa -= 0.33333334f;
                     break;
                 }
                 case "eatPay": {
-                    this.PlaySoundAtPosition(SoundEventHandler.a(SoundEventHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
+                    this.PlaySoundAtPosition(SoundsHandler.a(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
                     this.n -= 0.33333334f;
                     break;
                 }
@@ -835,24 +842,24 @@ implements bh_class82,
                 }
                 case "paymentMSG1": {
                     this.a(this.getID(), "Here, I know u like fish and yea.. these are for you");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "paymentMSG2": {
                     this.void_a("huh~?");
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HUH, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HUH, new int[0]);
                     break;
                 }
                 case "paymentMSG3": {
                     this.void_a("nyyyaaaa~ :D");
                     int[] nArray = new int[]{1, 7, 10, 11};
                     int n = nArray[this.getRNG().nextInt(nArray.length)];
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_CUTENYA[n]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[n]);
                     break;
                 }
                 case "paymentMSG4": {
                     this.void_a("tankuuuu owowowo");
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_OWO, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_OWO, new int[0]);
                     break;
                 }
                 case "paymentDone": {
@@ -864,72 +871,72 @@ implements bh_class82,
                 }
                 case "breath": 
                 case "rod_breath": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_LIGHTBREATHING, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING, new int[0]);
                     break;
                 }
                 case "happyOh": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HAPPYOH, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HAPPYOH, new int[0]);
                     break;
                 }
                 case "cutenya3": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_CUTENYA[3]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[3]);
                     break;
                 }
                 case "cutenya2": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_CUTENYA[2]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[2]);
                     break;
                 }
                 case "huh": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HUH, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HUH, new int[0]);
                     break;
                 }
                 case "hmph": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HMPH, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HMPH, new int[0]);
                     break;
                 }
                 case "hehe": 
                 case "giggle": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
                     break;
                 }
                 case "singing": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_SINGING, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_SINGING, new int[0]);
                     break;
                 }
                 case "touch_boobsMSG1": {
                     this.void_a("comon~ touch me hihi~");
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
                     break;
                 }
                 case "touch": {
-                    this.PlaySound(SoundEventHandler.MISC_TOUCH, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH, new int[0]);
                     break;
                 }
                 case "jump": {
-                    this.a(SoundEventHandler.MISC_JUMP[0], 0.2f);
+                    this.a(SoundsHandler.MISC_JUMP[0], 0.2f);
                     break;
                 }
                 case "horninya": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA, new int[0]);
                     break;
                 }
                 case "horninya2": 
                 case "touch_boobs_cumMSG3": 
                 case "sitting_cumMSG1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA[1]);
-                    this.a(SoundEventHandler.MISC_CUMINFLATION[0], 5.0f);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[1]);
+                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 5.0f);
                     break;
                 }
                 case "moan": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_MOAN));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
                     break;
                 }
                 case "touch_boobs_introDone": {
                     this.setCurrentAction(Action.TOUCH_BOOBS_SLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
-                    ds_class200.d();
-                    d3_class161.a(false);
+                    SexUI.resetCumPercentage();
+                    SexUI.d();
+                    HandlePlayerMovement.a(false);
                     break;
                 }
                 case "touch_boobs_slowDone": {
@@ -942,25 +949,25 @@ implements bh_class82,
                 }
                 case "addCumSlow": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "addCumFast": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04f);
+                    SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "fastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.TOUCH_BOOBS_SLOW);
                     break;
                 }
                 case "moanOrNya": {
                     if (Math.random() > 0.5) {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
                         break;
                     }
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_HORNINYA));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     break;
                 }
                 case "blackScreen": {
@@ -970,7 +977,7 @@ implements bh_class82,
                 }
                 case "touch_boobs_cumDone": {
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     this.void_r();
                     break;
                 }
@@ -980,60 +987,60 @@ implements bh_class82,
                     break;
                 }
                 case "touch_boobs_cumMSG1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA[3]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[3]);
                     break;
                 }
                 case "touch_boobs_cumMSG2": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA[9]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[9]);
                     break;
                 }
                 case "call_playerMSG1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
                     this.void_a("come here - big guy hehe~");
                     break;
                 }
                 case "pounding": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "sitting_introMSG1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
                     this.void_a("hehe~");
                     break;
                 }
                 case "sitting_introDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
-                    ds_class200.b();
-                    ds_class200.d();
+                    SexUI.resetCumPercentage();
+                    SexUI.d();
                     break;
                 }
                 case "sitting_slowMSG1": {
                     if (this.getRNG().nextBoolean()) {
                         if (this.getRNG().nextBoolean()) {
-                            this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_HORNINYA));
+                            this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
                             break;
                         }
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
                     } else {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_LIGHTBREATHING));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING));
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "sitting_fastMSG1": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_HORNINYA));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     } else {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "sitting_fastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     Vec3d vec3d = new Vec3d(0.0, -0.075f, -0.7109375);
                     Vec3d vec3d2 = ck_class135.a(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
@@ -1049,24 +1056,24 @@ implements bh_class82,
                 }
                 case "headpatMSG1": {
                     this.void_a("huh?~");
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HUH, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HUH, new int[0]);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_MMM, new int[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_MMM, new int[0]);
                     break;
                 }
                 case "headpatMSG3": {
                     this.void_a("nya~");
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[0]);
                 }
             }
         };
-        this.E.transitionLengthTicks = 10.0;
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
+        this.movementController.transitionLengthTicks = 10.0;
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     @Override

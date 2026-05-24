@@ -10,6 +10,9 @@ package com.trolmastercard.sexmod;
 import java.util.Arrays;
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlModel;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.AnimationProcessor;
@@ -98,7 +101,7 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public String[] SlimeBigBlob() {
+    public String[] Attachments() {
         return new String[]{"bigblob"};
     }
 

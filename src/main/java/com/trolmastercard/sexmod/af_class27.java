@@ -4,6 +4,10 @@
 package com.trolmastercard.sexmod;
 
 import java.util.Arrays;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -183,8 +187,8 @@ public class af_class27 {
         }
         GlStateManager.translate(0.0, 0.01, 0.0);
         Entity entity = ((GirlRenderer)minecraft.getRenderManager().getEntityRenderObject(em_class2582)).c(em_class2582);
-        Vec3d vec3d = em_class2582.boolean_Q() ? em_class2582.net_minecraft_util_math_Vec3d_o() : b6_class67.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
-        Vec3d vec3d2 = b6_class67.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
+        Vec3d vec3d = em_class2582.boolean_Q() ? em_class2582.net_minecraft_util_math_Vec3d_o() : Reference.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         vec3d3 = em_class2582.net_minecraft_util_math_Vec3d_a(vec3d3, f);
         GlStateManager.translate(vec3d3.x, vec3d3.y, vec3d3.z);

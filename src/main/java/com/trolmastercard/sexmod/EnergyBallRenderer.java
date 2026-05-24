@@ -7,6 +7,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,8 +20,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nonnull;
 
 public class EnergyBallRenderer
 extends Render<EnergyBallEntity> {
@@ -51,8 +50,8 @@ extends Render<EnergyBallEntity> {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 0.5f);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
         EntityPlayerSP entityPlayerSP = this.c.player;
-        Vec3d vec3d = b6_class67.a(new Vec3d(c4_class1132.lastTickPosX, c4_class1132.lastTickPosY, c4_class1132.lastTickPosZ), c4_class1132.getPositionVector(), (double)f2);
-        Vec3d vec3d2 = b6_class67.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
+        Vec3d vec3d = Reference.a(new Vec3d(c4_class1132.lastTickPosX, c4_class1132.lastTickPosY, c4_class1132.lastTickPosZ), c4_class1132.getPositionVector(), (double)f2);
+        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         GlStateManager.pushMatrix();
         GlStateManager.translate(vec3d3.x, vec3d3.y, vec3d3.z);
@@ -65,11 +64,11 @@ extends Render<EnergyBallEntity> {
         if (c4_class1132.g == 1.0) {
             float f3 = (float)this.c.world.getTotalWorldTime() + this.c.getRenderPartialTicks();
             double d4 = 0.5 * Math.sin((double)f3 * 0.5) + 0.5;
-            gv_class3883 = b6_class67.a(e, b, d4);
-            gv_class3882 = b6_class67.a(b, e, d4);
+            gv_class3883 = Reference.a(e, b, d4);
+            gv_class3882 = Reference.a(b, e, d4);
         } else {
-            gv_class3883 = b6_class67.a(EnergyBallRenderer.d, e, c4_class1132.g);
-            gv_class3882 = b6_class67.a(EnergyBallRenderer.d, e, c4_class1132.g);
+            gv_class3883 = Reference.a(EnergyBallRenderer.d, e, c4_class1132.g);
+            gv_class3882 = Reference.a(EnergyBallRenderer.d, e, c4_class1132.g);
         }
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         this.a(bufferBuilder, gv_class3883, 0.0f);

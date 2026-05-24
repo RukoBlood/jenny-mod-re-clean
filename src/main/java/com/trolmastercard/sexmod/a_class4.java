@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nonnull;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
@@ -189,7 +193,7 @@ extends GuiScreen {
     public void drawScreen(int n, int n2, float f) {
         super.drawScreen(n, n2, f);
         if (this.p) {
-            b += b6_class67.a((float)h, (float)s, f);
+            b += Reference.Lerp((float)h, (float)s, f);
         }
         this.a();
         this.mc.renderEngine.bindTexture(k);

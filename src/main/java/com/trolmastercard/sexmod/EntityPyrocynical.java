@@ -105,7 +105,7 @@ extends EntityLiving {
     void b() {
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
         this.a = entityPlayerSP.ticksExisted;
-        ((EntityPlayer)entityPlayerSP).playSound(SoundEventHandler.MISC_WEOWEO[3], 1.0f, 1.0f);
+        ((EntityPlayer)entityPlayerSP).playSound(SoundsHandler.MISC_WEOWEO[3], 1.0f, 1.0f);
     }
 
     double c() {

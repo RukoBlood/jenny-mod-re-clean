@@ -30,6 +30,9 @@ import java.util.Map;
 import java.util.Properties;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;

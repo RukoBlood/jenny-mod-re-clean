@@ -10,6 +10,7 @@ package com.trolmastercard.sexmod;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -79,7 +80,7 @@ public class gu_class386 {
             int n4 = EnchantmentHelper.getEnchantmentLevel(Enchantments.PROTECTION, itemStack);
             f -= (float) n4 * 0.04f * f;
             int n5 = EnchantmentHelper.getEnchantmentLevel(Enchantments.THORNS, itemStack);
-            f2 += ModInfo.f.nextFloat() < 0.15f * (float) n5 ? ModInfo.f.nextFloat() * 4.0f + 1.0f : 0.0f;
+            f2 += Reference.RANDOM.nextFloat() < 0.15f * (float) n5 ? Reference.RANDOM.nextFloat() * 4.0f + 1.0f : 0.0f;
             f2 = Math.min(4.0f, f2);
             if (damageSource.isFireDamage()) {
                 enchantment = EnchantmentHelper.getEnchantmentLevel(Enchantments.FIRE_PROTECTION, itemStack);

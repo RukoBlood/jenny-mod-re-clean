@@ -6,14 +6,12 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.b6_class67;
-import com.trolmastercard.sexmod.c3_class112;
-import com.trolmastercard.sexmod.cj_class134;
-import com.trolmastercard.sexmod.ck_class135;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import javax.vecmath.Vector3f;
+
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -62,8 +60,8 @@ public class gx_class390 {
 
     public static Vec3d a(Vec3d vec3d, Vector3f vector3f, Vec3d vec3d2) {
         double d = ck_class135.a(vector3f, vec3d2);
-        double d2 = b6_class67.e(Math.abs(d));
-        return b6_class67.a(vec3d, d > 0.0 ? c : e, d2 *= (double)0.1f);
+        double d2 = Reference.e(Math.abs(d));
+        return Reference.a(vec3d, d > 0.0 ? c : e, d2 *= (double)0.1f);
     }
 
     public static void a(EntityLivingBase entityLivingBase, float f) {

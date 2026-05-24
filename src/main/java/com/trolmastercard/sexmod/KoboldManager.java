@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
@@ -80,7 +83,7 @@ public class KoboldManager {
             KoboldEntity ff_class3082 = KoboldEntity.a(world, uUID, f);
             arrayList.add(ff_class3082);
         }
-        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.values()[ModInfo.f.nextInt(EyeAndKoboldColor.values().length)];
+        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.values()[Reference.RANDOM.nextInt(EyeAndKoboldColor.values().length)];
         b_inner50.a_inner49 a_inner492 = new b_inner50.a_inner49(uUID, eyeAndKoboldColor_, (KoboldEntity) arrayList.get(0), arrayList);
         c.put(uUID, a_inner492);
         int n = 0;

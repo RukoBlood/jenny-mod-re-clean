@@ -8,6 +8,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.Random;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.util.math.Vec3d;
 
 public class be_class78 {
@@ -68,7 +70,7 @@ public class be_class78 {
     }
 
     public static int a() {
-        return ModInfo.f.nextBoolean() ? 1 : -1;
+        return Reference.RANDOM.nextBoolean() ? 1 : -1;
     }
 
     public static float b(float f, float f2, float f3) {

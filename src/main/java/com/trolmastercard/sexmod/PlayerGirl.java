@@ -22,6 +22,9 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -207,7 +210,7 @@ extends Fighter {
 
     @Override
     public void void_r() {
-        this.B = null;
+        this.playerCamPos = null;
         this.setNoGravity(false);
         if (this.world.isRemote) {
             this.V();
@@ -218,7 +221,7 @@ extends Fighter {
     @SideOnly(value=Side.CLIENT)
     protected void V() {
         if (this.boolean_n() || this.boolean_f()) {
-            d3_class161.a(true);
+            HandlePlayerMovement.a(true);
             EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
             entityPlayerSP.setInvisible(false);
             entityPlayerSP.setNoGravity(false);
@@ -433,7 +436,7 @@ extends Fighter {
             Minecraft minecraft = Minecraft.getMinecraft();
             minecraft.gameSettings.thirdPersonView = 0;
             minecraft.entityRenderer.loadEntityShader(minecraft.getRenderViewEntity());
-            d3_class161.a(true);
+            HandlePlayerMovement.a(true);
         }
     }
 

@@ -7,6 +7,10 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -129,7 +133,7 @@ extends PlayerGirl {
         this.r = this.java_lang_Float_I().floatValue();
         entityPlayer.setPosition(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z);
         entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
-        this.a(0.0, 0.0, 0.4, 0.0f, 60.0f);
+        this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
         this.setCurrentAction(Action.DOGGYSTART);
         entityPlayer.setNoGravity(true);
         entityPlayer.noClip = true;
@@ -160,7 +164,7 @@ extends PlayerGirl {
                     this.createAnimation("animation.slime.sit", true, animationEvent);
                     break;
                 }
-                if (this.E.getCurrentAnimation() != null && this.E.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
                     boolean bl = this.ap = !this.ap;
                 }
                 if (!this.af) {
@@ -259,7 +263,7 @@ extends PlayerGirl {
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -285,40 +289,40 @@ extends PlayerGirl {
                 }
                 case "sexUiOn": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "bjiMSG10": {
                     if (!this.boolean_n()) break;
-                    this.a(-0.4, -0.8, -0.2, 60.0f, -3.0f);
+                    this.moveCamera(-0.4, -0.8, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "bjiMSG11": {
                     this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjiMSG12": {
-                    if (ModInfo.f.nextInt(5) == 0) {
+                    if (Reference.RANDOM.nextInt(5) == 0) {
                         this.a(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
                     this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjtMSG1": {
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "bjtDone": {
@@ -326,12 +330,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggyfastReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "bjtReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -342,7 +346,7 @@ extends PlayerGirl {
                 case "bjcMSG2": {
                     this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                     if (!this.boolean_n()) break;
-                    ds_class200.c();
+                    SexUI.c();
                     break;
                 }
                 case "doggyslowMSG2": {
@@ -357,7 +361,7 @@ extends PlayerGirl {
                 case "bjcDone": 
                 case "doggyCumDone": {
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     this.void_r();
                     break;
                 }
@@ -372,11 +376,11 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG1": {
-                    this.PlaySound(SoundEventHandler.MISC_TOUCH[0]);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH[0]);
                     break;
                 }
                 case "doggystartMSG2": {
-                    this.PlaySound(SoundEventHandler.MISC_TOUCH[1]);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH[1]);
                     break;
                 }
                 case "doggystartMSG3": {
@@ -384,27 +388,27 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_SMALLINSERTS), 1.5f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.33f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     break;
                 }
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.33f);
-                    int n = ModInfo.f.nextInt(4);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
+                    int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = ModInfo.f.nextInt(2);
+                        n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                         } else {
@@ -414,17 +418,17 @@ extends PlayerGirl {
                         this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.00666);
+                    SexUI.addCumPercentage(0.00666);
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.boolean_n()) {
-                        ds_class200.a(0.02);
+                        SexUI.addCumPercentage(0.02);
                     }
                     ++this.aq;
                     if (this.aq % 2 == 0) {
-                        int n = ModInfo.f.nextInt(2);
+                        int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                             break;
@@ -440,16 +444,16 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggycumMSG1": {
-                    this.a(SoundEventHandler.MISC_CUMINFLATION[0], 4.0f);
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 2.0f);
+                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.s);
-        animationData.addAnimationController(this.E);
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.eyesController);
+        animationData.addAnimationController(this.movementController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

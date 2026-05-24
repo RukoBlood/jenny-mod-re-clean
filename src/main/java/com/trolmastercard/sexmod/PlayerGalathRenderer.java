@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

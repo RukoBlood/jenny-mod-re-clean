@@ -7,6 +7,9 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.SexUI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -173,7 +176,7 @@ extends PlayerGirl {
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -190,38 +193,38 @@ extends PlayerGirl {
                 }
                 case "resetCumPercentage": {
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     break;
                 }
                 case "sex_fastMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04f);
+                    SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "sex_startMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "sex_fastReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "sex_fastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                 }
                 case "sex_startDone": {
                     this.setCurrentAction(Action.CITIZEN_SLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "sex_cumMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_CUMINFLATION), 2.0f);
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_CUMINFLATION), 2.0f);
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "blackscreen": {
@@ -231,14 +234,14 @@ extends PlayerGirl {
                 }
                 case "sex_cumDone": {
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     this.void_r();
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

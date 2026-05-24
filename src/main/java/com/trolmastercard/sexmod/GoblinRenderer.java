@@ -16,6 +16,9 @@ import java.util.Random;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -104,8 +107,8 @@ extends d6_class165<GoblinEntity> {
     }
 
     @Override
-    public void render(GeoModel geoModel, GoblinEntity e3_class2192, float f, float f2, float f3, float f4, float f5) {
-        super.render(geoModel, e3_class2192, f, f2, f3, f4, e3_class2192.ar);
+    public void render(GeoModel geoModel, GoblinEntity goblinEntity, float f, float f2, float f3, float f4, float f5) {
+        super.render(geoModel, goblinEntity, f, f2, f3, f4, goblinEntity.ar);
     }
 
     @Override
@@ -144,39 +147,39 @@ extends d6_class165<GoblinEntity> {
     }
 
     @Override
-    public void doRender(GoblinEntity e3_class2192, double d, double d2, double d3, float f, float f2) {
+    public void doRender(GoblinEntity goblinEntity, double d, double d2, double d3, float f, float f2) {
         Object object;
-        this.j = e3_class2192;
-        this.u = -420.69f == f && e3_class2192.currentAction() == Action.SHOULDER_IDLE;
-        this.F = -420.69f == f && e3_class2192.currentAction() == Action.PICK_UP;
-        this.z = e3_class2192.world.getLight(e3_class2192.getPosition(), true);
+        this.j = goblinEntity;
+        this.u = -420.69f == f && goblinEntity.currentAction() == Action.SHOULDER_IDLE;
+        this.F = -420.69f == f && goblinEntity.currentAction() == Action.PICK_UP;
+        this.z = goblinEntity.world.getLight(goblinEntity.getPosition(), true);
         this.v = f2;
         B = f;
-        Action fp_class3242 = e3_class2192.currentAction();
-        UUID uUID = e3_class2192.java_util_UUID_e();
-        if (e3_class2192.boolean_h()) {
-            object = GoblinRenderer.a(e3_class2192.world, e3_class2192, uUID, d, d2, d3);
+        Action action = goblinEntity.currentAction();
+        UUID uUID = goblinEntity.java_util_UUID_e();
+        if (goblinEntity.boolean_h()) {
+            object = GoblinRenderer.a(goblinEntity.world, goblinEntity, uUID, d, d2, d3);
             d = ((Vec3d)object).x;
             d2 = ((Vec3d)object).y;
             d3 = ((Vec3d)object).z;
         }
-        if (fp_class3242 == Action.THROWN || fp_class3242 == Action.START_THROWING) {
-            if (GoblinRenderer.minecraft.gameSettings.thirdPersonView == 0 && f == -420.69f && !e3_class2192.boolean_h()) {
+        if (action == Action.THROWN || action == Action.START_THROWING) {
+            if (GoblinRenderer.minecraft.gameSettings.thirdPersonView == 0 && f == -420.69f && !goblinEntity.boolean_h()) {
                 return;
             }
-            if (!e3_class2192.boolean_h()) {
+            if (!goblinEntity.boolean_h()) {
                 float f3;
-                e3_class2192.prevRenderYawOffset = f3 = e3_class2192.java_lang_Float_I().floatValue();
-                e3_class2192.renderYawOffset = f3;
+                goblinEntity.prevRenderYawOffset = f3 = goblinEntity.java_lang_Float_I().floatValue();
+                goblinEntity.renderYawOffset = f3;
             }
         }
-        if (GoblinRenderer.a((GirlEntity)e3_class2192, fp_class3242)) {
+        if (GoblinRenderer.a((GirlEntity)goblinEntity, action)) {
             if (GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
                 if (-420.69f != f) {
                     return;
                 }
-                e3_class2192.renderYawOffset = GoblinRenderer.minecraft.player.rotationYaw + 180.0f;
-                e3_class2192.prevRenderYawOffset = GoblinRenderer.minecraft.player.rotationYaw + 180.0f;
+                goblinEntity.renderYawOffset = GoblinRenderer.minecraft.player.rotationYaw + 180.0f;
+                goblinEntity.prevRenderYawOffset = GoblinRenderer.minecraft.player.rotationYaw + 180.0f;
                 object = GoblinRenderer.minecraft.player.getLookVec();
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(((Vec3d)object).x, ((Vec3d)object).y + (double) GoblinRenderer.minecraft.player.getEyeHeight(), ((Vec3d)object).z);
@@ -186,43 +189,43 @@ extends d6_class165<GoblinEntity> {
                 d2 = 0.0;
                 d3 = 0.0;
             } else {
-                if (!e3_class2192.boolean_h() || uUID == null || GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
+                if (!goblinEntity.boolean_h() || uUID == null || GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
                     if (uUID != null && !GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
-                        object = e3_class2192.world.getPlayerEntityByUUID(uUID);
+                        object = goblinEntity.world.getPlayerEntityByUUID(uUID);
                         if (object != null) {
-                            e3_class2192.renderYawOffset = ((EntityPlayer)object).rotationYaw;
-                            e3_class2192.prevRenderYawOffset = ((EntityPlayer)object).rotationYaw;
+                            goblinEntity.renderYawOffset = ((EntityPlayer)object).rotationYaw;
+                            goblinEntity.prevRenderYawOffset = ((EntityPlayer)object).rotationYaw;
                         }
                     } else {
-                        e3_class2192.renderYawOffset = GoblinRenderer.minecraft.player.rotationYaw;
-                        e3_class2192.prevRenderYawOffset = GoblinRenderer.minecraft.player.rotationYaw;
+                        goblinEntity.renderYawOffset = GoblinRenderer.minecraft.player.rotationYaw;
+                        goblinEntity.prevRenderYawOffset = GoblinRenderer.minecraft.player.rotationYaw;
                     }
                 }
-                object = GoblinRenderer.a((GirlEntity)e3_class2192, e3_class2192.java_util_UUID_e(), f2);
+                object = GoblinRenderer.a((GirlEntity)goblinEntity, goblinEntity.java_util_UUID_e(), f2);
                 d = ((Vec3d)object).x;
                 d2 = ((Vec3d)object).y;
                 d3 = ((Vec3d)object).z;
             }
         } else if (this.u) {
             GoblinRenderer.a(f2);
-            object = new Vec3d(b6_class67.a(-0.1f, 0.2f, GoblinRenderer.minecraft.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
+            object = new Vec3d(Reference.Lerp(-0.1f, 0.2f, GoblinRenderer.minecraft.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
             object = GoblinEntity.b((Vec3d)object, GoblinRenderer.minecraft.player.rotationYaw);
             d = ((Vec3d)object).x;
             d2 = ((Vec3d)object).y;
             d3 = ((Vec3d)object).z;
-            e3_class2192.renderYawOffset = GoblinRenderer.minecraft.player.rotationYaw;
-            e3_class2192.prevRenderYawOffset = GoblinRenderer.minecraft.player.prevRotationYaw;
+            goblinEntity.renderYawOffset = GoblinRenderer.minecraft.player.rotationYaw;
+            goblinEntity.prevRenderYawOffset = GoblinRenderer.minecraft.player.prevRotationYaw;
             if (GoblinRenderer.minecraft.player.isSneaking()) {
                 d2 -= 0.075;
             }
-        } else if (fp_class3242 == Action.SHOULDER_IDLE) {
+        } else if (action == Action.SHOULDER_IDLE) {
             if (uUID == null) {
                 return;
             }
             if (GoblinRenderer.minecraft.player.getPersistentID().equals(uUID) && GoblinRenderer.minecraft.gameSettings.thirdPersonView == 0) {
                 return;
             }
-            object = e3_class2192.world.getPlayerEntityByUUID(uUID);
+            object = goblinEntity.world.getPlayerEntityByUUID(uUID);
             if (object == null) {
                 return;
             }
@@ -230,16 +233,16 @@ extends d6_class165<GoblinEntity> {
             d = vector4f.x;
             d2 = vector4f.y;
             d3 = vector4f.z;
-            e3_class2192.renderYawOffset = vector4f.w;
+            goblinEntity.renderYawOffset = vector4f.w;
             if (((Entity)object).isSneaking()) {
                 d2 -= 0.32;
             }
-        } else if (fp_class3242 == Action.PICK_UP && uUID != null && (object = e3_class2192.world.getPlayerEntityByUUID(uUID)) != null) {
-            e3_class2192.prevRenderYawOffset = ((EntityPlayer)object).prevRotationYawHead;
-            e3_class2192.renderYawOffset = ((EntityPlayer)object).rotationYawHead;
+        } else if (action == Action.PICK_UP && uUID != null && (object = goblinEntity.world.getPlayerEntityByUUID(uUID)) != null) {
+            goblinEntity.prevRenderYawOffset = ((EntityPlayer)object).prevRotationYawHead;
+            goblinEntity.renderYawOffset = ((EntityPlayer)object).rotationYawHead;
         }
-        super.doRender(e3_class2192, d, d2, d3, f, f2);
-        if (GoblinRenderer.a((GirlEntity)e3_class2192, fp_class3242) && GoblinRenderer.minecraft.gameSettings.thirdPersonView == 0 && GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
+        super.doRender(goblinEntity, d, d2, d3, f, f2);
+        if (GoblinRenderer.a((GirlEntity)goblinEntity, action) && GoblinRenderer.minecraft.gameSettings.thirdPersonView == 0 && GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
             GlStateManager.popMatrix();
         }
     }
@@ -271,16 +274,16 @@ extends d6_class165<GoblinEntity> {
         if (entityPlayer == null) {
             return Vec3d.ZERO;
         }
-        Vec3d vec3d = b6_class67.a(new Vec3d(entityPlayer.prevPosX, entityPlayer.prevPosY, entityPlayer.prevPosZ), entityPlayer.getPositionVector(), (double)f);
-        Vec3d vec3d2 = b6_class67.a(new Vec3d(GoblinRenderer.minecraft.player.prevPosX, GoblinRenderer.minecraft.player.prevPosY, GoblinRenderer.minecraft.player.prevPosZ), GoblinRenderer.minecraft.player.getPositionVector(), (double)f);
+        Vec3d vec3d = Reference.a(new Vec3d(entityPlayer.prevPosX, entityPlayer.prevPosY, entityPlayer.prevPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.a(new Vec3d(GoblinRenderer.minecraft.player.prevPosX, GoblinRenderer.minecraft.player.prevPosY, GoblinRenderer.minecraft.player.prevPosZ), GoblinRenderer.minecraft.player.getPositionVector(), (double)f);
         return vec3d.subtract(vec3d2);
     }
 
     public static Vector4f a_0(EntityPlayer entityPlayer, float f) {
         EntityPlayerSP entityPlayerSP = GoblinRenderer.minecraft.player;
-        float f2 = b6_class67.a(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
-        Vec3d vec3d = b6_class67.a(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
-        Vec3d vec3d2 = b6_class67.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
+        float f2 = Reference.Lerp(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
+        Vec3d vec3d = Reference.a(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         return new Vector4f((float)vec3d3.x, (float)vec3d3.y, (float)vec3d3.z, f2);
     }

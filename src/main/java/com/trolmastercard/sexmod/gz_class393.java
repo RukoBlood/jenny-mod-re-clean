@@ -9,8 +9,8 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.d3_class161;
-import com.trolmastercard.sexmod.ds_class200;
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.SexUI;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -49,14 +49,14 @@ implements IMessage {
                 System.out.println("received an invalid message @SetPlayerMovement :(");
                 return null;
             }
-            d3_class161.a(gz_class3932.b);
+            HandlePlayerMovement.a(gz_class3932.b);
             try {
                 Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
             } catch (Exception exception) {
                 // empty catch block
             }
             if (gz_class3932.b) {
-                ds_class200.c();
+                SexUI.c();
             }
             return null;
         }

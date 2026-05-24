@@ -7,8 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
 
-public class df_class178
-extends EntityAIWatchClosest2 {
+public class df_class178 extends EntityAIWatchClosest2 {
     public boolean a = true;
 
     public df_class178(EntityLiving entityLiving, Class<? extends Entity> clazz, float f, float f2) {

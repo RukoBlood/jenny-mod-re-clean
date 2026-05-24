@@ -11,6 +11,8 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -70,7 +72,7 @@ public class gg_class366 implements IMessage {
                     }
                     WorldServer worldServer = (WorldServer)em_class2582.world;
                     for (int i = 0; i < 32; ++i) {
-                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, em_class2582.posX, em_class2582.posY + ModInfo.f.nextDouble() * 2.0, em_class2582.posZ, 32, 0.2, 0.2, 0.2, ModInfo.f.nextGaussian(), new int[0]);
+                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, em_class2582.posX, em_class2582.posY + Reference.RANDOM.nextDouble() * 2.0, em_class2582.posZ, 32, 0.2, 0.2, 0.2, Reference.RANDOM.nextGaussian(), new int[0]);
                     }
                     em_class2582.setPosition(em_class2582.homeCoords.x, em_class2582.homeCoords.y, em_class2582.homeCoords.z);
                     em_class2582.q = null;

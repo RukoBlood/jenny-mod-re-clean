@@ -7,6 +7,11 @@
 package com.trolmastercard.sexmod;
 
 import javax.annotation.Nonnull;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -35,14 +40,14 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(GirlEntity em_class2582) {
-        if (em_class2582.world instanceof FakeWorld) {
+    public ResourceLocation getModelLocation(GirlEntity girlEntity) {
+        if (girlEntity.world instanceof FakeWorld) {
             return this.c[0];
         }
-        if (ManglelieModel.boolean_c(em_class2582)) {
+        if (ManglelieModel.boolean_c(girlEntity)) {
             return this.c[2];
         }
-        return this.c[em_class2582.getDataManager().get(GirlEntity.D)];
+        return this.c[girlEntity.getDataManager().get(GirlEntity.D)];
     }
 
     public static boolean boolean_c(GirlEntity girl) {
@@ -55,7 +60,7 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity em_class2582) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
         return new ResourceLocation("sexmod", "animations/manglelie/manglelie.animation.json");
     }
 
@@ -157,7 +162,7 @@ extends GirlModel<GirlEntity> {
             f8_class2932.V = 0.0f;
             f8_class2932.aj = bl;
         }
-        a_inner128 a_inner1282 = f8_class2932.V == 0.0f ? (bl ? this.a(f__class2972, iBone2, iBone, iBone3, iBone4) : this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor)) : a_inner128.a(this.a(f__class2972, iBone2, iBone, iBone3, iBone4), this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor), (float)(f8_class2932.aj ? b6_class67.c(f8_class2932.V) : 1.0 - b6_class67.c(f8_class2932.V)));
+        a_inner128 a_inner1282 = f8_class2932.V == 0.0f ? (bl ? this.a(f__class2972, iBone2, iBone, iBone3, iBone4) : this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor)) : a_inner128.a(this.a(f__class2972, iBone2, iBone, iBone3, iBone4), this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor), (float)(f8_class2932.aj ? Reference.c(f8_class2932.V) : 1.0 - Reference.c(f8_class2932.V)));
         iBone2.setRotationX(a_inner128.access$000((a_inner128)a_inner1282).a);
         iBone2.setRotationY(a_inner128.access$000((a_inner128)a_inner1282).c);
         iBone2.setRotationZ(a_inner128.access$000((a_inner128)a_inner1282).b);
@@ -190,40 +195,40 @@ extends GirlModel<GirlEntity> {
         bm_class88 bm_class882 = be_class78.a(vec3d2, f8_class2932.R);
         bm_class88 bm_class883 = be_class78.a(vec3d3, f8_class2932.R);
         Float f4 = GalathEntity.a(f__class2972, f3);
-        float f5 = f4 == null ? b6_class67.b(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f3) : f4.floatValue();
+        float f5 = f4 == null ? Reference.b(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f3) : f4.floatValue();
         float f6 = gc_class360.c(f5);
         float f7 = f8_class2932.float_b(f3);
-        float f8 = (float)b6_class67.e(Math.min(1.0f, f7));
+        float f8 = (float) Reference.e(Math.min(1.0f, f7));
         if (f8 != 1.0f) {
             f = 0.0f;
         } else {
             f = (f7 * 28.0f - 28.0f) / 32.0f;
             f = Math.max(0.0f, f - 0.5f) * 2.0f;
         }
-        float f9 = (float)b6_class67.h(f);
-        float f10 = gc_class360.c(b6_class67.a(0.0f, 90.0f, f8));
+        float f9 = (float) Reference.h(f);
+        float f10 = gc_class360.c(Reference.Lerp(0.0f, 90.0f, f8));
         boolean bl = f8_class2932.boolean_a(f8_class2932.R, f3);
         if (bl) {
             a_inner128.access$002(a_inner1282, new f7_class292(-f2 + bm_class882.a + gc_class360.c(90.0f), bm_class882.c, 0.0f));
-            a_inner128.access$102(a_inner1282, new f7_class292(-f2 + bm_class883.a + gc_class360.c(90.0f), (float)((double)bm_class883.c + (double)gc_class360.c(-20.0f) * Math.cos(bm_class882.c + f6 * 1.0f) + (double)b6_class67.a(f10 / 2.0f, 0.0f, f9)), 0.0f));
+            a_inner128.access$102(a_inner1282, new f7_class292(-f2 + bm_class883.a + gc_class360.c(90.0f), (float)((double)bm_class883.c + (double)gc_class360.c(-20.0f) * Math.cos(bm_class882.c + f6 * 1.0f) + (double) Reference.Lerp(f10 / 2.0f, 0.0f, f9)), 0.0f));
             a_inner128.access$402(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class882.c) - Math.abs(f6)) * 0.1909f);
             a_inner128.access$702(a_inner1282, gc_class360.c(90.0f));
-            a_inner128.access$200((a_inner128)a_inner1282).b = b6_class67.a(f10, 0.0f, f9);
+            a_inner128.access$200((a_inner128)a_inner1282).b = Reference.Lerp(f10, 0.0f, f9);
             if ((double)f > 0.5) {
-                a_inner128.access$200((a_inner128)a_inner1282).a = m + (float)b6_class67.b((double)g, 0.0, b6_class67.h((f - 0.5f) * 2.0f));
+                a_inner128.access$200((a_inner128)a_inner1282).a = m + (float) Reference.Lerp((double)g, 0.0, Reference.h((f - 0.5f) * 2.0f));
             } else if (f != 0.0f && (double)f < 0.5) {
-                a_inner128.access$200((a_inner128)a_inner1282).a = m + (float)b6_class67.b(0.0, (double)g, b6_class67.h(f * 2.0f));
+                a_inner128.access$200((a_inner128)a_inner1282).a = m + (float) Reference.Lerp(0.0, (double)g, Reference.h(f * 2.0f));
             }
         } else {
             a_inner128.access$102(a_inner1282, new f7_class292(-f2 + bm_class883.a + gc_class360.c(90.0f), bm_class883.c, 0.0f));
-            a_inner128.access$002(a_inner1282, new f7_class292(-f2 + bm_class882.a + gc_class360.c(90.0f), (float)((double)bm_class882.c + (double)gc_class360.c(20.0f) * Math.cos(bm_class883.c + f6 * 1.0f)) - b6_class67.a(f10 / 2.0f, 0.0f, f9), 0.0f));
+            a_inner128.access$002(a_inner1282, new f7_class292(-f2 + bm_class882.a + gc_class360.c(90.0f), (float)((double)bm_class882.c + (double)gc_class360.c(20.0f) * Math.cos(bm_class883.c + f6 * 1.0f)) - Reference.Lerp(f10 / 2.0f, 0.0f, f9), 0.0f));
             a_inner128.access$502(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class883.c) - Math.abs(f6)) * 0.1909f);
             a_inner128.access$602(a_inner1282, gc_class360.c(90.0f));
-            a_inner128.access$300((a_inner128)a_inner1282).b = -b6_class67.a(f10, 0.0f, f9);
+            a_inner128.access$300((a_inner128)a_inner1282).b = -Reference.Lerp(f10, 0.0f, f9);
             if ((double)f > 0.5) {
-                a_inner128.access$300((a_inner128)a_inner1282).a = l + (float)b6_class67.b((double)g, 0.0, b6_class67.h((f - 0.5f) * 2.0f));
+                a_inner128.access$300((a_inner128)a_inner1282).a = l + (float) Reference.Lerp((double)g, 0.0, Reference.h((f - 0.5f) * 2.0f));
             } else if (f != 0.0f && (double)f < 0.5) {
-                a_inner128.access$300((a_inner128)a_inner1282).a = l + (float)b6_class67.b(0.0, (double)g, b6_class67.h(f * 2.0f));
+                a_inner128.access$300((a_inner128)a_inner1282).a = l + (float) Reference.Lerp(0.0, (double)g, Reference.h(f * 2.0f));
             }
         }
         a_inner128.access$000((a_inner128)a_inner1282).c += f6;
@@ -347,14 +352,14 @@ extends GirlModel<GirlEntity> {
 
         static a_inner128 a(a_inner128 a_inner1282, a_inner128 a_inner1283, float f) {
             a_inner128 a_inner1284 = new a_inner128();
-            a_inner1284.c = b6_class67.a(a_inner1282.c, a_inner1283.c, (double)f);
-            a_inner1284.g = b6_class67.a(a_inner1282.g, a_inner1283.g, (double)f);
-            a_inner1284.h = b6_class67.a(a_inner1282.h, a_inner1283.h, (double)f);
-            a_inner1284.b = b6_class67.a(a_inner1282.b, a_inner1283.b, (double)f);
-            a_inner1284.f = b6_class67.a(a_inner1282.f, a_inner1283.f, f);
-            a_inner1284.a = b6_class67.a(a_inner1282.a, a_inner1283.a, f);
-            a_inner1284.e = b6_class67.a(a_inner1282.e, a_inner1283.e, f);
-            a_inner1284.d = b6_class67.a(a_inner1282.d, a_inner1283.d, f);
+            a_inner1284.c = Reference.a(a_inner1282.c, a_inner1283.c, (double)f);
+            a_inner1284.g = Reference.a(a_inner1282.g, a_inner1283.g, (double)f);
+            a_inner1284.h = Reference.a(a_inner1282.h, a_inner1283.h, (double)f);
+            a_inner1284.b = Reference.a(a_inner1282.b, a_inner1283.b, (double)f);
+            a_inner1284.f = Reference.Lerp(a_inner1282.f, a_inner1283.f, f);
+            a_inner1284.a = Reference.Lerp(a_inner1282.a, a_inner1283.a, f);
+            a_inner1284.e = Reference.Lerp(a_inner1282.e, a_inner1283.e, f);
+            a_inner1284.d = Reference.Lerp(a_inner1282.d, a_inner1283.d, f);
             return a_inner1284;
         }
 

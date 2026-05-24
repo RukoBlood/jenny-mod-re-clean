@@ -11,6 +11,9 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.Ellie.EllieEntity;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.ConcurrentModificationException;
 import java.util.UUID;

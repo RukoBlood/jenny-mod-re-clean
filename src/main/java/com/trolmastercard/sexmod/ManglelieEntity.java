@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -549,7 +553,7 @@ extends GirlEntity {
     }
 
     boolean a(Vec3d vec3d, GalathEntity f__class2972, float f) {
-        Vec3d vec3d2 = ck_class135.a(vec3d, b6_class67.b(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f));
+        Vec3d vec3d2 = ck_class135.a(vec3d, Reference.b(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f));
         return vec3d2.x > 0.35;
     }
 
@@ -766,14 +770,14 @@ extends GirlEntity {
     @Override
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
         AnimationController animationController = animationEvent.getController();
-        if (this.s == animationController) {
+        if (this.eyesController == animationController) {
             if (this.b() == null) {
                 return PlayState.STOP;
             }
             this.createAnimation("animation.manglelie.angry_face", true, animationEvent);
             return PlayState.CONTINUE;
         }
-        if (this.E == animationController) {
+        if (this.movementController == animationController) {
             if (this.currentAction() != Action.NULL || this.boolean_r()) {
                 return PlayState.STOP;
             }
@@ -826,14 +830,14 @@ extends GirlEntity {
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
-        this.C.registerSoundListener(soundKeyframeEvent -> {
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
+        this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "pound": {
-                    this.PlaySound(SoundEventHandler.MISC_POUNDING, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "cs0": {
@@ -850,12 +854,12 @@ extends GirlEntity {
                 }
                 case "sexui": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "doubleSemen0": {
-                    this.a(SoundEventHandler.MISC_INSERTS, 6.0f);
-                    this.PlaySound(SoundEventHandler.MISC_POUNDING, new int[0]);
+                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                 }
                 case "doubleSemen": {
                     ga_class358.a(new ep_class263(10, em_class2582 -> {
@@ -871,7 +875,7 @@ extends GirlEntity {
                 }
             }
         });
-        animationData.addAnimationController(this.C);
+        animationData.addAnimationController(this.actionController);
     }
 
     private static Exception a(Exception exception) {

@@ -3,6 +3,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.util.math.Vec3d;
 
 @FunctionalInterface

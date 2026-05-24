@@ -10,6 +10,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.util.Reference;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
@@ -54,9 +55,9 @@ implements IMessage {
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 World world = messageContext.getServerHandler().player.world;
-                EntityItem entityItem = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.DIAMOND, ModInfo.f.nextInt(2) + 1));
-                EntityItem entityItem2 = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.EMERALD, ModInfo.f.nextInt(2) + 1));
-                EntityItem entityItem3 = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.GOLD_INGOT, ModInfo.f.nextInt(2) + 1));
+                EntityItem entityItem = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.DIAMOND, Reference.RANDOM.nextInt(2) + 1));
+                EntityItem entityItem2 = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.EMERALD, Reference.RANDOM.nextInt(2) + 1));
+                EntityItem entityItem3 = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.GOLD_INGOT, Reference.RANDOM.nextInt(2) + 1));
                 world.spawnEntity(entityItem);
                 world.spawnEntity(entityItem2);
                 world.spawnEntity(entityItem3);

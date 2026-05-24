@@ -16,6 +16,8 @@ import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4d;
+
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -144,9 +146,9 @@ extends GeoItemRenderer<DragonStaff> {
 
     void a(List<Integer> list, List<Vec3d> list2) {
         for (int i = 0; i < list.size(); ++i) {
-            float f = b6_class67.a(this.k.prevRotationYawHead, this.k.rotationYawHead, this.e.getRenderPartialTicks());
-            float f2 = b6_class67.a(this.k.prevRotationPitch, this.k.rotationPitch, this.e.getRenderPartialTicks());
-            Vec3d vec3d = b6_class67.a(new Vec3d(this.k.prevPosX, this.k.prevPosY + (double)this.k.getEyeHeight(), this.k.prevPosZ), this.k.getPositionVector().add(0.0, this.k.getEyeHeight(), 0.0), (double)this.e.getRenderPartialTicks());
+            float f = Reference.Lerp(this.k.prevRotationYawHead, this.k.rotationYawHead, this.e.getRenderPartialTicks());
+            float f2 = Reference.Lerp(this.k.prevRotationPitch, this.k.rotationPitch, this.e.getRenderPartialTicks());
+            Vec3d vec3d = Reference.a(new Vec3d(this.k.prevPosX, this.k.prevPosY + (double)this.k.getEyeHeight(), this.k.prevPosZ), this.k.getPositionVector().add(0.0, this.k.getEyeHeight(), 0.0), (double)this.e.getRenderPartialTicks());
             Vec3d vec3d2 = vec3d.subtract(list2.get(i));
             vec3d2 = ck_class135.a(vec3d2, -f2, f);
             double d = Math.abs(vec3d2.x) + Math.abs(vec3d2.z) + Math.abs(vec3d2.y);
@@ -164,7 +166,7 @@ extends GeoItemRenderer<DragonStaff> {
         float f = 1.0f / (float)list.size();
         float f2 = 0.0f;
         for (int i = 0; i < list.size(); ++i) {
-            this.a(list.get(i), 1.0f - (f2 += f), 0.0f + f2, (float)b6_class67.b((double)0.8f, (double)1.2f, (double)i / (double)list.size()));
+            this.a(list.get(i), 1.0f - (f2 += f), 0.0f + f2, (float) Reference.Lerp((double)0.8f, (double)1.2f, (double)i / (double)list.size()));
         }
     }
 

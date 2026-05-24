@@ -13,6 +13,9 @@ package com.trolmastercard.sexmod;
 import com.google.common.collect.Multimap;
 
 import java.util.List;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -124,10 +127,10 @@ public class FighterAI extends f_class282 {
             case IDLE: {
                 this.dataManager.set(Fighter.M, 0);
                 if (!this.fighter.N) {
-                    if (++this.j > 200 + ModInfo.f.nextInt(100)) {
+                    if (++this.j > 200 + Reference.RANDOM.nextInt(100)) {
                         this.j = 0;
                         Vec3d vec3d = this.player.getPositionVector();
-                        Vec3d vec3d2 = new Vec3d(vec3d.x + 1.0 + (double)(ModInfo.f.nextFloat() * 3.0f), vec3d.y, vec3d.z + 1.0 + (double)(ModInfo.f.nextFloat() * 3.0f));
+                        Vec3d vec3d2 = new Vec3d(vec3d.x + 1.0 + (double)(Reference.RANDOM.nextFloat() * 3.0f), vec3d.y, vec3d.z + 1.0 + (double)(Reference.RANDOM.nextFloat() * 3.0f));
                         this.pathNavigate.clearPath();
                         this.pathNavigate.tryMoveToXYZ(vec3d2.x, vec3d2.y, vec3d2.z, 0.5);
                     }

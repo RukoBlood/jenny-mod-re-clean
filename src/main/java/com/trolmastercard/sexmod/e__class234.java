@@ -13,6 +13,9 @@
 package com.trolmastercard.sexmod;
 
 import javax.vecmath.Vector2f;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -138,7 +141,7 @@ public class e__class234 {
         this.d = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
         Vec3d vec3d = ei_class2512.b("girlCam");
         vec3d = ei_class2512.b(vec3d, renderTickEvent.renderTickTime);
-        vec3d = vec3d.add(b6_class67.a(this.d, this.b, (double)renderTickEvent.renderTickTime));
+        vec3d = vec3d.add(Reference.a(this.d, this.b, (double)renderTickEvent.renderTickTime));
         minecraft.player.posX = vec3d.x;
         minecraft.player.posY = vec3d.y - (double)minecraft.player.getEyeHeight();
         minecraft.player.posZ = vec3d.z;
@@ -208,7 +211,7 @@ public class e__class234 {
             return;
         }
         Vec3d vec3d = minecraft.player.getPositionVector();
-        Vec3d vec3d2 = b6_class67.a(this.d, this.b, (double)renderWorldLastEvent.getPartialTicks());
+        Vec3d vec3d2 = Reference.a(this.d, this.b, (double)renderWorldLastEvent.getPartialTicks());
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
         e__class234.a(ei_class2512, minecraft.player, vec3d3.x, vec3d3.y, vec3d3.z, renderWorldLastEvent.getPartialTicks());
         GlStateManager.enableLighting();

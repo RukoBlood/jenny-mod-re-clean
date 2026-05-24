@@ -9,6 +9,8 @@
 package com.trolmastercard.sexmod;
 
 import java.util.List;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;

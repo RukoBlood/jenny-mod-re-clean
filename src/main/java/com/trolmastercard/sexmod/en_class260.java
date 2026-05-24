@@ -10,6 +10,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;

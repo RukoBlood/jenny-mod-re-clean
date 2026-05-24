@@ -7,6 +7,9 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.SexUI;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
@@ -176,7 +179,7 @@ extends PlayerGirl {
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -188,12 +191,12 @@ extends PlayerGirl {
                 }
                 case "deepthroat_prepareMSG1": {
                     this.void_a(I18n.format("allie.dialogue.hihi", new Object[0]));
-                    this.PlaySound(SoundEventHandler.MISC_PLOB[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "deepthroat_prepareMSG2": {
                     this.void_a(I18n.format("allie.dialogue.boys", new Object[0]));
-                    this.PlaySound(SoundEventHandler.MISC_PLOB[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "blackscreen": {
@@ -206,19 +209,19 @@ extends PlayerGirl {
                     if (!this.boolean_n()) break;
                     NetworkRegistry.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), this.getID(), false, true));
                     this.r = this.rotationYaw + 180.0f;
-                    this.a(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
-                    ds_class200.b();
+                    this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
+                    SexUI.resetCumPercentage();
                     break;
                 }
                 case "deepthroat_fastMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_ALLIE_BJMOAN));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_BJMOAN));
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
-                    ds_class200.a(0.04f);
+                    SexUI.d();
+                    SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "deepthroat_fastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.DEEPTHROAT_SLOW);
                     break;
                 }
@@ -227,15 +230,15 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_slowMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_ALLIE_LIPSOUND));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
-                    ds_class200.a(0.02f);
+                    SexUI.d();
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "deepthroat_cumMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_ALLIE_LIPSOUND));
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_CUMINFLATION), 1.5f);
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_CUMINFLATION), 1.5f);
                     break;
                 }
                 case "cowgirl_cumDone": 
@@ -246,35 +249,35 @@ extends PlayerGirl {
                 }
                 case "deepthroat_normal_prepareMSG1": {
                     this.void_a(I18n.format("allie.dialogue.alright", new Object[0]));
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_PLOB));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_PLOB));
                     break;
                 }
                 case "giggle": {
-                    this.a(SoundEventHandler.GIRLS_ALLIE_GIGGLE);
+                    this.a(SoundsHandler.GIRLS_ALLIE_GIGGLE);
                     break;
                 }
                 case "pounding": {
-                    this.a(SoundEventHandler.MISC_POUNDING);
+                    this.a(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "moan": {
-                    this.a(SoundEventHandler.GIRLS_ALLIE_MOAN);
+                    this.a(SoundsHandler.GIRLS_ALLIE_MOAN);
                     break;
                 }
                 case "mmm": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_ALLIE_MMM));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_MMM));
                     break;
                 }
                 case "slide": {
-                    this.PlaySound(SoundEventHandler.MISC_SLIDE, 0, 1, 4, 6);
+                    this.PlaySound(SoundsHandler.MISC_SLIDE, 0, 1, 4, 6);
                     break;
                 }
                 case "slowMoan": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_ALLIE_AHH));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_AHH));
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "cowgirlSlowDone": {
@@ -286,10 +289,10 @@ extends PlayerGirl {
                 }
                 case "fastMoan": {
                     if (this.boolean_n()) {
-                        ds_class200.a(0.04f);
+                        SexUI.addCumPercentage(0.04f);
                     }
                     if (!this.ap) {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_ALLIE_MOAN));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_MOAN));
                         this.ap = true;
                         break;
                     }
@@ -297,7 +300,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "fastSwitch": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     Action fp_class3242 = this.currentAction();
                     if (fp_class3242 == Action.REVERSE_COWGIRL_FAST_START) {
                         this.setCurrentAction(Action.REVERSE_COWGIRL_FAST_CONTINUES);
@@ -312,21 +315,21 @@ extends PlayerGirl {
                 }
                 case "openSexUi": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_INSERTS, 6.0f);
+                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
                     break;
                 }
                 case "aftermoan": {
-                    this.a(SoundEventHandler.GIRLS_ALLIE_AFTERSESSIONMOAN);
+                    this.a(SoundsHandler.GIRLS_ALLIE_AFTERSESSIONMOAN);
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
     }
 
     @Override
@@ -346,7 +349,7 @@ extends PlayerGirl {
             case "movement": {
                 double d = 4.0 * (Math.abs(this.posX - this.lastTickPosX) + Math.abs(this.posY - this.lastTickPosY) + Math.abs(this.posZ - this.lastTickPosZ));
                 d = Math.min(1.0 + d, 4.0);
-                this.E.setAnimationSpeed(d);
+                this.movementController.setAnimationSpeed(d);
                 this.createAnimation("animation.allie.tail", true, animationEvent);
                 break;
             }

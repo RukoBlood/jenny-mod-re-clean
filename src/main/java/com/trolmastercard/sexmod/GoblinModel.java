@@ -4,6 +4,10 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +35,7 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity em_class2582) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
         return new ResourceLocation("sexmod", "animations/goblin/goblin.animation.json");
     }
 
@@ -148,7 +152,7 @@ extends GirlModel<GirlEntity> {
         if (entityPlayer == null) {
             return;
         }
-        float f = b6_class67.a(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
+        float f = Reference.Lerp(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
         float f2 = entityPlayer.limbSwing;
         float f3 = (float)Math.sin(f2);
         IBone iBone = animationProcessor.getBone("LeftLeg");

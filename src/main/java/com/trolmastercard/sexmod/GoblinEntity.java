@@ -27,6 +27,11 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.proxy.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -218,14 +223,14 @@ implements ai_class30 {
     public void void_c(UUID uUID) {
         this.aY = 0;
         fh_class313.b();
-        d3_class161.a(false);
+        HandlePlayerMovement.a(false);
         this.void_e(uUID);
     }
 
     public void void_b(UUID uUID) {
         this.az = 0;
         fh_class313.b();
-        d3_class161.a(false);
+        HandlePlayerMovement.a(false);
         this.void_e(uUID);
     }
 
@@ -1511,7 +1516,7 @@ implements ai_class30 {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         block5 : switch (animationEvent.getController().getName()) {
@@ -1706,34 +1711,34 @@ implements ai_class30 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "catchEh": {
                     this.void_a("ehh..");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchAkward": {
                     this.void_a("awkward..");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchWell": {
                     this.void_a("well...");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchRather": {
                     this.void_a("would you rather have this stupid... thing?");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchMe": {
                     this.void_a("...or use me?~");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchDone": {
@@ -1750,17 +1755,17 @@ implements ai_class30 {
                 }
                 case "paizuriChoice": {
                     this.void_a("good choice!~");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "paizuriBoth": {
                     this.void_a("...for both of us!");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "paizruiUse": {
                     this.void_a("now use me like a fuck toy!~");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "paizuriSwitch": {
@@ -1769,19 +1774,19 @@ implements ai_class30 {
                     break;
                 }
                 case "touch": {
-                    this.a(SoundEventHandler.MISC_TOUCH, 3.0f);
+                    this.a(SoundsHandler.MISC_TOUCH, 3.0f);
                     break;
                 }
                 case "pound": {
-                    this.PlaySound(SoundEventHandler.MISC_POUNDING, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04f);
+                    SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "paizuri_startDone": {
                     this.setCurrentAction(Action.PAIZURI_IDLE);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "paizuriFastDone": {
@@ -1789,19 +1794,19 @@ implements ai_class30 {
                     break;
                 }
                 case "paizuriFastReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.PAIZURI_FAST_CONTINUES);
                     break;
                 }
                 case "paizuriFastContinuesReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "smallPound": {
-                    this.a(SoundEventHandler.MISC_POUNDING, 0.25f);
+                    this.a(SoundsHandler.MISC_POUNDING, 0.25f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "paizruiCam": {
@@ -1821,7 +1826,7 @@ implements ai_class30 {
                     break;
                 }
                 case "cumSound": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "jumpCam": {
@@ -1842,17 +1847,17 @@ implements ai_class30 {
                         minecraft.gameSettings.thirdPersonView = 0;
                     }
                     this.void_a("hmm...");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "breedingFound": {
                     this.void_a("guess we found a worthy breeding partner!");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "breedingEnough": {
                     this.void_a("Eh.. go pin him down, before he runs off!");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "breedingCam2": {
@@ -1866,14 +1871,14 @@ implements ai_class30 {
                 case "breedingIntroDone": {
                     this.setCurrentAction(Action.BREEDING_SLOW_0);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "breeding_slow1Done": {
                     if (this.getRNG().nextBoolean()) {
                         boolean bl = this.aD = !this.aD;
                     }
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.BREEDING_FAST_0);
                     this.ay = false;
                     break;
@@ -1885,14 +1890,14 @@ implements ai_class30 {
                     break;
                 }
                 case "breeding_fast1Ready": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.ay = true;
                     this.N();
-                    this.C.tickOffset = 0.0;
+                    this.actionController.tickOffset = 0.0;
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "breeding_intro_3Done": {
@@ -1901,11 +1906,11 @@ implements ai_class30 {
                 }
                 case "breeding_3_wiggle": {
                     if (!this.getRNG().nextBoolean()) break;
-                    this.C.tickOffset = 0.0;
+                    this.actionController.tickOffset = 0.0;
                     break;
                 }
                 case "breeding_fast_3Done": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.BREEDING_SLOW_2);
                     break;
                 }
@@ -1926,7 +1931,7 @@ implements ai_class30 {
                 case "neslon_introDone": {
                     this.setCurrentAction(Action.NELSON_SLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "nelson_slowDone": {
@@ -1939,17 +1944,17 @@ implements ai_class30 {
                         this.X = true;
                         return;
                     }
-                    if (!d3_class161.d) break;
+                    if (!HandlePlayerMovement.isThrusting) break;
                     this.X = true;
                     break;
                 }
                 case "neslon_fastBackSwitch": {
                     if (!this.boolean_n()) {
-                        this.C.tickOffset = 0.0;
+                        this.actionController.tickOffset = 0.0;
                         break;
                     }
-                    if (!d3_class161.d) break;
-                    this.C.tickOffset = 0.0;
+                    if (!HandlePlayerMovement.isThrusting) break;
+                    this.actionController.tickOffset = 0.0;
                     break;
                 }
                 case "nelsonFastDone": {
@@ -1965,11 +1970,11 @@ implements ai_class30 {
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        this.E.transitionLengthTicks = 10.0;
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
+        this.actionController.registerSoundListener(iSoundListener);
+        this.movementController.transitionLengthTicks = 10.0;
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     static EntityDataManager access$000(GoblinEntity e3_class2192) {

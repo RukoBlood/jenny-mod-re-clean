@@ -6,6 +6,11 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.Allie.AllieEntity;
+import com.trolmastercard.sexmod.girls.Bee.BeeEntity;
+import com.trolmastercard.sexmod.girls.Bia.BiaEntity;
+import com.trolmastercard.sexmod.girls.Ellie.EllieEntity;
+import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;

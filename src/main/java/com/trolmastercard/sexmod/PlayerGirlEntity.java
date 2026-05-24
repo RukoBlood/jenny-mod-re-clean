@@ -3,6 +3,13 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.Allie.AllieEntity;
+import com.trolmastercard.sexmod.girls.Bee.BeeEntity;
+import com.trolmastercard.sexmod.girls.Bia.BiaEntity;
+import com.trolmastercard.sexmod.girls.Ellie.EllieEntity;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.Entity;
 //fy
 public enum PlayerGirlEntity {
@@ -33,7 +40,7 @@ public enum PlayerGirlEntity {
         this.playerClass = playerClass;
         this.isNpcOnly = false;
         this.hasSpecifics = hasSpecifics;
-        this.editorID = ModInfo.b++;
+        this.editorID = Reference.b++;
     }
 
     private PlayerGirlEntity(Class<? extends GirlEntity> npcClass, int id, Class<? extends PlayerGirl> playerNPCClass, int PlayerID) {
@@ -43,7 +50,7 @@ public enum PlayerGirlEntity {
         this.playerClass = playerNPCClass;
         this.isNpcOnly = false;
         this.hasSpecifics = false;
-        this.editorID = ModInfo.b++;
+        this.editorID = Reference.b++;
     }
 
     private PlayerGirlEntity(Class<? extends GirlEntity> npcClass, int id) {
@@ -51,7 +58,7 @@ public enum PlayerGirlEntity {
         this.npcClass = npcClass;
         this.isNpcOnly = true;
         this.hasSpecifics = false;
-        this.editorID = ModInfo.b++;
+        this.editorID = Reference.b++;
         this.playerClass = null;
         this.playerID = 0;
     }

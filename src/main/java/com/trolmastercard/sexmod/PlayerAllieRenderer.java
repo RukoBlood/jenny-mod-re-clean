@@ -9,6 +9,9 @@ package com.trolmastercard.sexmod;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -123,8 +126,8 @@ extends PlayerGirlRenderer {
         this.I = vec2f.x * 8.0f;
         this.G = be_class78.b(this.G, -1.68f, 1.68f);
         this.I = be_class78.b(this.I, -1.68f, 1.68f);
-        this.G = b6_class67.a(this.F, this.G, this.y);
-        this.I = b6_class67.a(this.B, this.I, this.y);
+        this.G = Reference.Lerp(this.F, this.G, this.y);
+        this.I = Reference.Lerp(this.B, this.I, this.y);
         geoBone.setRotationX(f + this.G * f3);
         geoBone.setRotationZ(f2 + this.I * f3);
     }
@@ -134,9 +137,9 @@ extends PlayerGirlRenderer {
         double d2 = this.z - this.D;
         this.L = (Math.abs(d) + Math.abs(d2)) * 5.0;
         this.L = be_class78.b((float)this.L, 0.0f, 1.0f);
-        geoBone.setPositionY((float)b6_class67.a(5.0, 0.0, b6_class67.b(this.H, this.L, (double)this.y)));
+        geoBone.setPositionY((float) Reference.a(5.0, 0.0, Reference.Lerp(this.H, this.L, (double)this.y)));
         if (this.w instanceof PlayerAllie) {
-            ((PlayerAllie)this.w).aq = (float)b6_class67.a((double)0.3f, 0.0, b6_class67.b(this.H, this.L, (double)this.y));
+            ((PlayerAllie)this.w).aq = (float) Reference.a((double)0.3f, 0.0, Reference.Lerp(this.H, this.L, (double)this.y));
         }
     }
 

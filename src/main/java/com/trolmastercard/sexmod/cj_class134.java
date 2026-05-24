@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.properties.IProperty;
@@ -80,7 +82,7 @@ public class cj_class134 {
             vec3d = new Vec3d(0.2, 0.8, 0.0);
         } else {
             vec3d = new Vec3d(vec3d.x, vec3d.y, -vec3d.z);
-            float f2 = -b6_class67.a(entityLivingBase.prevRenderYawOffset, entityLivingBase.renderYawOffset, f);
+            float f2 = -Reference.Lerp(entityLivingBase.prevRenderYawOffset, entityLivingBase.renderYawOffset, f);
             vec3d = ck_class135.a(vec3d, f2);
         }
         return vec3d.normalize();
@@ -129,7 +131,7 @@ public class cj_class134 {
             double d3 = Math.PI * 2 * (double)f;
             double d4 = Math.sin(d3);
             double d5 = Math.cos(d3);
-            world.spawnParticle(enumParticleTypes, vec3d.x + (d4 *= d), vec3d.y, vec3d.z + (d5 *= d), 0.0, (double) ModInfo.f.nextFloat() * d2, 0.0, new int[0]);
+            world.spawnParticle(enumParticleTypes, vec3d.x + (d4 *= d), vec3d.y, vec3d.z + (d5 *= d), 0.0, (double) Reference.RANDOM.nextFloat() * d2, 0.0, new int[0]);
         }
     }
 

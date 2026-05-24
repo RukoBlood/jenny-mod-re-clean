@@ -3,6 +3,8 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlModel;
 import net.minecraft.util.ResourceLocation;
 
 public class CatModel
@@ -20,7 +22,7 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity em_class2582) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
         return new ResourceLocation("sexmod", "animations/cat/cat.animation.json");
     }
 

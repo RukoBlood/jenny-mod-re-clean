@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -177,7 +182,7 @@ implements dr_class199 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public boolean boolean_b(EntityPlayer entityPlayer) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlGUI(this, entityPlayer, new String[]{"anal", "oral", "mating"}, null, false));
+        Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(this, entityPlayer, new String[]{"anal", "oral", "mating"}, null, false));
         return true;
     }
 
@@ -286,7 +291,7 @@ implements dr_class199 {
                     this.createAnimation("animation.kobold.sit", true, animationEvent);
                     break;
                 }
-                if (this.E.getCurrentAnimation() != null && this.E.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
                     boolean bl = this.aB = !this.aB;
                 }
                 if (!this.af) {
@@ -295,16 +300,16 @@ implements dr_class199 {
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.aj) {
-                        this.E.setAnimationSpeed(1.2f);
+                        this.movementController.setAnimationSpeed(1.2f);
                         this.createAnimation("animation.kobold.run", true, animationEvent);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
-                        this.E.setAnimationSpeed(2.0);
+                        this.movementController.setAnimationSpeed(2.0);
                         this.createAnimation("animation.kobold.walk", true, animationEvent);
                         break;
                     }
-                    this.E.setAnimationSpeed(1.75);
+                    this.movementController.setAnimationSpeed(1.75);
                     this.createAnimation("animation.kobold.backwards_walk", true, animationEvent);
                     break;
                 }
@@ -415,14 +420,14 @@ implements dr_class199 {
     void b(SoundEvent soundEvent, float f) {
         float f2 = 0.25f - this.entityDataManager.get(aA).floatValue();
         double d = f2 / 0.25f;
-        float f3 = (float)b6_class67.b((double)0.9f, (double)1.1f, d);
+        float f3 = (float) Reference.Lerp((double)0.9f, (double)1.1f, d);
         this.PlaySoundAtPosition(soundEvent, f, f3);
     }
 
     @Override
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -434,11 +439,11 @@ implements dr_class199 {
                 }
                 case "paymentMSG1": {
                     this.a(this.getID(), "I'd like to use ur services owo");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "plob": {
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "blackScreen": {
@@ -467,15 +472,15 @@ implements dr_class199 {
                 }
                 case "lipsound": {
                     if (this.getRNG().nextBoolean()) {
-                        this.a(SoundEventHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
+                        this.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
                     } else {
-                        this.a(SoundEventHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
+                        this.a(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
                     }
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "touch": {
-                    this.a(SoundEventHandler.MISC_TOUCH);
+                    this.a(SoundsHandler.MISC_TOUCH);
                     break;
                 }
                 case "blowjobStartDone": {
@@ -483,44 +488,44 @@ implements dr_class199 {
                     this.ay = false;
                     this.az = true;
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "switch": {
                     this.ay = this.getRNG().nextBoolean();
-                    this.C.clearAnimationCache();
+                    this.actionController.clearAnimationCache();
                     break;
                 }
                 case "endSwitch": {
                     this.ay = false;
                     this.az = !this.az;
-                    this.C.clearAnimationCache();
+                    this.actionController.clearAnimationCache();
                     break;
                 }
                 case "blowjobFastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.SUCKBLOWJOB_BLINK);
                     break;
                 }
                 case "cumLoud": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "cumQuiet": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 1.5f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
                     break;
                 }
                 case "analCumDone": 
                 case "blowjobCumDone": {
                     if (!this.boolean_n()) break;
                     this.void_r();
-                    ds_class200.c();
+                    SexUI.c();
                     break;
                 }
                 case "analStartDone": {
                     this.setCurrentAction(Action.KOBOLD_ANAL_SLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "analStartCam": {
@@ -531,11 +536,11 @@ implements dr_class199 {
                     break;
                 }
                 case "pounding": {
-                    this.a(SoundEventHandler.MISC_POUNDING);
+                    this.a(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "analFastRapid": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     if (this.currentAction() == Action.KOBOLD_ANAL_FAST) {
                         this.N();
                         break;
@@ -550,67 +555,67 @@ implements dr_class199 {
                 }
                 case "analHard": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04f);
+                    SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "analSoft": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_GIGGLE);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_GIGGLE);
                     break;
                 }
                 case "moan": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_MOAN);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "moanMating": {
                     --this.ax;
                     if (this.ax > 0) break;
                     this.ax = 3;
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_MOAN);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "analHardMSG1": {
                     --this.ax;
                     if (this.ax > 0) break;
                     this.ax = 4;
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_MOAN);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "orgasm": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_ORGASM);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_ORGASM);
                     break;
                 }
                 case "breath": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_LIGHTBREATHING, 0.5f);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_LIGHTBREATHING, 0.5f);
                     break;
                 }
                 case "haa": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_HAA, 0.7f);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_HAA, 0.7f);
                     break;
                 }
                 case "interested": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_INTERESTED);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_INTERESTED);
                     break;
                 }
                 case "yep": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_YEP);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_YEP);
                     break;
                 }
                 case "bjmoan": {
-                    this.b(SoundEventHandler.a(SoundEventHandler.GIRLS_KOBOLD_BJMOAN));
+                    this.b(SoundsHandler.a(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
                     break;
                 }
                 case "blowjobStartbreath": {
                     int n = this.getRNG().nextInt(3);
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_LIGHTBREATHING[n]);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_LIGHTBREATHING[n]);
                     break;
                 }
                 case "matingCam": {
@@ -624,7 +629,7 @@ implements dr_class199 {
                 }
                 case "mating_press_startDone": {
                     if (this.boolean_n()) {
-                        ds_class200.d();
+                        SexUI.d();
                     }
                 }
                 case "mating_press_hardDone": {
@@ -634,17 +639,17 @@ implements dr_class199 {
                 }
                 case "mating_press_softReady": {
                     if (this.boolean_n()) {
-                        ds_class200.a(0.04f);
+                        SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.MATING_PRESS_HARD);
                     break;
                 }
                 case "mating_press_hardReady": {
                     if (this.boolean_n()) {
-                        ds_class200.a(0.04f);
+                        SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -659,7 +664,7 @@ implements dr_class199 {
                 }
                 case "cumMsg": {
                     this.void_a("I.. hope I am satisfying you sir");
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
                     break;
                 }
                 case "mating_press_cumDone": {
@@ -668,11 +673,11 @@ implements dr_class199 {
                 }
             }
         };
-        this.E.transitionLengthTicks = 3.0;
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
+        this.movementController.transitionLengthTicks = 3.0;
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

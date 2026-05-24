@@ -8,6 +8,8 @@ package com.trolmastercard.sexmod;
 
 import java.util.List;
 import java.util.Random;
+
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
@@ -115,7 +117,7 @@ extends EntityLiving {
     }
 
     void a() {
-        this.a(b6_class67.b(this.lastTickPosX, this.posX, 0.5), b6_class67.b(this.lastTickPosY, this.posY, 0.5), b6_class67.b(this.lastTickPosZ, this.posZ, 0.5));
+        this.a(Reference.Lerp(this.lastTickPosX, this.posX, 0.5), Reference.Lerp(this.lastTickPosY, this.posY, 0.5), Reference.Lerp(this.lastTickPosZ, this.posZ, 0.5));
         this.a(this.posX, this.posY, this.posZ);
     }
 
@@ -163,7 +165,7 @@ extends EntityLiving {
     public static void a(Vec3d vec3d) {
         WorldClient worldClient = Minecraft.getMinecraft().world;
         float f = gc_class360.c(1.8f);
-        Random random = ModInfo.f;
+        Random random = Reference.RANDOM;
         float f2 = 0.0f;
         while ((double)f2 < Math.PI * 2) {
             double d = Math.sin(f2);
@@ -182,11 +184,11 @@ extends EntityLiving {
     @SideOnly(value=Side.CLIENT)
     public static void c(Vec3d vec3d) {
         WorldClient worldClient = Minecraft.getMinecraft().world;
-        Random random = ModInfo.f;
+        Random random = Reference.RANDOM;
         for (int i = 0; i < 100; ++i) {
             worldClient.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, new int[0]);
         }
-        ((World)worldClient).playSound(vec3d.x, vec3d.y, vec3d.z, SoundEventHandler.MISC_SHATTER[0], SoundCategory.AMBIENT, 0.7f, 1.0f, false);
+        ((World)worldClient).playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.MISC_SHATTER[0], SoundCategory.AMBIENT, 0.7f, 1.0f, false);
     }
 
     @Override

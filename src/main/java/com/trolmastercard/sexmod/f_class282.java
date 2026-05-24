@@ -8,6 +8,9 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -36,7 +39,7 @@ public abstract class f_class282 extends EntityAIBase {
         BlockPos blockPos;
         int n = 0;
         do {
-            blockPos = this.player.getPosition().add(ModInfo.f.nextInt(10), 0, ModInfo.f.nextInt(10));
+            blockPos = this.player.getPosition().add(Reference.RANDOM.nextInt(10), 0, Reference.RANDOM.nextInt(10));
         } while (++n < 20 && !this.entity.attemptTeleport(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
         if (n >= 20) {
             this.entity.setPosition(this.player.posX, this.player.posY, this.player.posZ);

@@ -8,6 +8,10 @@ package com.trolmastercard.sexmod;
 
 import java.io.File;
 import java.io.IOException;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
+import com.trolmastercard.sexmod.gui.SexUI;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -60,9 +64,9 @@ public class bn_class89 {
         } else {
             PornWarning.isAdult = false;
         }
-        MinecraftForge.EVENT_BUS.register((Object)new ds_class200());
+        MinecraftForge.EVENT_BUS.register((Object)new SexUI());
         MinecraftForge.EVENT_BUS.register((Object)new fh_class313());
-        MinecraftForge.EVENT_BUS.register((Object)new d3_class161());
+        MinecraftForge.EVENT_BUS.register((Object)new HandlePlayerMovement());
         MinecraftForge.EVENT_BUS.register((Object)new l_class413());
         MinecraftForge.EVENT_BUS.register((Object)new bq_class93());
         MinecraftForge.EVENT_BUS.register((Object)new cn_class138());
@@ -73,7 +77,7 @@ public class bn_class89 {
         MinecraftForge.EVENT_BUS.register((Object)new c6_class115());
         MinecraftForge.EVENT_BUS.register((Object)new a_class4.b_inner5());
         MinecraftForge.EVENT_BUS.register((Object)new CustomModels.a_inner95());
-        MinecraftForge.EVENT_BUS.register((Object)new gb_class359());
+        MinecraftForge.EVENT_BUS.register((Object)new EscapeMinigameUI());
         MinecraftForge.EVENT_BUS.register((Object)new ga_class358());
         MinecraftForge.EVENT_BUS.register((Object)new hf_class401());
     }

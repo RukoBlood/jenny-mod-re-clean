@@ -5,6 +5,9 @@ package com.trolmastercard.sexmod;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.AnimationState;
@@ -29,7 +32,7 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity em_class2582) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
         return new ResourceLocation("sexmod", "animations/kobold/kobold.animation.json");
     }
 
@@ -72,7 +75,7 @@ extends GirlModel<GirlEntity> {
     }
 
     void b(GirlEntity em_class2582, AnimationProcessor<GirlEntity> animationProcessor) {
-        if (em_class2582.C.getAnimationState() != AnimationState.Transitioning) {
+        if (em_class2582.actionController.getAnimationState() != AnimationState.Transitioning) {
             return;
         }
         float f = em_class2582.getDataManager().get(KoboldEntity.aE);

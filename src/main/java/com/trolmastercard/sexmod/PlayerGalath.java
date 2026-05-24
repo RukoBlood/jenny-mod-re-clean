@@ -10,6 +10,10 @@ package com.trolmastercard.sexmod;
 import java.util.Random;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -185,7 +189,7 @@ implements b7_class68 {
         if (this.currentAction() != Action.RAPE_INTRO) {
             return;
         }
-        ds_class200.a(false);
+        SexUI.a(false);
     }
 
     void void_b() {
@@ -225,7 +229,7 @@ implements b7_class68 {
                 break;
             }
             case "movement": {
-                this.E.setAnimationSpeed(1.0);
+                this.movementController.setAnimationSpeed(1.0);
                 if (this.currentAction() != Action.NULL) {
                     this.createAnimation("animation.galath.null", true, animationEvent);
                     break;
@@ -243,16 +247,16 @@ implements b7_class68 {
                     break;
                 }
                 if (this.aj) {
-                    this.E.setAnimationSpeed(1.5);
+                    this.movementController.setAnimationSpeed(1.5);
                     this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.run", true, animationEvent);
                     break;
                 }
                 if (this.ao.y >= -0.1f) {
-                    this.E.setAnimationSpeed(2.0);
+                    this.movementController.setAnimationSpeed(2.0);
                     this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.walk", true, animationEvent);
                     break;
                 }
-                this.E.setAnimationSpeed(1.5);
+                this.movementController.setAnimationSpeed(1.5);
                 this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.backwards_walk", true, animationEvent);
                 break;
             }
@@ -323,7 +327,7 @@ implements b7_class68 {
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         this.void_p();
-        this.C.registerSoundListener(soundKeyframeEvent -> {
+        this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
                     if (++this.S != 3) break;
@@ -331,15 +335,15 @@ implements b7_class68 {
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "pound": {
-                    this.a(SoundEventHandler.MISC_POUNDING);
+                    this.a(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "flap": {
-                    this.a(SoundEventHandler.MISC_FLAP);
+                    this.a(SoundsHandler.MISC_FLAP);
                     break;
                 }
                 case "setNude": {
@@ -367,14 +371,14 @@ implements b7_class68 {
                     break;
                 }
                 case "poundRape": {
-                    this.a(SoundEventHandler.MISC_POUNDING);
+                    this.a(SoundsHandler.MISC_POUNDING);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.03f);
+                    SexUI.addCumPercentage(0.03f);
                     break;
                 }
                 case "enableRapeUI": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(false);
+                    SexUI.a(false);
                     break;
                 }
                 case "reloadRenderer": {
@@ -387,12 +391,12 @@ implements b7_class68 {
                     break;
                 }
                 case "corruptSwitch": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.CORRUPT_FAST);
                     break;
                 }
                 case "corrupt_hard": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.as = true;
                     this.N();
                     break;
@@ -403,7 +407,7 @@ implements b7_class68 {
                     break;
                 }
                 case "addCum": {
-                    ds_class200.a(0.03);
+                    SexUI.addCumPercentage(0.03);
                     break;
                 }
                 case "clearcum": {
@@ -423,7 +427,7 @@ implements b7_class68 {
                     float f = this.java_lang_Float_I().floatValue() + 220.0f;
                     Vec3d vec3d = ck_class135.a(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
                     NetworkRegistry.networkWrapper.sendToServer((IMessage)new a8_class16(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "enableBoyCam": {
@@ -438,7 +442,7 @@ implements b7_class68 {
                         return vec3d.subtract(vec3d2).normalize();
                     }, em_class2582 -> em_class2582.b("futaCockTip").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.3f, 0.3f));
                     ga_class358.a(new ep_class263(100, em_class2582 -> ck_class135.a(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.6f, 0.5f));
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_SMALLINSERTS), 3.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": 
@@ -450,41 +454,41 @@ implements b7_class68 {
                 case "flapControlled": {
                     if (!this.boolean_n()) break;
                     hf_class401.f();
-                    this.a(SoundEventHandler.MISC_FLAP);
+                    this.a(SoundsHandler.MISC_FLAP);
                     Minecraft minecraft = Minecraft.getMinecraft();
                     EntityPlayerSP entityPlayerSP = minecraft.player;
                     MovementInput movementInput = entityPlayerSP.movementInput;
                     Vec2f vec2f = movementInput.getMoveVector();
                     if (vec2f.x == 0.0f && vec2f.y == 0.0f) break;
-                    Vec3d vec3d = ck_class135.a(new Vec3d(-vec2f.x, 0.0, vec2f.y), b6_class67.a(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), b6_class67.a(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
+                    Vec3d vec3d = ck_class135.a(new Vec3d(-vec2f.x, 0.0, vec2f.y), Reference.Lerp(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), Reference.Lerp(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
                     NetworkRegistry.networkWrapper.sendToServer((IMessage)new ct_class144(vec3d, this.girlID()));
                     break;
                 }
                 case "clap": {
-                    this.a(SoundEventHandler.MISC_CLAP);
+                    this.a(SoundsHandler.MISC_CLAP);
                     break;
                 }
                 case "energysound": {
-                    this.PlaySound(SoundEventHandler.MISC_BEEW[1]);
+                    this.PlaySound(SoundsHandler.MISC_BEEW[1]);
                     break;
                 }
                 case "energy2": {
-                    this.PlaySound(SoundEventHandler.MISC_BEEW[2]);
+                    this.PlaySound(SoundsHandler.MISC_BEEW[2]);
                     break;
                 }
                 case "tpSound": {
-                    this.PlaySound(SoundEventHandler.MISC_WEOWEO[2]);
+                    this.PlaySound(SoundsHandler.MISC_WEOWEO[2]);
                     break;
                 }
                 case "sexui": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                 }
             }
         });
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.s);
-        animationData.addAnimationController(this.E);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.eyesController);
+        animationData.addAnimationController(this.movementController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

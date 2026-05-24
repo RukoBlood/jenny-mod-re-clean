@@ -12,6 +12,8 @@ package com.trolmastercard.sexmod;
 
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
+
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
@@ -56,7 +58,7 @@ public class gm_class376 {
     public static void b() {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        Vec3d vec3d = b6_class67.a(ModInfo.k, ModInfo.j, (double)a.getRenderPartialTicks());
+        Vec3d vec3d = Reference.a(Reference.k, Reference.j, (double)a.getRenderPartialTicks());
         GlStateManager.pushMatrix();
         GlStateManager.disableCull();
         GlStateManager.disableDepth();
@@ -150,8 +152,8 @@ public class gm_class376 {
         if (entityPlayerSP == null) {
             return;
         }
-        ModInfo.k = ModInfo.j;
-        ModInfo.j = entityPlayerSP.getPositionVector();
+        Reference.k = Reference.j;
+        Reference.j = entityPlayerSP.getPositionVector();
     }
 
     private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {

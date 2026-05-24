@@ -10,6 +10,9 @@ package com.trolmastercard.sexmod;
 import java.util.Objects;
 import javax.annotation.CheckReturnValue;
 import javax.vecmath.Vector4f;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;

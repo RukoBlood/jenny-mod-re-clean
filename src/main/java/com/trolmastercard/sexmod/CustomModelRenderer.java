@@ -18,6 +18,9 @@ import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -255,10 +258,10 @@ extends GeoEntityRenderer<CustomModelEntity> {
             cy_class1532.posX = entityLivingBase.posX;
             cy_class1532.posY = entityLivingBase.posY;
             cy_class1532.posZ = entityLivingBase.posZ;
-            vec3d = b6_class67.a(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
+            vec3d = Reference.a(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
         }
         EntityPlayerSP object = minecraft.player;
-        Vec3d vec3d2 = b6_class67.a(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.a(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)f);
         return vec3d.subtract(vec3d2);
     }
 

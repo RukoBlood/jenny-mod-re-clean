@@ -3,6 +3,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.builder.Animation;
@@ -306,12 +307,12 @@ public enum Action {
 
     @SideOnly(value=Side.CLIENT)
     public static float a(GirlEntity em_class2582) {
-        return (float) Action.a(em_class2582.C);
+        return (float) Action.a(em_class2582.actionController);
     }
 
     @SideOnly(value=Side.CLIENT)
     public static float c(GirlEntity em_class2582, float f) {
-        return (float)(em_class2582.getFactory().getOrCreateAnimationData((Integer)Integer.valueOf((int)em_class2582.getUniqueID().hashCode())).tick + (double)f - em_class2582.C.tickOffset);
+        return (float)(em_class2582.getFactory().getOrCreateAnimationData((Integer)Integer.valueOf((int)em_class2582.getUniqueID().hashCode())).tick + (double)f - em_class2582.actionController.tickOffset);
     }
 
     @SideOnly(value=Side.CLIENT)

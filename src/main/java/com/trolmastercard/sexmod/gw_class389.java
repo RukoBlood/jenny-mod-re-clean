@@ -3,6 +3,8 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.util.Reference;
+
 public enum gw_class389 {
     GIRL_SPECIFIC,
     HEAD(0, "customHead"),
@@ -28,9 +30,9 @@ public enum gw_class389 {
     private gw_class389(int n2, String string2) {
         this.iconXPos = n2;
         this.boneName = string2;
-        ++ModInfo.i;
-        this.buttonIDPlus = ModInfo.i++;
-        this.buttonIDMinus = ModInfo.i;
+        ++Reference.i;
+        this.buttonIDPlus = Reference.i++;
+        this.buttonIDMinus = Reference.i;
     }
 
     public static int a() {

@@ -3,6 +3,8 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,8 +12,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class ak_class32 {
     public static Vec3d b(Entity entity, EntityPlayer entityPlayer, float f) {
-        Vec3d vec3d = b6_class67.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY + (double)entityPlayer.getEyeHeight(), entity.lastTickPosZ), entity.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0), (double)f);
-        Vec3d vec3d2 = b6_class67.a(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d = Reference.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY + (double)entityPlayer.getEyeHeight(), entity.lastTickPosZ), entity.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0), (double)f);
+        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
         return vec3d.subtract(vec3d2);
     }
 
@@ -36,7 +38,7 @@ public class ak_class32 {
     }
 
     static Vec3d b(Entity entity, float f) {
-        return b6_class67.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
+        return Reference.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
     }
 
     public static void a() {

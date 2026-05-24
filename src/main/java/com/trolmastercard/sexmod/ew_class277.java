@@ -4,6 +4,8 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -11,8 +13,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class ew_class277
-extends PlayerGirl {
+public abstract class ew_class277 extends PlayerGirl {
     final static public DataParameter<String> as = EntityDataManager.createKey(ew_class277.class, DataSerializers.STRING).getSerializer().createKey(119);
     final static public DataParameter<BlockPos> au = EntityDataManager.createKey(ew_class277.class, DataSerializers.BLOCK_POS).getSerializer().createKey(120);
     final static public DataParameter<String> at = EntityDataManager.createKey(ew_class277.class, DataSerializers.STRING).getSerializer().createKey(121);

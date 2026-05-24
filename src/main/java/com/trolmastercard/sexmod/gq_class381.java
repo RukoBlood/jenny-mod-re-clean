@@ -12,6 +12,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -331,7 +334,7 @@ extends GuiListExtended {
             int n6 = n += 4;
             int n7 = n + 71 - 4;
             float f = this.a(n2, n6, n7, n3, n4, n5);
-            int n8 = (int)b6_class67.a((float)n6, (float)n7, f);
+            int n8 = (int) Reference.Lerp((float)n6, (float)n7, f);
             this.this$0.d.drawTexturedModalRect(n8, n2, this.b(n3, n4, n8, n2, n8 + 4, n2 + 20) ? 223 : 219, 20, 4, 20);
             this.this$0.d.c.a(n5, (int)(f * 100.0f));
         }

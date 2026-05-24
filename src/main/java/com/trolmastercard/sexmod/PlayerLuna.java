@@ -7,6 +7,9 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.SexUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -126,7 +129,7 @@ extends PlayerGirl {
             entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             entityPlayer.prevRotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             this.r = this.java_lang_Float_I().floatValue() + 180.0f;
-            this.a(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
+            this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
             this.entityDataManager.set(D, 0);
         }
         ++this.ar;
@@ -138,7 +141,7 @@ extends PlayerGirl {
         if (n == 0 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
             fh_class313.b();
             entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
         }
         if (n == 25 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
             Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
@@ -187,7 +190,7 @@ extends PlayerGirl {
                     this.createAnimation("animation.cat.sit", true, animationEvent);
                     break;
                 }
-                if (this.E.getCurrentAnimation() != null && this.E.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
                     boolean bl = this.aq = !this.aq;
                 }
                 if (!this.af) {
@@ -196,16 +199,16 @@ extends PlayerGirl {
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.aj) {
-                        this.E.setAnimationSpeed(1.5);
+                        this.movementController.setAnimationSpeed(1.5);
                         this.createAnimation("animation.cat.run", true, animationEvent);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
-                        this.E.setAnimationSpeed(2.0);
+                        this.movementController.setAnimationSpeed(2.0);
                         this.createAnimation("animation.cat.fastwalk", true, animationEvent);
                         break;
                     }
-                    this.E.setAnimationSpeed(2.0);
+                    this.movementController.setAnimationSpeed(2.0);
                     this.createAnimation("animation.cat.backwards_walk", true, animationEvent);
                     break;
                 }
@@ -306,7 +309,7 @@ extends PlayerGirl {
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -330,24 +333,24 @@ extends PlayerGirl {
                 }
                 case "paymentMSG1": {
                     this.a(this.getID(), "Here, I know u like fish and yea.. these are for you");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "paymentMSG2": {
                     this.void_a("huh~?");
-                    this.a(SoundEventHandler.GIRLS_LUNA_HUH);
+                    this.a(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "paymentMSG3": {
                     this.void_a("nyyyaaaa~ :D");
                     int[] nArray = new int[]{1, 7, 10, 11};
                     int n = nArray[this.getRNG().nextInt(nArray.length)];
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_CUTENYA[n]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[n]);
                     break;
                 }
                 case "paymentMSG4": {
                     this.void_a("tankuuuu owowowo");
-                    this.a(SoundEventHandler.GIRLS_LUNA_OWO);
+                    this.a(SoundsHandler.GIRLS_LUNA_OWO);
                     break;
                 }
                 case "paymentDone": {
@@ -359,72 +362,72 @@ extends PlayerGirl {
                 }
                 case "breath": 
                 case "rod_breath": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_LIGHTBREATHING);
+                    this.a(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING);
                     break;
                 }
                 case "happyOh": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_HAPPYOH);
+                    this.a(SoundsHandler.GIRLS_LUNA_HAPPYOH);
                     break;
                 }
                 case "cutenya3": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_CUTENYA[3]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[3]);
                     break;
                 }
                 case "cutenya2": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_CUTENYA[2]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[2]);
                     break;
                 }
                 case "huh": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_HUH);
+                    this.a(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "hmph": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_HMPH);
+                    this.a(SoundsHandler.GIRLS_LUNA_HMPH);
                     break;
                 }
                 case "hehe": 
                 case "giggle": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_GIGGLE);
+                    this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
                 case "singing": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_SINGING);
+                    this.a(SoundsHandler.GIRLS_LUNA_SINGING);
                     break;
                 }
                 case "touch_boobsMSG1": {
                     this.void_a("comon~ touch me hihi~");
-                    this.a(SoundEventHandler.GIRLS_LUNA_GIGGLE);
+                    this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
                 case "touch": {
-                    this.a(SoundEventHandler.MISC_TOUCH);
+                    this.a(SoundsHandler.MISC_TOUCH);
                     break;
                 }
                 case "jump": {
-                    this.a(SoundEventHandler.MISC_JUMP[0], 0.2f);
+                    this.a(SoundsHandler.MISC_JUMP[0], 0.2f);
                     break;
                 }
                 case "horninya": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_HORNINYA);
+                    this.a(SoundsHandler.GIRLS_LUNA_HORNINYA);
                     break;
                 }
                 case "horninya2": 
                 case "touch_boobs_cumMSG3": 
                 case "sitting_cumMSG1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA[1]);
-                    this.a(SoundEventHandler.MISC_CUMINFLATION[0], 5.0f);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[1]);
+                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 5.0f);
                     break;
                 }
                 case "moan": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_MOAN));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
                     break;
                 }
                 case "touch_boobs_introDone": {
                     this.setCurrentAction(Action.TOUCH_BOOBS_SLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
-                    ds_class200.d();
-                    d3_class161.a(false);
+                    SexUI.resetCumPercentage();
+                    SexUI.d();
+                    HandlePlayerMovement.a(false);
                     break;
                 }
                 case "touch_boobs_slowDone": {
@@ -437,25 +440,25 @@ extends PlayerGirl {
                 }
                 case "addCumSlow": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "addCumFast": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04f);
+                    SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "fastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.TOUCH_BOOBS_SLOW);
                     break;
                 }
                 case "moanOrNya": {
                     if (Math.random() > 0.5) {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
                         break;
                     }
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_HORNINYA));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     break;
                 }
                 case "blackScreen": {
@@ -465,7 +468,7 @@ extends PlayerGirl {
                 }
                 case "touch_boobs_cumDone": {
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     this.void_r();
                     break;
                 }
@@ -475,60 +478,60 @@ extends PlayerGirl {
                     break;
                 }
                 case "touch_boobs_cumMSG1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA[3]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[3]);
                     break;
                 }
                 case "touch_boobs_cumMSG2": {
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA[9]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[9]);
                     break;
                 }
                 case "call_playerMSG1": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_GIGGLE);
+                    this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     this.void_a("come here - big guy hehe~");
                     break;
                 }
                 case "pounding": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "sitting_introMSG1": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_GIGGLE);
+                    this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     this.void_a("hehe~");
                     break;
                 }
                 case "sitting_introDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
-                    ds_class200.b();
-                    ds_class200.d();
+                    SexUI.resetCumPercentage();
+                    SexUI.d();
                     break;
                 }
                 case "sitting_slowMSG1": {
                     if (this.getRNG().nextBoolean()) {
                         if (this.getRNG().nextBoolean()) {
-                            this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_HORNINYA));
+                            this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
                             break;
                         }
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
                     } else {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_LIGHTBREATHING));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING));
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "sitting_fastMSG1": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_HORNINYA));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     } else {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "sitting_fastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     Vec3d vec3d = new Vec3d(0.0, -0.075f, -0.7109375);
                     Vec3d vec3d2 = ck_class135.a(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
@@ -544,24 +547,24 @@ extends PlayerGirl {
                 }
                 case "headpatMSG1": {
                     this.void_a("huh?~");
-                    this.a(SoundEventHandler.GIRLS_LUNA_HUH);
+                    this.a(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.a(SoundEventHandler.GIRLS_LUNA_MMM);
+                    this.a(SoundsHandler.GIRLS_LUNA_MMM);
                     break;
                 }
                 case "headpatMSG3": {
                     this.void_a("nya~");
-                    this.PlaySound(SoundEventHandler.GIRLS_LUNA_HORNINYA[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[0]);
                 }
             }
         };
-        this.E.transitionLengthTicks = 10.0;
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
+        this.movementController.transitionLengthTicks = 10.0;
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

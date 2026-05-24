@@ -20,6 +20,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
@@ -127,7 +132,7 @@ implements ai_class30 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public boolean boolean_b(EntityPlayer entityPlayer) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlGUI(this, entityPlayer, new String[]{"anal", "paizuri"}, null, false));
+        Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(this, entityPlayer, new String[]{"anal", "paizuri"}, null, false));
         return true;
     }
 
@@ -167,7 +172,7 @@ implements ai_class30 {
         }
         Vec3d vec3d2 = entityPlayer.getPositionVector();
         Vec3d vec3d3 = new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ);
-        return b6_class67.a(vec3d3, vec3d2, (double)f);
+        return Reference.a(vec3d3, vec3d2, (double)f);
     }
 
     void void_c(EntityPlayer entityPlayer) {
@@ -288,7 +293,7 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return vec3d;
         }
-        float f2 = b6_class67.a(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
+        float f2 = Reference.Lerp(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
         Vec3d vec3d2 = vec3d;
         float f3 = 135.0f;
         Action fp_class3242 = this.currentAction();
@@ -378,7 +383,7 @@ implements ai_class30 {
             float f = GoblinEntity.d(this);
             float f2 = GoblinEntity.c(this);
             if (this.world.isRemote && this.boolean_f()) {
-                d3_class161.a(true);
+                HandlePlayerMovement.a(true);
             }
             Vec3d vec3d2 = GoblinEntity.a(new Vec3d(0.0, 0.0, 1.5), f, f2);
             entityPlayer.motionX = vec3d2.x;
@@ -698,7 +703,7 @@ implements ai_class30 {
                     this.createAnimation("animation.goblin.sit", true, animationEvent);
                     break;
                 }
-                if (this.E.getCurrentAnimation() != null && this.E.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
                     boolean bl = this.aC = !this.aC;
                 }
                 if (!this.af) {
@@ -707,16 +712,16 @@ implements ai_class30 {
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.aj) {
-                        this.E.setAnimationSpeed(1.2f);
+                        this.movementController.setAnimationSpeed(1.2f);
                         this.createAnimation("animation.goblin.running", true, animationEvent);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
-                        this.E.setAnimationSpeed(2.0);
+                        this.movementController.setAnimationSpeed(2.0);
                         this.createAnimation("animation.goblin.walk", true, animationEvent);
                         break;
                     }
-                    this.E.setAnimationSpeed(1.5);
+                    this.movementController.setAnimationSpeed(1.5);
                     this.createAnimation("animation.goblin.backwards_walk", true, animationEvent);
                     break;
                 }
@@ -859,7 +864,7 @@ implements ai_class30 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -871,27 +876,27 @@ implements ai_class30 {
                 }
                 case "catchEh": {
                     this.void_a("ehh..");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchAkward": {
                     this.void_a("awkward..");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchWell": {
                     this.void_a("well...");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchRather": {
                     this.void_a("would you rather have this stupid... thing?");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchMe": {
                     this.void_a("...or use me?~");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchDone": {
@@ -908,17 +913,17 @@ implements ai_class30 {
                 }
                 case "paizuriChoice": {
                     this.void_a("good choice!~");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriBoth": {
                     this.void_a("...for both of us!");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizruiUse": {
                     this.void_a("now use me like a fuck toy!~");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriSwitch": {
@@ -927,19 +932,19 @@ implements ai_class30 {
                     break;
                 }
                 case "touch": {
-                    this.a(SoundEventHandler.MISC_TOUCH, 3.0f);
+                    this.a(SoundsHandler.MISC_TOUCH, 3.0f);
                     break;
                 }
                 case "pound": {
-                    this.a(SoundEventHandler.MISC_POUNDING);
+                    this.a(SoundsHandler.MISC_POUNDING);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04f);
+                    SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "paizuri_startDone": {
                     this.setCurrentAction(Action.PAIZURI_IDLE);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "paizuriFastDone": {
@@ -947,20 +952,20 @@ implements ai_class30 {
                     break;
                 }
                 case "paizuriFastReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.PAIZURI_FAST_CONTINUES);
                     break;
                 }
                 case "paizuriFastContinuesReady": 
                 case "neslon_fastBackSwitch": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "smallPound": {
-                    this.a(SoundEventHandler.MISC_POUNDING, 0.25f);
+                    this.a(SoundsHandler.MISC_POUNDING, 0.25f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "paizruiCam": {
@@ -976,7 +981,7 @@ implements ai_class30 {
                     break;
                 }
                 case "cumSound": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "jumpCam": {
@@ -997,17 +1002,17 @@ implements ai_class30 {
                         minecraft.gameSettings.thirdPersonView = 0;
                     }
                     this.void_a("hmm...");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingFound": {
                     this.void_a("guess we found a worthy breeding partner!");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingEnough": {
                     this.void_a("Eh.. go pin him down, before he runs off!");
-                    this.a(SoundEventHandler.MISC_PLOB);
+                    this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingCam2": {
@@ -1021,14 +1026,14 @@ implements ai_class30 {
                 case "breedingIntroDone": {
                     this.setCurrentAction(Action.BREEDING_SLOW_0);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "breeding_slow1Done": {
                     if (this.getRNG().nextBoolean()) {
                         boolean bl = this.aB = !this.aB;
                     }
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.BREEDING_FAST_0);
                     this.aH = false;
                     break;
@@ -1040,14 +1045,14 @@ implements ai_class30 {
                     break;
                 }
                 case "breeding_fast1Ready": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.aH = true;
                     this.N();
-                    this.C.tickOffset = 0.0;
+                    this.actionController.tickOffset = 0.0;
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "breeding_intro_3Done": {
@@ -1056,11 +1061,11 @@ implements ai_class30 {
                 }
                 case "breeding_3_wiggle": {
                     if (!this.getRNG().nextBoolean()) break;
-                    this.C.tickOffset = 0.0;
+                    this.actionController.tickOffset = 0.0;
                     break;
                 }
                 case "breeding_fast_3Done": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.BREEDING_SLOW_2);
                     break;
                 }
@@ -1081,7 +1086,7 @@ implements ai_class30 {
                 case "neslon_introDone": {
                     this.setCurrentAction(Action.NELSON_SLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "nelson_slowDone": {
@@ -1094,7 +1099,7 @@ implements ai_class30 {
                         this.aF = true;
                         return;
                     }
-                    if (!d3_class161.d) break;
+                    if (!HandlePlayerMovement.isThrusting) break;
                     this.aF = true;
                     break;
                 }
@@ -1112,11 +1117,11 @@ implements ai_class30 {
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        this.E.transitionLengthTicks = 2.0;
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
+        this.actionController.registerSoundListener(iSoundListener);
+        this.movementController.transitionLengthTicks = 2.0;
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     private static Exception a(Exception exception) {

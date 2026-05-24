@@ -18,6 +18,11 @@ package com.trolmastercard.sexmod;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.Allie.AllieEntity;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -186,7 +191,7 @@ implements IAnimatable {
         nBTTagCompound.setInteger(d, n2 + 1);
         if (n2 > k && n2 < c) {
             double d = (float)(n2 - k) / (float)(c - k);
-            d = b6_class67.h(d);
+            d = Reference.h(d);
             vec3d = new Vec3d(0.0, (double)entityPlayer.eyeHeight * (1.0 - d), 0.0);
             cj_class134.a(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer).add(vec3d), (int)(d * 150.0), d * 0.75, d);
         }
@@ -197,7 +202,7 @@ implements IAnimatable {
         nBTTagCompound.setBoolean(e, false);
         nBTTagCompound.setInteger(d, 0);
         if (world.isRemote) {
-            d3_class161.a(false);
+            HandlePlayerMovement.a(false);
             return;
         }
         NBTTagCompound nBTTagCompound2 = itemStack.getTagCompound();
@@ -251,7 +256,7 @@ implements IAnimatable {
             if (PlayerGirl.e(entityPlayer)) {
                 return;
             }
-            if (entityPlayer.world.isRemote && !d3_class161.b()) {
+            if (entityPlayer.world.isRemote && !HandlePlayerMovement.b()) {
                 return;
             }
             if (!entityPlayer.world.isRemote) {

@@ -28,6 +28,12 @@ import java.util.UUID;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4d;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockLog;
@@ -434,7 +440,7 @@ dr_class199 {
         }
         if (this.world.isRemote) {
             if (this.boolean_J() && ((String)this.entityDataManager.get(v)).equals(entityPlayer.getPersistentID().toString())) {
-                this.a(SoundEventHandler.GIRLS_KOBOLD_MASTER);
+                this.a(SoundsHandler.GIRLS_KOBOLD_MASTER);
             }
             this.boolean_b(entityPlayer);
         } else {
@@ -457,14 +463,14 @@ dr_class199 {
     @SideOnly(value=Side.CLIENT)
     public boolean boolean_b(EntityPlayer entityPlayer) {
         if (this.boolean_J() && entityPlayer.getPersistentID().toString().equals(this.entityDataManager.get(v))) {
-            Minecraft.getMinecraft().displayGuiScreen(new GirlGUI(this, entityPlayer, new String[]{"anal", "oral", "mating"}, null, false));
+            Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(this, entityPlayer, new String[]{"anal", "oral", "mating"}, null, false));
             return true;
         }
         if (this.getActivePotionEffect(HornyPotion.HORNY_POTION) != null) {
-            Minecraft.getMinecraft().displayGuiScreen(new GirlGUI(this, entityPlayer, new String[]{"anal", "oral"}, null, false));
+            Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(this, entityPlayer, new String[]{"anal", "oral"}, null, false));
             return true;
         }
-        Minecraft.getMinecraft().displayGuiScreen(new GirlGUI(this, entityPlayer, new String[]{"anal", "oral"}, new ItemStack[]{new ItemStack(Items.GOLD_INGOT, 3), new ItemStack(Items.IRON_PICKAXE)}, false));
+        Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(this, entityPlayer, new String[]{"anal", "oral"}, new ItemStack[]{new ItemStack(Items.GOLD_INGOT, 3), new ItemStack(Items.IRON_PICKAXE)}, false));
         return true;
     }
 
@@ -487,7 +493,7 @@ dr_class199 {
 
     protected void a(boolean bl, UUID uUID) {
         super.a(bl, true, uUID);
-        d3_class161.a(false);
+        HandlePlayerMovement.a(false);
     }
 
     @Override
@@ -541,7 +547,7 @@ dr_class199 {
         }
         this.rotationYaw = this.java_lang_Float_I().floatValue();
         this.setNoGravity(false);
-        Vec3d vec3d = b6_class67.a(this.getPositionVector(), this.net_minecraft_util_math_Vec3d_o(), 40 - this.aD);
+        Vec3d vec3d = Reference.a(this.getPositionVector(), this.net_minecraft_util_math_Vec3d_o(), 40 - this.aD);
         this.setPosition(vec3d.x, vec3d.y, vec3d.z);
         this.setCurrentAction(Action.NULL);
         Optional<UUID> optional = this.entityDataManager.get(aL);
@@ -701,7 +707,7 @@ dr_class199 {
         }
         float f = this.getDistance(entityPlayer);
         if (f < 2.0f && this.S > 2.0f) {
-            this.b(SoundEventHandler.a(SoundEventHandler.GIRLS_KOBOLD_HEYMASTER));
+            this.b(SoundsHandler.a(SoundsHandler.GIRLS_KOBOLD_HEYMASTER));
             this.void_a("Hey master!");
             aV = this.world.getTotalWorldTime();
         }
@@ -983,7 +989,7 @@ dr_class199 {
             Vec3d vec3d = new Vec3d((float)blockPosArray[0].getX() + 0.5f, (double)blockPosArray[0].getY() + 0.5625, (float)blockPosArray[0].getZ() + 0.5f);
             Vec3d vec3d2 = new Vec3d((float)blockPosArray[1].getX() + 0.5f, (double)blockPosArray[1].getY() + 0.5625, (float)blockPosArray[1].getZ() + 0.5f);
             boolean bl = vec3d.subtract((Vec3d)vec3d2).x == 0.0;
-            Vec3d vec3d3 = b6_class67.a(vec3d, vec3d2, 0.5);
+            Vec3d vec3d3 = Reference.a(vec3d, vec3d2, 0.5);
             this.entityDataManager.set(G, true);
             this.c(vec3d3);
             this.void_b(bl ? 0.0f : 90.0f);
@@ -1111,7 +1117,7 @@ dr_class199 {
         BlockPos blockPos;
         int n = 0;
         do {
-            blockPos = entityPlayer.getPosition().add(ModInfo.f.nextInt(10), 0, ModInfo.f.nextInt(10));
+            blockPos = entityPlayer.getPosition().add(Reference.RANDOM.nextInt(10), 0, Reference.RANDOM.nextInt(10));
         } while (++n < 20 && !this.attemptTeleport(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
         if (n == 20) {
             this.setPosition(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ);
@@ -1416,7 +1422,7 @@ dr_class199 {
             return;
         }
         IBlockState iBlockState = this.world.getBlockState(this.aI);
-        if (!this.boolean_a(new ItemStack(iBlockState.getBlock().getItemDropped(iBlockState, ModInfo.f, 0)))) {
+        if (!this.boolean_a(new ItemStack(iBlockState.getBlock().getItemDropped(iBlockState, Reference.RANDOM, 0)))) {
             this.ax = true;
             this.b(uUID, true);
             return;
@@ -2608,7 +2614,7 @@ dr_class199 {
     void b(SoundEvent soundEvent, float f) {
         float f2 = 0.25f - this.entityDataManager.get(aE).floatValue();
         double d = f2 / 0.25f;
-        float f3 = (float)b6_class67.b((double)0.9f, (double)1.1f, d);
+        float f3 = (float) Reference.Lerp((double)0.9f, (double)1.1f, d);
         this.PlaySoundAtPosition(soundEvent, f, f3);
     }
 
@@ -2629,7 +2635,7 @@ dr_class199 {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         float f = 0.25f - this.getDataManager().get(aE).floatValue();
@@ -2657,7 +2663,7 @@ dr_class199 {
                     if (this.onGround && Math.abs(Math.abs(this.prevPosY) - Math.abs(this.posY)) < (double)0.1f) {
                         this.rotationYaw = this.rotationYawHead;
                         double d2 = 1.0 + (double)(f * 2.0f);
-                        this.E.setAnimationSpeed(d2);
+                        this.movementController.setAnimationSpeed(d2);
                         if (this.boolean_a()) {
                             this.createAnimation("animation.kobold.crouch_walk", true, animationEvent);
                             break;
@@ -2768,7 +2774,7 @@ dr_class199 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -2779,11 +2785,11 @@ dr_class199 {
                 }
                 case "paymentMSG1": {
                     this.a(this.getID(), "I'd like to use ur services owo");
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "plob": {
-                    this.PlaySound(SoundEventHandler.MISC_PLOB, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "blackScreen": {
@@ -2812,15 +2818,15 @@ dr_class199 {
                 }
                 case "lipsound": {
                     if (this.getRNG().nextBoolean()) {
-                        this.a(SoundEventHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
+                        this.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
                     } else {
-                        this.a(SoundEventHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
+                        this.a(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
                     }
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "touch": {
-                    this.PlaySound(SoundEventHandler.MISC_TOUCH, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH, new int[0]);
                     break;
                 }
                 case "blowjobStartDone": {
@@ -2828,44 +2834,44 @@ dr_class199 {
                     this.aT = false;
                     this.a4 = true;
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "switch": {
                     this.aT = this.getRNG().nextBoolean();
-                    this.C.clearAnimationCache();
+                    this.actionController.clearAnimationCache();
                     break;
                 }
                 case "endSwitch": {
                     this.aT = false;
                     this.a4 = !this.a4;
-                    this.C.clearAnimationCache();
+                    this.actionController.clearAnimationCache();
                     break;
                 }
                 case "blowjobFastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.SUCKBLOWJOB_BLINK);
                     break;
                 }
                 case "cumLoud": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "cumQuiet": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 1.5f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
                     break;
                 }
                 case "analCumDone": 
                 case "blowjobCumDone": {
                     if (!this.boolean_n()) break;
                     this.void_r();
-                    ds_class200.c();
+                    SexUI.c();
                     break;
                 }
                 case "analStartDone": {
                     this.setCurrentAction(Action.KOBOLD_ANAL_SLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "analStartCam": {
@@ -2876,13 +2882,13 @@ dr_class199 {
                     break;
                 }
                 case "pounding": {
-                    this.PlaySound(SoundEventHandler.MISC_POUNDING, new int[0]);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                     break;
                 }
                 case "analFastRapid": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     if (this.currentAction() == Action.KOBOLD_ANAL_FAST) {
-                        this.C.tickOffset = 0.0;
+                        this.actionController.tickOffset = 0.0;
                     }
                     this.setCurrentAction(Action.KOBOLD_ANAL_FAST);
                     break;
@@ -2894,67 +2900,67 @@ dr_class199 {
                 }
                 case "analHard": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04f);
+                    SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "analSoft": {
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02f);
+                    SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle": {
-                    this.a(SoundEventHandler.GIRLS_KOBOLD_GIGGLE);
+                    this.a(SoundsHandler.GIRLS_KOBOLD_GIGGLE);
                     break;
                 }
                 case "moan": {
-                    this.a(SoundEventHandler.GIRLS_KOBOLD_MOAN);
+                    this.a(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "moanMating": {
                     --this.aN;
                     if (this.aN > 0) break;
                     this.aN = 3;
-                    this.a(SoundEventHandler.GIRLS_KOBOLD_MOAN);
+                    this.a(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "analHardMSG1": {
                     --this.aN;
                     if (this.aN > 0) break;
                     this.aN = 4;
-                    this.a(SoundEventHandler.GIRLS_KOBOLD_MOAN);
+                    this.a(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "orgasm": {
-                    this.a(SoundEventHandler.GIRLS_KOBOLD_ORGASM);
+                    this.a(SoundsHandler.GIRLS_KOBOLD_ORGASM);
                     break;
                 }
                 case "breath": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_LIGHTBREATHING, 0.5f);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_LIGHTBREATHING, 0.5f);
                     break;
                 }
                 case "haa": {
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_HAA, 0.7f);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_HAA, 0.7f);
                     break;
                 }
                 case "interested": {
-                    this.a(SoundEventHandler.GIRLS_KOBOLD_INTERESTED);
+                    this.a(SoundsHandler.GIRLS_KOBOLD_INTERESTED);
                     break;
                 }
                 case "yep": {
-                    this.a(SoundEventHandler.GIRLS_KOBOLD_YEP);
+                    this.a(SoundsHandler.GIRLS_KOBOLD_YEP);
                     break;
                 }
                 case "bjmoan": {
-                    this.b(SoundEventHandler.a(SoundEventHandler.GIRLS_KOBOLD_BJMOAN));
+                    this.b(SoundsHandler.a(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
                     break;
                 }
                 case "blowjobStartbreath": {
                     int n = this.getRNG().nextInt(3);
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_LIGHTBREATHING[n]);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_LIGHTBREATHING[n]);
                     break;
                 }
                 case "matingCam": {
@@ -2968,7 +2974,7 @@ dr_class199 {
                 }
                 case "mating_press_startDone": {
                     if (this.boolean_n()) {
-                        ds_class200.d();
+                        SexUI.d();
                     }
                 }
                 case "mating_press_hardDone": {
@@ -2978,17 +2984,17 @@ dr_class199 {
                 }
                 case "mating_press_softReady": {
                     if (this.boolean_n()) {
-                        ds_class200.a(0.04f);
+                        SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.MATING_PRESS_HARD);
                     break;
                 }
                 case "mating_press_hardReady": {
                     if (this.boolean_n()) {
-                        ds_class200.a(0.04f);
+                        SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -3003,12 +3009,12 @@ dr_class199 {
                 }
                 case "cumMsg": {
                     this.void_a("I.. hope I am satisfying you sir");
-                    this.b(SoundEventHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
+                    this.b(SoundsHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
                     break;
                 }
                 case "renderEgg": {
                     this.Q = true;
-                    this.a(SoundEventHandler.MISC_PLOB, 0.5f);
+                    this.a(SoundsHandler.MISC_PLOB, 0.5f);
                     break;
                 }
                 case "mating_press_cumDone": {
@@ -3017,11 +3023,11 @@ dr_class199 {
                 }
             }
         };
-        this.E.transitionLengthTicks = 10.0;
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
+        this.movementController.transitionLengthTicks = 10.0;
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     @Override

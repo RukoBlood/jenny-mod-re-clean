@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -191,7 +195,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (f__class2972 == null) {
             return;
         }
-        GlStateManager.rotate(-b6_class67.b(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(-Reference.b(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
     }
 
     static boolean a_5(GirlEntity em_class2582) {
@@ -268,7 +272,7 @@ extends GirlRenderer<ManglelieEntity> {
         ItemStack itemStack = new ItemStack(Items.BOW);
         float f = ((ManglelieEntity)this.j).float_b(i.getRenderPartialTicks());
         if (f < 1.0f) {
-            float f2 = (float)b6_class67.e(f);
+            float f2 = (float) Reference.e(f);
             ((ManglelieEntity)this.j).d((int)(11.0f * (1.0f - f2) + 71980.0f));
             ((ManglelieEntity)this.j).void_a(itemStack);
             ((ManglelieEntity)this.j).setActiveHand(EnumHand.MAIN_HAND);

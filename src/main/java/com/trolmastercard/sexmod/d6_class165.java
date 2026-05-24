@@ -18,6 +18,8 @@ import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+
+import com.trolmastercard.sexmod.girls.GirlRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

@@ -12,6 +12,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.proxy.ClientProxy;
 import io.netty.buffer.ByteBuf;
 import java.io.File;
 import java.io.FileOutputStream;

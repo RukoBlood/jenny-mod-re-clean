@@ -10,6 +10,8 @@ package com.trolmastercard.sexmod;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;

@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

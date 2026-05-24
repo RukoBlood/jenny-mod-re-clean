@@ -11,6 +11,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -85,7 +86,7 @@ implements IMessage {
             }
             em_class2582.void_a(false);
             em_class2582.void_e((UUID)null);
-            em_class2582.B = null;
+            em_class2582.playerCamPos = null;
             em_class2582.setNoGravity(false);
             em_class2582.noClip = false;
             object2 = em_class2582.world;

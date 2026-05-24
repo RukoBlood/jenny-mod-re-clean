@@ -10,6 +10,11 @@ package com.trolmastercard.sexmod;
 import com.google.common.base.Optional;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
@@ -222,7 +227,7 @@ extends PlayerGirl {
                     this.createAnimation("animation.ellie.ride", true, animationEvent);
                     break;
                 }
-                if (this.E.getCurrentAnimation() != null && this.E.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
                     boolean bl = this.ar = !this.ar;
                 }
                 if (!this.af) {
@@ -231,16 +236,16 @@ extends PlayerGirl {
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.aj) {
-                        this.E.setAnimationSpeed(1.5);
+                        this.movementController.setAnimationSpeed(1.5);
                         this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.run", true, animationEvent);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
-                        this.E.setAnimationSpeed(2.0);
+                        this.movementController.setAnimationSpeed(2.0);
                         this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.fastwalk", true, animationEvent);
                         break;
                     }
-                    this.E.setAnimationSpeed(1.5);
+                    this.movementController.setAnimationSpeed(1.5);
                     this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.backwards_walk", true, animationEvent);
                     break;
                 }
@@ -361,7 +366,7 @@ extends PlayerGirl {
     @Override
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -398,22 +403,22 @@ extends PlayerGirl {
                 }
                 case "hugMSG2": {
                     this.h("Hmm...");
-                    this.a(SoundEventHandler.GIRLS_ELLIE_HMPH[3], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_HMPH[3], 3.0f);
                     break;
                 }
                 case "hugMSG3": {
                     this.h("Hey!");
-                    this.a(SoundEventHandler.GIRLS_ELLIE_AHH[2], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_AHH[2], 3.0f);
                     break;
                 }
                 case "hugMSG4": {
                     this.h(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
-                    this.a(SoundEventHandler.GIRLS_ELLIE_GIGGLE[0], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[0], 3.0f);
                     break;
                 }
                 case "hugMSG5": {
                     this.h(I18n.format("ellie.dialogue.whattodo", new Object[0]));
-                    this.a(SoundEventHandler.GIRLS_ELLIE_HUH[1], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_HUH[1], 3.0f);
                     break;
                 }
                 case "hugDone": {
@@ -425,12 +430,12 @@ extends PlayerGirl {
                 }
                 case "hugselectedMSG1": {
                     this.h(I18n.format("ellie.dialogue.iknow", new Object[0]));
-                    this.a(SoundEventHandler.GIRLS_ELLIE_MMM[0], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_MMM[0], 3.0f);
                     break;
                 }
                 case "hugselectedMSG2": {
                     this.h(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
-                    this.a(SoundEventHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
                     break;
                 }
                 case "hugselectedDone": {
@@ -446,7 +451,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "sitdownMSG1": {
-                    this.a(SoundEventHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
                     if (!this.boolean_e()) break;
                     this.h(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
                     break;
@@ -460,81 +465,81 @@ extends PlayerGirl {
                 case "missionary_startDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.MISSIONARY_SLOW);
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "cowgirlStartMSG0": {
-                    this.a(SoundEventHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
                     break;
                 }
                 case "cowgirlStartMSG1": {
                     if (!this.boolean_e()) break;
                     this.void_a(I18n.format("ellie.dialogue.like", new Object[0]));
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     break;
                 }
                 case "cowgirlStartMSG2": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_ELLIE_AHH), 3.0f);
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "cowgirlStartDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.COWGIRLSLOW);
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "cowgirlfastMSG1": {
                     if (this.aq) {
                         this.aq = false;
                     } else {
-                        this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_ELLIE_AHH), 3.0f);
+                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "cowgirlfastReady": {
                     if (!this.boolean_n()) break;
-                    if (!d3_class161.d) {
+                    if (!HandlePlayerMovement.isThrusting) {
                         this.setCurrentAction(Action.COWGIRLSLOW);
                         break;
                     }
-                    if (ModInfo.f.nextInt(4) == 1) break;
-                    this.C.clearAnimationCache();
+                    if (Reference.RANDOM.nextInt(4) == 1) break;
+                    this.actionController.clearAnimationCache();
                     break;
                 }
                 case "cowgirlfastdomMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.2);
+                    SexUI.addCumPercentage(0.2);
                     break;
                 }
                 case "cowgirlcumMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_ELLIE_AHH), 3.0f);
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG2": {
-                    this.a(SoundEventHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG3": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG4": {
                     if (!this.boolean_n()) break;
-                    ds_class200.c();
+                    SexUI.c();
                     break;
                 }
                 case "cowgirlcumMSG5": 
                 case "missionary_cumMSG2": {
-                    this.a(SoundEventHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
                     if (!this.boolean_n()) break;
                     this.void_a(I18n.format("ellie.dialogue.goodboy", new Object[0]));
                     break;
@@ -548,7 +553,7 @@ extends PlayerGirl {
                 case "cowgirlcumDone": 
                 case "carry_cumDone": {
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     this.void_r();
                     break;
                 }
@@ -563,34 +568,34 @@ extends PlayerGirl {
                 }
                 case "openSexUi": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "missionary_slowMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() && this.getRNG().nextBoolean()) {
-                        this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_ELLIE_MOAN), 3.0f);
+                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_MOAN), 3.0f);
                     } else {
-                        this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_ELLIE_AHH), 3.0f);
+                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "missionary_fastMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() || this.getRNG().nextBoolean()) {
-                        this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_ELLIE_MOAN), 3.0f);
+                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_MOAN), 3.0f);
                     } else {
-                        this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_ELLIE_AHH), 3.0f);
+                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.05);
+                    SexUI.addCumPercentage(0.05);
                     break;
                 }
                 case "missionary_fastDone": {
                     if (!this.boolean_n()) break;
-                    if (d3_class161.d) {
+                    if (HandlePlayerMovement.isThrusting) {
                         this.setCurrentAction(Action.MISSIONARY_FAST);
                         break;
                     }
@@ -598,43 +603,43 @@ extends PlayerGirl {
                     break;
                 }
                 case "bedRustle": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
-                    this.PlaySound(SoundEventHandler.MISC_BEDRUSTLE[0]);
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[0]);
                     break;
                 }
                 case "bedRustle1": {
-                    this.PlaySound(SoundEventHandler.MISC_BEDRUSTLE[1]);
+                    this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[1]);
                     break;
                 }
                 case "missionary_cumMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_ELLIE_AHH), 3.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     break;
                 }
                 case "carry_introMSG1": {
                     this.void_a("I'm hungry..");
-                    this.a(SoundEventHandler.GIRLS_ELLIE_HMPH, 6.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_HMPH, 6.0f);
                     break;
                 }
                 case "carry_introMSG2": {
                     this.void_a("heh~");
-                    this.a(SoundEventHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
+                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
                     break;
                 }
                 case "lipsound": {
-                    this.a(SoundEventHandler.GIRLS_ALLIE_LIPSOUND);
+                    this.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_INSERTS, 6.0f);
-                    this.a(SoundEventHandler.MISC_POUNDING);
+                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.a(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "pound": {
-                    this.a(SoundEventHandler.MISC_POUNDING);
+                    this.a(SoundsHandler.MISC_POUNDING);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "carry_slowDone": {
@@ -645,20 +650,20 @@ extends PlayerGirl {
                     break;
                 }
                 case "carry_fastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.CARRY_SLOW);
                     break;
                 }
                 case "sexUI": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

@@ -7,6 +7,10 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.SexUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
@@ -178,7 +182,7 @@ extends PlayerGirl {
         if (this.ar == -1) {
             if (this.world.isRemote) {
                 fh_class313.b();
-                d3_class161.a(false);
+                HandlePlayerMovement.a(false);
             } else {
                 this.void_e(entityPlayer.getPersistentID());
             }
@@ -197,7 +201,7 @@ extends PlayerGirl {
                 Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(ck_class135.a(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.boolean_n()) {
-                ds_class200.d();
+                SexUI.d();
             }
             return;
         }
@@ -252,7 +256,7 @@ extends PlayerGirl {
                     this.createAnimation("animation.bia.sit", true, animationEvent);
                     break;
                 }
-                if (this.E.getCurrentAnimation() != null && this.E.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
                     boolean bl = this.ap = !this.ap;
                 }
                 if (!this.af) {
@@ -261,16 +265,16 @@ extends PlayerGirl {
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.aj) {
-                        this.E.setAnimationSpeed(1.2);
+                        this.movementController.setAnimationSpeed(1.2);
                         this.createAnimation("animation.bia.run", true, animationEvent);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
-                        this.E.setAnimationSpeed(1.2);
+                        this.movementController.setAnimationSpeed(1.2);
                         this.createAnimation("animation.bia.fastwalk", true, animationEvent);
                         break;
                     }
-                    this.E.setAnimationSpeed(1.2);
+                    this.movementController.setAnimationSpeed(1.2);
                     this.createAnimation("animation.bia.backwards_walk", true, animationEvent);
                     break;
                 }
@@ -387,7 +391,7 @@ extends PlayerGirl {
     @Override
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -399,12 +403,12 @@ extends PlayerGirl {
                 }
                 case "stripMSG1": {
                     this.h("Hihi~");
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_BIA_GIGGLE));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
                 case "sexUiOn": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "pearl": {
@@ -413,37 +417,37 @@ extends PlayerGirl {
                 }
                 case "talk_hornyMSG1": {
                     this.void_a("Heyaaa~");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_HEY[3]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_HEY[3]);
                     break;
                 }
                 case "talk_hornyMSG2": {
                     this.void_a("I am Hornyyyyy~");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_GIGGLE[2]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[2]);
                     break;
                 }
                 case "talk_hornyMSG3": {
                     this.void_a("So...");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_BREATH[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "talk_hornyMSG4": {
                     this.void_a("Are we gonna have some fun nyaa?");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_HUH[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
                 case "talk_responseMSG1": {
                     this.void_a("Huh?!...");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_HUH[2]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[2]);
                     break;
                 }
                 case "talk_responseMSG2": {
                     this.void_a("I... uhm...");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_BREATH[1]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[1]);
                     break;
                 }
                 case "talk_responseMSG3": {
                     this.void_a("yes~");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_GIGGLE[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[0]);
                     break;
                 }
                 case "talk_responseDone": {
@@ -456,55 +460,55 @@ extends PlayerGirl {
                     break;
                 }
                 case "anal_prepareMSG1": {
-                    this.PlaySound(SoundEventHandler.MISC_PLOB[0]);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "anal_prepareMSG2": {
-                    this.PlaySound(SoundEventHandler.MISC_BEDRUSTLE[0]);
+                    this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[0]);
                     break;
                 }
                 case "anal_prepareDone": {
                     this.setCurrentAction(Action.ANAL_WAIT);
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     break;
                 }
                 case "anal_startMSG1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_MMM[3]);
-                    this.PlaySound(SoundEventHandler.MISC_POUNDING[34]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[3]);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING[34]);
                     break;
                 }
                 case "anal_fastMSG1": {
                     if (this.boolean_n()) {
-                        ds_class200.a(0.02);
+                        SexUI.addCumPercentage(0.02);
                     }
                     if (this.boolean_n()) {
-                        ds_class200.a(0.02);
+                        SexUI.addCumPercentage(0.02);
                     }
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.5f);
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_BIA_AHH));
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_slowMSG1": 
                 case "anal_startMSG2": {
                     if (this.boolean_n()) {
-                        ds_class200.a(0.02);
+                        SexUI.addCumPercentage(0.02);
                     }
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.5f);
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_BIA_AHH));
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_fastDone": {
-                    if (!this.boolean_n() || d3_class161.d) break;
+                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                 }
                 case "anal_startDone": {
                     this.setCurrentAction(Action.ANAL_SLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "anal_cumMSG2": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_BIA_AHH));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_cumBlackScreen": {
@@ -515,29 +519,29 @@ extends PlayerGirl {
                 case "doggy_cumDone": 
                 case "anal_cumDone": {
                     if (this.boolean_n()) {
-                        ds_class200.b();
+                        SexUI.resetCumPercentage();
                     }
                     this.void_r();
                     break;
                 }
                 case "headpatMSG1": {
                     this.void_a("Ooh headpats!");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_BREATH[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "headpatMSG2": {
                     this.void_a("Hmmm.... :D");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_MMM[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[0]);
                     break;
                 }
                 case "headpatMSG3": {
                     this.void_a("huh...?");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_HUH[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
                 case "headpatMSG4": {
                     this.void_a("Tanku hehe");
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_GIGGLE[1]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[1]);
                     break;
                 }
                 case "headpatDone": {
@@ -547,7 +551,7 @@ extends PlayerGirl {
                 }
                 case "sitdownMSG1": {
                     this.void_a("come here big boy~");
-                    this.a(SoundEventHandler.GIRLS_BIA_BREATH);
+                    this.a(SoundsHandler.GIRLS_BIA_BREATH);
                     break;
                 }
                 case "sitdownDone": {
@@ -555,53 +559,53 @@ extends PlayerGirl {
                     break;
                 }
                 case "slide": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_SLIDE));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_SLIDE));
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.005);
+                    SexUI.addCumPercentage(0.005);
                     break;
                 }
                 case "pound": {
-                    this.a(SoundEventHandler.MISC_POUNDING);
+                    this.a(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "doggyMoan": {
-                    this.a(this.getRNG().nextBoolean() ? SoundEventHandler.GIRLS_BIA_AHH : SoundEventHandler.GIRLS_BIA_MMM);
+                    this.a(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_BIA_AHH : SoundsHandler.GIRLS_BIA_MMM);
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "doggySwitch": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.PRONE_DOGGY_HARD);
                     break;
                 }
                 case "doggyReset": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "cum": {
-                    this.a(SoundEventHandler.MISC_INSERTS, 6.0f);
+                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
                     break;
                 }
                 case "orgasm1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_MMM[6]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[6]);
                     break;
                 }
                 case "orgasm2": {
-                    this.PlaySound(SoundEventHandler.GIRLS_BIA_MMM[7]);
+                    this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[7]);
                     break;
                 }
                 case "openSexUI": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
-        animationData.addAnimationController(this.C);
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
+        animationData.addAnimationController(this.actionController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

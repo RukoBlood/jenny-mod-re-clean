@@ -13,6 +13,7 @@
 package com.trolmastercard.sexmod;
 
 import com.google.common.base.Optional;
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.lang.reflect.Constructor;
 import java.util.ConcurrentModificationException;

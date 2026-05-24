@@ -17,6 +17,9 @@ package com.trolmastercard.sexmod;
 import java.util.ConcurrentModificationException;
 import java.util.Random;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
@@ -107,10 +110,10 @@ implements IAnimatable {
             return actionResult;
         }
         if (!this.a(world, entityPlayer)) {
-            world.playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundEventHandler.MISC_BEEW[0], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
+            world.playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundsHandler.MISC_BEEW[0], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
             return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, entityPlayer.getHeldItem(enumHand));
         }
-        world.playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundEventHandler.MISC_WEOWEO[1], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
+        world.playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundsHandler.MISC_WEOWEO[1], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
         nBTTagCompound.setLong(b, System.currentTimeMillis());
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, entityPlayer.getHeldItem(enumHand));
     }
@@ -137,7 +140,7 @@ implements IAnimatable {
         if (!entityPlayer.getPersistentID().equals(f__class2972.java_util_UUID_O())) {
             return;
         }
-        entityPlayer.world.playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundEventHandler.MISC_WEOWEO[0], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
+        entityPlayer.world.playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundsHandler.MISC_WEOWEO[0], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
         entityPlayer.getEntityData().setLong(m, System.currentTimeMillis());
         entityInteract.setCanceled(true);
     }
@@ -191,7 +194,7 @@ implements IAnimatable {
         Vec3d vec3d2 = entityPlayer.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0);
         Vec3d vec3d3 = vec3d2.add(ck_class135.a((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         float f = (float)(l - l2 - 1000L) / 2000.0f;
-        Vec3d vec3d4 = b6_class67.a(vec3d, vec3d3, (double)f);
+        Vec3d vec3d4 = Reference.a(vec3d, vec3d3, (double)f);
         ez_class281.b = 0.2f;
         Minecraft.getMinecraft().effectRenderer.addEffect(new ez_class281(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
     }
@@ -213,7 +216,7 @@ implements IAnimatable {
         Vec3d vec3d2 = vec3d.add(ck_class135.a((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         Vec3d vec3d3 = vec3d.add(entityPlayer.getLookVec().normalize().scale(2.0));
         float f = (float)(l - l2 - 1000L) / 2000.0f;
-        Vec3d vec3d4 = b6_class67.a(vec3d2, vec3d3, (double)f);
+        Vec3d vec3d4 = Reference.a(vec3d2, vec3d3, (double)f);
         ez_class281.b = 0.2f;
         Minecraft.getMinecraft().effectRenderer.addEffect(new ez_class281(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
     }

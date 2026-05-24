@@ -11,6 +11,9 @@ import java.util.HashSet;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -232,7 +235,7 @@ extends d9_class168 {
             }
         } else if (this.C) {
             GoblinRenderer.a(f2);
-            object = new Vec3d(b6_class67.a(-0.1f, 0.2f, PlayerGoblinRenderer.i.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
+            object = new Vec3d(Reference.Lerp(-0.1f, 0.2f, PlayerGoblinRenderer.i.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
             object = GoblinEntity.b((Vec3d)object, PlayerGoblinRenderer.i.player.rotationYaw);
             d = ((Vec3d)object).x;
             d2 = ((Vec3d)object).y;

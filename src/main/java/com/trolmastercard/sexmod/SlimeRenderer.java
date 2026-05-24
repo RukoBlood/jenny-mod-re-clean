@@ -4,6 +4,8 @@
 package com.trolmastercard.sexmod;
 
 import java.util.HashSet;
+
+import com.trolmastercard.sexmod.girls.GirlRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 

@@ -5,6 +5,9 @@ package com.trolmastercard.sexmod;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,17 +42,17 @@ public class ep_class263 {
         if (this.g.size() < this.a) {
             for (int i = 0; i < 6; ++i) {
                 vec3d = this.i.a(this.e);
-                this.g.add(new an_class35(minecraft.world, this.d.a(this.e), new Vec3d(vec3d.x + (double)((ModInfo.f.nextFloat() * 2.0f - 1.0f) * this.j), vec3d.y + (double)((ModInfo.f.nextFloat() * 2.0f - 1.0f) * this.j), vec3d.z + (double)((ModInfo.f.nextFloat() * 2.0f - 1.0f) * this.j))));
+                this.g.add(new an_class35(minecraft.world, this.d.a(this.e), new Vec3d(vec3d.x + (double)((Reference.RANDOM.nextFloat() * 2.0f - 1.0f) * this.j), vec3d.y + (double)((Reference.RANDOM.nextFloat() * 2.0f - 1.0f) * this.j), vec3d.z + (double)((Reference.RANDOM.nextFloat() * 2.0f - 1.0f) * this.j))));
             }
         }
         GlStateManager.disableCull();
         GlStateManager.disableAlpha();
-        Vec3d vec3d2 = b6_class67.a(new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ), minecraft.player.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.a(new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ), minecraft.player.getPositionVector(), (double)f);
         bufferBuilder.begin(9, DefaultVertexFormats.POSITION_COLOR);
         this.b();
         vec3d = null;
         for (an_class35 an_class352 : this.g) {
-            Vec3d vec3d3 = b6_class67.a(an_class352.d, an_class352.f, (double)f);
+            Vec3d vec3d3 = Reference.a(an_class352.d, an_class352.f, (double)f);
             if (vec3d == null) {
                 vec3d = vec3d3;
             }

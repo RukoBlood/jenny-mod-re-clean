@@ -7,6 +7,11 @@
 package com.trolmastercard.sexmod;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -112,8 +117,8 @@ extends PlayerGirl {
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayer.capabilities.isFlying = true;
             this.world.getPlayerEntityByUUID((UUID)this.java_util_UUID_m()).capabilities.isFlying = true;
-            this.a(0.0, 0.0, 0.4, 0.0f, 60.0f);
-            this.B = null;
+            this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
+            this.playerCamPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
             NetworkRegistry.networkWrapper.sendTo((IMessage)new gz_class393(false), (EntityPlayerMP)entityPlayer);
         }
@@ -137,7 +142,7 @@ extends PlayerGirl {
             case PAIZURI_SLOW: {
                 if (this.as) {
                     this.as = false;
-                    this.a(0.0, 0.0, 0.0, 0.0f, 70.0f);
+                    this.moveCamera(0.0, 0.0, 0.0, 0.0f, 70.0f);
                 }
                 return Action.PAIZURI_FAST;
             }
@@ -148,7 +153,7 @@ extends PlayerGirl {
     @Override
     protected Action CumAction(Action action) {
         if (action == Action.SUCKBLOWJOB || action == Action.THRUSTBLOWJOB) {
-            this.a(0.0, 0.0, 0.0, 0.0f, 70.0f);
+            this.moveCamera(0.0, 0.0, 0.0, 0.0f, 70.0f);
             return Action.CUMBLOWJOB;
         }
         if (action == Action.DOGGYSLOW || action == Action.DOGGYFAST) {
@@ -195,7 +200,7 @@ extends PlayerGirl {
                     this.createAnimation("animation.jenny.sit", true, animationEvent);
                     break;
                 }
-                if (this.E.getCurrentAnimation() != null && this.E.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
                     boolean bl = this.ap = !this.ap;
                 }
                 if (!this.af) {
@@ -204,16 +209,16 @@ extends PlayerGirl {
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.aj) {
-                        this.E.setAnimationSpeed(1.2f);
+                        this.movementController.setAnimationSpeed(1.2f);
                         this.createAnimation("animation.jenny.run", true, animationEvent);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
-                        this.E.setAnimationSpeed(1.5);
+                        this.movementController.setAnimationSpeed(1.5);
                         this.createAnimation("animation.jenny.fastwalk", true, animationEvent);
                         break;
                     }
-                    this.E.setAnimationSpeed(1.2f);
+                    this.movementController.setAnimationSpeed(1.2f);
                     this.createAnimation("animation.jenny.backwards_walk", true, animationEvent);
                     break;
                 }
@@ -321,7 +326,7 @@ extends PlayerGirl {
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        if (this.C == null) {
+        if (this.actionController == null) {
             this.void_p();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
@@ -333,16 +338,16 @@ extends PlayerGirl {
                 }
                 case "stripMSG1": {
                     this.h("Hihi~");
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_GIGGLE));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "paymentMSG1": {
                     this.h("Huh?");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_HUH[1]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_HUH[1]);
                     break;
                 }
                 case "paymentMSG2": {
-                    this.a(SoundEventHandler.MISC_PLOB[0], 0.5f);
+                    this.a(SoundsHandler.MISC_PLOB[0], 0.5f);
                     String string = "<" + Minecraft.getMinecraft().player.getName() + "> ";
                     switch (this.entityDataManager.get(GirlEntity.h)) {
                         case "strip": {
@@ -367,16 +372,16 @@ extends PlayerGirl {
                 }
                 case "paymentMSG3": {
                     this.h("Hehe~");
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_GIGGLE));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "sexUiOn": {
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "paymentMSG4": {
-                    this.a(SoundEventHandler.MISC_PLOB[0], 0.25f);
+                    this.a(SoundsHandler.MISC_PLOB[0], 0.25f);
                     break;
                 }
                 case "paymentDone": {
@@ -385,84 +390,84 @@ extends PlayerGirl {
                 }
                 case "bjiMSG1": {
                     this.h("What are you...");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_MMM[8]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
                     this.r = 180.0f;
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     break;
                 }
                 case "bjiMSG2": {
                     this.h("eh... boys...");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG3": {
                     this.h("OHOhh...!");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_AFTERSESSIONMOAN[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_AFTERSESSIONMOAN[0]);
                     break;
                 }
                 case "bjiMSG4": {
-                    this.PlaySound(SoundEventHandler.MISC_BELLJINGLE[0]);
+                    this.PlaySound(SoundsHandler.MISC_BELLJINGLE[0]);
                     break;
                 }
                 case "bjiMSG5": {
                     this.h("Was this really necessary?!");
-                    this.a(SoundEventHandler.GIRLS_JENNY_HMPH[1], 0.5f);
+                    this.a(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     break;
                 }
                 case "bjiMSG6": {
                     this.h("Oh~");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG7": {
                     this.h("You like it?~");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_GIGGLE[4]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[4]);
                     break;
                 }
                 case "bjiMSG8": {
                     this.b("<" + Minecraft.getMinecraft().player.getName() + "> Yee", true);
-                    this.a(SoundEventHandler.MISC_PLOB[0], 0.5f);
+                    this.a(SoundsHandler.MISC_PLOB[0], 0.5f);
                     break;
                 }
                 case "bjiMSG9": {
                     this.h("Hihihi~");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_GIGGLE[2]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[2]);
                     break;
                 }
                 case "bjiMSG10": {
                     if (!this.boolean_n()) break;
-                    this.a(-0.4, -0.8, -0.2, 60.0f, -3.0f);
+                    this.moveCamera(-0.4, -0.8, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "bjiMSG11": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_LIPSOUND));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_LIPSOUND));
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjiMSG12": {
-                    if (ModInfo.f.nextInt(5) == 0) {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_BJMOAN));
+                    if (Reference.RANDOM.nextInt(5) == 0) {
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_BJMOAN));
                     }
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_LIPSOUND));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_LIPSOUND));
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjtMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_MMM));
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_LIPSOUND));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_MMM));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_LIPSOUND));
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "bjtDone": {
@@ -470,45 +475,45 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggyfastReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     this.ar = true;
                     break;
                 }
                 case "bjtReady": 
                 case "paizuriReady": {
-                    if (!this.boolean_n() || !d3_class161.d) break;
+                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "bjcMSG1": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_BJMOAN[1]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_BJMOAN[1]);
                     break;
                 }
                 case "bjcMSG2": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_BJMOAN[7]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_BJMOAN[7]);
                     if (!this.boolean_n()) break;
-                    ds_class200.c();
+                    SexUI.c();
                     break;
                 }
                 case "bjcMSG3": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_AFTERSESSIONMOAN[1]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_AFTERSESSIONMOAN[1]);
                     break;
                 }
                 case "bjcMSG4": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_LIGHTBREATHING[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[0]);
                     break;
                 }
                 case "bjcMSG5": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_LIGHTBREATHING[1]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[1]);
                     break;
                 }
                 case "bjcMSG6": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_LIGHTBREATHING[2]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[2]);
                     break;
                 }
                 case "bjcMSG7": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_LIGHTBREATHING[3]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[3]);
                     break;
                 }
                 case "bjcBlackScreen": {
@@ -520,27 +525,27 @@ extends PlayerGirl {
                 case "paizuri_cumDone": 
                 case "doggyCumDone": {
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     this.void_r();
                     break;
                 }
                 case "doggyGoOnBedMSG1": {
-                    this.PlaySound(SoundEventHandler.MISC_BEDRUSTLE[0]);
+                    this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[0]);
                     this.r = this.rotationYaw;
                     break;
                 }
                 case "doggyGoOnBedMSG2": {
                     this.void_a("what are you waiting for?~");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_LIGHTBREATHING[9]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[9]);
                     break;
                 }
                 case "doggyGoOnBedMSG3": {
                     this.void_a("this ass ain't gonna fuck itself...");
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_GIGGLE[0]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[0]);
                     break;
                 }
                 case "doggyGoOnBedMSG4": {
-                    this.a(SoundEventHandler.MISC_SLAP[0], 0.75f);
+                    this.a(SoundsHandler.MISC_SLAP[0], 0.75f);
                     break;
                 }
                 case "doggyGoOnBedDone": {
@@ -549,73 +554,73 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG1": {
-                    this.PlaySound(SoundEventHandler.MISC_TOUCH[0]);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH[0]);
                     break;
                 }
                 case "doggystartMSG2": {
-                    this.PlaySound(SoundEventHandler.MISC_TOUCH[1]);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH[1]);
                     break;
                 }
                 case "doggystartMSG3": {
-                    this.a(SoundEventHandler.MISC_BEDRUSTLE[1], 0.5f);
+                    this.a(SoundsHandler.MISC_BEDRUSTLE[1], 0.5f);
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_SMALLINSERTS));
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_MMM[1]);
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS));
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[1]);
                     if (!this.boolean_n()) break;
-                    ds_class200.b();
+                    SexUI.resetCumPercentage();
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.33f);
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_MOAN));
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_MOAN));
                     break;
                 }
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.boolean_n()) break;
-                    ds_class200.d();
+                    SexUI.d();
                     break;
                 }
                 case "doggyslowMSG1": {
                     this.ar = false;
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.33f);
-                    int n = ModInfo.f.nextInt(4);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
+                    int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = ModInfo.f.nextInt(2);
+                        n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
-                            this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_MMM));
+                            this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_MMM));
                         } else {
-                            this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_MOAN));
+                            this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_MOAN));
                         }
                     } else {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_HEAVYBREATHING));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING));
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.00666);
+                    SexUI.addCumPercentage(0.00666);
                     break;
                 }
                 case "doggyslowMSG2": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_LIGHTBREATHING), 0.5f);
+                    this.a(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING), 0.5f);
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.boolean_n()) {
-                        ds_class200.a(0.02);
+                        SexUI.addCumPercentage(0.02);
                     }
                     ++this.aq;
                     if (this.aq % 2 == 0) {
-                        int n = ModInfo.f.nextInt(2);
+                        int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
-                            this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_MOAN));
+                            this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_MOAN));
                             break;
                         }
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_HEAVYBREATHING));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING));
                         break;
                     }
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_AHH));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_AHH));
                     break;
                 }
                 case "doggyfastDone": {
@@ -624,25 +629,25 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggycumMSG1": {
-                    this.a(SoundEventHandler.MISC_CUMINFLATION[0], 2.0f);
-                    this.a(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING), 2.0f);
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_MOAN));
+                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 2.0f);
+                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_MOAN));
                     break;
                 }
                 case "doggycumMSG2": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_HEAVYBREATHING[4]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING[4]);
                     break;
                 }
                 case "doggycumMSG3": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_HEAVYBREATHING[5]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING[5]);
                     break;
                 }
                 case "doggycumMSG4": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_HEAVYBREATHING[6]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING[6]);
                     break;
                 }
                 case "doggycumMSG5": {
-                    this.PlaySound(SoundEventHandler.GIRLS_JENNY_HEAVYBREATHING[7]);
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING[7]);
                     break;
                 }
                 case "pearl": {
@@ -653,39 +658,39 @@ extends PlayerGirl {
                     if (!this.boolean_n() || this.as) break;
                     this.as = true;
                     this.r = 180.0f;
-                    this.a(-0.7, -0.6, -0.2, 60.0f, -3.0f);
+                    this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "paizuri_startDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.PAIZURI_SLOW);
-                    ds_class200.b();
-                    ds_class200.d();
+                    SexUI.resetCumPercentage();
+                    SexUI.d();
                     break;
                 }
                 case "paizuriFastMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_MMM));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_MMM));
                     } else {
-                        this.PlaySound(SoundEventHandler.a(SoundEventHandler.GIRLS_JENNY_AHH));
+                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_JENNY_AHH));
                     }
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.04);
+                    SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "paizuriSlowMSG1": 
                 case "paizuriStartMSG1": {
-                    this.PlaySound(SoundEventHandler.a(SoundEventHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
                     if (!this.boolean_n()) break;
-                    ds_class200.a(0.02);
+                    SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "paizuri_fastDone": {
                     this.setCurrentAction(Action.PAIZURI_SLOW);
                     if (!this.boolean_n() || this.as) break;
                     this.as = true;
-                    this.a(-0.7, -0.6, -0.2, 60.0f, -3.0f);
+                    this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "paizuri_startStep": {
@@ -695,14 +700,14 @@ extends PlayerGirl {
                 }
                 case "paizuri_cumStart": {
                     if (!this.boolean_n() || this.as) break;
-                    this.a(-0.7, -0.6, -0.2, 60.0f, -3.0f);
+                    this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                 }
             }
         };
-        this.C.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.C);
-        animationData.addAnimationController(this.E);
-        animationData.addAnimationController(this.s);
+        this.actionController.registerSoundListener(iSoundListener);
+        animationData.addAnimationController(this.actionController);
+        animationData.addAnimationController(this.movementController);
+        animationData.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

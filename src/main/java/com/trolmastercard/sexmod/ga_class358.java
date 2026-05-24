@@ -13,6 +13,8 @@ package com.trolmastercard.sexmod;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

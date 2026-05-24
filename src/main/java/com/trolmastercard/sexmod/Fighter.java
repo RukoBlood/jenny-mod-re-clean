@@ -11,6 +11,9 @@ package com.trolmastercard.sexmod;
 
 import java.util.List;
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.monster.EntityMob;
@@ -91,7 +94,7 @@ public abstract class Fighter extends GirlEntity {
                 List<EntityMob> entityList = this.world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(new BlockPos(this.posX - 7.0, this.posY - 1.0, this.posZ - 7.0), new BlockPos(this.posX + 7.0, this.posY + 1.0, this.posZ + 7.0)));
                 int n = entityList.isEmpty() ? 4 : 1;
                 this.heal(n);
-                ((WorldServer)this.world).spawnParticle(EnumParticleTypes.HEART, false, this.posX, this.posY + 1.0 + ModInfo.f.nextDouble(), this.posZ, n, 1.0, 1.0, 1.0, ModInfo.f.nextGaussian(), new int[0]);
+                ((WorldServer)this.world).spawnParticle(EnumParticleTypes.HEART, false, this.posX, this.posY + 1.0 + Reference.RANDOM.nextDouble(), this.posZ, n, 1.0, 1.0, 1.0, Reference.RANDOM.nextGaussian(), new int[0]);
             }
         }
         if (this.N && !this.boolean_J()) {

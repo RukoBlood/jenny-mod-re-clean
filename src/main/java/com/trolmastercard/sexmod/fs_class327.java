@@ -3,6 +3,8 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.GirlEntity;
+
 import java.util.HashMap;
 import java.util.UUID;
 
