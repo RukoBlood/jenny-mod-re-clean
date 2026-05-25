@@ -4,13 +4,12 @@
  * Could not load the following classes:
  *  javax.annotation.Nullable
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Luna;
 
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.gc_class360;
 import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;

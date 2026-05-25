@@ -5,7 +5,7 @@
  *  javax.annotation.Nullable
  *  javax.vecmath.Vector4f
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Galath;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.girls.Galath.GalathRenderer;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;

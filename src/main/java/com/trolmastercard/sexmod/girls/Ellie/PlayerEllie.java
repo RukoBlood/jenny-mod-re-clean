@@ -5,7 +5,7 @@
  *  com.google.common.base.Optional
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Ellie;
 
 import com.google.common.base.Optional;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.*;
-import com.trolmastercard.sexmod.SendGirlToSex;
+import com.trolmastercard.sexmod.Packages.SendGirlToSex;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;

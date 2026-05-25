@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Bia;
 
 import java.util.HashSet;
 

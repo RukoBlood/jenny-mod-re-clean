@@ -4,13 +4,13 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Slime;
 
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
-import com.trolmastercard.sexmod.SetPlayerForGirl;
+import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;

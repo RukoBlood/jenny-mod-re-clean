@@ -5,7 +5,7 @@
  *  javax.annotation.Nullable
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Kobold;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,6 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.TeleportPlayer;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
-import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
-import com.trolmastercard.sexmod.girls.Kobold.KoboldRenderer;
 import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

@@ -4,7 +4,7 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Bia;
 
 import java.util.UUID;
 

@@ -5,7 +5,7 @@
  *  javax.annotation.Nullable
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Galath;
 
 import java.util.Random;
 import java.util.UUID;

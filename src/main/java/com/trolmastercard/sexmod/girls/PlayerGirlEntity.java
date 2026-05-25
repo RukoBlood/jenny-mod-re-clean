@@ -4,16 +4,25 @@
 package com.trolmastercard.sexmod.girls;
 
 import com.trolmastercard.sexmod.girls.Allie.AllieEntity;
+import com.trolmastercard.sexmod.girls.Allie.PlayerAllie;
 import com.trolmastercard.sexmod.girls.Bee.BeeEntity;
+import com.trolmastercard.sexmod.girls.Bee.PlayerBee;
 import com.trolmastercard.sexmod.girls.Bia.BiaEntity;
+import com.trolmastercard.sexmod.girls.Bia.PlayerBia;
 import com.trolmastercard.sexmod.girls.Ellie.EllieEntity;
+import com.trolmastercard.sexmod.girls.Ellie.PlayerEllie;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
+import com.trolmastercard.sexmod.girls.Galath.PlayerGalath;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
+import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblin;
 import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;
+import com.trolmastercard.sexmod.girls.Jenny.PlayerJenny;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
+import com.trolmastercard.sexmod.girls.Kobold.PlayerKobold;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
+import com.trolmastercard.sexmod.girls.Luna.PlayerLuna;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
-import com.trolmastercard.sexmod.girls.Player.*;
+import com.trolmastercard.sexmod.girls.Slime.PlayerSlime;
 import com.trolmastercard.sexmod.girls.Slime.SlimeEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.Entity;

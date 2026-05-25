@@ -4,15 +4,12 @@
  * Could not load the following classes:
  *  javax.vecmath.Vector4f
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Kobold;
 
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.d9_class168;
 import com.trolmastercard.sexmod.e4_class223;
-import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
-import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
-import com.trolmastercard.sexmod.girls.Kobold.KoboldRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.EnumAction;

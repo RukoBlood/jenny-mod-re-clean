@@ -12,7 +12,7 @@
  *  net.minecraftforge.fml.common.gameevent.TickEvent$RenderTickEvent
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Goblin;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,8 +25,6 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
-import com.trolmastercard.sexmod.girls.Goblin.GoblinRenderer;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;

@@ -4,14 +4,16 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Allie;
 
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.dc_class174;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -104,12 +106,12 @@ extends PlayerGirl {
     @Override
     public boolean boolean_F() {
         switch (this.currentAction()) {
-            case Action.ALLIE_PREPARE_NORMAL:
-            case Action.DEEPTHROAT_START:
-            case Action.DEEPTHROAT_CUM:
-            case Action.DEEPTHROAT_FAST:
-            case Action.ALLIE_PREPARE_FIRST_TIME:
-            case Action.DEEPTHROAT_SLOW: {
+            case ALLIE_PREPARE_NORMAL:
+            case DEEPTHROAT_START:
+            case DEEPTHROAT_CUM:
+            case DEEPTHROAT_FAST:
+            case ALLIE_PREPARE_FIRST_TIME:
+            case DEEPTHROAT_SLOW: {
                 return true;
             }
         }
@@ -358,87 +360,87 @@ extends PlayerGirl {
             }
             case "action": {
                 switch (this.currentAction()) {
-                    case Action.NULL: {
+                    case NULL: {
                         this.createAnimation("animation.allie.null", true, animationEvent);
                         break block5;
                     }
-                    case Action.SUMMON: {
+                    case SUMMON: {
                         this.createAnimation("animation.allie.summon", false, animationEvent);
                         break block5;
                     }
-                    case Action.SUMMON_NORMAL: {
+                    case SUMMON_NORMAL: {
                         this.createAnimation("animation.allie.summon_normal", false, animationEvent);
                         break block5;
                     }
-                    case Action.SUMMON_NORMAL_WAIT: {
+                    case SUMMON_NORMAL_WAIT: {
                         this.createAnimation("animation.allie.summon_normal_wait", true, animationEvent);
                         break block5;
                     }
-                    case Action.SUMMON_WAIT: {
+                    case SUMMON_WAIT: {
                         this.createAnimation("animation.allie.summon_wait", true, animationEvent);
                         break block5;
                     }
-                    case Action.ALLIE_PREPARE_FIRST_TIME: {
+                    case ALLIE_PREPARE_FIRST_TIME: {
                         this.createAnimation("animation.allie.deepthroat_prepare", false, animationEvent);
                         break block5;
                     }
-                    case Action.ALLIE_PREPARE_NORMAL: {
+                    case ALLIE_PREPARE_NORMAL: {
                         this.createAnimation("animation.allie.deepthroat_normal_prepare", false, animationEvent);
                         break block5;
                     }
-                    case Action.DEEPTHROAT_START: {
+                    case DEEPTHROAT_START: {
                         this.createAnimation("animation.allie.deepthroat_start", false, animationEvent);
                         break block5;
                     }
-                    case Action.DEEPTHROAT_SLOW: {
+                    case DEEPTHROAT_SLOW: {
                         this.createAnimation("animation.allie.deepthroat_slow", true, animationEvent);
                         break block5;
                     }
-                    case Action.DEEPTHROAT_FAST: {
+                    case DEEPTHROAT_FAST: {
                         this.createAnimation("animation.allie.deepthroat_fast", true, animationEvent);
                         break block5;
                     }
-                    case Action.DEEPTHROAT_CUM: {
+                    case DEEPTHROAT_CUM: {
                         this.createAnimation("animation.allie.deepthroat_cum", false, animationEvent);
                         break block5;
                     }
-                    case Action.RICH_FIRST_TIME: {
+                    case RICH_FIRST_TIME: {
                         this.createAnimation("animation.allie.rich", false, animationEvent);
                         break block5;
                     }
-                    case Action.RICH_NORMAL: {
+                    case RICH_NORMAL: {
                         this.createAnimation("animation.allie.rich_normal", false, animationEvent);
                         break block5;
                     }
-                    case Action.SUMMON_SAND: {
+                    case SUMMON_SAND: {
                         this.createAnimation("animation.allie.summon_sand", false, animationEvent);
                         break block5;
                     }
-                    case Action.ATTACK: {
+                    case ATTACK: {
                         this.createAnimation("animation.allie.attack" + this.S, false, animationEvent);
                         break block5;
                     }
-                    case Action.BOW: {
+                    case BOW: {
                         this.createAnimation("animation.allie.bowcharge", false, animationEvent);
                         break block5;
                     }
-                    case Action.REVERSE_COWGIRL_START: {
+                    case REVERSE_COWGIRL_START: {
                         this.createAnimation("animation.allie.reverse_cowgirl_start", true, animationEvent);
                         break block5;
                     }
-                    case Action.REVERSE_COWGIRL_SLOW: {
+                    case REVERSE_COWGIRL_SLOW: {
                         this.createAnimation("animation.allie.reverse_cowgirl_slow" + this.ar, true, animationEvent);
                         break block5;
                     }
-                    case Action.REVERSE_COWGIRL_FAST_CONTINUES: {
+                    case REVERSE_COWGIRL_FAST_CONTINUES: {
                         this.createAnimation("animation.allie.reverse_cowgirl_fastc" + this.av, true, animationEvent);
                         break block5;
                     }
-                    case Action.REVERSE_COWGIRL_FAST_START: {
+                    case REVERSE_COWGIRL_FAST_START: {
                         this.createAnimation("animation.allie.reverse_cowgirl_fasts", true, animationEvent);
                         break block5;
                     }
-                    case Action.REVERSE_COWGIRL_CUM: {
+                    case REVERSE_COWGIRL_CUM: {
                         this.createAnimation("animation.allie.reverse_cowgirl_cum", true, animationEvent);
                     }
                 }

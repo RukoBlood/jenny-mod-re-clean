@@ -10,10 +10,10 @@ package com.trolmastercard.sexmod.util.Handlers;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.*;
 
-import com.trolmastercard.sexmod.SendChatMessage;
-import com.trolmastercard.sexmod.SendGirlToSex;
-import com.trolmastercard.sexmod.SetPlayerForGirl;
-import com.trolmastercard.sexmod.dc_class174;
+import com.trolmastercard.sexmod.Packages.SendChatMessage;
+import com.trolmastercard.sexmod.Packages.SendGirlToSex;
+import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
+import com.trolmastercard.sexmod.Packages.dc_class174;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -27,7 +27,7 @@ public class PackageHandler {
 
     public static void RegisterMessages() {
         networkWrapper = net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.newSimpleChannel("sexmodchannel");
-        networkWrapper.registerMessage(com.trolmastercard.sexmod.SendChatMessage.a_inner369.class, SendChatMessage.class, PackageHandler.discriminator(), Side.CLIENT);
+        networkWrapper.registerMessage(SendChatMessage.a_inner369.class, SendChatMessage.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(SendChatMessage.a_inner369.class, SendChatMessage.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SetPlayerMovement.Handler.class, SetPlayerMovement.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(TeleportPlayer.Handler.class, TeleportPlayer.class, PackageHandler.discriminator(), Side.SERVER);

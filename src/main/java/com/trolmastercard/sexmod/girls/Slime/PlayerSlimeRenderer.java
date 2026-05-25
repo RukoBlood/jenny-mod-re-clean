@@ -4,7 +4,7 @@
  * Could not load the following classes:
  *  javax.vecmath.Vector3f
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Slime;
 
 import java.util.HashSet;
 import javax.vecmath.Vector3f;

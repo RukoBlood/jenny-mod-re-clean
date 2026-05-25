@@ -5,7 +5,7 @@
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  *  net.minecraftforge.fml.common.gameevent.TickEvent$ClientTickEvent
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Allie;
 
 import java.util.ArrayList;
 import java.util.Collection;

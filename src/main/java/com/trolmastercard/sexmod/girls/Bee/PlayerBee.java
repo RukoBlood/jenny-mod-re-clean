@@ -4,14 +4,16 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Player;
+package com.trolmastercard.sexmod.girls.Bee;
 
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
@@ -136,39 +138,39 @@ extends PlayerGirl {
             }
             case "action": {
                 switch (this.currentAction()) {
-                    case Action.NULL: {
+                    case NULL: {
                         this.createAnimation("animation.bee.null", false, animationEvent);
                         break block4;
                     }
-                    case Action.CITIZEN_START: {
+                    case CITIZEN_START: {
                         this.createAnimation("animation.bee.sex_start", false, animationEvent);
                         break block4;
                     }
-                    case Action.CITIZEN_SLOW: {
+                    case CITIZEN_SLOW: {
                         this.createAnimation("animation.bee.sex_slow", true, animationEvent);
                         break block4;
                     }
-                    case Action.CITIZEN_FAST: {
+                    case CITIZEN_FAST: {
                         this.createAnimation("animation.bee.sex_fast", true, animationEvent);
                         break block4;
                     }
-                    case Action.CITIZEN_CUM: {
+                    case CITIZEN_CUM: {
                         this.createAnimation("animation.bee.sex_cum", false, animationEvent);
                         break block4;
                     }
-                    case Action.THROW_PEARL: {
+                    case THROW_PEARL: {
                         this.createAnimation("animation.bee.throw_pearl", true, animationEvent);
                         break block4;
                     }
-                    case Action.ATTACK: {
+                    case ATTACK: {
                         this.createAnimation("animation.bee.attack" + this.S, false, animationEvent);
                         break block4;
                     }
-                    case Action.BOW: {
+                    case BOW: {
                         this.createAnimation("animation.bee.bowcharge", false, animationEvent);
                         break block4;
                     }
-                    case Action.RIDE: {
+                    case RIDE: {
                         this.createAnimation("animation.bee.ride", true, animationEvent);
                     }
                 }
@@ -191,7 +193,7 @@ extends PlayerGirl {
                 }
                 case "pearl": {
                     if (!this.boolean_e() || this.currentAction() != Action.THROW_PEARL) break;
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new gg_class366(this.girlID()));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "resetCumPercentage": {
