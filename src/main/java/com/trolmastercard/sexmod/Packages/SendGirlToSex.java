@@ -48,10 +48,10 @@ implements IMessage {
     implements IMessageHandler<SendGirlToSex, IMessage> {
         // TODO propagate this onMessage inlining to all other packets eventually...
         @Override
-        public IMessage onMessage(SendGirlToSex ac_class232, MessageContext messageContext) {
-            if (ac_class232.a) {
+        public IMessage onMessage(SendGirlToSex message, MessageContext ctx) {
+            if (message.a) {
                 FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                    ArrayList<GirlEntity> arrayList = GirlEntity.girlList(ac_class232.girlID);
+                    ArrayList<GirlEntity> arrayList = GirlEntity.girlList(message.girlID);
                     for (GirlEntity girlEntity : arrayList) {
                         if (!girlEntity.world.isRemote && girlEntity instanceof IBeddableSexGirl) {
                             ((IBeddableSexGirl) girlEntity).goToSexBed();

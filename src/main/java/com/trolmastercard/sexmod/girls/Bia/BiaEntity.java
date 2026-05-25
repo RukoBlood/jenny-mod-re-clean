@@ -486,7 +486,11 @@ implements bh_class82,
                 this.setCurrentAction(Action.HEAD_PAT);
                 break;
             }
-            case "doggy": //И где собственно код??? TODO: Код запилить
+            case "doggy": {
+                this.void_r();
+                PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
+                return;
+            }//И где собственно код??? TODO: Код запилить
             case "anal": {
                 this.void_r();
                 PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
