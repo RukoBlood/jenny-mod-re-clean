@@ -19,7 +19,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.*;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
+import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
@@ -189,7 +189,7 @@ implements bh_class82,
 
     @SideOnly(value=Side.CLIENT)
     protected static void CreateGUI(EntityPlayer entityPlayer, GirlEntity girlEntity, String[] stringArray, ItemStack[] itemStackArray) {
-        Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(girlEntity, entityPlayer, stringArray, itemStackArray, true));
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(girlEntity, entityPlayer, stringArray, itemStackArray, true));
     }
 
     public void b(ItemStack itemStack) {
@@ -348,7 +348,7 @@ implements bh_class82,
             Vec3d vec3d3 = vec3d.add(vec3dArrayArray[n][0]);
             this.void_b(nArray[n]);
             this.c(new Vec3d(vec3d3.x, vec3d3.y, vec3d3.z));
-            this.r = this.java_lang_Float_I().floatValue();
+            this.r = this.java_lang_Float_I();
             this.getNavigator().clearPath();
             this.getNavigator().tryMoveToXYZ(vec3d3.x, vec3d3.y, vec3d3.z, 0.2);
             this.ay = true;

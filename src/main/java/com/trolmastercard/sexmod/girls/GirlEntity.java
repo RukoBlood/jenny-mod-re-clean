@@ -40,7 +40,7 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
-import com.trolmastercard.sexmod.gui.KoboldInventoryUI;
+import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -593,17 +593,17 @@ implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected static void a(EntityPlayer entityPlayer, GirlEntity em_class2582) {
-        Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(em_class2582, entityPlayer));
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(em_class2582, entityPlayer));
     }
 
     @SideOnly(value=Side.CLIENT)
     protected static void a(EntityPlayer entityPlayer, GirlEntity em_class2582, String[] stringArray, ItemStack[] itemStackArray, boolean bl) {
-        Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(em_class2582, entityPlayer, stringArray, itemStackArray, bl));
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(em_class2582, entityPlayer, stringArray, itemStackArray, bl));
     }
 
     @SideOnly(value=Side.CLIENT)
     protected static void a(EntityPlayer entityPlayer, GirlEntity em_class2582, String[] stringArray, boolean bl) {
-        Minecraft.getMinecraft().displayGuiScreen(new KoboldInventoryUI(em_class2582, entityPlayer, stringArray, null, bl));
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(em_class2582, entityPlayer, stringArray, null, bl));
     }
 
     public void void_a(ItemStack itemStack) {

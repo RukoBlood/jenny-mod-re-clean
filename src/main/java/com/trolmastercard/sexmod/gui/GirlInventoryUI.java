@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class KoboldInventoryUI extends GuiScreen {
+public class GirlInventoryUI extends GuiScreen {
     final GirlEntity girlEntity;
     final EntityPlayer entityPlayer;
     final String[] h;
@@ -50,7 +50,7 @@ public class KoboldInventoryUI extends GuiScreen {
     int[] b = new int[]{4, 4, 5, 5, 4};
     int[] e = new int[]{50, 90, 50, 80, 60};
 
-    public KoboldInventoryUI(GirlEntity girlEntity, EntityPlayer entityPlayer) {
+    public GirlInventoryUI(GirlEntity girlEntity, EntityPlayer entityPlayer) {
         this.girlEntity = girlEntity;
         this.entityPlayer = entityPlayer;
         this.h = new String[0];
@@ -59,7 +59,7 @@ public class KoboldInventoryUI extends GuiScreen {
         this.entityDataManager = girlEntity.getDataManager();
     }
 
-    public KoboldInventoryUI(GirlEntity girlEntity, EntityPlayer entityPlayer, String[] stringArray, @Nullable ItemStack[] itemStackArray, boolean bl) {
+    public GirlInventoryUI(GirlEntity girlEntity, EntityPlayer entityPlayer, String[] stringArray, @Nullable ItemStack[] itemStackArray, boolean bl) {
         this.girlEntity = girlEntity;
         this.entityPlayer = entityPlayer;
         this.h = stringArray;
