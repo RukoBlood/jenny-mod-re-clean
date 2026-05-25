@@ -95,14 +95,14 @@ extends PlayerGirl {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (this.currentAction() == Action.COWGIRL_SITTING_CUM && (fp_class3242 == Action.COWGIRL_SITTING_SLOW || fp_class3242 == Action.COWGIRL_SITTING_FAST)) {
+    public void setCurrentAction(Action action) {
+        if (this.currentAction() == Action.COWGIRL_SITTING_CUM && (action == Action.COWGIRL_SITTING_SLOW || action == Action.COWGIRL_SITTING_FAST)) {
             return;
         }
-        if (this.currentAction() == Action.TOUCH_BOOBS_CUM && (fp_class3242 == Action.TOUCH_BOOBS_FAST || fp_class3242 == Action.TOUCH_BOOBS_SLOW)) {
+        if (this.currentAction() == Action.TOUCH_BOOBS_CUM && (action == Action.TOUCH_BOOBS_FAST || action == Action.TOUCH_BOOBS_SLOW)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override
