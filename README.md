@@ -124,7 +124,7 @@ No longer needed:
     - Find: `throw ([\w\d]+)\.([\w\d]+)\(([\w\d]+)\);`
     - Replace: `throw $3;`
 
-## Bugs
+## Bugs (Palkaline)
 
 I 110% guarantee there are bugs that were created during the deobfuscation process. Many steps are likely to result in many bugs, with each step compounding bugs before them.
 
@@ -134,6 +134,11 @@ The most likely bugs are:
   - so, these might fallback to defaults from the parent class.
 - Referencing incorrect method, same signature.
   - Static method resolution is strange to me... you learn something new!
+
+##Bugs (ME)
+
+Current state of the mod - я сломаль
+
 
 ## Modifications from source jar
 
@@ -148,7 +153,7 @@ The most likely bugs are:
     broken in its current state.
 - Other things I've probably forgotten... have been commented out though.
 
-## TODO
+## TODO (Palkaline)
 
 - fix broken refactors
   - see above...
@@ -157,6 +162,11 @@ The most likely bugs are:
   - I wrote a tiny proof-of-concept (not pictured in this project) that I managed to get working, 
   but it requires manual copying / pasting across each entity. I hate the design of this project.
   I feel like there is a better supported way to implement this... again, see comments...
+
+## TODO (ME)
+- Fix girls bugs
+- Refactor something
+- 
   
 ## References
 
