@@ -44,19 +44,19 @@ public class ad_class25 {
     static public float[] b;
 
     public ad_class25() {
-        if (ad_class25.a()) {
+        if (ad_class25.GetEnv()) {
             b = new float[60];
         }
     }
 
-    public static boolean a() {
+    public static boolean GetEnv() {
         return (Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment");
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void a(ClientChatEvent clientChatEvent) {
-        if (!ad_class25.a()) {
+        if (!ad_class25.GetEnv()) {
             return;
         }
         if (!"resetcolor".equalsIgnoreCase(clientChatEvent.getMessage())) {
@@ -73,7 +73,7 @@ public class ad_class25 {
     public void c(ClientChatEvent clientChatEvent) {
         float f;
         int n;
-        if (!ad_class25.a()) {
+        if (!ad_class25.GetEnv()) {
             return;
         }
         String string = clientChatEvent.getOriginalMessage();
@@ -102,7 +102,7 @@ public class ad_class25 {
     @SubscribeEvent
     public void b(ClientChatEvent clientChatEvent) {
         int n;
-        if (!ad_class25.a()) {
+        if (!ad_class25.GetEnv()) {
             return;
         }
         String string = clientChatEvent.getOriginalMessage();
@@ -132,7 +132,7 @@ public class ad_class25 {
         if (true)
             return;
 
-        if (!ad_class25.a()) {
+        if (!ad_class25.GetEnv()) {
             return;
         }
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
@@ -178,7 +178,7 @@ public class ad_class25 {
     @SubscribeEvent
     public void d(ClientChatEvent clientChatEvent) {
         //String[] stringArray;
-        if (!ad_class25.a()) {
+        if (!ad_class25.GetEnv()) {
             return;
         }
         String string = clientChatEvent.getOriginalMessage().toLowerCase();

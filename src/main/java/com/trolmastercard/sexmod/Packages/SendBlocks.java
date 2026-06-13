@@ -78,9 +78,9 @@ implements IMessage {
             }
             if (messageContext.side.isClient()) {
                 if (h6_class3972.a) {
-                    gm_class376.a(h6_class3972.c);
+                    gm_class376.AddList(h6_class3972.c);
                 } else {
-                    gm_class376.b(h6_class3972.c);
+                    gm_class376.CleanList(h6_class3972.c);
                 }
                 return null;
             }

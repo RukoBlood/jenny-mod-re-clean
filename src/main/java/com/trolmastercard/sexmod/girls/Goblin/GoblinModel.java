@@ -154,7 +154,7 @@ extends GirlModel<GirlEntity> {
         if (entityPlayer == null) {
             return;
         }
-        float f = Reference.Lerp(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
+        float f = Reference.LerpFloat(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
         float f2 = entityPlayer.limbSwing;
         float f3 = (float)Math.sin(f2);
         IBone iBone = animationProcessor.getBone("LeftLeg");

@@ -113,9 +113,9 @@ public class GirlInventoryUI extends GuiScreen {
         if (this.m == 1.0f) {
             this.n = Math.min(1.0f, this.n + this.mc.getTickLength() / 5.0f);
         }
-        int n5 = (int) Reference.Lerp(115.0f, 161.0f, this.n);
-        int n6 = (int) Reference.Lerp(91.0f, 137.0f, this.n);
-        int n7 = (int) Reference.Lerp(-30.0f, 120.0f, this.m);
+        int n5 = (int) Reference.LerpFloat(115.0f, 161.0f, this.n);
+        int n6 = (int) Reference.LerpFloat(91.0f, 137.0f, this.n);
+        int n7 = (int) Reference.LerpFloat(-30.0f, 120.0f, this.m);
         int n8 = 70;
         int n9 = 52;
         int n10 = 68;
@@ -139,7 +139,7 @@ public class GirlInventoryUI extends GuiScreen {
     }
 
     void a(int n, int n2) {
-        int n3 = (int) Reference.Lerp(-30.0f, 120.0f, this.m);
+        int n3 = (int) Reference.LerpFloat(-30.0f, 120.0f, this.m);
         this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_1), n3 - 105, 68);
         this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_2), n3 - 105, 87);
         this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_3), n3 - 105, 109);
@@ -164,8 +164,8 @@ public class GirlInventoryUI extends GuiScreen {
                 stringBuilder.append(" ");
             }
             this.mc.renderEngine.bindTexture(girlInventoryGUITexture);
-            this.drawTexturedModalRect(this.d[i] + n4 - 18 + (int) Reference.Lerp(0.0f, 23.0f, this.n), n5 + 2, this.j[i], 0, 16, 16);
-            this.buttonList.add(new GuiButton(i, n4 + 1, n5, (int)(Reference.Lerp(0.0f, 23.0f, this.n) + (float)this.d[i]), 20, this.d[i] <= 14 ? "" : stringBuilder.toString()));
+            this.drawTexturedModalRect(this.d[i] + n4 - 18 + (int) Reference.LerpFloat(0.0f, 23.0f, this.n), n5 + 2, this.j[i], 0, 16, 16);
+            this.buttonList.add(new GuiButton(i, n4 + 1, n5, (int)(Reference.LerpFloat(0.0f, 23.0f, this.n) + (float)this.d[i]), 20, this.d[i] <= 14 ? "" : stringBuilder.toString()));
             n5 += 30;
         }
         this.mc.renderEngine.bindTexture(girlInventoryGUITexture);

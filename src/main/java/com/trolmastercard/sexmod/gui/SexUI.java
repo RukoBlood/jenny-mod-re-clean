@@ -78,22 +78,22 @@ public class SexUI extends Gui {
             }
             if (h && !keepSpacePressed) {
                 height = HandlePlayerMovement.isThrusting ? 54 : 0;
-                this.drawTexturedModalRect((int) Reference.Lerp(-200.0f, 98.0f, transitionStep), 405, 0, height, 158, 54);
+                this.drawTexturedModalRect((int) Reference.LerpFloat(-200.0f, 98.0f, transitionStep), 405, 0, height, 158, 54);
             }
             GL11.glScalef(2.857143f, 2.857143f, 2.857143f);
             minecraft.renderEngine.bindTexture(hornyMeter);
             GL11.glScalef(0.75f, 0.75f, 0.75f);
-            this.drawTexturedModalRect(10, (int) Reference.Lerp(-200.0f, 10.0f, transitionStep), 0, 0, 146, 175);
-            drawCumPercentage = Reference.Lerp(drawCumPercentage, cumPercentage, (double)minecraft.getTickLength());
-            height = (int) Reference.Lerp(0.0, 160.0, drawCumPercentage);
-            int textureY = (int) Reference.Lerp(167.0, 8.0, drawCumPercentage);
-            double y = Reference.Lerp(178.0, 18.0, drawCumPercentage);
+            this.drawTexturedModalRect(10, (int) Reference.LerpFloat(-200.0f, 10.0f, transitionStep), 0, 0, 146, 175);
+            drawCumPercentage = Reference.LerpDouble(drawCumPercentage, cumPercentage, (double)minecraft.getTickLength());
+            height = (int) Reference.LerpDouble(0.0, 160.0, drawCumPercentage);
+            int textureY = (int) Reference.LerpDouble(167.0, 8.0, drawCumPercentage);
+            double y = Reference.LerpDouble(178.0, 18.0, drawCumPercentage);
             if (!keepSpacePressed) {
-                this.drawTexturedModalRect(67, (int) Reference.Lerp(-45.0, y, (double) transitionStep), 159, textureY, 32, height);
-                this.drawTexturedModalRect(120, (int) Reference.Lerp(-58.0, Reference.Lerp(178.0, 149.0, 1.0 - drawCumPercentage), (double) transitionStep), 212, (int) Reference.Lerp(169.0, 141.0, 1.0 - drawCumPercentage), 28, (int) Reference.Lerp(1.0, 29.0, 1.0 - drawCumPercentage));
-                this.drawTexturedModalRect(18, (int) Reference.Lerp(-58.0, Reference.Lerp(178.0, 149.0, 1.0 - drawCumPercentage), (double) transitionStep), 212, (int) Reference.Lerp(169.0, 141.0, 1.0 - drawCumPercentage), 28, (int) Reference.Lerp(1.0, 29.0, 1.0 - drawCumPercentage));
+                this.drawTexturedModalRect(67, (int) Reference.LerpDouble(-45.0, y, (double) transitionStep), 159, textureY, 32, height);
+                this.drawTexturedModalRect(120, (int) Reference.LerpDouble(-58.0, Reference.LerpDouble(178.0, 149.0, 1.0 - drawCumPercentage), (double) transitionStep), 212, (int) Reference.LerpDouble(169.0, 141.0, 1.0 - drawCumPercentage), 28, (int) Reference.LerpDouble(1.0, 29.0, 1.0 - drawCumPercentage));
+                this.drawTexturedModalRect(18, (int) Reference.LerpDouble(-58.0, Reference.LerpDouble(178.0, 149.0, 1.0 - drawCumPercentage), (double) transitionStep), 212, (int) Reference.LerpDouble(169.0, 141.0, 1.0 - drawCumPercentage), 28, (int) Reference.LerpDouble(1.0, 29.0, 1.0 - drawCumPercentage));
             } else {
-                this.drawTexturedModalRect(67, (int) Reference.Lerp(18.0f, -300.0f, cumStep += minecraft.getTickLength() / 15.0f), 159, 8, 32, 160);
+                this.drawTexturedModalRect(67, (int) Reference.LerpFloat(18.0f, -300.0f, cumStep += minecraft.getTickLength() / 15.0f), 159, 8, 32, 160);
             }
             GL11.glPopMatrix();
         }

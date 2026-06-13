@@ -129,8 +129,8 @@ extends PlayerGirlRenderer {
         this.I = vec2f.x * 8.0f;
         this.G = be_class78.b(this.G, -1.68f, 1.68f);
         this.I = be_class78.b(this.I, -1.68f, 1.68f);
-        this.G = Reference.Lerp(this.F, this.G, this.y);
-        this.I = Reference.Lerp(this.B, this.I, this.y);
+        this.G = Reference.LerpFloat(this.F, this.G, this.y);
+        this.I = Reference.LerpFloat(this.B, this.I, this.y);
         geoBone.setRotationX(f + this.G * f3);
         geoBone.setRotationZ(f2 + this.I * f3);
     }
@@ -140,9 +140,9 @@ extends PlayerGirlRenderer {
         double d2 = this.z - this.D;
         this.L = (Math.abs(d) + Math.abs(d2)) * 5.0;
         this.L = be_class78.b((float)this.L, 0.0f, 1.0f);
-        geoBone.setPositionY((float) Reference.a(5.0, 0.0, Reference.Lerp(this.H, this.L, (double)this.y)));
+        geoBone.setPositionY((float) Reference.a(5.0, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.y)));
         if (this.w instanceof PlayerAllie) {
-            ((PlayerAllie)this.w).aq = (float) Reference.a((double)0.3f, 0.0, Reference.Lerp(this.H, this.L, (double)this.y));
+            ((PlayerAllie)this.w).aq = (float) Reference.a((double)0.3f, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.y));
         }
     }
 

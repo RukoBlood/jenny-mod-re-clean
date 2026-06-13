@@ -121,7 +121,7 @@ extends EntityLiving {
     }
 
     void a() {
-        this.a(Reference.Lerp(this.lastTickPosX, this.posX, 0.5), Reference.Lerp(this.lastTickPosY, this.posY, 0.5), Reference.Lerp(this.lastTickPosZ, this.posZ, 0.5));
+        this.a(Reference.LerpDouble(this.lastTickPosX, this.posX, 0.5), Reference.LerpDouble(this.lastTickPosY, this.posY, 0.5), Reference.LerpDouble(this.lastTickPosZ, this.posZ, 0.5));
         this.a(this.posX, this.posY, this.posZ);
     }
 

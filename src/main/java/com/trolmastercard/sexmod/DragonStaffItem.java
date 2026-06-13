@@ -45,12 +45,12 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class DragonStaff extends Item
+public class DragonStaffItem extends Item
 implements IAnimatable {
-    final static public DragonStaff DRAGON_STAFF = new DragonStaff();
+    final static public DragonStaffItem DRAGON_STAFF = new DragonStaffItem();
     final private AnimationFactory animationFactory = new AnimationFactory(this);
 
-    public DragonStaff() {
+    public DragonStaffItem() {
         this.setCreativeTab(CreativeTabs.TOOLS);
         this.maxStackSize = 1;
     }
@@ -58,7 +58,7 @@ implements IAnimatable {
     public static void RegisterStaff() {
         DRAGON_STAFF.setRegistryName("sexmod", "dragon_staff");
         DRAGON_STAFF.setTranslationKey("dragon_staff");
-        MinecraftForge.EVENT_BUS.register(DragonStaff.class);
+        MinecraftForge.EVENT_BUS.register(DragonStaffItem.class);
     }
 
     @Override
@@ -75,7 +75,7 @@ implements IAnimatable {
     @SubscribeEvent
     public static void a(ModelRegistryEvent modelRegistryEvent) {
         ModelLoader.setCustomModelResourceLocation((Item) DRAGON_STAFF, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:dragon_staff"));
-        DRAGON_STAFF.setTileEntityItemStackRenderer(new fa_class300());
+        DRAGON_STAFF.setTileEntityItemStackRenderer(new DragonStaffRenderer());
     }
 
     @Override

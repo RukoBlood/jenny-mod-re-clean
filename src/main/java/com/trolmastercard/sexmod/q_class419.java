@@ -20,6 +20,7 @@ import com.trolmastercard.sexmod.Packages.InformOfOwnership;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SendBlocks;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.girls.Allie.LampItem;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.GirlEntity;

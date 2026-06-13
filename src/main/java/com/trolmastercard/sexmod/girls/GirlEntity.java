@@ -456,10 +456,10 @@ implements IAnimatable {
         super.readEntityFromNBT(nBTTagCompound);
         this.homeCoords = new Vec3d(nBTTagCompound.getDouble("homeX"), nBTTagCompound.getDouble("homeY"), nBTTagCompound.getDouble("homeZ"));
         String string2 = nBTTagCompound.getString("sexmod:customname");
-        if (!"".equals(string2)) {
+        if (!string2.isEmpty()) {
             this.g(string2);
         }
-        if ("".equals(string = nBTTagCompound.getString("girlID"))) {
+        if ((string = nBTTagCompound.getString("girlID")).isEmpty()) {
             return;
         }
         UUID uUID = UUID.fromString(string);
@@ -1176,8 +1176,8 @@ implements IAnimatable {
 
     public Vec3d a(double d) {
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
-        float f = entityPlayer.rotationYaw;
-        return entityPlayer.getPositionVector().add(-Math.sin((double)f * (Math.PI / 180)) * d, 0.0, Math.cos((double)f * (Math.PI / 180)) * d);
+        float yaw = entityPlayer.rotationYaw;
+        return entityPlayer.getPositionVector().add(-Math.sin((double)yaw * (Math.PI / 180)) * d, 0.0, Math.cos((double)yaw * (Math.PI / 180)) * d);
     }
 
     public Vec3d net_minecraft_util_math_Vec3d_a(Vec3d vec3d, float f) {
@@ -1256,7 +1256,7 @@ implements IAnimatable {
         if (this.boolean_Q()) {
             ((MatrixStack)object).rotateY((float)(-Math.toRadians(this.java_lang_Float_I().floatValue())));
         } else if (bl) {
-            ((MatrixStack)object).rotateY((float)(-Math.toRadians(Reference.Lerp(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
+            ((MatrixStack)object).rotateY((float)(-Math.toRadians(Reference.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
         }
         for (GeoBone geoBone3 : arrayList) {
             ((MatrixStack)object).translate(geoBone3);

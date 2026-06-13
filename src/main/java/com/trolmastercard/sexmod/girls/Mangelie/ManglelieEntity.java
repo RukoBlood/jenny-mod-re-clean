@@ -557,7 +557,7 @@ extends GirlEntity {
     }
 
     boolean a(Vec3d vec3d, GalathEntity f__class2972, float f) {
-        Vec3d vec3d2 = ck_class135.a(vec3d, Reference.b(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f));
+        Vec3d vec3d2 = ck_class135.a(vec3d, Reference.LerpAngleDegrees(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f));
         return vec3d2.x > 0.35;
     }
 

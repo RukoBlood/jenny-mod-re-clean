@@ -182,13 +182,13 @@ public enum h8_class399 {
             Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
             Vec3d vec3d4 = vec3d.add(vec3d2);
             float f = (float)(n - 24) / 8.0f;
-            Vec3d vec3d5 = Reference.a(vec3d3, vec3d4, (double)f);
+            Vec3d vec3d5 = Reference.LerpVec3d(vec3d3, vec3d4, (double)f);
             f__class2972.c(vec3d5);
         } else if (be_class78.a((double)n, 32.0, 54.0)) {
             Vec3d vec3d = ck_class135.a(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             Vec3d vec3d6 = entityLivingBase.getPositionVector().add(vec3d);
             f__class2972.c(vec3d6);
-            cs_class143 cs_class1432 = new cs_class143(f__class2972);
+            GalathDamageSource cs_class1432 = new GalathDamageSource(f__class2972);
             entityLivingBase.hurtTime = 0;
             entityLivingBase.hurtResistantTime = 0;
             if (n == 36) {
@@ -286,7 +286,7 @@ public enum h8_class399 {
         if (!bl && d2 < (double)0.9f) {
             f__class2972.O = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
         }
-        vec3d3 = bl ? new Vec3d(Reference.Lerp(vec3d6.x, vec3d.x, Math.min(1.0, d2)), Reference.Lerp(vec3d6.y, vec3d.y, Math.min(1.0, Reference.a(d2))), Reference.Lerp(vec3d6.z, vec3d.z, Math.min(1.0, d2))) : new Vec3d(Reference.Lerp(vec3d8.x, vec3d6.x, d2), Reference.Lerp(vec3d8.y, vec3d6.y, Reference.g(d2)), Reference.Lerp(vec3d8.z, vec3d6.z, d2));
+        vec3d3 = bl ? new Vec3d(Reference.LerpDouble(vec3d6.x, vec3d.x, Math.min(1.0, d2)), Reference.LerpDouble(vec3d6.y, vec3d.y, Math.min(1.0, Reference.EaseInCubic(d2))), Reference.LerpDouble(vec3d6.z, vec3d.z, Math.min(1.0, d2))) : new Vec3d(Reference.LerpDouble(vec3d8.x, vec3d6.x, d2), Reference.LerpDouble(vec3d8.y, vec3d6.y, Reference.EaseOutCubic(d2)), Reference.LerpDouble(vec3d8.z, vec3d6.z, d2));
         f__class2972.setPosition(vec3d3.x, vec3d3.y, vec3d3.z);
         if (bl) {
             f__class2972.getDataManager().set(GalathEntity.bO, Float.valueOf((float)d2));

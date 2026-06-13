@@ -47,12 +47,12 @@ public class ep_class263 {
         }
         GlStateManager.disableCull();
         GlStateManager.disableAlpha();
-        Vec3d vec3d2 = Reference.a(new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ), minecraft.player.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ), minecraft.player.getPositionVector(), (double)f);
         bufferBuilder.begin(9, DefaultVertexFormats.POSITION_COLOR);
         this.b();
         vec3d = null;
         for (an_class35 an_class352 : this.g) {
-            Vec3d vec3d3 = Reference.a(an_class352.d, an_class352.f, (double)f);
+            Vec3d vec3d3 = Reference.LerpVec3d(an_class352.d, an_class352.f, (double)f);
             if (vec3d == null) {
                 vec3d = vec3d3;
             }

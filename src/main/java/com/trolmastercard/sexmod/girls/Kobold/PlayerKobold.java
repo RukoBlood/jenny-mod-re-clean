@@ -424,7 +424,7 @@ implements dr_class199 {
     void b(SoundEvent soundEvent, float f) {
         float f2 = 0.25f - this.entityDataManager.get(aA).floatValue();
         double d = f2 / 0.25f;
-        float f3 = (float) Reference.Lerp((double)0.9f, (double)1.1f, d);
+        float f3 = (float) Reference.LerpDouble((double)0.9f, (double)1.1f, d);
         this.PlaySoundAtPosition(soundEvent, f, f3);
     }
 

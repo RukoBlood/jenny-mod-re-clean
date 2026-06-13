@@ -74,7 +74,7 @@ extends GirlRenderer {
             case "backHair": {
                 if (this.boolean_a()) break;
                 double d = this.r / gc_class360.c(45.0f);
-                float f = (float) Reference.Lerp(0.0, 0.75, d);
+                float f = (float) Reference.LerpDouble(0.0, 0.75, d);
                 geoBone.setPositionZ(f);
                 geoBone.setPositionY(f);
                 geoBone.setRotationX(-this.r);
@@ -84,7 +84,7 @@ extends GirlRenderer {
             case "sideHairL": {
                 if (this.boolean_a()) break;
                 double d = this.r / gc_class360.c(45.0f);
-                float f = (float) Reference.Lerp(0.0, (double)1.3f, d);
+                float f = (float) Reference.LerpDouble(0.0, (double)1.3f, d);
                 geoBone.setPositionZ(-f);
                 geoBone.setPositionY(f);
             }

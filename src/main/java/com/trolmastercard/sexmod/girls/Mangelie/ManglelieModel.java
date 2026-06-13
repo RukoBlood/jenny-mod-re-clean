@@ -164,19 +164,19 @@ extends GirlModel<GirlEntity> {
             f8_class2932.V = 0.0f;
             f8_class2932.aj = bl;
         }
-        a_inner128 a_inner1282 = f8_class2932.V == 0.0f ? (bl ? this.a(f__class2972, iBone2, iBone, iBone3, iBone4) : this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor)) : a_inner128.a(this.a(f__class2972, iBone2, iBone, iBone3, iBone4), this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor), (float)(f8_class2932.aj ? Reference.c(f8_class2932.V) : 1.0 - Reference.c(f8_class2932.V)));
-        iBone2.setRotationX(a_inner128.access$000((a_inner128)a_inner1282).a);
-        iBone2.setRotationY(a_inner128.access$000((a_inner128)a_inner1282).c);
-        iBone2.setRotationZ(a_inner128.access$000((a_inner128)a_inner1282).b);
-        iBone.setRotationX(a_inner128.access$100((a_inner128)a_inner1282).a);
-        iBone.setRotationY(a_inner128.access$100((a_inner128)a_inner1282).c);
-        iBone.setRotationZ(a_inner128.access$100((a_inner128)a_inner1282).b);
-        iBone3.setRotationX(a_inner128.access$200((a_inner128)a_inner1282).a);
-        iBone3.setRotationY(a_inner128.access$200((a_inner128)a_inner1282).c);
-        iBone3.setRotationZ(a_inner128.access$200((a_inner128)a_inner1282).b);
-        iBone4.setRotationX(a_inner128.access$300((a_inner128)a_inner1282).a);
-        iBone4.setRotationY(a_inner128.access$300((a_inner128)a_inner1282).c);
-        iBone4.setRotationZ(a_inner128.access$300((a_inner128)a_inner1282).b);
+        a_inner128 a_inner1282 = f8_class2932.V == 0.0f ? (bl ? this.a(f__class2972, iBone2, iBone, iBone3, iBone4) : this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor)) : a_inner128.a(this.a(f__class2972, iBone2, iBone, iBone3, iBone4), this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor), (float)(f8_class2932.aj ? Reference.EaseOutBack(f8_class2932.V) : 1.0 - Reference.EaseOutBack(f8_class2932.V)));
+        iBone2.setRotationX(a_inner128.access$000((a_inner128)a_inner1282).x);
+        iBone2.setRotationY(a_inner128.access$000((a_inner128)a_inner1282).y);
+        iBone2.setRotationZ(a_inner128.access$000((a_inner128)a_inner1282).z);
+        iBone.setRotationX(a_inner128.access$100((a_inner128)a_inner1282).x);
+        iBone.setRotationY(a_inner128.access$100((a_inner128)a_inner1282).y);
+        iBone.setRotationZ(a_inner128.access$100((a_inner128)a_inner1282).z);
+        iBone3.setRotationX(a_inner128.access$200((a_inner128)a_inner1282).x);
+        iBone3.setRotationY(a_inner128.access$200((a_inner128)a_inner1282).y);
+        iBone3.setRotationZ(a_inner128.access$200((a_inner128)a_inner1282).z);
+        iBone4.setRotationX(a_inner128.access$300((a_inner128)a_inner1282).x);
+        iBone4.setRotationY(a_inner128.access$300((a_inner128)a_inner1282).y);
+        iBone4.setRotationZ(a_inner128.access$300((a_inner128)a_inner1282).z);
         iBone.setScaleY(a_inner128.access$400(a_inner1282));
         iBone2.setScaleY(a_inner128.access$500(a_inner1282));
         iBone5.setRotationY(a_inner128.access$600(a_inner1282));
@@ -187,8 +187,8 @@ extends GirlModel<GirlEntity> {
         float f;
         //a_inner128 a_inner1282 = new a_inner128(null); // TODO weird synthetic inners...
         a_inner128 a_inner1282 = new a_inner128();
-        a_inner128.access$202(a_inner1282, new f7_class292(m, 0.0f, iBone.getRotationZ()));
-        a_inner128.access$302(a_inner1282, new f7_class292(l, 0.0f, iBone2.getRotationZ()));
+        a_inner128.access$202(a_inner1282, new Vector3f(m, 0.0f, iBone.getRotationZ()));
+        a_inner128.access$302(a_inner1282, new Vector3f(l, 0.0f, iBone2.getRotationZ()));
         float f2 = f__class2972.aE + animationProcessor.getBone("upperBody").getRotationX();
         float f3 = this.a.getRenderPartialTicks();
         Vec3d vec3d = ManglelieRenderer.a(f__class2972, f3);
@@ -197,10 +197,10 @@ extends GirlModel<GirlEntity> {
         bm_class88 bm_class882 = be_class78.a(vec3d2, f8_class2932.R);
         bm_class88 bm_class883 = be_class78.a(vec3d3, f8_class2932.R);
         Float f4 = GalathEntity.a(f__class2972, f3);
-        float f5 = f4 == null ? Reference.b(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f3) : f4.floatValue();
+        float f5 = f4 == null ? Reference.LerpAngleDegrees(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f3) : f4.floatValue();
         float f6 = gc_class360.c(f5);
         float f7 = f8_class2932.float_b(f3);
-        float f8 = (float) Reference.e(Math.min(1.0f, f7));
+        float f8 = (float) Reference.EaseOutQuart(Math.min(1.0f, f7));
         if (f8 != 1.0f) {
             f = 0.0f;
         } else {
@@ -208,33 +208,33 @@ extends GirlModel<GirlEntity> {
             f = Math.max(0.0f, f - 0.5f) * 2.0f;
         }
         float f9 = (float) Reference.h(f);
-        float f10 = gc_class360.c(Reference.Lerp(0.0f, 90.0f, f8));
+        float f10 = gc_class360.c(Reference.LerpFloat(0.0f, 90.0f, f8));
         boolean bl = f8_class2932.boolean_a(f8_class2932.R, f3);
         if (bl) {
-            a_inner128.access$002(a_inner1282, new f7_class292(-f2 + bm_class882.a + gc_class360.c(90.0f), bm_class882.c, 0.0f));
-            a_inner128.access$102(a_inner1282, new f7_class292(-f2 + bm_class883.a + gc_class360.c(90.0f), (float)((double)bm_class883.c + (double)gc_class360.c(-20.0f) * Math.cos(bm_class882.c + f6 * 1.0f) + (double) Reference.Lerp(f10 / 2.0f, 0.0f, f9)), 0.0f));
+            a_inner128.access$002(a_inner1282, new Vector3f(-f2 + bm_class882.a + gc_class360.c(90.0f), bm_class882.c, 0.0f));
+            a_inner128.access$102(a_inner1282, new Vector3f(-f2 + bm_class883.a + gc_class360.c(90.0f), (float)((double)bm_class883.c + (double)gc_class360.c(-20.0f) * Math.cos(bm_class882.c + f6 * 1.0f) + (double) Reference.LerpFloat(f10 / 2.0f, 0.0f, f9)), 0.0f));
             a_inner128.access$402(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class882.c) - Math.abs(f6)) * 0.1909f);
             a_inner128.access$702(a_inner1282, gc_class360.c(90.0f));
-            a_inner128.access$200((a_inner128)a_inner1282).b = Reference.Lerp(f10, 0.0f, f9);
+            a_inner128.access$200((a_inner128)a_inner1282).z = Reference.LerpFloat(f10, 0.0f, f9);
             if ((double)f > 0.5) {
-                a_inner128.access$200((a_inner128)a_inner1282).a = m + (float) Reference.Lerp((double)g, 0.0, Reference.h((f - 0.5f) * 2.0f));
+                a_inner128.access$200((a_inner128)a_inner1282).x = m + (float) Reference.LerpDouble((double)g, 0.0, Reference.h((f - 0.5f) * 2.0f));
             } else if (f != 0.0f && (double)f < 0.5) {
-                a_inner128.access$200((a_inner128)a_inner1282).a = m + (float) Reference.Lerp(0.0, (double)g, Reference.h(f * 2.0f));
+                a_inner128.access$200((a_inner128)a_inner1282).x = m + (float) Reference.LerpDouble(0.0, (double)g, Reference.h(f * 2.0f));
             }
         } else {
-            a_inner128.access$102(a_inner1282, new f7_class292(-f2 + bm_class883.a + gc_class360.c(90.0f), bm_class883.c, 0.0f));
-            a_inner128.access$002(a_inner1282, new f7_class292(-f2 + bm_class882.a + gc_class360.c(90.0f), (float)((double)bm_class882.c + (double)gc_class360.c(20.0f) * Math.cos(bm_class883.c + f6 * 1.0f)) - Reference.Lerp(f10 / 2.0f, 0.0f, f9), 0.0f));
+            a_inner128.access$102(a_inner1282, new Vector3f(-f2 + bm_class883.a + gc_class360.c(90.0f), bm_class883.c, 0.0f));
+            a_inner128.access$002(a_inner1282, new Vector3f(-f2 + bm_class882.a + gc_class360.c(90.0f), (float)((double)bm_class882.c + (double)gc_class360.c(20.0f) * Math.cos(bm_class883.c + f6 * 1.0f)) - Reference.LerpFloat(f10 / 2.0f, 0.0f, f9), 0.0f));
             a_inner128.access$502(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class883.c) - Math.abs(f6)) * 0.1909f);
             a_inner128.access$602(a_inner1282, gc_class360.c(90.0f));
-            a_inner128.access$300((a_inner128)a_inner1282).b = -Reference.Lerp(f10, 0.0f, f9);
+            a_inner128.access$300((a_inner128)a_inner1282).z = -Reference.LerpFloat(f10, 0.0f, f9);
             if ((double)f > 0.5) {
-                a_inner128.access$300((a_inner128)a_inner1282).a = l + (float) Reference.Lerp((double)g, 0.0, Reference.h((f - 0.5f) * 2.0f));
+                a_inner128.access$300((a_inner128)a_inner1282).x = l + (float) Reference.LerpDouble((double)g, 0.0, Reference.h((f - 0.5f) * 2.0f));
             } else if (f != 0.0f && (double)f < 0.5) {
-                a_inner128.access$300((a_inner128)a_inner1282).a = l + (float) Reference.Lerp(0.0, (double)g, Reference.h(f * 2.0f));
+                a_inner128.access$300((a_inner128)a_inner1282).x = l + (float) Reference.LerpDouble(0.0, (double)g, Reference.h(f * 2.0f));
             }
         }
-        a_inner128.access$000((a_inner128)a_inner1282).c += f6;
-        a_inner128.access$100((a_inner128)a_inner1282).c += f6;
+        a_inner128.access$000((a_inner128)a_inner1282).y += f6;
+        a_inner128.access$100((a_inner128)a_inner1282).y += f6;
         return a_inner1282;
     }
 
@@ -243,16 +243,16 @@ extends GirlModel<GirlEntity> {
         //a_inner128 a_inner1282 = new a_inner128(null);
         a_inner128 a_inner1282 = new a_inner128(); // TODO weird synthetic inners...
         if (f > 0.0f) {
-            a_inner128.access$002(a_inner1282, new f7_class292(iBone.getRotationX() - f, iBone.getRotationY() - f * -25.0f / 45.0f, iBone.getRotationZ() + f * 12.5f / 45.0f));
-            a_inner128.access$102(a_inner1282, new f7_class292(iBone2.getRotationX() - f, iBone2.getRotationY() + f * 15.0f / 45.0f, iBone2.getRotationZ()));
-            a_inner128.access$202(a_inner1282, new f7_class292(iBone3.getRotationX(), iBone3.getRotationY(), iBone3.getRotationZ()));
-            a_inner128.access$302(a_inner1282, new f7_class292(iBone4.getRotationX(), iBone4.getRotationY(), iBone4.getRotationZ()));
+            a_inner128.access$002(a_inner1282, new Vector3f(iBone.getRotationX() - f, iBone.getRotationY() - f * -25.0f / 45.0f, iBone.getRotationZ() + f * 12.5f / 45.0f));
+            a_inner128.access$102(a_inner1282, new Vector3f(iBone2.getRotationX() - f, iBone2.getRotationY() + f * 15.0f / 45.0f, iBone2.getRotationZ()));
+            a_inner128.access$202(a_inner1282, new Vector3f(iBone3.getRotationX(), iBone3.getRotationY(), iBone3.getRotationZ()));
+            a_inner128.access$302(a_inner1282, new Vector3f(iBone4.getRotationX(), iBone4.getRotationY(), iBone4.getRotationZ()));
             return a_inner1282;
         }
-        a_inner128.access$302(a_inner1282, new f7_class292(iBone4.getRotationX() + 2.0f * f, iBone4.getRotationY(), iBone4.getRotationZ()));
-        a_inner128.access$202(a_inner1282, new f7_class292(iBone3.getRotationX() + 2.2222223f * f, iBone3.getRotationY(), iBone3.getRotationZ()));
-        a_inner128.access$002(a_inner1282, new f7_class292(iBone.getRotationX() - f, iBone.getRotationY(), iBone.getRotationZ() + f * 5.0f / 45.0f));
-        a_inner128.access$102(a_inner1282, new f7_class292(iBone2.getRotationX() - f, iBone2.getRotationY(), iBone2.getRotationZ() - f * 5.0f / 45.0f));
+        a_inner128.access$302(a_inner1282, new Vector3f(iBone4.getRotationX() + 2.0f * f, iBone4.getRotationY(), iBone4.getRotationZ()));
+        a_inner128.access$202(a_inner1282, new Vector3f(iBone3.getRotationX() + 2.2222223f * f, iBone3.getRotationY(), iBone3.getRotationZ()));
+        a_inner128.access$002(a_inner1282, new Vector3f(iBone.getRotationX() - f, iBone.getRotationY(), iBone.getRotationZ() + f * 5.0f / 45.0f));
+        a_inner128.access$102(a_inner1282, new Vector3f(iBone2.getRotationX() - f, iBone2.getRotationY(), iBone2.getRotationZ() - f * 5.0f / 45.0f));
         return a_inner1282;
     }
 
@@ -340,10 +340,10 @@ extends GirlModel<GirlEntity> {
     }
 
     private static class a_inner128 {
-        private f7_class292 c;
-        private f7_class292 g;
-        private f7_class292 h;
-        private f7_class292 b;
+        private Vector3f c;
+        private Vector3f g;
+        private Vector3f h;
+        private Vector3f b;
         private float f = 1.0f;
         private float a = 1.0f;
         private float e = 0.0f;
@@ -354,30 +354,30 @@ extends GirlModel<GirlEntity> {
 
         static a_inner128 a(a_inner128 a_inner1282, a_inner128 a_inner1283, float f) {
             a_inner128 a_inner1284 = new a_inner128();
-            a_inner1284.c = Reference.a(a_inner1282.c, a_inner1283.c, (double)f);
-            a_inner1284.g = Reference.a(a_inner1282.g, a_inner1283.g, (double)f);
-            a_inner1284.h = Reference.a(a_inner1282.h, a_inner1283.h, (double)f);
-            a_inner1284.b = Reference.a(a_inner1282.b, a_inner1283.b, (double)f);
-            a_inner1284.f = Reference.Lerp(a_inner1282.f, a_inner1283.f, f);
-            a_inner1284.a = Reference.Lerp(a_inner1282.a, a_inner1283.a, f);
-            a_inner1284.e = Reference.Lerp(a_inner1282.e, a_inner1283.e, f);
-            a_inner1284.d = Reference.Lerp(a_inner1282.d, a_inner1283.d, f);
+            a_inner1284.c = Reference.LerpVector3f(a_inner1282.c, a_inner1283.c, (double)f);
+            a_inner1284.g = Reference.LerpVector3f(a_inner1282.g, a_inner1283.g, (double)f);
+            a_inner1284.h = Reference.LerpVector3f(a_inner1282.h, a_inner1283.h, (double)f);
+            a_inner1284.b = Reference.LerpVector3f(a_inner1282.b, a_inner1283.b, (double)f);
+            a_inner1284.f = Reference.LerpFloat(a_inner1282.f, a_inner1283.f, f);
+            a_inner1284.a = Reference.LerpFloat(a_inner1282.a, a_inner1283.a, f);
+            a_inner1284.e = Reference.LerpFloat(a_inner1282.e, a_inner1283.e, f);
+            a_inner1284.d = Reference.LerpFloat(a_inner1282.d, a_inner1283.d, f);
             return a_inner1284;
         }
 
-        static f7_class292 access$000(a_inner128 a_inner1282) {
+        static Vector3f access$000(a_inner128 a_inner1282) {
             return a_inner1282.c;
         }
 
-        static f7_class292 access$100(a_inner128 a_inner1282) {
+        static Vector3f access$100(a_inner128 a_inner1282) {
             return a_inner1282.g;
         }
 
-        static f7_class292 access$200(a_inner128 a_inner1282) {
+        static Vector3f access$200(a_inner128 a_inner1282) {
             return a_inner1282.b;
         }
 
-        static f7_class292 access$300(a_inner128 a_inner1282) {
+        static Vector3f access$300(a_inner128 a_inner1282) {
             return a_inner1282.h;
         }
 
@@ -401,22 +401,22 @@ extends GirlModel<GirlEntity> {
         //    this();
         //}
 
-        static f7_class292 access$202(a_inner128 a_inner1282, f7_class292 f7_class2922) {
+        static Vector3f access$202(a_inner128 a_inner1282, Vector3f f7_class2922) {
             a_inner1282.b = f7_class2922;
             return a_inner1282.b;
         }
 
-        static f7_class292 access$302(a_inner128 a_inner1282, f7_class292 f7_class2922) {
+        static Vector3f access$302(a_inner128 a_inner1282, Vector3f f7_class2922) {
             a_inner1282.h = f7_class2922;
             return a_inner1282.h;
         }
 
-        static f7_class292 access$002(a_inner128 a_inner1282, f7_class292 f7_class2922) {
+        static Vector3f access$002(a_inner128 a_inner1282, Vector3f f7_class2922) {
             a_inner1282.c = f7_class2922;
             return a_inner1282.c;
         }
 
-        static f7_class292 access$102(a_inner128 a_inner1282, f7_class292 f7_class2922) {
+        static Vector3f access$102(a_inner128 a_inner1282, Vector3f f7_class2922) {
             a_inner1282.g = f7_class2922;
             return a_inner1282.g;
         }

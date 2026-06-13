@@ -101,7 +101,7 @@ public class l_class413 {
         }
         this.b = minecraft.player.getPositionVector();
         this.a = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
-        Vec3d vec3d = girlEntity.boolean_Q() ? girlEntity.b("boyCam").add(girlEntity.net_minecraft_util_math_Vec3d_o()) : girlEntity.b("boyCam").add(Reference.a(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)renderTickEvent.renderTickTime));
+        Vec3d vec3d = girlEntity.boolean_Q() ? girlEntity.b("boyCam").add(girlEntity.net_minecraft_util_math_Vec3d_o()) : girlEntity.b("boyCam").add(Reference.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)renderTickEvent.renderTickTime));
         minecraft.player.posX = vec3d.x;
         minecraft.player.posY = vec3d.y - (double)minecraft.player.getEyeHeight();
         minecraft.player.posZ = vec3d.z;

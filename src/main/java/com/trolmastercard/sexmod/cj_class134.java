@@ -82,7 +82,7 @@ public class cj_class134 {
             vec3d = new Vec3d(0.2, 0.8, 0.0);
         } else {
             vec3d = new Vec3d(vec3d.x, vec3d.y, -vec3d.z);
-            float f2 = -Reference.Lerp(entityLivingBase.prevRenderYawOffset, entityLivingBase.renderYawOffset, f);
+            float f2 = -Reference.LerpFloat(entityLivingBase.prevRenderYawOffset, entityLivingBase.renderYawOffset, f);
             vec3d = ck_class135.a(vec3d, f2);
         }
         return vec3d.normalize();

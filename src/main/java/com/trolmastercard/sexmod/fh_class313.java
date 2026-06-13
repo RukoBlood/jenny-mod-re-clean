@@ -57,7 +57,7 @@ extends GuiScreen {
         }
         Minecraft minecraft = Minecraft.getMinecraft();
         int n = minecraft.gameSettings.guiScale;
-        float f = n == 1 ? (float) Reference.Lerp(-1800.0, 1000.0, 0.5 * Math.cos(e / 25.0) + 0.5) : (n == 2 ? (float) Reference.Lerp(-900.0, 750.0, 0.5 * Math.cos(e / 25.0) + 0.5) : (float) Reference.Lerp(-900.0, 600.0, 0.5 * Math.cos((e += (double)(minecraft.getTickLength() * 0.75f)) / 25.0) + 0.5));
+        float f = n == 1 ? (float) Reference.LerpDouble(-1800.0, 1000.0, 0.5 * Math.cos(e / 25.0) + 0.5) : (n == 2 ? (float) Reference.LerpDouble(-900.0, 750.0, 0.5 * Math.cos(e / 25.0) + 0.5) : (float) Reference.LerpDouble(-900.0, 600.0, 0.5 * Math.cos((e += (double)(minecraft.getTickLength() * 0.75f)) / 25.0) + 0.5));
         GlStateManager.pushMatrix();
         if (n == 1) {
             GlStateManager.scale(2.0f, 2.0f, 2.0f);

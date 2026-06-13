@@ -178,7 +178,7 @@ implements ai_class30 {
         }
         Vec3d vec3d2 = entityPlayer.getPositionVector();
         Vec3d vec3d3 = new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ);
-        return Reference.a(vec3d3, vec3d2, (double)f);
+        return Reference.LerpVec3d(vec3d3, vec3d2, (double)f);
     }
 
     void void_c(EntityPlayer entityPlayer) {
@@ -299,7 +299,7 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return vec3d;
         }
-        float f2 = Reference.Lerp(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
+        float f2 = Reference.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
         Vec3d vec3d2 = vec3d;
         float f3 = 135.0f;
         Action fp_class3242 = this.currentAction();

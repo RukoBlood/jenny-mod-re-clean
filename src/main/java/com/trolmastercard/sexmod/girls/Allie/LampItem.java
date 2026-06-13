@@ -13,14 +13,16 @@
  *  net.minecraftforge.fml.common.gameevent.PlayerEvent$PlayerLoggedOutEvent
  *  net.minecraftforge.registries.IForgeRegistryEntry
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Allie;
 
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 
+import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.cj_class134;
+import com.trolmastercard.sexmod.ck_class135;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Allie.AllieEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.util.Reference;

@@ -64,7 +64,7 @@ extends PlayerGirlRenderer {
             case "backHair": {
                 if (this.boolean_b() || !(this.z > 0.0f)) break;
                 double d = this.z / gc_class360.c(45.0f);
-                float f = (float) Reference.Lerp(0.0, 0.75, d);
+                float f = (float) Reference.LerpDouble(0.0, 0.75, d);
                 geoBone.setPositionZ(f);
                 geoBone.setPositionY(f);
                 geoBone.setRotationX(-this.z);

@@ -4,12 +4,14 @@
  * Could not load the following classes:
  *  net.minecraftforge.common.MinecraftForge
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.util.Handlers;
 
 import java.io.File;
 import java.io.IOException;
 
+import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.Allie.LampItem;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Galath.GalathCoin;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
@@ -30,7 +32,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class bn_class89 {
+public class bn_Handler {
     public static void a(boolean bl) throws IOException {
         MinecraftForge.EVENT_BUS.register((Object)new ah_class29());
         MinecraftForge.EVENT_BUS.register((Object)new eo_class262());
@@ -40,7 +42,7 @@ public class bn_class89 {
         MinecraftForge.EVENT_BUS.register((Object)new ho_class404.a_inner405());
         MinecraftForge.EVENT_BUS.register((Object)new FighterAI.a_inner339());
         MinecraftForge.EVENT_BUS.register((Object) LampItem.LAMP_ITEM);
-        MinecraftForge.EVENT_BUS.register((Object) DragonStaff.DRAGON_STAFF);
+        MinecraftForge.EVENT_BUS.register((Object) DragonStaffItem.DRAGON_STAFF);
         MinecraftForge.EVENT_BUS.register((Object) EditorWand.EDITOR_WAND);
         MinecraftForge.EVENT_BUS.register((Object)new LunaRod());
         MinecraftForge.EVENT_BUS.register((Object)new fu_class330());
@@ -48,7 +50,7 @@ public class bn_class89 {
         MinecraftForge.EVENT_BUS.register((Object)new ey_class280());
         MinecraftForge.EVENT_BUS.register((Object) Fire.FIRE);
         MinecraftForge.EVENT_BUS.register((Object)new KoboldEntity.c_inner311());
-        MinecraftForge.EVENT_BUS.register((Object)new DragonStaff.a_inner408());
+        MinecraftForge.EVENT_BUS.register((Object)new DragonStaffItem.a_inner408());
         MinecraftForge.EVENT_BUS.register((Object)new KoboldManager.b_inner50("tribes"));
         MinecraftForge.EVENT_BUS.register((Object)new KoboldEggItem());
         MinecraftForge.EVENT_BUS.register((Object)new am_class34());
@@ -67,13 +69,13 @@ public class bn_class89 {
         MinecraftForge.EVENT_BUS.register((Object)new ManglelieEntity.ArrowLogic());
         MinecraftForge.EVENT_BUS.register((Object)new f4_class289());
         if (bl) {
-            bn_class89.b();
+            bn_Handler.b();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
     static void b() {
-        if (bn_class89.checkIfAsked()) {
+        if (bn_Handler.checkIfAsked()) {
             MinecraftForge.EVENT_BUS.register((Object)new ShowWarning());
         } else {
             PornWarning.isAdult = false;

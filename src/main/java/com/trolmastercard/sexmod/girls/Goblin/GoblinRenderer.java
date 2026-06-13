@@ -209,7 +209,7 @@ extends d6_class165<GoblinEntity> {
             }
         } else if (this.u) {
             GoblinRenderer.a(f2);
-            object = new Vec3d(Reference.Lerp(-0.1f, 0.2f, GoblinRenderer.minecraft.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
+            object = new Vec3d(Reference.LerpFloat(-0.1f, 0.2f, GoblinRenderer.minecraft.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
             object = GoblinEntity.b((Vec3d)object, GoblinRenderer.minecraft.player.rotationYaw);
             d = ((Vec3d)object).x;
             d2 = ((Vec3d)object).y;
@@ -275,16 +275,16 @@ extends d6_class165<GoblinEntity> {
         if (entityPlayer == null) {
             return Vec3d.ZERO;
         }
-        Vec3d vec3d = Reference.a(new Vec3d(entityPlayer.prevPosX, entityPlayer.prevPosY, entityPlayer.prevPosZ), entityPlayer.getPositionVector(), (double)f);
-        Vec3d vec3d2 = Reference.a(new Vec3d(GoblinRenderer.minecraft.player.prevPosX, GoblinRenderer.minecraft.player.prevPosY, GoblinRenderer.minecraft.player.prevPosZ), GoblinRenderer.minecraft.player.getPositionVector(), (double)f);
+        Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entityPlayer.prevPosX, entityPlayer.prevPosY, entityPlayer.prevPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(GoblinRenderer.minecraft.player.prevPosX, GoblinRenderer.minecraft.player.prevPosY, GoblinRenderer.minecraft.player.prevPosZ), GoblinRenderer.minecraft.player.getPositionVector(), (double)f);
         return vec3d.subtract(vec3d2);
     }
 
     public static Vector4f a_0(EntityPlayer entityPlayer, float f) {
         EntityPlayerSP entityPlayerSP = GoblinRenderer.minecraft.player;
-        float f2 = Reference.Lerp(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
-        Vec3d vec3d = Reference.a(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
-        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
+        float f2 = Reference.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
+        Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         return new Vector4f((float)vec3d3.x, (float)vec3d3.y, (float)vec3d3.z, f2);
     }

@@ -9,22 +9,31 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class f1_class285
+public class cf_EllieRotateSomething
 extends ModelBase
 implements IRenderer {
     final private ModelRenderer a;
+    final private ModelRenderer b;
+    final private ModelRenderer c;
 
-    public f1_class285() {
+    public cf_EllieRotateSomething() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.a = new ModelRenderer(this);
-        this.a.setRotationPoint(-5.0f, 2.5f, 0.0f);
-        this.a.cubeList.add(new ModelBox(this.a, 0, 0, -2.0f, -6.0f, 0.0f, 2, 6, 2, 0.0f, false));
+        this.a.setRotationPoint(-5.0f, 1.5708f, 0.0f);
+        this.b = new ModelRenderer(this);
+        this.b.setRotationPoint(-1.0f, -3.0f, 1.0f);
+        this.a.addChild(this.b);
+        this.a(this.b, 0.0f, 1.5708f, 0.0f);
+        this.b.cubeList.add(new ModelBox(this.b, 0, 0, -1.0f, -3.0f, -1.0f, 2, 6, 2, 0.0f, false));
+        this.c = new ModelRenderer(this);
+        this.c.setRotationPoint(0.0f, 0.0f, 0.0f);
     }
 
     @Override
-    public void render(Entity entity, float f, float f2, float f3, float f4, float f5, float f6) {
-        this.a.render(f6);
+    public void render(Entity entity, float f, float f2, float f3, float f4, float f5, float scale) {
+        this.a.render(scale);
+        this.c.render(scale);
     }
 
     public void a(ModelRenderer modelRenderer, float f, float f2, float f3) {

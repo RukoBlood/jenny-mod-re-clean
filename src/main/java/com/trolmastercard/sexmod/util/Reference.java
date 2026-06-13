@@ -3,8 +3,8 @@
  */
 package com.trolmastercard.sexmod.util;
 
-import com.trolmastercard.sexmod.f7_class292;
-import com.trolmastercard.sexmod.gv_class388;
+import com.trolmastercard.sexmod.Vector3f;
+import com.trolmastercard.sexmod.ColorRGBA;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
@@ -32,76 +32,76 @@ public class Reference {
         return vec3d.add(vec3d3.x / (double)n, vec3d3.y / (double)n, vec3d3.z / (double)n);
     }
 
-    public static double Lerp(double start, double end, double step) {
+    public static double LerpDouble(double start, double end, double step) {
         return start + (end - start) * step;
     }
 
-    public static float Lerp(float start, float end, float step) {
+    public static float LerpFloat(float start, float end, float step) {
         return start + (end - start) * step;
     }
 
-    public static float a(float f, float f2, double d) {
-        float f3 = f2 - f;
-        while ((double)f3 < -Math.PI) {
-            f3 = (float)((double)f3 + Math.PI * 2);
+    public static float a(float start, float end, double step) {
+        float delta = end - start;
+        while ((double)delta < -Math.PI) {
+            delta = (float)((double)delta + Math.PI * 2);
         }
-        while ((double)f3 >= Math.PI) {
-            f3 = (float)((double)f3 - Math.PI * 2);
+        while ((double)delta >= Math.PI) {
+            delta = (float)((double)delta - Math.PI * 2);
         }
-        return (float)((double)f + (double)f3 * d);
+        return (float)((double)start + (double)delta * step);
     }
 
-    public static float b(float f, float f2, double d) {
-        double d2 = Math.toRadians(f);
-        double d3 = Math.toRadians(f2);
-        return (float)Math.toDegrees(Reference.a((float)d2, (float)d3, d));
+    public static float LerpAngleDegrees(float start, float end, double step) {
+        double StartRad = Math.toRadians(start);
+        double EndRad = Math.toRadians(end);
+        return (float)Math.toDegrees(Reference.a((float)StartRad, (float)EndRad, step));
     }
 
-    public static Vec3d a(Vec3d vec3d, Vec3d vec3d2, double d) {
-        Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        return vec3d.add(new Vec3d(vec3d3.x * d, vec3d3.y * d, vec3d3.z * d));
+    public static Vec3d LerpVec3d(Vec3d start, Vec3d end, double step) {
+        Vec3d delta = end.subtract(start);
+        return start.add(new Vec3d(delta.x * step, delta.y * step, delta.z * step));
     }
 
-    public static f7_class292 a(f7_class292 f7_class2922, f7_class292 f7_class2923, double d) {
-        f7_class292 f7_class2924 = f7_class2923.b(f7_class2922);
-        return f7_class2922.a(f7_class2924.a((float)d));
+    public static Vector3f LerpVector3f(Vector3f start, Vector3f end, double step) {
+        Vector3f delta = end.subtract(start);
+        return start.add(delta.scale((float)step));
     }
 
-    public static Vec3i a(Vec3i vec3i, Vec3i vec3i2, double d) {
-        Vec3d vec3d = new Vec3d(vec3i2.getX() - vec3i.getX(), vec3i2.getY() - vec3i.getY(), vec3i2.getZ() - vec3i.getZ());
-        return new Vec3i((double)vec3i.getX() + vec3d.x * d, (double)vec3i.getY() + vec3d.y * d, (double)vec3i.getZ() + vec3d.z * d);
+    public static Vec3i LerpVec3i(Vec3i start, Vec3i end, double step) {
+        Vec3d delta = new Vec3d(end.getX() - start.getX(), end.getY() - start.getY(), end.getZ() - start.getZ());
+        return new Vec3i((double)start.getX() + delta.x * step, (double)start.getY() + delta.y * step, (double)start.getZ() + delta.z * step);
     }
 
-    public static gv_class388 a(gv_class388 gv_class3882, gv_class388 gv_class3883, double d) {
-        gv_class388 gv_class3884 = new gv_class388(gv_class3883.a - gv_class3882.a, gv_class3883.d - gv_class3882.d, gv_class3883.c - gv_class3882.c, gv_class3883.b - gv_class3882.b);
-        return new gv_class388((int)((double)gv_class3882.a + (double)gv_class3884.a * d), (int)((double)gv_class3882.d + (double)gv_class3884.d * d), (int)((double)gv_class3882.c + (double)gv_class3884.c * d), (int)((double)gv_class3882.b + (double)gv_class3884.b * d));
+    public static ColorRGBA LerpColorRGBA(ColorRGBA start, ColorRGBA end, double step) {
+        ColorRGBA delta = new ColorRGBA(end.r - start.r, end.g - start.g, end.b - start.b, end.a - start.a);
+        return new ColorRGBA((int)((double)start.r + (double)delta.r * step), (int)((double)start.g + (double)delta.g * step), (int)((double)start.b + (double)delta.b * step), (int)((double)start.a + (double)delta.a * step));
     }
 
-    public static double e(double d) {
-        return 1.0 - Math.pow(1.0 - d, 4.0);
+    public static double EaseOutQuart(double value) {
+        return 1.0 - Math.pow(1.0 - value, 4.0);
     }
 
-    public static double g(double d) {
+    public static double EaseOutCubic(double d) {
         return 1.0 - Math.pow(1.0 - d, 3.0);
     }
 
-    public static double c(double d) {
+    public static double EaseOutBack(double d) {
         double d2 = 1.70158;
         double d3 = d2 + 1.0;
         return 1.0 + d3 * Math.pow(d - 1.0, 3.0) + d2 * Math.pow(d - 1.0, 2.0);
     }
 
-    public static double d(double d) {
+    public static double EaseInBack(double d) {
         double d2 = 1.70158;
         double d3 = d2 + 1.0;
         return d3 * d * d * d - d2 * d * d;
     }
 
-    public static double b(double d) {
+    public static double EaseOutSine(double d) {
         return Math.sin(d * Math.PI / 2.0);
     }
 
-    public static double a(double d) {
+    public static double EaseInCubic(double d) {
         return d * d * d;
     }
 

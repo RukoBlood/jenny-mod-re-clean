@@ -12,7 +12,6 @@ package com.trolmastercard.sexmod;
 
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
-import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.Galath.GalathCoin;
@@ -36,14 +35,14 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 public class av_class46
 extends GeoItemRenderer<GalathCoin> {
-    final static public f7_class292 e = new f7_class292(0.84705883f, 0.11764706f, 0.35686275f);
-    final static public f7_class292 f = new f7_class292(0.44705883f, 0.44705883f, 0.44705883f);
+    final static public Vector3f e = new Vector3f(0.84705883f, 0.11764706f, 0.35686275f);
+    final static public Vector3f f = new Vector3f(0.44705883f, 0.44705883f, 0.44705883f);
     final static public float b = 240.0f;
     final static public float g = 120.0f;
     final static float h = 0.05f;
     final static Minecraft a = Minecraft.getMinecraft();
     boolean c = false;
-    f7_class292 d;
+    Vector3f d;
 
     public av_class46() {
         super(new GalathCoinModel());
@@ -116,7 +115,7 @@ extends GeoItemRenderer<GalathCoin> {
             return 120.0f;
         }
         if (f2 <= 3000.0f) {
-            return Reference.Lerp(120.0f, 240.0f, (f2 - 1000.0f) / 2000.0f);
+            return Reference.LerpFloat(120.0f, 240.0f, (f2 - 1000.0f) / 2000.0f);
         }
         return 240.0f;
     }
@@ -127,12 +126,12 @@ extends GeoItemRenderer<GalathCoin> {
             return 240.0f;
         }
         if (f2 <= 3000.0f) {
-            return Reference.Lerp(240.0f, 120.0f, (f2 - 1000.0f) / 2000.0f);
+            return Reference.LerpFloat(240.0f, 120.0f, (f2 - 1000.0f) / 2000.0f);
         }
         return 120.0f;
     }
 
-    f7_class292 a() {
+    Vector3f a() {
         if (av_class46.a.player.getHeldItemMainhand() != this.currentItemStack && av_class46.a.player.getHeldItemOffhand() != this.currentItemStack) {
             return e;
         }
@@ -152,24 +151,24 @@ extends GeoItemRenderer<GalathCoin> {
         return e;
     }
 
-    f7_class292 a(long l, long l2) {
+    Vector3f a(long l, long l2) {
         float f = l2 - l;
         if (f < 1000.0f) {
             return av_class46.f;
         }
         if (f <= 3000.0f) {
-            return Reference.a(av_class46.f, e, (double)((f - 1000.0f) / 2000.0f));
+            return Reference.LerpVector3f(av_class46.f, e, (double)((f - 1000.0f) / 2000.0f));
         }
         return e;
     }
 
-    f7_class292 b(long l, long l2) {
+    Vector3f b(long l, long l2) {
         float f = l2 - l;
         if (f < 1000.0f) {
             return e;
         }
         if (f <= 3000.0f) {
-            return Reference.a(e, av_class46.f, (double)((f - 1000.0f) / 2000.0f));
+            return Reference.LerpVector3f(e, av_class46.f, (double)((f - 1000.0f) / 2000.0f));
         }
         return av_class46.f;
     }
@@ -184,7 +183,7 @@ extends GeoItemRenderer<GalathCoin> {
             for (GeoVertex geoVertex : geoQuad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
                 MATRIX_STACK.getModelMatrix().transform((Tuple4f)vector4f);
-                bufferBuilder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex(geoVertex.textureU, geoVertex.textureV).color(this.d.a, this.d.c, this.d.b, 1.0f).endVertex();
+                bufferBuilder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex(geoVertex.textureU, geoVertex.textureV).color(this.d.x, this.d.y, this.d.z, 1.0f).endVertex();
             }
         }
     }
@@ -200,7 +199,7 @@ extends GeoItemRenderer<GalathCoin> {
         }
         for (GeoQuad geoQuad : geoCube.quads) {
             if (geoQuad == null) continue;
-            Vector3f vector3f = new Vector3f((float)geoQuad.normal.getX(), (float)geoQuad.normal.getY(), (float)geoQuad.normal.getZ());
+            javax.vecmath.Vector3f vector3f = new javax.vecmath.Vector3f((float)geoQuad.normal.getX(), (float)geoQuad.normal.getY(), (float)geoQuad.normal.getZ());
             MATRIX_STACK.getNormalMatrix().transform((Tuple3f)vector3f);
             if ((geoCube.size.y == 0.0f || geoCube.size.z == 0.0f) && vector3f.getX() < 0.0f) {
                 vector3f.x *= -1.0f;

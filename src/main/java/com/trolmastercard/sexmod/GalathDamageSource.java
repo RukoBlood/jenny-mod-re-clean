@@ -16,38 +16,37 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-public class cs_class143
-extends DamageSource {
-    GalathEntity a;
-    Vec3d b;
+public class GalathDamageSource extends DamageSource {
+    GalathEntity galathEntity;
+    Vec3d sourceLocation;
 
-    public cs_class143(GalathEntity f__class2972) {
+    public GalathDamageSource(GalathEntity galathEntity) {
         super("galath");
-        this.a = f__class2972;
-        this.b = f__class2972.getPositionVector();
+        this.galathEntity = galathEntity;
+        this.sourceLocation = galathEntity.getPositionVector();
     }
 
     @Override
-    public ITextComponent getDeathMessage(EntityLivingBase entityLivingBase) {
-        return new TextComponentString(entityLivingBase.getName() + " was slain by Galath");
+    public ITextComponent getDeathMessage(EntityLivingBase entity) {
+        return new TextComponentString(entity.getName() + " was slain by Galath");
     }
 
     @Override
     @Nullable
     public Entity getImmediateSource() {
-        return this.a;
+        return this.galathEntity;
     }
 
     @Override
     @Nullable
     public Entity getTrueSource() {
-        return this.a;
+        return this.galathEntity;
     }
 
     @Override
     @Nullable
     public Vec3d getDamageLocation() {
-        return this.b;
+        return this.sourceLocation;
     }
 }
 

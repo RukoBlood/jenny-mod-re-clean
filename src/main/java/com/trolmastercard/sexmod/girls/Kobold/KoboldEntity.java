@@ -38,6 +38,7 @@ import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockLog;
@@ -421,10 +422,10 @@ IInventory,
             return false;
         }
         ItemStack itemStack2 = entityPlayer.getHeldItem(EnumHand.MAIN_HAND);
-        if (itemStack2.getItem() != DragonStaff.DRAGON_STAFF) {
+        if (itemStack2.getItem() != DragonStaffItem.DRAGON_STAFF) {
             itemStack2 = entityPlayer.getHeldItem(EnumHand.OFF_HAND);
         }
-        if (!this.boolean_J() && itemStack2.getItem() == DragonStaff.DRAGON_STAFF) {
+        if (!this.boolean_J() && itemStack2.getItem() == DragonStaffItem.DRAGON_STAFF) {
             if (!this.world.isRemote) {
                 return true;
             }
@@ -438,7 +439,7 @@ IInventory,
             this.m((UUID)optional.get());
             return true;
         }
-        if (this.boolean_J() && itemStack2.getItem() == DragonStaff.DRAGON_STAFF && ((String)this.entityDataManager.get(v)).equals(entityPlayer.getPersistentID().toString())) {
+        if (this.boolean_J() && itemStack2.getItem() == DragonStaffItem.DRAGON_STAFF && ((String)this.entityDataManager.get(v)).equals(entityPlayer.getPersistentID().toString())) {
             entityPlayer.openGui(Main.instance, 1, this.world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
             return true;
         }
@@ -760,7 +761,7 @@ IInventory,
                 }
             }
             if (d2 > 10.0) continue;
-            if (entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() != DragonStaff.DRAGON_STAFF && entityPlayer.getHeldItem(EnumHand.OFF_HAND).getItem() != DragonStaff.DRAGON_STAFF) {
+            if (entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() != DragonStaffItem.DRAGON_STAFF && entityPlayer.getHeldItem(EnumHand.OFF_HAND).getItem() != DragonStaffItem.DRAGON_STAFF) {
                 return;
             }
             PathNavigate pathNavigate = this.getNavigator();
@@ -993,7 +994,7 @@ IInventory,
             Vec3d vec3d = new Vec3d((float)blockPosArray[0].getX() + 0.5f, (double)blockPosArray[0].getY() + 0.5625, (float)blockPosArray[0].getZ() + 0.5f);
             Vec3d vec3d2 = new Vec3d((float)blockPosArray[1].getX() + 0.5f, (double)blockPosArray[1].getY() + 0.5625, (float)blockPosArray[1].getZ() + 0.5f);
             boolean bl = vec3d.subtract((Vec3d)vec3d2).x == 0.0;
-            Vec3d vec3d3 = Reference.a(vec3d, vec3d2, 0.5);
+            Vec3d vec3d3 = Reference.LerpVec3d(vec3d, vec3d2, 0.5);
             this.entityDataManager.set(G, true);
             this.c(vec3d3);
             this.void_b(bl ? 0.0f : 90.0f);
@@ -2618,7 +2619,7 @@ IInventory,
     void b(SoundEvent soundEvent, float f) {
         float f2 = 0.25f - this.entityDataManager.get(aE).floatValue();
         double d = f2 / 0.25f;
-        float f3 = (float) Reference.Lerp((double)0.9f, (double)1.1f, d);
+        float f3 = (float) Reference.LerpDouble((double)0.9f, (double)1.1f, d);
         this.PlaySoundAtPosition(soundEvent, f, f3);
     }
 

@@ -197,9 +197,9 @@ implements IAnimatable {
         Vec3d vec3d2 = entityPlayer.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0);
         Vec3d vec3d3 = vec3d2.add(ck_class135.a((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         float f = (float)(l - l2 - 1000L) / 2000.0f;
-        Vec3d vec3d4 = Reference.a(vec3d, vec3d3, (double)f);
-        ez_class281.b = 0.2f;
-        Minecraft.getMinecraft().effectRenderer.addEffect(new ez_class281(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
+        Vec3d vec3d4 = Reference.LerpVec3d(vec3d, vec3d3, (double)f);
+        ParticleGalathTrail.globalParticleScale = 0.2f;
+        Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGalathTrail(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -219,9 +219,9 @@ implements IAnimatable {
         Vec3d vec3d2 = vec3d.add(ck_class135.a((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         Vec3d vec3d3 = vec3d.add(entityPlayer.getLookVec().normalize().scale(2.0));
         float f = (float)(l - l2 - 1000L) / 2000.0f;
-        Vec3d vec3d4 = Reference.a(vec3d2, vec3d3, (double)f);
-        ez_class281.b = 0.2f;
-        Minecraft.getMinecraft().effectRenderer.addEffect(new ez_class281(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
+        Vec3d vec3d4 = Reference.LerpVec3d(vec3d2, vec3d3, (double)f);
+        ParticleGalathTrail.globalParticleScale = 0.2f;
+        Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGalathTrail(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
     }
 
     @SubscribeEvent

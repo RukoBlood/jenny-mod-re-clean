@@ -126,18 +126,18 @@ public class EscapeMinigameUI extends Gui {
         int n2 = renderGameOverlayEvent.getResolution().getScaledHeight();
         float f = renderGameOverlayEvent.getPartialTicks();
         minecraft.getTextureManager().bindTexture(l);
-        double d = c ? 1.0 - Reference.d((EscapeMinigameUI.d + f) / 20.0f) : Math.min(1.0, Reference.c((j + f) / 20.0f));
+        double d = c ? 1.0 - Reference.EaseInBack((EscapeMinigameUI.d + f) / 20.0f) : Math.min(1.0, Reference.EaseOutBack((j + f) / 20.0f));
         int n3 = n2 + 385;
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.33f, 0.33f, 0.33f);
         GlStateManager.translate(485.0f, 0.0f, 0.0f);
         int n4 = 4 * n2;
-        this.drawTexturedModalRect(n / 2 - 87, (int) Reference.Lerp((double)n4, (double)n3, d), 0, 104, 174, 48);
-        this.drawTexturedModalRect((int)((float)n / 2.0f - 78.0f), (int) Reference.Lerp((double)n4, (double)(n3 - 52), d), 52, b && q == EscapeMinigameUIKeybinds.A ? 52 : 0, 52, 52);
-        this.drawTexturedModalRect((int)((float)n / 2.0f - 26.0f), (int) Reference.Lerp((double)n4, (double)(n3 - 52), d), 104, b && q == EscapeMinigameUIKeybinds.S ? 52 : 0, 52, 52);
-        this.drawTexturedModalRect((int)((float)n / 2.0f + 26.0f), (int) Reference.Lerp((double)n4, (double)(n3 - 52), d), 156, b && q == EscapeMinigameUIKeybinds.D ? 52 : 0, 52, 52);
-        this.drawTexturedModalRect((int)((float)n / 2.0f - 26.0f), (int) Reference.Lerp((double)n4, (double)(n3 - 104), d), 0, b && q == EscapeMinigameUIKeybinds.W ? 52 : 0, 52, 52);
-        this.drawTexturedModalRect(n / 2 - 87 + 8, (int) Reference.Lerp((double)(n4 - 8), (double)(n3 + 8), d), 8, 152, (int)(158.0f * k), 32);
+        this.drawTexturedModalRect(n / 2 - 87, (int) Reference.LerpDouble((double)n4, (double)n3, d), 0, 104, 174, 48);
+        this.drawTexturedModalRect((int)((float)n / 2.0f - 78.0f), (int) Reference.LerpDouble((double)n4, (double)(n3 - 52), d), 52, b && q == EscapeMinigameUIKeybinds.A ? 52 : 0, 52, 52);
+        this.drawTexturedModalRect((int)((float)n / 2.0f - 26.0f), (int) Reference.LerpDouble((double)n4, (double)(n3 - 52), d), 104, b && q == EscapeMinigameUIKeybinds.S ? 52 : 0, 52, 52);
+        this.drawTexturedModalRect((int)((float)n / 2.0f + 26.0f), (int) Reference.LerpDouble((double)n4, (double)(n3 - 52), d), 156, b && q == EscapeMinigameUIKeybinds.D ? 52 : 0, 52, 52);
+        this.drawTexturedModalRect((int)((float)n / 2.0f - 26.0f), (int) Reference.LerpDouble((double)n4, (double)(n3 - 104), d), 0, b && q == EscapeMinigameUIKeybinds.W ? 52 : 0, 52, 52);
+        this.drawTexturedModalRect(n / 2 - 87 + 8, (int) Reference.LerpDouble((double)(n4 - 8), (double)(n3 + 8), d), 8, 152, (int)(158.0f * k), 32);
         GlStateManager.popMatrix();
     }
 

@@ -31,7 +31,6 @@ import javax.imageio.ImageIO;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
-import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
@@ -162,7 +161,7 @@ implements c3_class112 {
 
     @CheckReturnValue
     public static float a(GirlEntity em_class2582, float f) {
-        return em_class2582.boolean_Q() ? em_class2582.java_lang_Float_I().floatValue() : Reference.Lerp(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f);
+        return em_class2582.boolean_Q() ? em_class2582.java_lang_Float_I().floatValue() : Reference.LerpFloat(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f);
     }
 
     protected void d() {
@@ -327,8 +326,8 @@ implements c3_class112 {
         EntityLiving entityLiving = (EntityLiving)entityPlayer.getRidingEntity();
         EntityPlayerSP entityPlayerSP = GirlRenderer.i.player;
         Vec3d vec3d = entityLiving.getLookVec();
-        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
-        Vec3d vec3d3 = Reference.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d3 = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
         vec3d3 = vec3d2.subtract(vec3d3);
         ((GirlEntity)this.j).renderYawOffset = entityLiving.renderYawOffset;
         return new Vec3d(vec3d3.x + vec3d.x * -0.5, vec3d3.y + (double)0.15f, vec3d3.z + vec3d.z * -0.5);
@@ -355,7 +354,7 @@ implements c3_class112 {
             return vec3d;
         }
         if (!(t instanceof PlayerGirl) || !((PlayerGirl)t).boolean_f() || GirlRenderer.i.gameSettings.thirdPersonView == 0) {
-            Vec3d vec3d2 = Reference.a(new Vec3d(GirlRenderer.i.player.lastTickPosX, GirlRenderer.i.player.lastTickPosY, GirlRenderer.i.player.lastTickPosZ), GirlRenderer.i.player.getPositionVector(), (double)f);
+            Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(GirlRenderer.i.player.lastTickPosX, GirlRenderer.i.player.lastTickPosY, GirlRenderer.i.player.lastTickPosZ), GirlRenderer.i.player.getPositionVector(), (double)f);
             vec3d = ((GirlEntity)t).net_minecraft_util_math_Vec3d_o().subtract(vec3d2);
         }
         ((GirlEntity)t).rotationYaw = f2 = ((GirlEntity)t).java_lang_Float_I().floatValue();
@@ -461,7 +460,7 @@ implements c3_class112 {
         GlStateManager.popMatrix();
         this.a(t);
         CustomModelRenderer.a(t, f2);
-        f7_class292 f7_class2922 = this.e(t);
+        Vector3f f7_class2922 = this.e(t);
         if (f7_class2922 != null) {
             this.a((GirlEntity)t, f2, f7_class2922);
         }
@@ -479,7 +478,7 @@ implements c3_class112 {
     }
 
     @Nullable
-    protected f7_class292 e(T t) {
+    protected Vector3f e(T t) {
         return null;
     }
 
@@ -487,16 +486,16 @@ implements c3_class112 {
         return em_class2582;
     }
 
-    void a(GirlEntity em_class2582, float f, f7_class292 f7_class2922) {
+    void a(GirlEntity em_class2582, float f, Vector3f f7_class2922) {
         EntityPlayerSP entityPlayerSP = GirlRenderer.i.player;
-        f7_class2922 = new f7_class292(f7_class2922.a / 255.0f, f7_class2922.c / 255.0f, f7_class2922.b / 255.0f);
+        f7_class2922 = new Vector3f(f7_class2922.x / 255.0f, f7_class2922.y / 255.0f, f7_class2922.z / 255.0f);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         GlStateManager.pushMatrix();
         GlStateManager.translate(0.0, 0.01, 0.0);
         Entity entity = this.c(em_class2582);
-        Vec3d vec3d = em_class2582.boolean_Q() ? em_class2582.net_minecraft_util_math_Vec3d_o() : Reference.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
-        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
+        Vec3d vec3d = em_class2582.boolean_Q() ? em_class2582.net_minecraft_util_math_Vec3d_o() : Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         GlStateManager.translate(vec3d3.x, vec3d3.y, vec3d3.z);
         i.getTextureManager().bindTexture(e);
@@ -508,15 +507,15 @@ implements c3_class112 {
     protected static float a(GirlEntity em_class2582, float f, float f2, float f3) {
         EntityPlayerSP entityPlayerSP = GirlRenderer.i.player;
         Entity entity = ((GirlRenderer)i.getRenderManager().getEntityRenderObject(em_class2582)).c(em_class2582);
-        Vec3d vec3d = em_class2582.boolean_Q() ? em_class2582.net_minecraft_util_math_Vec3d_o() : Reference.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
-        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
+        Vec3d vec3d = em_class2582.boolean_Q() ? em_class2582.net_minecraft_util_math_Vec3d_o() : Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
         Vec3d vec3d3 = ActiveRenderInfo.getCameraPosition().add(vec3d2);
         float f4 = (float)vec3d3.distanceTo(vec3d);
         float f5 = Math.abs(f4) / 5.0f;
-        return Reference.Lerp(f3, f2, be_class78.b(f5, 0.0f, 1.0f));
+        return Reference.LerpFloat(f3, f2, be_class78.b(f5, 0.0f, 1.0f));
     }
 
-    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, f7_class292 f7_class2922, float f) {
+    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, Vector3f f7_class2922, float f) {
     }
 
     protected static void a(BufferBuilder bufferBuilder, Tessellator tessellator, GirlEntity em_class2582, String string, String string2, float f, float f2, float f3, float f4) {
@@ -529,22 +528,22 @@ implements c3_class112 {
         tessellator.draw();
     }
 
-    protected static void a(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, f7_class292 f7_class2922, float f) {
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidStartR", "braStringMidMid1R", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid1R", "braStringMidMid2R", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid2R", "braStringMidMid3R", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid3R", "braStringMidEndR", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidEndR", "braStringBackR", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringBackR", "braStringRightEndR", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringRightEndR", "braStringRightStartR", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringRightR", "braStringRightL", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidStartL", "braStringMidMid1L", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid1L", "braStringMidMid2L", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid2L", "braStringMidMid3L", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid3L", "braStringMidEndL", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidEndL", "braStringBackL", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringBackL", "braStringLeftEndL", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
-        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringLeftEndL", "braStringLeftStartL", f7_class2922.a, f7_class2922.c, f7_class2922.b, f);
+    protected static void a(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, Vector3f f7_class2922, float f) {
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidStartR", "braStringMidMid1R", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid1R", "braStringMidMid2R", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid2R", "braStringMidMid3R", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid3R", "braStringMidEndR", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidEndR", "braStringBackR", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringBackR", "braStringRightEndR", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringRightEndR", "braStringRightStartR", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringRightR", "braStringRightL", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidStartL", "braStringMidMid1L", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid1L", "braStringMidMid2L", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid2L", "braStringMidMid3L", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidMid3L", "braStringMidEndL", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringMidEndL", "braStringBackL", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringBackL", "braStringLeftEndL", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
+        GirlRenderer.a(bufferBuilder, tessellator, em_class2582, "braStringLeftEndL", "braStringLeftStartL", f7_class2922.x, f7_class2922.y, f7_class2922.z, f);
     }
 
     // TODO
@@ -594,8 +593,8 @@ implements c3_class112 {
         d2 -= (1.6 - (double)em_class2582.height) * 0.5;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        double d4 = (double) Reference.Lerp(entity.prevRotationYaw, entity.rotationYaw, f * 0.5f) * 0.01745329238474369;
-        double d5 = (double) Reference.Lerp(entity.prevRotationPitch, entity.rotationPitch, f * 0.5f) * 0.01745329238474369;
+        double d4 = (double) Reference.LerpFloat(entity.prevRotationYaw, entity.rotationYaw, f * 0.5f) * 0.01745329238474369;
+        double d5 = (double) Reference.LerpFloat(entity.prevRotationPitch, entity.rotationPitch, f * 0.5f) * 0.01745329238474369;
         double d6 = Math.cos(d4);
         double d7 = Math.sin(d4);
         double d8 = Math.sin(d5);
@@ -605,15 +604,15 @@ implements c3_class112 {
             d8 = -1.0;
         }
         double d9 = Math.cos(d5);
-        double d10 = Reference.Lerp(entity.prevPosX, entity.posX, (double)f) - d6 * 0.7 - d7 * 0.5 * d9;
-        double d11 = Reference.Lerp(entity.prevPosY + (double)entity.getEyeHeight() * 0.7, entity.posY + (double)entity.getEyeHeight() * 0.7, (double)f) - d8 * 0.5 - 0.25;
-        double d12 = Reference.Lerp(entity.prevPosZ, entity.posZ, (double)f) - d7 * 0.7 + d6 * 0.5 * d9;
-        double d13 = (double) Reference.Lerp(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f) * 0.01745329238474369 + 1.5707963267948966;
+        double d10 = Reference.LerpDouble(entity.prevPosX, entity.posX, (double)f) - d6 * 0.7 - d7 * 0.5 * d9;
+        double d11 = Reference.LerpDouble(entity.prevPosY + (double)entity.getEyeHeight() * 0.7, entity.posY + (double)entity.getEyeHeight() * 0.7, (double)f) - d8 * 0.5 - 0.25;
+        double d12 = Reference.LerpDouble(entity.prevPosZ, entity.posZ, (double)f) - d7 * 0.7 + d6 * 0.5 * d9;
+        double d13 = (double) Reference.LerpFloat(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f) * 0.01745329238474369 + 1.5707963267948966;
         d6 = Math.cos(d13) * (double)em_class2582.width * 0.4;
         d7 = Math.sin(d13) * (double)em_class2582.width * 0.4;
-        double d14 = Reference.Lerp(em_class2582.prevPosX, em_class2582.posX, (double)f) + d6;
-        double d15 = Reference.Lerp(em_class2582.prevPosY, em_class2582.posY, (double)f);
-        double d16 = Reference.Lerp(em_class2582.prevPosZ, em_class2582.posZ, (double)f) + d7;
+        double d14 = Reference.LerpDouble(em_class2582.prevPosX, em_class2582.posX, (double)f) + d6;
+        double d15 = Reference.LerpDouble(em_class2582.prevPosY, em_class2582.posY, (double)f);
+        double d16 = Reference.LerpDouble(em_class2582.prevPosZ, em_class2582.posZ, (double)f) + d7;
         d += d6;
         d3 += d7;
         double d17 = (float)(d10 - d14);
@@ -832,7 +831,7 @@ implements c3_class112 {
         MATRIX_STACK.moveBackFromPivot(geoCube);
         for (GeoQuad geoQuad : geoCube.quads) {
             if (geoQuad == null) continue;
-            Vector3f vector3f = new Vector3f((float)geoQuad.normal.getX(), (float)geoQuad.normal.getY(), (float)geoQuad.normal.getZ());
+            javax.vecmath.Vector3f vector3f = new javax.vecmath.Vector3f((float)geoQuad.normal.getX(), (float)geoQuad.normal.getY(), (float)geoQuad.normal.getZ());
             MATRIX_STACK.getNormalMatrix().transform((Tuple3f)vector3f);
             if ((geoCube.size.y == 0.0f || geoCube.size.z == 0.0f) && vector3f.getX() < 0.0f) {
                 vector3f.x *= -1.0f;

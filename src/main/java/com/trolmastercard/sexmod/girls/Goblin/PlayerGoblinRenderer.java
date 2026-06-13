@@ -237,7 +237,7 @@ extends d9_class168 {
             }
         } else if (this.C) {
             GoblinRenderer.a(f2);
-            object = new Vec3d(Reference.Lerp(-0.1f, 0.2f, PlayerGoblinRenderer.i.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
+            object = new Vec3d(Reference.LerpFloat(-0.1f, 0.2f, PlayerGoblinRenderer.i.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
             object = GoblinEntity.b((Vec3d)object, PlayerGoblinRenderer.i.player.rotationYaw);
             d = ((Vec3d)object).x;
             d2 = ((Vec3d)object).y;
@@ -277,12 +277,12 @@ extends d9_class168 {
     }
 
     @Override
-    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, f7_class292 f7_class2922, float f) {
+    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, Vector3f f7_class2922, float f) {
         PlayerGoblinRenderer.a(tessellator, bufferBuilder, em_class2582, f7_class2922, f);
     }
 
     @Nullable
-    protected f7_class292 e(GirlEntity em_class2582) {
+    protected Vector3f e(GirlEntity em_class2582) {
         if (!this.D) {
             return null;
         }
@@ -309,14 +309,14 @@ extends d9_class168 {
         ItemArmor itemArmor = (ItemArmor)itemStack.getItem();
         switch (itemArmor.getArmorMaterial()) {
             default: {
-                return new f7_class292(23.0f, 100.0f, 93.0f);
+                return new Vector3f(23.0f, 100.0f, 93.0f);
             }
             case GOLD: {
-                return new f7_class292(99.0f, 98.0f, 14.0f);
+                return new Vector3f(99.0f, 98.0f, 14.0f);
             }
             case CHAIN: 
             case IRON: {
-                return new f7_class292(85.0f, 85.0f, 85.0f);
+                return new Vector3f(85.0f, 85.0f, 85.0f);
             }
             case LEATHER: 
         }
@@ -324,7 +324,7 @@ extends d9_class168 {
         float f = n >> 16 & 0xFF;
         float f2 = n >> 8 & 0xFF;
         float f3 = n & 0xFF;
-        return new f7_class292(f, f2, f3);
+        return new Vector3f(f, f2, f3);
     }
 
     @Override

@@ -15,7 +15,6 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
@@ -24,21 +23,20 @@ import software.bernie.geckolib3.geo.render.built.GeoQuad;
 import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
-public class dd_class176
-extends GeoItemRenderer<NYIWinchesterItem> {
+public class NYIWinchesterRenderer extends GeoItemRenderer<NYIWinchesterItem> {
     final static Vec3d a = new Vec3d(0.0, 1.0, 0.0);
 
-    public dd_class176() {
+    public NYIWinchesterRenderer() {
         super(new NYIWinchesterModel());
     }
 
     //a
     @Override
-    public void render(NYIWinchesterItem aj_class312, ItemStack itemStack) {
+    public void render(NYIWinchesterItem item, ItemStack stack) {
         if (ad_class25.b[0] == 0.0f) {
             GL11.glDisable(2896);
         }
-        super.render(aj_class312, itemStack);
+        super.render(item, stack);
         GL11.glEnable(2896);
     }
 

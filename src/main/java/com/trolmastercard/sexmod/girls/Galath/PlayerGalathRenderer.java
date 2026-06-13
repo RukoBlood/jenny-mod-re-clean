@@ -38,7 +38,7 @@ extends PlayerGirlRenderer {
     }
 
     @Nullable
-    protected f7_class292 e(GirlEntity em_class2582) {
+    protected Vector3f e(GirlEntity em_class2582) {
         if (em_class2582.world instanceof FakeWorld) {
             return null;
         }
@@ -56,7 +56,7 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, f7_class292 f7_class2922, float f) {
+    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, Vector3f f7_class2922, float f) {
         PlayerGalathRenderer.a(tessellator, bufferBuilder, em_class2582, f7_class2922, f);
     }
 

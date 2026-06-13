@@ -35,8 +35,7 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-public class fa_class300
-extends GeoItemRenderer<DragonStaff> {
+public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
     final static private ResourceLocation c = new ResourceLocation("textures/entity/endercrystal/endercrystal.png");
     final private e8_class231 q = new e8_class231();
     final static float p = 10.0f;
@@ -56,7 +55,7 @@ extends GeoItemRenderer<DragonStaff> {
     ItemStack h;
     static HashMap<ItemStack, Vector3f> n = new HashMap();
 
-    public fa_class300() {
+    public DragonStaffRenderer() {
         super(new KoboldStaffModel());
     }
 
@@ -71,7 +70,7 @@ extends GeoItemRenderer<DragonStaff> {
     // was:
     //this.a((hy_class407)item, itemStack);
     @Override
-    public void render(DragonStaff hy_class4072, ItemStack itemStack) {
+    public void render(DragonStaffItem hy_class4072, ItemStack itemStack) {
         EntityPlayer entityPlayer = null;
         for (EntityPlayer entityPlayer2 : this.e.world.playerEntities) {
             if (entityPlayer2.inventory.mainInventory.contains(itemStack)) {
@@ -148,9 +147,9 @@ extends GeoItemRenderer<DragonStaff> {
 
     void a(List<Integer> list, List<Vec3d> list2) {
         for (int i = 0; i < list.size(); ++i) {
-            float f = Reference.Lerp(this.k.prevRotationYawHead, this.k.rotationYawHead, this.e.getRenderPartialTicks());
-            float f2 = Reference.Lerp(this.k.prevRotationPitch, this.k.rotationPitch, this.e.getRenderPartialTicks());
-            Vec3d vec3d = Reference.a(new Vec3d(this.k.prevPosX, this.k.prevPosY + (double)this.k.getEyeHeight(), this.k.prevPosZ), this.k.getPositionVector().add(0.0, this.k.getEyeHeight(), 0.0), (double)this.e.getRenderPartialTicks());
+            float f = Reference.LerpFloat(this.k.prevRotationYawHead, this.k.rotationYawHead, this.e.getRenderPartialTicks());
+            float f2 = Reference.LerpFloat(this.k.prevRotationPitch, this.k.rotationPitch, this.e.getRenderPartialTicks());
+            Vec3d vec3d = Reference.LerpVec3d(new Vec3d(this.k.prevPosX, this.k.prevPosY + (double)this.k.getEyeHeight(), this.k.prevPosZ), this.k.getPositionVector().add(0.0, this.k.getEyeHeight(), 0.0), (double)this.e.getRenderPartialTicks());
             Vec3d vec3d2 = vec3d.subtract(list2.get(i));
             vec3d2 = ck_class135.a(vec3d2, -f2, f);
             double d = Math.abs(vec3d2.x) + Math.abs(vec3d2.z) + Math.abs(vec3d2.y);
@@ -168,7 +167,7 @@ extends GeoItemRenderer<DragonStaff> {
         float f = 1.0f / (float)list.size();
         float f2 = 0.0f;
         for (int i = 0; i < list.size(); ++i) {
-            this.a(list.get(i), 1.0f - (f2 += f), 0.0f + f2, (float) Reference.Lerp((double)0.8f, (double)1.2f, (double)i / (double)list.size()));
+            this.a(list.get(i), 1.0f - (f2 += f), 0.0f + f2, (float) Reference.LerpDouble((double)0.8f, (double)1.2f, (double)i / (double)list.size()));
         }
     }
 

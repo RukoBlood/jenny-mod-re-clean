@@ -78,7 +78,7 @@ extends PlayerGirl {
 
     @Override
     public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
-        return new cf_class130();
+        return new cf_EllieRotateSomething();
     }
 
     @Override

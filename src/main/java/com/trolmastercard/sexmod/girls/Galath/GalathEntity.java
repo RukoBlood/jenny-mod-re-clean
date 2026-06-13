@@ -160,7 +160,7 @@ implements IEntityMultiPart,
     final static public double aZ = 2.0;
     final static public double Q = 1.0;
     final static public float aJ = 0.5f;
-    final static public f7_class292 aa = new f7_class292(0.83137256f, 0.6862745f, 0.21568628f);
+    final static public Vector3f aa = new Vector3f(0.83137256f, 0.6862745f, 0.21568628f);
     final static public Vec3d bz = new Vec3d(-1.049342f, 2.0547213554382324, -0.05048239231109619);
     final static public Vec3d bC = new Vec3d(1.2522261142730713, 1.435773253440857, 0.23570987582206726);
     final static public int aN = 10;
@@ -579,10 +579,10 @@ implements IEntityMultiPart,
         Vec3d vec3d = this.getPositionVector();
         Vec3d vec3d2 = this.b("weapon").add(vec3d);
         Vec3d vec3d3 = this.b("offhand").add(vec3d);
-        ez_class281.b = 0.5f;
+        ParticleGalathTrail.globalParticleScale = 0.5f;
         for (float f = 0.0f; f < 1.0f; f += 0.2f) {
-            Vec3d vec3d4 = Reference.a(vec3d2, vec3d3, (double)f);
-            Minecraft.getMinecraft().effectRenderer.addEffect(new ez_class281(this.world, vec3d4.x, vec3d4.y, vec3d4.z));
+            Vec3d vec3d4 = Reference.LerpVec3d(vec3d2, vec3d3, (double)f);
+            Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGalathTrail(this.world, vec3d4.x, vec3d4.y, vec3d4.z));
         }
     }
 
@@ -815,7 +815,7 @@ implements IEntityMultiPart,
         float f = 0.1f;
         Random random = this.getRNG();
         for (float f2 = 0.0f; f2 < 1.0f; f2 += f) {
-            Vec3d vec3d4 = Reference.a(vec3d2, vec3d3, (double)f2);
+            Vec3d vec3d4 = Reference.LerpVec3d(vec3d2, vec3d3, (double)f2);
             for (int i = 0; i < 3; ++i) {
                 this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d4.x + random.nextDouble() * 0.25 * (double)(random.nextBoolean() ? 1 : -1), vec3d4.y + random.nextDouble() * 0.25 * (double)(random.nextBoolean() ? 1 : -1), vec3d4.z + random.nextDouble() * 0.25 * (double)(random.nextBoolean() ? 1 : -1), 0.0, 0.0, 0.0, new int[0]);
             }
@@ -1563,7 +1563,7 @@ implements IEntityMultiPart,
                 entityLivingBase.motionX = vec3d5.x * 1.0;
                 entityLivingBase.motionZ = vec3d5.z * 1.0;
                 entityLivingBase.motionY = 1.0;
-                entityLivingBase.attackEntityFrom(new cs_class143(this), 0.5f);
+                entityLivingBase.attackEntityFrom(new GalathDamageSource(this), 0.5f);
                 if (!(entityLivingBase instanceof EntityPlayerMP)) continue;
                 EntityPlayerMP entityPlayerMP = (EntityPlayerMP)entityLivingBase;
                 entityPlayerMP.connection.sendPacket(new SPacketEntityVelocity(entityPlayerMP));
@@ -1970,8 +1970,8 @@ implements IEntityMultiPart,
         if (entityLivingBase == null) {
             return null;
         }
-        Vec3d vec3d = Reference.a(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
-        Vec3d vec3d2 = Reference.a(new Vec3d(f__class2972.lastTickPosX, f__class2972.lastTickPosY, f__class2972.lastTickPosZ), f__class2972.getPositionVector(), (double)f);
+        Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(f__class2972.lastTickPosX, f__class2972.lastTickPosY, f__class2972.lastTickPosZ), f__class2972.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         f__class2972.renderYawOffset = f2 = (float)gc_class360.b(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
         f__class2972.prevRenderYawOffset = f2;
@@ -2626,7 +2626,7 @@ implements IEntityMultiPart,
                     MovementInput movementInput = entityPlayerSP.movementInput;
                     Vec2f vec2f = movementInput.getMoveVector();
                     if (vec2f.x == 0.0f && vec2f.y == 0.0f) break;
-                    Vec3d vec3d = ck_class135.a(new Vec3d(-vec2f.x, 0.0, vec2f.y), Reference.Lerp(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), Reference.Lerp(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
+                    Vec3d vec3d = ck_class135.a(new Vec3d(-vec2f.x, 0.0, vec2f.y), Reference.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), Reference.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
                     PackageHandler.networkWrapper.sendToServer((IMessage)new UpdateVelocity(vec3d, this.girlID()));
                     break;
                 }
@@ -2809,7 +2809,7 @@ implements IEntityMultiPart,
                     Vec3d vec3d2;
                     double d;
                     if (!(em_class2582 instanceof GalathEntity) || !em_class2582.world.isRemote || em_class2582.currentAction() != Action.SUMMON_SKELETON || (d = (double)((GalathEntity)em_class2582).ad) < 9.0 || d > 30.0) continue;
-                    Vec3d vec3d3 = Reference.a(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double)f);
+                    Vec3d vec3d3 = Reference.LerpVec3d(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double)f);
                     double d2 = (d - 9.0) / 21.0;
                     if (em_class2582.getDataManager().get(bN).booleanValue()) {
                         vec3d2 = em_class2582.b("energyBallR");

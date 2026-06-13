@@ -114,11 +114,11 @@ implements IGirlModelParts {
         double d3 = vec3d4.z / (vec3d4.x + vec3d4.y + vec3d4.z);
         Vec3d vec3d5 = new Vec3d((double)(vec3d3.x > 0.0 ? 1 : -1) * d, (double)(vec3d3.y > 0.0 ? 1 : -1) * d2, (double)(vec3d3.z > 0.0 ? 1 : -1) * d3);
         double d4 = vec3d5.y / 2.0 + 0.5;
-        float f3 = (float) Reference.Lerp(-180.0, 0.0, d4);
+        float f3 = (float) Reference.LerpDouble(-180.0, 0.0, d4);
         if (Float.isNaN(f3)) {
             f3 = -90.0f;
         }
-        float f4 = f2 = d4 < 0.5 ? 0.0f : (float) Reference.Lerp(0.0, 16.0, -d4);
+        float f4 = f2 = d4 < 0.5 ? 0.0f : (float) Reference.LerpDouble(0.0, 16.0, -d4);
         if (Float.isNaN(f2)) {
             f2 = 0.0f;
         }

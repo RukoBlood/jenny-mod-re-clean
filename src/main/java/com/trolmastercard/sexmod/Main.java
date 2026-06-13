@@ -95,7 +95,7 @@ public class Main {
 
     @SideOnly(value=Side.CLIENT)
     static void clientReset() {
-        gm_class376.a();
+        gm_class376.ClearList();
         d6_class165.c();
     }
 

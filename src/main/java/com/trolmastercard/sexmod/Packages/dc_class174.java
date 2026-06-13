@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.bh_class82;
+import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import com.trolmastercard.sexmod.girls.Ellie.EllieEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;

@@ -95,7 +95,7 @@ public class j_class411 extends GuiScreen {
     }
 
     void c() {
-        fa_class300.a();
+        DragonStaffRenderer.a();
     }
 
     void a() {
@@ -175,7 +175,7 @@ public class j_class411 extends GuiScreen {
         GlStateManager.scale(1.0f + this.n * 0.5f, 1.0f + this.n * 0.5f, 1.0f);
         this.drawTexturedModalRect(-2.0f - f3 + this.n * 15.0f, -2.0f - f3 + this.n * 15.0f, 0, 0, 64, 64);
         this.a(f3);
-        if (fa_class300.b()) {
+        if (DragonStaffRenderer.b()) {
             this.drawTexturedModalRect(-2.0f - f3 + this.n * 15.0f, -2.0f - f3 + this.n * 15.0f, 128, 64, 64, 64);
         }
         GlStateManager.popMatrix();

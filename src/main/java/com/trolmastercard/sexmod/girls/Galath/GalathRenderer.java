@@ -59,9 +59,9 @@ implements c3_class112 {
             this.add("pentagram");
         }
     };
-    final static public f7_class292 y = new f7_class292(0.0f, 0.0f, 0.0f);
-    final static gv_class388 H = new gv_class388(152, 45, 62, 255);
-    final static gv_class388 I = new gv_class388(84, 66, 88, 255);
+    final static public Vector3f y = new Vector3f(0.0f, 0.0f, 0.0f);
+    final static ColorRGBA H = new ColorRGBA(152, 45, 62, 255);
+    final static ColorRGBA I = new ColorRGBA(84, 66, 88, 255);
     final static bm_class88 C = new bm_class88(0.25f, 0.125f);
     final static bm_class88 x = new bm_class88(0.375f, 0.125f);
     final static float F = 0.125f;
@@ -85,7 +85,7 @@ implements c3_class112 {
     //formerly a
     @Override
     @Nullable
-    protected f7_class292 e(GalathEntity f__class2972) {
+    protected Vector3f e(GalathEntity f__class2972) {
         if (f__class2972.world instanceof FakeWorld) {
             return null;
         }
@@ -106,7 +106,7 @@ implements c3_class112 {
     }
 
     @Override
-    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, f7_class292 f7_class2922, float f) {
+    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, Vector3f f7_class2922, float f) {
         GalathRenderer.a(tessellator, bufferBuilder, em_class2582, f7_class2922, f);
     }
 
@@ -179,7 +179,7 @@ implements c3_class112 {
         if (entityLivingBase == null) {
             return null;
         }
-        Vec3d vec3d = Reference.a(new Vec3d(entityLivingBase.prevPosX, entityLivingBase.prevPosY, entityLivingBase.prevPosZ), entityLivingBase.getPositionVector(), (double)f);
+        Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entityLivingBase.prevPosX, entityLivingBase.prevPosY, entityLivingBase.prevPosZ), entityLivingBase.getPositionVector(), (double)f);
         if (f2 == 24.0f && f__class2972.af == -1L) {
             f__class2972.af = GalathRenderer.i.world.getTotalWorldTime();
             f__class2972.aH = f__class2972.af + 8L;
@@ -189,7 +189,7 @@ implements c3_class112 {
             Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
             Vec3d vec3d4 = vec3d.add(0.0, entityLivingBase.getEyeHeight(), 0.0).add(vec3d2);
             float f3 = ((float) GalathRenderer.i.world.getTotalWorldTime() + f - (float)f__class2972.af) / (float)(f__class2972.aH - f__class2972.af);
-            return Reference.a(vec3d3, vec3d4, (double)f3);
+            return Reference.LerpVec3d(vec3d3, vec3d4, (double)f3);
         }
         if (be_class78.a((double)f2, 32.0, 54.0)) {
             Vec3d vec3d5 = ck_class135.a(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
@@ -210,7 +210,7 @@ implements c3_class112 {
         i.getTextureManager().bindTexture(e);
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
-        GalathRenderer.a(em_class2582, bufferBuilder, tessellator, Reference.Lerp(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f));
+        GalathRenderer.a(em_class2582, bufferBuilder, tessellator, Reference.LerpFloat(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f));
         GalathRenderer.b(em_class2582, bufferBuilder, tessellator, f);
         GalathRenderer.a(em_class2582, bufferBuilder, tessellator);
         GlStateManager.popMatrix();
@@ -241,7 +241,7 @@ implements c3_class112 {
         GlStateManager.rotate(f5, 0.0f, 1.0f, 0.0f);
         GlStateManager.rotate(f4, 0.0f, 0.0f, 1.0f);
         float f6 = gc_class360.c(9.0);
-        f7_class292 f7_class2922 = GalathEntity.aa;
+        Vector3f f7_class2922 = GalathEntity.aa;
         i.getTextureManager().bindTexture(e);
         bufferBuilder.begin(3, DefaultVertexFormats.POSITION_TEX_COLOR);
         GlStateManager.glLineWidth(GalathRenderer.a(em_class2582, f, 1.0f, 3.0f));
@@ -249,7 +249,7 @@ implements c3_class112 {
         while ((double)f7 < Math.PI * 2) {
             d2 = Math.sin(f7) * (double)0.3f;
             d = Math.cos(f7) * (double)0.3f;
-            bufferBuilder.pos(d2, 0.0, d).tex(0.0, 0.0).color(f7_class2922.a, f7_class2922.c, f7_class2922.b, 1.0f).endVertex();
+            bufferBuilder.pos(d2, 0.0, d).tex(0.0, 0.0).color(f7_class2922.x, f7_class2922.y, f7_class2922.z, 1.0f).endVertex();
             f7 += f6;
         }
         tessellator.draw();
@@ -406,8 +406,8 @@ implements c3_class112 {
                 Action fp_class3242 = ((GalathEntity)this.j).currentAction();
                 if (fp_class3242 != Action.FLY && fp_class3242 != Action.ATTACK_SWORD || (entityLivingBase = ((GalathEntity)this.j).net_minecraft_entity_EntityLivingBase_M()) == null) break;
                 float f = i.getRenderPartialTicks();
-                Vec3d vec3d = Reference.a(new Vec3d(((GalathEntity)this.j).lastTickPosX, ((GalathEntity)this.j).lastTickPosY, ((GalathEntity)this.j).lastTickPosZ), ((GalathEntity)this.j).getPositionVector(), (double)f);
-                Vec3d vec3d2 = Reference.a(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.j).getPositionVector(), (double)f);
+                Vec3d vec3d = Reference.LerpVec3d(new Vec3d(((GalathEntity)this.j).lastTickPosX, ((GalathEntity)this.j).lastTickPosY, ((GalathEntity)this.j).lastTickPosZ), ((GalathEntity)this.j).getPositionVector(), (double)f);
+                Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.j).getPositionVector(), (double)f);
                 Vec3d vec3d3 = vec3d.subtract(vec3d2);
                 float f4 = (float)ck_class135.a((Vec3d)vec3d3, (float)((GalathEntity)this.j).renderYawOffset).z;
                 float f5 = (float)Math.atan2(vec3d3.y, f4);
@@ -581,8 +581,8 @@ implements c3_class112 {
             return;
         }
         ef_class245.b_inner247 b_inner2472 = G.a();
-        b_inner2472.g = Reference.Lerp(GalathRenderer.G.g, 0.0f, f);
-        b_inner2472.e = Reference.Lerp(GalathRenderer.G.e, 0.0f, f);
+        b_inner2472.g = Reference.LerpFloat(GalathRenderer.G.g, 0.0f, f);
+        b_inner2472.e = Reference.LerpFloat(GalathRenderer.G.e, 0.0f, f);
         this.a(bufferBuilder, geoBone, b_inner2472);
     }
 
@@ -627,8 +627,8 @@ implements c3_class112 {
         GL11.glDisable(2896);
         float f2 = be_class78.b((float) Action.GIVE_COIN.ticksPlaying[1] + f, 105.0f, 125.0f);
         float f3 = (f2 - 105.0f) / 20.0f;
-        float f4 = Reference.Lerp(120.0f, 240.0f, f3);
-        f7_class292 f7_class2922 = Reference.a(av_class46.f, av_class46.e, (double)f3);
+        float f4 = Reference.LerpFloat(120.0f, 240.0f, f3);
+        Vector3f f7_class2922 = Reference.LerpVector3f(av_class46.f, av_class46.e, (double)f3);
         float f5 = OpenGlHelper.lastBrightnessX;
         float f6 = OpenGlHelper.lastBrightnessY;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, f4, f4);
@@ -643,7 +643,7 @@ implements c3_class112 {
                 MATRIX_STACK.push();
                 GlStateManager.pushMatrix();
                 this.q = geoBone2;
-                this.a(bufferBuilder, geoCube, f7_class2922.a, f7_class2922.c, f7_class2922.b, 1.0f, 0.0);
+                this.a(bufferBuilder, geoCube, f7_class2922.x, f7_class2922.y, f7_class2922.z, 1.0f, 0.0);
                 GlStateManager.popMatrix();
                 MATRIX_STACK.pop();
             }

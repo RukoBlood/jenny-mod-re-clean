@@ -40,12 +40,12 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 // dh_class182
 public class ManglelieRenderer
 extends GirlRenderer<ManglelieEntity> {
-    final static gv_class388 C = new gv_class388(115, 108, 188, 255);
-    final static f7_class292 D = new f7_class292(0.05f, 0.04f, 0.0f);
-    final static f7_class292 v = new f7_class292(0.0f, 0.065f, 0.0f);
-    final static f7_class292 z = new f7_class292(0.0f, 0.03f, 0.03f);
-    final static gv_class388 r = new gv_class388(63, 59, 150, 255);
-    final static gv_class388 x = new gv_class388(79, 74, 188, 255);
+    final static ColorRGBA C = new ColorRGBA(115, 108, 188, 255);
+    final static Vector3f D = new Vector3f(0.05f, 0.04f, 0.0f);
+    final static Vector3f v = new Vector3f(0.0f, 0.065f, 0.0f);
+    final static Vector3f z = new Vector3f(0.0f, 0.03f, 0.03f);
+    final static ColorRGBA r = new ColorRGBA(63, 59, 150, 255);
+    final static ColorRGBA x = new ColorRGBA(79, 74, 188, 255);
     final static float A = 0.5f;
     final static float w = 0.5f;
     final static int s = 40;
@@ -197,7 +197,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (f__class2972 == null) {
             return;
         }
-        GlStateManager.rotate(-Reference.b(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(-Reference.LerpAngleDegrees(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
     }
 
     static boolean a_5(GirlEntity em_class2582) {
@@ -229,15 +229,15 @@ extends GirlRenderer<ManglelieEntity> {
         Vec3d vec3d4 = em_class2582.b("skirt_" + n2 + "_0");
         Vec3d vec3d5 = em_class2582.b("skirt_" + n2 + "_1");
         Vec3d vec3d6 = em_class2582.b("skirt_" + n2 + "_2");
-        gv_class388 gv_class3882 = n % 2 == 0 ? x : r;
-        bufferBuilder.pos(vec3d.x, vec3d.y, vec3d.z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3d2.x, vec3d2.y, vec3d2.z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3d5.x, vec3d5.y, vec3d5.z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3d4.x, vec3d4.y, vec3d4.z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3d2.x, vec3d2.y, vec3d2.z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3d5.x, vec3d5.y, vec3d5.z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3d6.x, vec3d6.y, vec3d6.z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3d3.x, vec3d3.y, vec3d3.z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
+        ColorRGBA gv_class3882 = n % 2 == 0 ? x : r;
+        bufferBuilder.pos(vec3d.x, vec3d.y, vec3d.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3d2.x, vec3d2.y, vec3d2.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3d5.x, vec3d5.y, vec3d5.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3d4.x, vec3d4.y, vec3d4.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3d2.x, vec3d2.y, vec3d2.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3d5.x, vec3d5.y, vec3d5.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3d6.x, vec3d6.y, vec3d6.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3d3.x, vec3d3.y, vec3d3.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
     }
 
     @Override
@@ -274,7 +274,7 @@ extends GirlRenderer<ManglelieEntity> {
         ItemStack itemStack = new ItemStack(Items.BOW);
         float f = ((ManglelieEntity)this.j).float_b(i.getRenderPartialTicks());
         if (f < 1.0f) {
-            float f2 = (float) Reference.e(f);
+            float f2 = (float) Reference.EaseOutQuart(f);
             ((ManglelieEntity)this.j).d((int)(11.0f * (1.0f - f2) + 71980.0f));
             ((ManglelieEntity)this.j).void_a(itemStack);
             ((ManglelieEntity)this.j).setActiveHand(EnumHand.MAIN_HAND);

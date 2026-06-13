@@ -97,7 +97,7 @@ extends Gui {
         this.a(p, (int)((float)n3 - 1.5f * (float)hf_class401.w.c + 1.0f), n2 - 70 + 3);
         this.a(p, n3 - hf_class401.w.c / 2 + 1, n2 - 70 + 3);
         this.a(p, n3 + hf_class401.w.c / 2 + 1, n2 - 70 + 3);
-        float f2 = (float) Reference.b(Math.min(1.0f, (float)(l - s) / 150.0f));
+        float f2 = (float) Reference.EaseOutSine(Math.min(1.0f, (float)(l - s) / 150.0f));
         float f3 = f2 == 1.0f ? be_class78.b(1.0f - (float)(l - hf_class401.f) / 500.0f, 0.0f, 1.0f) : 0.0f;
         this.a(1, -1.5f * (float)hf_class401.w.c, f3, f2, n3, n2, f);
         this.a(2, (float)(-hf_class401.w.c) / 2.0f, f3, f2, n3, n2, f);

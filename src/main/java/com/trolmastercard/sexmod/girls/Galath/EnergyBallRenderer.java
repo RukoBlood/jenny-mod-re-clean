@@ -7,7 +7,7 @@
  */
 package com.trolmastercard.sexmod.girls.Galath;
 
-import com.trolmastercard.sexmod.gv_class388;
+import com.trolmastercard.sexmod.ColorRGBA;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -22,12 +22,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
-public class EnergyBallRenderer
-extends Render<EnergyBallEntity> {
+public class EnergyBallRenderer extends Render<EnergyBallEntity> {
     static public EnergyBallRenderer a;
-    final static gv_class388 e;
-    final static gv_class388 b;
-    final static gv_class388 d;
+    final static ColorRGBA e;
+    final static ColorRGBA b;
+    final static ColorRGBA d;
     Minecraft c = Minecraft.getMinecraft();
 
     public EnergyBallRenderer(RenderManager renderManager) {
@@ -43,33 +42,33 @@ extends Render<EnergyBallEntity> {
 
     //a
     @Override
-    public void doRender(EnergyBallEntity c4_class1132, double d, double d2, double d3, float f, float f2) {
-        gv_class388 gv_class3882;
-        gv_class388 gv_class3883;
+    public void doRender(EnergyBallEntity entity, double d, double d2, double d3, float f, float f2) {
+        ColorRGBA gv_class3882;
+        ColorRGBA gv_class3883;
         GL11.glDisable(2896);
         GlStateManager.enableAlpha();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 0.5f);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
         EntityPlayerSP entityPlayerSP = this.c.player;
-        Vec3d vec3d = Reference.a(new Vec3d(c4_class1132.lastTickPosX, c4_class1132.lastTickPosY, c4_class1132.lastTickPosZ), c4_class1132.getPositionVector(), (double)f2);
-        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
+        Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f2);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         GlStateManager.pushMatrix();
         GlStateManager.translate(vec3d3.x, vec3d3.y, vec3d3.z);
         GlStateManager.rotate(180.0f - this.renderManager.playerViewY, 0.0f, 1.0f, 0.0f);
         GlStateManager.rotate((float)(this.renderManager.options.thirdPersonView == 2 ? -1 : 1) * -this.renderManager.playerViewX, 1.0f, 0.0f, 0.0f);
-        GlStateManager.scale(c4_class1132.g, c4_class1132.g, c4_class1132.g);
+        GlStateManager.scale(entity.g, entity.g, entity.g);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        this.c.renderEngine.bindTexture(this.getEntityTexture(c4_class1132));
-        if (c4_class1132.g == 1.0) {
+        this.c.renderEngine.bindTexture(this.getEntityTexture(entity));
+        if (entity.g == 1.0) {
             float f3 = (float)this.c.world.getTotalWorldTime() + this.c.getRenderPartialTicks();
             double d4 = 0.5 * Math.sin((double)f3 * 0.5) + 0.5;
-            gv_class3883 = Reference.a(e, b, d4);
-            gv_class3882 = Reference.a(b, e, d4);
+            gv_class3883 = Reference.LerpColorRGBA(e, b, d4);
+            gv_class3882 = Reference.LerpColorRGBA(b, e, d4);
         } else {
-            gv_class3883 = Reference.a(EnergyBallRenderer.d, e, c4_class1132.g);
-            gv_class3882 = Reference.a(EnergyBallRenderer.d, e, c4_class1132.g);
+            gv_class3883 = Reference.LerpColorRGBA(EnergyBallRenderer.d, e, entity.g);
+            gv_class3882 = Reference.LerpColorRGBA(EnergyBallRenderer.d, e, entity.g);
         }
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         this.a(bufferBuilder, gv_class3883, 0.0f);
@@ -85,11 +84,11 @@ extends Render<EnergyBallEntity> {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, OpenGlHelper.lastBrightnessX, OpenGlHelper.lastBrightnessY);
     }
 
-    void a(BufferBuilder bufferBuilder, gv_class388 gv_class3882, float f) {
-        bufferBuilder.pos(-0.25, 0.0, f).tex(0.0, 0.0).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(0.25, 0.0, f).tex(1.0, 0.0).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(0.25, 0.5, f).tex(1.0, 1.0).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(-0.25, 0.5, f).tex(0.0, 1.0).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
+    void a(BufferBuilder buf, ColorRGBA color, float z) {
+        buf.pos(-0.25, 0.0, z).tex(0.0, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
+        buf.pos(0.25, 0.0, z).tex(1.0, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
+        buf.pos(0.25, 0.5, z).tex(1.0, 1.0).color(color.r, color.g, color.b, color.a).endVertex();
+        buf.pos(-0.25, 0.5, z).tex(0.0, 1.0).color(color.r, color.g, color.b, color.a).endVertex();
     }
 
     //@Override
@@ -104,9 +103,9 @@ extends Render<EnergyBallEntity> {
     //}
 
     static {
-        e = new gv_class388(0, 255, 251, 255);
-        b = new gv_class388(255, 0, 236, 255);
-        d = new gv_class388(255, 255, 255, 0);
+        e = new ColorRGBA(0, 255, 251, 255);
+        b = new ColorRGBA(255, 0, 236, 255);
+        d = new ColorRGBA(255, 255, 255, 0);
     }
 }
 

@@ -56,11 +56,11 @@ public class am_class34 {
         float f = minecraft.player.rotationYaw;
         GoblinRenderer.N = (float)((double)minecraft.player.movementInput.moveStrafe * GoblinRenderer.G.x);
         GoblinRenderer.N += -(f - GoblinRenderer.H) * 3.0f;
-        GoblinRenderer.N = Reference.Lerp(GoblinRenderer.I, GoblinRenderer.N, 0.1f);
+        GoblinRenderer.N = Reference.LerpFloat(GoblinRenderer.I, GoblinRenderer.N, 0.1f);
         float f2 = -minecraft.player.rotationPitch;
         GoblinRenderer.x = (float)((double)minecraft.player.movementInput.moveForward * GoblinRenderer.G.z + (double)((float)minecraft.player.motionY) * GoblinRenderer.G.y);
         GoblinRenderer.x += -(f2 - GoblinRenderer.t) * 3.0f;
-        GoblinRenderer.x = Reference.Lerp(GoblinRenderer.E, GoblinRenderer.x, 0.1f);
+        GoblinRenderer.x = Reference.LerpFloat(GoblinRenderer.E, GoblinRenderer.x, 0.1f);
         GoblinRenderer.a(girlEntity, renderWorldLastEvent.getPartialTicks());
         GoblinRenderer.H = f;
         GoblinRenderer.I = GoblinRenderer.N;

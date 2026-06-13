@@ -32,9 +32,9 @@ import software.bernie.geckolib3.geo.render.built.GeoCube;
 import software.bernie.geckolib3.geo.render.built.GeoQuad;
 import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-
-public abstract class d9_class168
-extends PlayerGirlRenderer {
+//d9
+// * Used by kobold renderer.
+public abstract class d9_class168 extends PlayerGirlRenderer {
     final static protected Vec3i z = new Vec3i(255, 255, 255);
     static HashMap<Integer, Vec3i> A = new HashMap();
 

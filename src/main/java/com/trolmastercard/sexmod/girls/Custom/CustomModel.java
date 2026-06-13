@@ -79,7 +79,7 @@ public class CustomModel {
 
     public static int b(boolean bl) {
         CustomModel.a(bl);
-        return CustomModel.c(bl);
+        return CustomModel.LoadModels(bl);
     }
 
     static void log(Level level, String string) {
@@ -255,7 +255,7 @@ public class CustomModel {
         return string;
     }
 
-    public static int c(boolean bl) {
+    public static int LoadModels(boolean bl) {
         CustomModel.log(Level.INFO, "loading up custom models...");
         String string2 = CustomModel.h();
         File file2 = new File(string2);
@@ -721,7 +721,7 @@ public class CustomModel {
         @SubscribeEvent
         public void a(FMLNetworkEvent.ClientConnectedToServerEvent clientConnectedToServerEvent) {
             Minecraft minecraft = Minecraft.getMinecraft();
-            minecraft.addScheduledTask(() -> CustomModel.c(true));
+            minecraft.addScheduledTask(() -> CustomModel.LoadModels(true));
             this.a = false;
         }
 

@@ -199,7 +199,7 @@ extends GuiScreen {
     public void drawScreen(int n, int n2, float f) {
         super.drawScreen(n, n2, f);
         if (this.p) {
-            b += Reference.Lerp((float)h, (float)s, f);
+            b += Reference.LerpFloat((float)h, (float)s, f);
         }
         this.a();
         this.mc.renderEngine.bindTexture(k);

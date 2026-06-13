@@ -111,10 +111,10 @@ extends GirlModel<GirlEntity> {
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
         IBone iBone = animationProcessor.getBone("head");
         float f = this.a.getRenderPartialTicks() + (float)this.a.player.ticksExisted;
-        f7_class292 f7_class2922 = this.a((GalathEntity)em_class2582, f);
-        iBone.setRotationX(iBone.getRotationX() + f7_class2922.a);
-        iBone.setRotationY(iBone.getRotationY() + f7_class2922.c);
-        iBone.setRotationZ(iBone.getRotationZ() + f7_class2922.b);
+        Vector3f f7_class2922 = this.a((GalathEntity)em_class2582, f);
+        iBone.setRotationX(iBone.getRotationX() + f7_class2922.x);
+        iBone.setRotationY(iBone.getRotationY() + f7_class2922.y);
+        iBone.setRotationZ(iBone.getRotationZ() + f7_class2922.z);
         if (em_class2582.currentAction() != Action.PUSSY_LICKING || ((GalathEntity)em_class2582).a5) {
             return;
         }
@@ -125,12 +125,12 @@ extends GirlModel<GirlEntity> {
         this.g = f2;
     }
 
-    f7_class292 a(GalathEntity f__class2972, float f) {
-        return Reference.a(this.a(f), f7_class292.d, (double)f__class2972.float_b(this.a.getRenderPartialTicks()));
+    Vector3f a(GalathEntity f__class2972, float f) {
+        return Reference.LerpVector3f(this.a(f), Vector3f.ZERO, (double)f__class2972.float_b(this.a.getRenderPartialTicks()));
     }
 
-    f7_class292 a(float f) {
-        return new f7_class292((float)Math.sin(f * 0.3f) * gc_class360.c(10.0f), (float)Math.sin(f * 0.15f) * gc_class360.c(7.0f), (float)Math.sin((double)f * -0.15) * gc_class360.c(7.0f));
+    Vector3f a(float f) {
+        return new Vector3f((float)Math.sin(f * 0.3f) * gc_class360.c(10.0f), (float)Math.sin(f * 0.15f) * gc_class360.c(7.0f), (float)Math.sin((double)f * -0.15) * gc_class360.c(7.0f));
     }
 
     void void_c(GirlEntity em_class2582) {
@@ -318,8 +318,8 @@ extends GirlModel<GirlEntity> {
         float f2 = Minecraft.getMinecraft().getRenderPartialTicks();
         IBone iBone = this.getAnimationProcessor().getBone("rotationTool");
         f2_class286 f2_class2862 = ((b7_class68)((Object)em_class2582)).com_trolmastercard_sexmod_f2_class286_d();
-        iBone.setRotationX((float) Reference.Lerp(f2_class2862.c + (double)f, f2_class2862.d + (double)f, (double)f2));
-        iBone.setRotationZ((float) Reference.Lerp(f2_class2862.b, f2_class2862.a, (double)f2));
+        iBone.setRotationX((float) Reference.LerpDouble(f2_class2862.c + (double)f, f2_class2862.d + (double)f, (double)f2));
+        iBone.setRotationZ((float) Reference.LerpDouble(f2_class2862.b, f2_class2862.a, (double)f2));
     }
 
     @Override

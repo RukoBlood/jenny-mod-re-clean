@@ -65,7 +65,7 @@ public class cn_class138 {
         float f2 = 0.0f;
         try {
             ItemRenderer object = this.f.getItemRenderer();
-            if (ad_class25.a()) {
+            if (ad_class25.GetEnv()) {
                 f = ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, object, "prevEquippedProgressMainHand")).floatValue();
                 f2 = ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, object, "equippedProgressMainHand")).floatValue();
             } else {

@@ -262,10 +262,10 @@ extends GeoEntityRenderer<CustomModelEntity> {
             cy_class1532.posX = entityLivingBase.posX;
             cy_class1532.posY = entityLivingBase.posY;
             cy_class1532.posZ = entityLivingBase.posZ;
-            vec3d = Reference.a(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
+            vec3d = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
         }
         EntityPlayerSP object = minecraft.player;
-        Vec3d vec3d2 = Reference.a(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)f);
         return vec3d.subtract(vec3d2);
     }
 
@@ -300,9 +300,9 @@ extends GeoEntityRenderer<CustomModelEntity> {
 
     GirlEntity b(CustomModelEntity cy_class1532) {
         UUID uUID = cy_class1532.b();
-        GirlEntity em_class2582 = GirlID.GetGirlID(uUID);
-        if (em_class2582 != null) {
-            return em_class2582;
+        GirlEntity entity = GirlID.GetGirlID(uUID);
+        if (entity != null) {
+            return entity;
         }
         return GirlEntity.getGirlEntity(uUID);
     }

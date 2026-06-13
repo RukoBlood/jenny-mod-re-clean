@@ -3,8 +3,6 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.ck_class135;
-import com.trolmastercard.sexmod.gv_class388;
 import java.util.ArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -48,27 +46,27 @@ public class ef_class245 {
         return (float)(Math.sin(f * f2 + f3 * (float)n) * (double)f4);
     }
 
-    static void a(BufferBuilder bufferBuilder, Vec3d[] vec3dArray, Vec3d[] vec3dArray2, gv_class388 gv_class3882) {
-        bufferBuilder.pos(vec3dArray[1].x, vec3dArray[1].y, vec3dArray[1].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray[2].x, vec3dArray[2].y, vec3dArray[2].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray2[2].x, vec3dArray2[2].y, vec3dArray2[2].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray2[1].x, vec3dArray2[1].y, vec3dArray2[1].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray[0].x, vec3dArray[0].y, vec3dArray[0].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray[1].x, vec3dArray[1].y, vec3dArray[1].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray2[1].x, vec3dArray2[1].y, vec3dArray2[1].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray2[0].x, vec3dArray2[0].y, vec3dArray2[0].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray[2].x, vec3dArray[2].y, vec3dArray[2].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray[3].x, vec3dArray[3].y, vec3dArray[3].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray2[3].x, vec3dArray2[3].y, vec3dArray2[3].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray2[2].x, vec3dArray2[2].y, vec3dArray2[2].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray[0].x, vec3dArray[0].y, vec3dArray[0].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray[3].x, vec3dArray[3].y, vec3dArray[3].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray2[3].x, vec3dArray2[3].y, vec3dArray2[3].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
-        bufferBuilder.pos(vec3dArray2[0].x, vec3dArray2[0].y, vec3dArray2[0].z).color(gv_class3882.a, gv_class3882.d, gv_class3882.c, gv_class3882.b).endVertex();
+    static void a(BufferBuilder bufferBuilder, Vec3d[] vec3dArray, Vec3d[] vec3dArray2, ColorRGBA gv_class3882) {
+        bufferBuilder.pos(vec3dArray[1].x, vec3dArray[1].y, vec3dArray[1].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray[2].x, vec3dArray[2].y, vec3dArray[2].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray2[2].x, vec3dArray2[2].y, vec3dArray2[2].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray2[1].x, vec3dArray2[1].y, vec3dArray2[1].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray[0].x, vec3dArray[0].y, vec3dArray[0].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray[1].x, vec3dArray[1].y, vec3dArray[1].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray2[1].x, vec3dArray2[1].y, vec3dArray2[1].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray2[0].x, vec3dArray2[0].y, vec3dArray2[0].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray[2].x, vec3dArray[2].y, vec3dArray[2].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray[3].x, vec3dArray[3].y, vec3dArray[3].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray2[3].x, vec3dArray2[3].y, vec3dArray2[3].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray2[2].x, vec3dArray2[2].y, vec3dArray2[2].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray[0].x, vec3dArray[0].y, vec3dArray[0].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray[3].x, vec3dArray[3].y, vec3dArray[3].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray2[3].x, vec3dArray2[3].y, vec3dArray2[3].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
+        bufferBuilder.pos(vec3dArray2[0].x, vec3dArray2[0].y, vec3dArray2[0].z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
     }
 
     public static class b_inner247 {
-        public gv_class388 h;
+        public ColorRGBA h;
         public float e;
         public int c;
         public float g;
@@ -78,7 +76,7 @@ public class ef_class245 {
         public float f;
         public float a;
 
-        public b_inner247(gv_class388 gv_class3882, float f, int n, float f2, a_inner246 a_inner2462, a_inner246 a_inner2463, a_inner246 a_inner2464, float f3, float f4) {
+        public b_inner247(ColorRGBA gv_class3882, float f, int n, float f2, a_inner246 a_inner2462, a_inner246 a_inner2463, a_inner246 a_inner2464, float f3, float f4) {
             this.h = gv_class3882;
             this.e = f;
             this.c = n;

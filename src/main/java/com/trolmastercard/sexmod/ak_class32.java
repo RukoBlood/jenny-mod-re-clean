@@ -12,8 +12,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class ak_class32 {
     public static Vec3d b(Entity entity, EntityPlayer entityPlayer, float f) {
-        Vec3d vec3d = Reference.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY + (double)entityPlayer.getEyeHeight(), entity.lastTickPosZ), entity.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0), (double)f);
-        Vec3d vec3d2 = Reference.a(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY + (double)entityPlayer.getEyeHeight(), entity.lastTickPosZ), entity.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
         return vec3d.subtract(vec3d2);
     }
 
@@ -38,7 +38,7 @@ public class ak_class32 {
     }
 
     static Vec3d b(Entity entity, float f) {
-        return Reference.a(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
+        return Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
     }
 
     public static void a() {
