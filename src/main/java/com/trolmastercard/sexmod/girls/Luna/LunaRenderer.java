@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.gc_class360;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
-import com.trolmastercard.sexmod.p_class418;
+import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -100,7 +100,7 @@ extends GirlRenderer {
                 if (itemStack.equals(ItemStack.EMPTY) || eb_class2362.Z != 1.0f) break;
                 GlStateManager.pushMatrix();
                 Tessellator.getInstance().draw();
-                p_class418.a(IGeoRenderer.MATRIX_STACK, geoBone);
+                GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
                 GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
                 GlStateManager.scale(eb_class2362.aa, eb_class2362.aa, eb_class2362.aa);
                 Minecraft.getMinecraft().getItemRenderer().renderItem(this.j, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);

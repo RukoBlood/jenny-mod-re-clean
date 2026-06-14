@@ -8,8 +8,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 
-public class e8_class231
-extends ModelBase {
+public class e8_class231 extends ModelBase {
     final private ModelRenderer b;
     final private ModelRenderer a = new ModelRenderer(this, "glass");
 

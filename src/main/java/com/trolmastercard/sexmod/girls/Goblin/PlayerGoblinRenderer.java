@@ -16,6 +16,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.d9_class168;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

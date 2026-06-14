@@ -17,7 +17,10 @@ import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieRenderer;
+import com.trolmastercard.sexmod.util.ColorRGBA;
+import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -72,8 +75,8 @@ implements c3_class112 {
     final static float J = 0.06484375f;
     final static float z = 0.026124999f;
     final static float u = 0.0570625f;
-    final static ef_class245.b_inner247 G = new ef_class245.b_inner247(H, 0.1f, 12, 0.035f, (n, f) -> (float)(Math.sin((double)f * 0.3 + -0.2 * (double)n) * 15.0), (n, f) -> (float)(Math.sin((double)f * -0.15 + -0.2 * (double)n) * 3.0), (n, f) -> 0.0f, 0.03f, 0.005f);
-    final static ef_class245.b_inner247 t = new ef_class245.b_inner247(H, 0.0f, 12, 0.0f, (n, f) -> (float)(Math.sin((double)f * 0.3 + -0.2 * (double)n) * 15.0), (n, f) -> (float)(Math.sin((double)f * -0.15 + -0.2 * (double)n) * 3.0), (n, f) -> 0.0f, 0.03f, 0.005f);
+    final static ProceduralRibbonGenerator.RibbonSettings G = new ProceduralRibbonGenerator.RibbonSettings(H, 0.1f, 12, 0.035f, (n, f) -> (float)(Math.sin((double)f * 0.3 + -0.2 * (double)n) * 15.0), (n, f) -> (float)(Math.sin((double)f * -0.15 + -0.2 * (double)n) * 3.0), (n, f) -> 0.0f, 0.03f, 0.005f);
+    final static ProceduralRibbonGenerator.RibbonSettings t = new ProceduralRibbonGenerator.RibbonSettings(H, 0.0f, 12, 0.0f, (n, f) -> (float)(Math.sin((double)f * 0.3 + -0.2 * (double)n) * 15.0), (n, f) -> (float)(Math.sin((double)f * -0.15 + -0.2 * (double)n) * 3.0), (n, f) -> 0.0f, 0.03f, 0.005f);
     boolean r = false;
     float s = 0.0f;
 
@@ -116,7 +119,7 @@ implements c3_class112 {
         if (f__class2972.currentAction() != Action.MASTERBATE) {
             return;
         }
-        f__class2972.rotationYaw = f = f__class2972.java_lang_Float_I().floatValue();
+        f__class2972.rotationYaw = f = f__class2972.java_lang_Float_I();
         f__class2972.prevRenderYawOffset = f;
         f__class2972.renderYawOffset = f;
         f__class2972.prevRotationYawHead = f;
@@ -207,7 +210,7 @@ implements c3_class112 {
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         GlStateManager.pushMatrix();
         af_class27.a(i, em_class2582, f);
-        i.getTextureManager().bindTexture(e);
+        i.getTextureManager().bindTexture(LINE);
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
         GalathRenderer.a(em_class2582, bufferBuilder, tessellator, Reference.LerpFloat(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f));
@@ -242,7 +245,7 @@ implements c3_class112 {
         GlStateManager.rotate(f4, 0.0f, 0.0f, 1.0f);
         float f6 = gc_class360.c(9.0);
         Vector3f f7_class2922 = GalathEntity.aa;
-        i.getTextureManager().bindTexture(e);
+        i.getTextureManager().bindTexture(LINE);
         bufferBuilder.begin(3, DefaultVertexFormats.POSITION_TEX_COLOR);
         GlStateManager.glLineWidth(GalathRenderer.a(em_class2582, f, 1.0f, 3.0f));
         float f7 = 0.0f;
@@ -417,7 +420,7 @@ implements c3_class112 {
                 if (!((GalathEntity)this.j).ap) break;
                 GlStateManager.pushMatrix();
                 Tessellator.getInstance().draw();
-                p_class418.a(MATRIX_STACK, geoBone);
+                GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, geoBone);
                 GL11.glEnable(2896);
                 GlStateManager.scale(1.5, 1.0, 2.0);
                 GlStateManager.translate(0.0, 0.0, 0.05);
@@ -560,13 +563,13 @@ implements c3_class112 {
     void a(BufferBuilder bufferBuilder, GeoBone geoBone, float f2) {
         float f4 = Action.d(this.j, i.getRenderPartialTicks());
         float f5 = f2 * (float)((double)0.02f * ((double)-0.4f * Math.cos(Math.PI * 2 * (double)f4 + 1.05) + (double)0.6f));
-        ef_class245.b_inner247 b_inner2472 = new ef_class245.b_inner247(H, 0.0f, 12, f5, (n, f3) -> f2 * (float)(Math.cos(Math.PI * 2 * (double)f4 + (double)0.35f + (double)(-0.2f * (float)n)) * -10.0), (n, f) -> 0.0f, (n, f3) -> f2 * (float)(Math.cos(Math.PI * 2 * (double)f4 + 1.25 + (double)(-0.1f * (float)n)) * -5.0), 0.03f, 0.005f);
-        this.a(bufferBuilder, geoBone, b_inner2472);
+        ProceduralRibbonGenerator.RibbonSettings settings = new ProceduralRibbonGenerator.RibbonSettings(H, 0.0f, 12, f5, (n, f3) -> f2 * (float)(Math.cos(Math.PI * 2 * (double)f4 + (double)0.35f + (double)(-0.2f * (float)n)) * -10.0), (n, f) -> 0.0f, (n, f3) -> f2 * (float)(Math.cos(Math.PI * 2 * (double)f4 + 1.25 + (double)(-0.1f * (float)n)) * -5.0), 0.03f, 0.005f);
+        this.a(bufferBuilder, geoBone, settings);
     }
 
     void d(BufferBuilder bufferBuilder, GeoBone geoBone) {
         float f3 = Action.d(this.j, i.getRenderPartialTicks());
-        ef_class245.b_inner247 b_inner2472 = new ef_class245.b_inner247(H, 0.0f, 12, 0.02f, (n, f2) -> (float)(Math.cos(Math.PI * 2 * (double)f3 + (double)(-0.2f * (float)n)) * 15.0), (n, f2) -> (float)(Math.cos(Math.PI * 2 * (double)f3 + (double)(-0.2f * (float)n)) * 5.0), (n, f) -> 0.0f, 0.03f, 0.005f);
+        ProceduralRibbonGenerator.RibbonSettings b_inner2472 = new ProceduralRibbonGenerator.RibbonSettings(H, 0.0f, 12, 0.02f, (n, f2) -> (float)(Math.cos(Math.PI * 2 * (double)f3 + (double)(-0.2f * (float)n)) * 15.0), (n, f2) -> (float)(Math.cos(Math.PI * 2 * (double)f3 + (double)(-0.2f * (float)n)) * 5.0), (n, f) -> 0.0f, 0.03f, 0.005f);
         this.a(bufferBuilder, geoBone, b_inner2472);
     }
 
@@ -580,19 +583,19 @@ implements c3_class112 {
             this.a(bufferBuilder, geoBone, t);
             return;
         }
-        ef_class245.b_inner247 b_inner2472 = G.a();
-        b_inner2472.g = Reference.LerpFloat(GalathRenderer.G.g, 0.0f, f);
-        b_inner2472.e = Reference.LerpFloat(GalathRenderer.G.e, 0.0f, f);
-        this.a(bufferBuilder, geoBone, b_inner2472);
+        ProceduralRibbonGenerator.RibbonSettings settings = G.getSettings();
+        settings.LengthStep = Reference.LerpFloat(GalathRenderer.G.LengthStep, 0.0f, f);
+        settings.initialOffset = Reference.LerpFloat(GalathRenderer.G.initialOffset, 0.0f, f);
+        this.a(bufferBuilder, geoBone, settings);
     }
 
-    void a(BufferBuilder bufferBuilder, GeoBone geoBone, ef_class245.b_inner247 b_inner2472) {
+    void a(BufferBuilder bufferBuilder, GeoBone geoBone, ProceduralRibbonGenerator.RibbonSettings b_inner2472) {
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        p_class418.a(MATRIX_STACK, geoBone);
+        GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, geoBone);
         GlStateManager.disableCull();
-        this.bindTexture(e);
-        ef_class245.a(bufferBuilder, Tessellator.getInstance(), i, b_inner2472);
+        this.bindTexture(LINE);
+        ProceduralRibbonGenerator.renderRibbon(bufferBuilder, Tessellator.getInstance(), i, b_inner2472);
         this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.j)));
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         GlStateManager.enableCull();
@@ -656,14 +659,14 @@ implements c3_class112 {
     }
 
     @Override
-    protected Vec3d a(GalathEntity f__class2972, float f, Vec3d vec3d) {
-        if (f__class2972.currentAction() == Action.RUN) {
+    protected Vec3d a(GalathEntity entity, float f, Vec3d vec3d) {
+        if (entity.currentAction() == Action.RUN) {
             float f2;
-            f__class2972.rotationYaw = f2 = f__class2972.java_lang_Float_I().floatValue();
-            f__class2972.prevRenderYawOffset = f2;
-            f__class2972.renderYawOffset = f2;
-            f__class2972.prevRotationYawHead = f2;
-            f__class2972.rotationYawHead = f2;
+            entity.rotationYaw = f2 = entity.java_lang_Float_I().floatValue();
+            entity.prevRenderYawOffset = f2;
+            entity.renderYawOffset = f2;
+            entity.prevRotationYawHead = f2;
+            entity.rotationYawHead = f2;
         }
         return vec3d;
     }

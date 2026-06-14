@@ -7,7 +7,9 @@ import java.util.Arrays;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.util.ColorRGBA;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;

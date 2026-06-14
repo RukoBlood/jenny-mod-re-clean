@@ -3,8 +3,6 @@
  */
 package com.trolmastercard.sexmod.util;
 
-import com.trolmastercard.sexmod.Vector3f;
-import com.trolmastercard.sexmod.ColorRGBA;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 

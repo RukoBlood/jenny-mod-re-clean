@@ -15,7 +15,10 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.util.ColorRGBA;
+import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -171,7 +174,7 @@ extends GirlRenderer<ManglelieEntity> {
             af_class27.a(i, em_class2582, f);
             ManglelieRenderer.b(em_class2582, f);
         }
-        i.getTextureManager().bindTexture(e);
+        i.getTextureManager().bindTexture(LINE);
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
 
@@ -259,7 +262,7 @@ extends GirlRenderer<ManglelieEntity> {
         ItemRenderer itemRenderer = Minecraft.getMinecraft().getItemRenderer();
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        p_class418.a(IGeoRenderer.MATRIX_STACK, geoBone);
+        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
         GL11.glEnable(2896);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

@@ -18,6 +18,7 @@ import com.trolmastercard.sexmod.girls.Galath.GalathCoin;
 import com.trolmastercard.sexmod.girls.Galath.GalathCoinModel;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

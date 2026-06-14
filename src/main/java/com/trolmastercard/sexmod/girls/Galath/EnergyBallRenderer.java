@@ -7,7 +7,7 @@
  */
 package com.trolmastercard.sexmod.girls.Galath;
 
-import com.trolmastercard.sexmod.ColorRGBA;
+import com.trolmastercard.sexmod.util.ColorRGBA;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

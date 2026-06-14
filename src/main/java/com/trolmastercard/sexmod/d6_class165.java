@@ -20,6 +20,7 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -86,7 +87,7 @@ extends GirlRenderer<G> {
         }
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        p_class418.a(IGeoRenderer.MATRIX_STACK, geoBone);
+        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
         GL11.glEnable(2896);
         GlStateManager.scale(f, f, f);
         GlStateManager.rotate((float)vec3d.x, 1.0f, 0.0f, 0.0f);

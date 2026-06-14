@@ -37,7 +37,9 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -96,7 +98,7 @@ import software.bernie.shadowed.eliotlash.mclib.utils.Interpolations;
 public abstract class GirlRenderer<T extends GirlEntity & IAnimatable>
 extends GeoEntityRenderer<T>
 implements c3_class112 {
-    final static protected ResourceLocation e = new ResourceLocation("sexmod", "textures/line.png");
+    final static protected ResourceLocation LINE = new ResourceLocation("sexmod", "textures/line.png");
     final static float m = 1.5f;
     protected double c;
     protected T j;
@@ -498,7 +500,7 @@ implements c3_class112 {
         Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         GlStateManager.translate(vec3d3.x, vec3d3.y, vec3d3.z);
-        i.getTextureManager().bindTexture(e);
+        i.getTextureManager().bindTexture(LINE);
         float f2 = GirlRenderer.a(em_class2582, f, 1.0f, 5.0f);
         this.b(tessellator, bufferBuilder, em_class2582, f7_class2922, f2);
         GlStateManager.popMatrix();
@@ -885,7 +887,7 @@ implements c3_class112 {
         for (int i = 0; i < itemStack.getCount(); ++i) {
             GlStateManager.pushMatrix();
             Tessellator.getInstance().draw();
-            p_class418.a(IGeoRenderer.MATRIX_STACK, geoBone);
+            GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
             GL11.glEnable(2896);
             GL11.glRotated((double)((double)geoBone.getRotationX() + 2.5), 0.0, 0.0, 1.0);
             GL11.glRotated((double)geoBone.getRotationY(), 0.0, 1.0, 0.0);
@@ -945,7 +947,7 @@ implements c3_class112 {
         }
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        p_class418.a(MATRIX_STACK, geoBone);
+        GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, geoBone);
         GL11.glEnable(2896);
         if (itemStack.getItem() instanceof ItemBow) {
             GL11.glRotatef((float)e2_class2182.K, 1.0f, 0.0f, 0.0f);

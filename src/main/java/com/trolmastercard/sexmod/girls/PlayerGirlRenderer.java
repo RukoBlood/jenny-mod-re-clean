@@ -13,7 +13,7 @@ import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.bu_class100;
-import com.trolmastercard.sexmod.p_class418;
+import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -225,7 +225,7 @@ extends GirlRenderer<GirlEntity> {
     void a(BufferBuilder bufferBuilder, GeoBone geoBone, Color color) {
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        p_class418.a(IGeoRenderer.MATRIX_STACK, geoBone);
+        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
         GL11.glEnable(2896);
         this.void_c();
         new bu_class100((IGeoRenderer)this).render(this.j, this.j.limbSwing, this.j.limbSwingAmount, this.y, 0.0f, 0.0f, 0.0f, color);
@@ -244,7 +244,7 @@ extends GirlRenderer<GirlEntity> {
         ItemRenderer itemRenderer = Minecraft.getMinecraft().getItemRenderer();
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        p_class418.a(IGeoRenderer.MATRIX_STACK, geoBone);
+        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
         GL11.glEnable(2896);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

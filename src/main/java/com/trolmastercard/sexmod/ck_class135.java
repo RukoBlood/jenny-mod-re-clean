@@ -6,7 +6,6 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.gc_class360;
 import javax.vecmath.Vector3f;
 import net.minecraft.util.math.Vec3d;
 

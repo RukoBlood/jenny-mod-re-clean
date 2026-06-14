@@ -19,6 +19,7 @@ import javax.vecmath.Vector4d;
 
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldStaffModel;
+import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -102,7 +103,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
         if ("staff".equals(geoBone.getName())) {
             GlStateManager.pushMatrix();
             Tessellator.getInstance().draw();
-            p_class418.a(IGeoRenderer.MATRIX_STACK, geoBone);
+            GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
             GlStateManager.translate(0.0, 1.5 + 0.001 * Math.sin(0.005 * this.b) + 0.001, 0.0);
             Vector3f vector3f = n.get(this.h);
             GlStateManager.scale(this.d(), this.d(), this.d());
