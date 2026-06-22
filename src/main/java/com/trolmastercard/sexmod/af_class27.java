@@ -7,9 +7,7 @@ import java.util.Arrays;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
-import com.trolmastercard.sexmod.util.ColorRGBA;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -54,7 +52,7 @@ public class af_class27 {
             vec3dArray[7] = new Vec3d(f7_class2923.x, -f7_class2923.y, 0.0);
         }
         for (n = 0; n < vec3dArray.length; ++n) {
-            vec3dArray[n] = ck_class135.a(vec3dArray[n], f);
+            vec3dArray[n] = VectorMath.rotate(vec3dArray[n], f);
         }
         for (n = 0; n < 4; ++n) {
             vec3dArray[n] = vec3dArray[n].add(vec3d);
@@ -102,17 +100,17 @@ public class af_class27 {
             Arrays.fill(objectArray, Vec3d.ZERO);
             return objectArray;
         }
-        float f6 = gc_class360.d(iBone.getRotationY());
-        float f7 = gc_class360.d(iBone.getRotationZ());
+        float f6 = TrigMath.toDegrees(iBone.getRotationY());
+        float f7 = TrigMath.toDegrees(iBone.getRotationZ());
         Vec3d vec3d = em_class2582.b(string);
         Vec3d vec3d2 = em_class2582.b(string2);
         Vec3d vec3d3 = em_class2582.b(string3);
         Vec3d[] vec3dArray = new Vec3d[]{new Vec3d(f2, 0.0, -f3), new Vec3d(-f2, 0.0, -f3), new Vec3d(-f2, 0.0, f3), new Vec3d(f2, 0.0, f3), new Vec3d(f2, f3, 0.0), new Vec3d(-f2, f3, 0.0), new Vec3d(-f2, -f3, 0.0), new Vec3d(f2, -f3, 0.0), new Vec3d(f4, 0.0, -f5), new Vec3d(-f4, 0.0, -f5), new Vec3d(-f4, 0.0, f5), new Vec3d(f4, 0.0, f5)};
         for (n = 0; n < vec3dArray.length; ++n) {
-            vec3dArray[n] = ck_class135.a(vec3dArray[n], f);
+            vec3dArray[n] = VectorMath.rotate(vec3dArray[n], f);
         }
         for (n = 0; n < 4; ++n) {
-            vec3dArray[n] = ck_class135.a(vec3dArray[n], 0.0f, f6, f7);
+            vec3dArray[n] = VectorMath.rotateEuler(vec3dArray[n], 0.0f, f6, f7);
         }
         for (n = 0; n < 4; ++n) {
             vec3dArray[n] = vec3dArray[n].add(vec3d);

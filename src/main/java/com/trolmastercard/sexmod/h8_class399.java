@@ -20,7 +20,10 @@ import com.trolmastercard.sexmod.girls.Galath.EnergyBallEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
@@ -134,7 +137,7 @@ public enum h8_class399 {
         Random random = f__class2972.getRNG();
         boolean bl = f__class2972.getDataManager().get(GalathEntity.ay);
         if (f__class2972.getDataManager().get(GalathEntity.bN).booleanValue()) {
-            vec3d3 = vec3d4.add(ck_class135.a(bl ? ck_class135.c(GalathEntity.bz) : GalathEntity.bz, 180.0f + f__class2972.renderYawOffset));
+            vec3d3 = vec3d4.add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(GalathEntity.bz) : GalathEntity.bz, 180.0f + f__class2972.renderYawOffset));
             vec3d2 = vec3d5.subtract(vec3d3).normalize();
             vec3d2 = new Vec3d(vec3d2.x + random.nextDouble() * (double)0.3f, vec3d2.y + random.nextDouble() * (double)0.3f, vec3d2.z + random.nextDouble() * (double)0.3f);
             vec3d2 = vec3d2.normalize();
@@ -144,7 +147,7 @@ public enum h8_class399 {
             f__class2972.world.spawnEntity(c4_class1132);
         }
         if (f__class2972.getDataManager().get(GalathEntity.b7).booleanValue()) {
-            vec3d3 = vec3d4.add(ck_class135.a(bl ? ck_class135.c(GalathEntity.bC) : GalathEntity.bC, 180.0f + f__class2972.renderYawOffset));
+            vec3d3 = vec3d4.add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(GalathEntity.bC) : GalathEntity.bC, 180.0f + f__class2972.renderYawOffset));
             vec3d2 = vec3d5.subtract(vec3d3).normalize();
             vec3d2 = new Vec3d(vec3d2.x + random.nextDouble() * (double)0.3f, vec3d2.y + random.nextDouble() * (double)0.3f, vec3d2.z + random.nextDouble() * (double)0.3f);
             vec3d2 = vec3d2.normalize();
@@ -164,7 +167,7 @@ public enum h8_class399 {
         f__class2972.e(vec3d);
         Vec3d vec3d2 = f__class2972.net_minecraft_entity_EntityLivingBase_M().getPositionVector();
         g8_class353 g8_class3532 = new g8_class353(vec3d2.x - vec3d.x, vec3d2.z - vec3d.z);
-        double d = gc_class360.b(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
+        double d = TrigMath.toDegrees(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
         f__class2972.void_a(true);
         f__class2972.c(vec3d);
         f__class2972.void_b((float)d);
@@ -176,26 +179,26 @@ public enum h8_class399 {
         if (be_class78.a((double)n, 24.0, 32.0)) {
             Vec3d vec3d = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight(), 0.0);
             g8_class353 g8_class3532 = new g8_class353(vec3d.x - f__class2972.posX, vec3d.z - f__class2972.posZ);
-            double d = gc_class360.b(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
+            double d = TrigMath.toDegrees(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
             f__class2972.void_b((float)d);
-            Vec3d vec3d2 = ck_class135.a(new Vec3d(0.0, 0.0, 3.0), (float)(d + 180.0));
+            Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), (float)(d + 180.0));
             Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
             Vec3d vec3d4 = vec3d.add(vec3d2);
             float f = (float)(n - 24) / 8.0f;
             Vec3d vec3d5 = Reference.LerpVec3d(vec3d3, vec3d4, (double)f);
             f__class2972.c(vec3d5);
         } else if (be_class78.a((double)n, 32.0, 54.0)) {
-            Vec3d vec3d = ck_class135.a(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
+            Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             Vec3d vec3d6 = entityLivingBase.getPositionVector().add(vec3d);
             f__class2972.c(vec3d6);
-            GalathDamageSource cs_class1432 = new GalathDamageSource(f__class2972);
+            GalathDamageSource damageSource = new GalathDamageSource(f__class2972);
             entityLivingBase.hurtTime = 0;
             entityLivingBase.hurtResistantTime = 0;
             if (n == 36) {
-                entityLivingBase.attackEntityFrom(cs_class1432, 5.0f);
+                entityLivingBase.attackEntityFrom(damageSource, 5.0f);
             }
             if (n == 40) {
-                entityLivingBase.attackEntityFrom(cs_class1432, 5.0f);
+                entityLivingBase.attackEntityFrom(damageSource, 5.0f);
             }
         } else if (n == 54) {
             f__class2972.void_a(false);
@@ -236,7 +239,7 @@ public enum h8_class399 {
             f__class2972.O = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
             f__class2972.bd = f__class2972.getPositionVector();
             vec3d3 = entityLivingBase.getPositionVector().subtract(f__class2972.getPositionVector()).normalize();
-            f__class2972.void_b((float)(gc_class360.b(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0));
+            f__class2972.void_b((float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0));
         }
         vec3d3 = f__class2972.getPositionVector();
         Vec3d vec3d4 = vec3d3.subtract(0.65f, 0.65f, 0.65f);
@@ -247,7 +250,7 @@ public enum h8_class399 {
             if (object2.isDead || !object2.onGround || GirlEntity.a(object2.getPersistentID(), true) != null) continue;
             vec3d2 = object2.getPositionVector();
             vec3d = vec3d3.subtract(vec3d2);
-            Vec3d bl2 = ck_class135.a(vec3d, f__class2972.java_lang_Float_I().floatValue());
+            Vec3d bl2 = VectorMath.rotate(vec3d, f__class2972.java_lang_Float_I().floatValue());
             d2 = Math.abs(bl2.x);
             if (d2 > (double)0.65f) continue;
             for (EntityWitherSkeleton by : f__class2972.bI) {
@@ -274,10 +277,10 @@ public enum h8_class399 {
         vec3d = new Vec3d(vec3d.x, vec3d8.y, vec3d.z);
         boolean bl3 = bl = vec3d3.distanceTo(new Vec3d(vec3d8.x, vec3d3.y, vec3d8.z)) > vec3d3.distanceTo(new Vec3d(vec3d.x, vec3d3.y, vec3d.z));
         if (bl) {
-            d2 = ck_class135.a(vec3d6, vec3d, vec3d3);
+            d2 = VectorMath.getLinearFactor(vec3d6, vec3d, vec3d3);
             d = vec3d6.distanceTo(vec3d);
         } else {
-            d2 = ck_class135.a(vec3d8, vec3d6, vec3d3);
+            d2 = VectorMath.getLinearFactor(vec3d8, vec3d6, vec3d3);
             d = vec3d8.distanceTo(vec3d6);
         }
         double d4 = d / (double)0.05f;

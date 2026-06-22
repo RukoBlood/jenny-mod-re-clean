@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.girls.Luna;
 
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.gc_class360;
+import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
 import com.trolmastercard.sexmod.util.Reference;
@@ -63,7 +63,7 @@ extends PlayerGirlRenderer {
             }
             case "backHair": {
                 if (this.boolean_b() || !(this.z > 0.0f)) break;
-                double d = this.z / gc_class360.c(45.0f);
+                double d = this.z / TrigMath.toRadians(45.0f);
                 float f = (float) Reference.LerpDouble(0.0, 0.75, d);
                 geoBone.setPositionZ(f);
                 geoBone.setPositionY(f);

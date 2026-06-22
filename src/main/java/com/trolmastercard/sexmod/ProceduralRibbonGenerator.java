@@ -6,6 +6,7 @@ package com.trolmastercard.sexmod;
 import java.util.ArrayList;
 
 import com.trolmastercard.sexmod.util.ColorRGBA;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,7 +31,7 @@ public class ProceduralRibbonGenerator {
         };
 
         Vec3d direction = new Vec3d(0.0, 0.0, -settings.LengthStep);
-        Vec3d currentPos = ck_class135.a(direction.normalize(), (double)settings.initialOffset);
+        Vec3d currentPos = VectorMath.scale(direction.normalize(), (double)settings.initialOffset);
 
         Vec3d[] firstSegment = new Vec3d[4];
         System.arraycopy(baseVertices, 0, firstSegment, 0, 4);
@@ -49,7 +50,7 @@ public class ProceduralRibbonGenerator {
 
             segments.add(segmentedVertices);
 
-            direction = ck_class135.a(direction,
+            direction = VectorMath.rotateEuler(direction,
                     settings.waveX.getOffset(n, renderTime),
                     settings.WaveY.getOffset(n, renderTime),
                     settings.WaveZ.getOffset(n, renderTime)

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.events.GirlBedInteraction;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.Allie.LampItem;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
@@ -38,7 +39,7 @@ public class bn_Handler {
         MinecraftForge.EVENT_BUS.register((Object)new eo_class262());
         MinecraftForge.EVENT_BUS.register((Object)new q_class419());
         MinecraftForge.EVENT_BUS.register((Object)new HornyPotion());
-        MinecraftForge.EVENT_BUS.register((Object)new gu_class386());
+        MinecraftForge.EVENT_BUS.register((Object)new ArmorHandler());
         MinecraftForge.EVENT_BUS.register((Object)new ho_class404.a_inner405());
         MinecraftForge.EVENT_BUS.register((Object)new FighterAI.a_inner339());
         MinecraftForge.EVENT_BUS.register((Object) LampItem.LAMP_ITEM);
@@ -47,7 +48,7 @@ public class bn_Handler {
         MinecraftForge.EVENT_BUS.register((Object)new LunaRod());
         MinecraftForge.EVENT_BUS.register((Object)new fu_class330());
         MinecraftForge.EVENT_BUS.register((Object)new LunaEntity.CreeperLogic());
-        MinecraftForge.EVENT_BUS.register((Object)new ey_class280());
+        MinecraftForge.EVENT_BUS.register((Object)new GirlBedInteraction());
         MinecraftForge.EVENT_BUS.register((Object) Fire.FIRE);
         MinecraftForge.EVENT_BUS.register((Object)new KoboldEntity.c_inner311());
         MinecraftForge.EVENT_BUS.register((Object)new DragonStaffItem.a_inner408());
@@ -78,7 +79,7 @@ public class bn_Handler {
         if (bn_Handler.checkIfAsked()) {
             MinecraftForge.EVENT_BUS.register((Object)new ShowWarning());
         } else {
-            PornWarning.isAdult = false;
+            AdultContentWarning.isAdult = false;
         }
         MinecraftForge.EVENT_BUS.register((Object)new SexUI());
         MinecraftForge.EVENT_BUS.register((Object)new fh_class313());

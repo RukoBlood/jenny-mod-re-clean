@@ -17,7 +17,9 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import net.minecraft.block.Block;
@@ -255,7 +257,7 @@ implements bh_class82,
         if (fp_class3242 == Action.ANAL_WAIT) {
             if (!this.world.isRemote) {
                 this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(ck_class135.a(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
+                Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.boolean_n()) {
                 SexUI.d();
@@ -268,9 +270,9 @@ implements bh_class82,
             this.f(0);
             this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
             Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o();
-            Vec3d vec3d2 = vec3d.add(ck_class135.a(0.0, 0.0, 1.0, f));
+            Vec3d vec3d2 = vec3d.add(VectorMath.RotateY(0.0, 0.0, 1.0, f));
             this.c(vec3d2);
-            Vec3d vec3d3 = vec3d.add(ck_class135.a(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
+            Vec3d vec3d3 = vec3d.add(VectorMath.RotateY(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
             entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
             this.void_a(true);
         }

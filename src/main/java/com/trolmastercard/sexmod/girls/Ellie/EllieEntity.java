@@ -15,6 +15,8 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -243,7 +245,7 @@ implements bh_class82 {
             return;
         }
         float f = this.java_lang_Float_I().floatValue();
-        Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(ck_class135.a(new Vec3d(0.0, 2.5625f - entityPlayer.getEyeHeight(), -0.3125), 180.0f + f));
+        Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(VectorMath.rotate(new Vec3d(0.0, 2.5625f - entityPlayer.getEyeHeight(), -0.3125), 180.0f + f));
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
@@ -308,7 +310,7 @@ implements bh_class82 {
             entityPlayer.noClip = true;
             vec3d2 = this.net_minecraft_util_math_Vec3d_o();
             entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
-            vec3d = ck_class135.a(new Vec3d(0.0, 0.0, 0.1), entityPlayer.rotationYaw);
+            vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.1), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
             entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
@@ -329,7 +331,7 @@ implements bh_class82 {
             entityPlayer.noClip = true;
             vec3d2 = this.net_minecraft_util_math_Vec3d_o();
             entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
-            vec3d = ck_class135.a(new Vec3d(0.0, 1.0 - (double)entityPlayer.eyeHeight, -1.8125), entityPlayer.rotationYaw);
+            vec3d = VectorMath.rotate(new Vec3d(0.0, 1.0 - (double)entityPlayer.eyeHeight, -1.8125), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
             entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
@@ -491,7 +493,7 @@ implements bh_class82 {
         }
         entityPlayer.setNoGravity(true);
         entityPlayer.noClip = true;
-        Vec3d vec3d = ck_class135.a(new Vec3d(0.0, 0.0, -0.5), entityPlayer.rotationYaw);
+        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, -0.5), entityPlayer.rotationYaw);
         Vec3d vec3d2 = vec3d.add(entityPlayer.getPositionVector());
         this.c(vec3d2);
         this.void_b(entityPlayer.rotationYaw);
@@ -514,7 +516,7 @@ implements bh_class82 {
 
     @Override
     protected boolean processInteract(EntityPlayer entityPlayer, EnumHand enumHand) {
-        if (EllieEntity.com_trolmastercard_sexmod_em_class258_d(entityPlayer) != null) {
+        if (EllieEntity.getActiveSceneInfo(entityPlayer) != null) {
             return false;
         }
         if (this.getID() != null) {

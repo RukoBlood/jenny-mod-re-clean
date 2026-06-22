@@ -39,7 +39,7 @@ public class PackageHandler {
         networkWrapper.registerMessage(ResetGirl.a_inner422.class, ResetGirl.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(ChangeDataParameter.a_inner416.class, ChangeDataParameter.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(bo_class90.a_inner91.class, bo_class90.class, PackageHandler.discriminator(), Side.SERVER);
-        networkWrapper.registerMessage(SendCompanionHome.a_inner367.class, SendCompanionHome.class, PackageHandler.discriminator(), Side.SERVER);
+        networkWrapper.registerMessage(SendCompanionHome.Handler.class, SendCompanionHome.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SetNewHome.a_inner14.class, SetNewHome.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(UploadInventoryToServer.a_inner61.class, UploadInventoryToServer.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(RemoveItems.a_inner424.class, RemoveItems.class, PackageHandler.discriminator(), Side.SERVER);

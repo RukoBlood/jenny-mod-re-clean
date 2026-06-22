@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class y_class432 {
+public class PlayerSkin {
     final static public int a = 3;
 
     @SideOnly(value=Side.CLIENT)

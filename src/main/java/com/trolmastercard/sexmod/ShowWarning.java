@@ -20,7 +20,7 @@ public class ShowWarning extends JFrame {
             return;
         }
         this.firstlaunch = true;
-        PornWarning.ShowWarning();
+        AdultContentWarning.ShowWarning();
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

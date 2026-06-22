@@ -6,7 +6,7 @@
  *  net.minecraftforge.event.world.BlockEvent$BreakEvent
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.events;
 
 import java.util.List;
 
@@ -22,25 +22,25 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ey_class280 {
-    final static int a = 3;
+public class GirlBedInteraction {
+    final static int SEARCH_RADIUS = 3;
 
     @SubscribeEvent
-    public void a(BlockEvent.BreakEvent breakEvent) {
+    public void onBlockBreak(BlockEvent.BreakEvent breakEvent) {
         Block block = breakEvent.getState().getBlock();
         if (block != Blocks.BED) {
             return;
         }
-        BlockPos blockPos = breakEvent.getPos();
-        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(blockPos.getX() - 3, blockPos.getY() - 3, blockPos.getZ() - 3, blockPos.getX() + 3, blockPos.getY() + 3, blockPos.getZ() + 3);
-        List<GirlEntity> list = breakEvent.getWorld().getEntitiesWithinAABB(GirlEntity.class, axisAlignedBB);
-        boolean bl = false;
-        for (GirlEntity em_class2582 : list) {
-            if (em_class2582.isDead || !em_class2582.getDataManager().get(GirlEntity.G).booleanValue()) continue;
-            bl = true;
+        BlockPos pos = breakEvent.getPos();
+        AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() - 3, pos.getY() - 3, pos.getZ() - 3, pos.getX() + 3, pos.getY() + 3, pos.getZ() + 3);
+        List<GirlEntity> girlsNearby = breakEvent.getWorld().getEntitiesWithinAABB(GirlEntity.class, aabb);
+        boolean isBedOccupied = false;
+        for (GirlEntity girl : girlsNearby) {
+            if (girl.isDead || !girl.getDataManager().get(GirlEntity.G).booleanValue()) continue;
+            isBedOccupied = true;
             break;
         }
-        if (!bl) {
+        if (!isBedOccupied) {
             return;
         }
         breakEvent.getPlayer().sendStatusMessage(new TextComponentString("this bed is currently used by a girl.. pls don't disturb okay? ... you are kinda mean rn"), true);
@@ -49,14 +49,10 @@ public class ey_class280 {
 
     @SubscribeEvent
     @SideOnly(value=Side.CLIENT)
-    public void a(PlayerSPPushOutOfBlocksEvent playerSPPushOutOfBlocksEvent) {
-        if (GirlEntity.com_trolmastercard_sexmod_em_class258_d(playerSPPushOutOfBlocksEvent.getEntityPlayer()) != null) {
-            playerSPPushOutOfBlocksEvent.setCanceled(true);
+    public void onPlayerPushOutOfBlocks(PlayerSPPushOutOfBlocksEvent event) {
+        if (GirlEntity.getActiveSceneInfo(event.getEntityPlayer()) != null) {
+            event.setCanceled(true);
         }
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

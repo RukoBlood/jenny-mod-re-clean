@@ -35,7 +35,16 @@ extends Container {
             int n;
             IItemHandler iItemHandler = (IItemHandler)em_class2582.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
             this.b = em_class2582;
-            this.d = new Slot[]{new fe_class305(fe_class305.b_inner307.WEAPON, iItemHandler, fe_class305.b_inner307.WEAPON.id, 31, 60), new fe_class305(fe_class305.b_inner307.BOW, iItemHandler, fe_class305.b_inner307.BOW.id, 50, 60), new fe_class305(fe_class305.b_inner307.HELMET, iItemHandler, fe_class305.b_inner307.HELMET.id, 72, 60), new fe_class305(fe_class305.b_inner307.CHEST_PLATE, iItemHandler, fe_class305.b_inner307.CHEST_PLATE.id, 91, 60), new fe_class305(fe_class305.b_inner307.PANTS, iItemHandler, fe_class305.b_inner307.PANTS.id, 110, 60), new fe_class305(fe_class305.b_inner307.SHOES, iItemHandler, fe_class305.b_inner307.SHOES.id, 129, 60)};
+
+            this.d = new Slot[]{
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.WEAPON, iItemHandler, GirlInventorySlot.GirlEquipmentType.WEAPON.id, 31, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.BOW, iItemHandler, GirlInventorySlot.GirlEquipmentType.BOW.id, 50, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.HELMET, iItemHandler, GirlInventorySlot.GirlEquipmentType.HELMET.id, 72, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.CHEST_PLATE, iItemHandler, GirlInventorySlot.GirlEquipmentType.CHEST_PLATE.id, 91, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.PANTS, iItemHandler, GirlInventorySlot.GirlEquipmentType.PANTS.id, 110, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.SHOES, iItemHandler, GirlInventorySlot.GirlEquipmentType.SHOES.id, 129, 60)
+            };
+
             ArrayList<Slot> arrayList = new ArrayList<Slot>();
             for (n = 0; n < 3; ++n) {
                 for (int i = 0; i < 9; ++i) {

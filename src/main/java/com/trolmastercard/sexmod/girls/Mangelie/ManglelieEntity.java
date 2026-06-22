@@ -19,7 +19,10 @@ import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -377,7 +380,7 @@ extends GirlEntity {
         }
         Float f = GalathEntity.a(f__class2972, 0.0f);
         float f2 = f == null ? f__class2972.rotationYawHead : f.floatValue();
-        Vec3d vec3d2 = ck_class135.a(vec3d, f2);
+        Vec3d vec3d2 = VectorMath.rotate(vec3d, f2);
         return vec3d2.z < 0.0;
     }
 
@@ -531,7 +534,7 @@ extends GirlEntity {
         Vec3d vec3d = this.getPositionVector();
         Vec3d vec3d2 = entity.getPositionVector();
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        float f = (float)gc_class360.b(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
+        float f = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
         this.void_b(f);
         this.f = this.getNavigator();
         this.f.clearPath();
@@ -557,7 +560,7 @@ extends GirlEntity {
     }
 
     boolean a(Vec3d vec3d, GalathEntity f__class2972, float f) {
-        Vec3d vec3d2 = ck_class135.a(vec3d, Reference.LerpAngleDegrees(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f));
+        Vec3d vec3d2 = VectorMath.rotate(vec3d, Reference.LerpAngleDegrees(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f));
         return vec3d2.x > 0.35;
     }
 
@@ -590,13 +593,13 @@ extends GirlEntity {
         Vec3d vec3d = entity.getPositionVector().add(0.0, entity.getEyeHeight(), 0.0);
         Vec3d vec3d2 = f__class2972.getPositionVector().add(f__class2972.b("mangPos")).add(this.b("head"));
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        float f = (float)(gc_class360.b(Math.atan2(vec3d3.z, vec3d3.x)) + 90.0);
+        float f = (float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) + 90.0);
         Float f2 = GalathEntity.a(f__class2972, 0.0f);
         f -= f__class2972.rotationYawHead;
         if (f2 != null) {
             f -= f2.floatValue();
         }
-        this.af = Math.abs(cj_class134.a(0.0f, f)) < 80.0f ? -gc_class360.c(f) : 0.0f;
+        this.af = Math.abs(cj_class134.a(0.0f, f)) < 80.0f ? -TrigMath.toRadians(f) : 0.0f;
         this.W = this.af == 0.0f ? 0.0f : (float)be_class78.b(-vec3d3.y / 2.0, -0.75, 0.75);
     }
 

@@ -15,10 +15,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
-import com.trolmastercard.sexmod.util.ColorRGBA;
-import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -310,7 +307,7 @@ extends GirlRenderer<ManglelieEntity> {
             if (bl) {
                 string2 = string2 + "2";
             }
-            if ((f = gc_class360.d(em_class2582.b().getBone(string2).getRotationX())) < 0.0f) {
+            if ((f = TrigMath.toDegrees(em_class2582.b().getBone(string2).getRotationX())) < 0.0f) {
                 return;
             }
             geoBone.setPositionY(geoBone.getPositionY() + f * 0.01f);
@@ -323,11 +320,11 @@ extends GirlRenderer<ManglelieEntity> {
             if (bl) {
                 string2 = string2 + "2";
             }
-            if ((f = gc_class360.d(em_class2582.b().getBone(string2).getRotationX())) < 0.0f) {
+            if ((f = TrigMath.toDegrees(em_class2582.b().getBone(string2).getRotationX())) < 0.0f) {
                 return;
             }
-            geoBone.setRotationX(gc_class360.c(f));
-            geoBone.setPositionY(gc_class360.c(f * 0.03f));
+            geoBone.setRotationX(TrigMath.toRadians(f));
+            geoBone.setPositionY(TrigMath.toRadians(f * 0.03f));
         }
     }
 

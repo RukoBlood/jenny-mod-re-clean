@@ -17,10 +17,7 @@ import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieRenderer;
-import com.trolmastercard.sexmod.util.ColorRGBA;
-import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -164,7 +161,7 @@ implements c3_class112 {
             f__class2972.prevRenderYawOffset = this.s;
         } else {
             float f;
-            f__class2972.renderYawOffset = f = (float)(gc_class360.b(Math.atan2(vec3d2.z, vec3d2.x)) - 90.0);
+            f__class2972.renderYawOffset = f = (float)(TrigMath.toDegrees(Math.atan2(vec3d2.z, vec3d2.x)) - 90.0);
             f__class2972.prevRenderYawOffset = f;
             this.s = f;
         }
@@ -188,14 +185,14 @@ implements c3_class112 {
             f__class2972.aH = f__class2972.af + 8L;
         }
         if (be_class78.a((double)f2, 24.0, 32.0)) {
-            Vec3d vec3d2 = ck_class135.a(new Vec3d(0.0, 0.0, 3.0), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
+            Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
             Vec3d vec3d4 = vec3d.add(0.0, entityLivingBase.getEyeHeight(), 0.0).add(vec3d2);
             float f3 = ((float) GalathRenderer.i.world.getTotalWorldTime() + f - (float)f__class2972.af) / (float)(f__class2972.aH - f__class2972.af);
             return Reference.LerpVec3d(vec3d3, vec3d4, (double)f3);
         }
         if (be_class78.a((double)f2, 32.0, 54.0)) {
-            Vec3d vec3d5 = ck_class135.a(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
+            Vec3d vec3d5 = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             return vec3d.add(vec3d5);
         }
         return null;
@@ -243,7 +240,7 @@ implements c3_class112 {
         GlStateManager.rotate(f3, 1.0f, 0.0f, 0.0f);
         GlStateManager.rotate(f5, 0.0f, 1.0f, 0.0f);
         GlStateManager.rotate(f4, 0.0f, 0.0f, 1.0f);
-        float f6 = gc_class360.c(9.0);
+        float f6 = TrigMath.toRadians(9.0);
         Vector3f f7_class2922 = GalathEntity.aa;
         i.getTextureManager().bindTexture(LINE);
         bufferBuilder.begin(3, DefaultVertexFormats.POSITION_TEX_COLOR);
@@ -258,7 +255,7 @@ implements c3_class112 {
         tessellator.draw();
         i.getTextureManager().bindTexture(w);
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        f6 = gc_class360.c(60.0);
+        f6 = TrigMath.toRadians(60.0);
         f7 = 0.0f;
         while ((double)f7 < Math.PI * 2) {
             d2 = Math.sin(f7) * (double)0.3f;
@@ -379,13 +376,13 @@ implements c3_class112 {
             case "hairBack": {
                 if (i.isGamePaused()) break;
                 IBone iBone = ((GalathEntity)this.j).b().getBone("head");
-                float f = gc_class360.d(iBone.getRotationX());
+                float f = TrigMath.toDegrees(iBone.getRotationX());
                 if (f < 0.0f) {
-                    geoBone.setRotationX(gc_class360.c(-f));
+                    geoBone.setRotationX(TrigMath.toRadians(-f));
                     break;
                 }
                 float f2 = Math.min(1.0f, f / 45.0f);
-                geoBone.setRotationX(gc_class360.c(-f));
+                geoBone.setRotationX(TrigMath.toRadians(-f));
                 geoBone.setPositionY(geoBone.getPositionY() + f2 * 1.5f);
                 break;
             }
@@ -393,13 +390,13 @@ implements c3_class112 {
             case "hairDownSideR": {
                 if (i.isGamePaused()) break;
                 IBone iBone = ((GalathEntity)this.j).b().getBone("head");
-                float f = gc_class360.d(iBone.getRotationX());
+                float f = TrigMath.toDegrees(iBone.getRotationX());
                 if (f < 0.0f) {
-                    geoBone.setRotationX(gc_class360.c(-f / 2.0f));
+                    geoBone.setRotationX(TrigMath.toRadians(-f / 2.0f));
                     break;
                 }
                 float f3 = Math.min(1.0f, f / 45.0f);
-                geoBone.setRotationX(gc_class360.c(-f));
+                geoBone.setRotationX(TrigMath.toRadians(-f));
                 geoBone.setPositionY(geoBone.getPositionY() + f3);
                 break;
             }
@@ -412,7 +409,7 @@ implements c3_class112 {
                 Vec3d vec3d = Reference.LerpVec3d(new Vec3d(((GalathEntity)this.j).lastTickPosX, ((GalathEntity)this.j).lastTickPosY, ((GalathEntity)this.j).lastTickPosZ), ((GalathEntity)this.j).getPositionVector(), (double)f);
                 Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.j).getPositionVector(), (double)f);
                 Vec3d vec3d3 = vec3d.subtract(vec3d2);
-                float f4 = (float)ck_class135.a((Vec3d)vec3d3, (float)((GalathEntity)this.j).renderYawOffset).z;
+                float f4 = (float) VectorMath.rotate((Vec3d)vec3d3, (float)((GalathEntity)this.j).renderYawOffset).z;
                 float f5 = (float)Math.atan2(vec3d3.y, f4);
                 break;
             }
@@ -460,9 +457,9 @@ implements c3_class112 {
                 if (((GalathEntity)this.j).currentAction() != Action.RAPE_CHARGE || (entityLivingBase = ((GalathEntity)this.j).net_minecraft_entity_EntityLivingBase_M()) == null) break;
                 float f = ((GalathEntity)this.j).renderYawOffset;
                 Vec3d vec3d = entityLivingBase.getPositionVector().subtract(((GalathEntity)this.j).getPositionVector());
-                vec3d = ck_class135.a(vec3d, f);
+                vec3d = VectorMath.rotate(vec3d, f);
                 double d = -be_class78.b(vec3d.x, -1.0, 1.0);
-                geoBone.setRotationZ(geoBone.getRotationZ() + gc_class360.c(45.0 * d));
+                geoBone.setRotationZ(geoBone.getRotationZ() + TrigMath.toRadians(45.0 * d));
             }
         }
         if (((GalathEntity)this.j).boolean_b()) {

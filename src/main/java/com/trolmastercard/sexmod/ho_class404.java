@@ -24,8 +24,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ho_class404
-extends EntityEnderPearl {
+public class ho_class404 extends EntityEnderPearl {
     public ho_class404(World world) {
         super(world);
     }
@@ -80,11 +79,11 @@ extends EntityEnderPearl {
         @SubscribeEvent
         public void a(EnderTeleportEvent enderTeleportEvent) {
             if (enderTeleportEvent.getEntityLiving() instanceof GirlEntity) {
-                GirlEntity em_class2582 = (GirlEntity)enderTeleportEvent.getEntityLiving();
-                em_class2582.q = null;
-                em_class2582.setCurrentAction(Action.NULL);
-                em_class2582.getDataManager().set(GirlEntity.G, false);
-                em_class2582.goHome();
+                GirlEntity girl = (GirlEntity)enderTeleportEvent.getEntityLiving();
+                girl.q = null;
+                girl.setCurrentAction(Action.NULL);
+                girl.getDataManager().set(GirlEntity.G, false);
+                girl.goHome();
             }
         }
     }

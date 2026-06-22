@@ -22,7 +22,9 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.InformOfOwnership;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
@@ -195,7 +197,7 @@ implements IAnimatable {
         }
         Vec3d vec3d = f__class2972.net_minecraft_util_math_Vec3d_o().add(0.0, 1.5, 0.0);
         Vec3d vec3d2 = entityPlayer.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0);
-        Vec3d vec3d3 = vec3d2.add(ck_class135.a((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
+        Vec3d vec3d3 = vec3d2.add(VectorMath.RotateY((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         float f = (float)(l - l2 - 1000L) / 2000.0f;
         Vec3d vec3d4 = Reference.LerpVec3d(vec3d, vec3d3, (double)f);
         ParticleGalathTrail.globalParticleScale = 0.2f;
@@ -216,7 +218,7 @@ implements IAnimatable {
             return;
         }
         Vec3d vec3d = entityPlayer.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0);
-        Vec3d vec3d2 = vec3d.add(ck_class135.a((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
+        Vec3d vec3d2 = vec3d.add(VectorMath.RotateY((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         Vec3d vec3d3 = vec3d.add(entityPlayer.getLookVec().normalize().scale(2.0));
         float f = (float)(l - l2 - 1000L) / 2000.0f;
         Vec3d vec3d4 = Reference.LerpVec3d(vec3d2, vec3d3, (double)f);

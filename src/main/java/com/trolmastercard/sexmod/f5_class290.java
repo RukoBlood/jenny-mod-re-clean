@@ -9,7 +9,7 @@ import net.minecraft.network.EnumPacketDirection;
 
 public class f5_class290 extends NetHandlerPlayClient {
     public f5_class290(Minecraft minecraft) {
-        super(minecraft, minecraft.currentScreen, new x(EnumPacketDirection.CLIENTBOUND), minecraft.getSession().getProfile());
+        super(minecraft, minecraft.currentScreen, new x_worldRelatedClass(EnumPacketDirection.CLIENTBOUND), minecraft.getSession().getProfile());
     }
 }
 

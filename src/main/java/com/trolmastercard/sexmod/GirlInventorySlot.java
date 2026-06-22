@@ -18,26 +18,25 @@ import net.minecraft.item.ItemTool;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class fe_class305
-extends SlotItemHandler {
-    b_inner307 a;
+public class GirlInventorySlot extends SlotItemHandler {
+    GirlEquipmentType slotType;
 
-    public fe_class305(b_inner307 b_inner3072, IItemHandler iItemHandler, int n, int n2, int n3) {
-        super(iItemHandler, n, n2, n3);
-        this.a = b_inner3072;
+    public GirlInventorySlot(GirlEquipmentType type, IItemHandler itemHandler, int index, int xPos, int yPos) {
+        super(itemHandler, index, xPos, yPos);
+        this.slotType = type;
     }
 
-    public static boolean a(ItemStack itemStack, int n) {
-        return fe_class305.a(itemStack, b_inner307.a(n));
+    public static boolean isSlotValidForItems(ItemStack itemStack, int n) {
+        return GirlInventorySlot.isItemValidForSlot(itemStack, GirlEquipmentType.a(n));
     }
 
     public boolean isItemValid(ItemStack itemStack) {
-        return fe_class305.a(itemStack, this.a);
+        return GirlInventorySlot.isItemValidForSlot(itemStack, this.slotType);
     }
 
-    static boolean a(ItemStack itemStack, b_inner307 b_inner3072) {
-        Item item = itemStack.getItem();
-        switch (b_inner3072) {
+    static boolean isItemValidForSlot(ItemStack stack, GirlEquipmentType type) {
+        Item item = stack.getItem();
+        switch (type) {
             case WEAPON: {
                 return item instanceof ItemSword || item instanceof ItemTool;
             }
@@ -63,11 +62,8 @@ extends SlotItemHandler {
         return false;
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 
-    public static enum b_inner307 {
+    public static enum GirlEquipmentType {
         WEAPON(0),
         BOW(1),
         HELMET(2),
@@ -78,8 +74,8 @@ extends SlotItemHandler {
 
         public int id;
 
-        public static b_inner307 a(int n) {
-            switch (n) {
+        public static GirlEquipmentType a(int index) {
+            switch (index) {
                 case 0: {
                     return WEAPON;
                 }
@@ -102,16 +98,13 @@ extends SlotItemHandler {
                     return ROD;
                 }
             }
-            throw new NullPointerException("Girls don't have a slot nr. " + n);
+            throw new NullPointerException("Girls don't have a slot nr. " + index);
         }
 
-        private b_inner307(int n2) {
-            this.id = n2;
+        private GirlEquipmentType(int id) {
+            this.id = id;
         }
 
-        private static NullPointerException a(NullPointerException nullPointerException) {
-            return nullPointerException;
-        }
     }
 }
 

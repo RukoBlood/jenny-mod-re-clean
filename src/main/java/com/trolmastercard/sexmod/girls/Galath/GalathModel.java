@@ -9,8 +9,11 @@ import com.trolmastercard.sexmod.girls.GirlModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.f2_class286;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -131,7 +134,7 @@ extends GirlModel<GirlEntity> {
     }
 
     Vector3f a(float f) {
-        return new Vector3f((float)Math.sin(f * 0.3f) * gc_class360.c(10.0f), (float)Math.sin(f * 0.15f) * gc_class360.c(7.0f), (float)Math.sin((double)f * -0.15) * gc_class360.c(7.0f));
+        return new Vector3f((float)Math.sin(f * 0.3f) * TrigMath.toRadians(10.0f), (float)Math.sin(f * 0.15f) * TrigMath.toRadians(7.0f), (float)Math.sin((double)f * -0.15) * TrigMath.toRadians(7.0f));
     }
 
     void void_c(GirlEntity em_class2582) {
@@ -175,8 +178,8 @@ extends GirlModel<GirlEntity> {
         }
         MolangParser molangParser = GeckoLibCache.getInstance().parser;
         Vec3d vec3d = ak_class32.b(em_class2582, entityPlayer, this.a.getRenderPartialTicks()).add(em_class2582.b("head"));
-        float f = (float)gc_class360.b(Math.atan2(vec3d.z, vec3d.x)) - em_class2582.java_lang_Float_I().floatValue();
-        float f2 = (float)gc_class360.b(Math.atan2(vec3d.y, Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z)));
+        float f = (float) TrigMath.toDegrees(Math.atan2(vec3d.z, vec3d.x)) - em_class2582.java_lang_Float_I().floatValue();
+        float f2 = (float) TrigMath.toDegrees(Math.atan2(vec3d.y, Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z)));
         double d = Math.abs(vec3d.x) + Math.abs(vec3d.y) + Math.abs(vec3d.z);
         double d2 = d * 7.0 + -20.0;
         double d3 = d * 5.0 + -20.0;
@@ -244,7 +247,7 @@ extends GirlModel<GirlEntity> {
         Vec3d vec3d2 = em_class2582.getPositionVector().subtract(vec3d);
         boolean bl2 = bl = Math.abs(vec3d2.x) + Math.abs(vec3d2.z) < (double)0.01f;
         if (bl) {
-            iBone.setRotationX(gc_class360.c(-90.0f));
+            iBone.setRotationX(TrigMath.toRadians(-90.0f));
             iBone.setPositionY(0.0f);
             iBone.setPositionZ(0.0f);
         } else {
@@ -269,7 +272,7 @@ extends GirlModel<GirlEntity> {
         iBone.setPositionY((float)vec3d.y);
         iBone.setPositionZ((float)vec3d.z);
         float f = em_class2582.getDataManager().get(GalathEntity.bO);
-        iBone.setRotationY(gc_class360.c(f * 180.0f));
+        iBone.setRotationY(TrigMath.toRadians(f * 180.0f));
     }
 
     /*

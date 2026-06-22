@@ -17,7 +17,9 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import net.minecraft.block.state.IBlockState;
@@ -297,7 +299,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (entityPlayer == null) {
             return;
         }
-        Vec3d vec3d = ck_class135.a(new Vec3d(0.0, 0.0, 0.2), this.java_lang_Float_I().floatValue() + 180.0f);
+        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.2), this.java_lang_Float_I().floatValue() + 180.0f);
         entityPlayer.setPositionAndUpdate(entityPlayer.posX + vec3d.x, entityPlayer.posY, entityPlayer.posZ + vec3d.z);
     }
 

@@ -7,21 +7,20 @@ import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.world.World;
 
-public class bb_class74
-extends MultiPartEntityPart {
-    public boolean a = false;
+public class MultiPartHitbox extends MultiPartEntityPart {
+    public boolean isCollidable = false;
 
-    public bb_class74(World world) {
+    public MultiPartHitbox(World world) {
         super(null, "", 0.0f, 0.0f);
     }
 
-    public bb_class74(IEntityMultiPart iEntityMultiPart, String string, float f, float f2) {
-        super(iEntityMultiPart, string, f, f2);
+    public MultiPartHitbox(IEntityMultiPart parent, String partName, float width, float height) {
+        super(parent, partName, width, height);
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return this.a;
+        return this.isCollidable;
     }
 }
 

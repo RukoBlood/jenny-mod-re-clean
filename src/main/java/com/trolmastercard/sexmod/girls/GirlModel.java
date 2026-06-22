@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.interfaces.IGirlAnimGeoModel;
 import com.trolmastercard.sexmod.util.interfaces.IGirlModelParts;
 import net.minecraft.client.Minecraft;
@@ -125,7 +126,7 @@ implements IGirlModelParts {
         if (Float.isNaN(f = (float)(4.0 - Math.sin(1.5707963267948966 + d4 * 2.0 * Math.PI) * 4.0))) {
             f = 8.0f;
         }
-        return new Vec3d(gc_class360.c(f3), f2, f);
+        return new Vec3d(TrigMath.toRadians(f3), f2, f);
     }
 
     void a(AnimationProcessor<T> animationProcessor, ItemStack itemStack, ItemStack itemStack2, ItemStack itemStack3, ItemStack itemStack4) {

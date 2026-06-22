@@ -25,7 +25,6 @@ import io.netty.channel.ChannelConfig;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelMetadata;
-import io.netty.channel.ChannelOutboundInvoker;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelProgressivePromise;
 import io.netty.channel.ChannelPromise;
@@ -36,9 +35,8 @@ import java.net.SocketAddress;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetworkManager;
 
-public class x
-extends NetworkManager {
-    public x(EnumPacketDirection enumPacketDirection) {
+public class x_worldRelatedClass extends NetworkManager {
+    public x_worldRelatedClass(EnumPacketDirection enumPacketDirection) {
         super(enumPacketDirection);
     }
 

@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.f2_class286;
+import com.trolmastercard.sexmod.util.f2_class286;
 
 public interface b7_class68 {
     public f2_class286 com_trolmastercard_sexmod_f2_class286_d();

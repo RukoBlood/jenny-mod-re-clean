@@ -413,8 +413,8 @@ extends GuiScreen {
         this.a(n, n2, n3, 0);
     }
 
-    public void a(int n, int n2, e1_class217 e1_class2172) {
-        this.a(n, n2, e1_class2172.c, e1_class2172.b);
+    public void a(int n, int n2, Point2D e1_class2172) {
+        this.a(n, n2, e1_class2172.x, e1_class2172.y);
     }
 
     void a(int n, int n2, float f, EntityLivingBase entityLivingBase, float f2) {

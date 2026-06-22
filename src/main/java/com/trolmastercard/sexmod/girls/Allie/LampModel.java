@@ -8,14 +8,13 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import com.trolmastercard.sexmod.y_class432;
+import com.trolmastercard.sexmod.PlayerSkin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class LampModel
-extends AnimatedGeoModel<LampItem> {
+public class LampModel extends AnimatedGeoModel<LampItem> {
     ResourceLocation a = null;
 
     @Override
@@ -24,21 +23,21 @@ extends AnimatedGeoModel<LampItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(LampItem ap_class372) {
+    public ResourceLocation getTextureLocation(LampItem item) {
         if (this.a != null) {
             return this.a;
         }
         try {
             Minecraft minecraft = Minecraft.getMinecraft();
-            BufferedImage bufferedImage = y_class432.GetPlayerSkin(minecraft.player.getPersistentID());
-            Graphics graphics = bufferedImage.getGraphics();
+            BufferedImage skin = PlayerSkin.GetPlayerSkin(minecraft.player.getPersistentID());
+            Graphics graphics = skin.getGraphics();
             graphics.setColor(new Color(185, 254, 255));
             graphics.fillRect(0, 0, 2, 2);
             graphics.setColor(new Color(255, 255, 255));
             graphics.fillRect(2, 0, 1, 2);
             graphics.setColor(new Color(0, 0, 0));
             graphics.fillRect(3, 0, 1, 2);
-            this.a = minecraft.renderEngine.getDynamicTextureLocation("alliesLamp", new DynamicTexture(bufferedImage));
+            this.a = minecraft.renderEngine.getDynamicTextureLocation("alliesLamp", new DynamicTexture(skin));
         } catch (IOException iOException) {
             iOException.printStackTrace();
             this.a = new ResourceLocation("sexmod", "textures/entity/allie/lamp.png");

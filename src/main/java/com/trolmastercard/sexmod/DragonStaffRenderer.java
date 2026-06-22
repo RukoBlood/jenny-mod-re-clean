@@ -21,6 +21,7 @@ import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldStaffModel;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -71,7 +72,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
     // was:
     //this.a((hy_class407)item, itemStack);
     @Override
-    public void render(DragonStaffItem hy_class4072, ItemStack itemStack) {
+    public void render(DragonStaffItem staff, ItemStack itemStack) {
         EntityPlayer entityPlayer = null;
         for (EntityPlayer entityPlayer2 : this.e.world.playerEntities) {
             if (entityPlayer2.inventory.mainInventory.contains(itemStack)) {
@@ -95,7 +96,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
         }
         this.h = itemStack;
         this.k = entityPlayer;
-        super.render(hy_class4072, itemStack);
+        super.render(staff, itemStack);
     }
 
     @Override
@@ -152,7 +153,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
             float f2 = Reference.LerpFloat(this.k.prevRotationPitch, this.k.rotationPitch, this.e.getRenderPartialTicks());
             Vec3d vec3d = Reference.LerpVec3d(new Vec3d(this.k.prevPosX, this.k.prevPosY + (double)this.k.getEyeHeight(), this.k.prevPosZ), this.k.getPositionVector().add(0.0, this.k.getEyeHeight(), 0.0), (double)this.e.getRenderPartialTicks());
             Vec3d vec3d2 = vec3d.subtract(list2.get(i));
-            vec3d2 = ck_class135.a(vec3d2, -f2, f);
+            vec3d2 = VectorMath.rotate(vec3d2, -f2, f);
             double d = Math.abs(vec3d2.x) + Math.abs(vec3d2.z) + Math.abs(vec3d2.y);
             double d2 = -vec3d2.x / d;
             double d3 = -vec3d2.y / d;

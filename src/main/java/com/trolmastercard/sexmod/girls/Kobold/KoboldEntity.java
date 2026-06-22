@@ -37,7 +37,9 @@ import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -300,43 +302,43 @@ IInventory,
     }
 
     @Override
-    public e1_class217 g(int n) {
+    public Point2D g(int n) {
         switch (n) {
             case 0: {
-                return new e1_class217(160, 0);
+                return new Point2D(160, 0);
             }
             case 1: {
-                return new e1_class217(180, 0);
+                return new Point2D(180, 0);
             }
             case 2: {
-                return new e1_class217(200, 0);
+                return new Point2D(200, 0);
             }
             case 3: {
-                return new e1_class217(220, 0);
+                return new Point2D(220, 0);
             }
             case 4: {
-                return new e1_class217(227, 20);
+                return new Point2D(227, 20);
             }
             case 5: {
-                return new e1_class217(140, 40);
+                return new Point2D(140, 40);
             }
             case 6: {
-                return new e1_class217(160, 40);
+                return new Point2D(160, 40);
             }
             case 7: {
-                return new e1_class217(180, 40);
+                return new Point2D(180, 40);
             }
             case 8: {
-                return new e1_class217(227, 40);
+                return new Point2D(227, 40);
             }
             case 9: {
-                return new e1_class217(0, 130);
+                return new Point2D(0, 130);
             }
             case 10: {
-                return new e1_class217(20, 130);
+                return new Point2D(20, 130);
             }
         }
-        return e1_class217.a;
+        return Point2D.ZERO;
     }
 
     @Override
@@ -2810,14 +2812,14 @@ IInventory,
                 case "blowjobStartMSG1": {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = ck_class135.a(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.java_lang_Float_I().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = ck_class135.a(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.java_lang_Float_I().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
@@ -2882,7 +2884,7 @@ IInventory,
                 case "analStartCam": {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = ck_class135.a(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.java_lang_Float_I().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue(), 0.0f));
                     break;
                 }
@@ -2972,7 +2974,7 @@ IInventory,
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
-                    vec3d = ck_class135.a(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
                     vec3d = vec3d.add(this.net_minecraft_util_math_Vec3d_o());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 10.0f));
                     break;
@@ -3007,7 +3009,7 @@ IInventory,
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
-                    vec3d = ck_class135.a(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
                     vec3d = vec3d.add(this.net_minecraft_util_math_Vec3d_o());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 70.0f));
                     break;

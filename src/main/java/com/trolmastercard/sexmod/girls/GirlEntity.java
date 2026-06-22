@@ -44,6 +44,7 @@ import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -944,7 +945,7 @@ implements IAnimatable {
         return null;
     }
 
-    public static GirlEntity com_trolmastercard_sexmod_em_class258_d(@Nonnull EntityPlayer entityPlayer) {
+    public static GirlEntity getActiveSceneInfo(@Nonnull EntityPlayer entityPlayer) {
         return GirlEntity.com_trolmastercard_sexmod_em_class258_c(entityPlayer.getPersistentID());
     }
 
@@ -1356,8 +1357,8 @@ implements IAnimatable {
     }
 
     @CheckReturnValue
-    public e1_class217 g(int n) {
-        return e1_class217.a;
+    public Point2D g(int n) {
+        return Point2D.ZERO;
     }
 
     public void void_a(List<Integer> list) {

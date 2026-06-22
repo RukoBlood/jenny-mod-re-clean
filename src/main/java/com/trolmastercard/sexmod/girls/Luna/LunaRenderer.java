@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.gc_class360;
+import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
@@ -73,7 +73,7 @@ extends GirlRenderer {
             }
             case "backHair": {
                 if (this.boolean_a()) break;
-                double d = this.r / gc_class360.c(45.0f);
+                double d = this.r / TrigMath.toRadians(45.0f);
                 float f = (float) Reference.LerpDouble(0.0, 0.75, d);
                 geoBone.setPositionZ(f);
                 geoBone.setPositionY(f);
@@ -83,7 +83,7 @@ extends GirlRenderer {
             case "sideHairR": 
             case "sideHairL": {
                 if (this.boolean_a()) break;
-                double d = this.r / gc_class360.c(45.0f);
+                double d = this.r / TrigMath.toRadians(45.0f);
                 float f = (float) Reference.LerpDouble(0.0, (double)1.3f, d);
                 geoBone.setPositionZ(-f);
                 geoBone.setPositionY(f);

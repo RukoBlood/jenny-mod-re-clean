@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod.girls.Pyrocynical;
 
-import com.trolmastercard.sexmod.SoundsHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.be_class78;
 import com.trolmastercard.sexmod.cj_class134;
 import net.minecraft.client.Minecraft;

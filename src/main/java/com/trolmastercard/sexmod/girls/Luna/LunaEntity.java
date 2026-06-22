@@ -22,7 +22,9 @@ import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import net.minecraft.client.Minecraft;
@@ -359,7 +361,7 @@ implements bh_class82,
 
     public void void_j() {
         EntityItem entityItem = new EntityItem(this.world, this.posX, this.posY, this.posZ, this.entityDataManager.get(ag));
-        Vec3d vec3d = ck_class135.a(new Vec3d(0.0, (double)0.2f + Math.random() * (double)0.1f, (double)-0.2f + Math.random() * (double)-0.1f), this.rotationYaw);
+        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, (double)0.2f + Math.random() * (double)0.1f, (double)-0.2f + Math.random() * (double)-0.1f), this.rotationYaw);
         entityItem.motionX = vec3d.x;
         entityItem.motionY = vec3d.y;
         entityItem.motionZ = vec3d.z;
@@ -1047,14 +1049,14 @@ implements bh_class82,
                     if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     Vec3d vec3d = new Vec3d(0.0, -0.075f, -0.7109375);
-                    Vec3d vec3d2 = ck_class135.a(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d2 = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
                     Minecraft.getMinecraft().player.setPosition(this.net_minecraft_util_math_Vec3d_o().x + vec3d2.x, this.net_minecraft_util_math_Vec3d_o().y + vec3d2.y, this.net_minecraft_util_math_Vec3d_o().z + vec3d2.z);
                     break;
                 }
                 case "sitting_fastTp": {
                     if (!this.boolean_n()) break;
                     Vec3d vec3d = new Vec3d(0.0, -0.160625, -0.9925);
-                    Vec3d vec3d3 = ck_class135.a(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d3 = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
                     Minecraft.getMinecraft().player.setPosition(this.net_minecraft_util_math_Vec3d_o().x + vec3d3.x, this.net_minecraft_util_math_Vec3d_o().y + vec3d3.y, this.net_minecraft_util_math_Vec3d_o().z + vec3d3.z);
                     break;
                 }

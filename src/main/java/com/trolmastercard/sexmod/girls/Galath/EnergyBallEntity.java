@@ -9,9 +9,9 @@ package com.trolmastercard.sexmod.girls.Galath;
 import java.util.List;
 import java.util.Random;
 
-import com.trolmastercard.sexmod.SoundsHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.Packages.SpawnEnergyBallParticlesAlt;
-import com.trolmastercard.sexmod.gc_class360;
+import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
@@ -168,7 +168,7 @@ extends EntityLiving {
     @SideOnly(value=Side.CLIENT)
     public static void a(Vec3d vec3d) {
         WorldClient worldClient = Minecraft.getMinecraft().world;
-        float f = gc_class360.c(1.8f);
+        float f = TrigMath.toRadians(1.8f);
         Random random = Reference.RANDOM;
         float f2 = 0.0f;
         while ((double)f2 < Math.PI * 2) {

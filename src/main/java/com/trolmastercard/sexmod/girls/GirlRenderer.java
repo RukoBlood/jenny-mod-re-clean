@@ -40,6 +40,7 @@ import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -143,10 +144,10 @@ implements c3_class112 {
     }
 
     protected ResourceLocation a(UUID uUID, World world) throws IOException {
-        BufferedImage bufferedImage;
+        BufferedImage skin;
         try {
-            bufferedImage = y_class432.GetPlayerSkin(uUID);
-            Graphics graphics = bufferedImage.getGraphics();
+            skin = PlayerSkin.GetPlayerSkin(uUID);
+            Graphics graphics = skin.getGraphics();
             graphics.setColor(this.f);
             graphics.fillRect(0, 0, 4, 3);
             graphics.setColor(this.o);
@@ -155,9 +156,9 @@ implements c3_class112 {
             if (!this.h) {
                 this.h = true;
             }
-            bufferedImage = ImageIO.read(i.getResourceManager().getResource(new ResourceLocation("sexmod", "textures/player/steve.png")).getInputStream());
+            skin = ImageIO.read(i.getResourceManager().getResource(new ResourceLocation("sexmod", "textures/player/steve.png")).getInputStream());
         }
-        l.put(uUID, this.renderManager.renderEngine.getDynamicTextureLocation("player" + uUID, new DynamicTexture(bufferedImage)));
+        l.put(uUID, this.renderManager.renderEngine.getDynamicTextureLocation("player" + uUID, new DynamicTexture(skin)));
         return l.get(uUID);
     }
 
@@ -173,7 +174,7 @@ implements c3_class112 {
     }
 
     float a(World world, Vec3d vec3d, float f, float f2) {
-        RayTraceResult rayTraceResult = this.a(vec3d, vec3d.add(ck_class135.a(new Vec3d(0.0, 0.0, -4.0), f, f2)), world);
+        RayTraceResult rayTraceResult = this.a(vec3d, vec3d.add(VectorMath.rotate(new Vec3d(0.0, 0.0, -4.0), f, f2)), world);
         if (rayTraceResult == null) {
             return 4.0f;
         }

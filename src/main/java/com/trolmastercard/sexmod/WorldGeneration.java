@@ -114,13 +114,13 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
         return nBTTagCompound;
     }
 
-    static String a(e1_class217 e1_class2172) {
-        return e1_class2172.c + "|" + e1_class2172.b;
+    static String a(Point2D point) {
+        return point.x + "|" + point.y;
     }
 
-    static e1_class217 a(String string) {
+    static Point2D a(String string) {
         String[] stringArray = string.split("\\|");
-        return new e1_class217(Integer.parseInt(stringArray[0]), Integer.parseInt(stringArray[1]));
+        return new Point2D(Integer.parseInt(stringArray[0]), Integer.parseInt(stringArray[1]));
     }
 
     public void generate(Random random, int n, int n2, World world, IChunkGenerator iChunkGenerator, IChunkProvider iChunkProvider) {
@@ -155,7 +155,7 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
         int n8;
         for (a_inner345 a_inner3452 : this.d) {
             int n9 = n8 = a_inner3452.a.equals(b_inner3462.f) ? 156 : 62;
-            if (!(a_inner3452.b.a(n, n2) < (float)n8)) continue;
+            if (!(a_inner3452.b.distanceTo(n, n2) < (float)n8)) continue;
             return;
         }
         int n10 = b_inner3462.c.getX();
@@ -183,7 +183,7 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
             return;
         }
         n5 = n11;
-        this.d.add(new a_inner345(new e1_class217(n, n2), b_inner3462.f));
+        this.d.add(new a_inner345(new Point2D(n, n2), b_inner3462.f));
         b_inner3462.b.generate(world, random, new BlockPos(n8, n5, n7));
         if (!b_inner3462.d) {
             return;
@@ -301,10 +301,10 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
     }
 
     static class a_inner345 {
-        e1_class217 b;
+        Point2D b;
         String a;
 
-        public a_inner345(e1_class217 e1_class2172, String string) {
+        public a_inner345(Point2D e1_class2172, String string) {
             this.b = e1_class2172;
             this.a = string;
         }

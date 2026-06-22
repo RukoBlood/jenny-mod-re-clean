@@ -23,16 +23,15 @@ import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import net.minecraft.client.resources.I18n;
 
-public class PornWarning
-extends JFrame {
+public class AdultContentWarning extends JFrame {
     private final JPanel panel;
-    static PornWarning window;
+    static AdultContentWarning window;
     static public boolean isAdult;
 
     public static void ShowWarning() {
         EventQueue.invokeLater(() -> {
             try {
-                window = new PornWarning();
+                window = new AdultContentWarning();
                 window.setVisible(true);
                 window.requestFocus();
             } catch (Exception exception) {
@@ -41,7 +40,7 @@ extends JFrame {
         });
     }
 
-    public PornWarning() {
+    public AdultContentWarning() {
         this.setResizable(false);
         this.setBounds(100, 100, 600, 260);
         this.panel = new JPanel();

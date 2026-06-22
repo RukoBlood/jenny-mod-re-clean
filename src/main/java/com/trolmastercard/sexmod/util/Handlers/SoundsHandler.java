@@ -5,11 +5,12 @@
  *  net.minecraftforge.fml.common.registry.ForgeRegistries
  *  net.minecraftforge.registries.IForgeRegistryEntry
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.util.Handlers;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;

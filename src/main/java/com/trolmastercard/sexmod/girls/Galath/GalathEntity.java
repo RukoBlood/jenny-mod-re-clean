@@ -37,9 +37,9 @@ import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
 import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockBanner;
@@ -118,10 +118,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class GalathEntity
-extends GirlEntity
-implements IEntityMultiPart,
-        b7_class68 {
+public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_class68 {
     final static public float a2 = 0.6f;
     final static public float b6 = 0.6f;
     final static public int bj = 10;
@@ -218,8 +215,8 @@ implements IEntityMultiPart,
     final static public float bS = 5.0f;
     final static public int a1 = 60;
     BossInfoServer aO = new BossInfoServer(new TextComponentString(this.getGirlName()), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
-    bb_class74 b2 = new bb_class74(this, "energyBallHitBox", 0.75f, 0.75f);
-    bb_class74 V = new bb_class74(this, "energyBallHitBox", 0.75f, 0.75f);
+    MultiPartHitbox b2 = new MultiPartHitbox(this, "energyBallHitBox", 0.75f, 0.75f);
+    MultiPartHitbox V = new MultiPartHitbox(this, "energyBallHitBox", 0.75f, 0.75f);
     public h8_class399 bZ = null;
     public Vec3d O = null;
     public Vec3d bL = null;
@@ -289,7 +286,7 @@ implements IEntityMultiPart,
             return;
         }
         this.setCurrentAction(Action.MASTERBATE);
-        this.void_b(180.0f - (float)gc_class360.b(Math.atan2(vec3d.x - entityPlayer.posX, vec3d.z - entityPlayer.posZ)));
+        this.void_b(180.0f - (float) TrigMath.toDegrees(Math.atan2(vec3d.x - entityPlayer.posX, vec3d.z - entityPlayer.posZ)));
         be_class78.a(8000, () -> {
             EntityPlayer p1 = this.net_minecraft_entity_player_EntityPlayer_z();
             if (p1 == null) {
@@ -845,19 +842,19 @@ implements IEntityMultiPart,
     }
 
     void void_h() {
-        this.b2.a = false;
-        this.V.a = false;
+        this.b2.isCollidable = false;
+        this.V.isCollidable = false;
         if ((float)this.ad < 9.0f) {
             return;
         }
         if ((float)this.ad > 30.0f) {
             return;
         }
-        this.b2.a = true;
-        this.V.a = true;
+        this.b2.isCollidable = true;
+        this.V.isCollidable = true;
         boolean bl = this.entityDataManager.get(ay);
-        Vec3d vec3d = this.getPositionVector().add(ck_class135.a(bl ? ck_class135.c(bz) : bz, 180.0f + this.renderYawOffset));
-        Vec3d vec3d2 = this.getPositionVector().add(ck_class135.a(bl ? ck_class135.c(bC) : bC, 180.0f + this.renderYawOffset));
+        Vec3d vec3d = this.getPositionVector().add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(bz) : bz, 180.0f + this.renderYawOffset));
+        Vec3d vec3d2 = this.getPositionVector().add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(bC) : bC, 180.0f + this.renderYawOffset));
         this.b2.setLocationAndAngles(vec3d.x, vec3d.y, vec3d.z, this.renderYawOffset, 0.0f);
         this.V.setLocationAndAngles(vec3d2.x, vec3d2.y, vec3d2.z, this.renderYawOffset, 0.0f);
         this.b2.onUpdate();
@@ -883,9 +880,9 @@ implements IEntityMultiPart,
         this.b4 = this.a9;
         this.a_ = this.bg;
         Vec3d vec3d = this.W.subtract(this.bD);
-        Vec3d vec3d2 = ck_class135.a(vec3d, this.renderYawOffset + 180.0f);
-        this.a9 = gc_class360.c(be_class78.b(vec3d2.z * 40.0, -50.0, 50.0));
-        this.bg = gc_class360.c(be_class78.b(vec3d2.x * 40.0, -50.0, 50.0));
+        Vec3d vec3d2 = VectorMath.rotate(vec3d, this.renderYawOffset + 180.0f);
+        this.a9 = TrigMath.toRadians(be_class78.b(vec3d2.z * 40.0, -50.0, 50.0));
+        this.bg = TrigMath.toRadians(be_class78.b(vec3d2.x * 40.0, -50.0, 50.0));
     }
 
     public void f(Vec3d vec3d) {
@@ -1156,7 +1153,7 @@ implements IEntityMultiPart,
         Vec3d vec3d = this.getPositionVector();
         Vec3d vec3d2 = entity.getPositionVector();
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        float f = (float)gc_class360.b(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
+        float f = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
         this.void_b(f);
         this.f.clearPath();
         this.f.tryMoveToEntityLiving(entity, 0.65f);
@@ -1423,7 +1420,7 @@ implements IEntityMultiPart,
         if (entityPlayer == null) {
             return;
         }
-        Vec3d vec3d = bl ? new Vec3d(-0.5, 0.5f - entityPlayer.getEyeHeight(), 0.4f).add(this.net_minecraft_util_math_Vec3d_o()) : ck_class135.a(new Vec3d(0.5, 0.5f - entityPlayer.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
+        Vec3d vec3d = bl ? new Vec3d(-0.5, 0.5f - entityPlayer.getEyeHeight(), 0.4f).add(this.net_minecraft_util_math_Vec3d_o()) : VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayer.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
@@ -1974,7 +1971,7 @@ implements IEntityMultiPart,
         Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
         Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(f__class2972.lastTickPosX, f__class2972.lastTickPosY, f__class2972.lastTickPosZ), f__class2972.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
-        f__class2972.renderYawOffset = f2 = (float)gc_class360.b(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
+        f__class2972.renderYawOffset = f2 = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
         f__class2972.prevRenderYawOffset = f2;
         return Float.valueOf(f2);
     }
@@ -2570,7 +2567,7 @@ implements IEntityMultiPart,
                     this.U = true;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     float f = this.java_lang_Float_I().floatValue() + 220.0f;
-                    Vec3d vec3d = ck_class135.a(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
                     SexUI.d();
                     break;
@@ -2590,7 +2587,7 @@ implements IEntityMultiPart,
                     break;
                 }
                 case "creampie": {
-                    ga_class358.a(new ep_class263(100, em_class2582 -> ck_class135.a(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.6f, 0.5f));
+                    ga_class358.a(new ep_class263(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.6f, 0.5f));
                     // TODO fallthrough looks intentional
                 }
                 case "creampieGalath": {
@@ -2627,7 +2624,7 @@ implements IEntityMultiPart,
                     MovementInput movementInput = entityPlayerSP.movementInput;
                     Vec2f vec2f = movementInput.getMoveVector();
                     if (vec2f.x == 0.0f && vec2f.y == 0.0f) break;
-                    Vec3d vec3d = ck_class135.a(new Vec3d(-vec2f.x, 0.0, vec2f.y), Reference.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), Reference.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(-vec2f.x, 0.0, vec2f.y), Reference.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), Reference.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
                     PackageHandler.networkWrapper.sendToServer((IMessage)new UpdateVelocity(vec3d, this.girlID()));
                     break;
                 }

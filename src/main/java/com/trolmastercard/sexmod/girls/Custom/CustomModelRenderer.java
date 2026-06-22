@@ -25,6 +25,7 @@ import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.TrigMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -81,8 +82,8 @@ extends GeoEntityRenderer<CustomModelEntity> {
         this.f.put("customLowerArmL", "lowerArmL");
         this.f.put("customArmR", "armR");
         this.f.put("customLowerArmR", "lowerArmR");
-        this.g.put("lowerArmR", em_class2582 -> gc_class360.c(em_class2582.float_ai()));
-        this.g.put("lowerArmL", em_class2582 -> gc_class360.c(em_class2582.float_T()));
+        this.g.put("lowerArmR", em_class2582 -> TrigMath.toRadians(em_class2582.float_ai()));
+        this.g.put("lowerArmL", em_class2582 -> TrigMath.toRadians(em_class2582.float_T()));
     }
 
     boolean d(CustomModelEntity cy_class1532) {

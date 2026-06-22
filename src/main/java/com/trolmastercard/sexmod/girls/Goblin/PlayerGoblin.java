@@ -29,6 +29,8 @@ import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
@@ -92,7 +94,7 @@ implements ai_class30 {
 
     @Override
     public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
-        return new fv_class331();
+        return new KoboldLimb();
     }
 
     @Override
@@ -309,7 +311,7 @@ implements ai_class30 {
         } else if (fp_class3242 != Action.START_THROWING) {
             vec3d2 = vec3d2.subtract(0.0, 2.0, 0.0);
         }
-        vec3d2 = ck_class135.a(vec3d2, f2 + f3);
+        vec3d2 = VectorMath.rotate(vec3d2, f2 + f3);
         return vec3d2;
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 /*
-* Related to GirlEntity
+* Related to PlayerJenny
 * */
 public class a0_class6 extends ModelBase implements IRenderer {
     final private ModelRenderer renderer;

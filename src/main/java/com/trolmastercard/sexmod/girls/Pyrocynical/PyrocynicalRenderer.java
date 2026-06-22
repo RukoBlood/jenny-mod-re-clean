@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.girls.Pyrocynical;
 
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.SoundsHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.be_class78;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;

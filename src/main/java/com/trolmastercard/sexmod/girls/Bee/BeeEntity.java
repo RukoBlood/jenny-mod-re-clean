@@ -16,6 +16,7 @@ import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.BeeInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIPanic;
@@ -151,7 +152,7 @@ extends Supporter {
         if (entityPlayer == null) {
             return;
         }
-        if (BeeEntity.com_trolmastercard_sexmod_em_class258_d(entityPlayer) != null) {
+        if (BeeEntity.getActiveSceneInfo(entityPlayer) != null) {
             return;
         }
         if (PlayerGirl.e(entityPlayer)) {

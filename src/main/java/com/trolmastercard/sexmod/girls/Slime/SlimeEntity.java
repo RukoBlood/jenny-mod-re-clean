@@ -13,7 +13,9 @@ import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -191,7 +193,7 @@ extends GirlEntity {
             return;
         }
         Vec3d vec3d = this.getPositionVector();
-        Vec3d vec3d2 = ck_class135.a(new Vec3d(0.0, 0.0, 0.65f), this.java_lang_Float_I().floatValue());
+        Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.java_lang_Float_I().floatValue());
         vec3d = vec3d.add(vec3d2);
         entityPlayerSP.setPosition(vec3d.x, vec3d.y, vec3d.z);
         entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
@@ -238,7 +240,7 @@ extends GirlEntity {
             return;
         }
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 1.0);
-        if (entityPlayer == null || !entityPlayer.onGround || SlimeEntity.com_trolmastercard_sexmod_em_class258_d(entityPlayer) != null) {
+        if (entityPlayer == null || !entityPlayer.onGround || SlimeEntity.getActiveSceneInfo(entityPlayer) != null) {
             return;
         }
         this.c(this.getPositionVector());
@@ -251,7 +253,7 @@ extends GirlEntity {
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         this.void_e(entityPlayer.getPersistentID());
         entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
-        Vec3d vec3d = ck_class135.a(new Vec3d(0.0, 0.0, 0.65f), this.java_lang_Float_I().floatValue());
+        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.java_lang_Float_I().floatValue());
         entityPlayer.setPosition(this.posX + vec3d.x, this.posY, this.posZ + vec3d.z);
         if (this.currentAction() == Action.WAITDOGGY) {
             this.setCurrentAction(Action.DOGGYSTART);
@@ -307,7 +309,7 @@ extends GirlEntity {
         this.rotationYaw = f = this.entityDataManager.get(R).floatValue();
         this.prevRotationYaw = f;
         Vec3d vec3d = new Vec3d(0.0, 0.0, 0.7f);
-        vec3d = ck_class135.a(vec3d, f);
+        vec3d = VectorMath.rotate(vec3d, f);
         this.motionX = vec3d.x;
         this.motionZ = vec3d.z;
         this.N = 0;
@@ -325,7 +327,7 @@ extends GirlEntity {
         if (entityPlayer == null) {
             return this.float_f();
         }
-        if (SlimeEntity.com_trolmastercard_sexmod_em_class258_d(entityPlayer) != null) {
+        if (SlimeEntity.getActiveSceneInfo(entityPlayer) != null) {
             return this.float_f();
         }
         return (float)Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29578f + 90.0f;

@@ -47,7 +47,7 @@ public class SendCompanionHome implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
     }
 
-    public static class a_inner367 implements IMessageHandler<SendCompanionHome, IMessage> {
+    public static class Handler implements IMessageHandler<SendCompanionHome, IMessage> {
         public IMessage a(SendCompanionHome gg_class3662, MessageContext messageContext) {
             if (!gg_class3662.b || messageContext.side != Side.SERVER) {
                 System.out.println("received an invalid message @SendCompanionHome :(");

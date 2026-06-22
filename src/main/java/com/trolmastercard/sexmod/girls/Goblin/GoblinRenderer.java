@@ -20,6 +20,7 @@ import javax.vecmath.Vector4f;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.TrigMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -39,8 +40,7 @@ import software.bernie.geckolib3.geo.render.built.GeoCube;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class GoblinRenderer
-extends d6_class165<GoblinEntity> {
+public class GoblinRenderer extends d6_class165<GoblinEntity> {
     final static Vec3i w = new Vec3i(255, 255, 255);
     final static float K = -420.69f;
     final static float A = 8.0f;
@@ -394,8 +394,8 @@ extends d6_class165<GoblinEntity> {
         if (!bl) {
             return;
         }
-        geoBone.setRotationX(geoBone.getRotationX() + gc_class360.c(be_class78.b(x, -f, f)));
-        geoBone.setRotationZ(geoBone.getRotationZ() + gc_class360.c(be_class78.b(N, -f2, f2)));
+        geoBone.setRotationX(geoBone.getRotationX() + TrigMath.toRadians(be_class78.b(x, -f, f)));
+        geoBone.setRotationZ(geoBone.getRotationZ() + TrigMath.toRadians(be_class78.b(N, -f2, f2)));
     }
 
     public static void a(GirlEntity em_class2582, GeoBone geoBone) {
@@ -407,7 +407,7 @@ extends d6_class165<GoblinEntity> {
         if (minecraft.isGamePaused()) {
             return;
         }
-        geoBone.setRotationX(geoBone.getRotationX() + gc_class360.c(f));
+        geoBone.setRotationX(geoBone.getRotationX() + TrigMath.toRadians(f));
     }
 
     public static void a(GeoBone geoBone, String string) {

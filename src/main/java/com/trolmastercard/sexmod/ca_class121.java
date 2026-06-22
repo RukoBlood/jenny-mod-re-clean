@@ -35,7 +35,17 @@ extends Container {
             int n;
             IItemHandler iItemHandler = (IItemHandler)eb_class2362.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
             this.d = eb_class2362;
-            this.b = new Slot[]{new fe_class305(fe_class305.b_inner307.WEAPON, iItemHandler, fe_class305.b_inner307.WEAPON.id, 41, 60), new fe_class305(fe_class305.b_inner307.BOW, iItemHandler, fe_class305.b_inner307.BOW.id, 59, 60), new fe_class305(fe_class305.b_inner307.HELMET, iItemHandler, fe_class305.b_inner307.HELMET.id, 81, 60), new fe_class305(fe_class305.b_inner307.CHEST_PLATE, iItemHandler, fe_class305.b_inner307.CHEST_PLATE.id, 100, 60), new fe_class305(fe_class305.b_inner307.PANTS, iItemHandler, fe_class305.b_inner307.PANTS.id, 119, 60), new fe_class305(fe_class305.b_inner307.SHOES, iItemHandler, fe_class305.b_inner307.SHOES.id, 138, 60), new fe_class305(fe_class305.b_inner307.ROD, iItemHandler, fe_class305.b_inner307.ROD.id, 22, 60)};
+
+            this.b = new Slot[]{
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.WEAPON, iItemHandler, GirlInventorySlot.GirlEquipmentType.WEAPON.id, 41, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.BOW, iItemHandler, GirlInventorySlot.GirlEquipmentType.BOW.id, 59, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.HELMET, iItemHandler, GirlInventorySlot.GirlEquipmentType.HELMET.id, 81, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.CHEST_PLATE, iItemHandler, GirlInventorySlot.GirlEquipmentType.CHEST_PLATE.id, 100, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.PANTS, iItemHandler, GirlInventorySlot.GirlEquipmentType.PANTS.id, 119, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.SHOES, iItemHandler, GirlInventorySlot.GirlEquipmentType.SHOES.id, 138, 60),
+                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.ROD, iItemHandler, GirlInventorySlot.GirlEquipmentType.ROD.id, 22, 60)
+            };
+
             ArrayList<Slot> arrayList = new ArrayList<Slot>();
             for (n = 0; n < 3; ++n) {
                 for (int i = 0; i < 9; ++i) {

@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.properties.IProperty;
@@ -39,8 +41,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class cj_class134 {
     public static float a(float f, float f2) {
-        f = gc_class360.b(f);
-        f2 = gc_class360.b(f2);
+        f = TrigMath.b(f);
+        f2 = TrigMath.b(f2);
         float f3 = Math.abs(f - f2);
         float f4 = 360.0f - f3;
         float f5 = Math.min(f3, f4);
@@ -83,7 +85,7 @@ public class cj_class134 {
         } else {
             vec3d = new Vec3d(vec3d.x, vec3d.y, -vec3d.z);
             float f2 = -Reference.LerpFloat(entityLivingBase.prevRenderYawOffset, entityLivingBase.renderYawOffset, f);
-            vec3d = ck_class135.a(vec3d, f2);
+            vec3d = VectorMath.rotate(vec3d, f2);
         }
         return vec3d.normalize();
     }

@@ -19,8 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class az_class56
-extends GuiContainer {
+public class az_class56 extends GuiContainer {
     final static ResourceLocation b = new ResourceLocation("sexmod", "textures/gui/girlinventory.png");
     UUID c;
     LunaEntity d;

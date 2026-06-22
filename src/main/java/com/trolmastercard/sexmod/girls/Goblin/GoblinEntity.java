@@ -37,6 +37,7 @@ import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -340,40 +341,40 @@ implements ai_class30 {
     }
 
     @Override
-    public e1_class217 g(int n) {
+    public Point2D g(int n) {
         switch (n) {
             case 0: {
-                return new e1_class217(40, 130);
+                return new Point2D(40, 130);
             }
             case 1: {
-                return new e1_class217(60, 130);
+                return new Point2D(60, 130);
             }
             case 2: {
-                return new e1_class217(80, 130);
+                return new Point2D(80, 130);
             }
             case 3: {
-                return new e1_class217(100, 130);
+                return new Point2D(100, 130);
             }
             case 4: {
-                return new e1_class217(120, 130);
+                return new Point2D(120, 130);
             }
             case 5: {
-                return new e1_class217(140, 130);
+                return new Point2D(140, 130);
             }
             case 6: {
-                return new e1_class217(160, 130);
+                return new Point2D(160, 130);
             }
             case 7: {
-                return new e1_class217(180, 130);
+                return new Point2D(180, 130);
             }
             case 8: {
-                return new e1_class217(200, 0);
+                return new Point2D(200, 0);
             }
             case 9: {
-                return new e1_class217(200, 130);
+                return new Point2D(200, 130);
             }
         }
-        return e1_class217.a;
+        return Point2D.ZERO;
     }
 
     @Override

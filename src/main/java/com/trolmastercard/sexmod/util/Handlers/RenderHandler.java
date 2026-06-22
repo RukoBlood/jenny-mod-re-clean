@@ -4,8 +4,9 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.client.registry.RenderingRegistry
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.util.Handlers;
 
+import com.trolmastercard.sexmod.CrossModel;
 import com.trolmastercard.sexmod.girls.Allie.*;
 import com.trolmastercard.sexmod.girls.Bee.*;
 import com.trolmastercard.sexmod.girls.Bia.*;

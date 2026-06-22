@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -329,7 +330,7 @@ public class FighterAI extends f_class282 {
             return;
         }
         Vec3d vec3d = new Vec3d(0.0, 0.0, 0.1f);
-        vec3d = ck_class135.a(vec3d, this.fighter.rotationYaw);
+        vec3d = VectorMath.rotate(vec3d, this.fighter.rotationYaw);
         this.fighter.motionX = vec3d.x;
         this.fighter.motionZ = vec3d.z;
     }
