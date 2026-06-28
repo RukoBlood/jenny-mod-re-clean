@@ -48,6 +48,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
 
+/*
+* I need help with this project.
+* I want to reverse engineer this mod so bad.
+* Please, if you know Java, modded 1.12.2 or reverse engineered mods before,
+* fork this project on GitHub, and request your bugfixes or reversed code.
+*/
+
 @Mod(modid="sexmod", name="Fapcraft", version="1.1.0", dependencies="after:geckolib")
 public class Main {
     @Mod.Instance
