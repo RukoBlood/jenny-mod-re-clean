@@ -1743,13 +1743,13 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         return list.get(0);
     }
 
-    EntityMob a(AxisAlignedBB axisAlignedBB) {
-        List<EntityMob> list = this.world.getEntitiesWithinAABB(EntityMob.class, axisAlignedBB);
-        if (list.isEmpty()) {
+    EntityMob a(AxisAlignedBB aabb) {
+        List<EntityMob> mobList = this.world.getEntitiesWithinAABB(EntityMob.class, aabb);
+        if (mobList.isEmpty()) {
             return null;
         }
         ArrayList<EntityMob> arrayList = new ArrayList<EntityMob>();
-        for (EntityMob object : list) {
+        for (EntityMob object : mobList) {
             if (!d_class156.a(object)) continue;
             arrayList.add(object);
         }
@@ -1788,22 +1788,22 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (entityLivingBase.dimension != this.dimension) {
             return false;
         }
-        float f2 = this.getDistance(entityLivingBase);
+        float dist = this.getDistance(entityLivingBase);
         float f3 = f = this.maybeMountedByMangFn() ? 16.0f : 30.0f;
-        if (f2 > f) {
+        if (dist > f) {
             return false;
         }
         if (!(entityLivingBase instanceof EntityPlayer)) {
             return true;
         }
-        EntityPlayer entityPlayer = (EntityPlayer)entityLivingBase;
-        if (GirlEntity.com_trolmastercard_sexmod_em_class258_c(entityPlayer.getPersistentID()) != null) {
+        EntityPlayer player = (EntityPlayer)entityLivingBase;
+        if (GirlEntity.com_trolmastercard_sexmod_em_class258_c(player.getPersistentID()) != null) {
             return false;
         }
-        if (entityPlayer.isCreative()) {
+        if (player.isCreative()) {
             return false;
         }
-        return !entityPlayer.isSpectator();
+        return !player.isSpectator();
     }
 
     @Override
@@ -2146,60 +2146,60 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     @Override
-    protected boolean a(Action fp_class3242, String string, boolean bl, AnimationEvent animationEvent) {
-        if (fp_class3242 == Action.MASTERBATE_SITTING && this.bx) {
+    protected boolean a(Action action, String string, boolean bl, AnimationEvent event) {
+        if (action == Action.MASTERBATE_SITTING && this.bx) {
             this.bx = false;
-            this.createAnimation("animation.galath.masterbating_sitting", true, animationEvent, true);
+            this.createAnimation("animation.galath.masterbating_sitting", true, event, true);
             return true;
         }
-        if (fp_class3242 == Action.MORNING_BLOWJOB_FAST && this.S) {
+        if (action == Action.MORNING_BLOWJOB_FAST && this.S) {
             this.setCurrentAction(Action.MORNING_BLOWJOB_CUM);
             return true;
         }
-        if (fp_class3242 == Action.MORNING_BLOWJOB_FAST && this.aD) {
-            this.createAnimation("animation.shared.bed_fast", true, animationEvent, true);
+        if (action == Action.MORNING_BLOWJOB_FAST && this.aD) {
+            this.createAnimation("animation.shared.bed_fast", true, event, true);
             this.aD = false;
             return true;
         }
-        if (fp_class3242 == Action.MORNING_BLOWJOB_CUM) {
+        if (action == Action.MORNING_BLOWJOB_CUM) {
             this.setCurrentAction((Action)null);
             return true;
         }
-        if (fp_class3242 == Action.PUSSY_LICKING && this.a5) {
+        if (action == Action.PUSSY_LICKING && this.a5) {
             this.a5 = false;
-            this.createAnimation("animation.galath.pussy_licking", true, animationEvent, true);
+            this.createAnimation("animation.galath.pussy_licking", true, event, true);
             return true;
         }
-        if (fp_class3242 == Action.MORNING_BLOWJOB_SLOW && (this.S || HandlePlayerMovement.isThrusting)) {
+        if (action == Action.MORNING_BLOWJOB_SLOW && (this.S || HandlePlayerMovement.isThrusting)) {
             this.aD = true;
             this.setCurrentAction(Action.MORNING_BLOWJOB_FAST);
-            this.createAnimation("animation.shared.bed_soft", true, animationEvent, true);
+            this.createAnimation("animation.shared.bed_soft", true, event, true);
             return true;
         }
-        if (fp_class3242 == Action.MORNING_BLOWJOB_SLOW && this.bt) {
+        if (action == Action.MORNING_BLOWJOB_SLOW && this.bt) {
             this.bt = false;
-            this.createAnimation("animation.shared.bed_slow", true, animationEvent, true);
+            this.createAnimation("animation.shared.bed_slow", true, event, true);
             return true;
         }
-        if (fp_class3242 == Action.MORNING_BLOWJOB_FAST && !HandlePlayerMovement.isThrusting) {
+        if (action == Action.MORNING_BLOWJOB_FAST && !HandlePlayerMovement.isThrusting) {
             this.setCurrentAction(Action.MORNING_BLOWJOB_SLOW);
             this.bt = true;
-            this.createAnimation("animation.shared.bed_back", true, animationEvent, true);
+            this.createAnimation("animation.shared.bed_back", true, event, true);
             return true;
         }
         return false;
     }
 
     public float float_b(float f) {
-        Action fp_class3242 = this.currentAction();
-        if (fp_class3242 == Action.PUSSY_LICKING && !this.a5) {
+        Action action = this.currentAction();
+        if (action == Action.PUSSY_LICKING && !this.a5) {
             return 0.0f;
         }
-        if (fp_class3242 == Action.MASTERBATE_SITTING && !this.bx) {
+        if (action == Action.MASTERBATE_SITTING && !this.bx) {
             return 1.0f;
         }
         float f2 = Action.d(this, f);
-        if (fp_class3242 == Action.MASTERBATE_SITTING) {
+        if (action == Action.MASTERBATE_SITTING) {
             return f2;
         }
         return 1.0f - f2;
@@ -2207,19 +2207,19 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     // TODO
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.boolean_h()) {
-            this.createAnimation("animation.galath.idle", true, animationEvent);
+            this.createAnimation("animation.galath.idle", true, event);
             return PlayState.CONTINUE;
         }
         Action fp_class3242 = this.currentAction();
-        AnimationController animationController = animationEvent.getController();
+        AnimationController animationController = event.getController();
         animationController.setAnimationSpeed(1.0);
         if (animationController.equals(this.eyesController)) {
             if (!fp_class3242.autoBlink || fp_class3242 == Action.GALATH_DE_SUMMON) {
                 return PlayState.STOP;
             }
-            this.createAnimation("animation.galath.blink", true, animationEvent);
+            this.createAnimation("animation.galath.blink", true, event);
             return PlayState.CONTINUE;
         }
         if (animationController.equals(this.movementController)) {
@@ -2227,16 +2227,16 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 return PlayState.STOP;
             }
             if (!this.onGround) {
-                this.createAnimation("animation.galath.controlled_flight", true, animationEvent);
+                this.createAnimation("animation.galath.controlled_flight", true, event);
                 return PlayState.CONTINUE;
             }
             Vec3d vec3d = this.getPositionVector().subtract(new Vec3d(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ));
             if (vec3d.equals(Vec3d.ZERO)) {
-                this.createAnimation("animation.galath.idle", true, animationEvent);
+                this.createAnimation("animation.galath.idle", true, event);
                 return PlayState.CONTINUE;
             }
             this.rotationYaw = this.rotationYawHead;
-            this.createAnimation("animation.galath." + (this.entityDataManager.get(bT) != false ? "run" : "walk"), true, animationEvent);
+            this.createAnimation("animation.galath." + (this.entityDataManager.get(bT) != false ? "run" : "walk"), true, event);
             return PlayState.CONTINUE;
         }
         switch (this.currentAction()) {
@@ -2244,129 +2244,129 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 return PlayState.STOP;
             }
             case FLY: {
-                this.createAnimation("animation.galath.idle_flying", true, animationEvent);
+                this.createAnimation("animation.galath.idle_flying", true, event);
                 break;
             }
             case SUMMON_SKELETON: {
-                this.createAnimation("animation.galath.summon_skeleton" + (this.entityDataManager.get(ay) != false ? "Mirrored" : ""), true, animationEvent);
+                this.createAnimation("animation.galath.summon_skeleton" + (this.entityDataManager.get(ay) != false ? "Mirrored" : ""), true, event);
                 break;
             }
             case ATTACK_SWORD: {
-                this.createAnimation("animation.galath.attack", true, animationEvent);
+                this.createAnimation("animation.galath.attack", true, event);
                 break;
             }
             case KNOCK_OUT_FLY: {
                 animationController.setAnimationSpeed(1.5);
-                this.createAnimation("animation.galath.knockout_air", true, animationEvent);
+                this.createAnimation("animation.galath.knockout_air", true, event);
                 break;
             }
             case KNOCK_OUT_GROUND: {
-                this.createAnimation("animation.galath.knocked_out", true, animationEvent);
+                this.createAnimation("animation.galath.knocked_out", true, event);
                 break;
             }
             case KNOCK_OUT_STAND_UP: {
-                this.createAnimation("animation.galath.knocked_out_stand_up", true, animationEvent);
+                this.createAnimation("animation.galath.knocked_out_stand_up", true, event);
                 break;
             }
             case RAPE_PREPARE: {
-                this.createAnimation("animation.galath.rape_prepare", true, animationEvent);
+                this.createAnimation("animation.galath.rape_prepare", true, event);
                 break;
             }
             case RAPE_CHARGE: {
-                this.createAnimation("animation.galath.rape_charge", true, animationEvent);
+                this.createAnimation("animation.galath.rape_charge", true, event);
                 break;
             }
             case RAPE_INTRO: {
-                this.createAnimation("animation.galath.rape_intro", true, animationEvent);
+                this.createAnimation("animation.galath.rape_intro", true, event);
                 break;
             }
             case RAPE_ON_GOING: {
-                this.createAnimation("animation.galath.rape" + this.b1, true, animationEvent);
+                this.createAnimation("animation.galath.rape" + this.b1, true, event);
                 break;
             }
             case RAPE_CUM: {
-                this.createAnimation("animation.galath.rape_cum", true, animationEvent);
+                this.createAnimation("animation.galath.rape_cum", true, event);
                 break;
             }
             case RAPE_CUM_IDLE: {
-                this.createAnimation("animation.galath.rape_cum_idle", true, animationEvent);
+                this.createAnimation("animation.galath.rape_cum_idle", true, event);
                 break;
             }
             case CORRUPT_FAST: {
-                this.createAnimation("animation.galath.corrupt_" + (this.aT ? "hard" : "soft"), true, animationEvent);
+                this.createAnimation("animation.galath.corrupt_" + (this.aT ? "hard" : "soft"), true, event);
                 break;
             }
             case CORRUPT_SLOW: {
-                this.createAnimation("animation.galath.corrupt_slow", true, animationEvent);
+                this.createAnimation("animation.galath.corrupt_slow", true, event);
                 break;
             }
             case CORRUPT_INTRO: {
-                this.createAnimation("animation.galath.corrupt_intro", true, animationEvent);
+                this.createAnimation("animation.galath.corrupt_intro", true, event);
                 break;
             }
             case CORRUPT_CUM: {
-                this.createAnimation("animation.galath.corrupt_cum", true, animationEvent);
+                this.createAnimation("animation.galath.corrupt_cum", true, event);
                 break;
             }
             case CONTROLLED_FLIGHT: {
-                this.createAnimation("animation.galath.controlled_flight", true, animationEvent);
+                this.createAnimation("animation.galath.controlled_flight", true, event);
                 break;
             }
             case BOOST: {
-                this.createAnimation("animation.galath.boost", true, animationEvent);
+                this.createAnimation("animation.galath.boost", true, event);
                 break;
             }
             case GALATH_SUMMON: {
-                this.createAnimation("animation.galath.summon", false, animationEvent);
+                this.createAnimation("animation.galath.summon", false, event);
                 break;
             }
             case GALATH_DE_SUMMON: {
-                this.createAnimation("animation.galath.desummon" + (this.onGround ? "_standing" : ""), true, animationEvent);
+                this.createAnimation("animation.galath.desummon" + (this.onGround ? "_standing" : ""), true, event);
                 break;
             }
             case GIVE_COIN: {
-                this.createAnimation("animation.galath.give_coin", true, animationEvent);
+                this.createAnimation("animation.galath.give_coin", true, event);
                 break;
             }
             case MASTERBATE: {
-                this.createAnimation("animation.galath.masterbate", true, animationEvent);
+                this.createAnimation("animation.galath.masterbate", true, event);
                 break;
             }
             case RUN: {
                 animationController.setAnimationSpeed(0.7);
-                this.createAnimation("animation.galath.running", true, animationEvent);
+                this.createAnimation("animation.galath.running", true, event);
                 break;
             }
             case HUG_MANG: {
-                this.createAnimation("animation.galath.hug_mang", true, animationEvent);
+                this.createAnimation("animation.galath.hug_mang", true, event);
                 break;
             }
             case PUSSY_LICKING: {
-                this.createAnimation(this.a5 ? "animation.galath.pussy_licking_forward" : "animation.galath.pussy_licking", true, animationEvent);
+                this.createAnimation(this.a5 ? "animation.galath.pussy_licking_forward" : "animation.galath.pussy_licking", true, event);
                 break;
             }
             case MASTERBATE_SITTING: {
-                this.createAnimation(this.bx ? "animation.galath.pussy_licking_back" : "animation.galath.masterbating_sitting", true, animationEvent);
+                this.createAnimation(this.bx ? "animation.galath.pussy_licking_back" : "animation.galath.masterbating_sitting", true, event);
                 break;
             }
             case MASTERBATE_SITTING_CUM: {
-                this.createAnimation("animation.galath.masterbating_sitting_cum", true, animationEvent);
+                this.createAnimation("animation.galath.masterbating_sitting_cum", true, event);
                 break;
             }
             case MORNING_BLOWJOB_SLOW: {
-                this.createAnimation(this.bt ? "animation.shared.bed_back" : "animation.shared.bed_slow", true, animationEvent);
+                this.createAnimation(this.bt ? "animation.shared.bed_back" : "animation.shared.bed_slow", true, event);
                 break;
             }
             case MORNING_BLOWJOB_FAST: {
                 if (this.aD) {
-                    this.createAnimation("animation.shared.bed_soft", true, animationEvent);
+                    this.createAnimation("animation.shared.bed_soft", true, event);
                     break;
                 }
-                this.a("animation.shared.bed_fast", 4, 0.75f, animationEvent);
+                this.a("animation.shared.bed_fast", 4, 0.75f, event);
                 break;
             }
             case MORNING_BLOWJOB_CUM: {
-                this.createAnimation("animation.shared.bed_cum", true, animationEvent);
+                this.createAnimation("animation.shared.bed_cum", true, event);
             }
         }
         return PlayState.CONTINUE;
@@ -2569,7 +2569,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     float f = this.java_lang_Float_I().floatValue() + 220.0f;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "enableBoyCam": {
@@ -2651,16 +2651,16 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 case "setCoinLook": {
                     float f;
                     if (!this.boolean_n()) break;
-                    EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    entityPlayerSP.rotationYaw = f = this.java_lang_Float_I().floatValue() + 180.0f;
-                    entityPlayerSP.prevRotationYaw = f;
-                    entityPlayerSP.rotationPitch = 0.0f;
-                    entityPlayerSP.prevRotationPitch = 0.0f;
+                    EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
+                    playerSP.rotationYaw = f = this.java_lang_Float_I() + 180.0f;
+                    playerSP.prevRotationYaw = f;
+                    playerSP.rotationPitch = 0.0f;
+                    playerSP.prevRotationPitch = 0.0f;
                     break;
                 }
                 case "sexui": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "boostSound": {
@@ -2736,15 +2736,15 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             if (entityMountEvent.isMounting()) {
                 return;
             }
-            Entity entity = entityMountEvent.getEntityBeingMounted();
-            if (!(entity instanceof GalathEntity)) {
+            Entity mountedEntity = entityMountEvent.getEntityBeingMounted();
+            if (!(mountedEntity instanceof GalathEntity)) {
                 return;
             }
-            if (entity.world.isRemote) {
+            if (mountedEntity.world.isRemote) {
                 hf_class401.c();
                 return;
             }
-            ((GalathEntity)entity).void_t();
+            ((GalathEntity)mountedEntity).void_t();
         }
 
         @SubscribeEvent(priority=EventPriority.HIGH)
@@ -2799,7 +2799,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         public void a(RenderWorldLastEvent renderWorldLastEvent) {
             Minecraft minecraft = Minecraft.getMinecraft();
             RenderManager renderManager = minecraft.getRenderManager();
-            float f = minecraft.getRenderPartialTicks();
+            float ticks = minecraft.getRenderPartialTicks();
             try {
                 for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
                     EnergyBallEntity c4_class1132;
@@ -2807,7 +2807,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     Vec3d vec3d2;
                     double d;
                     if (!(em_class2582 instanceof GalathEntity) || !em_class2582.world.isRemote || em_class2582.currentAction() != Action.SUMMON_SKELETON || (d = (double)((GalathEntity)em_class2582).ad) < 9.0 || d > 30.0) continue;
-                    Vec3d vec3d3 = Reference.LerpVec3d(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double)f);
+                    Vec3d vec3d3 = Reference.LerpVec3d(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double)ticks);
                     double d2 = (d - 9.0) / 21.0;
                     if (em_class2582.getDataManager().get(bN).booleanValue()) {
                         vec3d2 = em_class2582.b("energyBallR");
@@ -2815,7 +2815,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                         c4_class1132 = new EnergyBallEntity(em_class2582.world, (GalathEntity)em_class2582);
                         c4_class1132.g = d2;
                         c4_class1132.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-                        renderManager.renderEntity(c4_class1132, 0.0, 0.0, 0.0, 0.0f, f, true);
+                        renderManager.renderEntity(c4_class1132, 0.0, 0.0, 0.0, 0.0f, ticks, true);
                         c4_class1132.setPosition(0.0, -500.0, 0.0);
                         c4_class1132.setDead();
                     }
@@ -2825,7 +2825,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     c4_class1132 = new EnergyBallEntity(em_class2582.world, (GalathEntity)em_class2582);
                     c4_class1132.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
                     c4_class1132.g = d2;
-                    renderManager.renderEntity(c4_class1132, 0.0, 0.0, 0.0, 0.0f, f, true);
+                    renderManager.renderEntity(c4_class1132, 0.0, 0.0, 0.0, 0.0f, ticks, true);
                     c4_class1132.setPosition(0.0, -500.0, 0.0);
                     c4_class1132.setDead();
                 }
@@ -2837,7 +2837,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             GlStateManager.enableAlpha();
         }
 
-        boolean a(World world, BlockPos blockPos, EnumFacing enumFacing) {
+        boolean CheckBedOrientation(World world, BlockPos blockPos, EnumFacing enumFacing) {
             if (enumFacing == EnumFacing.NORTH) {
                 if (this.a(world, blockPos = blockPos.west())) {
                     return false;
@@ -2911,7 +2911,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             }
             Vec3d vec3d = entityPlayer.getPositionVector();
             BlockPos blockPos = new BlockPos(vec3d);
-            if (!this.a(entityPlayer.world, blockPos, entityPlayer.world.getBlockState(blockPos).getValue(BlockHorizontal.FACING))) {
+            if (!this.CheckBedOrientation(entityPlayer.world, blockPos, entityPlayer.world.getBlockState(blockPos).getValue(BlockHorizontal.FACING))) {
                 entityPlayer.sendMessage(new TextComponentString(String.format("%sFor Galath and Manglelie to %swake you up with a blowjob%s, you have to provide enough space to the %sright side%s of your bed. This includes the %stop and bottom half%s of the bed.", new Object[]{TextFormatting.GRAY, TextFormatting.DARK_RED, TextFormatting.GRAY, TextFormatting.DARK_RED, TextFormatting.GRAY, TextFormatting.DARK_RED, TextFormatting.GRAY})));
                 return;
             }

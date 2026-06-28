@@ -7,7 +7,6 @@
  */
 package com.trolmastercard.sexmod.util.Handlers;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.*;
 
 import com.trolmastercard.sexmod.Packages.SendChatMessage;
@@ -59,13 +58,13 @@ public class PackageHandler {
         networkWrapper.registerMessage(GetTribeUIValues.a_inner64.class, GetTribeUIValues.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(SetTribeFollowMode.a_inner316.class, SetTribeFollowMode.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(FallTree.a_inner303.class, FallTree.class, PackageHandler.discriminator(), Side.SERVER);
-        networkWrapper.registerMessage(SendBlocks.a_inner398.class, SendBlocks.class, PackageHandler.discriminator(), Side.CLIENT);
-        networkWrapper.registerMessage(SendBlocks.a_inner398.class, SendBlocks.class, PackageHandler.discriminator(), Side.SERVER);
+        networkWrapper.registerMessage(SendBlocks.Handler.class, SendBlocks.class, PackageHandler.discriminator(), Side.CLIENT);
+        networkWrapper.registerMessage(SendBlocks.Handler.class, SendBlocks.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(CancelTask.a_inner45.class, CancelTask.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SpawnParticle.a_inner261.class, SpawnParticle.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(SendEgg.a_inner434.class, SendEgg.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(Mine.a_inner227.class, Mine.class, PackageHandler.discriminator(), Side.SERVER);
-        networkWrapper.registerMessage(bd_class76.a_inner77.class, bd_class76.class, PackageHandler.discriminator(), Side.CLIENT);
+        networkWrapper.registerMessage(bd_class76.Handler.class, bd_class76.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(ForcePlayerGirlUpdate.a_inner362.class, ForcePlayerGirlUpdate.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(UploadModelString.a_inner333.class, UploadModelString.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(GalathRapePounce.a_inner357.class, GalathRapePounce.class, PackageHandler.discriminator(), Side.SERVER);
@@ -76,10 +75,10 @@ public class PackageHandler {
         networkWrapper.registerMessage(DownloadServerModel.a_inner147.class, DownloadServerModel.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(SpawnEnergyBallParticlesAlt.a_inner102.class, SpawnEnergyBallParticlesAlt.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(GalathBackOffRape.a_inner126.class, GalathBackOffRape.class, PackageHandler.discriminator(), Side.SERVER);
-        networkWrapper.registerMessage(InformOfOwnership.a_inner365.class, InformOfOwnership.class, PackageHandler.discriminator(), Side.CLIENT);
-        networkWrapper.registerMessage(RequestRiding.a_inner86.class, RequestRiding.class, PackageHandler.discriminator(), Side.SERVER);
+        networkWrapper.registerMessage(InformOfOwnership.Handler.class, InformOfOwnership.class, PackageHandler.discriminator(), Side.CLIENT);
+        networkWrapper.registerMessage(RequestRiding.Handler.class, RequestRiding.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SpawnEnergyBallParticles.Handler.class, SpawnEnergyBallParticles.class, PackageHandler.discriminator(), Side.CLIENT);
-        networkWrapper.registerMessage(SetPlayerCam.a_inner40.class, SetPlayerCam.class, PackageHandler.discriminator(), Side.CLIENT);
+        networkWrapper.registerMessage(SetPlayerCam.Handler.class, SetPlayerCam.class, PackageHandler.discriminator(), Side.CLIENT);
     }
 
     static {

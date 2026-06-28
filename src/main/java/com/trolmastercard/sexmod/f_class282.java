@@ -116,7 +116,7 @@ public abstract class f_class282 extends EntityAIBase {
     @SubscribeEvent
     public void a(LivingDeathEvent livingDeathEvent) {
         GirlEntity em_class2582;
-        if (livingDeathEvent.getEntityLiving() instanceof GirlEntity && !(em_class2582 = (GirlEntity)livingDeathEvent.getEntityLiving()).getDataManager().get(GirlEntity.v).equals("")) {
+        if (livingDeathEvent.getEntityLiving() instanceof GirlEntity && !(em_class2582 = (GirlEntity) livingDeathEvent.getEntityLiving()).getDataManager().get(GirlEntity.v).isEmpty()) {
             livingDeathEvent.setCanceled(true);
         }
     }

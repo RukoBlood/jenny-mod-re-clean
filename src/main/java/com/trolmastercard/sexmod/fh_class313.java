@@ -78,7 +78,7 @@ extends GuiScreen {
         this.drawTexturedModalRect(f + 200.0f, 256.0f, 0, 0, 400, 256);
         this.drawTexturedModalRect(f + 200.0f, 512.0f, 0, 0, 400, 256);
         if (e > 30.0) {
-            SexUI.c();
+            SexUI.hide();
         }
         if (e > 69.0) {
             e = 0.0;

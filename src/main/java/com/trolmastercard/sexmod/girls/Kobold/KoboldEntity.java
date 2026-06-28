@@ -2412,25 +2412,25 @@ IInventory,
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (this.currentAction() == Action.MATING_PRESS_CUM && (fp_class3242 == Action.MATING_PRESS_SOFT || fp_class3242 == Action.MATING_PRESS_HARD)) {
+    public void setCurrentAction(Action action) {
+        if (this.currentAction() == Action.MATING_PRESS_CUM && (action == Action.MATING_PRESS_SOFT || action == Action.MATING_PRESS_HARD)) {
             return;
         }
-        if (this.currentAction() == Action.KOBOLD_ANAL_CUM && (fp_class3242 == Action.KOBOLD_ANAL_SLOW || fp_class3242 == Action.KOBOLD_ANAL_FAST)) {
+        if (this.currentAction() == Action.KOBOLD_ANAL_CUM && (action == Action.KOBOLD_ANAL_SLOW || action == Action.KOBOLD_ANAL_FAST)) {
             return;
         }
-        if (this.currentAction() == Action.CUMBLOWJOB && (fp_class3242 == Action.SUCKBLOWJOB || fp_class3242 == Action.THRUSTBLOWJOB)) {
+        if (this.currentAction() == Action.CUMBLOWJOB && (action == Action.SUCKBLOWJOB || action == Action.THRUSTBLOWJOB)) {
             return;
         }
-        if (fp_class3242 == Action.MATING_PRESS_CUM) {
+        if (action == Action.MATING_PRESS_CUM) {
             this.V = 0;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override
     public void onDeath(DamageSource damageSource) {
-        EntityPlayer entityPlayer;
+        EntityPlayer player;
         super.onDeath(damageSource);
         if (this.world.isRemote) {
             return;
@@ -2441,8 +2441,8 @@ IInventory,
         }
         UUID uUID = (UUID)optional.get();
         KoboldManager.a(uUID, this);
-        if (this.boolean_J() && (entityPlayer = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.getDataManager().get(v)))) != null) {
-            entityPlayer.sendMessage(new TextComponentString(String.format("%s%s%s has perished %suwu", new Object[]{TextFormatting.RED, this.getGirlName(), TextFormatting.WHITE, TextFormatting.RED})));
+        if (this.boolean_J() && (player = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.getDataManager().get(v)))) != null) {
+            player.sendMessage(new TextComponentString(String.format("%s%s%s has perished %suwu", new Object[]{TextFormatting.RED, this.getGirlName(), TextFormatting.WHITE, TextFormatting.RED})));
         }
     }
 
@@ -2513,19 +2513,19 @@ IInventory,
         }
         this.aA = nBTTagCompound.getBoolean("editedColorManually");
         //if (uUID != null && !this.isDead) {
-        UUID uUID = nBTTagCompound.getUniqueId("tribeId");
-        if (nBTTagCompound.hasUniqueId("tribeId") && uUID != null && !this.isDead) {
-            if (uUID.getLeastSignificantBits() == 0 || uUID.getMostSignificantBits() == 0) {
+        UUID tribeId = nBTTagCompound.getUniqueId("tribeId");
+        if (nBTTagCompound.hasUniqueId("tribeId") && tribeId != null && !this.isDead) {
+            if (tribeId.getLeastSignificantBits() == 0 || tribeId.getMostSignificantBits() == 0) {
                 // TODO tribeId return a 00000... UUID when missing... super weird
                 return;
             }
-            this.entityDataManager.set(aL, Optional.of(uUID));
-            if (!KoboldManager.o(uUID)) {
-                KoboldManager.a(uUID, EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(N)));
+            this.entityDataManager.set(aL, Optional.of(tribeId));
+            if (!KoboldManager.o(tribeId)) {
+                KoboldManager.a(tribeId, EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(N)));
             }
-            KoboldManager.c(uUID, this);
+            KoboldManager.c(tribeId, this);
             if (nBTTagCompound.getBoolean("isLeader")) {
-                KoboldManager.d(uUID, this);
+                KoboldManager.d(tribeId, this);
             }
             this.entityDataManager.set(aU, nBTTagCompound.getString("tribeName"));
         }
@@ -2841,7 +2841,7 @@ IInventory,
                     this.aT = false;
                     this.a4 = true;
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "switch": {
@@ -2872,13 +2872,13 @@ IInventory,
                 case "blowjobCumDone": {
                     if (!this.boolean_n()) break;
                     this.void_r();
-                    SexUI.c();
+                    SexUI.hide();
                     break;
                 }
                 case "analStartDone": {
                     this.setCurrentAction(Action.KOBOLD_ANAL_SLOW);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "analStartCam": {
@@ -2981,7 +2981,7 @@ IInventory,
                 }
                 case "mating_press_startDone": {
                     if (this.boolean_n()) {
-                        SexUI.d();
+                        SexUI.init();
                     }
                 }
                 case "mating_press_hardDone": {

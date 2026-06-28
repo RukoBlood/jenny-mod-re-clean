@@ -117,9 +117,5 @@ public class be_class78 {
             runnable.run();
         }, (ClientServerCheck.getInstance() ? "server sexmod thread " : "client sexmod thread ") + randomUUID).start();
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

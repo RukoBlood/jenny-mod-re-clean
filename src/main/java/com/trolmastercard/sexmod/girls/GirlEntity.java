@@ -818,18 +818,18 @@ implements IAnimatable {
     protected abstract <E extends IAnimatable> PlayState predicate(AnimationEvent<E> var1);
 
     @SideOnly(value=Side.CLIENT)
-    protected boolean a(Action fp_class3242, String string, boolean bl, AnimationEvent animationEvent) {
+    protected boolean a(Action action, String string, boolean bl, AnimationEvent animationEvent) {
         return false;
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected void createAnimation(String string, boolean looped, AnimationEvent animationEvent, boolean bl2) {
-        if (!bl2 && Action.b(this, animationEvent.getPartialTick()) && this.a(this.currentAction(), string, HandlePlayerMovement.isThrusting, animationEvent)) {
+    protected void createAnimation(String animName, boolean looped, AnimationEvent event, boolean bl2) {
+        if (!bl2 && Action.b(this, event.getPartialTick()) && this.a(this.currentAction(), animName, HandlePlayerMovement.isThrusting, event)) {
             return;
         }
         ILoopType.EDefaultLoopTypes eDefaultLoopTypes = looped ? ILoopType.EDefaultLoopTypes.LOOP : ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME;
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation(string, eDefaultLoopTypes));
-        animationEvent.getController().transitionLengthTicks = 0.0;
+        event.getController().setAnimation(new AnimationBuilder().addAnimation(animName, eDefaultLoopTypes));
+        event.getController().transitionLengthTicks = 0.0;
     }
 
     @SideOnly(value=Side.CLIENT)

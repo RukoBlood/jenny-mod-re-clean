@@ -83,7 +83,7 @@ public class PlayerJenny extends PlayerGirl {
 
     @Override
     public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
-        return new a0_class6();
+        return new JennyLimb();
     }
 
     @Override
@@ -384,7 +384,7 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "sexUiOn": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "paymentMSG4": {
@@ -474,7 +474,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "bjtDone": {
@@ -500,7 +500,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "bjcMSG2": {
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_BJMOAN[7]);
                     if (!this.boolean_n()) break;
-                    SexUI.c();
+                    SexUI.hide();
                     break;
                 }
                 case "bjcMSG3": {
@@ -587,7 +587,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "doggyslowMSG1": {
@@ -672,7 +672,7 @@ public class PlayerJenny extends PlayerGirl {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.PAIZURI_SLOW);
                     SexUI.resetCumPercentage();
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "paizuriFastMSG1": {

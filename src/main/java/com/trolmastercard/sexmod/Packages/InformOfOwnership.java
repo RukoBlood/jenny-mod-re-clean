@@ -37,7 +37,7 @@ implements IMessage {
         byteBuf.writeBoolean(this.b);
     }
 
-    public static class a_inner365
+    public static class Handler
     implements IMessageHandler<InformOfOwnership, IMessage> {
         public IMessage a(InformOfOwnership gf_class3642, MessageContext messageContext) {
             if (!gf_class3642.a || !messageContext.side.equals((Object)Side.CLIENT)) {

@@ -42,9 +42,5 @@ public class fl_class318 {
         }
         return false;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

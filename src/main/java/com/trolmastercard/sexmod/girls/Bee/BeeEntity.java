@@ -376,7 +376,7 @@ extends Supporter {
                 case "sex_startDone": {
                     this.setCurrentAction(Action.CITIZEN_SLOW);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "sex_cumMSG1": {

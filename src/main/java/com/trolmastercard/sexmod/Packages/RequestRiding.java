@@ -32,7 +32,7 @@ implements IMessage {
     public void toBytes(ByteBuf byteBuf) {
     }
 
-    public static class a_inner86
+    public static class Handler
     implements IMessageHandler<RequestRiding, IMessage> {
         public IMessage a(RequestRiding bk_class852, MessageContext messageContext) {
             if (!bk_class852.a || !messageContext.side.equals((Object)Side.SERVER)) {

@@ -396,7 +396,7 @@ extends GirlEntity {
                 case "deepthroat_fastMSG1": {
                     this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_BJMOAN));
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
@@ -407,7 +407,7 @@ extends GirlEntity {
                         this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_BJMOAN));
                     }
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
@@ -546,7 +546,7 @@ extends GirlEntity {
                 }
                 case "openSexUi": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "cum": {

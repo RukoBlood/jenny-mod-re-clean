@@ -69,7 +69,7 @@ implements IMessage {
         return runtimeException;
     }
 
-    public static class a_inner398
+    public static class Handler
     implements IMessageHandler<SendBlocks, IMessage> {
         public IMessage a(SendBlocks h6_class3972, MessageContext messageContext) {
             if (!h6_class3972.b) {

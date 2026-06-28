@@ -296,7 +296,7 @@ extends PlayerGirl {
                 }
                 case "sexUiOn": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "bjiMSG10": {
@@ -329,7 +329,7 @@ extends PlayerGirl {
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "bjtDone": {
@@ -353,7 +353,7 @@ extends PlayerGirl {
                 case "bjcMSG2": {
                     this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                     if (!this.boolean_n()) break;
-                    SexUI.c();
+                    SexUI.hide();
                     break;
                 }
                 case "doggyslowMSG2": {
@@ -408,7 +408,7 @@ extends PlayerGirl {
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "doggyslowMSG1": {

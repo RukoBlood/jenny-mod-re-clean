@@ -861,7 +861,7 @@ extends GirlEntity {
                 }
                 case "sexui": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "doubleSemen0": {

@@ -614,7 +614,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "sexUiOn": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "paymentMSG4": {
@@ -707,7 +707,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "bjtDone": {
@@ -733,7 +733,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "bjcMSG2": {
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_BJMOAN[7]);
                     if (!this.boolean_n()) break;
-                    SexUI.c();
+                    SexUI.hide();
                     break;
                 }
                 case "bjcMSG3": {
@@ -820,7 +820,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 // TODO
@@ -935,7 +935,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.PAIZURI_SLOW);
                     SexUI.resetCumPercentage();
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "paizuriFastMSG1": {

@@ -11,6 +11,7 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.Packages.bd_class76;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityAnimal;

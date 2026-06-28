@@ -14,14 +14,13 @@ import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class CrossModel
-extends AnimatedGeoModel<CustomModelEntity> {
+public class CrossModel extends AnimatedGeoModel<CustomModelEntity> {
     @Override
-    public ResourceLocation getModelLocation(CustomModelEntity cy_class1532) {
-        if (cy_class1532.f) {
+    public ResourceLocation getModelLocation(CustomModelEntity entity) {
+        if (entity.f) {
             return new ResourceLocation("sexmod", "geo/cross.geo.json");
         }
-        return CustomModel.k(cy_class1532.a());
+        return CustomModel.k(entity.a());
     }
 
     @Override

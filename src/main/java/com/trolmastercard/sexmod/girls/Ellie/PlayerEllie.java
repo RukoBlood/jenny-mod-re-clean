@@ -472,7 +472,7 @@ extends PlayerGirl {
                 case "missionary_startDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.MISSIONARY_SLOW);
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "cowgirlStartMSG0": {
@@ -495,7 +495,7 @@ extends PlayerGirl {
                 case "cowgirlStartDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.COWGIRLSLOW);
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "cowgirlfastMSG1": {
@@ -541,7 +541,7 @@ extends PlayerGirl {
                 }
                 case "cowgirlcumMSG4": {
                     if (!this.boolean_n()) break;
-                    SexUI.c();
+                    SexUI.hide();
                     break;
                 }
                 case "cowgirlcumMSG5": 
@@ -575,7 +575,7 @@ extends PlayerGirl {
                 }
                 case "openSexUi": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "missionary_slowMSG1": {
@@ -663,7 +663,7 @@ extends PlayerGirl {
                 }
                 case "sexUI": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                 }
             }
         };

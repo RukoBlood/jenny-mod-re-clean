@@ -41,8 +41,7 @@ public class SetPlayerMovement implements IMessage {
         this.messageValid = true;
     }
 
-    public static class Handler
-    implements IMessageHandler<SetPlayerMovement, IMessage> {
+    public static class Handler implements IMessageHandler<SetPlayerMovement, IMessage> {
         public IMessage onMessageMain(SetPlayerMovement message, MessageContext ctx) {
             if (!message.messageValid || ctx.side != Side.CLIENT) {
                 System.out.println("received an invalid message @SetPlayerMovement :(");
@@ -55,7 +54,7 @@ public class SetPlayerMovement implements IMessage {
                 // empty catch block
             }
             if (message.setActive) {
-                SexUI.c();
+                SexUI.hide();
             }
             return null;
         }

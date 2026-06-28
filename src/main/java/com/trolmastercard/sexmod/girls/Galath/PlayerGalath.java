@@ -436,7 +436,7 @@ implements b7_class68 {
                     float f = this.java_lang_Float_I().floatValue() + 220.0f;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "enableBoyCam": {
@@ -491,7 +491,7 @@ implements b7_class68 {
                 }
                 case "sexui": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                 }
             }
         });

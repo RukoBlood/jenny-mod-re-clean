@@ -8,8 +8,9 @@
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler
  *  net.minecraftforge.fml.common.network.simpleimpl.MessageContext
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.Packages;
 
+import com.trolmastercard.sexmod.b5_class66;
 import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
@@ -23,8 +24,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class bd_class76
-implements IMessage {
+public class bd_class76 implements IMessage {
     boolean c = false;
     EntityPlayer b;
     HashMap<PlayerGirlEntity, String> a = new HashMap();
@@ -61,13 +61,12 @@ implements IMessage {
         return runtimeException;
     }
 
-    public static class a_inner77
-    implements IMessageHandler<bd_class76, IMessage> {
-        public IMessage a(bd_class76 bd_class762, MessageContext messageContext) {
-            if (!bd_class762.c || messageContext.side != Side.CLIENT) {
+    public static class Handler implements IMessageHandler<bd_class76, IMessage> {
+        public IMessage a(bd_class76 message, MessageContext ctx) {
+            if (!message.c || ctx.side != Side.CLIENT) {
                 return null;
             }
-            this.a(bd_class762.a);
+            this.a(message.a);
             return null;
         }
 
@@ -77,13 +76,9 @@ implements IMessage {
             minecraft.addScheduledTask(() -> minecraft.displayGuiScreen(new b5_class66(hashMap)));
         }
 
-                @Override
+        @Override
         public IMessage onMessage(bd_class76 iMessage, MessageContext messageContext) {
             return this.a((bd_class76)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

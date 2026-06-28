@@ -32,7 +32,7 @@ public class SexUI extends Gui {
     static boolean keepSpacePressed;
     static boolean h;
 
-    public static void d() {
+    public static void init() {
         if (shouldBeRendered) {
             return;
         }
@@ -50,7 +50,7 @@ public class SexUI extends Gui {
         h = bl;
     }
 
-    public static void c() {
+    public static void hide() {
         SexUI.resetCumPercentage();
         shouldBeRendered = false;
         h = true;

@@ -46,7 +46,7 @@ implements IMessage {
         byteBuf.writeInt(this.c);
     }
 
-    public static class a_inner40
+    public static class Handler
     implements IMessageHandler<SetPlayerCam, IMessage> {
         public IMessage a(SetPlayerCam aq_class392, MessageContext messageContext) {
             if (!aq_class392.d || messageContext.side != Side.CLIENT) {

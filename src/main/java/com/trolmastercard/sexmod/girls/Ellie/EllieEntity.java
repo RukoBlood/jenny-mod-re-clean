@@ -222,7 +222,7 @@ implements bh_class82 {
         if (this.currentAction() != Action.CARRY_SLOW) {
             return;
         }
-        SexUI.d();
+        SexUI.init();
     }
 
     void void_e() {
@@ -792,7 +792,7 @@ implements bh_class82 {
                 case "cowgirlStartDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.COWGIRLSLOW);
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "cowgirlfastMSG1": {
@@ -833,7 +833,7 @@ implements bh_class82 {
                 }
                 case "cowgirlcumMSG4": {
                     if (!this.boolean_n()) break;
-                    SexUI.c();
+                    SexUI.hide();
                     break;
                 }
                 case "cowgirlcumMSG5": 
@@ -873,7 +873,7 @@ implements bh_class82 {
                 }
                 case "openSexUi": {
                     if (!this.boolean_e()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "missionary_slowMSG1": {
@@ -901,7 +901,7 @@ implements bh_class82 {
                 case "missionary_startDone": {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.MISSIONARY_SLOW);
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "missionary_fastDone": {

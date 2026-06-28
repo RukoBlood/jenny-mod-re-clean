@@ -1792,7 +1792,7 @@ implements ai_class30 {
                 case "paizuri_startDone": {
                     this.setCurrentAction(Action.PAIZURI_IDLE);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "paizuriFastDone": {
@@ -1877,7 +1877,7 @@ implements ai_class30 {
                 case "breedingIntroDone": {
                     this.setCurrentAction(Action.BREEDING_SLOW_0);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "breeding_slow1Done": {
@@ -1937,7 +1937,7 @@ implements ai_class30 {
                 case "neslon_introDone": {
                     this.setCurrentAction(Action.NELSON_SLOW);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "nelson_slowDone": {

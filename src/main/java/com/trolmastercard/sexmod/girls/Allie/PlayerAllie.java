@@ -222,7 +222,7 @@ extends PlayerGirl {
                 case "deepthroat_fastMSG1": {
                     this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_BJMOAN));
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
@@ -238,7 +238,7 @@ extends PlayerGirl {
                 case "deepthroat_slowMSG1": {
                     this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
@@ -321,7 +321,7 @@ extends PlayerGirl {
                 }
                 case "openSexUi": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "cum": {

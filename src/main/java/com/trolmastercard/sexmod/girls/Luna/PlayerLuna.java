@@ -433,7 +433,7 @@ extends PlayerGirl {
                     this.setCurrentAction(Action.TOUCH_BOOBS_SLOW);
                     if (!this.boolean_n()) break;
                     SexUI.resetCumPercentage();
-                    SexUI.d();
+                    SexUI.init();
                     HandlePlayerMovement.a(false);
                     break;
                 }
@@ -510,7 +510,7 @@ extends PlayerGirl {
                     if (!this.boolean_n()) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     SexUI.resetCumPercentage();
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "sitting_slowMSG1": {

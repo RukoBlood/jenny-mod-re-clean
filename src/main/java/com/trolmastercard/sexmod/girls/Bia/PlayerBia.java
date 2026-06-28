@@ -208,7 +208,7 @@ extends PlayerGirl {
                 Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.boolean_n()) {
-                SexUI.d();
+                SexUI.init();
             }
             return;
         }
@@ -415,7 +415,7 @@ extends PlayerGirl {
                 }
                 case "sexUiOn": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "pearl": {
@@ -511,7 +511,7 @@ extends PlayerGirl {
                 case "anal_startDone": {
                     this.setCurrentAction(Action.ANAL_SLOW);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "anal_cumMSG2": {
@@ -605,7 +605,7 @@ extends PlayerGirl {
                 }
                 case "openSexUI": {
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                 }
             }
         };

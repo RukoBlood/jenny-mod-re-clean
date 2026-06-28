@@ -4,7 +4,7 @@
 package com.trolmastercard.sexmod;
 
 public class bm_class88 {
-    final static public bm_class88 b = new bm_class88(0.0f, 0.0f);
+    final static public bm_class88 ZERO = new bm_class88(0.0f, 0.0f);
     public float c;
     public float a;
 

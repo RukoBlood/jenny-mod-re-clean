@@ -494,7 +494,7 @@ implements dr_class199 {
                     this.ay = false;
                     this.az = true;
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "switch": {
@@ -525,13 +525,13 @@ implements dr_class199 {
                 case "blowjobCumDone": {
                     if (!this.boolean_n()) break;
                     this.void_r();
-                    SexUI.c();
+                    SexUI.hide();
                     break;
                 }
                 case "analStartDone": {
                     this.setCurrentAction(Action.KOBOLD_ANAL_SLOW);
                     if (!this.boolean_n()) break;
-                    SexUI.d();
+                    SexUI.init();
                     break;
                 }
                 case "analStartCam": {
@@ -635,7 +635,7 @@ implements dr_class199 {
                 }
                 case "mating_press_startDone": {
                     if (this.boolean_n()) {
-                        SexUI.d();
+                        SexUI.init();
                     }
                 }
                 case "mating_press_hardDone": {
