@@ -281,7 +281,7 @@ extends GirlEntity {
         entityTippedArrow.motionX = vec3d3.x * 4.0;
         entityTippedArrow.motionY = vec3d3.y * 4.0;
         entityTippedArrow.motionZ = vec3d3.z * 4.0;
-        GirlEntity.a((GirlEntity)f__class2972, SoundEvents.ENTITY_ARROW_SHOOT, true);
+        GirlEntity.girlPlaySound((GirlEntity)f__class2972, SoundEvents.ENTITY_ARROW_SHOOT, true);
         this.world.spawnEntity(entityTippedArrow);
         this.U = true;
     }
@@ -361,25 +361,25 @@ extends GirlEntity {
         }
     }
 
-    public static boolean a(Entity entity, GalathEntity f__class2972) {
-        if (entity.isDead) {
+    public static boolean a(Entity e, GalathEntity galath) {
+        if (e.isDead) {
             return true;
         }
-        if (entity.dimension != f__class2972.dimension) {
+        if (e.dimension != galath.dimension) {
             return true;
         }
-        if (!d_class156.a(entity)) {
+        if (!GalathMobTarget.isValidTarget(e)) {
             return true;
         }
-        if (!d_class156.a(f__class2972.world, f__class2972.net_minecraft_util_math_Vec3d_o().add(0.0, f__class2972.getEyeHeight(), 0.0), entity)) {
+        if (!GalathMobTarget.hasLineOfSight(galath.world, galath.net_minecraft_util_math_Vec3d_o().add(0.0, galath.getEyeHeight(), 0.0), e)) {
             return true;
         }
-        Vec3d vec3d = entity.getPositionVector().subtract(f__class2972.getPositionVector());
+        Vec3d vec3d = e.getPositionVector().subtract(galath.getPositionVector());
         if (vec3d.x * vec3d.x + vec3d.z * vec3d.z > 225.0) {
             return true;
         }
-        Float f = GalathEntity.a(f__class2972, 0.0f);
-        float f2 = f == null ? f__class2972.rotationYawHead : f.floatValue();
+        Float f = GalathEntity.a(galath, 0.0f);
+        float f2 = f == null ? galath.rotationYawHead : f.floatValue();
         Vec3d vec3d2 = VectorMath.rotate(vec3d, f2);
         return vec3d2.z < 0.0;
     }

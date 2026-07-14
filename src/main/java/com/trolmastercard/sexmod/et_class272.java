@@ -20,8 +20,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class et_class272
-implements IGuiHandler {
+public class et_class272 implements IGuiHandler {
     File b;
     File c;
     boolean a = false;
@@ -54,7 +53,7 @@ implements IGuiHandler {
                 for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
                     if (em_class2582.world.isRemote || !(em_class2582 instanceof IInventory) || em_class2582.getPosition().getX() != 3 || em_class2582.getPosition().getY() != 1 || em_class2582.getPosition().getZ() != 7) continue;
                     IInventory iInventory = (IInventory)((Object)em_class2582);
-                    new bx_class105(Minecraft.getMinecraft().player.inventory, iInventory, Minecraft.getMinecraft().player, UUID.randomUUID());
+                    new GirlInventory(Minecraft.getMinecraft().player.inventory, iInventory, Minecraft.getMinecraft().player, UUID.randomUUID());
                 }
             } catch (ConcurrentModificationException concurrentModificationException) {
                 // empty catch block
@@ -78,10 +77,10 @@ implements IGuiHandler {
         }
         if (n == 1) {
             try {
-                for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                    if (em_class2582.world.isRemote || !(em_class2582 instanceof IInventory) || em_class2582.getPosition().getX() != n2 || em_class2582.getPosition().getY() != n3 || em_class2582.getPosition().getZ() != n4) continue;
-                    IInventory iInventory = (IInventory)((Object)em_class2582);
-                    return new bx_class105(entityPlayer.inventory, iInventory, entityPlayer, UUID.randomUUID());
+                for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+                    if (girl.world.isRemote || !(girl instanceof IInventory) || girl.getPosition().getX() != n2 || girl.getPosition().getY() != n3 || girl.getPosition().getZ() != n4) continue;
+                    IInventory iInventory = (IInventory)((Object)girl);
+                    return new GirlInventory(entityPlayer.inventory, iInventory, entityPlayer, UUID.randomUUID());
                 }
             } catch (ConcurrentModificationException concurrentModificationException) {
                 // empty catch block

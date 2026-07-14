@@ -107,7 +107,7 @@ extends Supporter {
     @Override
     protected void initEntityAI() {
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(0, new h_class395(this));
+        this.tasks.addTask(0, new FollowPlayerGoal(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.25));
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(2, this.o);

@@ -43,7 +43,7 @@ import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class FighterAI extends f_class282 {
+public class FighterAI extends BaseCompanionGoal {
     Fighter fighter;
     EntityLivingBase target;
     Entity o;
@@ -119,10 +119,10 @@ public class FighterAI extends f_class282 {
                         this.void_a();
                     }
                 } else {
-                    this.c();
+                    this.goNearPlayer();
                 }
                 this.j = 300;
-                this.double_b();
+                this.setCompanionSpeed();
                 break;
             }
             case IDLE: {
@@ -135,11 +135,11 @@ public class FighterAI extends f_class282 {
                         this.pathNavigate.clearPath();
                         this.pathNavigate.tryMoveToXYZ(vec3d2.x, vec3d2.y, vec3d2.z, 0.5);
                     }
-                    this.double_b();
+                    this.setCompanionSpeed();
                     break;
                 }
                 if (!(this.fighter.getDistance(this.player) > 10.0f)) break;
-                this.c();
+                this.goNearPlayer();
                 break;
             }
             case RIDE: {
@@ -164,7 +164,7 @@ public class FighterAI extends f_class282 {
     }
 
     @Override
-    protected States abstractStates() {
+    protected States getNewState() {
         float f;
         boolean bl;
         //Entity entity;
@@ -178,7 +178,7 @@ public class FighterAI extends f_class282 {
                 this.o = entity;
                 return States.RIDE;
             }
-        } else if (!this.player.isRiding() && this.fighter.isRiding() || this.f == States.RIDE && !this.player.isRiding()) {
+        } else if (!this.player.isRiding() && this.fighter.isRiding() || this.CurState == States.RIDE && !this.player.isRiding()) {
             this.fighter.setCurrentAction(Action.NULL);
             this.fighter.dismountRidingEntity();
             this.fighter.noClip = false;
@@ -200,7 +200,7 @@ public class FighterAI extends f_class282 {
             this.target = entity;
             return States.ATTACK;
         }
-        if (this.f != States.FOLLOW) {
+        if (this.CurState != States.FOLLOW) {
             damageSource = this.player.getLastDamageSource();
             if (damageSource != null && this.CompanionStates((EntityLivingBase)(entity = (EntityLivingBase)damageSource.getTrueSource()))) {
                 this.target = entity;
@@ -224,7 +224,7 @@ public class FighterAI extends f_class282 {
             }
         }
         boolean bl2 = bl = (f = this.fighter.getDistance(this.player)) > 5.0f;
-        if (!bl && this.f == States.FOLLOW) {
+        if (!bl && this.CurState == States.FOLLOW) {
             if (++this.m > 60) {
                 bl = false;
                 this.m = 0;
@@ -232,7 +232,7 @@ public class FighterAI extends f_class282 {
                 bl = true;
             }
         }
-        if (bl && this.f == States.ATTACK) {
+        if (bl && this.CurState == States.ATTACK) {
             this.n = 60;
         }
         if (bl) {
@@ -309,8 +309,8 @@ public class FighterAI extends f_class282 {
     }
 
     @Override
-    protected double double_b() {
-        double d = super.double_b();
+    protected double setCompanionSpeed() {
+        double d = super.setCompanionSpeed();
         if (this.fighter.N) {
             d = 0.0;
         }

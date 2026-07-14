@@ -157,9 +157,5 @@ public class gm_class376 {
         Reference.k = Reference.j;
         Reference.j = playerSP.getPositionVector();
     }
-
-    private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-        return concurrentModificationException;
-    }
 }
 

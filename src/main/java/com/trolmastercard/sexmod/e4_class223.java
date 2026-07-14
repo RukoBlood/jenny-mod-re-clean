@@ -104,9 +104,6 @@ public abstract class e4_class223 extends GirlEntity {
     public static String[] java_lang_String_arr_a(GirlEntity em_class2582) {
         return em_class2582.getDataManager().get(M).split("-");
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
+    
 }
 

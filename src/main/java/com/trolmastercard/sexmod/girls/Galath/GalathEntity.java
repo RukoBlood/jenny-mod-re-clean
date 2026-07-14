@@ -411,15 +411,15 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     @Override
-    public void addTrackingPlayer(EntityPlayerMP entityPlayerMP) {
-        super.addTrackingPlayer(entityPlayerMP);
-        this.aO.addPlayer(entityPlayerMP);
+    public void addTrackingPlayer(EntityPlayerMP playerMP) {
+        super.addTrackingPlayer(playerMP);
+        this.aO.addPlayer(playerMP);
     }
 
     @Override
-    public void removeTrackingPlayer(EntityPlayerMP entityPlayerMP) {
-        super.removeTrackingPlayer(entityPlayerMP);
-        this.aO.removePlayer(entityPlayerMP);
+    public void removeTrackingPlayer(EntityPlayerMP playerMP) {
+        super.removeTrackingPlayer(playerMP);
+        this.aO.removePlayer(playerMP);
     }
 
     @Override
@@ -445,14 +445,14 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     @Nullable
     public ManglelieEntity com_trolmastercard_sexmod_f8_class293_a(boolean bl) {
-        GirlEntity em_class2582;
+        GirlEntity girlEntity;
         UUID uUID = this.aF();
         if (uUID == null) {
             return null;
         }
-        GirlEntity em_class2583 = em_class2582 = bl ? GalathEntity.com_trolmastercard_sexmod_em_class258_a(uUID) : GalathEntity.getGirlEntity(uUID);
-        if (em_class2582 instanceof ManglelieEntity) {
-            return (ManglelieEntity)em_class2582;
+        GirlEntity em_class2583 = girlEntity = bl ? GalathEntity.com_trolmastercard_sexmod_em_class258_a(uUID) : GalathEntity.getGirlEntity(uUID);
+        if (girlEntity instanceof ManglelieEntity) {
+            return (ManglelieEntity)girlEntity;
         }
         return null;
     }
@@ -539,15 +539,15 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     @Override
     public void onUpdate() {
-        boolean bl = this.maybeMountedByMangFn();
-        if (bl) {
+        boolean mounted = this.maybeMountedByMangFn();
+        if (mounted) {
             this.void_E();
         } else {
             this.void_c();
         }
         this.void_aa();
         super.onUpdate();
-        if (bl) {
+        if (mounted) {
             this.au();
         } else {
             this.void_R();
@@ -1706,28 +1706,32 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.bZ = null;
     }
 
+    /*
+    * Searches entities in area, then does something
+    */
+
     void void_I() {
-        EntityLivingBase entityLivingBase;
+        EntityLivingBase ent;
         if (this.boolean_f()) {
             return;
         }
         if (this.getID() != null) {
             return;
         }
-        boolean bl = this.maybeMountedByMangFn();
-        float f = bl ? 7.0f : 20.0f;
-        Vec3d vec3d = new Vec3d(f, f, f);
-        Vec3d vec3d2 = this.getPositionVector();
-        Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        Vec3d vec3d4 = vec3d2.add(vec3d);
-        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(vec3d3.x, vec3d3.y, vec3d3.z, vec3d4.x, vec3d4.y, vec3d4.z);
-        EntityLivingBase entityLivingBase2 = entityLivingBase = bl ? this.a(axisAlignedBB) : this.b(axisAlignedBB);
-        if (entityLivingBase == null) {
+        boolean mounted = this.maybeMountedByMangFn();
+        float areaSize = mounted ? 7.0f : 20.0f;
+        Vec3d area = new Vec3d(areaSize, areaSize, areaSize);
+        Vec3d posVector = this.getPositionVector();
+        Vec3d startPos = posVector.subtract(area);
+        Vec3d EndPos = posVector.add(area);
+        AxisAlignedBB SearchArea = new AxisAlignedBB(startPos.x, startPos.y, startPos.z, EndPos.x, EndPos.y, EndPos.z);
+        EntityLivingBase target = ent = mounted ? this.getMobsThatGalathLooksAt(SearchArea) : this.getPlayerNearby(SearchArea);
+        if (ent == null) {
             this.aI();
             return;
         }
-        this.a(entityLivingBase);
-        GirlEntity.a((GirlEntity)this, SoundsHandler.GIRLS_GALATH_DIALOG[1], true);
+        this.a(ent);
+        GirlEntity.girlPlaySound((GirlEntity)this, SoundsHandler.GIRLS_GALATH_DIALOG[1], true);
         if (this.bZ != null) {
             this.bZ.e(this);
         }
@@ -1735,28 +1739,42 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.bZ.b(this);
     }
 
-    EntityPlayer b(AxisAlignedBB axisAlignedBB) {
-        List<EntityPlayer> list = this.world.getEntitiesWithinAABB(EntityPlayer.class, axisAlignedBB, entityPlayer -> !PlayerGirl.e(entityPlayer) && !entityPlayer.isCreative() && !entityPlayer.isSpectator());
-        if (list.isEmpty()) {
+    /*
+    * Searches for the players, that is in survival (or adventure, who tf uses adventure mod) and not having schmex in area
+    * Then returns first player
+    */
+
+    EntityPlayer getPlayerNearby(AxisAlignedBB aabb) {
+        List<EntityPlayer> players = this.world.getEntitiesWithinAABB(
+                EntityPlayer.class,
+                aabb,
+                entityPlayer -> !PlayerGirl.e(entityPlayer) && !entityPlayer.isCreative() && !entityPlayer.isSpectator());
+        if (players.isEmpty()) {
             return null;
         }
-        return list.get(0);
+        return players.get(0);
     }
 
-    EntityMob a(AxisAlignedBB aabb) {
+    /*
+    * Выбирай:
+    * Либо наждачкой подтереться (фикс геморроя)
+    * Либо реверсить это.
+    */
+
+    EntityMob getMobsThatGalathLooksAt(AxisAlignedBB aabb) {
         List<EntityMob> mobList = this.world.getEntitiesWithinAABB(EntityMob.class, aabb);
         if (mobList.isEmpty()) {
             return null;
         }
-        ArrayList<EntityMob> arrayList = new ArrayList<EntityMob>();
-        for (EntityMob object : mobList) {
-            if (!d_class156.a(object)) continue;
-            arrayList.add(object);
+        ArrayList<EntityMob> mobArray = new ArrayList<EntityMob>();
+        for (EntityMob mob : mobList) {
+            if (!GalathMobTarget.isValidTarget(mob)) continue;
+            mobArray.add(mob);
         }
-        Vec3d vec3d = this.getPositionVector().add(0.0, this.getEyeHeight(), 0.0);
-        for (EntityMob entityMob : arrayList) {
-            if (!d_class156.a(this.world, vec3d, entityMob)) continue;
-            return entityMob;
+        Vec3d WorldMobEyeHeight = this.getPositionVector().add(0.0, this.getEyeHeight(), 0.0);
+        for (EntityMob mob : mobArray) {
+            if (!GalathMobTarget.hasLineOfSight(this.world, WorldMobEyeHeight, mob)) continue;
+            return mob;
         }
         return null;
     }

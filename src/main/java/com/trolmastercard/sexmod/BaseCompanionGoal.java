@@ -19,62 +19,71 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public abstract class f_class282 extends EntityAIBase {
+public abstract class BaseCompanionGoal extends EntityAIBase {
     public GirlEntity entity;
     public EntityPlayer player;
     public PathNavigate pathNavigate;
     public EntityDataManager dataManager;
-    public States f = States.IDLE;
-    final static public double g = 0.5;
-    final static public double h = 0.7;
-    final static public int b = 60;
+    public States CurState = States.IDLE;
+    final static public double BASE_WALK_SPEED = 0.5;
+    final static public double BASE_RUN_SPEED = 0.7;
+    final static public int DEATH_PREVENTION_TICKS = 60;
 
-    public f_class282(GirlEntity girlEntity) {
-        this.entity = girlEntity;
-        this.pathNavigate = girlEntity.getNavigator();
-        this.dataManager = girlEntity.getDataManager();
+    public BaseCompanionGoal(GirlEntity girl) {
+        this.entity = girl;
+        this.pathNavigate = girl.getNavigator();
+        this.dataManager = girl.getDataManager();
     }
 
-    protected void c() {
-        BlockPos blockPos;
-        int n = 0;
+    protected void goNearPlayer() {
+        BlockPos targetPos;
+        int attempts = 0;
+
         do {
-            blockPos = this.player.getPosition().add(Reference.RANDOM.nextInt(10), 0, Reference.RANDOM.nextInt(10));
-        } while (++n < 20 && !this.entity.attemptTeleport(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-        if (n >= 20) {
+            targetPos = this.player.getPosition().add(Reference.RANDOM.nextInt(10), 0, Reference.RANDOM.nextInt(10));
+        }
+        while (++attempts < 20 && !this.entity.attemptTeleport(targetPos.getX(), targetPos.getY(), targetPos.getZ()));
+
+        if (attempts >= 20) {
             this.entity.setPosition(this.player.posX, this.player.posY, this.player.posZ);
         }
+
         this.entity.motionX = 0.0;
         this.entity.motionY = 0.0;
         this.entity.motionZ = 0.0;
     }
 
-    protected double double_b() {
+    protected double setCompanionSpeed() {
         GirlEntity.WalkTypes walkTypes;
-        double d;
+        double speed;
         float distance = this.entity.getDistance(this.player);
+
         if (this.player.isSprinting()) {
-            d = 0.7;
+            speed = BASE_RUN_SPEED;
             walkTypes = GirlEntity.WalkTypes.RUN;
-        } else {
-            d = 0.5;
+        }
+        else {
+            speed = BASE_WALK_SPEED;
             walkTypes = GirlEntity.WalkTypes.WALK;
         }
-        double d2 = Math.floor(distance / 5.0f) * 0.2;
-        d += d2;
+
+        double distBonus = Math.floor(distance / 5.0f) * 0.2;
+        speed += distBonus;
+
         if (this.entity.isInWater()) {
-            d *= 60.0;
+            speed *= 60.0;
             walkTypes = GirlEntity.WalkTypes.WALK;
         }
-        this.pathNavigate.setSpeed(d);
+
+        this.pathNavigate.setSpeed(speed);
         this.entity.a(walkTypes);
-        return d;
+        return speed;
     }
 
     @Override
     public void resetTask() {
         this.pathNavigate.clearPath();
-        this.f = States.IDLE;
+        this.CurState = States.IDLE;
         this.entity.setCurrentAction(Action.NULL);
         this.dataManager.set(GirlEntity.v, "");
         this.pathNavigate = null;
@@ -84,13 +93,13 @@ public abstract class f_class282 extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        return !this.entity.getDataManager().get(GirlEntity.v).equals("");
+        return !this.entity.getDataManager().get(GirlEntity.v).isEmpty();
     }
 
     @Override
     public boolean shouldContinueExecuting() {
         String string = this.dataManager.get(GirlEntity.v);
-        return !string.equals("") && this.entity.world.getPlayerEntityByUUID(UUID.fromString(string)) != null;
+        return !string.isEmpty() && this.entity.world.getPlayerEntityByUUID(UUID.fromString(string)) != null;
     }
 
     @Override
@@ -102,27 +111,23 @@ public abstract class f_class282 extends EntityAIBase {
 
     @Override
     public void updateTask() {
-        this.f = this.abstractStates();
+        this.CurState = this.getNewState();
         if (this.entity.o != null) {
-            this.entity.o.a = this.f == States.IDLE;
+            this.entity.o.a = this.CurState == States.IDLE;
         }
-        this.CompanionStates(this.f);
+        this.CompanionStates(this.CurState);
     }
 
-    protected abstract States abstractStates();
+    protected abstract States getNewState();
 
     protected abstract void CompanionStates(States states);
 
     @SubscribeEvent
-    public void a(LivingDeathEvent livingDeathEvent) {
-        GirlEntity em_class2582;
-        if (livingDeathEvent.getEntityLiving() instanceof GirlEntity && !(em_class2582 = (GirlEntity) livingDeathEvent.getEntityLiving()).getDataManager().get(GirlEntity.v).isEmpty()) {
-            livingDeathEvent.setCanceled(true);
+    public void onGirlDeath(LivingDeathEvent event) {
+        GirlEntity girl;
+        if (event.getEntityLiving() instanceof GirlEntity && !(girl = (GirlEntity) event.getEntityLiving()).getDataManager().get(GirlEntity.v).isEmpty()) {
+            event.setCanceled(true);
         }
-    }
-
-    private static RuntimeException b(RuntimeException runtimeException) {
-        return runtimeException;
     }
 
     public static enum States {

@@ -31,7 +31,7 @@ extends GuiContainer {
     UUID a;
 
     public ek_class255(EntityPlayer entityPlayer, GirlEntity em_class2582, UUID uUID) {
-        super(new bx_class105(entityPlayer.inventory, (IInventory)((Object)em_class2582), entityPlayer, uUID));
+        super(new GirlInventory(entityPlayer.inventory, (IInventory)((Object)em_class2582), entityPlayer, uUID));
         this.c = uUID;
         this.b = em_class2582;
         this.a = entityPlayer.getPersistentID();

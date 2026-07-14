@@ -84,7 +84,7 @@ public class bn_Handler {
         MinecraftForge.EVENT_BUS.register((Object)new SexUI());
         MinecraftForge.EVENT_BUS.register((Object)new fh_class313());
         MinecraftForge.EVENT_BUS.register((Object)new HandlePlayerMovement());
-        MinecraftForge.EVENT_BUS.register((Object)new l_class413());
+        MinecraftForge.EVENT_BUS.register((Object)new GirlRenderEvent());
         MinecraftForge.EVENT_BUS.register((Object)new bq_class93());
         MinecraftForge.EVENT_BUS.register((Object)new cn_class138());
         MinecraftForge.EVENT_BUS.register((Object)new e__class234());

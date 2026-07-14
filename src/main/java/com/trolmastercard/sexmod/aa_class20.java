@@ -17,8 +17,7 @@ import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 
-public class aa_class20
-extends EntityAINearestAttackableTarget<KoboldEntity> {
+public class aa_class20 extends EntityAINearestAttackableTarget<KoboldEntity> {
     final private int a;
     final private boolean b;
 
@@ -60,10 +59,6 @@ extends EntityAINearestAttackableTarget<KoboldEntity> {
         arrayList.sort(this.sorter);
         this.targetEntity = arrayList.get(0);
         return true;
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

@@ -221,23 +221,23 @@ implements IAnimatable {
         }
     }
 
-    public static void a(GirlEntity em_class2582, SoundEvent soundEvent, boolean bl) {
-        Vec3d vec3d = em_class2582.getPositionVector();
-        for (EntityPlayer entityPlayer : cj_class134.a(em_class2582)) {
+    public static void girlPlaySound(GirlEntity girl, SoundEvent sound, boolean bl) {
+        Vec3d pos = girl.getPositionVector();
+        for (EntityPlayer player : cj_class134.a(girl)) {
             Vec3d vec3d2;
             if (!bl) {
-                vec3d2 = vec3d;
+                vec3d2 = pos;
             } else {
-                Vec3d vec3d3 = entityPlayer.getPositionVector();
-                Vec3d vec3d4 = vec3d.subtract(vec3d3).normalize();
-                vec3d2 = vec3d3.add(vec3d4);
+                Vec3d playerPos = player.getPositionVector();
+                Vec3d vec3d4 = pos.subtract(playerPos).normalize();
+                vec3d2 = playerPos.add(vec3d4);
             }
-            ((EntityPlayerMP)entityPlayer).connection.sendPacket(new SPacketSoundEffect(soundEvent, SoundCategory.AMBIENT, vec3d2.x, vec3d2.y, vec3d2.z, 1.0f, 1.0f));
+            ((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(sound, SoundCategory.AMBIENT, vec3d2.x, vec3d2.y, vec3d2.z, 1.0f, 1.0f));
         }
     }
 
     public static void a(GirlEntity em_class2582, SoundEvent soundEvent) {
-        GirlEntity.a(em_class2582, soundEvent, false);
+        GirlEntity.girlPlaySound(em_class2582, soundEvent, false);
     }
 
     public static void a(GirlEntity em_class2582, SoundEvent[] soundEventArray) {
@@ -245,7 +245,7 @@ implements IAnimatable {
     }
 
     public static void a(GirlEntity em_class2582, SoundEvent[] soundEventArray, boolean bl) {
-        GirlEntity.a(em_class2582, SoundsHandler.a(soundEventArray), bl);
+        GirlEntity.girlPlaySound(em_class2582, SoundsHandler.a(soundEventArray), bl);
     }
 
     @SideOnly(value=Side.CLIENT)
