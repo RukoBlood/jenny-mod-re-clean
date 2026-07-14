@@ -25,8 +25,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class SexPrompt
-implements IMessage {
+public class SexPrompt implements IMessage {
     boolean e = false;
     String c;
     UUID b;

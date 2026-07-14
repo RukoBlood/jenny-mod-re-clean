@@ -47,7 +47,7 @@ implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
     }
 
-    public static class a_inner8
+    public static class Handler
     implements IMessageHandler<ResetController, IMessage> {
         public IMessage a(ResetController a1_class72, MessageContext messageContext) {
             if (!a1_class72.d) {

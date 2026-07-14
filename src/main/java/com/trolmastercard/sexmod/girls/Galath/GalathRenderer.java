@@ -628,7 +628,7 @@ implements c3_class112 {
         float f2 = be_class78.b((float) Action.GIVE_COIN.ticksPlaying[1] + f, 105.0f, 125.0f);
         float f3 = (f2 - 105.0f) / 20.0f;
         float f4 = Reference.LerpFloat(120.0f, 240.0f, f3);
-        Vector3f f7_class2922 = Reference.LerpVector3f(av_class46.f, av_class46.e, (double)f3);
+        Vector3f f7_class2922 = Reference.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, (double)f3);
         float f5 = OpenGlHelper.lastBrightnessX;
         float f6 = OpenGlHelper.lastBrightnessY;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, f4, f4);

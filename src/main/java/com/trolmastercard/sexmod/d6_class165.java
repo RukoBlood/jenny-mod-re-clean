@@ -39,8 +39,7 @@ import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-public abstract class d6_class165<G extends e4_class223>
-extends GirlRenderer<G> {
+public abstract class d6_class165<G extends e4_class223> extends GirlRenderer<G> {
     final static protected Vec3i r = new Vec3i(255, 255, 255);
     static HashMap<Integer, Vec3i> s = new HashMap();
 

@@ -14,12 +14,13 @@
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  *  net.minecraftforge.fml.common.gameevent.PlayerEvent$PlayerRespawnEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.events;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.cj_class134;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.Allie.PlayerAllie;
 import com.trolmastercard.sexmod.girls.Bee.PlayerBee;

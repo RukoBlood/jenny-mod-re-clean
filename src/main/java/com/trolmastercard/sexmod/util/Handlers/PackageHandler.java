@@ -26,15 +26,15 @@ public class PackageHandler {
 
     public static void RegisterMessages() {
         networkWrapper = net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.newSimpleChannel("sexmodchannel");
-        networkWrapper.registerMessage(SendChatMessage.a_inner369.class, SendChatMessage.class, PackageHandler.discriminator(), Side.CLIENT);
-        networkWrapper.registerMessage(SendChatMessage.a_inner369.class, SendChatMessage.class, PackageHandler.discriminator(), Side.SERVER);
+        networkWrapper.registerMessage(SendChatMessage.Handler.class, SendChatMessage.class, PackageHandler.discriminator(), Side.CLIENT);
+        networkWrapper.registerMessage(SendChatMessage.Handler.class, SendChatMessage.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SetPlayerMovement.Handler.class, SetPlayerMovement.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(TeleportPlayer.Handler.class, TeleportPlayer.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SendGirlToSex.a_inner24.class, SendGirlToSex.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SetPlayerForGirl.a_inner59.class, SetPlayerForGirl.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(dc_class174.a_inner175.class, dc_class174.class, PackageHandler.discriminator(), Side.SERVER);
-        networkWrapper.registerMessage(ResetController.a_inner8.class, ResetController.class, PackageHandler.discriminator(), Side.CLIENT);
-        networkWrapper.registerMessage(ResetController.a_inner8.class, ResetController.class, PackageHandler.discriminator(), Side.SERVER);
+        networkWrapper.registerMessage(ResetController.Handler.class, ResetController.class, PackageHandler.discriminator(), Side.CLIENT);
+        networkWrapper.registerMessage(ResetController.Handler.class, ResetController.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(ResetGirl.a_inner422.class, ResetGirl.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(ChangeDataParameter.a_inner416.class, ChangeDataParameter.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(bo_class90.a_inner91.class, bo_class90.class, PackageHandler.discriminator(), Side.SERVER);

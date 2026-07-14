@@ -17,6 +17,7 @@ package com.trolmastercard.sexmod;
 
 import com.trolmastercard.sexmod.Packages.GetTribeUIValues;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
+import com.trolmastercard.sexmod.gui.j_class411;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;

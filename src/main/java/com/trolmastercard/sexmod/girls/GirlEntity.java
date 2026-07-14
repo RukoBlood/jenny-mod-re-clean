@@ -42,6 +42,7 @@ import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.ClientServerCheck;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
@@ -106,8 +107,7 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.MatrixStack;
 
 // em_class258
-public abstract class GirlEntity extends EntityCreature
-implements IAnimatable {
+public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     static public int j = 22;
     final static protected long t = 20L;
     final private AnimationFactory factory = new AnimationFactory(this);

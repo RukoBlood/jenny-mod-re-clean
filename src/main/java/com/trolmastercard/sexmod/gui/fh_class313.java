@@ -6,9 +6,9 @@
  *  net.minecraftforge.client.event.RenderGameOverlayEvent$ElementType
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui;
 
-import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.be_class78;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -19,9 +19,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+
+//fh.class
 @SideOnly(value=Side.CLIENT)
-public class fh_class313
-extends GuiScreen {
+public class fh_class313 extends GuiScreen {
     final static public int d = 1200;
     static private boolean b = false;
     static private double e = 0.0;
@@ -85,10 +86,6 @@ extends GuiScreen {
             b = false;
         }
         GlStateManager.popMatrix();
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

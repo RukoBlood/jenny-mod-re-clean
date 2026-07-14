@@ -7,11 +7,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
 
+//df.class
 public class df_class178 extends EntityAIWatchClosest2 {
     public boolean a = true;
 
-    public df_class178(EntityLiving entityLiving, Class<? extends Entity> clazz, float f, float f2) {
-        super(entityLiving, clazz, f, f2);
+    public df_class178(EntityLiving entityLiving, Class<? extends Entity> watchTargetClass, float maxDistance, float chanceIn) {
+        super(entityLiving, watchTargetClass, maxDistance, chanceIn);
     }
 
     @Override
@@ -19,10 +20,6 @@ public class df_class178 extends EntityAIWatchClosest2 {
         if (this.a) {
             super.updateTask();
         }
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

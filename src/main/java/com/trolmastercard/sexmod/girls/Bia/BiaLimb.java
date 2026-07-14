@@ -1,20 +1,18 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Bia;
 
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
-public class go_class378
-extends ModelBase
-implements IRenderer {
+//go.class
+public class BiaLimb extends ModelBase implements IRenderer {
     final public ModelRenderer a;
 
-    public go_class378() {
+    public BiaLimb() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.a = new ModelRenderer(this);
@@ -23,8 +21,8 @@ implements IRenderer {
     }
 
     @Override
-    public void render(Entity entity, float f, float f2, float f3, float f4, float f5, float f6) {
-        this.a.render(f6);
+    public void render(Entity entity, float f, float f2, float f3, float f4, float f5, float scale) {
+        this.a.render(scale);
     }
 
     public void a(ModelRenderer modelRenderer, float f, float f2, float f3) {

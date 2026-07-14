@@ -101,7 +101,7 @@ implements IAnimatable {
     @SubscribeEvent
     public static void a(ModelRegistryEvent modelRegistryEvent) {
         ModelLoader.setCustomModelResourceLocation((Item) GALATH_COIN, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:galath_coin"));
-        GALATH_COIN.setTileEntityItemStackRenderer(new av_class46());
+        GALATH_COIN.setTileEntityItemStackRenderer(new GalathCoinRenderer());
     }
 
     @Override

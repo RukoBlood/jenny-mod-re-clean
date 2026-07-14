@@ -10,8 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.events.GirlBedInteraction;
-import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.events.*;
 import com.trolmastercard.sexmod.girls.Allie.LampItem;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Galath.GalathCoin;
@@ -29,11 +28,15 @@ import com.trolmastercard.sexmod.girls.Allie.PlayerAllieRenderer;
 import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblin;
 import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.gui.fh_class313;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class bn_Handler {
+//bn.class
+//Registers Events
+
+public class EventHandler {
     public static void a(boolean bl) throws IOException {
         MinecraftForge.EVENT_BUS.register((Object)new ah_class29());
         MinecraftForge.EVENT_BUS.register((Object)new eo_class262());
@@ -70,13 +73,13 @@ public class bn_Handler {
         MinecraftForge.EVENT_BUS.register((Object)new ManglelieEntity.ArrowLogic());
         MinecraftForge.EVENT_BUS.register((Object)new f4_class289());
         if (bl) {
-            bn_Handler.b();
+            EventHandler.RegisterIfAllowed();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    static void b() {
-        if (bn_Handler.checkIfAsked()) {
+    static void RegisterIfAllowed() {
+        if (EventHandler.checkIfAsked()) {
             MinecraftForge.EVENT_BUS.register((Object)new ShowWarning());
         } else {
             AdultContentWarning.isAdult = false;

@@ -37,7 +37,7 @@ public class CommonProxy {
         Main.setConfigs();
         SoundsHandler.RegisterSounds();
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new et_class272());
-        bn_Handler.a(false);
+        EventHandler.a(false);
         PackageHandler.RegisterMessages();
     }
 

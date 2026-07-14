@@ -34,8 +34,7 @@ import software.bernie.geckolib3.geo.render.built.GeoQuad;
 import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
-public class av_class46
-extends GeoItemRenderer<GalathCoin> {
+public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
     final static public Vector3f e = new Vector3f(0.84705883f, 0.11764706f, 0.35686275f);
     final static public Vector3f f = new Vector3f(0.44705883f, 0.44705883f, 0.44705883f);
     final static public float b = 240.0f;
@@ -45,7 +44,7 @@ extends GeoItemRenderer<GalathCoin> {
     boolean c = false;
     Vector3f d;
 
-    public av_class46() {
+    public GalathCoinRenderer() {
         super(new GalathCoinModel());
     }
 
@@ -91,11 +90,11 @@ extends GeoItemRenderer<GalathCoin> {
     }
 
     float a(float f) {
-        if (av_class46.a.player.getHeldItemMainhand() != this.currentItemStack && av_class46.a.player.getHeldItemOffhand() != this.currentItemStack) {
+        if (GalathCoinRenderer.a.player.getHeldItemMainhand() != this.currentItemStack && GalathCoinRenderer.a.player.getHeldItemOffhand() != this.currentItemStack) {
             return this.b(f);
         }
         long l = System.currentTimeMillis();
-        NBTTagCompound nBTTagCompound = av_class46.a.player.getEntityData();
+        NBTTagCompound nBTTagCompound = GalathCoinRenderer.a.player.getEntityData();
         long l2 = nBTTagCompound.getLong("sexmod:galath_coin_activation_time");
         long l3 = nBTTagCompound.getLong("sexmod:galath_coin_deactivation_time");
         if (l2 != 0L) {
@@ -133,11 +132,11 @@ extends GeoItemRenderer<GalathCoin> {
     }
 
     Vector3f a() {
-        if (av_class46.a.player.getHeldItemMainhand() != this.currentItemStack && av_class46.a.player.getHeldItemOffhand() != this.currentItemStack) {
+        if (GalathCoinRenderer.a.player.getHeldItemMainhand() != this.currentItemStack && GalathCoinRenderer.a.player.getHeldItemOffhand() != this.currentItemStack) {
             return e;
         }
         long l = System.currentTimeMillis();
-        NBTTagCompound nBTTagCompound = av_class46.a.player.getEntityData();
+        NBTTagCompound nBTTagCompound = GalathCoinRenderer.a.player.getEntityData();
         long l2 = nBTTagCompound.getLong("sexmod:galath_coin_activation_time");
         long l3 = nBTTagCompound.getLong("sexmod:galath_coin_deactivation_time");
         if (l2 != 0L) {
@@ -155,10 +154,10 @@ extends GeoItemRenderer<GalathCoin> {
     Vector3f a(long l, long l2) {
         float f = l2 - l;
         if (f < 1000.0f) {
-            return av_class46.f;
+            return GalathCoinRenderer.f;
         }
         if (f <= 3000.0f) {
-            return Reference.LerpVector3f(av_class46.f, e, (double)((f - 1000.0f) / 2000.0f));
+            return Reference.LerpVector3f(GalathCoinRenderer.f, e, (double)((f - 1000.0f) / 2000.0f));
         }
         return e;
     }
@@ -169,13 +168,13 @@ extends GeoItemRenderer<GalathCoin> {
             return e;
         }
         if (f <= 3000.0f) {
-            return Reference.LerpVector3f(e, av_class46.f, (double)((f - 1000.0f) / 2000.0f));
+            return Reference.LerpVector3f(e, GalathCoinRenderer.f, (double)((f - 1000.0f) / 2000.0f));
         }
-        return av_class46.f;
+        return GalathCoinRenderer.f;
     }
 
     float b(float f) {
-        return (float)(60.0 * Math.sin(((float)av_class46.a.player.ticksExisted + f) * 0.05f) + 180.0);
+        return (float)(60.0 * Math.sin(((float) GalathCoinRenderer.a.player.ticksExisted + f) * 0.05f) + 180.0);
     }
 
     void a(BufferBuilder bufferBuilder, GeoCube geoCube) {

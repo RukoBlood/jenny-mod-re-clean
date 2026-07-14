@@ -5,10 +5,12 @@
  *  org.lwjgl.input.Keyboard
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui;
 
 import java.io.IOException;
 
+import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.be_class78;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
@@ -20,8 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-public class ea_class235
-extends GuiScreen {
+public class ea_class235 extends GuiScreen {
     final static float j = 100.0f;
     final static float c = 15.0f;
     final static float k = 5.0f;

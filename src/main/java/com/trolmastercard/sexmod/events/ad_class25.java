@@ -7,7 +7,7 @@
  *  net.minecraftforge.event.entity.living.LivingHurtEvent
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.events;
 
 import java.util.Collection;
 import java.util.HashMap;

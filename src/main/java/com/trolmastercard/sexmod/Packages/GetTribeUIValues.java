@@ -15,7 +15,7 @@ import com.trolmastercard.sexmod.e4_class223;
 import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.j_class411;
+import com.trolmastercard.sexmod.gui.j_class411;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;

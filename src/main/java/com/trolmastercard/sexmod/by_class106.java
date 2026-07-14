@@ -32,9 +32,5 @@ public enum by_class106 {
         }
         return n;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

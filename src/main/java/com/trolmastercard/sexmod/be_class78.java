@@ -9,6 +9,7 @@ import java.awt.datatransfer.StringSelection;
 import java.util.Random;
 import java.util.UUID;
 
+import com.trolmastercard.sexmod.util.ClientServerCheck;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.util.math.Vec3d;
 

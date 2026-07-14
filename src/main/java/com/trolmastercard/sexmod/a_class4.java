@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-
 import com.trolmastercard.sexmod.Packages.UploadModelString;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
@@ -51,9 +50,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class a_class4
-extends GuiScreen {
+//a.class
+public class a_class4 extends GuiScreen {
     final static public ResourceLocation k = new ResourceLocation("sexmod", "textures/gui/clothing_icons.png");
     final static int r = 20;
     final static float j = 0.25f;

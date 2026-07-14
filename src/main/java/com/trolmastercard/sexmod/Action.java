@@ -333,9 +333,5 @@ public enum Action {
     public static boolean b(GirlEntity em_class2582, float f) {
         return Action.d(em_class2582, f) == 1.0f;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

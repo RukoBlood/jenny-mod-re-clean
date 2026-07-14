@@ -18,6 +18,7 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
@@ -79,7 +80,7 @@ extends PlayerGirl {
 
     @Override
     public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
-        return new cf_EllieRotateSomething();
+        return new EllieLimb();
     }
 
     @Override

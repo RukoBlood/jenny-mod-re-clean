@@ -1,16 +1,6 @@
-/*
- * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
- * 
- * Could not load the following classes:
- *  io.netty.buffer.ByteBuf
- *  net.minecraftforge.fml.common.FMLCommonHandler
- *  net.minecraftforge.fml.common.network.ByteBufUtils
- *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
- *  net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler
- *  net.minecraftforge.fml.common.network.simpleimpl.MessageContext
- */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.Packages;
 
+import com.trolmastercard.sexmod.Fighter;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
@@ -22,16 +12,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class ft_class328
-implements IMessage {
-    boolean a;
+public class UpdateEquipment implements IMessage {
+    boolean valid;
     UUID c;
     NBTTagCompound b;
 
-    public ft_class328() {
+    public UpdateEquipment() {
     }
 
-    public ft_class328(UUID uUID, NBTTagCompound nBTTagCompound) {
+    public UpdateEquipment(UUID uUID, NBTTagCompound nBTTagCompound) {
         this.c = uUID;
         this.b = nBTTagCompound;
     }
@@ -39,7 +28,7 @@ implements IMessage {
     public void fromBytes(ByteBuf byteBuf) {
         this.c = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
         this.b = ByteBufUtils.readTag((ByteBuf)byteBuf);
-        this.a = true;
+        this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -47,26 +36,25 @@ implements IMessage {
         ByteBufUtils.writeTag((ByteBuf)byteBuf, (NBTTagCompound)this.b);
     }
 
-    public static class a_inner329
-    implements IMessageHandler<ft_class328, IMessage> {
-        public IMessage a(ft_class328 ft_class3282, MessageContext messageContext) {
-            if (!ft_class3282.a) {
+    public static class Handler implements IMessageHandler<UpdateEquipment, IMessage> {
+        public IMessage a(UpdateEquipment msg, MessageContext ctx) {
+            if (!msg.valid) {
                 System.out.println("received an invalid message @UpdateEquipment :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(ft_class3282.c);
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.c);
                 for (GirlEntity em_class2582 : arrayList) {
                     if (!(em_class2582 instanceof Fighter)) continue;
-                    ((Fighter)em_class2582).items.deserializeNBT(ft_class3282.b);
+                    ((Fighter)em_class2582).items.deserializeNBT(msg.b);
                 }
             });
             return null;
         }
 
-                @Override
-        public IMessage onMessage(ft_class328 iMessage, MessageContext messageContext) {
-            return this.a((ft_class328)iMessage, messageContext);
+        @Override
+        public IMessage onMessage(UpdateEquipment iMessage, MessageContext messageContext) {
+            return this.a((UpdateEquipment)iMessage, messageContext);
         }
 
         private static RuntimeException a(RuntimeException runtimeException) {

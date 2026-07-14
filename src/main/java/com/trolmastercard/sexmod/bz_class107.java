@@ -8,8 +8,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.easing.EasingType;
 
-public class bz_class107<T extends IAnimatable>
-extends AnimationController<T> {
+public class bz_class107<T extends IAnimatable> extends AnimationController<T> {
     public bz_class107(T t, String string, float f, AnimationController.IAnimationPredicate<T> iAnimationPredicate) {
         super(t, string, f, iAnimationPredicate);
     }

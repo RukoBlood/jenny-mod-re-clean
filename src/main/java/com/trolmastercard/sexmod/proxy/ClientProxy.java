@@ -19,7 +19,7 @@ import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.RenderHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Handlers.bn_Handler;
+import com.trolmastercard.sexmod.util.Handlers.EventHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.KeyBinding;
@@ -58,7 +58,7 @@ extends CommonProxy {
         Main.setConfigs();
         SoundsHandler.RegisterSounds();
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new et_class272(true));
-        bn_Handler.a(true);
+        EventHandler.a(true);
         PackageHandler.RegisterMessages();
         Minecraft minecraft = Minecraft.getMinecraft();
         RenderManager renderManager = minecraft.getRenderManager();

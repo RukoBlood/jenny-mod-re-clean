@@ -8,9 +8,11 @@
  *  net.minecraftforge.fml.common.gameevent.TickEvent$Phase
  *  net.minecraftforge.fml.common.gameevent.TickEvent$RenderTickEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.events;
 
 import java.util.UUID;
+
+import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.util.Reference;

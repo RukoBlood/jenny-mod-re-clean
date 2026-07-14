@@ -72,7 +72,7 @@ implements IMessage {
         return indexOutOfBoundsException;
     }
 
-    public static class a_inner369
+    public static class Handler
     implements IMessageHandler<SendChatMessage, IMessage> {
         public IMessage a(SendChatMessage gh_class3682, MessageContext messageContext) {
             if (!gh_class3682.b) {

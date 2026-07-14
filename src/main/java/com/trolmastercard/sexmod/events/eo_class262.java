@@ -6,7 +6,7 @@
  *  net.minecraftforge.fml.common.eventhandler.EventPriority
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.events;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;

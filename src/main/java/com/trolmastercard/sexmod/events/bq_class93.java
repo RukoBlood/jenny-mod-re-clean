@@ -5,7 +5,7 @@
  *  net.minecraftforge.client.event.GuiOpenEvent
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.events;
 
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -20,10 +20,6 @@ public class bq_class93 {
             PlayerGirl.Z.clear();
             PlayerGirl.playerGirlUUIDHashtable.clear();
         }
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

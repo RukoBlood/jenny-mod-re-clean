@@ -8,15 +8,13 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
-public class cf_EllieRotateSomething
-extends ModelBase
-implements IRenderer {
+//cf.class
+public class EllieLimb extends ModelBase implements IRenderer {
     final private ModelRenderer a;
     final private ModelRenderer b;
     final private ModelRenderer c;
 
-    public cf_EllieRotateSomething() {
+    public EllieLimb() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.a = new ModelRenderer(this);

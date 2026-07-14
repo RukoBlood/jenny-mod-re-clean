@@ -6,7 +6,7 @@
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,7 +14,10 @@ import java.util.HashSet;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import com.trolmastercard.sexmod.DragonStaffRenderer;
 import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.be_class78;
+import com.trolmastercard.sexmod.gm_class376;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;

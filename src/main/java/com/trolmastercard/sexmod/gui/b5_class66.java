@@ -4,7 +4,7 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -27,9 +27,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+//b5.class
 
-public class b5_class66
-extends GuiScreen {
+public class b5_class66 extends GuiScreen {
     List<EntityLivingBase> a = new ArrayList<EntityLivingBase>();
     int b = 0;
     static float c = 0.0f;

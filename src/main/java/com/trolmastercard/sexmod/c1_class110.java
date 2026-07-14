@@ -9,8 +9,7 @@ import software.bernie.geckolib3.core.IAnimatableModel;
 import software.bernie.geckolib3.core.processor.AnimationProcessor;
 import software.bernie.geckolib3.core.processor.IBone;
 
-public class c1_class110<T extends IAnimatable>
-extends AnimationProcessor<T> {
+public class c1_class110<T extends IAnimatable> extends AnimationProcessor<T> {
     HashMap<String, IBone> a = new HashMap();
 
     public c1_class110(IAnimatableModel iAnimatableModel) {
