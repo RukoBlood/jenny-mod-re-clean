@@ -9,22 +9,20 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class cq_class141
-extends ModelBase
-implements IRenderer {
-    final private ModelRenderer a;
+public class SlimeLimb extends ModelBase implements IRenderer {
+    final private ModelRenderer mdl;
 
-    public cq_class141() {
+    public SlimeLimb() {
         this.textureWidth = 16;
         this.textureHeight = 16;
-        this.a = new ModelRenderer(this);
-        this.a.setRotationPoint(-5.0f, 2.5f, 0.0f);
-        this.a.cubeList.add(new ModelBox(this.a, 0, 0, -2.0f, -6.0f, 0.0f, 2, 6, 2, 0.0f, false));
+        this.mdl = new ModelRenderer(this);
+        this.mdl.setRotationPoint(-5.0f, 2.5f, 0.0f);
+        this.mdl.cubeList.add(new ModelBox(this.mdl, 0, 0, -2.0f, -6.0f, 0.0f, 2, 6, 2, 0.0f, false));
     }
 
     @Override
     public void render(Entity entity, float f, float f2, float f3, float f4, float f5, float f6) {
-        this.a.render(f6);
+        this.mdl.render(f6);
     }
 
     public void ModelRotate(ModelRenderer modelRenderer, float x, float y, float z) {
@@ -35,7 +33,7 @@ implements IRenderer {
 
     @Override
     public ModelRenderer Render() {
-        return this.a;
+        return this.mdl;
     }
 }
 

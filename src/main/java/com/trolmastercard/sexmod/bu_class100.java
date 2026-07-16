@@ -18,8 +18,7 @@ import software.bernie.geckolib3.core.util.Color;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-public class bu_class100
-extends GeoLayerRenderer {
+public class bu_class100 extends GeoLayerRenderer {
     final static private ResourceLocation b = new ResourceLocation("textures/entity/elytra.png");
     final private ModelElytra a = new ModelElytra();
 

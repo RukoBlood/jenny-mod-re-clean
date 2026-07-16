@@ -58,7 +58,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
+    public IRenderer getLimbRenderer(int n) {
         return new a7_class15();
     }
 

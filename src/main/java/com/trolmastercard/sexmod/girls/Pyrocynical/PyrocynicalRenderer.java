@@ -10,7 +10,7 @@ package com.trolmastercard.sexmod.girls.Pyrocynical;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.be_class78;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -114,7 +114,7 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
         if (al_class332.a == -1) {
             return 0;
         }
-        return (int) be_class78.b(this.minecraft.player.ticksExisted - al_class332.a, 1.0f, 30.0f);
+        return (int) Utils.clamp(this.minecraft.player.ticksExisted - al_class332.a, 1.0f, 30.0f);
     }
 
     float a(PyrocynicalEntity al_class332, float f) {
@@ -136,7 +136,7 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
             return 0.0f;
         }
         int n = 90;
-        float f2 = be_class78.b(this.minecraft.player.ticksExisted - al_class332.a, n, 120.0f) - (float)n;
+        float f2 = Utils.clamp(this.minecraft.player.ticksExisted - al_class332.a, n, 120.0f) - (float)n;
         float f3 = (f2 + f) / 30.0f;
         return 1.0f - f3;
     }

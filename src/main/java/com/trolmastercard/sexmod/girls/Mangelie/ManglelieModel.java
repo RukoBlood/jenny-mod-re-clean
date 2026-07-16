@@ -15,6 +15,7 @@ import com.trolmastercard.sexmod.girls.GirlModel;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -196,8 +197,8 @@ extends GirlModel<GirlEntity> {
         Vec3d vec3d = ManglelieRenderer.a(f__class2972, f3);
         Vec3d vec3d2 = f8_class2932.b("armR").add(vec3d);
         Vec3d vec3d3 = f8_class2932.b("armL").add(vec3d);
-        bm_class88 bm_class882 = be_class78.a(vec3d2, f8_class2932.R);
-        bm_class88 bm_class883 = be_class78.a(vec3d3, f8_class2932.R);
+        Vector2f bm_class882 = Utils.CalculateLookAngles(vec3d2, f8_class2932.R);
+        Vector2f bm_class883 = Utils.CalculateLookAngles(vec3d3, f8_class2932.R);
         Float f4 = GalathEntity.a(f__class2972, f3);
         float f5 = f4 == null ? Reference.LerpAngleDegrees(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f3) : f4.floatValue();
         float f6 = TrigMath.toRadians(f5);
@@ -213,9 +214,9 @@ extends GirlModel<GirlEntity> {
         float f10 = TrigMath.toRadians(Reference.LerpFloat(0.0f, 90.0f, f8));
         boolean bl = f8_class2932.boolean_a(f8_class2932.R, f3);
         if (bl) {
-            a_inner128.access$002(a_inner1282, new Vector3f(-f2 + bm_class882.a + TrigMath.toRadians(90.0f), bm_class882.c, 0.0f));
-            a_inner128.access$102(a_inner1282, new Vector3f(-f2 + bm_class883.a + TrigMath.toRadians(90.0f), (float)((double)bm_class883.c + (double) TrigMath.toRadians(-20.0f) * Math.cos(bm_class882.c + f6 * 1.0f) + (double) Reference.LerpFloat(f10 / 2.0f, 0.0f, f9)), 0.0f));
-            a_inner128.access$402(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class882.c) - Math.abs(f6)) * 0.1909f);
+            a_inner128.access$002(a_inner1282, new Vector3f(-f2 + bm_class882.yaw + TrigMath.toRadians(90.0f), bm_class882.pitch, 0.0f));
+            a_inner128.access$102(a_inner1282, new Vector3f(-f2 + bm_class883.yaw + TrigMath.toRadians(90.0f), (float)((double)bm_class883.pitch + (double) TrigMath.toRadians(-20.0f) * Math.cos(bm_class882.pitch + f6 * 1.0f) + (double) Reference.LerpFloat(f10 / 2.0f, 0.0f, f9)), 0.0f));
+            a_inner128.access$402(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class882.pitch) - Math.abs(f6)) * 0.1909f);
             a_inner128.access$702(a_inner1282, TrigMath.toRadians(90.0f));
             a_inner128.access$200((a_inner128)a_inner1282).z = Reference.LerpFloat(f10, 0.0f, f9);
             if ((double)f > 0.5) {
@@ -224,9 +225,9 @@ extends GirlModel<GirlEntity> {
                 a_inner128.access$200((a_inner128)a_inner1282).x = m + (float) Reference.LerpDouble(0.0, (double)g, Reference.h(f * 2.0f));
             }
         } else {
-            a_inner128.access$102(a_inner1282, new Vector3f(-f2 + bm_class883.a + TrigMath.toRadians(90.0f), bm_class883.c, 0.0f));
-            a_inner128.access$002(a_inner1282, new Vector3f(-f2 + bm_class882.a + TrigMath.toRadians(90.0f), (float)((double)bm_class882.c + (double) TrigMath.toRadians(20.0f) * Math.cos(bm_class883.c + f6 * 1.0f)) - Reference.LerpFloat(f10 / 2.0f, 0.0f, f9), 0.0f));
-            a_inner128.access$502(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class883.c) - Math.abs(f6)) * 0.1909f);
+            a_inner128.access$102(a_inner1282, new Vector3f(-f2 + bm_class883.yaw + TrigMath.toRadians(90.0f), bm_class883.pitch, 0.0f));
+            a_inner128.access$002(a_inner1282, new Vector3f(-f2 + bm_class882.yaw + TrigMath.toRadians(90.0f), (float)((double)bm_class882.pitch + (double) TrigMath.toRadians(20.0f) * Math.cos(bm_class883.pitch + f6 * 1.0f)) - Reference.LerpFloat(f10 / 2.0f, 0.0f, f9), 0.0f));
+            a_inner128.access$502(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class883.pitch) - Math.abs(f6)) * 0.1909f);
             a_inner128.access$602(a_inner1282, TrigMath.toRadians(90.0f));
             a_inner128.access$300((a_inner128)a_inner1282).z = -Reference.LerpFloat(f10, 0.0f, f9);
             if ((double)f > 0.5) {
@@ -287,8 +288,8 @@ extends GirlModel<GirlEntity> {
             iBone2.setRotationX(-1.6666666f * f);
             iBone.setRotationX(f * 0.666f);
         }
-        float f2 = be_class78.a((double)f8_class2932.T, f8_class2932.af);
-        float f3 = be_class78.a((double)f8_class2932.ai, f8_class2932.W);
+        float f2 = Utils.getAngleDifferences((double)f8_class2932.T, f8_class2932.af);
+        float f3 = Utils.getAngleDifferences((double)f8_class2932.ai, f8_class2932.W);
         float f4 = Minecraft.getDebugFPS();
         if (f4 == 0.0f) {
             f4 = 1.0f;

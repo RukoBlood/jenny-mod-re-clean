@@ -12,6 +12,7 @@ import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
@@ -84,7 +85,7 @@ implements IClientCommand {
 
     String a(GirlEntity em_class2582) {
         if (em_class2582 instanceof PlayerGirl) {
-            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + be_class78.b(PlayerGirlEntity.a(em_class2582).toString());
+            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + Utils.CapitalizeString(PlayerGirlEntity.a(em_class2582).toString());
         }
         return (Object)((Object)TextFormatting.YELLOW) + "applied model code to this " + em_class2582.getGirlName();
     }

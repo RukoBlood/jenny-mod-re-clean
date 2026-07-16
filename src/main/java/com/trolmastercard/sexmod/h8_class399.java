@@ -23,6 +23,7 @@ import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
@@ -84,9 +85,9 @@ public enum h8_class399 {
         if (!hashMap.isEmpty()) {
             ArrayList<Map.Entry<BlockPos, Integer>> arrayList2 = new ArrayList<>(hashMap.entrySet());
             arrayList2.sort((entry, entry2) -> ((Integer)entry2.getValue()).compareTo((Integer)entry.getValue()));
-            galath.O = new Vec3d((Vec3i)(arrayList2.get(be_class78.a(arrayList2.size() - 1))).getKey());
+            galath.O = new Vec3d((Vec3i)(arrayList2.get(Utils.getWeightedRandomInt(arrayList2.size() - 1))).getKey());
         } else {
-            galath.O = arrayList.isEmpty() ? new Vec3d(blockPos2.add(be_class78.a(10.0f, true), be_class78.a(10.0f, false), be_class78.a(10.0f, true))) : new Vec3d((Vec3i)arrayList.get(Reference.RANDOM.nextInt(arrayList.size())));
+            galath.O = arrayList.isEmpty() ? new Vec3d(blockPos2.add(Utils.getRandomFloat(10.0f, true), Utils.getRandomFloat(10.0f, false), Utils.getRandomFloat(10.0f, true))) : new Vec3d((Vec3i)arrayList.get(Reference.RANDOM.nextInt(arrayList.size())));
         }
         galath.bL = null;
         galath.b(0);
@@ -108,7 +109,7 @@ public enum h8_class399 {
         Vec3d vec3d4 = vec3d3.normalize();
         f__class2972.motionX = vec3d4.x * (double)0.6f;
         f__class2972.motionZ = vec3d4.z * (double)0.6f;
-        f__class2972.motionY = be_class78.b(vec3d3.y * (double)0.6f, (double)-0.6f, (double)0.6f);
+        f__class2972.motionY = Utils.clamp(vec3d3.y * (double)0.6f, (double)-0.6f, (double)0.6f);
     }, f__class2972 -> f__class2972.ar() > 23, f__class2972 -> {
         f__class2972.b(Vec3d.ZERO);
         f__class2972.b(0);
@@ -176,7 +177,7 @@ public enum h8_class399 {
         EntityLivingBase entityLivingBase = f__class2972.net_minecraft_entity_EntityLivingBase_M();
         int n = f__class2972.az() + 1;
         f__class2972.a(n);
-        if (be_class78.a((double)n, 24.0, 32.0)) {
+        if (Utils.isValueInBounds((double)n, 24.0, 32.0)) {
             Vec3d vec3d = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight(), 0.0);
             g8_class353 g8_class3532 = new g8_class353(vec3d.x - f__class2972.posX, vec3d.z - f__class2972.posZ);
             double d = TrigMath.toDegrees(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
@@ -187,7 +188,7 @@ public enum h8_class399 {
             float f = (float)(n - 24) / 8.0f;
             Vec3d vec3d5 = Reference.LerpVec3d(vec3d3, vec3d4, (double)f);
             f__class2972.c(vec3d5);
-        } else if (be_class78.a((double)n, 32.0, 54.0)) {
+        } else if (Utils.isValueInBounds((double)n, 32.0, 54.0)) {
             Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             Vec3d vec3d6 = entityLivingBase.getPositionVector().add(vec3d);
             f__class2972.c(vec3d6);

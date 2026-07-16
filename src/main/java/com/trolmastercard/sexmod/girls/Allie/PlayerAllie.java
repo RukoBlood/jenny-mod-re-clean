@@ -65,8 +65,8 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
-        return new f1_PlayerAllieRotateSomething();
+    public IRenderer getLimbRenderer(int n) {
+        return new AllieLimb();
     }
 
     @Override

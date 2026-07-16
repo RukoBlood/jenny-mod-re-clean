@@ -382,7 +382,7 @@ IInventory,
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(I)));
-        this.tasks.addTask(3, new hz_class409(this));
+        this.tasks.addTask(3, new AutoCloseDoorGoal(this));
         this.tasks.addTask(5, this.o);
     }
 
@@ -830,7 +830,7 @@ IInventory,
     }
 
     void void_b(EntityPlayer entityPlayer) {
-        PlayerGirl ei_class2512 = PlayerGirl.d_(entityPlayer.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
         Vec3d vec3d = new Vec3d(entityPlayer.posX, entityPlayer.posY + (double)(ei_class2512 == null ? entityPlayer.eyeHeight : ei_class2512.getEyeHeight()), entityPlayer.posZ);
         Vec3d vec3d2 = new Vec3d(this.posX, this.posY + (double)this.getEyeHeight(), this.posZ);
         double d = vec3d2.distanceTo(vec3d);

@@ -168,7 +168,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (em_class2582.boolean_h()) {
             GlStateManager.translate(0.0, 0.01, 0.0);
         } else {
-            af_class27.a(i, em_class2582, f);
+            GalathGeometryRender.setupRenderTranslations(i, em_class2582, f);
             ManglelieRenderer.b(em_class2582, f);
         }
         i.getTextureManager().bindTexture(LINE);
@@ -299,7 +299,7 @@ extends GirlRenderer<ManglelieEntity> {
             return;
         }
         int n = ManglelieRenderer.a(string);
-        if (be_class78.a((double)n, 17.0, 35.0)) {
+        if (Utils.isValueInBounds((double)n, 17.0, 35.0)) {
             if (i.isGamePaused()) {
                 return;
             }
@@ -312,7 +312,7 @@ extends GirlRenderer<ManglelieEntity> {
             }
             geoBone.setPositionY(geoBone.getPositionY() + f * 0.01f);
         }
-        if (be_class78.a((double)n, 1.0, 11.0)) {
+        if (Utils.isValueInBounds((double)n, 1.0, 11.0)) {
             if (!string.endsWith("1")) {
                 return;
             }
@@ -383,12 +383,12 @@ extends GirlRenderer<ManglelieEntity> {
 
     static void a_6(GirlEntity em_class2582, BufferBuilder bufferBuilder, Tessellator tessellator, float f) {
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        Vec3d[][] vec3dArray = af_class27.a(em_class2582, f, "clothBoobLconStart", "clothBoobLconEnd", D, v);
-        Vec3d[][] vec3dArray2 = af_class27.a(em_class2582, f, "clothBoobRconStart", "clothBoobRconEnd", D, v);
-        Vec3d[][] vec3dArray3 = af_class27.a(em_class2582, f, "clothBoobMidconStart", "clothBoobMidconEnd", z, z);
-        af_class27.a(bufferBuilder, vec3dArray, C);
-        af_class27.a(bufferBuilder, vec3dArray2, C);
-        af_class27.a(bufferBuilder, vec3dArray3, C);
+        Vec3d[][] vec3dArray = GalathGeometryRender.generateBoxMesh(em_class2582, f, "clothBoobLconStart", "clothBoobLconEnd", D, v);
+        Vec3d[][] vec3dArray2 = GalathGeometryRender.generateBoxMesh(em_class2582, f, "clothBoobRconStart", "clothBoobRconEnd", D, v);
+        Vec3d[][] vec3dArray3 = GalathGeometryRender.generateBoxMesh(em_class2582, f, "clothBoobMidconStart", "clothBoobMidconEnd", z, z);
+        GalathGeometryRender.drawMesh(bufferBuilder, vec3dArray, C);
+        GalathGeometryRender.drawMesh(bufferBuilder, vec3dArray2, C);
+        GalathGeometryRender.drawMesh(bufferBuilder, vec3dArray3, C);
         tessellator.draw();
     }
 

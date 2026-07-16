@@ -23,6 +23,7 @@ import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -601,7 +602,7 @@ extends GirlEntity {
             f -= f2.floatValue();
         }
         this.af = Math.abs(cj_class134.a(0.0f, f)) < 80.0f ? -TrigMath.toRadians(f) : 0.0f;
-        this.W = this.af == 0.0f ? 0.0f : (float)be_class78.b(-vec3d3.y / 2.0, -0.75, 0.75);
+        this.W = this.af == 0.0f ? 0.0f : (float) Utils.clamp(-vec3d3.y / 2.0, -0.75, 0.75);
     }
 
     @Override

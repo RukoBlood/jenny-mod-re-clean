@@ -83,7 +83,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
+    public IRenderer getLimbRenderer(int n) {
         return new JennyLimb();
     }
 
@@ -204,19 +204,19 @@ public class PlayerJenny extends PlayerGirl {
                     this.createAnimation("animation.jenny.null", true, animationEvent);
                     break;
                 }
-                if (this.ak) {
+                if (this.isPlayerRiding) {
                     this.createAnimation("animation.jenny.sit", true, animationEvent);
                     break;
                 }
-                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.ap = !this.ap;
                 }
-                if (!this.af) {
+                if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.jenny.fly" + (this.ap ? "2" : ""), true, animationEvent);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
-                    if (this.aj) {
+                    if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2f);
                         this.createAnimation("animation.jenny.run", true, animationEvent);
                         break;

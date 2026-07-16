@@ -34,7 +34,7 @@ public class ah_class29 {
     @SubscribeEvent
     public void a(LivingAttackEvent livingAttackEvent) {
         DamageSource damageSource = livingAttackEvent.getSource();
-        if (damageSource == DamageSource.OUT_OF_WORLD || damageSource instanceof a3_class10) {
+        if (damageSource == DamageSource.OUT_OF_WORLD || damageSource instanceof CumDrainDamageSource) {
             return;
         }
         if (!(livingAttackEvent.getEntity() instanceof EntityPlayer)) {

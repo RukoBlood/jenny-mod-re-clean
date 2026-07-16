@@ -288,7 +288,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         }
         this.setCurrentAction(Action.MASTERBATE);
         this.void_b(180.0f - (float) TrigMath.toDegrees(Math.atan2(vec3d.x - entityPlayer.posX, vec3d.z - entityPlayer.posZ)));
-        be_class78.a(8000, () -> {
+        Utils.runDelayedTask(8000, () -> {
             EntityPlayer p1 = this.net_minecraft_entity_player_EntityPlayer_z();
             if (p1 == null) {
                 return;
@@ -407,7 +407,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(I)));
-        this.tasks.addTask(3, new hz_class409(this));
+        this.tasks.addTask(3, new AutoCloseDoorGoal(this));
         this.tasks.addTask(5, this.o);
     }
 
@@ -882,8 +882,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.a_ = this.bg;
         Vec3d vec3d = this.W.subtract(this.bD);
         Vec3d vec3d2 = VectorMath.rotate(vec3d, this.renderYawOffset + 180.0f);
-        this.a9 = TrigMath.toRadians(be_class78.b(vec3d2.z * 40.0, -50.0, 50.0));
-        this.bg = TrigMath.toRadians(be_class78.b(vec3d2.x * 40.0, -50.0, 50.0));
+        this.a9 = TrigMath.toRadians(Utils.clamp(vec3d2.z * 40.0, -50.0, 50.0));
+        this.bg = TrigMath.toRadians(Utils.clamp(vec3d2.x * 40.0, -50.0, 50.0));
     }
 
     public void f(Vec3d vec3d) {
@@ -961,7 +961,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     void void_d(EntityPlayer entityPlayer) {
-        PlayerGirl ei_class2512 = PlayerGirl.d_(entityPlayer.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
         Vec3d vec3d = new Vec3d(entityPlayer.posX, entityPlayer.posY + (double)(ei_class2512 == null ? entityPlayer.eyeHeight : ei_class2512.getEyeHeight()), entityPlayer.posZ);
         Vec3d vec3d2 = new Vec3d(this.posX, this.posY + (double)this.getEyeHeight(), this.posZ);
         double d = vec3d2.distanceTo(vec3d);
@@ -1481,7 +1481,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (++this.at != 15) {
             return;
         }
-        entityPlayer.attackEntityFrom(new a3_class10(this), 2.1474836E9f);
+        entityPlayer.attackEntityFrom(new CumDrainDamageSource(this), 2.1474836E9f);
     }
 
     void void_O() {
@@ -1526,7 +1526,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             if (entityWitherSkeleton.isDead || entityWitherSkeleton.ticksExisted % 10 != 0) continue;
             Set<? extends EntityPlayer> set = ((WorldServer)this.world).getEntityTracker().getTrackingPlayers(entityWitherSkeleton);
             for (EntityPlayer entityPlayer : set) {
-                ((EntityPlayerMP)entityPlayer).connection.sendPacket(new SPacketParticles(EnumParticleTypes.DRAGON_BREATH, false, (float)entityWitherSkeleton.posX, (float)entityWitherSkeleton.posY, (float)entityWitherSkeleton.posZ, 0.2f * (float)be_class78.a(), entityWitherSkeleton.getEyeHeight() / 2.0f, 0.2f * (float)be_class78.a(), 0.0f, 5, new int[0]));
+                ((EntityPlayerMP)entityPlayer).connection.sendPacket(new SPacketParticles(EnumParticleTypes.DRAGON_BREATH, false, (float)entityWitherSkeleton.posX, (float)entityWitherSkeleton.posY, (float)entityWitherSkeleton.posZ, 0.2f * (float) Utils.getRandomSign(), entityWitherSkeleton.getEyeHeight() / 2.0f, 0.2f * (float) Utils.getRandomSign(), 0.0f, 5, new int[0]));
             }
         }
     }
@@ -1877,7 +1877,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if ("anal".equals(string)) {
             fh_class313.b();
             HandlePlayerMovement.a(false);
-            be_class78.a(1200, () -> {
+            Utils.runDelayedTask(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                 this.c(entityPlayerSP.getPositionVector());
                 this.void_b(0.0f);
@@ -1890,7 +1890,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if ("cowgirl".equals(string)) {
             fh_class313.b();
             HandlePlayerMovement.a(false);
-            be_class78.a(1200, () -> {
+            Utils.runDelayedTask(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                 this.c(entityPlayerSP.getPositionVector());
                 this.void_b(entityPlayerSP.rotationYaw + 180.0f);
@@ -1907,7 +1907,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             }
             fh_class313.b();
             HandlePlayerMovement.a(false);
-            be_class78.a(1200, () -> {
+            Utils.runDelayedTask(1200, () -> {
                 Minecraft minecraft = Minecraft.getMinecraft();
                 EntityPlayerSP entityPlayerSP = minecraft.player;
                 minecraft.gameSettings.thirdPersonView = 1;
@@ -2122,7 +2122,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (entityPlayer.capabilities.isCreativeMode) {
             return;
         }
-        entityPlayer.attackEntityFrom(new a3_class10(this), 1.0f);
+        entityPlayer.attackEntityFrom(new CumDrainDamageSource(this), 1.0f);
         if (bl) {
             this.heal(1.5f);
         }
@@ -2787,7 +2787,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             } else {
                 GalathCoin.a(f__class2972);
                 PackageHandler.networkWrapper.sendToAllTracking((IMessage)new com.trolmastercard.sexmod.Packages.SpawnEnergyBallParticles(f__class2972.girlID(), GalathMangTracker.b(f__class2972)), (Entity)f__class2972);
-                be_class78.a(900, () -> GalathMangTracker.a(f__class2972));
+                Utils.runDelayedTask(900, () -> GalathMangTracker.a(f__class2972));
                 f__class2972.bU = true;
             }
             f__class2972.setHealth(1.0f);
@@ -2968,7 +2968,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             f__class2972.void_e(entityPlayer.getPersistentID());
             f__class2972.setCurrentAction(Action.MORNING_BLOWJOB_SLOW);
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-            be_class78.a(500, () -> {
+            Utils.runDelayedTask(500, () -> {
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
                 PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerCam(-10.0f, f + 180.0f + 5.0f, 0), (EntityPlayerMP)entityPlayer);
             });

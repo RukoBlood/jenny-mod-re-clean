@@ -22,8 +22,7 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class bj_class84
-extends WorldSavedData {
+public class bj_class84 extends WorldSavedData {
     final static String a = "sexmod:static_custom_model_manager";
     final static String d = "sexmod:static_custom_model_manager";
     static public HashMap<UUID, String> c = new HashMap();
@@ -45,18 +44,18 @@ extends WorldSavedData {
         return string;
     }
 
-    private static String b(GirlEntity em_class2582) {
-        if (em_class2582 instanceof GalathEntity) {
-            UUID uUID = em_class2582.girlID();
+    private static String b(GirlEntity girl) {
+        if (girl instanceof GalathEntity) {
+            UUID uUID = girl.girlID();
             UUID uUID2 = GalathMangTracker.f(uUID);
             if (uUID2 == null) {
                 uUID2 = uUID;
             }
             return c.get(uUID2);
         }
-        if (em_class2582 instanceof ManglelieEntity) {
-            UUID uUID = GalathMangTracker.f(((ManglelieEntity)em_class2582).java_util_UUID_v());
-            return b.get(uUID == null ? em_class2582.girlID() : uUID);
+        if (girl instanceof ManglelieEntity) {
+            UUID uUID = GalathMangTracker.f(((ManglelieEntity)girl).java_util_UUID_v());
+            return b.get(uUID == null ? girl.girlID() : uUID);
         }
         return null;
     }
@@ -131,10 +130,6 @@ extends WorldSavedData {
     public static void a() {
         c.clear();
         b.clear();
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

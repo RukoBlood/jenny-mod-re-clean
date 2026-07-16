@@ -16,11 +16,10 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class Supporter
-extends GirlEntity
-implements IInventory {
-    final static public DataParameter<Boolean> K = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(111);
-    public ItemStackHandler L = new ItemStackHandler(27);
+public abstract class Supporter extends GirlEntity implements IInventory {
+
+    final static public DataParameter<Boolean> HAS_CHEST = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(111);
+    public ItemStackHandler invHandler = new ItemStackHandler(27);
 
     protected Supporter(World world) {
         super(world);
@@ -29,7 +28,7 @@ implements IInventory {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.entityDataManager.register(K, false);
+        this.entityDataManager.register(HAS_CHEST, false);
     }
 
     @Override
@@ -43,26 +42,26 @@ implements IInventory {
     }
 
     @Override
-    public ItemStack getStackInSlot(int n) {
-        if (n >= this.L.getSlots()) {
+    public ItemStack getStackInSlot(int index) {
+        if (index >= this.invHandler.getSlots()) {
             return ItemStack.EMPTY;
         }
-        return this.L.getStackInSlot(n);
+        return this.invHandler.getStackInSlot(index);
     }
 
     @Override
-    public ItemStack decrStackSize(int n, int n2) {
-        return this.L.extractItem(n, n2, false);
+    public ItemStack decrStackSize(int index, int count) {
+        return this.invHandler.extractItem(index, count, false);
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int n) {
-        return this.L.extractItem(n, this.L.getStackInSlot(n).getCount(), false);
+    public ItemStack removeStackFromSlot(int index) {
+        return this.invHandler.extractItem(index, this.invHandler.getStackInSlot(index).getCount(), false);
     }
 
     @Override
-    public void setInventorySlotContents(int n, ItemStack itemStack) {
-        this.L.setStackInSlot(n, itemStack);
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        this.invHandler.setStackInSlot(index, stack);
     }
 
     @Override
@@ -75,30 +74,30 @@ implements IInventory {
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer entityPlayer) {
+    public boolean isUsableByPlayer(EntityPlayer player) {
         return true;
     }
 
     @Override
-    public void openInventory(EntityPlayer entityPlayer) {
+    public void openInventory(EntityPlayer player) {
     }
 
     @Override
-    public void closeInventory(EntityPlayer entityPlayer) {
+    public void closeInventory(EntityPlayer player) {
     }
 
     @Override
-    public boolean isItemValidForSlot(int n, ItemStack itemStack) {
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getField(int n) {
-        return n;
+    public int getField(int id) {
+        return id;
     }
 
     @Override
-    public void setField(int n, int n2) {
+    public void setField(int id, int value) {
     }
 
     @Override
@@ -108,10 +107,6 @@ implements IInventory {
 
     @Override
     public void clear() {
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

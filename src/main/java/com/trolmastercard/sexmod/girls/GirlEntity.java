@@ -426,7 +426,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(I)));
-        this.tasks.addTask(3, new hz_class409(this));
+        this.tasks.addTask(3, new AutoCloseDoorGoal(this));
         this.tasks.addTask(5, this.o);
         this.tasks.addTask(5, this.avoidWater);
     }

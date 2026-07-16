@@ -58,8 +58,8 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
-        return new bf_class79();
+    public IRenderer getLimbRenderer(int n) {
+        return new LunaLimb();
     }
 
     @Override
@@ -194,19 +194,19 @@ extends PlayerGirl {
                     this.createAnimation("animation.cat.null", true, animationEvent);
                     break;
                 }
-                if (this.ak) {
+                if (this.isPlayerRiding) {
                     this.createAnimation("animation.cat.sit", true, animationEvent);
                     break;
                 }
-                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.aq = !this.aq;
                 }
-                if (!this.af) {
+                if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.cat.fly" + (this.aq ? "2" : ""), true, animationEvent);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
-                    if (this.aj) {
+                    if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.5);
                         this.createAnimation("animation.cat.run", true, animationEvent);
                         break;

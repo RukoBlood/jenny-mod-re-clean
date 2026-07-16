@@ -22,9 +22,5 @@ public class ShowWarning extends JFrame {
         this.firstlaunch = true;
         AdultContentWarning.ShowWarning();
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

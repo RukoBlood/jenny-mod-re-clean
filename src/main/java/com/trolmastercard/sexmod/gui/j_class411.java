@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.DragonStaffRenderer;
 import com.trolmastercard.sexmod.Packages.*;
-import com.trolmastercard.sexmod.be_class78;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.gm_class376;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.block.Block;
@@ -158,10 +158,10 @@ public class j_class411 extends GuiScreen {
         this.k += (float)(n < this.width / 2 && n2 < this.height / 2 ? 1 : -1) * this.mc.getTickLength();
         this.n += (float)(n > this.width / 2 && n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
         this.i += (float)(n > this.width / 2 && n2 < this.height / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.a = be_class78.b(this.a, 0.0f, 1.0f);
-        this.k = be_class78.b(this.k, 0.0f, 1.0f);
-        this.n = be_class78.b(this.n, 0.0f, 1.0f);
-        this.i = be_class78.b(this.i, 0.0f, 1.0f);
+        this.a = Utils.clamp(this.a, 0.0f, 1.0f);
+        this.k = Utils.clamp(this.k, 0.0f, 1.0f);
+        this.n = Utils.clamp(this.n, 0.0f, 1.0f);
+        this.i = Utils.clamp(this.i, 0.0f, 1.0f);
         GlStateManager.pushMatrix();
         GlStateManager.translate((float)this.width / 2.0f, (float)this.height / 2.0f, 0.0f);
         GlStateManager.scale(f2, f2, f2);

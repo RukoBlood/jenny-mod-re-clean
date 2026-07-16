@@ -65,8 +65,8 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
-        return new cq_class141();
+    public IRenderer getLimbRenderer(int n) {
+        return new SlimeLimb();
     }
 
     @Override
@@ -168,19 +168,19 @@ extends PlayerGirl {
                     this.createAnimation("animation.slime.null", true, animationEvent);
                     break;
                 }
-                if (this.ak) {
+                if (this.isPlayerRiding) {
                     this.createAnimation("animation.slime.sit", true, animationEvent);
                     break;
                 }
-                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.ap = !this.ap;
                 }
-                if (!this.af) {
+                if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.slime.fly" + (this.ap ? "2" : ""), true, animationEvent);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
-                    if (this.aj) {
+                    if (this.isPlayerSprinting) {
                         this.createAnimation("animation.slime.run", true, animationEvent);
                         break;
                     }

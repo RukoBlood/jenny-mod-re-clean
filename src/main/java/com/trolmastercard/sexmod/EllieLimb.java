@@ -22,7 +22,7 @@ public class EllieLimb extends ModelBase implements IRenderer {
         this.b = new ModelRenderer(this);
         this.b.setRotationPoint(-1.0f, -3.0f, 1.0f);
         this.a.addChild(this.b);
-        this.a(this.b, 0.0f, 1.5708f, 0.0f);
+        this.rotate(this.b, 0.0f, 1.5708f, 0.0f);
         this.b.cubeList.add(new ModelBox(this.b, 0, 0, -1.0f, -3.0f, -1.0f, 2, 6, 2, 0.0f, false));
         this.c = new ModelRenderer(this);
         this.c.setRotationPoint(0.0f, 0.0f, 0.0f);
@@ -34,7 +34,7 @@ public class EllieLimb extends ModelBase implements IRenderer {
         this.c.render(scale);
     }
 
-    public void a(ModelRenderer modelRenderer, float f, float f2, float f3) {
+    public void rotate(ModelRenderer modelRenderer, float f, float f2, float f3) {
         modelRenderer.rotateAngleX = f;
         modelRenderer.rotateAngleY = f2;
         modelRenderer.rotateAngleZ = f3;

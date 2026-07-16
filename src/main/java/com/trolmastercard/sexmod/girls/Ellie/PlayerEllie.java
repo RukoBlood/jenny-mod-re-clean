@@ -79,7 +79,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
+    public IRenderer getLimbRenderer(int n) {
         return new EllieLimb();
     }
 
@@ -231,19 +231,19 @@ extends PlayerGirl {
                     this.createAnimation("animation.ellie.null", true, animationEvent);
                     break;
                 }
-                if (this.ak) {
+                if (this.isPlayerRiding) {
                     this.createAnimation("animation.ellie.ride", true, animationEvent);
                     break;
                 }
-                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.ar = !this.ar;
                 }
-                if (!this.af) {
+                if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.ellie.fly" + (this.ar ? "2" : ""), true, animationEvent);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
-                    if (this.aj) {
+                    if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.5);
                         this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.run", true, animationEvent);
                         break;

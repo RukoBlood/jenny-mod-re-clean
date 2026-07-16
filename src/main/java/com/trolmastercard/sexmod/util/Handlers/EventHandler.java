@@ -94,7 +94,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new w_class427());
         MinecraftForge.EVENT_BUS.register((Object)new PlayerAllieRenderer.a_inner205());
         MinecraftForge.EVENT_BUS.register((Object)new gm_class376());
-        MinecraftForge.EVENT_BUS.register((Object)new c6_class115());
+        MinecraftForge.EVENT_BUS.register((Object)new DeprecatedCheckForUpdates());
         MinecraftForge.EVENT_BUS.register((Object)new a_class4.b_inner5());
         MinecraftForge.EVENT_BUS.register((Object)new CustomModel.a_inner95());
         MinecraftForge.EVENT_BUS.register((Object)new EscapeMinigameUI());

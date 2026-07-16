@@ -19,6 +19,7 @@ import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -133,7 +134,7 @@ extends Item {
         String string2 = GirlEntity.c(GirlEntity.h(em_class2582.girlID()));
         entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{em_class2582.getGirlName(), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
-        be_class78.a(String.format("%s$%s", string, string2));
+        Utils.copyToClipboard(String.format("%s$%s", string, string2));
     }
 
     @SubscribeEvent
@@ -162,16 +163,16 @@ extends Item {
         if (!world.isRemote) {
             return true;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.d_(entityPlayer.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
         if (ei_class2512 == null) {
             entityPlayer.sendStatusMessage(new TextComponentString("you gotta turn into the girl, you want to copy the model-code off"), true);
             return true;
         }
         String string = ei_class2512.java_lang_String_C();
         String string2 = GirlEntity.c(GirlEntity.h(ei_class2512.girlID()));
-        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{be_class78.b(PlayerGirlEntity.a(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
+        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{Utils.CapitalizeString(PlayerGirlEntity.a(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
-        be_class78.a(String.format("%s$%s", string, string2));
+        Utils.copyToClipboard(String.format("%s$%s", string, string2));
         return true;
     }
 
@@ -191,10 +192,6 @@ extends Item {
     public static void a(ModelRegistryEvent modelRegistryEvent) {
         ModelLoader.setCustomModelResourceLocation((Item) EDITOR_WAND, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:npc_editor_wand"));
         ModelLoader.setCustomModelResourceLocation((Item) EDITOR_WAND, 1, (ModelResourceLocation)new ModelResourceLocation("sexmod:npc_editor_wand_active"));
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

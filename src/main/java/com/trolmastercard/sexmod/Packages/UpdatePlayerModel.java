@@ -72,7 +72,7 @@ implements IMessage {
                 EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
                 World world = entityPlayerMP.world;
                 UUID uUID = messageContext.getServerHandler().player.getPersistentID();
-                PlayerGirl ei_class2513 = PlayerGirl.d_(uUID);
+                PlayerGirl ei_class2513 = PlayerGirl.getUUIDHashtable(uUID);
                 if (ei_class2513 != null) {
                     try {
                         for (GirlEntity object2 : GirlEntity.GirlEntityList()) {

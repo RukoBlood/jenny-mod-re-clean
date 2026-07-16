@@ -77,7 +77,7 @@ public class fu_class330 {
 
     @SubscribeEvent
     public void a(PlayerInteractEvent.RightClickBlock rightClickBlock) {
-        PlayerGirl ei_class2512 = PlayerGirl.d_(rightClickBlock.getEntityPlayer().getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(rightClickBlock.getEntityPlayer().getPersistentID());
         BlockPos blockPos = rightClickBlock.getPos();
         World world = rightClickBlock.getEntityPlayer().world;
         EntityPlayer entityPlayer = rightClickBlock.getEntityPlayer();
@@ -187,7 +187,7 @@ public class fu_class330 {
             return;
         }
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-        PlayerGirl ei_class2512 = PlayerGirl.d_(entityPlayerSP.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityPlayerSP.getPersistentID());
         EntityPlayer entityPlayer = (EntityPlayer)entityInteract.getTarget();
         PlayerGirl ei_class2513 = PlayerGirl.GetPlayer(entityPlayer);
         if (ei_class2513 == null) {
@@ -215,12 +215,12 @@ public class fu_class330 {
             return;
         }
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-        PlayerGirl ei_class2512 = PlayerGirl.d_(entityPlayerSP.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityPlayerSP.getPersistentID());
         if (ei_class2512 == null) {
             return;
         }
         EntityPlayer entityPlayer = (EntityPlayer)entityInteract.getTarget();
-        PlayerGirl ei_class2513 = PlayerGirl.d_(entityPlayer.getPersistentID());
+        PlayerGirl ei_class2513 = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
         if (ei_class2513 != null) {
             entityPlayer.sendStatusMessage(new TextComponentString("no lesbo yet owo"), true);
             return;
@@ -325,7 +325,7 @@ public class fu_class330 {
             return;
         }
         Minecraft minecraft = Minecraft.getMinecraft();
-        PlayerGirl ei_class2512 = PlayerGirl.d_(minecraft.player.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
         if (ei_class2512 == null) {
             return;
         }
@@ -354,7 +354,7 @@ public class fu_class330 {
         if (!(entityLivingBase instanceof EntityPlayer)) {
             return;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.d_(entityLivingBase.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityLivingBase.getPersistentID());
         if (ei_class2512 == null) {
             return;
         }

@@ -25,6 +25,7 @@ import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
@@ -537,7 +538,7 @@ implements bh_class82,
             return;
         }
         PathPoint pathPoint = path.getFinalPathPoint();
-        PathPoint pathPoint2 = new PathPoint(be_class78.a(this.posX), be_class78.a(this.posY), be_class78.a(this.posZ));
+        PathPoint pathPoint2 = new PathPoint(Utils.Round(this.posX), Utils.Round(this.posY), Utils.Round(this.posZ));
         if (pathPoint == null) {
             return;
         }

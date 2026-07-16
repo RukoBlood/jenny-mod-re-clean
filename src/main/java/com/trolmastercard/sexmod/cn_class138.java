@@ -36,7 +36,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class cn_class138 {
-    Minecraft f;
+    Minecraft mc;
     float g = 2.0f;
     boolean c = false;
     final static private ResourceLocation e = new ResourceLocation("textures/map/map_background.png");
@@ -49,23 +49,23 @@ public class cn_class138 {
     public void a(RenderSpecificHandEvent renderSpecificHandEvent) {
         //Object object;
         PlayerGirl.void_C();
-        PlayerGirl ei_class2512 = PlayerGirl.d_(Minecraft.getMinecraft().player.getPersistentID());
-        if (ei_class2512 == null) {
+        PlayerGirl pg = PlayerGirl.getUUIDHashtable(Minecraft.getMinecraft().player.getPersistentID());
+        if (pg == null) {
             return;
         }
-        int n = ei_class2512.int_ah();
-        this.d = ei_class2512.com_trolmastercard_sexmod_at_class43_a(n);
-        this.h = new ResourceLocation("sexmod", ei_class2512.HandTexture(n));
-        this.b = ei_class2512.net_minecraft_util_math_Vec3i_b(n);
+        int n = pg.int_ah();
+        this.d = pg.getLimbRenderer(n);
+        this.h = new ResourceLocation("sexmod", pg.HandTexture(n));
+        this.b = pg.net_minecraft_util_math_Vec3i_b(n);
         if (this.d == null) {
             System.out.println("HAND IS NULL uwu did you forget to assign this girl a hand owo?");
             return;
         }
-        this.f = Minecraft.getMinecraft();
+        this.mc = Minecraft.getMinecraft();
         float f = 0.0f;
         float f2 = 0.0f;
         try {
-            ItemRenderer object = this.f.getItemRenderer();
+            ItemRenderer object = this.mc.getItemRenderer();
             if (ad_class25.GetEnv()) {
                 f = ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, object, "prevEquippedProgressMainHand")).floatValue();
                 f2 = ((Float)ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, object, "equippedProgressMainHand")).floatValue();
@@ -80,9 +80,9 @@ public class cn_class138 {
             exception.printStackTrace(new PrintWriter(stringWriter));
             Minecraft.getMinecraft().player.sendChatMessage(stringWriter.toString());
         }
-        EntityPlayerSP object = this.f.player;
+        EntityPlayerSP object = this.mc.player;
         float f3 = ((EntityLivingBase)object).getSwingProgress(renderSpecificHandEvent.getPartialTicks());
-        ItemStack itemStack = this.f.player.getHeldItemMainhand();
+        ItemStack itemStack = this.mc.player.getHeldItemMainhand();
         GlStateManager.color((float)this.b.getX() / 255.0f, (float)this.b.getY() / 255.0f, (float)this.b.getZ() / 255.0f);
         if (renderSpecificHandEvent.getHand() == EnumHand.MAIN_HAND) {
             if (itemStack.isEmpty() || itemStack.getItem() instanceof ItemMap) {
@@ -97,9 +97,9 @@ public class cn_class138 {
             } else {
                 this.c = false;
             }
-        } else if (this.f.player.getHeldItemOffhand().getItem() instanceof ItemMap) {
+        } else if (this.mc.player.getHeldItemOffhand().getItem() instanceof ItemMap) {
             renderSpecificHandEvent.setCanceled(true);
-            this.a(EnumHandSide.LEFT, this.g - 1.0f, f3, this.f.player.getHeldItemOffhand());
+            this.a(EnumHandSide.LEFT, this.g - 1.0f, f3, this.mc.player.getHeldItemOffhand());
         }
         GlStateManager.resetColor();
     }
@@ -119,7 +119,7 @@ public class cn_class138 {
     void a(EnumHandSide enumHandSide, float f, float f2, ItemStack itemStack) {
         float f3 = enumHandSide == EnumHandSide.RIGHT ? 1.0f : -1.0f;
         GlStateManager.translate(f3 * 0.125f, -0.125f, 0.0f);
-        if (!this.f.player.isInvisible()) {
+        if (!this.mc.player.isInvisible()) {
             GlStateManager.pushMatrix();
             GlStateManager.rotate(f3 * 10.0f, 0.0f, 0.0f, 1.0f);
             this.a(f, f2, enumHandSide);
@@ -176,7 +176,7 @@ public class cn_class138 {
         GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
         GlStateManager.scale(0.38f, 0.38f, 0.38f);
         GlStateManager.disableLighting();
-        this.f.getTextureManager().bindTexture(e);
+        this.mc.getTextureManager().bindTexture(e);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         GlStateManager.translate(-0.5f, -0.5f, 0.0f);
@@ -187,9 +187,9 @@ public class cn_class138 {
         bufferBuilder.pos(135.0, -7.0, 0.0).tex(1.0, 0.0).endVertex();
         bufferBuilder.pos(-7.0, -7.0, 0.0).tex(0.0, 0.0).endVertex();
         tessellator.draw();
-        MapData mapData = ((ItemMap)itemStack.getItem()).getMapData(itemStack, this.f.world);
+        MapData mapData = ((ItemMap)itemStack.getItem()).getMapData(itemStack, this.mc.world);
         if (mapData != null) {
-            this.f.entityRenderer.getMapItemRenderer().renderMap(mapData, false);
+            this.mc.entityRenderer.getMapItemRenderer().renderMap(mapData, false);
         }
         GlStateManager.color((float)this.b.getX() / 255.0f, (float)this.b.getY() / 255.0f, (float)this.b.getZ() / 255.0f);
     }
@@ -248,10 +248,6 @@ public class cn_class138 {
         GlStateManager.rotate(f3 * -135.0f, 0.0f, 1.0f, 0.0f);
         GlStateManager.translate(f3 * 5.6f, 0.0f, 0.0f);
         GlStateManager.translate(0.5f, 1.1f, 0.0f);
-    }
-
-    private static Exception a(Exception exception) {
-        return exception;
     }
 }
 

@@ -21,6 +21,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -394,8 +395,8 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
         if (!bl) {
             return;
         }
-        geoBone.setRotationX(geoBone.getRotationX() + TrigMath.toRadians(be_class78.b(x, -f, f)));
-        geoBone.setRotationZ(geoBone.getRotationZ() + TrigMath.toRadians(be_class78.b(N, -f2, f2)));
+        geoBone.setRotationX(geoBone.getRotationX() + TrigMath.toRadians(Utils.clamp(x, -f, f)));
+        geoBone.setRotationZ(geoBone.getRotationZ() + TrigMath.toRadians(Utils.clamp(N, -f2, f2)));
     }
 
     public static void a(GirlEntity em_class2582, GeoBone geoBone) {
@@ -473,7 +474,7 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
         if (!this.u && !this.F) {
             return vec3i;
         }
-        float f = be_class78.b(this.z, 2.0f, 15.0f) / 15.0f;
+        float f = Utils.clamp(this.z, 2.0f, 15.0f) / 15.0f;
         return new Vec3i((float)vec3i.getX() * f, (float)vec3i.getY() * f, (float)vec3i.getZ() * f);
     }
 

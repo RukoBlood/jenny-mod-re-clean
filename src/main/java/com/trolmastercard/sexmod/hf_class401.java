@@ -8,6 +8,7 @@
 package com.trolmastercard.sexmod;
 
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -91,14 +92,14 @@ extends Gui {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableAlpha();
         float f = l < u + 500L ? (float)(l - u) / 500.0f : (l < g + 500L ? 1.0f + (float)(g - l) / 500.0f : 1.0f);
-        f = be_class78.b(f, 0.0f, 1.0f);
+        f = Utils.clamp(f, 0.0f, 1.0f);
         GlStateManager.color(1.0f, 1.0f, 1.0f, f);
         this.a(i, n3 - hf_class401.i.c / 2, n2 - 70);
         this.a(p, (int)((float)n3 - 1.5f * (float)hf_class401.w.c + 1.0f), n2 - 70 + 3);
         this.a(p, n3 - hf_class401.w.c / 2 + 1, n2 - 70 + 3);
         this.a(p, n3 + hf_class401.w.c / 2 + 1, n2 - 70 + 3);
         float f2 = (float) Reference.EaseOutSine(Math.min(1.0f, (float)(l - s) / 150.0f));
-        float f3 = f2 == 1.0f ? be_class78.b(1.0f - (float)(l - hf_class401.f) / 500.0f, 0.0f, 1.0f) : 0.0f;
+        float f3 = f2 == 1.0f ? Utils.clamp(1.0f - (float)(l - hf_class401.f) / 500.0f, 0.0f, 1.0f) : 0.0f;
         this.a(1, -1.5f * (float)hf_class401.w.c, f3, f2, n3, n2, f);
         this.a(2, (float)(-hf_class401.w.c) / 2.0f, f3, f2, n3, n2, f);
         this.a(3, (float)hf_class401.w.c / 2.0f, f3, f2, n3, n2, f);

@@ -4,6 +4,7 @@
 package com.trolmastercard.sexmod;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Utils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.builder.Animation;
@@ -326,7 +327,7 @@ public enum Action {
         if (f2 <= 0.0f) {
             return 0.0f;
         }
-        return be_class78.b(Action.c(em_class2582, f) / f2, 0.0f, 1.0f);
+        return Utils.clamp(Action.c(em_class2582, f) / f2, 0.0f, 1.0f);
     }
 
     @SideOnly(value=Side.CLIENT)

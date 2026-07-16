@@ -58,7 +58,7 @@ implements b7_class68 {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
+    public IRenderer getLimbRenderer(int n) {
         return new a5_class12();
     }
 
@@ -244,11 +244,11 @@ implements b7_class68 {
                     this.createAnimation("animation.galath.null", true, animationEvent);
                     break;
                 }
-                if (this.ak) {
+                if (this.isPlayerRiding) {
                     this.createAnimation("animation.galath.sit", true, animationEvent);
                     break;
                 }
-                if (!this.af) {
+                if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.galath.controlled_flight", true, animationEvent);
                     break;
                 }
@@ -256,7 +256,7 @@ implements b7_class68 {
                     this.createAnimation(this.boolean_g() ? "animation.galath.crouchidle" : "animation.galath.idle", true, animationEvent);
                     break;
                 }
-                if (this.aj) {
+                if (this.isPlayerSprinting) {
                     this.movementController.setAnimationSpeed(1.5);
                     this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.run", true, animationEvent);
                     break;

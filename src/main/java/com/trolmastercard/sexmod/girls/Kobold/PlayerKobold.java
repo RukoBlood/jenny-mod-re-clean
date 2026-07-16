@@ -213,7 +213,7 @@ implements dr_class199 {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
+    public IRenderer getLimbRenderer(int n) {
         return new KoboldLimb();
     }
 
@@ -294,19 +294,19 @@ implements dr_class199 {
                     this.createAnimation("animation.kobold.null", true, animationEvent);
                     break;
                 }
-                if (this.ak) {
+                if (this.isPlayerRiding) {
                     this.createAnimation("animation.kobold.sit", true, animationEvent);
                     break;
                 }
-                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.aB = !this.aB;
                 }
-                if (!this.af) {
+                if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.kobold.fly" + (this.aB ? "2" : ""), true, animationEvent);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
-                    if (this.aj) {
+                    if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2f);
                         this.createAnimation("animation.kobold.run", true, animationEvent);
                         break;

@@ -8,7 +8,7 @@
  */
 package com.trolmastercard.sexmod.gui;
 
-import com.trolmastercard.sexmod.be_class78;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -40,7 +40,7 @@ public class fh_class313 extends GuiScreen {
 
     public static void a(Runnable runnable) {
         b = true;
-        be_class78.a(1200, runnable);
+        Utils.runDelayedTask(1200, runnable);
     }
 
     @Override

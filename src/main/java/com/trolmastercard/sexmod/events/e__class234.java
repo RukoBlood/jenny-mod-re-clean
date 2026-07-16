@@ -10,10 +10,11 @@
  *  net.minecraftforge.fml.common.gameevent.TickEvent$Phase
  *  net.minecraftforge.fml.common.gameevent.TickEvent$RenderTickEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.events;
 
 import javax.vecmath.Vector2f;
 
+import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
@@ -47,65 +48,65 @@ public class e__class234 {
             return;
         }
         PlayerGirl.void_C();
-        PlayerGirl ei_class2512 = PlayerGirl.d_(pre.getEntityPlayer().getPersistentID());
-        if (ei_class2512 == null) {
+        PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(pre.getEntityPlayer().getPersistentID());
+        if (playerGirl == null) {
             return;
         }
         pre.setCanceled(true);
-        e__class234.a(ei_class2512, pre.getEntityPlayer(), pre.getX(), pre.getY(), pre.getZ(), pre.getPartialRenderTick());
+        e__class234.a(playerGirl, pre.getEntityPlayer(), pre.getX(), pre.getY(), pre.getZ(), pre.getPartialRenderTick());
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static void a(PlayerGirl ei_class2512, EntityPlayer entityPlayer, double d, double d2, double d3, float f) {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        if ((entityPlayer = ei_class2512.net_minecraft_entity_player_EntityPlayer_c(entityPlayer)).isInvisibleToPlayer(minecraft.player) && !ei_class2512.boolean_E()) {
+    public static void a(PlayerGirl playerGirl, EntityPlayer player, double d, double d2, double d3, float f) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if ((player = playerGirl.getPlayerEntity(player)).isInvisibleToPlayer(mc.player) && !playerGirl.boolean_E()) {
             return;
         }
-        RenderManager renderManager = minecraft.getRenderManager();
-        ei_class2512.rotationYaw = entityPlayer.rotationYaw;
-        ei_class2512.prevRotationYawHead = entityPlayer.prevRotationYawHead;
-        ei_class2512.rotationYawHead = entityPlayer.rotationYawHead;
-        ei_class2512.prevRotationPitch = entityPlayer.prevRotationPitch;
-        ei_class2512.rotationPitch = entityPlayer.rotationPitch;
-        ei_class2512.prevRotationYaw = entityPlayer.prevRotationYaw;
-        ei_class2512.prevPosX = entityPlayer.prevPosX;
-        ei_class2512.prevPosY = entityPlayer.prevPosY;
-        ei_class2512.prevPosZ = entityPlayer.prevPosZ;
-        ei_class2512.lastTickPosX = entityPlayer.lastTickPosX;
-        ei_class2512.lastTickPosY = entityPlayer.lastTickPosY;
-        ei_class2512.lastTickPosZ = entityPlayer.lastTickPosZ;
-        ei_class2512.renderYawOffset = entityPlayer.renderYawOffset;
-        ei_class2512.prevRenderYawOffset = entityPlayer.prevRenderYawOffset;
-        ei_class2512.ad = entityPlayer.isSneaking();
-        ei_class2512.aj = entityPlayer.isSprinting();
-        ei_class2512.ak = entityPlayer.isRiding();
-        ei_class2512.af = entityPlayer.onGround;
-        ei_class2512.ah = entityPlayer.getItemInUseCount() != 0;
-        double d4 = entityPlayer.lastTickPosX - entityPlayer.posX;
-        double d5 = entityPlayer.posZ - entityPlayer.lastTickPosZ;
-        double d6 = Math.PI / 180 * (double)entityPlayer.rotationYaw;
-        ei_class2512.ao = new Vector2f((float)(d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float)(d4 * Math.sin(d6) + d5 * Math.cos(d6)));
-        float f2 = ei_class2512.boolean_z() ? e__class234.a(ei_class2512, entityPlayer) : 0.0f;
+        RenderManager renderManager = mc.getRenderManager();
+        playerGirl.rotationYaw = player.rotationYaw;
+        playerGirl.prevRotationYawHead = player.prevRotationYawHead;
+        playerGirl.rotationYawHead = player.rotationYawHead;
+        playerGirl.prevRotationPitch = player.prevRotationPitch;
+        playerGirl.rotationPitch = player.rotationPitch;
+        playerGirl.prevRotationYaw = player.prevRotationYaw;
+        playerGirl.prevPosX = player.prevPosX;
+        playerGirl.prevPosY = player.prevPosY;
+        playerGirl.prevPosZ = player.prevPosZ;
+        playerGirl.lastTickPosX = player.lastTickPosX;
+        playerGirl.lastTickPosY = player.lastTickPosY;
+        playerGirl.lastTickPosZ = player.lastTickPosZ;
+        playerGirl.renderYawOffset = player.renderYawOffset;
+        playerGirl.prevRenderYawOffset = player.prevRenderYawOffset;
+        playerGirl.isPlayerSneaking = player.isSneaking();
+        playerGirl.isPlayerSprinting = player.isSprinting();
+        playerGirl.isPlayerRiding = player.isRiding();
+        playerGirl.isPlayerOnGround = player.onGround;
+        playerGirl.ah = player.getItemInUseCount() != 0;
+        double d4 = player.lastTickPosX - player.posX;
+        double d5 = player.posZ - player.lastTickPosZ;
+        double d6 = Math.PI / 180 * (double)player.rotationYaw;
+        playerGirl.ao = new Vector2f((float)(d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float)(d4 * Math.sin(d6) + d5 * Math.cos(d6)));
+        float f2 = playerGirl.boolean_z() ? e__class234.a(playerGirl, player) : 0.0f;
         PlayerGirlRenderer.v = true;
-        renderManager.renderEntity(ei_class2512, d, d2 + (double)f2, d3, 90.0f, f, false);
+        renderManager.renderEntity(playerGirl, d, d2 + (double)f2, d3, 90.0f, f, false);
     }
 
-    static float a(PlayerGirl ei_class2512, EntityPlayer entityPlayer) {
-        if (ei_class2512.getDataManager().get(GirlEntity.G).booleanValue()) {
+    static float a(PlayerGirl pg, EntityPlayer entityPlayer) {
+        if (pg.getDataManager().get(GirlEntity.G)) {
             return 0.0f;
         }
-        if ((entityPlayer.getHeldItemMainhand().getItem() instanceof ItemBow || entityPlayer.getHeldItemOffhand().getItem() instanceof ItemBow) && ei_class2512.ah) {
-            ei_class2512.setCurrentAction(Action.BOW);
+        if ((entityPlayer.getHeldItemMainhand().getItem() instanceof ItemBow || entityPlayer.getHeldItemOffhand().getItem() instanceof ItemBow) && pg.ah) {
+            pg.setCurrentAction(Action.BOW);
         }
-        if (ei_class2512.currentAction() == Action.BOW && !ei_class2512.ah) {
-            ei_class2512.setCurrentAction(Action.NULL);
+        if (pg.currentAction() == Action.BOW && !pg.ah) {
+            pg.setCurrentAction(Action.NULL);
         }
-        if (ei_class2512.currentAction() == Action.BOW) {
-            ei_class2512.rotationYaw = ei_class2512.rotationYawHead;
-            ei_class2512.renderYawOffset = ei_class2512.rotationYawHead;
-            ei_class2512.prevRenderYawOffset = ei_class2512.prevRotationYawHead;
+        if (pg.currentAction() == Action.BOW) {
+            pg.rotationYaw = pg.rotationYawHead;
+            pg.renderYawOffset = pg.rotationYawHead;
+            pg.prevRenderYawOffset = pg.prevRotationYawHead;
         }
-        if (ei_class2512.ak) {
+        if (pg.isPlayerRiding) {
             return entityPlayer.getRidingEntity() instanceof EntityBoat ? 0.4f : 0.2f;
         }
         return 0.0f;
@@ -132,7 +133,7 @@ public class e__class234 {
         if (minecraft.gameSettings.thirdPersonView != 0) {
             return;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.d_(minecraft.player.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
         if (ei_class2512 == null) {
             return;
         }
@@ -183,7 +184,7 @@ public class e__class234 {
         if (minecraft.player == null) {
             return;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.d_(minecraft.player.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
         if (ei_class2512 == null) {
             return;
         }
@@ -200,7 +201,7 @@ public class e__class234 {
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(RenderWorldLastEvent renderWorldLastEvent) {
+    public void a(RenderWorldLastEvent event) {
         Minecraft minecraft = Minecraft.getMinecraft();
         if (this.b == null) {
             return;
@@ -208,14 +209,14 @@ public class e__class234 {
         if (minecraft.gameSettings.thirdPersonView != 0) {
             return;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.d_(minecraft.player.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
         if (ei_class2512 == null) {
             return;
         }
         Vec3d vec3d = minecraft.player.getPositionVector();
-        Vec3d vec3d2 = Reference.LerpVec3d(this.d, this.b, (double)renderWorldLastEvent.getPartialTicks());
+        Vec3d vec3d2 = Reference.LerpVec3d(this.d, this.b, (double)event.getPartialTicks());
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        e__class234.a(ei_class2512, minecraft.player, vec3d3.x, vec3d3.y, vec3d3.z, renderWorldLastEvent.getPartialTicks());
+        e__class234.a(ei_class2512, minecraft.player, vec3d3.x, vec3d3.y, vec3d3.z, event.getPartialTicks());
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
@@ -231,7 +232,7 @@ public class e__class234 {
         if (renderTickEvent.phase == TickEvent.Phase.END) {
             return;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.d_(minecraft.player.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
         if (ei_class2512 == null) {
             if (this.e) {
                 this.e = false;
@@ -252,10 +253,6 @@ public class e__class234 {
         }
         minecraft.player.eyeHeight = ei_class2512.float_R();
         this.e = true;
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

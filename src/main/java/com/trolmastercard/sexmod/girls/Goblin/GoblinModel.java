@@ -11,6 +11,7 @@ import com.trolmastercard.sexmod.girls.GirlModel;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -211,7 +212,7 @@ extends GirlModel<GirlEntity> {
             }
         }
         float f3 = (float)(-(MathHelper.atan2(vec3d3.z, vec3d3.x) * 57.29577951308232 + (double)f2));
-        float f4 = be_class78.b((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
+        float f4 = Utils.clamp((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
         iBone.setRotationY(TrigMath.toRadians(f3));
         iBone.setRotationX(f4);
     }
@@ -225,7 +226,7 @@ extends GirlModel<GirlEntity> {
         Vec3d vec3d2 = em_class2582.getPositionVector();
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         float f = (float)(-(Math.atan2(vec3d3.z, vec3d3.x) * 57.29577951308232)) + 90.0f;
-        float f2 = be_class78.b((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
+        float f2 = Utils.clamp((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
         iBone.setRotationY(TrigMath.toRadians(f));
         iBone2.setRotationX(f2);
     }

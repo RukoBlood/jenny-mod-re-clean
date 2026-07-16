@@ -62,8 +62,8 @@ implements c3_class112 {
     final static public Vector3f y = new Vector3f(0.0f, 0.0f, 0.0f);
     final static ColorRGBA H = new ColorRGBA(152, 45, 62, 255);
     final static ColorRGBA I = new ColorRGBA(84, 66, 88, 255);
-    final static bm_class88 C = new bm_class88(0.25f, 0.125f);
-    final static bm_class88 x = new bm_class88(0.375f, 0.125f);
+    final static Vector2f C = new Vector2f(0.25f, 0.125f);
+    final static Vector2f x = new Vector2f(0.375f, 0.125f);
     final static float F = 0.125f;
     final static ResourceLocation w = new ResourceLocation("sexmod", "textures/star.png");
     final static int v = 105;
@@ -184,14 +184,14 @@ implements c3_class112 {
             f__class2972.af = GalathRenderer.i.world.getTotalWorldTime();
             f__class2972.aH = f__class2972.af + 8L;
         }
-        if (be_class78.a((double)f2, 24.0, 32.0)) {
+        if (Utils.isValueInBounds((double)f2, 24.0, 32.0)) {
             Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
             Vec3d vec3d4 = vec3d.add(0.0, entityLivingBase.getEyeHeight(), 0.0).add(vec3d2);
             float f3 = ((float) GalathRenderer.i.world.getTotalWorldTime() + f - (float)f__class2972.af) / (float)(f__class2972.aH - f__class2972.af);
             return Reference.LerpVec3d(vec3d3, vec3d4, (double)f3);
         }
-        if (be_class78.a((double)f2, 32.0, 54.0)) {
+        if (Utils.isValueInBounds((double)f2, 32.0, 54.0)) {
             Vec3d vec3d5 = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             return vec3d.add(vec3d5);
         }
@@ -206,7 +206,7 @@ implements c3_class112 {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         GlStateManager.pushMatrix();
-        af_class27.a(i, em_class2582, f);
+        GalathGeometryRender.setupRenderTranslations(i, em_class2582, f);
         i.getTextureManager().bindTexture(LINE);
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
@@ -275,10 +275,10 @@ implements c3_class112 {
             return;
         }
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        Vec3d[][] vec3dArray = af_class27.a(em_class2582, f, "hairStrandStartR", "hairStrandMidR", "hairStrandEndR", 0.0296875f, 0.06484375f, 0.026124999f, 0.0570625f, "head");
-        Vec3d[][] vec3dArray2 = af_class27.a(em_class2582, f, "hairStrandStartL", "hairStrandMidL", "hairStrandEndL", 0.0296875f, 0.06484375f, 0.026124999f, 0.0570625f, "head");
-        af_class27.a(bufferBuilder, vec3dArray, I);
-        af_class27.a(bufferBuilder, vec3dArray2, I);
+        Vec3d[][] vec3dArray = GalathGeometryRender.generateAdvancedJointMesh(em_class2582, f, "hairStrandStartR", "hairStrandMidR", "hairStrandEndR", 0.0296875f, 0.06484375f, 0.026124999f, 0.0570625f, "head");
+        Vec3d[][] vec3dArray2 = GalathGeometryRender.generateAdvancedJointMesh(em_class2582, f, "hairStrandStartL", "hairStrandMidL", "hairStrandEndL", 0.0296875f, 0.06484375f, 0.026124999f, 0.0570625f, "head");
+        GalathGeometryRender.drawMesh(bufferBuilder, vec3dArray, I);
+        GalathGeometryRender.drawMesh(bufferBuilder, vec3dArray2, I);
         tessellator.draw();
     }
 
@@ -299,22 +299,22 @@ implements c3_class112 {
 
     static void a(BufferBuilder bufferBuilder, Tessellator tessellator, Vec3d[] vec3dArray) {
         bufferBuilder.begin(4, DefaultVertexFormats.POSITION_TEX_COLOR);
-        bufferBuilder.pos(vec3dArray[0].x, vec3dArray[0].y, vec3dArray[0].z).tex(GalathRenderer.C.c, GalathRenderer.C.a).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[1].x, vec3dArray[1].y, vec3dArray[1].z).tex(GalathRenderer.C.c + 0.125f, GalathRenderer.C.a).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[2].x, vec3dArray[2].y, vec3dArray[2].z).tex(GalathRenderer.C.c + 0.125f, GalathRenderer.C.a + 0.125f).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[11].x, vec3dArray[11].y, vec3dArray[11].z).tex(GalathRenderer.C.c, GalathRenderer.C.a).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[12].x, vec3dArray[12].y, vec3dArray[12].z).tex(GalathRenderer.C.c + 0.125f, GalathRenderer.C.a).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[13].x, vec3dArray[13].y, vec3dArray[13].z).tex(GalathRenderer.C.c + 0.125f, GalathRenderer.C.a + 0.125f).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[0].x, vec3dArray[0].y, vec3dArray[0].z).tex(GalathRenderer.C.pitch, GalathRenderer.C.yaw).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[1].x, vec3dArray[1].y, vec3dArray[1].z).tex(GalathRenderer.C.pitch + 0.125f, GalathRenderer.C.yaw).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[2].x, vec3dArray[2].y, vec3dArray[2].z).tex(GalathRenderer.C.pitch + 0.125f, GalathRenderer.C.yaw + 0.125f).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[11].x, vec3dArray[11].y, vec3dArray[11].z).tex(GalathRenderer.C.pitch, GalathRenderer.C.yaw).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[12].x, vec3dArray[12].y, vec3dArray[12].z).tex(GalathRenderer.C.pitch + 0.125f, GalathRenderer.C.yaw).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[13].x, vec3dArray[13].y, vec3dArray[13].z).tex(GalathRenderer.C.pitch + 0.125f, GalathRenderer.C.yaw + 0.125f).color(255, 255, 255, 255).endVertex();
         tessellator.draw();
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        bufferBuilder.pos(vec3dArray[3].x, vec3dArray[3].y, vec3dArray[3].z).tex(GalathRenderer.x.c, GalathRenderer.x.a + 0.125f).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[4].x, vec3dArray[4].y, vec3dArray[4].z).tex(GalathRenderer.x.c, GalathRenderer.x.a).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[5].x, vec3dArray[5].y, vec3dArray[5].z).tex(GalathRenderer.x.c + 0.125f, GalathRenderer.x.a).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[6].x, vec3dArray[6].y, vec3dArray[6].z).tex(GalathRenderer.x.c + 0.125f, GalathRenderer.x.a + 0.125f).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[7].x, vec3dArray[7].y, vec3dArray[7].z).tex(GalathRenderer.x.c, GalathRenderer.x.a + 0.125f).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[8].x, vec3dArray[8].y, vec3dArray[8].z).tex(GalathRenderer.x.c, GalathRenderer.x.a).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[9].x, vec3dArray[9].y, vec3dArray[9].z).tex(GalathRenderer.x.c + 0.125f, GalathRenderer.x.a).color(255, 255, 255, 255).endVertex();
-        bufferBuilder.pos(vec3dArray[10].x, vec3dArray[10].y, vec3dArray[10].z).tex(GalathRenderer.x.c + 0.125f, GalathRenderer.x.a + 0.125f).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[3].x, vec3dArray[3].y, vec3dArray[3].z).tex(GalathRenderer.x.pitch, GalathRenderer.x.yaw + 0.125f).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[4].x, vec3dArray[4].y, vec3dArray[4].z).tex(GalathRenderer.x.pitch, GalathRenderer.x.yaw).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[5].x, vec3dArray[5].y, vec3dArray[5].z).tex(GalathRenderer.x.pitch + 0.125f, GalathRenderer.x.yaw).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[6].x, vec3dArray[6].y, vec3dArray[6].z).tex(GalathRenderer.x.pitch + 0.125f, GalathRenderer.x.yaw + 0.125f).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[7].x, vec3dArray[7].y, vec3dArray[7].z).tex(GalathRenderer.x.pitch, GalathRenderer.x.yaw + 0.125f).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[8].x, vec3dArray[8].y, vec3dArray[8].z).tex(GalathRenderer.x.pitch, GalathRenderer.x.yaw).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[9].x, vec3dArray[9].y, vec3dArray[9].z).tex(GalathRenderer.x.pitch + 0.125f, GalathRenderer.x.yaw).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.pos(vec3dArray[10].x, vec3dArray[10].y, vec3dArray[10].z).tex(GalathRenderer.x.pitch + 0.125f, GalathRenderer.x.yaw + 0.125f).color(255, 255, 255, 255).endVertex();
         tessellator.draw();
     }
 
@@ -458,7 +458,7 @@ implements c3_class112 {
                 float f = ((GalathEntity)this.j).renderYawOffset;
                 Vec3d vec3d = entityLivingBase.getPositionVector().subtract(((GalathEntity)this.j).getPositionVector());
                 vec3d = VectorMath.rotate(vec3d, f);
-                double d = -be_class78.b(vec3d.x, -1.0, 1.0);
+                double d = -Utils.clamp(vec3d.x, -1.0, 1.0);
                 geoBone.setRotationZ(geoBone.getRotationZ() + TrigMath.toRadians(45.0 * d));
             }
         }
@@ -625,7 +625,7 @@ implements c3_class112 {
         GeoBone geoBone2 = geoBone.childBones.get(0);
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         GL11.glDisable(2896);
-        float f2 = be_class78.b((float) Action.GIVE_COIN.ticksPlaying[1] + f, 105.0f, 125.0f);
+        float f2 = Utils.clamp((float) Action.GIVE_COIN.ticksPlaying[1] + f, 105.0f, 125.0f);
         float f3 = (f2 - 105.0f) / 20.0f;
         float f4 = Reference.LerpFloat(120.0f, 240.0f, f3);
         Vector3f f7_class2922 = Reference.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, (double)f3);

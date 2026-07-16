@@ -26,6 +26,7 @@ import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
+import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -209,7 +210,7 @@ extends GeoEntityRenderer<CustomModelEntity> {
         BlockPos object = new BlockPos(Math.floor(em_class2582.posX), Math.floor(em_class2582.posY), Math.floor(em_class2582.posZ));
         int n = em_class2582.world.getLight((BlockPos)object, true);
         Vec3d vec3d = new Vec3d(1.0, 1.0, 1.0);
-        float f3 = be_class78.b(n, 10.0f, 15.0f) / 15.0f;
+        float f3 = Utils.clamp(n, 10.0f, 15.0f) / 15.0f;
         this.d = new Vec3d(vec3d.x * (double)f3, vec3d.y * (double)f3, vec3d.z * (double)f3);
         GlStateManager.pushMatrix();
         GlStateManager.translate(((Vec3d)object2).x, ((Vec3d)object2).y, ((Vec3d)object2).z);

@@ -28,11 +28,11 @@ public class ep_class263 {
     final float j;
     final float h;
 
-    public ep_class263(int n, ar_class41 ar_class412, b8_class69 b8_class692, GirlEntity em_class2582, float f, float f2) {
+    public ep_class263(int n, ar_class41 ar_class412, b8_class69 b8_class692, GirlEntity girlEntity, float f, float f2) {
         this.a = n;
         this.i = ar_class412;
         this.d = b8_class692;
-        this.e = em_class2582;
+        this.e = girlEntity;
         this.j = f;
         this.h = f2;
     }
@@ -86,10 +86,6 @@ public class ep_class263 {
             }
             this.g.set(n + 1, an_class352);
         }
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

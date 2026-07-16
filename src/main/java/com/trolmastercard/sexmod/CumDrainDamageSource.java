@@ -1,9 +1,3 @@
-/*
- * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
- * 
- * Could not load the following classes:
- *  javax.annotation.Nullable
- */
 package com.trolmastercard.sexmod;
 
 import javax.annotation.Nullable;
@@ -16,20 +10,19 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-public class a3_class10
-extends DamageSource {
-    GalathEntity galathEntity;
+public class CumDrainDamageSource extends DamageSource {
+    GalathEntity galath;
     Vec3d pos;
 
-    public a3_class10(GalathEntity entity) {
+    public CumDrainDamageSource(GalathEntity entity) {
         super("galath");
-        this.galathEntity = entity;
+        this.galath = entity;
         this.pos = entity.getPositionVector();
     }
 
     @Override
-    public ITextComponent getDeathMessage(EntityLivingBase entityLivingBase) {
-        return new TextComponentString(entityLivingBase.getName() + " got his cum drained by a Succubus");
+    public ITextComponent getDeathMessage(EntityLivingBase ent) {
+        return new TextComponentString(ent.getName() + " got his cum drained by a Succubus");
     }
 
     @Override
@@ -45,13 +38,13 @@ extends DamageSource {
     @Override
     @Nullable
     public Entity getImmediateSource() {
-        return this.galathEntity;
+        return this.galath;
     }
 
     @Override
     @Nullable
     public Entity getTrueSource() {
-        return this.galathEntity;
+        return this.galath;
     }
 
     @Override

@@ -4,11 +4,12 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui;
 
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.UploadInventoryToServer;
+import com.trolmastercard.sexmod.ca_class121;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;

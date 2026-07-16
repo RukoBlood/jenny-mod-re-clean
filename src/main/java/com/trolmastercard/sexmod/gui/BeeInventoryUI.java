@@ -25,8 +25,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class BeeInventoryUI
-extends GuiScreen {
+public class BeeInventoryUI extends GuiScreen {
     Supporter supporter;
     EntityPlayer player;
     boolean e;
@@ -56,14 +55,14 @@ extends GuiScreen {
         this.mc.renderEngine.bindTexture(b);
         this.drawTexturedModalRect(n3 / 2 - 7, 61 - (int)(15.0 - this.d * 15.0), 32, 0, 15, 15);
         this.buttonList.add(new GuiButton(2, n3 / 2 - 10, 59 - (int)(15.0 - this.d * 15.0), 20, 20, ""));
-        this.drawTexturedModalRect(n3 / 2 - 20, 20, this.supporter.getDataManager().get(Supporter.K) ? 0 : 40, 130, 40, 40);
+        this.drawTexturedModalRect(n3 / 2 - 20, 20, this.supporter.getDataManager().get(Supporter.HAS_CHEST) ? 0 : 40, 130, 40, 40);
     }
 
     @Override
     protected void mouseClicked(int n, int n2, int n3) throws IOException {
         ScaledResolution scaledResolution = new ScaledResolution(this.mc);
         int n4 = scaledResolution.getScaledWidth();
-        if (this.supporter.getDataManager().get(Supporter.K).booleanValue() && n >= n4 / 2 - 20 && n <= n4 / 2 + 20 && n2 >= 20 && n2 <= 60) {
+        if (this.supporter.getDataManager().get(Supporter.HAS_CHEST).booleanValue() && n >= n4 / 2 - 20 && n <= n4 / 2 + 20 && n2 >= 20 && n2 <= 60) {
             PackageHandler.networkWrapper.sendToServer((IMessage)new BeeOpenChest(this.supporter.girlID(), this.player.getPersistentID()));
             this.onGuiClosed();
         }

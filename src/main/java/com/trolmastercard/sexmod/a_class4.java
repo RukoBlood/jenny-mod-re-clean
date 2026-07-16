@@ -514,13 +514,13 @@ public class a_class4 extends GuiScreen {
                     return;
                 }
             }
-            Minecraft minecraft = Minecraft.getMinecraft();
-            PlayerGirl ei_class2512 = PlayerGirl.d_(minecraft.player.getPersistentID());
-            if (ei_class2512 == null) {
-                minecraft.player.sendStatusMessage(new TextComponentString("You have to turn into the girl you want to customize"), true);
+            Minecraft mc = Minecraft.getMinecraft();
+            PlayerGirl pg = PlayerGirl.getUUIDHashtable(mc.player.getPersistentID());
+            if (pg == null) {
+                mc.player.sendStatusMessage(new TextComponentString("You have to turn into the girl you want to customize"), true);
                 return;
             }
-            a_class4.a(ei_class2512);
+            a_class4.a(pg);
         }
 
         @SubscribeEvent

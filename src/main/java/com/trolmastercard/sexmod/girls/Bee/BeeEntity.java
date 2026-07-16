@@ -50,8 +50,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class BeeEntity
-extends Supporter {
+public class BeeEntity extends Supporter {
     public float N = 3200.0f;
     int P = 0;
     final static float O = 4800.0f;
@@ -237,8 +236,8 @@ extends Supporter {
 
     @Override
     protected boolean processInteract(EntityPlayer entityPlayer, EnumHand enumHand) {
-        if (this.entityDataManager.get(M).booleanValue() && !((Boolean)this.entityDataManager.get(K)).booleanValue() && entityPlayer.getHeldItem(enumHand).getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
-            this.entityDataManager.set(K, true);
+        if (this.entityDataManager.get(M).booleanValue() && !((Boolean)this.entityDataManager.get(HAS_CHEST)).booleanValue() && entityPlayer.getHeldItem(enumHand).getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
+            this.entityDataManager.set(HAS_CHEST, true);
             entityPlayer.getHeldItem(enumHand).shrink(1);
             return super.processInteract(entityPlayer, enumHand);
         }
@@ -286,8 +285,8 @@ extends Supporter {
     public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
         super.writeEntityToNBT(nBTTagCompound);
         nBTTagCompound.setBoolean("isTamed", this.entityDataManager.get(M));
-        nBTTagCompound.setBoolean("hasChest", (Boolean)this.entityDataManager.get(K));
-        nBTTagCompound.setTag("inventory", this.L.serializeNBT());
+        nBTTagCompound.setBoolean("hasChest", (Boolean)this.entityDataManager.get(HAS_CHEST));
+        nBTTagCompound.setTag("inventory", this.invHandler.serializeNBT());
     }
 
     @Override
@@ -296,8 +295,8 @@ extends Supporter {
         if (nBTTagCompound.hasKey("isTamed")) {
             this.entityDataManager.set(M, nBTTagCompound.getBoolean("isTamed"));
         }
-        this.entityDataManager.set(K, nBTTagCompound.getBoolean("hasChest"));
-        this.L.deserializeNBT(nBTTagCompound.getCompoundTag("inventory"));
+        this.entityDataManager.set(HAS_CHEST, nBTTagCompound.getBoolean("hasChest"));
+        this.invHandler.deserializeNBT(nBTTagCompound.getCompoundTag("inventory"));
     }
 
     @Override
@@ -312,7 +311,7 @@ extends Supporter {
                     this.createAnimation("animation.bee.null", true, animationEvent);
                     break;
                 }
-                this.createAnimation("animation.bee." + ((Boolean)this.entityDataManager.get(K) != false ? "idle_has_chest" : "idle"), true, animationEvent);
+                this.createAnimation("animation.bee." + ((Boolean) this.entityDataManager.get(HAS_CHEST) ? "idle_has_chest" : "idle"), true, animationEvent);
                 break;
             }
             case "action": {

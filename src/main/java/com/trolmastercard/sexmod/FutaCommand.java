@@ -15,6 +15,7 @@ import java.util.Random;
 
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -90,7 +91,7 @@ implements IClientCommand {
                 Vec3d vec3d = girlEntity.b("cockParticles").add(girlEntity.getPositionVector());
                 Random random = girlEntity.getRNG();
                 for (int i = 0; i < 10; ++i) {
-                    girlEntity.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextFloat() * 0.025f * (float)be_class78.a(), random.nextFloat() * 0.025f * (float)be_class78.a(), random.nextFloat() * 0.025f * (float)be_class78.a(), new int[0]);
+                    girlEntity.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), new int[0]);
                 }
             }
         } catch (ConcurrentModificationException concurrentModificationException) {

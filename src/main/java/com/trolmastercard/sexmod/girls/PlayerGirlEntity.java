@@ -102,9 +102,5 @@ public enum PlayerGirlEntity {
         }
         return null;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

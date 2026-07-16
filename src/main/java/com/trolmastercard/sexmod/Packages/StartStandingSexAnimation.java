@@ -59,7 +59,7 @@ implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                PlayerGirl ei_class2512 = PlayerGirl.d_(eu_class2732.a);
+                PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(eu_class2732.a);
                 if (ei_class2512 == null) {
                     return;
                 }

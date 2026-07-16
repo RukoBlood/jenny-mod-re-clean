@@ -55,8 +55,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 //ei
-public abstract class PlayerGirl
-extends Fighter {
+public abstract class PlayerGirl extends Fighter {
     final static public String aa = "sexmod:CustomModel";
     final static public String ae = "sexmod:GirlSpecific";
     final static public float ac = 0.0f;
@@ -64,10 +63,10 @@ extends Fighter {
     final static public int Y = 65;
     static public boolean ag = true;
     public Vector2f ao = new Vector2f(0.0f, 0.0f);
-    public boolean ad = false;
-    public boolean aj = false;
-    public boolean ak = false;
-    public boolean af = true;
+    public boolean isPlayerSneaking = false;
+    public boolean isPlayerSprinting = false;
+    public boolean isPlayerRiding = false;
+    public boolean isPlayerOnGround = true;
     public boolean ah = false;
     final static protected DataParameter<Optional<UUID>> ai = EntityDataManager.createKey(GirlEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID).getSerializer().createKey(118);
 
@@ -89,7 +88,7 @@ extends Fighter {
 
     // TODO clash
     @Nullable
-    public static PlayerGirl d_(UUID uUID) {
+    public static PlayerGirl getUUIDHashtable(UUID uUID) {
         return playerGirlUUIDHashtable.get(uUID);
     }
 
@@ -121,8 +120,8 @@ extends Fighter {
         PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.java_util_UUID_m(), n, action), this.net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P());
     }
 
-    public EntityPlayer net_minecraft_entity_player_EntityPlayer_c(EntityPlayer entityPlayer) {
-        return entityPlayer;
+    public EntityPlayer getPlayerEntity(EntityPlayer player) {
+        return player;
     }
 
     public boolean boolean_z() {
@@ -177,7 +176,7 @@ extends Fighter {
 
     public abstract void b(String var1, UUID var2);
 
-    public abstract IRenderer com_trolmastercard_sexmod_at_class43_a(int var1);
+    public abstract IRenderer getLimbRenderer(int var1);
 
     public abstract String HandTexture(int var1);
 
@@ -207,7 +206,7 @@ extends Fighter {
 
     @SideOnly(value=Side.CLIENT)
     public static void void_i() {
-        PlayerGirl ei_class2512 = PlayerGirl.d_(Minecraft.getMinecraft().player.getPersistentID());
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(Minecraft.getMinecraft().player.getPersistentID());
         if (ei_class2512 == null) {
             return;
         }
@@ -567,7 +566,7 @@ extends Fighter {
         if (uUID == null) {
             return false;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.d_(uUID);
+        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(uUID);
         return ei_class2512 != null;
     }
 
@@ -622,10 +621,6 @@ extends Fighter {
 
     @Override
     protected void U() {
-    }
-
-    private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-        return concurrentModificationException;
     }
 }
 

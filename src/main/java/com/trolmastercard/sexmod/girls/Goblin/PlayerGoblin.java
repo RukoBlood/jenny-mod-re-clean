@@ -94,7 +94,7 @@ implements ai_class30 {
     }
 
     @Override
-    public IRenderer com_trolmastercard_sexmod_at_class43_a(int n) {
+    public IRenderer getLimbRenderer(int n) {
         return new KoboldLimb();
     }
 
@@ -146,7 +146,7 @@ implements ai_class30 {
     }
 
     @Override
-    public EntityPlayer net_minecraft_entity_player_EntityPlayer_c(EntityPlayer entityPlayer) {
+    public EntityPlayer getPlayerEntity(EntityPlayer entityPlayer) {
         UUID uUID = this.java_util_UUID_e();
         if (uUID == null) {
             return entityPlayer;
@@ -708,19 +708,19 @@ implements ai_class30 {
                     this.createAnimation("animation.goblin.null", true, animationEvent);
                     break;
                 }
-                if (this.ak) {
+                if (this.isPlayerRiding) {
                     this.createAnimation("animation.goblin.sit", true, animationEvent);
                     break;
                 }
-                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.af) {
+                if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.aC = !this.aC;
                 }
-                if (!this.af) {
+                if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.goblin.fly" + (this.aC ? "2" : ""), true, animationEvent);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
-                    if (this.aj) {
+                    if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2f);
                         this.createAnimation("animation.goblin.running", true, animationEvent);
                         break;
@@ -1274,11 +1274,11 @@ implements ai_class30 {
             if (!(entityInteract.getTarget() instanceof EntityPlayer)) {
                 return;
             }
-            PlayerGirl ei_class2512 = PlayerGirl.d_(entityInteract.getTarget().getPersistentID());
+            PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityInteract.getTarget().getPersistentID());
             if (!(ei_class2512 instanceof PlayerGoblin)) {
                 return;
             }
-            PlayerGirl ei_class2513 = PlayerGirl.d_(entityPlayer.getPersistentID());
+            PlayerGirl ei_class2513 = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
             if (ei_class2513 != null) {
                 return;
             }

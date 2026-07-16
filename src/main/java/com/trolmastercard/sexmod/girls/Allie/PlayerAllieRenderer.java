@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.trolmastercard.sexmod.Action;
-import com.trolmastercard.sexmod.be_class78;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
 import com.trolmastercard.sexmod.util.Reference;
@@ -127,8 +127,8 @@ extends PlayerGirlRenderer {
         Vec2f vec2f = new Vec2f((float)(d * Math.cos(d3) + d2 * Math.sin(d3)), (float)(-d * Math.sin(d3) + d2 * Math.cos(d3)));
         this.G = vec2f.y * -8.0f;
         this.I = vec2f.x * 8.0f;
-        this.G = be_class78.b(this.G, -1.68f, 1.68f);
-        this.I = be_class78.b(this.I, -1.68f, 1.68f);
+        this.G = Utils.clamp(this.G, -1.68f, 1.68f);
+        this.I = Utils.clamp(this.I, -1.68f, 1.68f);
         this.G = Reference.LerpFloat(this.F, this.G, this.y);
         this.I = Reference.LerpFloat(this.B, this.I, this.y);
         geoBone.setRotationX(f + this.G * f3);
@@ -139,7 +139,7 @@ extends PlayerGirlRenderer {
         double d = this.C - this.A;
         double d2 = this.z - this.D;
         this.L = (Math.abs(d) + Math.abs(d2)) * 5.0;
-        this.L = be_class78.b((float)this.L, 0.0f, 1.0f);
+        this.L = Utils.clamp((float)this.L, 0.0f, 1.0f);
         geoBone.setPositionY((float) Reference.a(5.0, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.y)));
         if (this.w instanceof PlayerAllie) {
             ((PlayerAllie)this.w).aq = (float) Reference.a((double)0.3f, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.y));

@@ -664,30 +664,30 @@ public class KoboldManager {
         }
 
         @SubscribeEvent
-        public void a(EntityJoinWorldEvent entityJoinWorldEvent) {
+        public void a(EntityJoinWorldEvent event) {
             EntityMob entityMob;
-            Entity entity = entityJoinWorldEvent.getEntity();
+            Entity entity = event.getEntity();
             if (entity instanceof EntityZombie) {
                 entityMob = (EntityZombie) entity;
-                entityMob.targetTasks.addTask(3, new aa_class20((EntityCreature) entityMob, true, false));
+                entityMob.targetTasks.addTask(3, new TargetNearestKoboldGoal((EntityCreature) entityMob, true, false));
             }
             if (entity instanceof AbstractSkeleton) {
                 entityMob = (AbstractSkeleton) entity;
-                ((AbstractSkeleton) entityMob).targetTasks.addTask(3, new aa_class20((EntityCreature) entityMob, true, false));
+                ((AbstractSkeleton) entityMob).targetTasks.addTask(3, new TargetNearestKoboldGoal((EntityCreature) entityMob, true, false));
             }
             if (entity instanceof EntitySpider) {
                 entityMob = (EntitySpider) entity;
-                ((EntitySpider) entityMob).targetTasks.addTask(3, new aa_class20((EntityCreature) entityMob, true, true));
+                ((EntitySpider) entityMob).targetTasks.addTask(3, new TargetNearestKoboldGoal((EntityCreature) entityMob, true, true));
             }
         }
 
         @SubscribeEvent
-        public void a(BlockEvent.BreakEvent breakEvent) {
+        public void a(BlockEvent.BreakEvent event) {
             Object object;
             Object object2;
             b_inner50.a_inner49 a_inner492;
-            BlockPos blockPos = breakEvent.getPos();
-            World world = breakEvent.getWorld();
+            BlockPos blockPos = event.getPos();
+            World world = event.getWorld();
             if (world.isRemote) {
                 return;
             }

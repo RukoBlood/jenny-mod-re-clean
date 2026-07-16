@@ -57,7 +57,7 @@ implements IMessage {
                 System.out.println("received an invalid message @ForcePlayerGirlUpdate :(");
                 return null;
             }
-            PlayerGirl ei_class2512 = PlayerGirl.d_(gd_class3612.c);
+            PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(gd_class3612.c);
             if (ei_class2512 == null) {
                 return null;
             }

@@ -65,7 +65,7 @@ public class q_class419 {
             PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, true), entityPlayerMP);
         }
         PlayerGirl.void_C();
-        PlayerGirl playerGirl = PlayerGirl.d_(playerLoggedInEvent.player.getPersistentID());
+        PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(playerLoggedInEvent.player.getPersistentID());
         World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
         this.a(world, (EntityPlayer)entityPlayerMP, playerGirl);
         if (playerGirl != null) {

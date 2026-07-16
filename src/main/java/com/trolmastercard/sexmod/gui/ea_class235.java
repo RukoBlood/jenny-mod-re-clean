@@ -10,7 +10,7 @@ package com.trolmastercard.sexmod.gui;
 import java.io.IOException;
 
 import com.trolmastercard.sexmod.Action;
-import com.trolmastercard.sexmod.be_class78;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
@@ -105,10 +105,10 @@ public class ea_class235 extends GuiScreen {
         this.e += (float)(n > this.width / 2 ? 1 : -1) * this.mc.getTickLength();
         this.d += (float)(n2 < this.height / 2 - 1 ? 1 : -1) * this.mc.getTickLength();
         this.m += (float)(n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.g = be_class78.b(this.g, 0.0f, 1.0f);
-        this.e = be_class78.b(this.e, 0.0f, 1.0f);
-        this.d = be_class78.b(this.d, 0.0f, 1.0f);
-        this.m = be_class78.b(this.m, 0.0f, 1.0f);
+        this.g = Utils.clamp(this.g, 0.0f, 1.0f);
+        this.e = Utils.clamp(this.e, 0.0f, 1.0f);
+        this.d = Utils.clamp(this.d, 0.0f, 1.0f);
+        this.m = Utils.clamp(this.m, 0.0f, 1.0f);
         GlStateManager.pushMatrix();
         GlStateManager.translate((float)this.width / 2.0f, (float)this.height / 2.0f, 0.0f);
         GlStateManager.scale(f2, f2, f2);

@@ -108,7 +108,7 @@ implements IMessage {
                     if (!(em_class2582 instanceof Supporter)) continue;
                     Supporter fo_class3232 = (Supporter)em_class2582;
                     for (int i = 0; i < 27; ++i) {
-                        fo_class3232.L.setStackInSlot(i, b1_class602.d[i + 36]);
+                        fo_class3232.invHandler.setStackInSlot(i, b1_class602.d[i + 36]);
                     }
                 }
             });

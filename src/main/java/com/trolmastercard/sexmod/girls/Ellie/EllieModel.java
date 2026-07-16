@@ -8,7 +8,7 @@ import java.util.HashMap;
 import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.FakeWorld;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
-import com.trolmastercard.sexmod.be_class78;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlModel;
 import net.minecraft.entity.player.EntityPlayer;
@@ -77,11 +77,11 @@ extends GirlModel<GirlEntity> {
             f = this.f.get(n2)[1];
             float f3 = this.f.get(n2)[2];
             f2 = ((float)(Math.atan2(vec3d.x, vec3d.z) + (double)this.f.get(n2)[0]) + em_class2582.java_lang_Float_I().floatValue()) * 0.8f;
-            if ((f2 = be_class78.b(f2, f, f3)) == f || f2 == f3) {
+            if ((f2 = Utils.clamp(f2, f, f3)) == f || f2 == f3) {
                 f2 = 0.0f;
             }
         }
-        f = f2 == 0.0f ? 0.0f : be_class78.b((float)((entityPlayer.posY - em_class2582.posY) * 0.5), -0.75f, 0.75f);
+        f = f2 == 0.0f ? 0.0f : Utils.clamp((float)((entityPlayer.posY - em_class2582.posY) * 0.5), -0.75f, 0.75f);
         iBone.setRotationY(f2);
         iBone.setRotationX(f);
     }

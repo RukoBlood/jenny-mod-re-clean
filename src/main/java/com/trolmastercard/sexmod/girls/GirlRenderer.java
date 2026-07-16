@@ -37,10 +37,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
-import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Vector3f;
-import com.trolmastercard.sexmod.util.VectorMath;
+import com.trolmastercard.sexmod.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -515,7 +512,7 @@ implements c3_class112 {
         Vec3d vec3d3 = ActiveRenderInfo.getCameraPosition().add(vec3d2);
         float f4 = (float)vec3d3.distanceTo(vec3d);
         float f5 = Math.abs(f4) / 5.0f;
-        return Reference.LerpFloat(f3, f2, be_class78.b(f5, 0.0f, 1.0f));
+        return Reference.LerpFloat(f3, f2, Utils.clamp(f5, 0.0f, 1.0f));
     }
 
     protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, Vector3f f7_class2922, float f) {

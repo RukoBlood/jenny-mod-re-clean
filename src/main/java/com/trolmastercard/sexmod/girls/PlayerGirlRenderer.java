@@ -82,7 +82,7 @@ extends GirlRenderer<GirlEntity> {
         this.s = entityPlayer.getHeldItemMainhand();
         this.x = entityPlayer.getHeldItemOffhand();
         this.u = ei_class2512.ah;
-        this.r = ei_class2512.ad;
+        this.r = ei_class2512.isPlayerSneaking;
         this.w = (PlayerGirl)em_class2582;
         this.y = f2;
         ei_class2512.f(entityPlayer);

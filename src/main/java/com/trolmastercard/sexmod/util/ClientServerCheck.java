@@ -23,13 +23,9 @@ public class ClientServerCheck {
         if (server == null) {
             return false;
         }
-        boolean bl = server.isCallingFromMinecraftThread();
-        Main.LOGGER.warn("couldn't clarify if is running on a server or client thread. Came to the solution onServer=" + bl);
-        return bl;
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
+        boolean serverCallingFromMinecraftThread = server.isCallingFromMinecraftThread();
+        Main.LOGGER.warn("couldn't clarify if is running on a server or client thread. Came to the solution onServer=" + serverCallingFromMinecraftThread);
+        return serverCallingFromMinecraftThread;
     }
 }
 

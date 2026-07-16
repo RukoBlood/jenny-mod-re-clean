@@ -4,7 +4,7 @@
 package com.trolmastercard.sexmod.girls.Pyrocynical;
 
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.be_class78;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.cj_class134;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -100,7 +100,7 @@ extends EntityLiving {
             this.b();
         }
         this.e = true;
-        be_class78.a(6250, () -> this.world.removeEntity(this));
+        Utils.runDelayedTask(6250, () -> this.world.removeEntity(this));
         return false;
     }
 
