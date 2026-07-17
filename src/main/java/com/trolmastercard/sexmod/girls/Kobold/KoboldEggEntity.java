@@ -57,7 +57,7 @@ implements IAnimatable {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(b, KoboldEntity.KoboldColor.toString());
+        this.dataManager.register(b, KoboldEntity.COLOR.toString());
         this.dataManager.register(c, 0);
     }
 

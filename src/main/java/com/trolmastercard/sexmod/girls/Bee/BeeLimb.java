@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Bee;
 
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -9,10 +9,13 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class LunaLimb extends ModelBase implements IRenderer {
+/*
+* Related to PlayerBee
+* */
+public class BeeLimb extends ModelBase implements IRenderer {
     final private ModelRenderer renderer;
 
-    public LunaLimb() {
+    public BeeLimb() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.renderer = new ModelRenderer(this);
@@ -21,14 +24,14 @@ public class LunaLimb extends ModelBase implements IRenderer {
     }
 
     @Override
-    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         this.renderer.render(scale);
     }
 
-    public void a(ModelRenderer renderer, float x, float y, float z) {
-        renderer.rotateAngleX = x;
-        renderer.rotateAngleY = y;
-        renderer.rotateAngleZ = z;
+    public void a(ModelRenderer modelRenderer, float x, float y, float z) {
+        modelRenderer.rotateAngleX = x;
+        modelRenderer.rotateAngleY = y;
+        modelRenderer.rotateAngleZ = z;
     }
 
     @Override

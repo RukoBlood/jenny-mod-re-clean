@@ -62,8 +62,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlayerGoblin
-extends ew_class277
+public class PlayerGoblin extends ew_class277
 implements ai_class30 {
     final static public float aI = 2.0f;
     final static public DataParameter<String> ax = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.STRING).getSerializer().createKey(122);
@@ -249,8 +248,8 @@ implements ai_class30 {
 
     @Override
     protected void void_a() {
-        PlayerGoblinRenderer.e();
-        GoblinRenderer.c();
+        PlayerGoblinRenderer.ResetColors();
+        GoblinRenderer.ResetColors();
     }
 
     @Override

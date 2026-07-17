@@ -261,7 +261,7 @@ public class KoboldManager {
         b_inner50.a_inner49 a_inner492 = c.get(uUID);
         if (a_inner492 == null) {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
-            return KoboldEntity.KoboldColor;
+            return KoboldEntity.COLOR;
         }
         return a_inner492.h;
     }
@@ -596,8 +596,7 @@ public class KoboldManager {
         return runtimeException;
     }
 
-    public static class b_inner50
-            extends WorldSavedData {
+    public static class b_inner50 extends WorldSavedData {
         public b_inner50(String string) {
             super(string);
         }
@@ -1181,23 +1180,19 @@ public class KoboldManager {
             }
 
             KoboldEntity b() {
-                KoboldEntity ff_class3082 = null;
+                KoboldEntity kobold = null;
                 for (KoboldEntity ff_class3083 : this.a) {
                     if (ff_class3083.isDead) continue;
-                    if (ff_class3082 == null) {
-                        ff_class3082 = ff_class3083;
+                    if (kobold == null) {
+                        kobold = ff_class3083;
                         continue;
                     }
-                    float f = ff_class3082.getDataManager().get(KoboldEntity.aE).floatValue();
+                    float f = kobold.getDataManager().get(KoboldEntity.aE).floatValue();
                     float f2 = ff_class3083.getDataManager().get(KoboldEntity.aE).floatValue();
                     if (!(f2 < f)) continue;
-                    ff_class3082 = ff_class3083;
+                    kobold = ff_class3083;
                 }
-                return ff_class3082;
-            }
-
-            private static RuntimeException a(RuntimeException runtimeException) {
-                return runtimeException;
+                return kobold;
             }
         }
     }

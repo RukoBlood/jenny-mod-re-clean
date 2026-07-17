@@ -104,12 +104,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
 // ff_class308
-public class KoboldEntity
-extends e4_class223
-implements bh_class82,
-IInventory,
-        dr_class199 {
-    final static public EyeAndKoboldColor KoboldColor = EyeAndKoboldColor.PURPLE;
+public class KoboldEntity extends e4_class223 implements bh_class82, IInventory, dr_class199 {
+    final static public EyeAndKoboldColor COLOR = EyeAndKoboldColor.PURPLE;
     final static public float Y = 0.25f;
     final static int ar = 20;
     final static int ag = 2;
@@ -269,7 +265,7 @@ IInventory,
             }
         }
         this.entityDataManager.set(M, stringBuilder.toString());
-        KoboldRenderer.c();
+        KoboldRenderer.ResetColors();
     }
 
     void void_m() {
@@ -299,7 +295,7 @@ IInventory,
             }
         }
         this.entityDataManager.set(M, stringBuilder.toString());
-        KoboldRenderer.c();
+        KoboldRenderer.ResetColors();
     }
 
     @Override
@@ -366,7 +362,7 @@ IInventory,
         super.entityInit();
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.values()[this.getRNG().nextInt(EyeAndKoboldColor.values().length)];
         this.entityDataManager.register(K, new BlockPos(eyeAndKoboldColor_.getMainColor()));
-        this.entityDataManager.register(N, KoboldColor.name());
+        this.entityDataManager.register(N, COLOR.name());
         this.entityDataManager.register(aL, Optional.absent());
         this.entityDataManager.register(aE, Float.valueOf(0.0f));
         this.entityDataManager.register(T, KoboldNames.values()[this.getRNG().nextInt(KoboldNames.values().length)].toString());
@@ -529,7 +525,7 @@ IInventory,
 
     @Override
     protected void void_a() {
-        KoboldRenderer.c();
+        KoboldRenderer.ResetColors();
     }
 
     boolean boolean_g() {

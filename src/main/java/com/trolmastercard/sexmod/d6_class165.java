@@ -41,25 +41,25 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 public abstract class d6_class165<G extends e4_class223> extends GirlRenderer<G> {
     final static protected Vec3i r = new Vec3i(255, 255, 255);
-    static HashMap<Integer, Vec3i> s = new HashMap();
+    static HashMap<Integer, Vec3i> Colors = new HashMap();
 
     public d6_class165(RenderManager renderManager, AnimatedGeoModel animatedGeoModel, double d) {
         super(renderManager, animatedGeoModel, d);
     }
 
-    public static void c() {
-        s.clear();
+    public static void ResetColors() {
+        Colors.clear();
     }
 
     protected Vec3i a(GeoBone geoBone) {
         String string = geoBone.getName();
         int n = string.hashCode() + ((e4_class223)this.j).getPersistentID().hashCode();
-        Vec3i vec3i = s.get(n);
+        Vec3i vec3i = Colors.get(n);
         if (vec3i != null) {
             return vec3i;
         }
         vec3i = this.a(string);
-        s.put(n, vec3i);
+        Colors.put(n, vec3i);
         return vec3i;
     }
 
@@ -193,10 +193,6 @@ public abstract class d6_class165<G extends e4_class223> extends GirlRenderer<G>
                 bufferBuilder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex((double)geoVertex.textureU + d, geoVertex.textureV).color((float)vec3d.x, (float)vec3d.y, (float)vec3d.z, f4).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
             }
         }
-    }
-
-    private static RuntimeException c(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

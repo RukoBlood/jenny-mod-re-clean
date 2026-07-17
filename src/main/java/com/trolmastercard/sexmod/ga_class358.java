@@ -15,6 +15,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.util.interfaces.IPositionProvider;
+import com.trolmastercard.sexmod.util.interfaces.ITargetProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,7 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ga_class358 {
     final static ResourceLocation CUMMY_TEXTURE = new ResourceLocation("sexmod", "textures/cummy.png");
     static Minecraft minecraft = Minecraft.getMinecraft();
-    static List<ep_class263> a = new ArrayList<ep_class263>();
+    static List<DynamicTrailRenderer> a = new ArrayList<DynamicTrailRenderer>();
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
@@ -45,8 +47,8 @@ public class ga_class358 {
         if (ga_class358.minecraft.player == null) {
             return;
         }
-        for (ep_class263 ep_class2632 : a) {
-            ep_class2632.a(minecraft, tessellator, bufferBuilder, f);
+        for (DynamicTrailRenderer ep_class2632 : a) {
+            ep_class2632.renderTrail(minecraft, tessellator, bufferBuilder, f);
         }
         GlStateManager.enableDepth();
         GlStateManager.enableLighting();
@@ -58,23 +60,23 @@ public class ga_class358 {
         if (clientTickEvent.phase == TickEvent.Phase.END) {
             return;
         }
-        for (ep_class263 ep_class2632 : a) {
-            ep_class2632.a();
+        for (DynamicTrailRenderer ep_class2632 : a) {
+            ep_class2632.onTick();
         }
     }
 
-    public static void a(ep_class263 ep_class2632) {
+    public static void a(DynamicTrailRenderer ep_class2632) {
         a.add(ep_class2632);
     }
 
-    public static void a(int n, ar_class41 ar_class412, b8_class69 b8_class692, GirlEntity em_class2582, float f, float f2) {
-        a.add(new ep_class263(n, ar_class412, b8_class692, em_class2582, f, f2));
+    public static void a(int n, IPositionProvider ar_class412, ITargetProvider b8_class692, GirlEntity em_class2582, float f, float f2) {
+        a.add(new DynamicTrailRenderer(n, ar_class412, b8_class692, em_class2582, f, f2));
     }
 
     public static void a(@Nonnull GirlEntity em_class2582) {
-        ArrayList<ep_class263> arrayList = new ArrayList<ep_class263>();
-        for (ep_class263 ep_class2632 : a) {
-            if (!ep_class2632.e.girlID().equals(em_class2582.girlID())) continue;
+        ArrayList<DynamicTrailRenderer> arrayList = new ArrayList<DynamicTrailRenderer>();
+        for (DynamicTrailRenderer ep_class2632 : a) {
+            if (!ep_class2632.ownerEntity.girlID().equals(em_class2582.girlID())) continue;
             arrayList.add(ep_class2632);
         }
         a.removeAll(arrayList);

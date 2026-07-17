@@ -103,7 +103,7 @@ public class Main {
     @SideOnly(value=Side.CLIENT)
     static void clientReset() {
         gm_class376.ClearList();
-        d6_class165.c();
+        d6_class165.ResetColors();
     }
 
     @SideOnly(value=Side.CLIENT)

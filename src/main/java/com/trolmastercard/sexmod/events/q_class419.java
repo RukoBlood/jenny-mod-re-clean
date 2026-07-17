@@ -8,14 +8,14 @@
  *  net.minecraftforge.fml.common.gameevent.PlayerEvent$PlayerLoggedOutEvent
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.events;
 
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.Packages.InformOfOwnership;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SendBlocks;
@@ -118,31 +118,25 @@ public class q_class419 {
     @SubscribeEvent
     public void a(PlayerEvent.PlayerLoggedOutEvent playerLoggedOutEvent) {
         EntityPlayer entityPlayer = playerLoggedOutEvent.player;
-        try {
-            for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
-                if (girlEntity instanceof PlayerGirl) {
-                    ((PlayerGirl)girlEntity).void_b(entityPlayer);
-                }
-                if (girlEntity.getID() == null) continue;
-                if (girlEntity.getID().equals(entityPlayer.getPersistentID()) || girlEntity.getID().equals(entityPlayer.getUniqueID())) {
-                    ResetGirl.a_inner422.a(girlEntity);
-                    girlEntity.void_a(false);
-                    girlEntity.setCurrentAction(Action.NULL);
-                }
-                if (!(girlEntity instanceof PlayerGirl) || !((PlayerGirl)girlEntity).java_util_UUID_m().equals(entityPlayer.getPersistentID()) || girlEntity.getID() == null) continue;
-                EntityPlayerMP entityPlayerMP = (EntityPlayerMP)playerLoggedOutEvent.player.world.getPlayerEntityByUUID(girlEntity.getID());
-                PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
-                ResetGirl.a_inner422.a(entityPlayerMP);
-                entityPlayer.setInvisible(false);
-                girlEntity.void_e((UUID)null);
+        for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
+            if (girlEntity instanceof PlayerGirl) {
+                ((PlayerGirl)girlEntity).void_b(entityPlayer);
             }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+            if (girlEntity.getID() == null) continue;
+            if (girlEntity.getID().equals(entityPlayer.getPersistentID()) || girlEntity.getID().equals(entityPlayer.getUniqueID())) {
+                ResetGirl.a_inner422.a(girlEntity);
+                girlEntity.void_a(false);
+                girlEntity.setCurrentAction(Action.NULL);
+            }
+            if (!(girlEntity instanceof PlayerGirl) || !((PlayerGirl)girlEntity).java_util_UUID_m().equals(entityPlayer.getPersistentID()) || girlEntity.getID() == null) continue;
+            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)playerLoggedOutEvent.player.world.getPlayerEntityByUUID(girlEntity.getID());
+            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
+            ResetGirl.a_inner422.a(entityPlayerMP);
+            entityPlayer.setInvisible(false);
+            girlEntity.void_e((UUID)null);
         }
     }
 
-    private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-        return concurrentModificationException;
-    }
+
 }
 

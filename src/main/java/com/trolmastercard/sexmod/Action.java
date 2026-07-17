@@ -195,10 +195,10 @@ public enum Action {
     public boolean useBoyCam;
     public boolean hideNameTag;
 
-    private Action(int n2, boolean bl, boolean bl2) {
-        this.transitionTick = n2;
-        this.hasPlayer = bl;
-        this.autoBlink = bl2;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink) {
+        this.transitionTick = transitionTick;
+        this.hasPlayer = hasPlayer;
+        this.autoBlink = autoBlink;
         this.maxGirlPitch = 30.0f;
         this.minGirlPitch = -90.0f;
         this.flipGirlYaw = false;
@@ -206,24 +206,24 @@ public enum Action {
         this.hideNameTag = false;
     }
 
-    private Action(int n2, boolean bl, boolean bl2, boolean bl3) {
-        this(n2, bl, bl2);
-        this.useBoyCam = bl3;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink, boolean useBoyCam) {
+        this(transitionTick, hasPlayer, autoBlink);
+        this.useBoyCam = useBoyCam;
     }
 
-    private Action(int n2, boolean bl, boolean bl2, boolean bl3, boolean bl4) {
-        this(n2, bl, bl2);
-        this.useBoyCam = bl3;
-        this.hideNameTag = bl4;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink, boolean useBoyCam, boolean HideNameTag) {
+        this(transitionTick, hasPlayer, autoBlink);
+        this.useBoyCam = useBoyCam;
+        this.hideNameTag = HideNameTag;
     }
 
-    private Action(int n2, boolean bl, boolean bl2, float f, float f2, boolean bl3) {
-        this.transitionTick = n2;
-        this.hasPlayer = bl;
-        this.autoBlink = bl2;
-        this.maxGirlPitch = f;
-        this.minGirlPitch = f2;
-        this.flipGirlYaw = bl3;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink, float maxGirlPitch, float minGirlPitch, boolean flipGirlYaw) {
+        this.transitionTick = transitionTick;
+        this.hasPlayer = hasPlayer;
+        this.autoBlink = autoBlink;
+        this.maxGirlPitch = maxGirlPitch;
+        this.minGirlPitch = minGirlPitch;
+        this.flipGirlYaw = flipGirlYaw;
         this.useBoyCam = false;
         this.hideNameTag = false;
     }
@@ -239,100 +239,100 @@ public enum Action {
         this.hideNameTag = bl4;
     }
 
-    private Action(int n2, boolean bl, boolean bl2, boolean bl3, float f, float f2, boolean bl4) {
-        this.transitionTick = n2;
-        this.hasPlayer = bl;
-        this.autoBlink = bl2;
-        this.maxGirlPitch = f;
-        this.minGirlPitch = f2;
-        this.flipGirlYaw = bl4;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink, boolean useBoyCam, float maxGirlPitch, float minGirlPitch, boolean flipGirlYaw) {
+        this.transitionTick = transitionTick;
+        this.hasPlayer = hasPlayer;
+        this.autoBlink = autoBlink;
+        this.maxGirlPitch = maxGirlPitch;
+        this.minGirlPitch = minGirlPitch;
+        this.flipGirlYaw = flipGirlYaw;
         this.hideNameTag = false;
-        this.useBoyCam = bl3;
+        this.useBoyCam = useBoyCam;
     }
 
-    private Action(int n2, boolean bl, boolean bl2, int n3, Action fp_class3242) {
-        this(n2, bl, bl2);
-        this.length = n3;
-        this.followUp = fp_class3242;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink, int length, Action followUp) {
+        this(transitionTick, hasPlayer, autoBlink);
+        this.length = length;
+        this.followUp = followUp;
     }
 
-    private Action(int n2, boolean bl, boolean bl2, boolean bl3, int n3, Action fp_class3242) {
-        this(n2, bl, bl2);
-        this.length = n3;
-        this.followUp = fp_class3242;
-        this.useBoyCam = bl3;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink, boolean useBoyCam, int length, Action followUp) {
+        this(transitionTick, hasPlayer, autoBlink);
+        this.length = length;
+        this.followUp = followUp;
+        this.useBoyCam = useBoyCam;
     }
 
-    private Action(int n2, boolean bl, boolean bl2, boolean bl3, int n3, Action fp_class3242, float f, float f2, boolean bl4) {
-        this.transitionTick = n2;
-        this.hasPlayer = bl;
-        this.autoBlink = bl2;
-        this.length = n3;
-        this.followUp = fp_class3242;
-        this.useBoyCam = bl3;
-        this.minGirlPitch = f;
-        this.maxGirlPitch = f2;
-        this.flipGirlYaw = bl4;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink, boolean useBoyCam, int length, Action followUp, float minGirlPitch, float maxGirlPitch, boolean flipGirlYaw) {
+        this.transitionTick = transitionTick;
+        this.hasPlayer = hasPlayer;
+        this.autoBlink = autoBlink;
+        this.length = length;
+        this.followUp = followUp;
+        this.useBoyCam = useBoyCam;
+        this.minGirlPitch = minGirlPitch;
+        this.maxGirlPitch = maxGirlPitch;
+        this.flipGirlYaw = flipGirlYaw;
     }
 
-    private Action(int n2, boolean bl, boolean bl2, boolean bl3, boolean bl4, int n3, Action fp_class3242) {
-        this(n2, bl, bl2);
-        this.length = n3;
-        this.followUp = fp_class3242;
-        this.useBoyCam = bl4;
-        this.hideNameTag = bl3;
+    private Action(int transitionTick, boolean hasPlayer, boolean autoBlink, boolean hideNameTag, boolean useBoyCam, int length, Action followUp) {
+        this(transitionTick, hasPlayer, autoBlink);
+        this.length = length;
+        this.followUp = followUp;
+        this.useBoyCam = useBoyCam;
+        this.hideNameTag = hideNameTag;
     }
 
-    public static boolean a(Action fp_class3242, Action... actionArray) {
-        for (Action fp_class3243 : actionArray) {
-            if (fp_class3242 != fp_class3243) continue;
+    public static boolean a(Action action, Action... actionArray) {
+        for (Action action1 : actionArray) {
+            if (action != action1) continue;
             return true;
         }
         return false;
     }
 
-    public static boolean a(GirlEntity em_class2582, Action... actionArray) {
-        return Action.a(em_class2582.currentAction(), actionArray);
+    public static boolean a(GirlEntity girl, Action... actionArray) {
+        return Action.a(girl.currentAction(), actionArray);
     }
 
-    public static double a(AnimationController animationController) {
-        if (animationController == null) {
+    public static double getAnimationLength(AnimationController controller) {
+        if (controller == null) {
             return 0.0;
         }
-        Animation animation = animationController.getCurrentAnimation();
-        if (animation == null) {
+        Animation currentAnimation = controller.getCurrentAnimation();
+        if (currentAnimation == null) {
             return 0.0;
         }
-        return animation.animationLength;
+        return currentAnimation.animationLength;
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static float a(GirlEntity em_class2582) {
-        return (float) Action.a(em_class2582.actionController);
+    public static float getAnimationLength(GirlEntity girl) {
+        return (float) Action.getAnimationLength(girl.actionController);
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static float c(GirlEntity em_class2582, float f) {
-        return (float)(em_class2582.getFactory().getOrCreateAnimationData((Integer)Integer.valueOf((int)em_class2582.getUniqueID().hashCode())).tick + (double)f - em_class2582.actionController.tickOffset);
+    public static float c(GirlEntity girl, float f) {
+        return (float)(girl.getFactory().getOrCreateAnimationData((Integer) (int) girl.getUniqueID().hashCode()).tick + (double)f - girl.actionController.tickOffset);
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static float a(GirlEntity em_class2582, float f) {
-        return Action.c(em_class2582, f) / 20.0f;
+    public static float a(GirlEntity girl, float f) {
+        return Action.c(girl, f) / 20.0f;
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static float d(GirlEntity em_class2582, float f) {
-        float f2 = Action.a(em_class2582);
+    public static float d(GirlEntity girl, float f) {
+        float f2 = Action.getAnimationLength(girl);
         if (f2 <= 0.0f) {
             return 0.0f;
         }
-        return Utils.clamp(Action.c(em_class2582, f) / f2, 0.0f, 1.0f);
+        return Utils.clamp(Action.c(girl, f) / f2, 0.0f, 1.0f);
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static boolean b(GirlEntity em_class2582, float f) {
-        return Action.d(em_class2582, f) == 1.0f;
+    public static boolean b(GirlEntity girl, float f) {
+        return Action.d(girl, f) == 1.0f;
     }
 }
 

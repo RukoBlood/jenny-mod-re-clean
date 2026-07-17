@@ -8,15 +8,12 @@
  *  javax.vecmath.Vector4f
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Galath;
 
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.girls.Galath.GalathCoin;
-import com.trolmastercard.sexmod.girls.Galath.GalathCoinModel;
-import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.client.Minecraft;

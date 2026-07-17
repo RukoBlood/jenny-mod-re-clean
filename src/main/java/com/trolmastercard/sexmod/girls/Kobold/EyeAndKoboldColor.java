@@ -46,7 +46,7 @@ public enum EyeAndKoboldColor {
         try {
             return EyeAndKoboldColor.valueOf(string);
         } catch (IllegalArgumentException illegalArgumentException) {
-            return KoboldEntity.KoboldColor;
+            return KoboldEntity.COLOR;
         }
     }
 
@@ -55,7 +55,7 @@ public enum EyeAndKoboldColor {
             if (!vec3i.equals(color.getMainColor())) continue;
             return color;
         }
-        return KoboldEntity.KoboldColor;
+        return KoboldEntity.COLOR;
     }
 
     public static EyeAndKoboldColor getColorByWoolId(int id) {
@@ -63,7 +63,7 @@ public enum EyeAndKoboldColor {
             if (color.getWoolMeta() != id) continue;
             return color;
         }
-        return KoboldEntity.KoboldColor;
+        return KoboldEntity.COLOR;
     }
 
     public Vec3i getMainColor() {

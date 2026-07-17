@@ -17,6 +17,7 @@ import com.trolmastercard.sexmod.Packages.ResetController;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packages.SpawnEnergyBallParticlesAlt;
 import com.trolmastercard.sexmod.girls.Galath.EnergyBallEntity;
+import com.trolmastercard.sexmod.girls.Galath.GalathDamageSource;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

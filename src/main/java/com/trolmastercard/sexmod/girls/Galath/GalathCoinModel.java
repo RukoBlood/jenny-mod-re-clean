@@ -6,8 +6,7 @@ package com.trolmastercard.sexmod.girls.Galath;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class GalathCoinModel
-extends AnimatedGeoModel<GalathCoin> {
+public class GalathCoinModel extends AnimatedGeoModel<GalathCoin> {
     @Override
     public ResourceLocation getModelLocation(GalathCoin cc_class1242) {
         return new ResourceLocation("sexmod", "geo/galath/galath_coin.geo.json");

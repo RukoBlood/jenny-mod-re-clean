@@ -64,8 +64,4 @@ public class bt_class99 extends EntityAIAvoidEntity<EntityPlayer> {
         super.resetTask();
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
-

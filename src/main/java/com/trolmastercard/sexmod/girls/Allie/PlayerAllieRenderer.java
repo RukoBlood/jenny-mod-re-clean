@@ -173,8 +173,8 @@ extends PlayerGirlRenderer {
     public static class a_inner205 {
         @SubscribeEvent
         public void a(TickEvent.ClientTickEvent clientTickEvent) {
-            for (PlayerAllieRenderer dv_class2042 : J) {
-                dv_class2042.void_a();
+            for (PlayerAllieRenderer renderer : J) {
+                renderer.void_a();
             }
         }
     }

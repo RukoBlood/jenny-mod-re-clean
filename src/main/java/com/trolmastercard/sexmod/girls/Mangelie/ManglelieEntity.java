@@ -17,6 +17,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
+import com.trolmastercard.sexmod.girls.Galath.GalathMobTarget;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
@@ -871,7 +872,7 @@ extends GirlEntity {
                     this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                 }
                 case "doubleSemen": {
-                    ga_class358.a(new ep_class263(10, em_class2582 -> {
+                    ga_class358.a(new DynamicTrailRenderer(10, em_class2582 -> {
                         Vec3d vec3d = em_class2582.d("semenEmitter");
                         Vec3d vec3d2 = em_class2582.d("semenDir");
                         return vec3d.subtract(vec3d2).normalize();

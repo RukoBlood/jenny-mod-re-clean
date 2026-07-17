@@ -61,16 +61,12 @@ public class bu_class100 extends GeoLayerRenderer {
     }
 
     @Override
-    public void doRenderLayer(EntityLivingBase entityLivingBase, float f, float f2, float f3, float f4, float f5, float f6, float f7) {
+    public void doRenderLayer(EntityLivingBase entityLivingBase, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
     }
 
     @Override
     public boolean shouldCombineTextures() {
         return false;
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

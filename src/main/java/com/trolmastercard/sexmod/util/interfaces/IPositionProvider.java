@@ -1,13 +1,13 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.util.interfaces;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.util.math.Vec3d;
 
 @FunctionalInterface
-public interface ar_class41 {
+public interface IPositionProvider {
     public Vec3d a(GirlEntity var1);
 }
 

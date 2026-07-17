@@ -446,12 +446,12 @@ implements b7_class68 {
                     break;
                 }
                 case "creampie": {
-                    ga_class358.a(new ep_class263(130, em_class2582 -> {
+                    ga_class358.a(new DynamicTrailRenderer(130, em_class2582 -> {
                         Vec3d vec3d = em_class2582.d("futaCockTip");
                         Vec3d vec3d2 = em_class2582.d("futaCockTipDirHelp");
                         return vec3d.subtract(vec3d2).normalize();
                     }, em_class2582 -> em_class2582.b("futaCockTip").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.3f, 0.3f));
-                    ga_class358.a(new ep_class263(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.6f, 0.5f));
+                    ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.6f, 0.5f));
                     this.a(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }

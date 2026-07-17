@@ -200,7 +200,7 @@ implements ai_class30 {
 
     @Override
     protected void void_a() {
-        GoblinRenderer.c();
+        GoblinRenderer.ResetColors();
     }
 
     @Override
@@ -388,7 +388,7 @@ implements ai_class30 {
         GoblinEntity.c(stringBuilder, Integer.parseInt(GoblinEntity.java_lang_String_arr_a(this)[9]));
         this.entityDataManager.set(M, stringBuilder.toString());
         if (Main.proxy instanceof ClientProxy) {
-            GoblinRenderer.c();
+            GoblinRenderer.ResetColors();
         }
     }
 
@@ -403,7 +403,7 @@ implements ai_class30 {
         }
         GoblinEntity.c(stringBuilder, Integer.parseInt(GoblinEntity.java_lang_String_arr_a(this)[9]));
         this.entityDataManager.set(M, stringBuilder.toString());
-        GoblinRenderer.c();
+        GoblinRenderer.ResetColors();
     }
 
     protected String java_lang_String_a(StringBuilder stringBuilder, int n) {

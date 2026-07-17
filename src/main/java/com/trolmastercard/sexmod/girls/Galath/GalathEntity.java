@@ -41,6 +41,7 @@ import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.world.NameStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockBanner;
@@ -275,7 +276,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.entityDataManager.set(v, uUID.toString());
         this.aO.setVisible(false);
         this.bG = new BlockPos(this.getPositionVector());
-        String string = gy_class392.a(uUID, PlayerGirlEntity.GALATH);
+        String string = NameStorage.getCustomName(uUID, PlayerGirlEntity.GALATH);
         if (string != null) {
             super.g(string);
         }
@@ -1237,7 +1238,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (uUID == null) {
             return;
         }
-        gy_class392.a(uUID, PlayerGirlEntity.GALATH, string);
+        NameStorage.setCustomName(uUID, PlayerGirlEntity.GALATH, string);
     }
 
     public void d(Vec3d vec3d) {
@@ -2146,7 +2147,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (nBTTagCompound.getBoolean("sexmod:despawned")) {
             this.P = true;
         }
-        if ((uUID = this.java_util_UUID_O()) != null && (string = gy_class392.a(uUID, PlayerGirlEntity.GALATH)) != null) {
+        if ((uUID = this.java_util_UUID_O()) != null && (string = NameStorage.getCustomName(uUID, PlayerGirlEntity.GALATH)) != null) {
             this.g(string);
         }
     }
@@ -2507,13 +2508,13 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "rape_switch": {
-                    EntityPlayerSP entityPlayerSP;
+                    EntityPlayerSP player;
                     Random random = this.getRNG();
                     int n = this.b1;
                     do {
                         this.b1 = random.nextInt(3);
                     } while (this.b1 == n);
-                    if (this.maybeMountedByMangFn() || !this.boolean_n() || !(0.0f >= (entityPlayerSP = Minecraft.getMinecraft().player).getHealth() - 1.0f)) break;
+                    if (this.maybeMountedByMangFn() || !this.boolean_n() || !(0.0f >= (player = Minecraft.getMinecraft().player).getHealth() - 1.0f)) break;
                     this.setCurrentAction(Action.RAPE_CUM);
                     break;
                 }
@@ -2538,12 +2539,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                         SexUI.a(false);
                         break;
                     }
-                    EscapeMinigameUI.a();
+                    EscapeMinigameUI.StartMinigame();
                     break;
                 }
                 case "removeUI": {
                     if (!this.boolean_n() || this.maybeMountedByMangFn()) break;
-                    EscapeMinigameUI.d();
+                    EscapeMinigameUI.StartClosingAnimation();
                     break;
                 }
                 case "reloadRenderer": {
@@ -2598,7 +2599,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 }
                 case "masterbateCumming": {
                     if (!FutaCommand.enabled) break;
-                    ga_class358.a(new ep_class263(90, girlEntity -> {
+                    ga_class358.a(new DynamicTrailRenderer(90, girlEntity -> {
                         Vec3d vec3d = girlEntity.d("futaCockTip");
                         Vec3d vec3d2 = girlEntity.d("futaCockTipDirHelp");
                         return vec3d.subtract(vec3d2).normalize();
@@ -2606,12 +2607,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "creampie": {
-                    ga_class358.a(new ep_class263(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.6f, 0.5f));
+                    ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.6f, 0.5f));
                     // TODO fallthrough looks intentional
                 }
                 case "creampieGalath": {
                     if (FutaCommand.enabled) {
-                        ga_class358.a(new ep_class263(130, em_class2582 -> {
+                        ga_class358.a(new DynamicTrailRenderer(130, em_class2582 -> {
                             Vec3d vec3d = em_class2582.d("futaCockTip");
                             Vec3d vec3d2 = em_class2582.d("futaCockTipDirHelp");
                             return vec3d.subtract(vec3d2).normalize();

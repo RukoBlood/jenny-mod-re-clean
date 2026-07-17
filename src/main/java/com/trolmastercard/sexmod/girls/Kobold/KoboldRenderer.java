@@ -122,7 +122,7 @@ public class KoboldRenderer extends d6_class165<KoboldEntity> {
             ff_class3082.as = string;
         }
         if (!ff_class3082.as.equals(string)) {
-            KoboldRenderer.c();
+            KoboldRenderer.ResetColors();
             ff_class3082.as = string;
         }
         this.v = new Vector3f((float)d, (float)d2, (float)d3);

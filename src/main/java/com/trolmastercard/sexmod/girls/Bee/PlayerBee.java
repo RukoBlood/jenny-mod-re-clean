@@ -27,8 +27,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlayerBee
-extends PlayerGirl {
+public class PlayerBee extends PlayerGirl {
     protected PlayerBee(World world) {
         super(world);
     }
@@ -59,7 +58,7 @@ extends PlayerGirl {
 
     @Override
     public IRenderer getLimbRenderer(int n) {
-        return new a7_class15();
+        return new BeeLimb();
     }
 
     @Override

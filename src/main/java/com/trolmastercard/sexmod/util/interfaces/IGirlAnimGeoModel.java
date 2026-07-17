@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod.util.interfaces;
 
 import java.lang.reflect.Field;
 
-import com.trolmastercard.sexmod.c1_class110;
+import com.trolmastercard.sexmod.CachedAnimationProcessor;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.geo.exception.GeoModelException;
@@ -21,7 +21,7 @@ extends AnimatedGeoModel<T> {
         try {
             Field field = Class.forName("software.bernie.geckolib3.model.AnimatedGeoModel").getDeclaredField("animationProcessor");
             field.setAccessible(true);
-            field.set(this, new c1_class110(this));
+            field.set(this, new CachedAnimationProcessor(this));
         } catch (Exception exception) {
             exception.printStackTrace();
         }

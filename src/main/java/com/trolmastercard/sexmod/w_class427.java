@@ -86,10 +86,6 @@ public class w_class427 {
         PackageHandler.networkWrapper.sendToServer((IMessage)new StartStandingSexAnimation(uUID, uUID2, string));
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static class a_inner428 {
         public String a;
         public UUID c;

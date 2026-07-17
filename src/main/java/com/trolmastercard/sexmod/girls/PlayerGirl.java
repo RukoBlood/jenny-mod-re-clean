@@ -99,14 +99,10 @@ public abstract class PlayerGirl extends Fighter {
 
     @Nullable
     public static PlayerGirl com_trolmastercard_sexmod_ei_class251_a(UUID uUID) {
-        try {
-            for (GirlEntity em_class2582 : PlayerGirl.GirlEntityList()) {
-                PlayerGirl ei_class2512;
-                if (em_class2582.world.isRemote || !(em_class2582 instanceof PlayerGirl) || !uUID.equals((ei_class2512 = (PlayerGirl)em_class2582).java_util_UUID_m())) continue;
-                return ei_class2512;
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (GirlEntity girl : PlayerGirl.GirlEntityList()) {
+            PlayerGirl playerGirl;
+            if (girl.world.isRemote || !(girl instanceof PlayerGirl) || !uUID.equals((playerGirl = (PlayerGirl)girl).java_util_UUID_m())) continue;
+            return playerGirl;
         }
         return null;
     }
@@ -341,8 +337,8 @@ public abstract class PlayerGirl extends Fighter {
         super.playStepSound(blockPos, block);
     }
 
-    public AxisAlignedBB net_minecraft_util_math_AxisAlignedBB_a(EntityPlayer entityPlayer) {
-        return entityPlayer.getEntityBoundingBox();
+    public AxisAlignedBB getPlayerBB(EntityPlayer player) {
+        return player.getEntityBoundingBox();
     }
 
     @Override

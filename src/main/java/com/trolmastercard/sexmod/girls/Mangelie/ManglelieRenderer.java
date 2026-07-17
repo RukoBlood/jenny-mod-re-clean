@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
+import com.trolmastercard.sexmod.girls.Galath.GalathGeometryRender;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
 import com.trolmastercard.sexmod.util.*;

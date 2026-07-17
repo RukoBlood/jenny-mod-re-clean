@@ -36,25 +36,25 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 // * Used by kobold renderer.
 public abstract class d9_class168 extends PlayerGirlRenderer {
     final static protected Vec3i z = new Vec3i(255, 255, 255);
-    static HashMap<Integer, Vec3i> A = new HashMap();
+    static HashMap<Integer, Vec3i> Colors = new HashMap();
 
     public d9_class168(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
         super(renderManager, animatedGeoModel);
     }
 
-    public static void e() {
-        A.clear();
+    public static void ResetColors() {
+        Colors.clear();
     }
 
     protected Vec3i a(GeoBone geoBone) {
         String string = geoBone.getName();
         int n = string.hashCode() + this.j.getPersistentID().hashCode();
-        Vec3i vec3i = A.get(n);
+        Vec3i vec3i = Colors.get(n);
         if (vec3i != null) {
             return vec3i;
         }
         vec3i = this.net_minecraft_util_math_Vec3i_a(string);
-        A.put(n, vec3i);
+        Colors.put(n, vec3i);
         return vec3i;
     }
 

@@ -41,9 +41,5 @@ public enum eh_class250 {
         }
         return n;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

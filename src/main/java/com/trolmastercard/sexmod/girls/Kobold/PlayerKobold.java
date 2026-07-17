@@ -47,9 +47,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 import software.bernie.geckolib3.util.MatrixStack;
 
-public class PlayerKobold
-extends ew_class277
-implements dr_class199 {
+public class PlayerKobold extends ew_class277 implements dr_class199 {
     final static public EyeAndKoboldColor aw = EyeAndKoboldColor.PURPLE;
     final static public DataParameter<Float> aA = EntityDataManager.createKey(PlayerKobold.class, DataSerializers.FLOAT).getSerializer().createKey(122);
     boolean aB = false;
@@ -75,7 +73,7 @@ implements dr_class199 {
     }
 
     @Override
-    public AxisAlignedBB net_minecraft_util_math_AxisAlignedBB_a(EntityPlayer entityPlayer) {
+    public AxisAlignedBB getPlayerBB(EntityPlayer entityPlayer) {
         float f = 0.6f;
         float f2 = 0.9f;
         float f3 = f / 2.0f;
@@ -107,7 +105,7 @@ implements dr_class199 {
         }
         this.entityDataManager.set(at, stringBuilder.toString());
         if (this.world.isRemote) {
-            PlayerKoboldRenderer.e();
+            PlayerKoboldRenderer.ResetColors();
         }
     }
 
@@ -154,8 +152,8 @@ implements dr_class199 {
 
     @Override
     protected void void_a() {
-        PlayerKoboldRenderer.e();
-        KoboldRenderer.c();
+        PlayerKoboldRenderer.ResetColors();
+        KoboldRenderer.ResetColors();
     }
 
     @Override

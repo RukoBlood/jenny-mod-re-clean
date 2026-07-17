@@ -29,6 +29,7 @@ import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblin;
 import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.world.NameStorage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EventHandler {
     public static void a(boolean bl) throws IOException {
-        MinecraftForge.EVENT_BUS.register((Object)new ah_class29());
+        MinecraftForge.EVENT_BUS.register((Object)new GirlCombatProtection());
         MinecraftForge.EVENT_BUS.register((Object)new eo_class262());
         MinecraftForge.EVENT_BUS.register((Object)new q_class419());
         MinecraftForge.EVENT_BUS.register((Object)new HornyPotion());
@@ -61,13 +62,13 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new GoblinEntity.c_inner222());
         MinecraftForge.EVENT_BUS.register((Object)new PlayerGoblin.a_inner265());
         MinecraftForge.EVENT_BUS.register((Object)new LampItem.a_inner38());
-        MinecraftForge.EVENT_BUS.register((Object)new ad_class25());
+        MinecraftForge.EVENT_BUS.register((Object)new DebugMode());
         MinecraftForge.EVENT_BUS.register((Object)new GalathEntity.a_inner298());
         MinecraftForge.EVENT_BUS.register((Object)new GalathMangTracker());
         MinecraftForge.EVENT_BUS.register((Object) GalathCoin.GALATH_COIN);
         MinecraftForge.EVENT_BUS.register((Object) NYIWinchesterItem.NYI_WINCHESTER_ITEM);
         MinecraftForge.EVENT_BUS.register((Object)new fq_class325());
-        MinecraftForge.EVENT_BUS.register((Object)new gy_class392());
+        MinecraftForge.EVENT_BUS.register((Object)new NameStorage());
         MinecraftForge.EVENT_BUS.register((Object)new bj_class84());
         MinecraftForge.EVENT_BUS.register((Object) WorldGeneration.Generate());
         MinecraftForge.EVENT_BUS.register((Object)new ManglelieEntity.ArrowLogic());
@@ -89,7 +90,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new HandlePlayerMovement());
         MinecraftForge.EVENT_BUS.register((Object)new GirlRenderEvent());
         MinecraftForge.EVENT_BUS.register((Object)new bq_class93());
-        MinecraftForge.EVENT_BUS.register((Object)new cn_class138());
+        MinecraftForge.EVENT_BUS.register((Object)new InHandMapRenderer());
         MinecraftForge.EVENT_BUS.register((Object)new e__class234());
         MinecraftForge.EVENT_BUS.register((Object)new w_class427());
         MinecraftForge.EVENT_BUS.register((Object)new PlayerAllieRenderer.a_inner205());
@@ -106,10 +107,6 @@ public class EventHandler {
         File file = new File("sexmod/dontAskAgain");
         file.getParentFile().mkdirs();
         return !file.exists();
-    }
-
-    private static Exception a(Exception exception) {
-        return exception;
     }
 }
 
