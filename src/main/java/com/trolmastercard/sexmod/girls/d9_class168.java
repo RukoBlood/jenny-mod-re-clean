@@ -163,10 +163,10 @@ public abstract class d9_class168 extends PlayerGirlRenderer {
         }
         if (!geoBone.isHidden) {
             Vector4f vec4f = this.a(string, f, f2, f3);
-            f = ((Vector4f)vec4f).x;
-            f2 = ((Vector4f)vec4f).y;
-            f3 = ((Vector4f)vec4f).z;
-            double d = ((Vector4f)vec4f).w;
+            f = ((Vector4f) vec4f).x;
+            f2 = ((Vector4f) vec4f).y;
+            f3 = ((Vector4f) vec4f).z;
+            double d = ((Vector4f) vec4f).w;
             if (!this.p.contains(string)) {
                 for (GeoCube object : geoBone.childCubes) {
                     MATRIX_STACK.push();
@@ -185,11 +185,7 @@ public abstract class d9_class168 extends PlayerGirlRenderer {
                 this.a(bufferBuilder, geoBone2, f, f2, f3, f4, d);
             }
         }
-        try {
-            MATRIX_STACK.pop();
-        } catch (IllegalStateException illegalStateException) {
-            // empty catch block
-        }
+        MATRIX_STACK.pop()
     }
 
     public void a(BufferBuilder bufferBuilder, GeoCube geoCube, GeoBone geoBone, float f, float f2, float f3, float f4, double d) {

@@ -183,10 +183,10 @@ extends GirlRenderer<GirlEntity> {
         }
         if (!geoBone.isHidden) {
             Vector4f itemStack = this.a(string, f, f2, f3);
-            f = ((Vector4f)itemStack).x;
-            f2 = ((Vector4f)itemStack).y;
-            f3 = ((Vector4f)itemStack).z;
-            double d = ((Vector4f)itemStack).w;
+            f = ((Vector4f) itemStack).x;
+            f2 = ((Vector4f) itemStack).y;
+            f3 = ((Vector4f) itemStack).z;
+            double d = ((Vector4f) itemStack).w;
             if (!this.p.contains(string)) {
                 for (GeoCube object : geoBone.childCubes) {
                     MATRIX_STACK.push();
@@ -205,11 +205,7 @@ extends GirlRenderer<GirlEntity> {
                 this.a(bufferBuilder, geoBone2, f, f2, f3, f4, d);
             }
         }
-        try {
-            MATRIX_STACK.pop();
-        } catch (IllegalStateException illegalStateException) {
-            // empty catch block
-        }
+        MATRIX_STACK.pop()
     }
 
     boolean boolean_a() {

@@ -653,23 +653,20 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             if (!(Math.sqrt(blockPos.distanceSq(object)) < 1000.0)) continue;
             return false;
         }
-        try {
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                if (em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || em_class2582.isDead || !(em_class2582.getDistanceSq(blockPos) < 1000000.0)) continue;
-                return false;
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+            if (em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || em_class2582.isDead || !(em_class2582.getDistanceSq(blockPos) < 1000000.0))
+                continue;
+            return false;
         }
         int n = blockPos.getY();
-        while ((float)n < 15.0f + (float)blockPos.getY()) {
+        while ((float) n < 15.0f + (float) blockPos.getY()) {
             if (world.getBlockState(new BlockPos(blockPos.getX(), n, blockPos.getZ())).getBlock() != Blocks.AIR) {
                 return false;
             }
             ++n;
         }
         n = blockPos.getY();
-        while ((float)n > (float)blockPos.getY() - 5.0f) {
+        while ((float) n > (float) blockPos.getY() - 5.0f) {
             if (world.getBlockState(new BlockPos(blockPos.getX(), n, blockPos.getZ())).getBlock() instanceof BlockLiquid) {
                 return false;
             }
@@ -2739,15 +2736,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             if (!hf_class401.d()) {
                 return;
             }
-            try {
-                for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                    if (!em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !minecraft.player.getPersistentID().equals(((GalathEntity)em_class2582).ax())) continue;
-                    hf_class401.a();
-                    em_class2582.setCurrentAction(Action.BOOST);
-                    return;
-                }
-            } catch (ConcurrentModificationException concurrentModificationException) {
-                // empty catch block
+            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+                if (!em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !minecraft.player.getPersistentID().equals(((GalathEntity) em_class2582).ax()))
+                    continue;
+                hf_class401.a();
+                em_class2582.setCurrentAction(Action.BOOST);
+                return;
             }
         }
 
@@ -2820,37 +2814,34 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             Minecraft minecraft = Minecraft.getMinecraft();
             RenderManager renderManager = minecraft.getRenderManager();
             float ticks = minecraft.getRenderPartialTicks();
-            try {
-                for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                    EnergyBallEntity c4_class1132;
-                    Vec3d vec3d;
-                    Vec3d vec3d2;
-                    double d;
-                    if (!(em_class2582 instanceof GalathEntity) || !em_class2582.world.isRemote || em_class2582.currentAction() != Action.SUMMON_SKELETON || (d = (double)((GalathEntity)em_class2582).ad) < 9.0 || d > 30.0) continue;
-                    Vec3d vec3d3 = Reference.LerpVec3d(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double)ticks);
-                    double d2 = (d - 9.0) / 21.0;
-                    if (em_class2582.getDataManager().get(bN).booleanValue()) {
-                        vec3d2 = em_class2582.b("energyBallR");
-                        vec3d = vec3d3.add(vec3d2);
-                        c4_class1132 = new EnergyBallEntity(em_class2582.world, (GalathEntity)em_class2582);
-                        c4_class1132.g = d2;
-                        c4_class1132.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-                        renderManager.renderEntity(c4_class1132, 0.0, 0.0, 0.0, 0.0f, ticks, true);
-                        c4_class1132.setPosition(0.0, -500.0, 0.0);
-                        c4_class1132.setDead();
-                    }
-                    if (!em_class2582.getDataManager().get(b7).booleanValue()) continue;
-                    vec3d2 = em_class2582.b("energyBallL");
+            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+                EnergyBallEntity c4_class1132;
+                Vec3d vec3d;
+                Vec3d vec3d2;
+                double d;
+                if (!(em_class2582 instanceof GalathEntity) || !em_class2582.world.isRemote || em_class2582.currentAction() != Action.SUMMON_SKELETON || (d = (double) ((GalathEntity) em_class2582).ad) < 9.0 || d > 30.0)
+                    continue;
+                Vec3d vec3d3 = Reference.LerpVec3d(new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ), em_class2582.getPositionVector(), (double) ticks);
+                double d2 = (d - 9.0) / 21.0;
+                if (em_class2582.getDataManager().get(bN).booleanValue()) {
+                    vec3d2 = em_class2582.b("energyBallR");
                     vec3d = vec3d3.add(vec3d2);
-                    c4_class1132 = new EnergyBallEntity(em_class2582.world, (GalathEntity)em_class2582);
-                    c4_class1132.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
+                    c4_class1132 = new EnergyBallEntity(em_class2582.world, (GalathEntity) em_class2582);
                     c4_class1132.g = d2;
+                    c4_class1132.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
                     renderManager.renderEntity(c4_class1132, 0.0, 0.0, 0.0, 0.0f, ticks, true);
                     c4_class1132.setPosition(0.0, -500.0, 0.0);
                     c4_class1132.setDead();
                 }
-            } catch (ConcurrentModificationException concurrentModificationException) {
-                // empty catch block
+                if (!em_class2582.getDataManager().get(b7).booleanValue()) continue;
+                vec3d2 = em_class2582.b("energyBallL");
+                vec3d = vec3d3.add(vec3d2);
+                c4_class1132 = new EnergyBallEntity(em_class2582.world, (GalathEntity) em_class2582);
+                c4_class1132.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
+                c4_class1132.g = d2;
+                renderManager.renderEntity(c4_class1132, 0.0, 0.0, 0.0, 0.0f, ticks, true);
+                c4_class1132.setPosition(0.0, -500.0, 0.0);
+                c4_class1132.setDead();
             }
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();

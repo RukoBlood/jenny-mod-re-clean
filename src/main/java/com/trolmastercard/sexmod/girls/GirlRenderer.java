@@ -658,14 +658,14 @@ implements c3_class112 {
 
     @Override
     public void renderRecursively(BufferBuilder bufferBuilder, GeoBone geoBone, float f, float f2, float f3, float f4) {
-        if (((GirlEntity)this.j).world instanceof FakeWorld) {
+        if (((GirlEntity) this.j).world instanceof FakeWorld) {
             return;
         }
         String string = geoBone.getName();
         if (string.equals("weapon") && this.j instanceof Fighter) {
             this.a(bufferBuilder, geoBone);
         }
-        if (string.equals("itemRenderer") && ((GirlEntity)this.j).currentAction() == Action.PAYMENT) {
+        if (string.equals("itemRenderer") && ((GirlEntity) this.j).currentAction() == Action.PAYMENT) {
             this.b(bufferBuilder, geoBone);
         }
         if (string.equals("ballL") || string.equals("ballR") || string.equals("cock")) {
@@ -709,11 +709,7 @@ implements c3_class112 {
                 this.a(bufferBuilder, geoBone2, f, f2, f3, f4, d);
             }
         }
-        try {
-            MATRIX_STACK.pop();
-        } catch (IllegalStateException illegalStateException) {
-            // empty catch block
-        }
+        MATRIX_STACK.pop()
     }
 
     protected Vector4f a(float f, float f2, float f3) {

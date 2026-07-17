@@ -183,23 +183,20 @@ implements IAnimatable {
             return;
         }
         GalathEntity f__class2972 = null;
-        try {
-            for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
-                if (object2.isDead || !object2.world.isRemote || !(object2 instanceof GalathEntity) || !entityPlayer.equals(object2.net_minecraft_entity_player_EntityPlayer_z())) continue;
-                f__class2972 = (GalathEntity)object2;
-                break;
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
+            if (object2.isDead || !object2.world.isRemote || !(object2 instanceof GalathEntity) || !entityPlayer.equals(object2.net_minecraft_entity_player_EntityPlayer_z()))
+                continue;
+            f__class2972 = (GalathEntity) object2;
+            break;
         }
         if (f__class2972 == null) {
             return;
         }
         Vec3d vec3d = f__class2972.net_minecraft_util_math_Vec3d_o().add(0.0, 1.5, 0.0);
         Vec3d vec3d2 = entityPlayer.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0);
-        Vec3d vec3d3 = vec3d2.add(VectorMath.RotateY((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
-        float f = (float)(l - l2 - 1000L) / 2000.0f;
-        Vec3d vec3d4 = Reference.LerpVec3d(vec3d, vec3d3, (double)f);
+        Vec3d vec3d3 = vec3d2.add(VectorMath.RotateY((float) (entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double) (-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
+        float f = (float) (l - l2 - 1000L) / 2000.0f;
+        Vec3d vec3d4 = Reference.LerpVec3d(vec3d, vec3d3, (double) f);
         ParticleGalathTrail.globalParticleScale = 0.2f;
         Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGalathTrail(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
     }
@@ -298,14 +295,11 @@ implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     void b(EntityPlayer entityPlayer) {
         GalathEntity f__class2972 = null;
-        try {
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                if (em_class2582.isDead || !em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !entityPlayer.equals(em_class2582.net_minecraft_entity_player_EntityPlayer_z())) continue;
-                f__class2972 = (GalathEntity)em_class2582;
-                break;
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+            if (em_class2582.isDead || !em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !entityPlayer.equals(em_class2582.net_minecraft_entity_player_EntityPlayer_z()))
+                continue;
+            f__class2972 = (GalathEntity) em_class2582;
+            break;
         }
         if (f__class2972 == null) {
             return;

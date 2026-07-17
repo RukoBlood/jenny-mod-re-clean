@@ -364,11 +364,7 @@ extends GeoEntityRenderer<CustomModelEntity> {
                 this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
             }
         }
-        try {
-            this.c.c.pop();
-        } catch (IllegalStateException illegalStateException) {
-            // empty catch block
-        }
+        this.c.c.pop()
     }
 
     @Override

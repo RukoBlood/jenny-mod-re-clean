@@ -67,13 +67,9 @@ public class gm_class376 {
         textureManager.bindTexture(MARK_TEXTURE);
         GlStateManager.translate(-vec3d.x, -vec3d.y, -vec3d.z);
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        try {
-            for (BlockPos blockPos : blockPositionsList) {
-                Vec3i vec3i = gm_class376.b(blockPos);
-                gm_class376.a(bufferBuilder, blockPos, vec3i.getX(), vec3i.getY(), vec3i.getZ());
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (BlockPos blockPos : blockPositionsList) {
+            Vec3i vec3i = gm_class376.b(blockPos);
+            gm_class376.a(bufferBuilder, blockPos, vec3i.getX(), vec3i.getY(), vec3i.getZ());
         }
         tessellator.draw();
         GlStateManager.enableDepth();

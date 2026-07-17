@@ -69,35 +69,31 @@ implements IMessage {
     public static class a_inner175
     implements IMessageHandler<dc_class174, IMessage> {
         public static void a(UUID uUID, UUID uUID2, boolean bl, boolean bl2) {
-            try {
-                for (GirlEntity em_class2582 : GirlEntity.girlList(uUID)) {
-                    if (em_class2582.world.isRemote) continue;
-                    if (em_class2582 instanceof JennyEntity || em_class2582 instanceof EllieEntity || em_class2582 instanceof LunaEntity) {
-                        em_class2582.tasks.removeTask(em_class2582.o);
-                        em_class2582.tasks.removeTask(em_class2582.avoidWater);
-                    }
-                    em_class2582.getNavigator().clearPath();
-                    em_class2582.motionX = 0.0;
-                    em_class2582.motionY = 0.0;
-                    em_class2582.motionZ = 0.0;
-                    if (em_class2582.getID() == null) {
-                        em_class2582.void_e(uUID2);
-                    }
-                    if (bl2) {
-                        em_class2582.c(em_class2582.net_minecraft_util_math_Vec3d_aa());
-                    }
-                    em_class2582.j(em_class2582.getID());
-                    if (!bl) {
-                        return;
-                    }
-                    if (!(em_class2582 instanceof bh_class82)) {
-                        return;
-                    }
-                    bh_class82 bh_class822 = (bh_class82)((Object)em_class2582);
-                    bh_class822.void_b();
+            for (GirlEntity em_class2582 : GirlEntity.girlList(uUID)) {
+                if (em_class2582.world.isRemote) continue;
+                if (em_class2582 instanceof JennyEntity || em_class2582 instanceof EllieEntity || em_class2582 instanceof LunaEntity) {
+                    em_class2582.tasks.removeTask(em_class2582.o);
+                    em_class2582.tasks.removeTask(em_class2582.avoidWater);
                 }
-            } catch (ConcurrentModificationException concurrentModificationException) {
-                // empty catch block
+                em_class2582.getNavigator().clearPath();
+                em_class2582.motionX = 0.0;
+                em_class2582.motionY = 0.0;
+                em_class2582.motionZ = 0.0;
+                if (em_class2582.getID() == null) {
+                    em_class2582.void_e(uUID2);
+                }
+                if (bl2) {
+                    em_class2582.c(em_class2582.net_minecraft_util_math_Vec3d_aa());
+                }
+                em_class2582.j(em_class2582.getID());
+                if (!bl) {
+                    return;
+                }
+                if (!(em_class2582 instanceof bh_class82)) {
+                    return;
+                }
+                bh_class82 bh_class822 = (bh_class82) ((Object) em_class2582);
+                bh_class822.void_b();
             }
         }
 

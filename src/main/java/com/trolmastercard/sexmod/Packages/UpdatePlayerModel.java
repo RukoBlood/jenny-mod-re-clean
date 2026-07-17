@@ -74,13 +74,9 @@ implements IMessage {
                 UUID uUID = messageContext.getServerHandler().player.getPersistentID();
                 PlayerGirl ei_class2513 = PlayerGirl.getUUIDHashtable(uUID);
                 if (ei_class2513 != null) {
-                    try {
-                        for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
-                            if (object2.world.isRemote || !object2.girlID().equals(ei_class2513.girlID())) continue;
-                            world.removeEntity(object2);
-                        }
-                    } catch (ConcurrentModificationException concurrentModificationException) {
-                        // empty catch block
+                    for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
+                        if (object2.world.isRemote || !object2.girlID().equals(ei_class2513.girlID())) continue;
+                        world.removeEntity(object2);
                     }
                     ei_class2513.void_y();
                     PlayerGirl.playerGirlUUIDHashtable.remove(uUID);

@@ -147,23 +147,19 @@ public class j_class411 extends GuiScreen {
         GL11.glEnable(3042);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glBlendFunc(770, 771);
-        try {
-            this.m = Math.min(1.0f, this.m + this.mc.getTickLength() / 5.0f);
-        } catch (NullPointerException nullPointerException) {
-            // empty catch block
-        }
-        float f2 = (float)this.a((double)this.m);
+        this.m = Math.min(1.0f, this.m + this.mc.getTickLength() / 5.0f)
+        float f2 = (float) this.a((double) this.m);
         float f3 = (1.0f - f2) * 100.0f;
-        this.a += (float)(n < this.width / 2 && n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.k += (float)(n < this.width / 2 && n2 < this.height / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.n += (float)(n > this.width / 2 && n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.i += (float)(n > this.width / 2 && n2 < this.height / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.a += (float) (n < this.width / 2 && n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.k += (float) (n < this.width / 2 && n2 < this.height / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.n += (float) (n > this.width / 2 && n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.i += (float) (n > this.width / 2 && n2 < this.height / 2 ? 1 : -1) * this.mc.getTickLength();
         this.a = Utils.clamp(this.a, 0.0f, 1.0f);
         this.k = Utils.clamp(this.k, 0.0f, 1.0f);
         this.n = Utils.clamp(this.n, 0.0f, 1.0f);
         this.i = Utils.clamp(this.i, 0.0f, 1.0f);
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float)this.width / 2.0f, (float)this.height / 2.0f, 0.0f);
+        GlStateManager.translate((float) this.width / 2.0f, (float) this.height / 2.0f, 0.0f);
         GlStateManager.scale(f2, f2, f2);
         this.mc.renderEngine.bindTexture(h);
         GlStateManager.pushMatrix();

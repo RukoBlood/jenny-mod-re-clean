@@ -532,14 +532,10 @@ public abstract class PlayerGirl extends Fighter {
 
     public static void void_C() {
         ArrayList<PlayerGirl> arrayList = new ArrayList<PlayerGirl>();
-        try {
-            for (PlayerGirl ei_class2512 : Z) {
-                if (ei_class2512.java_util_UUID_m() == null) continue;
-                playerGirlUUIDHashtable.put(ei_class2512.java_util_UUID_m(), ei_class2512);
-                arrayList.add(ei_class2512);
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (PlayerGirl ei_class2512 : Z) {
+            if (ei_class2512.java_util_UUID_m() == null) continue;
+            playerGirlUUIDHashtable.put(ei_class2512.java_util_UUID_m(), ei_class2512);
+            arrayList.add(ei_class2512);
         }
         for (PlayerGirl ei_class2512 : arrayList) {
             Z.remove(ei_class2512);

@@ -261,15 +261,12 @@ public class LampItem extends Item implements IAnimatable {
                 return;
             }
             if (!entityPlayer.world.isRemote) {
-                try {
-                    for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
-                        AllieEntity bl;
-                        ItemStack itemStack2;
-                        if (object2.isDead || !(object2 instanceof AllieEntity) || !itemStack.equals(itemStack2 = (bl = (AllieEntity)object2).getDataManager().get(AllieEntity.itemStack))) continue;
-                        return;
-                    }
-                } catch (ConcurrentModificationException concurrentModificationException) {
-                    // empty catch block
+                for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
+                    AllieEntity bl;
+                    ItemStack itemStack2;
+                    if (object2.isDead || !(object2 instanceof AllieEntity) || !itemStack.equals(itemStack2 = (bl = (AllieEntity) object2).getDataManager().get(AllieEntity.itemStack)))
+                        continue;
+                    return;
                 }
             }
             if (itemStack.getItem() != LAMP_ITEM) {

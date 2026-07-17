@@ -519,14 +519,11 @@ implements ai_class30 {
         if (uUID == null) {
             return false;
         }
-        try {
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                UUID uUID2;
-                if (!(em_class2582 instanceof ai_class30) || em_class2582.world.isRemote || em_class2582.isDead || !uUID.equals(uUID2 = ((ai_class30)((Object)em_class2582)).java_util_UUID_e())) continue;
-                return true;
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+            UUID uUID2;
+            if (!(em_class2582 instanceof ai_class30) || em_class2582.world.isRemote || em_class2582.isDead || !uUID.equals(uUID2 = ((ai_class30) ((Object) em_class2582)).java_util_UUID_e()))
+                continue;
+            return true;
         }
         return false;
     }
@@ -2003,20 +2000,17 @@ implements ai_class30 {
                 return;
             }
             ArrayList<GoblinEntity> arrayList = new ArrayList<GoblinEntity>();
-            try {
-                for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                    EntityPlayer entityPlayer;
-                    GoblinEntity e3_class2192;
-                    UUID uUID;
-                    if (!em_class2582.world.isRemote || !(em_class2582 instanceof GoblinEntity) || (uUID = (e3_class2192 = (GoblinEntity)em_class2582).java_util_UUID_e()) == null || (entityPlayer = e3_class2192.world.getPlayerEntityByUUID(uUID)) == null || entityPlayer.dimension == e3_class2192.dimension) continue;
-                    arrayList.add(e3_class2192);
-                }
-            } catch (ConcurrentModificationException concurrentModificationException) {
-                // empty catch block
+            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+                EntityPlayer entityPlayer;
+                GoblinEntity e3_class2192;
+                UUID uUID;
+                if (!em_class2582.world.isRemote || !(em_class2582 instanceof GoblinEntity) || (uUID = (e3_class2192 = (GoblinEntity) em_class2582).java_util_UUID_e()) == null || (entityPlayer = e3_class2192.world.getPlayerEntityByUUID(uUID)) == null || entityPlayer.dimension == e3_class2192.dimension)
+                    continue;
+                arrayList.add(e3_class2192);
             }
             for (GoblinEntity e3_class2193 : arrayList) {
-                e3_class2193.void_a((UUID)null);
-                e3_class2193.void_e((UUID)null);
+                e3_class2193.void_a((UUID) null);
+                e3_class2193.void_e((UUID) null);
                 e3_class2193.setDead();
             }
         }
@@ -2028,30 +2022,27 @@ implements ai_class30 {
             int n = playerChangedDimensionEvent.toDim;
             World world = entityPlayer.world;
             GoblinEntity e3_class2192 = null;
-            try {
-                for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                    GoblinEntity e3_class2193;
-                    if (em_class2582.world.isRemote || !(em_class2582 instanceof GoblinEntity) || !uUID.equals((e3_class2193 = (GoblinEntity)em_class2582).java_util_UUID_e())) continue;
-                    String string = e3_class2193.java_lang_String_C();
-                    String string2 = e3_class2193.java_lang_String_F();
-                    e3_class2192 = e3_class2193;
-                    e3_class2192.void_a((UUID)null);
-                    e3_class2192.void_e((UUID)null);
-                    e3_class2192.setCurrentAction(Action.NULL);
-                    GoblinEntity e3_class2194 = new GoblinEntity(world);
-                    e3_class2194.dimension = n;
-                    e3_class2194.forceSpawn = true;
-                    e3_class2194.f(string);
-                    e3_class2194.e(string2);
-                    GoblinEntity.access$000(e3_class2194).set(aC, true);
-                    world.spawnEntity(e3_class2194);
-                    e3_class2194.setPositionAndUpdate(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ);
-                    e3_class2194.void_a(uUID);
-                    e3_class2194.setCurrentAction(Action.SHOULDER_IDLE);
-                    break;
-                }
-            } catch (ConcurrentModificationException concurrentModificationException) {
-                // empty catch block
+            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+                GoblinEntity e3_class2193;
+                if (em_class2582.world.isRemote || !(em_class2582 instanceof GoblinEntity) || !uUID.equals((e3_class2193 = (GoblinEntity) em_class2582).java_util_UUID_e()))
+                    continue;
+                String string = e3_class2193.java_lang_String_C();
+                String string2 = e3_class2193.java_lang_String_F();
+                e3_class2192 = e3_class2193;
+                e3_class2192.void_a((UUID) null);
+                e3_class2192.void_e((UUID) null);
+                e3_class2192.setCurrentAction(Action.NULL);
+                GoblinEntity e3_class2194 = new GoblinEntity(world);
+                e3_class2194.dimension = n;
+                e3_class2194.forceSpawn = true;
+                e3_class2194.f(string);
+                e3_class2194.e(string2);
+                GoblinEntity.access$000(e3_class2194).set(aC, true);
+                world.spawnEntity(e3_class2194);
+                e3_class2194.setPositionAndUpdate(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ);
+                e3_class2194.void_a(uUID);
+                e3_class2194.setCurrentAction(Action.SHOULDER_IDLE);
+                break;
             }
             if (e3_class2192 == null) {
                 return;
@@ -2089,15 +2080,12 @@ implements ai_class30 {
             }
             GirlEntity em_class2582 = null;
             UUID uUID = Minecraft.getMinecraft().player.getPersistentID();
-            try {
-                for (GirlEntity em_class2583 : GirlEntity.GirlEntityList()) {
-                    ai_class30 ai_class302;
-                    if (!em_class2583.world.isRemote || !(em_class2583 instanceof ai_class30) || !uUID.equals((ai_class302 = (ai_class30)((Object)em_class2583)).java_util_UUID_e())) continue;
-                    em_class2582 = em_class2583;
-                    break;
-                }
-            } catch (ConcurrentModificationException concurrentModificationException) {
-                // empty catch block
+            for (GirlEntity em_class2583 : GirlEntity.GirlEntityList()) {
+                ai_class30 ai_class302;
+                if (!em_class2583.world.isRemote || !(em_class2583 instanceof ai_class30) || !uUID.equals((ai_class302 = (ai_class30) ((Object) em_class2583)).java_util_UUID_e()))
+                    continue;
+                em_class2582 = em_class2583;
+                break;
             }
             if (em_class2582 == null) {
                 return;

@@ -94,23 +94,19 @@ public class ea_class235 extends GuiScreen {
         GL11.glEnable(3042);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glBlendFunc(770, 771);
-        try {
-            this.a = Math.min(1.0f, this.a + this.mc.getTickLength() / 5.0f);
-        } catch (NullPointerException nullPointerException) {
-            // empty catch block
-        }
-        float f2 = (float)this.a(this.a);
+        this.a = Math.min(1.0f, this.a + this.mc.getTickLength() / 5.0f)
+        float f2 = (float) this.a(this.a);
         float f3 = (1.0f - f2) * 100.0f;
-        this.g += (float)(n < this.width / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.e += (float)(n > this.width / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.d += (float)(n2 < this.height / 2 - 1 ? 1 : -1) * this.mc.getTickLength();
-        this.m += (float)(n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.g += (float) (n < this.width / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.e += (float) (n > this.width / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.d += (float) (n2 < this.height / 2 - 1 ? 1 : -1) * this.mc.getTickLength();
+        this.m += (float) (n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
         this.g = Utils.clamp(this.g, 0.0f, 1.0f);
         this.e = Utils.clamp(this.e, 0.0f, 1.0f);
         this.d = Utils.clamp(this.d, 0.0f, 1.0f);
         this.m = Utils.clamp(this.m, 0.0f, 1.0f);
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float)this.width / 2.0f, (float)this.height / 2.0f, 0.0f);
+        GlStateManager.translate((float) this.width / 2.0f, (float) this.height / 2.0f, 0.0f);
         GlStateManager.scale(f2, f2, f2);
         this.mc.renderEngine.bindTexture(i);
         GlStateManager.pushMatrix();

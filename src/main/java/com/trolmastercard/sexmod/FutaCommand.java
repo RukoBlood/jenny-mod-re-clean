@@ -6,11 +6,7 @@
  */
 package com.trolmastercard.sexmod;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ConcurrentModificationException;
+import java.io.*;
 import java.util.Random;
 
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
@@ -26,23 +22,25 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.IClientCommand;
 
-public class FutaCommand
-extends CommandBase
-implements IClientCommand {
+public class FutaCommand extends CommandBase implements IClientCommand {
     final static String d = "sexmod/futa";
     final static int a = 10;
     final static float c = 0.025f;
     static public boolean enabled = true;
-    final static public FutaCommand b = new FutaCommand();
+    final static public FutaCommand b;
 
-    public FutaCommand() {
-        String string = "";
+    static {
         try {
-            string = new BufferedReader(new FileReader(d)).readLine().toLowerCase();
-        } catch (Exception exception) {
-            // empty catch block
+            b = new FutaCommand();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        if ("".equals(string)) {
+    }
+
+    public FutaCommand() throws IOException {
+        String string = "";
+        string = new BufferedReader(new FileReader(d)).readLine().toLowerCase();
+        if (string.isEmpty()) {
             return;
         }
         if ("true".equals(string)) {
@@ -85,17 +83,13 @@ implements IClientCommand {
         } catch (IOException iOException) {
             iOException.printStackTrace();
         }
-        try {
-            for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
-                if (girlEntity.isDead || !girlEntity.world.isRemote || !(girlEntity instanceof GalathEntity)) continue;
-                Vec3d vec3d = girlEntity.b("cockParticles").add(girlEntity.getPositionVector());
-                Random random = girlEntity.getRNG();
-                for (int i = 0; i < 10; ++i) {
-                    girlEntity.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), new int[0]);
-                }
+        for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
+            if (girlEntity.isDead || !girlEntity.world.isRemote || !(girlEntity instanceof GalathEntity)) continue;
+            Vec3d vec3d = girlEntity.b("cockParticles").add(girlEntity.getPositionVector());
+            Random random = girlEntity.getRNG();
+            for (int i = 0; i < 10; ++i) {
+                girlEntity.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), new int[0]);
             }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
         }
     }
 
@@ -105,10 +99,6 @@ implements IClientCommand {
 
     public boolean allowUsageWithoutPrefix(ICommandSender iCommandSender, String string) {
         return false;
-    }
-
-    private static Exception a(Exception exception) {
-        return exception;
     }
 }
 

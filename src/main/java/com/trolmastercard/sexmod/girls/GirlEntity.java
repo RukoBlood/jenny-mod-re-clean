@@ -911,21 +911,17 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public static GirlEntity a(@Nonnull UUID uUID, Boolean bl) {
-        try {
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                if (em_class2582.isDead || !uUID.equals(em_class2582.getID())) continue;
-                if (bl == null) {
-                    return em_class2582;
-                }
-                boolean bl2 = em_class2582.world.isRemote;
-                if (bl2 && !bl.booleanValue()) {
-                    return em_class2582;
-                }
-                if (bl2 || !bl.booleanValue()) continue;
+        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+            if (em_class2582.isDead || !uUID.equals(em_class2582.getID())) continue;
+            if (bl == null) {
                 return em_class2582;
             }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+            boolean bl2 = em_class2582.world.isRemote;
+            if (bl2 && !bl) {
+                return em_class2582;
+            }
+            if (bl2 || !bl) continue;
+            return em_class2582;
         }
         return null;
     }
@@ -933,14 +929,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @Nullable
     public static GirlEntity com_trolmastercard_sexmod_em_class258_c(@Nonnull UUID uUID) {
         boolean bl = FMLCommonHandler.instance().getMinecraftServerInstance() == null;
-        try {
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                boolean bl2;
-                if (em_class2582.isDead || (bl2 = em_class2582.world.isRemote) != bl || !uUID.equals(em_class2582.getID())) continue;
-                return em_class2582;
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+            boolean bl2;
+            if (em_class2582.isDead || (bl2 = em_class2582.world.isRemote) != bl || !uUID.equals(em_class2582.getID()))
+                continue;
+            return em_class2582;
         }
         return null;
     }
@@ -973,33 +966,26 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     public static void k(UUID uUID) {
-        try {
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                UUID uUID2 = em_class2582.getID();
-                if (uUID2 == null || !uUID2.equals(uUID)) continue;
-                Action fp_class3242 = em_class2582.FastSexAction(em_class2582.currentAction());
-                if (fp_class3242 == null) {
-                    return;
-                }
-                em_class2582.setCurrentAction(fp_class3242);
+        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+            UUID uUID2 = em_class2582.getID();
+            if (uUID2 == null || !uUID2.equals(uUID)) continue;
+            Action fp_class3242 = em_class2582.FastSexAction(em_class2582.currentAction());
+            if (fp_class3242 == null) {
                 return;
             }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+            em_class2582.setCurrentAction(fp_class3242);
+            return;
         }
     }
 
     @SideOnly(value=Side.CLIENT)
     public static void f(UUID uUID) {
-        try {
-            for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
-                Action action;
-                UUID uUID2;
-                if (girlEntity.isDead || !girlEntity.world.isRemote || (uUID2 = girlEntity.getID()) == null || !uUID2.equals(uUID) || (action = girlEntity.CumAction(girlEntity.currentAction())) == null) continue;
-                girlEntity.setCurrentAction(action);
-            }
-        } catch (ConcurrentModificationException concurrentModificationException) {
-            // empty catch block
+        for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
+            Action action;
+            UUID uUID2;
+            if (girlEntity.isDead || !girlEntity.world.isRemote || (uUID2 = girlEntity.getID()) == null || !uUID2.equals(uUID) || (action = girlEntity.CumAction(girlEntity.currentAction())) == null)
+                continue;
+            girlEntity.setCurrentAction(action);
         }
     }
 

@@ -2548,11 +2548,9 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
     boolean a(bs_class97 bs_class972) {
         ArrayList<ItemStack> arrayList = new ArrayList<ItemStack>();
         for (BlockPos blockPos : bs_class972.g()) {
-            try {
-                IBlockState iBlockState = this.world.getBlockState(blockPos);
-                ItemStack itemStack = iBlockState.getBlock().getItem(this.world, blockPos, iBlockState);
-                arrayList.add(itemStack);
-            } catch (IllegalArgumentException illegalArgumentException) {}
+            IBlockState iBlockState = this.world.getBlockState(blockPos);
+            ItemStack itemStack = iBlockState.getBlock().getItem(this.world, blockPos, iBlockState);
+            arrayList.add(itemStack);
         }
         return this.boolean_a((List<ItemStack>)arrayList);
     }
@@ -3174,15 +3172,12 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
 
         @SubscribeEvent
         public void a(WorldEvent.Unload unload) {
-            try {
-                for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                    KoboldEntity ff_class3082;
-                    Optional<UUID> optional;
-                    if (!(em_class2582 instanceof KoboldEntity) || !(optional = (ff_class3082 = (KoboldEntity)em_class2582).getDataManager().get(aL)).isPresent() || !KoboldManager.e((UUID)optional.get(), ff_class3082)) continue;
-                    ff_class3082.s((UUID)optional.get());
-                }
-            } catch (ConcurrentModificationException concurrentModificationException) {
-                // empty catch block
+            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+                KoboldEntity ff_class3082;
+                Optional<UUID> optional;
+                if (!(em_class2582 instanceof KoboldEntity) || !(optional = (ff_class3082 = (KoboldEntity) em_class2582).getDataManager().get(aL)).isPresent() || !KoboldManager.e((UUID) optional.get(), ff_class3082))
+                    continue;
+                ff_class3082.s((UUID) optional.get());
             }
         }
 
