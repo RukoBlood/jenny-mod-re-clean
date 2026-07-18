@@ -1,9 +1,11 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.util.interfaces;
 
 import java.util.HashSet;
+
+import com.trolmastercard.sexmod.gx_class390;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 import javax.annotation.CheckReturnValue;

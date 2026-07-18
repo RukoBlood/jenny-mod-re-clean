@@ -13,6 +13,7 @@ import javax.vecmath.Vector3f;
 
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
+import com.trolmastercard.sexmod.util.interfaces.IModelBoneFilter;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
