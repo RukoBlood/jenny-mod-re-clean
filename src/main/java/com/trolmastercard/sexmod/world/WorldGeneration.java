@@ -7,7 +7,7 @@
  *  net.minecraftforge.fml.common.IWorldGenerator
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.world;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
+import com.trolmastercard.sexmod.Point2D;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.world.gen.generators.WorldGenStructure;

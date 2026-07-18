@@ -47,7 +47,7 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    public HashSet<String> a() {
+    public HashSet<String> getBlacklistedBoneNames() {
         return new HashSet<String>(){
             {
                 this.add("boobs");

@@ -23,6 +23,7 @@ import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import com.trolmastercard.sexmod.world.FakeWorld;
+import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;

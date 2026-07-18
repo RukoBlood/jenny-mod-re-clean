@@ -27,6 +27,7 @@ import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -53,8 +54,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.MatrixStack;
 
-public class CustomModelRenderer
-extends GeoEntityRenderer<CustomModelEntity> {
+public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
     final static public float e = 1.876945f;
     final static public float i = 2.876945f;
     Minecraft a;
@@ -227,7 +227,7 @@ extends GeoEntityRenderer<CustomModelEntity> {
         //Object object;
         if (em_class2582.boolean_Q()) {
             Vec3d object = em_class2582.net_minecraft_util_math_Vec3d_o();
-            float f2 = em_class2582.java_lang_Float_I().floatValue();
+            float f2 = em_class2582.java_lang_Float_I();
             cy_class1532.prevPosX = ((Vec3d)object).x;
             cy_class1532.prevPosY = ((Vec3d)object).y;
             cy_class1532.prevPosZ = ((Vec3d)object).z;
@@ -364,7 +364,7 @@ extends GeoEntityRenderer<CustomModelEntity> {
                 this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
             }
         }
-        this.c.c.pop()
+        this.c.c.pop();
     }
 
     @Override

@@ -67,7 +67,7 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     @Override
-    public HashSet<String> a() {
+    public HashSet<String> getBlacklistedBoneNames() {
         if (!this.u) {
             B.addAll(gx_class390.a);
             this.u = true;
@@ -393,7 +393,7 @@ extends GirlRenderer<ManglelieEntity> {
         tessellator.draw();
     }
 
-    public boolean a(HashSet hashSet, GeoBone geoBone) {
+    public boolean isBoneAllowed(HashSet hashSet, GeoBone geoBone) {
         while (geoBone.parent != null) {
             String string = geoBone.getName();
             if (string.contains("clothBoob")) {

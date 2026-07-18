@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod.girls.Pyrocynical;
 
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Utils;
-import com.trolmastercard.sexmod.WorldUtils;
+import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityLiving;

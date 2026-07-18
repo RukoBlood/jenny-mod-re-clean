@@ -33,6 +33,7 @@ import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.CommonProxy;
+import com.trolmastercard.sexmod.world.WorldGeneration;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;

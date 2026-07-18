@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.trolmastercard.sexmod.Action;
-import com.trolmastercard.sexmod.WorldUtils;
+import com.trolmastercard.sexmod.world.WorldUtils;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.Allie.PlayerAllie;
 import com.trolmastercard.sexmod.girls.Bee.PlayerBee;

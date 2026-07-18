@@ -95,8 +95,8 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    public HashSet<String> a() {
-        HashSet<String> hashSet = super.a();
+    public HashSet<String> getBlacklistedBoneNames() {
+        HashSet<String> hashSet = super.getBlacklistedBoneNames();
         hashSet.add("figure");
         return hashSet;
     }

@@ -13,6 +13,7 @@ import javax.vecmath.Vector3f;
 
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
+import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -30,21 +31,21 @@ public class gx_class390 {
             this.add("fuckhole");
         }
     };
-    static protected HashMap<c3_class112, HashMap<String, Boolean>> d = new HashMap();
+    static protected HashMap<IModelBoneFilter, HashMap<String, Boolean>> d = new HashMap();
     static public Vec3d b;
 
-    static boolean a(c3_class112 c3_class1122, GeoBone geoBone) {
+    static boolean a(IModelBoneFilter c3_class1122, GeoBone geoBone) {
         HashMap<String, Boolean> hashMap = d.get(c3_class1122);
         if (hashMap == null) {
             hashMap = new HashMap();
-            boolean bl = c3_class1122.a(c3_class1122.a(), geoBone);
+            boolean bl = c3_class1122.isBoneAllowed(c3_class1122.getBlacklistedBoneNames(), geoBone);
             hashMap.put(geoBone.getName(), bl);
             d.put(c3_class1122, hashMap);
             return bl;
         }
         Boolean bl = hashMap.get(geoBone.getName());
         if (bl == null) {
-            bl = c3_class1122.a(c3_class1122.a(), geoBone);
+            bl = c3_class1122.isBoneAllowed(c3_class1122.getBlacklistedBoneNames(), geoBone);
             hashMap.put(geoBone.getName(), bl);
             d.put(c3_class1122, hashMap);
             return bl;
@@ -52,7 +53,7 @@ public class gx_class390 {
         return bl;
     }
 
-    public static Vec3d a(c3_class112 c3_class1122, GeoBone geoBone, Vec3d vec3d, Vector3f vector3f) {
+    public static Vec3d a(IModelBoneFilter c3_class1122, GeoBone geoBone, Vec3d vec3d, Vector3f vector3f) {
         if (!gx_class390.a(c3_class1122, geoBone)) {
             return vec3d;
         }
@@ -69,13 +70,13 @@ public class gx_class390 {
         b = WorldUtils.getLightDirectionVector(entityLivingBase, f);
     }
 
-    public static void a(List<IBone> list, HashSet<String> hashSet, c3_class112 c3_class1122) {
+    public static void a(List<IBone> list, HashSet<String> hashSet, IModelBoneFilter c3_class1122) {
         if (d.get(c3_class1122) != null) {
             return;
         }
         HashMap<String, Boolean> hashMap = new HashMap<String, Boolean>();
         for (IBone iBone : list) {
-            hashMap.put(iBone.getName(), c3_class1122.a(hashSet, (GeoBone)iBone));
+            hashMap.put(iBone.getName(), c3_class1122.isBoneAllowed(hashSet, (GeoBone)iBone));
         }
         d.put(c3_class1122, hashMap);
     }

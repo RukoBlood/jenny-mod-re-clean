@@ -96,7 +96,7 @@ import software.bernie.shadowed.eliotlash.mclib.utils.Interpolations;
 // 'd_'
 public abstract class GirlRenderer<T extends GirlEntity & IAnimatable>
 extends GeoEntityRenderer<T>
-implements c3_class112 {
+implements IModelBoneFilter {
     final static protected ResourceLocation LINE = new ResourceLocation("sexmod", "textures/line.png");
     final static float m = 1.5f;
     protected double c;
@@ -258,7 +258,7 @@ implements c3_class112 {
         this.p.clear();
         this.p = this.a(((GirlEntity)t).boolean_h(), ((GirlEntity)t).int_ah() == 0);
         this.d();
-        gx_class390.a(((GirlEntity)t).b().getModelRendererList(), this.a(), this);
+        gx_class390.a(((GirlEntity)t).b().getModelRendererList(), this.getBlacklistedBoneNames(), this);
         gx_class390.a(t, f);
         this.a(geoModel, bufferBuilder, t, f2, f3, f4, f5, f);
         this.renderAfter(t, f, f2, f3, f4, f5);
@@ -710,7 +710,7 @@ implements c3_class112 {
                 this.a(bufferBuilder, geoBone2, f, f2, f3, f4, d);
             }
         }
-        MATRIX_STACK.pop()
+        MATRIX_STACK.pop();
     }
 
     protected Vector4f a(float f, float f2, float f3) {

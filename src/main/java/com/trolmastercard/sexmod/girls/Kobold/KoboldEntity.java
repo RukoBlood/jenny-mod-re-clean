@@ -42,6 +42,7 @@ import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import com.trolmastercard.sexmod.world.FakeWorld;
+import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockLog;

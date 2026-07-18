@@ -14,7 +14,6 @@ package com.trolmastercard.sexmod.girls;
 import com.google.common.base.Optional;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,7 @@ import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packages.SexPrompt;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.events.InteractionPrompt;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.block.Block;
@@ -351,7 +351,7 @@ public abstract class PlayerGirl extends Fighter {
             return;
         }
         if (this.boolean_f()) {
-            w_class427.a.a();
+            InteractionPrompt.instance.onTickUpdate();
         }
     }
 

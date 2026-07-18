@@ -30,6 +30,7 @@ import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.world.NameStorage;
+import com.trolmastercard.sexmod.world.WorldGeneration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -92,7 +93,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new bq_class93());
         MinecraftForge.EVENT_BUS.register((Object)new InHandMapRenderer());
         MinecraftForge.EVENT_BUS.register((Object)new e__class234());
-        MinecraftForge.EVENT_BUS.register((Object)new w_class427());
+        MinecraftForge.EVENT_BUS.register((Object)new InteractionPrompt());
         MinecraftForge.EVENT_BUS.register((Object)new PlayerAllieRenderer.a_inner205());
         MinecraftForge.EVENT_BUS.register((Object)new gm_class376());
         MinecraftForge.EVENT_BUS.register((Object)new DeprecatedCheckForUpdates());

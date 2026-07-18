@@ -6,7 +6,7 @@
  *  com.google.common.collect.Sets
  *  net.minecraftforge.fml.common.FMLCommonHandler
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.world;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -20,7 +20,6 @@ import java.util.Set;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.VectorMath;
-import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.properties.IProperty;

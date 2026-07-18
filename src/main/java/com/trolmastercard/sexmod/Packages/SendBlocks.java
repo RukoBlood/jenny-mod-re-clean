@@ -10,7 +10,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.WorldUtils;
+import com.trolmastercard.sexmod.world.WorldUtils;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.gm_class376;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

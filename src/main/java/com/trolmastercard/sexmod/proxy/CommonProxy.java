@@ -18,6 +18,7 @@ import java.io.IOException;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.util.Handlers.*;
+import com.trolmastercard.sexmod.world.WorldGeneration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

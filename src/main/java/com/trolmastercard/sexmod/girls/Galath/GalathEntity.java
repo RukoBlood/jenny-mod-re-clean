@@ -41,6 +41,7 @@ import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.world.NameStorage;
+import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockBanner;

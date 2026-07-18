@@ -489,7 +489,7 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
     }
 
     @Override
-    public HashSet<String> a() {
+    public HashSet<String> getBlacklistedBoneNames() {
         return new HashSet<String>(){
             {
                 this.add("boobs");

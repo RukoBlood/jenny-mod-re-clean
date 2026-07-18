@@ -12,7 +12,7 @@
 package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.w_class427;
+import com.trolmastercard.sexmod.events.InteractionPrompt;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,7 +65,7 @@ public class SexPrompt implements IMessage {
                 return null;
             }
             if (messageContext.side.equals((Object)Side.CLIENT)) {
-                w_class427.a.a(new w_class427.a_inner428(g4_class3472.c, g4_class3472.b, g4_class3472.a, g4_class3472.d));
+                InteractionPrompt.instance.openInteractivePrompt(new InteractionPrompt.ActiveRequest(g4_class3472.c, g4_class3472.b, g4_class3472.a, g4_class3472.d));
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
@@ -88,10 +88,6 @@ public class SexPrompt implements IMessage {
                 @Override
         public IMessage onMessage(SexPrompt iMessage, MessageContext messageContext) {
             return this.a((SexPrompt)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

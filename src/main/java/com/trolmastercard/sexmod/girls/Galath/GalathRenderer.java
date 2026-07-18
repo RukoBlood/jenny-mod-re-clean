@@ -43,7 +43,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 //da_class171
 public class GalathRenderer
 extends GirlRenderer<GalathEntity>
-implements c3_class112 {
+implements IModelBoneFilter {
     final static public int D = 14;
     final static public HashSet<String> E = new HashSet<String>(){
         {
@@ -97,7 +97,7 @@ implements c3_class112 {
     }
 
     @Override
-    public HashSet<String> a() {
+    public HashSet<String> getBlacklistedBoneNames() {
         if (!this.r) {
             E.addAll(gx_class390.a);
             E.addAll(ManglelieRenderer.B);

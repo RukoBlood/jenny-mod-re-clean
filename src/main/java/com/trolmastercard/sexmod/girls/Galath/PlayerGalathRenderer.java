@@ -51,7 +51,7 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    public HashSet<String> a() {
+    public HashSet<String> getBlacklistedBoneNames() {
         HashSet<String> hashSet = GalathRenderer.E;
         GalathRenderer.E.addAll(gx_class390.a);
         return GalathRenderer.E;
