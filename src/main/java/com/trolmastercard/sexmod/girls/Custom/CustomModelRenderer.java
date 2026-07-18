@@ -386,7 +386,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
                 vector3f.z *= -1.0f;
             }
             if (this.j != null) {
-                this.d = gx_class390.a(this.d, vector3f, this.j);
+                this.d = BoneDeformProcessor.calculatePhysicsVector(this.d, vector3f, this.j);
             }
             for (GeoVertex geoVertex : geoQuad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);

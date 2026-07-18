@@ -105,7 +105,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
 // ff_class308
-public class KoboldEntity extends e4_class223 implements bh_class82, IInventory, dr_class199 {
+public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class82, IInventory, dr_class199 {
     final static public EyeAndKoboldColor COLOR = EyeAndKoboldColor.PURPLE;
     final static public float Y = 0.25f;
     final static int ar = 20;
@@ -197,16 +197,16 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
     }
 
     @Override
-    protected String a(StringBuilder stringBuilder) {
-        KoboldEntity.b(stringBuilder, 8);
-        KoboldEntity.b(stringBuilder, 3);
-        KoboldEntity.void_b(stringBuilder);
-        KoboldEntity.void_b(stringBuilder);
-        KoboldEntity.void_a(stringBuilder, 2);
-        KoboldEntity.void_a(stringBuilder, 2);
-        KoboldEntity.void_a(stringBuilder, 1);
-        KoboldEntity.void_a(stringBuilder, 1);
-        return stringBuilder.toString();
+    protected String generateAppearanceDNA(StringBuilder dnaBuilder) {
+        KoboldEntity.appendRandomGeneExclusive(dnaBuilder, 8);
+        KoboldEntity.appendRandomGeneExclusive(dnaBuilder, 3);
+        KoboldEntity.appendGaussianBodyGene(dnaBuilder);
+        KoboldEntity.appendGaussianBodyGene(dnaBuilder);
+        KoboldEntity.appendRandomGeneInclusive(dnaBuilder, 2);
+        KoboldEntity.appendRandomGeneInclusive(dnaBuilder, 2);
+        KoboldEntity.appendRandomGeneInclusive(dnaBuilder, 1);
+        KoboldEntity.appendRandomGeneInclusive(dnaBuilder, 1);
+        return dnaBuilder.toString();
     }
 
     @Override
@@ -232,8 +232,8 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
     public ArrayList<Integer> L() {
         ArrayList<Integer> arrayList = new ArrayList<Integer>();
         arrayList.add(Math.round(this.entityDataManager.get(aE).floatValue() * 100.0f / 0.25f));
-        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf((String)this.entityDataManager.get(N))));
-        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf((Vec3i)this.entityDataManager.get(K))));
+        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf((String)this.entityDataManager.get(CURRENT_ACTION))));
+        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf((Vec3i)this.entityDataManager.get(ACTION_TARGET_POS))));
         return arrayList;
     }
 
@@ -248,24 +248,24 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
                     continue block5;
                 }
                 case 1: {
-                    String string = (String)this.entityDataManager.get(N);
+                    String string = (String)this.entityDataManager.get(CURRENT_ACTION);
                     String string2 = EyeAndKoboldColor.values()[n].toString();
                     if (!string2.equals(string)) {
                         this.aA = true;
                     }
-                    this.entityDataManager.set(N, string2);
+                    this.entityDataManager.set(CURRENT_ACTION, string2);
                     continue block5;
                 }
                 case 2: {
-                    this.entityDataManager.set(K, new BlockPos(EyeAndKoboldColor.values()[n].getMainColor()));
+                    this.entityDataManager.set(ACTION_TARGET_POS, new BlockPos(EyeAndKoboldColor.values()[n].getMainColor()));
                     continue block5;
                 }
                 default: {
-                    KoboldEntity.c(stringBuilder, n);
+                    KoboldEntity.appendFixedGene(stringBuilder, n);
                 }
             }
         }
-        this.entityDataManager.set(M, stringBuilder.toString());
+        this.entityDataManager.set(APPEARANCE_DNA, stringBuilder.toString());
         KoboldRenderer.ResetColors();
     }
 
@@ -283,19 +283,19 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
                     continue block5;
                 }
                 case 1: {
-                    this.entityDataManager.set(N, EyeAndKoboldColor.values()[n].toString());
+                    this.entityDataManager.set(CURRENT_ACTION, EyeAndKoboldColor.values()[n].toString());
                     continue block5;
                 }
                 case 2: {
-                    this.entityDataManager.set(K, new BlockPos(EyeAndKoboldColor.values()[n].getMainColor()));
+                    this.entityDataManager.set(ACTION_TARGET_POS, new BlockPos(EyeAndKoboldColor.values()[n].getMainColor()));
                     continue block5;
                 }
                 default: {
-                    KoboldEntity.c(stringBuilder, n);
+                    KoboldEntity.appendFixedGene(stringBuilder, n);
                 }
             }
         }
-        this.entityDataManager.set(M, stringBuilder.toString());
+        this.entityDataManager.set(APPEARANCE_DNA, stringBuilder.toString());
         KoboldRenderer.ResetColors();
     }
 
@@ -362,8 +362,8 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
     protected void entityInit() {
         super.entityInit();
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.values()[this.getRNG().nextInt(EyeAndKoboldColor.values().length)];
-        this.entityDataManager.register(K, new BlockPos(eyeAndKoboldColor_.getMainColor()));
-        this.entityDataManager.register(N, COLOR.name());
+        this.entityDataManager.register(ACTION_TARGET_POS, new BlockPos(eyeAndKoboldColor_.getMainColor()));
+        this.entityDataManager.register(CURRENT_ACTION, COLOR.name());
         this.entityDataManager.register(aL, Optional.absent());
         this.entityDataManager.register(aE, Float.valueOf(0.0f));
         this.entityDataManager.register(T, KoboldNames.values()[this.getRNG().nextInt(KoboldNames.values().length)].toString());
@@ -525,7 +525,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
     }
 
     @Override
-    protected void void_a() {
+    protected void onDataWatcherUpdate() {
         KoboldRenderer.ResetColors();
     }
 
@@ -1969,7 +1969,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
         }
         this.a0 = 300;
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.entityDataManager.get(v)));
-        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(N));
+        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(CURRENT_ACTION));
         if (entityPlayer != null) {
             entityPlayer.sendStatusMessage(new TextComponentString((Object)((Object) eyeAndKoboldColor_.getTextColor()) + this.getGirlName() + "s " + (Object)((Object)TextFormatting.WHITE) + "inventory is full and there are either no chests to put her items in or said chests are full as well"), false);
         }
@@ -2406,7 +2406,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
         if (!optional.isPresent()) {
             return;
         }
-        this.entityDataManager.set(N, KoboldManager.l((UUID)optional.get()).toString());
+        this.entityDataManager.set(CURRENT_ACTION, KoboldManager.l((UUID)optional.get()).toString());
     }
 
     @Override
@@ -2473,14 +2473,14 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
     public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
         super.writeEntityToNBT(nBTTagCompound);
         nBTTagCompound.setFloat("body_size", this.entityDataManager.get(aE).floatValue());
-        nBTTagCompound.setInteger("eyeColorX", ((BlockPos)this.entityDataManager.get(K)).getX());
-        nBTTagCompound.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(K)).getY());
-        nBTTagCompound.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(K)).getZ());
-        nBTTagCompound.setString("model", (String)this.entityDataManager.get(M));
+        nBTTagCompound.setInteger("eyeColorX", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getX());
+        nBTTagCompound.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getY());
+        nBTTagCompound.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getZ());
+        nBTTagCompound.setString("model", (String)this.entityDataManager.get(APPEARANCE_DNA));
         nBTTagCompound.setString("name", this.entityDataManager.get(T));
         nBTTagCompound.setString("master", (String)this.entityDataManager.get(v));
         nBTTagCompound.setTag("inventory", this.X.serializeNBT());
-        nBTTagCompound.setString("bodyColor", (String)this.entityDataManager.get(N));
+        nBTTagCompound.setString("bodyColor", (String)this.entityDataManager.get(CURRENT_ACTION));
         nBTTagCompound.setBoolean("editedColorManually", this.aA);
         Optional<UUID> optional = this.entityDataManager.get(aL);
         if (optional.isPresent()) {
@@ -2496,10 +2496,10 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
         super.readEntityFromNBT(nBTTagCompound);
         String string = nBTTagCompound.getString("model");
         if (!"".equals(string)) {
-            this.entityDataManager.set(M, string);
+            this.entityDataManager.set(APPEARANCE_DNA, string);
         }
         if (!BlockPos.ORIGIN.equals(blockPos = new BlockPos(nBTTagCompound.getInteger("eyeColorX"), nBTTagCompound.getInteger("eyeColorY"), nBTTagCompound.getInteger("eyeColorZ")))) {
-            this.entityDataManager.set(K, blockPos);
+            this.entityDataManager.set(ACTION_TARGET_POS, blockPos);
         }
         this.entityDataManager.set(aE, Float.valueOf(nBTTagCompound.getFloat("body_size")));
         this.entityDataManager.set(T, nBTTagCompound.getString("name"));
@@ -2507,7 +2507,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
         this.X.deserializeNBT(nBTTagCompound.getCompoundTag("inventory"));
         String string2 = nBTTagCompound.getString("bodyColor");
         if (!string2.isEmpty()) {
-            this.entityDataManager.set(N, nBTTagCompound.getString("bodyColor"));
+            this.entityDataManager.set(CURRENT_ACTION, nBTTagCompound.getString("bodyColor"));
         }
         this.aA = nBTTagCompound.getBoolean("editedColorManually");
         //if (uUID != null && !this.isDead) {
@@ -2519,7 +2519,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
             }
             this.entityDataManager.set(aL, Optional.of(tribeId));
             if (!KoboldManager.o(tribeId)) {
-                KoboldManager.a(tribeId, EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(N)));
+                KoboldManager.a(tribeId, EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(CURRENT_ACTION)));
             }
             KoboldManager.c(tribeId, this);
             if (nBTTagCompound.getBoolean("isLeader")) {

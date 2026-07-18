@@ -60,7 +60,7 @@ public class NYIWinchesterRenderer extends GeoItemRenderer<NYIWinchesterItem> {
             if ((geoCube.size.x == 0.0f || geoCube.size.y == 0.0f) && vector3f.getZ() < 0.0f) {
                 vector3f.z *= -1.0f;
             }
-            Vec3d vec3d = DebugMode.devDebugFloats[0] == 0.0f ? gx_class390.a(new Vec3d(f, f2, f3), vector3f, a) : new Vec3d(f, f2, f3);
+            Vec3d vec3d = DebugMode.devDebugFloats[0] == 0.0f ? BoneDeformProcessor.calculatePhysicsVector(new Vec3d(f, f2, f3), vector3f, a) : new Vec3d(f, f2, f3);
             for (GeoVertex geoVertex : geoQuad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
                 MATRIX_STACK.getModelMatrix().transform((Tuple4f)vector4f);

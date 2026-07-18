@@ -100,7 +100,7 @@ implements IModelBoneFilter {
     @Override
     public HashSet<String> getBlacklistedBoneNames() {
         if (!this.r) {
-            E.addAll(gx_class390.a);
+            E.addAll(BoneDeformProcessor.EXCLUDED_MESH_BONES);
             E.addAll(ManglelieRenderer.B);
             this.r = true;
         }

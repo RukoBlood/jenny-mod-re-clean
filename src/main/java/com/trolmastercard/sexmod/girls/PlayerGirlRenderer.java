@@ -177,7 +177,7 @@ extends GirlRenderer<GirlEntity> {
             MATRIX_STACK.pop();
             return;
         }
-        if (("neck".equals(string) || "head".equals(string)) && !this.boolean_a()) {
+        if (("neck".equals(string) || "head".equals(string)) && this.boolean_a()) {
             MATRIX_STACK.pop();
             return;
         }
@@ -202,20 +202,20 @@ extends GirlRenderer<GirlEntity> {
                     this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
                     continue;
                 }
-                this.a(bufferBuilder, geoBone2, f, f2, f3, f4, d);
+                this.renderCustomBones(bufferBuilder, geoBone2, f, f2, f3, f4, d);
             }
         }
-        MATRIX_STACK.pop()
+        MATRIX_STACK.pop();
     }
 
     boolean boolean_a() {
         if (!((PlayerGirl)this.j).boolean_f()) {
-            return true;
+            return false;
         }
         if (PlayerGirlRenderer.i.gameSettings.thirdPersonView != 0) {
-            return true;
+            return false;
         }
-        return PlayerGirlRenderer.i.currentScreen instanceof GuiInventory || PlayerGirlRenderer.i.currentScreen instanceof GuiContainerCreative;
+        return !(PlayerGirlRenderer.i.currentScreen instanceof GuiInventory) && !(PlayerGirlRenderer.i.currentScreen instanceof GuiContainerCreative);
     }
 
     void a(BufferBuilder bufferBuilder, GeoBone geoBone, Color color) {

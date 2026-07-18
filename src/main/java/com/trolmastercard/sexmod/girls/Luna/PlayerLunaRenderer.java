@@ -35,7 +35,7 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected ItemStack net_minecraft_item_ItemStack_a(@Nullable ItemStack itemStack) {
+    protected ItemStack getHeldItem(@Nullable ItemStack heldItem) {
         switch (this.j.currentAction()) {
             case FISHING_IDLE: 
             case FISHING_START: {
@@ -44,7 +44,7 @@ extends PlayerGirlRenderer {
                 return itemStack2;
             }
         }
-        return itemStack;
+        return heldItem;
     }
 
     boolean boolean_b() {

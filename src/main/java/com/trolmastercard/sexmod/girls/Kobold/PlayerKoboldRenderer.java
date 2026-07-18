@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.girls.Kobold;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.d9_class168;
-import com.trolmastercard.sexmod.e4_class223;
+import com.trolmastercard.sexmod.AbstractGoblinKoboldEntity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.EnumAction;
@@ -28,8 +28,8 @@ extends d9_class168 {
     @Override
     protected Vec3i net_minecraft_util_math_Vec3i_a(String string) {
         EntityDataManager entityDataManager = this.j.getDataManager();
-        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.N));
-        BlockPos blockPos = (BlockPos)entityDataManager.get(KoboldEntity.K);
+        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
+        BlockPos blockPos = (BlockPos)entityDataManager.get(KoboldEntity.ACTION_TARGET_POS);
         if (KoboldRenderer.t.contains(string)) {
             return eyeAndKoboldColor_.getMainColor();
         }
@@ -46,7 +46,7 @@ extends d9_class168 {
     protected Vector4f a(String string, float f, float f2, float f3) {
         String[] stringArray;
         int n;
-        if ("mouth".equals(string) && (n = Integer.parseInt((stringArray = e4_class223.java_lang_String_arr_a(this.j))[7])) == 1) {
+        if ("mouth".equals(string) && (n = Integer.parseInt((stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j))[7])) == 1) {
             return new Vector4f(f, f2, f3, -0.078125f);
         }
         return super.a(string, f, f2, f3);

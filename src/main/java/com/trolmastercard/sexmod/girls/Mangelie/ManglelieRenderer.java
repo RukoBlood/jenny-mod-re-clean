@@ -69,7 +69,7 @@ extends GirlRenderer<ManglelieEntity> {
     @Override
     public HashSet<String> getBlacklistedBoneNames() {
         if (!this.u) {
-            B.addAll(gx_class390.a);
+            B.addAll(BoneDeformProcessor.EXCLUDED_MESH_BONES);
             this.u = true;
         }
         return B;

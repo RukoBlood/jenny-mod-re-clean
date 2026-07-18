@@ -38,7 +38,7 @@ public class LunaRenderer extends GirlRenderer {
     }
 
     @Override
-    protected ItemStack net_minecraft_item_ItemStack_a(@Nullable ItemStack itemStack) {
+    protected ItemStack getHeldItem(@Nullable ItemStack heldItem) {
         switch (this.j.currentAction()) {
             case FISHING_IDLE: 
             case FISHING_START: {
@@ -53,7 +53,7 @@ public class LunaRenderer extends GirlRenderer {
                 return itemStack2;
             }
         }
-        return itemStack;
+        return heldItem;
     }
 
     boolean boolean_a() {

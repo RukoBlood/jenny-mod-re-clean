@@ -100,7 +100,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     continue block5;
                 }
                 default: {
-                    e4_class223.c(stringBuilder, n);
+                    AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, n);
                 }
             }
         }
@@ -121,14 +121,14 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
 
     @Override
     protected String a(StringBuilder stringBuilder) {
-        e4_class223.b(stringBuilder, 8);
-        e4_class223.b(stringBuilder, 3);
-        e4_class223.void_b(stringBuilder);
-        e4_class223.void_b(stringBuilder);
-        e4_class223.void_a(stringBuilder, 2);
-        e4_class223.void_a(stringBuilder, 2);
-        e4_class223.void_a(stringBuilder, 1);
-        e4_class223.void_a(stringBuilder, 1);
+        AbstractGoblinKoboldEntity.appendRandomGeneExclusive(stringBuilder, 8);
+        AbstractGoblinKoboldEntity.appendRandomGeneExclusive(stringBuilder, 3);
+        AbstractGoblinKoboldEntity.appendGaussianBodyGene(stringBuilder);
+        AbstractGoblinKoboldEntity.appendGaussianBodyGene(stringBuilder);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 2);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 2);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 1);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 1);
         return stringBuilder.toString();
     }
 

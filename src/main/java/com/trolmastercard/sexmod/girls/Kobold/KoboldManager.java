@@ -180,7 +180,7 @@ public class KoboldManager {
         c.replace(uUID, a_inner492);
         ff_class3082.getDataManager().set(KoboldEntity.aL, Optional.of(uUID));
         if (!ff_class3082.aA) {
-            ff_class3082.getDataManager().set(KoboldEntity.N, a_inner492.h.toString());
+            ff_class3082.getDataManager().set(KoboldEntity.CURRENT_ACTION, a_inner492.h.toString());
         }
     }
 

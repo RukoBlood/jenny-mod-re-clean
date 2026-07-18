@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.e4_class223;
+import com.trolmastercard.sexmod.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
@@ -105,7 +105,7 @@ public class GetTribeUIValues implements IMessage {
                 for (KoboldEntity koboldEntity : list) {
                     if (koboldEntity.isDead || hashSet.contains(object = koboldEntity.girlID())) continue;
                     if (koboldEntity.aA) {
-                        koboldColor = EyeAndKoboldColor.safeValueOf(koboldEntity.getDataManager().get(e4_class223.N)).getWoolMeta();
+                        koboldColor = EyeAndKoboldColor.safeValueOf(koboldEntity.getDataManager().get(AbstractGoblinKoboldEntity.CURRENT_ACTION)).getWoolMeta();
                     }
                     arrayList.add(new Vector4d(koboldEntity.posX, koboldEntity.posY, koboldEntity.posZ, (double)koboldColor));
                     hashSet.add(object);

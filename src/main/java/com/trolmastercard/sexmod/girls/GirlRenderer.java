@@ -259,8 +259,8 @@ implements IModelBoneFilter {
         this.p.clear();
         this.p = this.a(((GirlEntity)t).boolean_h(), ((GirlEntity)t).int_ah() == 0);
         this.d();
-        gx_class390.a(((GirlEntity)t).b().getModelRendererList(), this.getBlacklistedBoneNames(), this);
-        gx_class390.a(t, f);
+        BoneDeformProcessor.preWarmFilterCache(((GirlEntity)t).b().getModelRendererList(), this.getBlacklistedBoneNames(), this);
+        BoneDeformProcessor.updateGlobalInfluence(t, f);
         this.a(geoModel, bufferBuilder, t, f2, f3, f4, f5, f);
         this.renderAfter(t, f, f2, f3, f4, f5);
         GlStateManager.disableRescaleNormal();
@@ -665,7 +665,7 @@ implements IModelBoneFilter {
         }
         String string = geoBone.getName();
         if (string.equals("weapon") && this.j instanceof Fighter) {
-            this.a(bufferBuilder, geoBone);
+            this.RenderHeldItem(bufferBuilder, geoBone);
         }
         if (string.equals("itemRenderer") && ((GirlEntity) this.j).currentAction() == Action.PAYMENT) {
             this.b(bufferBuilder, geoBone);
@@ -708,7 +708,7 @@ implements IModelBoneFilter {
                     this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
                     continue;
                 }
-                this.a(bufferBuilder, geoBone2, f, f2, f3, f4, d);
+                this.renderCustomBones(bufferBuilder, geoBone2, f, f2, f3, f4, d);
             }
         }
         MATRIX_STACK.pop();
@@ -779,13 +779,13 @@ implements IModelBoneFilter {
         this.g = (Matrix4f)MATRIX_STACK.getModelMatrix().clone();
     }
 
-    public void a(BufferBuilder bufferBuilder, GeoBone geoBone, float f, float f2, float f3, float f4, double d) {
+    public void renderCustomBones(BufferBuilder bufferBuilder, GeoBone geoBone, float f, float f2, float f3, float f4, double d) {
         if (((GirlEntity)this.j).world instanceof FakeWorld) {
             return;
         }
         String string = geoBone.getName();
         if (string.equals("weapon")) {
-            this.a(bufferBuilder, geoBone);
+            this.RenderHeldItem(bufferBuilder, geoBone);
         }
         if (string.equals("ballL") || string.equals("ballR") || string.equals("cock")) {
             f4 = 1.0f;
@@ -809,7 +809,7 @@ implements IModelBoneFilter {
                 }
             }
             for (GeoBone geoBone2 : geoBone.childBones) {
-                this.a(bufferBuilder, geoBone2, f, f2, f3, f4, d);
+                this.renderCustomBones(bufferBuilder, geoBone2, f, f2, f3, f4, d);
             }
         }
         MATRIX_STACK.pop();
@@ -840,7 +840,7 @@ implements IModelBoneFilter {
             if ((geoCube.size.x == 0.0f || geoCube.size.y == 0.0f) && vector3f.getZ() < 0.0f) {
                 vector3f.z *= -1.0f;
             }
-            Vec3d vec3d = gx_class390.a(this, this.q, new Vec3d(f, f2, f3), vector3f);
+            Vec3d vec3d = BoneDeformProcessor.applyBoneDeformation(this, this.q, new Vec3d(f, f2, f3), vector3f);
             for (GeoVertex geoVertex : geoQuad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
                 MATRIX_STACK.getModelMatrix().transform((Tuple4f)vector4f);
@@ -909,11 +909,11 @@ implements IModelBoneFilter {
     }
 
     @CheckReturnValue
-    protected ItemStack net_minecraft_item_ItemStack_a(@Nullable ItemStack itemStack) {
-        return itemStack;
+    protected ItemStack getHeldItem(@Nullable ItemStack heldItem) {
+        return heldItem;
     }
 
-    protected void a(BufferBuilder bufferBuilder, GeoBone geoBone) {
+    protected void RenderHeldItem(BufferBuilder bufferBuilder, GeoBone geoBone) {
         if (this.j == null) {
             return;
         }
@@ -932,7 +932,7 @@ implements IModelBoneFilter {
         } else if (n == 2) {
             itemStack = entityDataManager.get(Fighter.ITEM_SLOT_2);
         }
-        itemStack = this.net_minecraft_item_ItemStack_a(itemStack);
+        itemStack = this.getHeldItem(itemStack);
         if (itemStack == null) {
             return;
         }

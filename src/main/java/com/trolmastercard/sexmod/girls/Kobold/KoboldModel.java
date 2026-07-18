@@ -9,7 +9,7 @@ import java.util.List;
 import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.dr_class199;
-import com.trolmastercard.sexmod.e4_class223;
+import com.trolmastercard.sexmod.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlModel;
 import net.minecraft.client.Minecraft;
@@ -54,7 +54,7 @@ extends GirlModel<GirlEntity> {
             animationProcessor.getBone("crown").setHidden(true);
             animationProcessor.getBone("egg").setHidden(true);
         }
-        String[] stringArray = e4_class223.java_lang_String_arr_a(em_class2582);
+        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(em_class2582);
         this.b(animationProcessor, stringArray[0]);
         this.e(animationProcessor, stringArray[1]);
         this.a(animationProcessor, stringArray[2], 0.75f, 1.35f, "boobL", "boobR", "armorBoobs");

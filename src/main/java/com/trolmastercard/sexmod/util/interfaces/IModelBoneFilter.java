@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod.util.interfaces;
 
 import java.util.HashSet;
 
-import com.trolmastercard.sexmod.gx_class390;
+import com.trolmastercard.sexmod.BoneDeformProcessor;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 import javax.annotation.CheckReturnValue;
@@ -13,7 +13,7 @@ import javax.annotation.CheckReturnValue;
 public interface IModelBoneFilter {
     @CheckReturnValue
     default public HashSet<String> getBlacklistedBoneNames() {
-        return gx_class390.a;
+        return BoneDeformProcessor.EXCLUDED_MESH_BONES;
     }
 
     @CheckReturnValue

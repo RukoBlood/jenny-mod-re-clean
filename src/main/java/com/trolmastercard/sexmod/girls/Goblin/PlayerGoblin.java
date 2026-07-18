@@ -212,16 +212,16 @@ implements ai_class30 {
 
     @Override
     protected String a(StringBuilder stringBuilder) {
-        e4_class223.void_a(stringBuilder, 3);
-        e4_class223.void_a(stringBuilder, 2);
-        e4_class223.void_a(stringBuilder, 2);
-        e4_class223.void_a(stringBuilder, 7);
-        e4_class223.void_a(stringBuilder, 7);
-        e4_class223.void_a(stringBuilder, 5);
-        e4_class223.void_a(stringBuilder, g5_class349.values().length - 1);
-        e4_class223.void_a(stringBuilder, by_class106.values().length - 1);
-        e4_class223.void_a(stringBuilder, eh_class250.values().length - 1);
-        e4_class223.c(stringBuilder, 0);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 3);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 2);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 2);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 7);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 7);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 5);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, g5_class349.values().length - 1);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, by_class106.values().length - 1);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, eh_class250.values().length - 1);
+        AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, 0);
         return stringBuilder.toString();
     }
 
@@ -568,9 +568,9 @@ implements ai_class30 {
     public void void_a(List<Integer> list) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int n : list) {
-            e4_class223.c(stringBuilder, n);
+            AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, n);
         }
-        e4_class223.c(stringBuilder, 1);
+        AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, 1);
         this.entityDataManager.set(at, stringBuilder.toString());
     }
 

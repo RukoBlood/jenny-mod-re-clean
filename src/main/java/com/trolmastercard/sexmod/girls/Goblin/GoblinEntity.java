@@ -86,7 +86,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class GoblinEntity
-extends e4_class223
+extends AbstractGoblinKoboldEntity
 implements ai_class30 {
     final static public by_class106 ax = by_class106.DARK_GREEN;
     final static public Vec3i ah = new Vec3i(11, 6, 11);
@@ -160,7 +160,7 @@ implements ai_class30 {
     public GoblinEntity(World world, @Nonnull String string, int n) {
         this(world);
         this.entityDataManager.set(aK, string);
-        this.entityDataManager.set(M, this.java_lang_String_a(new StringBuilder(), n));
+        this.entityDataManager.set(APPEARANCE_DNA, this.java_lang_String_a(new StringBuilder(), n));
     }
 
     public GoblinEntity(World world, boolean bl, float f, Vec3d vec3d) {
@@ -168,7 +168,7 @@ implements ai_class30 {
         if (!bl) {
             return;
         }
-        this.entityDataManager.set(M, this.java_lang_String_b(new StringBuilder()));
+        this.entityDataManager.set(APPEARANCE_DNA, this.java_lang_String_b(new StringBuilder()));
         this.ac = f;
         this.al = vec3d;
         this.aX = true;
@@ -191,8 +191,8 @@ implements ai_class30 {
     protected void entityInit() {
         super.entityInit();
         eh_class250 eh_class2502 = eh_class250.values()[this.getRNG().nextInt(eh_class250.values().length)];
-        this.entityDataManager.register(K, new BlockPos(eh_class2502.a()));
-        this.entityDataManager.register(N, ax.name());
+        this.entityDataManager.register(ACTION_TARGET_POS, new BlockPos(eh_class2502.a()));
+        this.entityDataManager.register(CURRENT_ACTION, ax.name());
         this.entityDataManager.register(Q, "");
         this.entityDataManager.register(aK, "");
         this.entityDataManager.register(a0, ItemStack.EMPTY);
@@ -201,7 +201,7 @@ implements ai_class30 {
     }
 
     @Override
-    protected void void_a() {
+    protected void onDataWatcherUpdate() {
         GoblinRenderer.ResetColors();
     }
 
@@ -294,32 +294,32 @@ implements ai_class30 {
     }
 
     protected String java_lang_String_b(StringBuilder stringBuilder) {
-        GoblinEntity.void_a(stringBuilder, 3);
-        GoblinEntity.void_a(stringBuilder, 2);
-        GoblinEntity.void_a(stringBuilder, 2);
-        GoblinEntity.c(stringBuilder, 7);
-        GoblinEntity.c(stringBuilder, 7);
-        GoblinEntity.void_a(stringBuilder, 5);
-        GoblinEntity.void_a(stringBuilder, g5_class349.values().length - 1);
-        GoblinEntity.void_a(stringBuilder, by_class106.values().length - 1);
-        GoblinEntity.void_a(stringBuilder, eh_class250.values().length - 1);
-        GoblinEntity.c(stringBuilder, 1);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 3);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 2);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 2);
+        GoblinEntity.appendFixedGene(stringBuilder, 7);
+        GoblinEntity.appendFixedGene(stringBuilder, 7);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 5);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, g5_class349.values().length - 1);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, by_class106.values().length - 1);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, eh_class250.values().length - 1);
+        GoblinEntity.appendFixedGene(stringBuilder, 1);
         return stringBuilder.toString();
     }
 
     @Override
-    protected String a(StringBuilder stringBuilder) {
-        GoblinEntity.void_a(stringBuilder, 3);
-        GoblinEntity.void_a(stringBuilder, 2);
-        GoblinEntity.void_a(stringBuilder, 2);
-        GoblinEntity.void_a(stringBuilder, 8);
-        GoblinEntity.void_a(stringBuilder, 8);
-        GoblinEntity.void_a(stringBuilder, 5);
-        GoblinEntity.void_a(stringBuilder, g5_class349.values().length - 1);
-        GoblinEntity.void_a(stringBuilder, by_class106.values().length - 1);
-        GoblinEntity.void_a(stringBuilder, eh_class250.values().length - 1);
-        GoblinEntity.c(stringBuilder, 0);
-        return stringBuilder.toString();
+    protected String generateAppearanceDNA(StringBuilder dnaBuilder) {
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, 3);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, 2);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, 2);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, 8);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, 8);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, 5);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, g5_class349.values().length - 1);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, by_class106.values().length - 1);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, eh_class250.values().length - 1);
+        GoblinEntity.appendFixedGene(dnaBuilder, 0);
+        return dnaBuilder.toString();
     }
 
     @Override
@@ -385,10 +385,10 @@ implements ai_class30 {
     public void void_a(List<Integer> list) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int n : list) {
-            GoblinEntity.c(stringBuilder, n);
+            GoblinEntity.appendFixedGene(stringBuilder, n);
         }
-        GoblinEntity.c(stringBuilder, Integer.parseInt(GoblinEntity.java_lang_String_arr_a(this)[9]));
-        this.entityDataManager.set(M, stringBuilder.toString());
+        GoblinEntity.appendFixedGene(stringBuilder, Integer.parseInt(GoblinEntity.SplitDnaIntoGenes(this)[9]));
+        this.entityDataManager.set(APPEARANCE_DNA, stringBuilder.toString());
         if (Main.proxy instanceof ClientProxy) {
             GoblinRenderer.ResetColors();
         }
@@ -401,35 +401,35 @@ implements ai_class30 {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry entry : this.d) {
             int n = (Integer)((Map.Entry)entry.getValue()).getValue();
-            GoblinEntity.c(stringBuilder, n);
+            GoblinEntity.appendFixedGene(stringBuilder, n);
         }
-        GoblinEntity.c(stringBuilder, Integer.parseInt(GoblinEntity.java_lang_String_arr_a(this)[9]));
-        this.entityDataManager.set(M, stringBuilder.toString());
+        GoblinEntity.appendFixedGene(stringBuilder, Integer.parseInt(GoblinEntity.SplitDnaIntoGenes(this)[9]));
+        this.entityDataManager.set(APPEARANCE_DNA, stringBuilder.toString());
         GoblinRenderer.ResetColors();
     }
 
     protected String java_lang_String_a(StringBuilder stringBuilder, int n) {
-        GoblinEntity.void_a(stringBuilder, 3);
-        GoblinEntity.void_a(stringBuilder, 2);
-        GoblinEntity.void_a(stringBuilder, 2);
-        GoblinEntity.void_a(stringBuilder, 7);
-        GoblinEntity.void_a(stringBuilder, 7);
-        GoblinEntity.void_a(stringBuilder, 5);
-        GoblinEntity.void_a(stringBuilder, g5_class349.values().length - 1);
-        GoblinEntity.c(stringBuilder, n);
-        GoblinEntity.void_a(stringBuilder, eh_class250.values().length - 1);
-        GoblinEntity.c(stringBuilder, 0);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 3);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 2);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 2);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 7);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 7);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, 5);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, g5_class349.values().length - 1);
+        GoblinEntity.appendFixedGene(stringBuilder, n);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, eh_class250.values().length - 1);
+        GoblinEntity.appendFixedGene(stringBuilder, 0);
         return stringBuilder.toString();
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
         super.writeEntityToNBT(nBTTagCompound);
-        nBTTagCompound.setString("bodyColor", (String)this.entityDataManager.get(N));
-        nBTTagCompound.setInteger("eyeColorX", ((BlockPos)this.entityDataManager.get(K)).getX());
-        nBTTagCompound.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(K)).getY());
-        nBTTagCompound.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(K)).getZ());
-        nBTTagCompound.setString("model", (String)this.entityDataManager.get(M));
+        nBTTagCompound.setString("bodyColor", (String)this.entityDataManager.get(CURRENT_ACTION));
+        nBTTagCompound.setInteger("eyeColorX", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getX());
+        nBTTagCompound.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getY());
+        nBTTagCompound.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getZ());
+        nBTTagCompound.setString("model", (String)this.entityDataManager.get(APPEARANCE_DNA));
         nBTTagCompound.setString("girlID", (String)this.entityDataManager.get(GIRL_ID));
         nBTTagCompound.setString("queen", this.entityDataManager.get(aK));
         nBTTagCompound.setBoolean("isQueen", this.aX);
@@ -453,14 +453,14 @@ implements ai_class30 {
     public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
         super.readEntityFromNBT(nBTTagCompound);
         this.aX = nBTTagCompound.getBoolean("isQueen");
-        this.entityDataManager.set(M, nBTTagCompound.getString("model"));
-        this.entityDataManager.set(N, nBTTagCompound.getString("bodyColor"));
-        String[] stringArray = GoblinEntity.java_lang_String_arr_a(this);
+        this.entityDataManager.set(APPEARANCE_DNA, nBTTagCompound.getString("model"));
+        this.entityDataManager.set(CURRENT_ACTION, nBTTagCompound.getString("bodyColor"));
+        String[] stringArray = GoblinEntity.SplitDnaIntoGenes(this);
         if (Integer.parseInt(stringArray[3]) > 7 || Integer.parseInt(stringArray[4]) > 7) {
-            this.entityDataManager.set(M, this.java_lang_String_a(new StringBuilder(), this.int_k()));
+            this.entityDataManager.set(APPEARANCE_DNA, this.java_lang_String_a(new StringBuilder(), this.int_k()));
             Main.LOGGER.log(Level.INFO, "updated an old Goblin");
         }
-        this.entityDataManager.set(K, new BlockPos(nBTTagCompound.getInteger("eyeColorX"), nBTTagCompound.getInteger("eyeColorY"), nBTTagCompound.getInteger("eyeColorZ")));
+        this.entityDataManager.set(ACTION_TARGET_POS, new BlockPos(nBTTagCompound.getInteger("eyeColorX"), nBTTagCompound.getInteger("eyeColorY"), nBTTagCompound.getInteger("eyeColorZ")));
         this.entityDataManager.set(GIRL_ID, nBTTagCompound.getString("girlID"));
         this.entityDataManager.set(aK, nBTTagCompound.getString("queen"));
         this.entityDataManager.set(aC, nBTTagCompound.getBoolean("isTamed"));
@@ -1130,7 +1130,7 @@ implements ai_class30 {
     }
 
     int int_k() {
-        return Integer.parseInt(GoblinEntity.java_lang_String_arr_a(this)[7]);
+        return Integer.parseInt(GoblinEntity.SplitDnaIntoGenes(this)[7]);
     }
 
     @Nullable

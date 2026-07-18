@@ -17,7 +17,7 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.gx_class390;
+import com.trolmastercard.sexmod.BoneDeformProcessor;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -157,7 +157,7 @@ public abstract class d9_class168 extends PlayerGirlRenderer {
             MATRIX_STACK.pop();
             return;
         }
-        if (("neck".equals(string) || "head".equals(string)) && !this.boolean_a()) {
+        if (("neck".equals(string) || "head".equals(string)) && this.boolean_a()) {
             MATRIX_STACK.pop();
             return;
         }
@@ -182,10 +182,10 @@ public abstract class d9_class168 extends PlayerGirlRenderer {
                     this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
                     continue;
                 }
-                this.a(bufferBuilder, geoBone2, f, f2, f3, f4, d);
+                this.renderCustomBones(bufferBuilder, geoBone2, f, f2, f3, f4, d);
             }
         }
-        MATRIX_STACK.pop()
+        MATRIX_STACK.pop();
     }
 
     public void a(BufferBuilder bufferBuilder, GeoCube geoCube, GeoBone geoBone, float f, float f2, float f3, float f4, double d) {
@@ -211,7 +211,7 @@ public abstract class d9_class168 extends PlayerGirlRenderer {
             } else {
                 Vec3i geoVertexArray = this.a(geoBone);
                 geoVertexArray = this.a((Vec3i)geoVertexArray);
-                vec3d = gx_class390.a(this, geoBone, new Vec3d((float)geoVertexArray.getX() / 255.0f, (float)geoVertexArray.getY() / 255.0f, (float)geoVertexArray.getZ() / 255.0f), vector3f);
+                vec3d = BoneDeformProcessor.applyBoneDeformation(this, geoBone, new Vec3d((float)geoVertexArray.getX() / 255.0f, (float)geoVertexArray.getY() / 255.0f, (float)geoVertexArray.getZ() / 255.0f), vector3f);
             }
             for (GeoVertex geoVertex : geoQuad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);

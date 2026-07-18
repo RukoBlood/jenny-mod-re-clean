@@ -1350,19 +1350,19 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void void_a(List<Integer> list) {
-        if (!(this instanceof e4_class223) && !(this instanceof ew_class277)) {
+        if (!(this instanceof AbstractGoblinKoboldEntity) && !(this instanceof ew_class277)) {
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (int n : list) {
-            e4_class223.c(stringBuilder, n);
+            AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, n);
         }
-        this.entityDataManager.set(e4_class223.M, stringBuilder.toString());
+        this.entityDataManager.set(AbstractGoblinKoboldEntity.APPEARANCE_DNA, stringBuilder.toString());
     }
 
     public String java_lang_String_F() {
-        if (this instanceof e4_class223 || this instanceof ew_class277) {
-            return this.entityDataManager.get(e4_class223.M);
+        if (this instanceof AbstractGoblinKoboldEntity || this instanceof ew_class277) {
+            return this.entityDataManager.get(AbstractGoblinKoboldEntity.APPEARANCE_DNA);
         }
         return "";
     }
@@ -1389,8 +1389,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public static List<Integer> h(UUID uUID) {
         GirlEntity em_class2582 = Main.proxy instanceof ClientProxy ? GirlEntity.getGirlEntity(uUID) : GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID);
         ArrayList<Integer> arrayList = new ArrayList<Integer>(em_class2582.L());
-        if (em_class2582 instanceof e4_class223 || em_class2582 instanceof ew_class277) {
-            arrayList.addAll(GirlEntity.c(em_class2582.getDataManager().get(e4_class223.M)));
+        if (em_class2582 instanceof AbstractGoblinKoboldEntity || em_class2582 instanceof ew_class277) {
+            arrayList.addAll(GirlEntity.c(em_class2582.getDataManager().get(AbstractGoblinKoboldEntity.APPEARANCE_DNA)));
         }
         return arrayList;
     }
@@ -1440,8 +1440,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void e(String string) {
-        if (this instanceof e4_class223 || this instanceof ew_class277) {
-            this.entityDataManager.set(e4_class223.M, string);
+        if (this instanceof AbstractGoblinKoboldEntity || this instanceof ew_class277) {
+            this.entityDataManager.set(AbstractGoblinKoboldEntity.APPEARANCE_DNA, string);
         }
     }
 

@@ -74,7 +74,7 @@ implements IMessage {
                     EntityDataManager entityDataManager = object2.getDataManager();
                     entityDataManager.set(GirlEntity.v, g9_class3542.a.toString());
                     entityDataManager.set(KoboldEntity.aU, g9_class3542.b);
-                    eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.N));
+                    eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
                 }
                 if (eyeAndKoboldColor_ == null) {
                     return;

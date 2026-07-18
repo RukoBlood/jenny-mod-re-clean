@@ -45,7 +45,7 @@ extends d9_class168 {
 
     @Override
     protected Vec3i net_minecraft_util_math_Vec3i_a(String string) {
-        String[] stringArray = e4_class223.java_lang_String_arr_a(this.j);
+        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j);
         if (stringArray.length < 8) {
             return z;
         }
@@ -133,7 +133,7 @@ extends d9_class168 {
 
     @Override
     protected void a(String string, GeoBone geoBone) {
-        String[] stringArray = e4_class223.java_lang_String_arr_a(this.j);
+        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j);
         if (stringArray.length < 8) {
             return;
         }

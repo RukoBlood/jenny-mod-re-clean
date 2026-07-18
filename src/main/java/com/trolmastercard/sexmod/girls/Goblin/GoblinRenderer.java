@@ -42,7 +42,7 @@ import software.bernie.geckolib3.geo.render.built.GeoCube;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class GoblinRenderer extends d6_class165<GoblinEntity> {
+public class GoblinRenderer extends AbstractKoboldGoblinRenderer<GoblinEntity> {
     final static Vec3i w = new Vec3i(255, 255, 255);
     final static float K = -420.69f;
     final static float A = 8.0f;
@@ -292,30 +292,30 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
     }
 
     @Override
-    protected Vec3i a(String string) {
-        String[] stringArray = e4_class223.java_lang_String_arr_a(this.j);
+    protected Vec3i resolveBoneColor(String boneName) {
+        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j);
         if (stringArray.length < 8) {
-            return r;
+            return DEFAULT_COLOR;
         }
-        if (string.contains("band")) {
+        if (boneName.contains("band")) {
             return w;
         }
-        if (string.contains("eyeColor") || string.contains("eyeColor2")) {
+        if (boneName.contains("eyeColor") || boneName.contains("eyeColor2")) {
             return GoblinRenderer.unknownCalcVec(stringArray[8]);
         }
-        if (string.contains("variant") || string.contains("boob")) {
+        if (boneName.contains("variant") || boneName.contains("boob")) {
             return GoblinRenderer.c(stringArray[7]);
         }
-        if (string.contains("hair")) {
+        if (boneName.contains("hair")) {
             return GoblinRenderer.d(stringArray[6]);
         }
-        if (D.contains(string)) {
+        if (D.contains(boneName)) {
             return GoblinRenderer.c(stringArray[7]);
         }
-        if (M.contains(string)) {
+        if (M.contains(boneName)) {
             return GoblinRenderer.d(stringArray[6]);
         }
-        return r;
+        return DEFAULT_COLOR;
     }
 
     public static Vec3i unknownCalcVec(String string) {
@@ -335,7 +335,7 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
         if (((GoblinEntity)this.j).world instanceof FakeWorld) {
             return;
         }
-        String[] stringArray = e4_class223.java_lang_String_arr_a(this.j);
+        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j);
         if (stringArray.length < 8) {
             return;
         }
@@ -414,7 +414,7 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
 
     public static void a(GeoBone geoBone, String string) {
         int n = Integer.parseInt(string);
-        GoblinRenderer.a(geoBone, n);
+        GoblinRenderer.selectAndShowExclusiveChildBone(geoBone, n);
     }
 
     static HashSet<Integer> b(int n, String string) {
@@ -461,31 +461,31 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
     }
 
     static void a(GeoBone geoBone2, String string, String string2, String string3) {
-        GeoBone geoBone3 = GoblinRenderer.a(geoBone2, Integer.parseInt(string));
-        GeoBone geoBone4 = GoblinRenderer.a(geoBone3, Integer.parseInt(string2));
+        GeoBone geoBone3 = GoblinRenderer.selectAndShowExclusiveChildBone(geoBone2, Integer.parseInt(string));
+        GeoBone geoBone4 = GoblinRenderer.selectAndShowExclusiveChildBone(geoBone3, Integer.parseInt(string2));
         List<GeoBone> list = geoBone4.childBones;
         int n2 = list.size();
         HashSet<Integer> hashSet = GoblinRenderer.b(n2, string3);
         geoBone4.childBones.forEach(geoBone -> geoBone.setHidden(true));
-        hashSet.forEach(n -> GoblinRenderer.b(geoBone4, n));
+        hashSet.forEach(n -> GoblinRenderer.ShowChildBoneByIndex(geoBone4, n));
     }
 
     @Override
-    protected Vec3i a(Vec3i vec3i) {
+    protected Vec3i filterFinalColor(Vec3i inputColor) {
         if (!this.u && !this.F) {
-            return vec3i;
+            return inputColor;
         }
         float f = Utils.clamp(this.z, 2.0f, 15.0f) / 15.0f;
-        return new Vec3i((float)vec3i.getX() * f, (float)vec3i.getY() * f, (float)vec3i.getZ() * f);
+        return new Vec3i((float) inputColor.getX() * f, (float) inputColor.getY() * f, (float) inputColor.getZ() * f);
     }
 
     @Override
-    protected ItemStack net_minecraft_item_ItemStack_a(@Nullable ItemStack itemStack) {
+    protected ItemStack getHeldItem(@Nullable ItemStack heldItem) {
         Action fp_class3242 = ((GoblinEntity)this.j).currentAction();
         if (fp_class3242 == Action.RUN || fp_class3242 == Action.CATCH) {
             return ((GoblinEntity)this.j).getDataManager().get(GoblinEntity.a0);
         }
-        return itemStack;
+        return heldItem;
     }
 
     @Override
@@ -506,7 +506,7 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
     }
 
     @Override
-    protected float a__() {
+    protected float getRenderItemScale() {
         if (((GoblinEntity)this.j).currentAction() == Action.CATCH) {
             return 0.5f;
         }
@@ -514,26 +514,26 @@ public class GoblinRenderer extends d6_class165<GoblinEntity> {
     }
 
     @Override
-    protected Vec3d a(ItemStack itemStack) {
-        if (itemStack == null) {
+    protected Vec3d getItemRenderRotation(ItemStack item) {
+        if (item == null) {
             return Vec3d.ZERO;
         }
-        if (itemStack.getItem() instanceof ItemBlock || itemStack.getMaxStackSize() == 1) {
-            return super.a(itemStack);
+        if (item.getItem() instanceof ItemBlock || item.getMaxStackSize() == 1) {
+            return super.getItemRenderRotation(item);
         }
         return new Vec3d(180.0, 0.0, 0.0);
     }
 
     @Override
-    public void a(BufferBuilder bufferBuilder, GeoCube geoCube, GeoBone geoBone, float f, float f2, float f3, float f4, double d) {
-        if (this.u && !C.contains(geoBone.getName())) {
+    public void renderCubeGeometry(BufferBuilder buffer, GeoCube cube, GeoBone bone, float r, float g, float b, float a, double textureOffset) {
+        if (this.u && !C.contains(bone.getName())) {
             return;
         }
-        if (this.p.contains(geoBone.getName())) {
+        if (this.p.contains(bone.getName())) {
             return;
         }
-        this.q = geoBone;
-        super.a(bufferBuilder, geoCube, geoBone, f, f2, f3, f4, d);
+        this.q = bone;
+        super.renderCubeGeometry(buffer, cube, bone, r, g, b, a, textureOffset);
     }
 
     //public void doRender(GirlEntity em_class2582, double d, double d2, double d3, float f, float f2) {
