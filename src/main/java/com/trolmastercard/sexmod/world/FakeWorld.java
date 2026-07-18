@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.world;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -22,33 +22,32 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FakeWorld
-extends WorldClient {
-    public Biome getBiomeForCoordsBody(BlockPos blockPos) {
+public class FakeWorld extends WorldClient {
+    public Biome getBiomeForCoordsBody(BlockPos pos) {
         return new BiomePlains(false, new Biome.BiomeProperties("Plains").setBaseHeight(0.125f).setHeightVariation(0.05f).setHeightVariation(0.8f).setRainfall(0.4f));
     }
 
     @Override
-    public void notifyNeighborsOfStateChange(BlockPos blockPos, Block block, boolean bl) {
-        super.notifyNeighborsOfStateChange(blockPos, block, bl);
+    public void notifyNeighborsOfStateChange(BlockPos pos, Block blockType, boolean updateObservers) {
+        super.notifyNeighborsOfStateChange(pos, blockType, updateObservers);
     }
 
-    public void markAndNotifyBlock(BlockPos blockPos, Chunk chunk, IBlockState iBlockState, IBlockState iBlockState2, int n) {
+    public void markAndNotifyBlock(BlockPos pos, Chunk chunk, IBlockState state, IBlockState newState, int flags) {
     }
 
-    public float getSunBrightnessFactor(float f) {
+    public float getSunBrightnessFactor(float factor) {
         return 1.0f;
     }
 
     @SideOnly(value=Side.CLIENT)
-    public float getSunBrightnessBody(float f) {
+    public float getSunBrightnessBody(float body) {
         return 1.0f;
     }
 
     public void updateWeatherBody() {
     }
 
-    public boolean canBlockFreezeBody(BlockPos blockPos, boolean bl) {
+    public boolean canBlockFreezeBody(BlockPos pos, boolean bl) {
         return false;
     }
 
@@ -57,7 +56,7 @@ extends WorldClient {
     }
 
     public FakeWorld() {
-        super(new f5_class290(Minecraft.getMinecraft()), new WorldSettings(0L, GameType.SURVIVAL, false, false, WorldType.FLAT), 0, EnumDifficulty.HARD, new Profiler());
+        super(new FakeNetHandler(Minecraft.getMinecraft()), new WorldSettings(0L, GameType.SURVIVAL, false, false, WorldType.FLAT), 0, EnumDifficulty.HARD, new Profiler());
         this.provider.setWorld(this);
     }
 
@@ -75,10 +74,6 @@ extends WorldClient {
 
     public int countEntities(EnumCreatureType enumCreatureType, boolean bl) {
         return 0;
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

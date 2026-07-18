@@ -457,14 +457,14 @@ extends GirlEntity {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (this.currentAction() == Action.THREESOME_CUM && Action.a(fp_class3242, Action.THREESOME_FAST, Action.THREESOME_SLOW)) {
+    public void setCurrentAction(Action action) {
+        if (this.currentAction() == Action.THREESOME_CUM && Action.a(action, Action.THREESOME_FAST, Action.THREESOME_SLOW)) {
             return;
         }
-        if (!this.world.isRemote && fp_class3242 == Action.THREESOME_CUM) {
+        if (!this.world.isRemote && action == Action.THREESOME_CUM) {
             GalathMangTracker.setLastCumTime(this.getID(), this.world.getTotalWorldTime());
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     void void_w() {
@@ -602,7 +602,7 @@ extends GirlEntity {
         if (f2 != null) {
             f -= f2.floatValue();
         }
-        this.af = Math.abs(cj_class134.a(0.0f, f)) < 80.0f ? -TrigMath.toRadians(f) : 0.0f;
+        this.af = Math.abs(WorldUtils.CalculateAngleDifferences(0.0f, f)) < 80.0f ? -TrigMath.toRadians(f) : 0.0f;
         this.W = this.af == 0.0f ? 0.0f : (float) Utils.clamp(-vec3d3.y / 2.0, -0.75, 0.75);
     }
 

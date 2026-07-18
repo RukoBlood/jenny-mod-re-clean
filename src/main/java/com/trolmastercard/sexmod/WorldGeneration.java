@@ -168,7 +168,7 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
         int n12 = Integer.MAX_VALUE;
         for (n5 = n8; n5 < n8 + n10; ++n5) {
             for (n4 = n7; n4 < n7 + n6; ++n4) {
-                n3 = cj_class134.a(world, n5, n4);
+                n3 = WorldUtils.getSurfaceHeight(world, n5, n4);
                 if (b_inner3462.d && world.getBlockState(new BlockPos(n5, n3, n4)).getBlock() == Blocks.WATER) {
                     return;
                 }
@@ -214,7 +214,7 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
         }
         int n3 = n * 16 + 8;
         int n4 = n2 * 16 + 8;
-        int n5 = cj_class134.a(world, n3, n4);
+        int n5 = WorldUtils.getSurfaceHeight(world, n3, n4);
         if (world.getBlockState(new BlockPos(n3, n5, n4)).getMaterial().isLiquid()) {
             return;
         }

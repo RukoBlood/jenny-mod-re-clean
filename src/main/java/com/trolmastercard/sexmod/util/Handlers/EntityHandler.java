@@ -77,16 +77,16 @@ public class EntityHandler {
         EntityRegistry.addSpawn(ManglelieEntity.class, 5, 1, 1, (EnumCreatureType)EnumCreatureType.AMBIENT, (Biome[])new Biome[]{Biomes.HELL});
     }
 
-    private static void RegisterPlayerEntity(String entity, Class<? extends Entity> girlClass, int n) {
-        EntityRegistry.registerModEntity((ResourceLocation)new ResourceLocation("sexmod:" + entity), girlClass, (String)entity, (int)n, (Object) Main.instance, 100, 1, (boolean)false);
+    private static void RegisterPlayerEntity(String entity, Class<? extends Entity> girlClass, int id) {
+        EntityRegistry.registerModEntity((ResourceLocation)new ResourceLocation("sexmod:" + entity), girlClass, (String)entity, (int)id, (Object) Main.instance, 100, 1, (boolean)false);
     }
 
-    private static void RegisterNPCEntity(String entity, Class<? extends Entity> girlClass, int n, int n2, int n3) {
-        EntityRegistry.registerModEntity((ResourceLocation)new ResourceLocation("sexmod:" + entity), girlClass, (String)entity, (int)n, (Object) Main.instance, 50, 1, (boolean)true, (int)n2, (int)n3);
+    private static void RegisterNPCEntity(String entity, Class<? extends Entity> girlClass, int id, int n2, int n3) {
+        EntityRegistry.registerModEntity((ResourceLocation)new ResourceLocation("sexmod:" + entity), girlClass, (String)entity, (int)id, (Object) Main.instance, 50, 1, (boolean)true, (int)n2, (int)n3);
     }
 
-    private static void RegisterOtherEntity(String entity, Class<? extends Entity> girlClass, int n) {
-        EntityRegistry.registerModEntity((ResourceLocation)new ResourceLocation("sexmod:" + entity), girlClass, (String)entity, (int)n, (Object) Main.instance, 50, 1, (boolean)true);
+    private static void RegisterOtherEntity(String entity, Class<? extends Entity> girlClass, int id) {
+        EntityRegistry.registerModEntity((ResourceLocation)new ResourceLocation("sexmod:" + entity), girlClass, (String)entity, (int)id, (Object) Main.instance, 50, 1, (boolean)true);
     }
 }
 

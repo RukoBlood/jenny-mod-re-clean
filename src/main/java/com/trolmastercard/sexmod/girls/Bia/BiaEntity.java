@@ -9,7 +9,6 @@ package com.trolmastercard.sexmod.girls.Bia;
 
 import java.util.UUID;
 import javax.vecmath.Vector4d;
-
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SendGirlToSex;
@@ -23,6 +22,7 @@ import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -47,10 +47,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class BiaEntity
-extends Fighter
-implements bh_class82,
-        IBeddableSexGirl {
+public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     final static int ae = 3;
     public boolean Y = false;
     int ag = 0;
@@ -94,18 +91,18 @@ implements bh_class82,
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
+    public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
         if (fp_class3243 == Action.ANAL_CUM || fp_class3243 == Action.PRONE_DOGGY_CUM) {
             this.entityDataManager.set(h, "");
         }
-        if (fp_class3243 == Action.ANAL_CUM && (fp_class3242 == Action.ANAL_FAST || fp_class3242 == Action.ANAL_SLOW)) {
+        if (fp_class3243 == Action.ANAL_CUM && (action == Action.ANAL_FAST || action == Action.ANAL_SLOW)) {
             return;
         }
-        if (fp_class3243 == Action.PRONE_DOGGY_CUM && (fp_class3242 == Action.PRONE_DOGGY_HARD || fp_class3242 == Action.PRONE_DOGGY_SOFT)) {
+        if (fp_class3243 == Action.PRONE_DOGGY_CUM && (action == Action.PRONE_DOGGY_HARD || action == Action.PRONE_DOGGY_SOFT)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override
@@ -372,7 +369,7 @@ implements bh_class82,
             Vec3d vec3d2 = vec3d.add(this.ad[i][1]);
             Vec3d vec3d3 = vec3d.subtract(this.ad[i][1]);
             Block block = this.world.getBlockState(new BlockPos(vec3d2.x, vec3d2.y, vec3d2.z)).getBlock();
-            if (block != Blocks.AIR || !cj_class134.b(this.world, new BlockPos(vec3d3))) continue;
+            if (block != Blocks.AIR || !WorldUtils.b(this.world, new BlockPos(vec3d3))) continue;
             if (n2 == -1) {
                 n2 = i;
                 continue;
@@ -395,16 +392,16 @@ implements bh_class82,
         if (blockPos == null) {
             return false;
         }
-        if (cj_class134.b(this.world, blockPos.north()) && this.world.isAirBlock(blockPos.south())) {
+        if (WorldUtils.b(this.world, blockPos.north()) && this.world.isAirBlock(blockPos.south())) {
             return true;
         }
-        if (cj_class134.b(this.world, blockPos.east()) && this.world.isAirBlock(blockPos.west())) {
+        if (WorldUtils.b(this.world, blockPos.east()) && this.world.isAirBlock(blockPos.west())) {
             return true;
         }
-        if (cj_class134.b(this.world, blockPos.south()) && this.world.isAirBlock(blockPos.north())) {
+        if (WorldUtils.b(this.world, blockPos.south()) && this.world.isAirBlock(blockPos.north())) {
             return true;
         }
-        return cj_class134.b(this.world, blockPos.west()) && this.world.isAirBlock(blockPos.east());
+        return WorldUtils.b(this.world, blockPos.west()) && this.world.isAirBlock(blockPos.east());
     }
 
     Vector4d javax_vecmath_Vector4d_b() {
@@ -897,10 +894,6 @@ implements bh_class82,
         animationData.addAnimationController(this.actionController);
         animationData.addAnimationController(this.movementController);
         animationData.addAnimationController(this.eyesController);
-    }
-
-    private static NullPointerException a(NullPointerException nullPointerException) {
-        return nullPointerException;
     }
 }
 

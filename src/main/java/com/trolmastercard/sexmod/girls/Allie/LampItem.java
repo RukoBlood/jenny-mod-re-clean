@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.trolmastercard.sexmod.Action;
-import com.trolmastercard.sexmod.cj_class134;
+import com.trolmastercard.sexmod.WorldUtils;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.GirlEntity;
@@ -194,12 +194,12 @@ public class LampItem extends Item implements IAnimatable {
             double d = (float)(n2 - k) / (float)(c - k);
             d = Reference.h(d);
             vec3d = new Vec3d(0.0, (double)entityPlayer.eyeHeight * (1.0 - d), 0.0);
-            cj_class134.a(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer).add(vec3d), (int)(d * 150.0), d * 0.75, d);
+            WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer).add(vec3d), (int)(d * 150.0), d * 0.75, d);
         }
         if (n2 < c) {
             return;
         }
-        cj_class134.a(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer), 150, 0.75, 2.0);
+        WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer), 150, 0.75, 2.0);
         nBTTagCompound.setBoolean(e, false);
         nBTTagCompound.setInteger(d, 0);
         if (world.isRemote) {
@@ -283,10 +283,6 @@ public class LampItem extends Item implements IAnimatable {
             }
             nBTTagCompound2.setBoolean(LampItem.e, true);
             nBTTagCompound2.setInteger(LampItem.d, 0);
-        }
-
-        private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-            return concurrentModificationException;
         }
     }
 }

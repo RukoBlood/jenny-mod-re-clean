@@ -23,6 +23,7 @@ import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -277,18 +278,18 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
+    public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == Action.DOGGYCUM && (fp_class3242 == Action.DOGGYSLOW || fp_class3242 == Action.DOGGYFAST)) {
+        if (fp_class3243 == Action.DOGGYCUM && (action == Action.DOGGYSLOW || action == Action.DOGGYFAST)) {
             return;
         }
-        if (fp_class3243 == Action.CUMBLOWJOB && (fp_class3242 == Action.THRUSTBLOWJOB || fp_class3242 == Action.SUCKBLOWJOB)) {
+        if (fp_class3243 == Action.CUMBLOWJOB && (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB)) {
             return;
         }
-        if (fp_class3243 == Action.PAIZURI_CUM && (fp_class3242 == Action.PAIZURI_SLOW || fp_class3242 == Action.PAIZURI_FAST)) {
+        if (fp_class3243 == Action.PAIZURI_CUM && (action == Action.PAIZURI_SLOW || action == Action.PAIZURI_FAST)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
         if (fp_class3243 != Action.STARTBLOWJOB && fp_class3243 != Action.PAIZURI_START) {
             return;
         }

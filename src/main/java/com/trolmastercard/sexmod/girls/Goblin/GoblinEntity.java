@@ -40,6 +40,7 @@ import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -604,7 +605,7 @@ implements ai_class30 {
         if (this.R == null || this.getDistance(this.R.getX(), this.R.getY(), this.R.getZ()) > this.double_l() || this.Y > 100) {
             int n = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(5);
             int n2 = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(5);
-            int n3 = cj_class134.a(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
+            int n3 = WorldUtils.getSurfaceHeight(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
             this.R = new BlockPos(this.getPosition().getX() + n, n3, this.getPosition().getZ() + n2);
             this.Y = 0;
         }
@@ -1280,45 +1281,45 @@ implements ai_class30 {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
+    public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == Action.PAIZURI_CUM && (fp_class3242 == Action.PAIZURI_SLOW || fp_class3242 == Action.PAIZURI_FAST)) {
+        if (fp_class3243 == Action.PAIZURI_CUM && (action == Action.PAIZURI_SLOW || action == Action.PAIZURI_FAST)) {
             return;
         }
-        if (fp_class3243 == Action.NELSON_CUM && (fp_class3242 == Action.NELSON_SLOW || fp_class3242 == Action.NELSON_FAST)) {
+        if (fp_class3243 == Action.NELSON_CUM && (action == Action.NELSON_SLOW || action == Action.NELSON_FAST)) {
             return;
         }
-        if (fp_class3243 == Action.BREEDING_CUM_0 && (fp_class3242 == Action.BREEDING_SLOW_0 || fp_class3242 == Action.BREEDING_FAST_0)) {
+        if (fp_class3243 == Action.BREEDING_CUM_0 && (action == Action.BREEDING_SLOW_0 || action == Action.BREEDING_FAST_0)) {
             return;
         }
-        if (fp_class3242 == Action.START_THROWING && !this.world.isRemote) {
+        if (action == Action.START_THROWING && !this.world.isRemote) {
             this.void_e(this.java_util_UUID_e());
             this.L_();
         }
-        if (fp_class3242 == Action.PAIZURI_START && !this.world.isRemote) {
+        if (action == Action.PAIZURI_START && !this.world.isRemote) {
             this.void_z();
         }
-        if (fp_class3242 == Action.NELSON_INTRO && !this.world.isRemote) {
+        if (action == Action.NELSON_INTRO && !this.world.isRemote) {
             this.void_q();
         }
-        if (this.currentAction() == Action.PAIZURI_CUM && fp_class3242 == Action.NULL && !this.world.isRemote) {
+        if (this.currentAction() == Action.PAIZURI_CUM && action == Action.NULL && !this.world.isRemote) {
             this.D_();
         }
-        if (fp_class3242 == Action.BREEDING_CUM_0) {
+        if (action == Action.BREEDING_CUM_0) {
             this.entityDataManager.set(aV, true);
             this.av = this.world.getTotalWorldTime();
             this.ai = this.world.getTotalWorldTime();
         }
-        if (fp_class3242 == Action.BREEDING_CUM_0) {
+        if (action == Action.BREEDING_CUM_0) {
             this.Z = 0;
         }
-        if (fp_class3242 == Action.NELSON_CUM) {
+        if (action == Action.NELSON_CUM) {
             this.entityDataManager.set(aV, true);
         }
-        if (fp_class3243 == Action.NELSON_CUM && fp_class3242 != Action.NELSON_CUM) {
+        if (fp_class3243 == Action.NELSON_CUM && action != Action.NELSON_CUM) {
             this.entityDataManager.set(aV, false);
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     void D_() {

@@ -23,6 +23,7 @@ import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -257,18 +258,18 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
+    public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == Action.MATING_PRESS_CUM && (fp_class3242 == Action.MATING_PRESS_SOFT || fp_class3242 == Action.MATING_PRESS_HARD)) {
+        if (fp_class3243 == Action.MATING_PRESS_CUM && (action == Action.MATING_PRESS_SOFT || action == Action.MATING_PRESS_HARD)) {
             return;
         }
-        if (fp_class3243 == Action.KOBOLD_ANAL_CUM && (fp_class3242 == Action.KOBOLD_ANAL_SLOW || fp_class3242 == Action.KOBOLD_ANAL_FAST)) {
+        if (fp_class3243 == Action.KOBOLD_ANAL_CUM && (action == Action.KOBOLD_ANAL_SLOW || action == Action.KOBOLD_ANAL_FAST)) {
             return;
         }
-        if (fp_class3243 == Action.CUMBLOWJOB && (fp_class3242 == Action.SUCKBLOWJOB || fp_class3242 == Action.THRUSTBLOWJOB)) {
+        if (fp_class3243 == Action.CUMBLOWJOB && (action == Action.SUCKBLOWJOB || action == Action.THRUSTBLOWJOB)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override

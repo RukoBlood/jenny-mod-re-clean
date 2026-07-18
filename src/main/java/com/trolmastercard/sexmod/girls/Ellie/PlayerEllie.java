@@ -129,15 +129,15 @@ extends PlayerGirl {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
+    public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == Action.MISSIONARY_CUM && (fp_class3242 == Action.MISSIONARY_FAST || fp_class3242 == Action.MISSIONARY_SLOW)) {
+        if (fp_class3243 == Action.MISSIONARY_CUM && (action == Action.MISSIONARY_FAST || action == Action.MISSIONARY_SLOW)) {
             return;
         }
-        if (fp_class3243 == Action.COWGIRLCUM && (fp_class3242 == Action.COWGIRLSLOW || fp_class3242 == Action.COWGIRLFAST)) {
+        if (fp_class3243 == Action.COWGIRLCUM && (action == Action.COWGIRLSLOW || action == Action.COWGIRLFAST)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override

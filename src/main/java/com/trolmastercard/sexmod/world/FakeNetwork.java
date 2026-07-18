@@ -17,7 +17,7 @@
  *  io.netty.util.Attribute
  *  io.netty.util.AttributeKey
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.world;
 
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
@@ -35,8 +35,8 @@ import java.net.SocketAddress;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetworkManager;
 
-public class x_worldRelatedClass extends NetworkManager {
-    public x_worldRelatedClass(EnumPacketDirection enumPacketDirection) {
+public class FakeNetwork extends NetworkManager {
+    public FakeNetwork(EnumPacketDirection enumPacketDirection) {
         super(enumPacketDirection);
     }
 

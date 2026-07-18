@@ -17,7 +17,6 @@ import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import io.netty.buffer.ByteBuf;
-import java.util.ConcurrentModificationException;
 import java.util.UUID;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;

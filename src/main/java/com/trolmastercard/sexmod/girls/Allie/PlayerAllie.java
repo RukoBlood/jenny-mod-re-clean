@@ -17,6 +17,7 @@ import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
@@ -95,14 +96,14 @@ extends PlayerGirl {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (this.currentAction() == Action.DEEPTHROAT_CUM && (fp_class3242 == Action.DEEPTHROAT_FAST || fp_class3242 == Action.DEEPTHROAT_SLOW)) {
+    public void setCurrentAction(Action action) {
+        if (this.currentAction() == Action.DEEPTHROAT_CUM && (action == Action.DEEPTHROAT_FAST || action == Action.DEEPTHROAT_SLOW)) {
             return;
         }
-        if (this.currentAction() == Action.REVERSE_COWGIRL_CUM && (fp_class3242 == Action.REVERSE_COWGIRL_SLOW || fp_class3242 == Action.REVERSE_COWGIRL_FAST_START || fp_class3242 == Action.REVERSE_COWGIRL_FAST_CONTINUES)) {
+        if (this.currentAction() == Action.REVERSE_COWGIRL_CUM && (action == Action.REVERSE_COWGIRL_SLOW || action == Action.REVERSE_COWGIRL_FAST_START || action == Action.REVERSE_COWGIRL_FAST_CONTINUES)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override

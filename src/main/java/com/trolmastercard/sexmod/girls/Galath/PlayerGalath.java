@@ -59,7 +59,7 @@ implements b7_class68 {
 
     @Override
     public IRenderer getLimbRenderer(int n) {
-        return new a5_class12();
+        return new GalathLimb();
     }
 
     @Override
@@ -107,21 +107,21 @@ implements b7_class68 {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
+    public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == Action.CORRUPT_CUM && (fp_class3242 == Action.CORRUPT_FAST || fp_class3242 == Action.CORRUPT_SLOW)) {
+        if (fp_class3243 == Action.CORRUPT_CUM && (action == Action.CORRUPT_FAST || action == Action.CORRUPT_SLOW)) {
             return;
         }
-        if (fp_class3243 == Action.RAPE_CUM && fp_class3242 == Action.RAPE_ON_GOING) {
+        if (fp_class3243 == Action.RAPE_CUM && action == Action.RAPE_ON_GOING) {
             return;
         }
-        if (fp_class3243 == Action.RAPE_CUM && fp_class3242 == Action.RAPE_CUM_IDLE) {
+        if (fp_class3243 == Action.RAPE_CUM && action == Action.RAPE_CUM_IDLE) {
             return;
         }
-        if (fp_class3242 == Action.CORRUPT_SLOW) {
+        if (action == Action.CORRUPT_SLOW) {
             this.as = false;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     void void_a() {
@@ -463,7 +463,7 @@ implements b7_class68 {
                 }
                 case "flapControlled": {
                     if (!this.boolean_n()) break;
-                    hf_class401.f();
+                    GalathFlightUI.showUI();
                     this.a(SoundsHandler.MISC_FLAP);
                     Minecraft minecraft = Minecraft.getMinecraft();
                     EntityPlayerSP entityPlayerSP = minecraft.player;

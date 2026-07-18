@@ -711,7 +711,7 @@ public class KoboldManager {
                     EntityPlayerMP entityPlayerMP;
                     a_inner492 = (a_inner49) entry.getValue();
                     if (!a_inner492.b.contains(blockPos)) continue;
-                    object2 = cj_class134.a(blockPos, iBlockState);
+                    object2 = WorldUtils.getBedPairPosition(blockPos, iBlockState);
                     a_inner492.b.remove(blockPos);
                     a_inner492.b.remove(object2);
                     object = KoboldManager.b((UUID) entry.getKey());

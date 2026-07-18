@@ -47,6 +47,7 @@ import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -173,21 +174,21 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return Action.valueOf(this.entityDataManager.get(J));
     }
 
-    public void setCurrentAction(Action fp_class3242) {
-        Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == fp_class3242) {
+    public void setCurrentAction(Action action) {
+        Action currentAction = this.currentAction();
+        if (currentAction == action) {
             return;
         }
-        if (fp_class3242 == Action.ATTACK && fp_class3243 != Action.NULL) {
+        if (action == Action.ATTACK && currentAction != Action.NULL) {
             return;
         }
-        Action fp_class3244 = fp_class3242 = fp_class3242 == null ? Action.NULL : fp_class3242;
+        Action fp_class3244 = action = action == null ? Action.NULL : action;
         if (this.world.isRemote) {
-            this.changeDataParameterFromClient("currentAction", fp_class3242.toString());
+            this.changeDataParameterFromClient("currentAction", action.toString());
             return;
         }
-        fp_class3243.ticksPlaying = new int[]{0, 0};
-        this.entityDataManager.set(J, fp_class3242.toString());
+        currentAction.ticksPlaying = new int[]{0, 0};
+        this.entityDataManager.set(J, action.toString());
     }
 
     public int int_ah() {
@@ -216,14 +217,14 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public static void a(GirlEntity em_class2582, String string) {
-        for (EntityPlayer entityPlayer : cj_class134.a(em_class2582)) {
+        for (EntityPlayer entityPlayer : WorldUtils.getPlayersTrackingEntity(em_class2582)) {
             entityPlayer.sendMessage(new TextComponentString(string));
         }
     }
 
     public static void girlPlaySound(GirlEntity girl, SoundEvent sound, boolean bl) {
         Vec3d pos = girl.getPositionVector();
-        for (EntityPlayer player : cj_class134.a(girl)) {
+        for (EntityPlayer player : WorldUtils.getPlayersTrackingEntity(girl)) {
             Vec3d vec3d2;
             if (!bl) {
                 vec3d2 = pos;

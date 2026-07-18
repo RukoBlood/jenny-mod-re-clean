@@ -90,7 +90,7 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
     }
 
     ResourceLocation a(PyrocynicalEntity pyrocynical, double d) {
-        if (pyrocynical.a != -1) {
+        if (pyrocynical.triggerTick != -1) {
             return new ResourceLocation("sexmod", String.format("%s%s.png", PYRO_FAT_ANIM_FRAMES, this.b(pyrocynical)));
         }
         if (d < 3.0) {
@@ -111,14 +111,14 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
     }
 
     int b(PyrocynicalEntity al_class332) {
-        if (al_class332.a == -1) {
+        if (al_class332.triggerTick == -1) {
             return 0;
         }
-        return (int) Utils.clamp(this.minecraft.player.ticksExisted - al_class332.a, 1.0f, 30.0f);
+        return (int) Utils.clamp(this.minecraft.player.ticksExisted - al_class332.triggerTick, 1.0f, 30.0f);
     }
 
     float a(PyrocynicalEntity al_class332, float f) {
-        if (al_class332.a == -1) {
+        if (al_class332.triggerTick == -1) {
             return 0.0f;
         }
         int n = this.b(al_class332);
@@ -129,14 +129,14 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
     }
 
     float b(PyrocynicalEntity al_class332, float f) {
-        if (al_class332.a == -1) {
+        if (al_class332.triggerTick == -1) {
             return 1.0f;
         }
-        if (this.minecraft.player.ticksExisted - al_class332.a > 120) {
+        if (this.minecraft.player.ticksExisted - al_class332.triggerTick > 120) {
             return 0.0f;
         }
         int n = 90;
-        float f2 = Utils.clamp(this.minecraft.player.ticksExisted - al_class332.a, n, 120.0f) - (float)n;
+        float f2 = Utils.clamp(this.minecraft.player.ticksExisted - al_class332.triggerTick, n, 120.0f) - (float)n;
         float f3 = (f2 + f) / 30.0f;
         return 1.0f - f3;
     }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.trolmastercard.sexmod.Action;
-import com.trolmastercard.sexmod.FakeWorld;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.dr_class199;
 import com.trolmastercard.sexmod.e4_class223;
 import com.trolmastercard.sexmod.girls.GirlEntity;

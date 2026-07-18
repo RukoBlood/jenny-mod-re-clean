@@ -18,6 +18,7 @@ import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIPanic;
@@ -130,11 +131,11 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (this.currentAction() == Action.CITIZEN_CUM && (fp_class3242 == Action.CITIZEN_FAST || fp_class3242 == Action.COWGIRLSLOW)) {
+    public void setCurrentAction(Action action) {
+        if (this.currentAction() == Action.CITIZEN_CUM && (action == Action.CITIZEN_FAST || action == Action.COWGIRLSLOW)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     void void_c() {

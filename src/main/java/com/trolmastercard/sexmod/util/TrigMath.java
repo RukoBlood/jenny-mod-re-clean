@@ -13,7 +13,7 @@ public class TrigMath {
         return Math.atan2(dZ, Math.sqrt(dX * dX + dY * dY));
     }
 
-    public static float b(float f) {
+    public static float NormalizeAngle(float f) {
         if ((f %= 360.0f) < 0.0f) {
             f += 360.0f;
         }
@@ -44,10 +44,6 @@ public class TrigMath {
 
     public static double toDegrees(double rad) {
         return 57.29577951308232 * rad;
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

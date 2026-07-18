@@ -34,6 +34,7 @@ import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
@@ -595,30 +596,30 @@ implements ai_class30 {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
+    public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == Action.PAIZURI_CUM && (fp_class3242 == Action.PAIZURI_SLOW || fp_class3242 == Action.PAIZURI_FAST)) {
+        if (fp_class3243 == Action.PAIZURI_CUM && (action == Action.PAIZURI_SLOW || action == Action.PAIZURI_FAST)) {
             return;
         }
-        if (fp_class3243 == Action.NELSON_CUM && (fp_class3242 == Action.NELSON_SLOW || fp_class3242 == Action.NELSON_FAST)) {
+        if (fp_class3243 == Action.NELSON_CUM && (action == Action.NELSON_SLOW || action == Action.NELSON_FAST)) {
             return;
         }
-        if (fp_class3243 == Action.BREEDING_CUM_0 && (fp_class3242 == Action.BREEDING_SLOW_0 || fp_class3242 == Action.BREEDING_FAST_0)) {
+        if (fp_class3243 == Action.BREEDING_CUM_0 && (action == Action.BREEDING_SLOW_0 || action == Action.BREEDING_FAST_0)) {
             return;
         }
-        if (fp_class3242 == Action.PAIZURI_START && !this.world.isRemote) {
+        if (action == Action.PAIZURI_START && !this.world.isRemote) {
             this.void_m();
         }
-        if (fp_class3242 == Action.NELSON_INTRO && !this.world.isRemote) {
+        if (action == Action.NELSON_INTRO && !this.world.isRemote) {
             this.void_q();
         }
-        if (fp_class3242 == Action.NELSON_CUM) {
+        if (action == Action.NELSON_CUM) {
             this.entityDataManager.set(aA, true);
         }
-        if (fp_class3243 == Action.NELSON_CUM && fp_class3242 != Action.NELSON_CUM) {
+        if (fp_class3243 == Action.NELSON_CUM && action != Action.NELSON_CUM) {
             this.entityDataManager.set(aA, false);
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     void void_q() {

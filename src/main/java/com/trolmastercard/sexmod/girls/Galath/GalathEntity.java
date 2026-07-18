@@ -19,7 +19,6 @@
 package com.trolmastercard.sexmod.girls.Galath;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -224,7 +223,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     public Vec3d bL = null;
     public int aF = 0;
     public Vec3d bd = null;
-    public List<EntityWitherSkeleton> bI = new ArrayList<EntityWitherSkeleton>();
+    public List<EntityWitherSkeleton> witherSkeletons = new ArrayList<EntityWitherSkeleton>();
     public float aE = 0.0f;
     public long af = -1L;
     public long aH = -1L;
@@ -1179,7 +1178,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (this.bG == null || this.getDistance(this.bG.getX(), this.bG.getY(), this.bG.getZ()) > this.double_i() || this.aC > 175) {
             int n = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(10);
             int n2 = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(10);
-            int n3 = this.world.provider.getDimensionType() == DimensionType.NETHER ? (int)Math.ceil(this.posY) : cj_class134.a(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
+            int n3 = this.world.provider.getDimensionType() == DimensionType.NETHER ? (int)Math.ceil(this.posY) : WorldUtils.getSurfaceHeight(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
             this.bG = new BlockPos(this.getPosition().getX() + n, n3, this.getPosition().getZ() + n2);
             this.aC = 0;
         }
@@ -1282,7 +1281,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.ad_();
         this.aG();
         this.aA();
-        this.aD();
+        this.KillWitherSkeletons();
         this.void_O();
         this.Z();
     }
@@ -1321,42 +1320,42 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == Action.GALATH_DE_SUMMON) {
+    public void setCurrentAction(Action action) {
+        Action currentAction = this.currentAction();
+        if (currentAction == Action.GALATH_DE_SUMMON) {
             return;
         }
-        if (fp_class3243 == Action.CORRUPT_CUM && (fp_class3242 == Action.CORRUPT_FAST || fp_class3242 == Action.CORRUPT_SLOW)) {
+        if (currentAction == Action.CORRUPT_CUM && (action == Action.CORRUPT_FAST || action == Action.CORRUPT_SLOW)) {
             return;
         }
-        if (fp_class3243 == Action.RAPE_CUM && fp_class3242 == Action.RAPE_ON_GOING) {
+        if (currentAction == Action.RAPE_CUM && action == Action.RAPE_ON_GOING) {
             return;
         }
-        if (fp_class3243 == Action.MORNING_BLOWJOB_CUM && (fp_class3242 == Action.MORNING_BLOWJOB_SLOW || fp_class3242 == Action.MORNING_BLOWJOB_FAST)) {
+        if (currentAction == Action.MORNING_BLOWJOB_CUM && (action == Action.MORNING_BLOWJOB_SLOW || action == Action.MORNING_BLOWJOB_FAST)) {
             return;
         }
-        if (!this.world.isRemote && Action.a(fp_class3243, Action.CORRUPT_CUM, Action.RAPE_CUM, Action.MORNING_BLOWJOB_CUM)) {
+        if (!this.world.isRemote && Action.a(currentAction, Action.CORRUPT_CUM, Action.RAPE_CUM, Action.MORNING_BLOWJOB_CUM)) {
             GalathMangTracker.setLastCumTime(this.getID(), this.world.getTotalWorldTime());
         }
-        if (fp_class3242 == Action.CORRUPT_SLOW) {
+        if (action == Action.CORRUPT_SLOW) {
             this.aT = false;
-            if (fp_class3243 == Action.CORRUPT_INTRO) {
+            if (currentAction == Action.CORRUPT_INTRO) {
                 this.d(false);
             }
-            if (this.maybeMountedByMangFn() && fp_class3243 == Action.NULL) {
+            if (this.maybeMountedByMangFn() && currentAction == Action.NULL) {
                 this.d(true);
             }
         }
-        if (fp_class3243 == Action.GIVE_COIN && fp_class3242 == Action.NULL && !this.world.isRemote) {
-            this.ap();
+        if (currentAction == Action.GIVE_COIN && action == Action.NULL && !this.world.isRemote) {
+            this.GiveCoinToPlayer();
         }
-        if (fp_class3243 == Action.HUG_MANG && fp_class3242 == Action.NULL) {
+        if (currentAction == Action.HUG_MANG && action == Action.NULL) {
             this.al();
         }
-        if (fp_class3243 == Action.MORNING_BLOWJOB_CUM && fp_class3242 == Action.NULL) {
+        if (currentAction == Action.MORNING_BLOWJOB_CUM && action == Action.NULL) {
             this.aE();
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     void aE() {
@@ -1376,22 +1375,28 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         f8_class2932.c(true);
     }
 
-    void ap() {
-        EntityPlayer entityPlayer = this.getPlayerEntity();
-        if (entityPlayer == null) {
+    void GiveCoinToPlayer() {
+        EntityPlayer player = this.getPlayerEntity();
+        if (player == null) {
             return;
         }
-        ItemStack itemStack = entityPlayer.getHeldItemMainhand();
-        entityPlayer.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(GalathCoin.GALATH_COIN));
-        if (!itemStack.isEmpty()) {
-            entityPlayer.inventory.addItemStackToInventory(itemStack);
+        ItemStack heldItem = player.getHeldItemMainhand();
+
+        //Give player coin. If slot is not empty, just throw item in inventory.
+        player.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(GalathCoin.GALATH_COIN));
+        if (!heldItem.isEmpty()) {
+            player.inventory.addItemStackToInventory(heldItem);
         }
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
+
+        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)player);
+
         this.void_e((UUID)null);
         this.a((EntityLivingBase)null);
-        entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.GRAY) + "Defeating a succubus makes her accept the victor as her master, granting him a coin to which her soul is bound. Using the coin summons her, offering services on demand. If her master uses the coin on her or goes too far, she returns to the coin"));
+        //Congrats, you defeated and graped me. Here is the coin to spawn me.
+        player.sendMessage(new TextComponentString((Object)((Object)TextFormatting.GRAY) + "Defeating a succubus makes her accept the victor as her master, granting him a coin to which her soul is bound. Using the coin summons her, offering services on demand. If her master uses the coin on her or goes too far, she returns to the coin"));
+
         GalathMangTracker.a(this);
-        entityPlayer.setPositionAndUpdate(entityPlayer.posX, Math.ceil(entityPlayer.posY) + 1.0, entityPlayer.posZ);
+        player.setPositionAndUpdate(player.posX, Math.ceil(player.posY) + 1.0, player.posZ);
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1487,7 +1492,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (entityLivingBase == null) {
             return;
         }
-        for (EntityWitherSkeleton entityWitherSkeleton : this.bI) {
+        for (EntityWitherSkeleton entityWitherSkeleton : this.witherSkeletons) {
             if (entityWitherSkeleton.isDead || entityLivingBase.getDistance(entityWitherSkeleton) < 15.0f) continue;
             PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(entityWitherSkeleton.getPositionVector(), true), (Entity)this);
             entityWitherSkeleton.setDead();
@@ -1495,17 +1500,17 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         }
     }
 
-    void aD() {
-        if (!this.entityDataManager.get(bP).booleanValue()) {
+    void KillWitherSkeletons() {
+        if (!this.entityDataManager.get(bP)) {
             return;
         }
-        for (EntityWitherSkeleton entityWitherSkeleton : this.bI) {
-            if (entityWitherSkeleton.isDead) continue;
-            PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(entityWitherSkeleton.getPositionVector(), true), (Entity)this);
-            entityWitherSkeleton.setDead();
-            this.world.removeEntity(entityWitherSkeleton);
+        for (EntityWitherSkeleton witherSkeleton : this.witherSkeletons) {
+            if (witherSkeleton.isDead) continue;
+            PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(witherSkeleton.getPositionVector(), true), (Entity)this);
+            witherSkeleton.setDead();
+            this.world.removeEntity(witherSkeleton);
         }
-        this.bI.clear();
+        this.witherSkeletons.clear();
     }
 
     public static void void_c(EntityPlayer entityPlayer) {
@@ -1520,7 +1525,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     void aA() {
-        for (EntityWitherSkeleton entityWitherSkeleton : this.bI) {
+        for (EntityWitherSkeleton entityWitherSkeleton : this.witherSkeletons) {
             if (entityWitherSkeleton.isDead || entityWitherSkeleton.ticksExisted % 10 != 0) continue;
             Set<? extends EntityPlayer> set = ((WorldServer)this.world).getEntityTracker().getTrackingPlayers(entityWitherSkeleton);
             for (EntityPlayer entityPlayer : set) {
@@ -1531,12 +1536,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     void aG() {
         ArrayList<EntityWitherSkeleton> arrayList = new ArrayList<EntityWitherSkeleton>();
-        for (EntityWitherSkeleton entityWitherSkeleton : this.bI) {
+        for (EntityWitherSkeleton entityWitherSkeleton : this.witherSkeletons) {
             if (!entityWitherSkeleton.isDead) continue;
             arrayList.add(entityWitherSkeleton);
         }
         for (EntityWitherSkeleton entityWitherSkeleton : arrayList) {
-            this.bI.remove(entityWitherSkeleton);
+            this.witherSkeletons.remove(entityWitherSkeleton);
         }
     }
 
@@ -1868,7 +1873,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     @SideOnly(value=Side.CLIENT)
     public void a(String string, UUID uUID) {
         if ("ride".equals(string)) {
-            hf_class401.f();
+            GalathFlightUI.showUI();
             PackageHandler.networkWrapper.sendToServer((IMessage)new RequestRiding());
             return;
         }
@@ -1975,22 +1980,22 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         return (EntityLivingBase)this.world.getEntityByID(n);
     }
 
-    public static Float a(GalathEntity f__class2972, float f) {
+    public static Float a(GalathEntity galath, float f) {
         float f2;
-        Action fp_class3242 = f__class2972.currentAction();
-        if (fp_class3242 != Action.FLY && fp_class3242 != Action.SUMMON_SKELETON && fp_class3242 != Action.RAPE_PREPARE) {
+        Action galathAction = galath.currentAction();
+        if (galathAction != Action.FLY && galathAction != Action.SUMMON_SKELETON && galathAction != Action.RAPE_PREPARE) {
             return null;
         }
-        EntityLivingBase entityLivingBase = f__class2972.net_minecraft_entity_EntityLivingBase_M();
+        EntityLivingBase entityLivingBase = galath.net_minecraft_entity_EntityLivingBase_M();
         if (entityLivingBase == null) {
             return null;
         }
         Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
-        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(f__class2972.lastTickPosX, f__class2972.lastTickPosY, f__class2972.lastTickPosZ), f__class2972.getPositionVector(), (double)f);
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(galath.lastTickPosX, galath.lastTickPosY, galath.lastTickPosZ), galath.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
-        f__class2972.renderYawOffset = f2 = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
-        f__class2972.prevRenderYawOffset = f2;
-        return Float.valueOf(f2);
+        galath.renderYawOffset = f2 = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
+        galath.prevRenderYawOffset = f2;
+        return f2;
     }
 
     void c(float f) {
@@ -2634,7 +2639,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 }
                 case "flapControlled": {
                     if (!this.boolean_n()) break;
-                    hf_class401.f();
+                    GalathFlightUI.showUI();
                     this.PlaySound(SoundsHandler.MISC_FLAP, new int[0]);
                     Minecraft minecraft = Minecraft.getMinecraft();
                     EntityPlayerSP entityPlayerSP = minecraft.player;
@@ -2728,34 +2733,34 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
         @SideOnly(value=Side.CLIENT)
         @SubscribeEvent
-        public void a(InputEvent.KeyInputEvent keyInputEvent) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            if (!minecraft.gameSettings.keyBindJump.isKeyDown()) {
+        public void FlyBoost(InputEvent.KeyInputEvent event) {
+            Minecraft mc = Minecraft.getMinecraft();
+            if (!mc.gameSettings.keyBindJump.isKeyDown()) {
                 return;
             }
-            if (!hf_class401.d()) {
+            if (!GalathFlightUI.canBoost()) {
                 return;
             }
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-                if (!em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !minecraft.player.getPersistentID().equals(((GalathEntity) em_class2582).ax()))
+            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+                if (!girl.world.isRemote || !(girl instanceof GalathEntity) || !mc.player.getPersistentID().equals(((GalathEntity) girl).ax()))
                     continue;
-                hf_class401.a();
-                em_class2582.setCurrentAction(Action.BOOST);
+                GalathFlightUI.consumeCharge();
+                girl.setCurrentAction(Action.BOOST);
                 return;
             }
         }
 
         @SubscribeEvent
-        public void a(EntityMountEvent entityMountEvent) {
-            if (entityMountEvent.isMounting()) {
+        public void a(EntityMountEvent event) {
+            if (event.isMounting()) {
                 return;
             }
-            Entity mountedEntity = entityMountEvent.getEntityBeingMounted();
+            Entity mountedEntity = event.getEntityBeingMounted();
             if (!(mountedEntity instanceof GalathEntity)) {
                 return;
             }
             if (mountedEntity.world.isRemote) {
-                hf_class401.c();
+                GalathFlightUI.startFadeOutTimer();
                 return;
             }
             ((GalathEntity)mountedEntity).void_t();

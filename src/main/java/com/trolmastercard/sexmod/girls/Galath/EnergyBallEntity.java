@@ -151,7 +151,7 @@ extends EntityLiving {
         entityWitherSkeleton.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
         this.world.spawnEntity(entityWitherSkeleton);
         PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(vec3d, true), (Entity)this);
-        this.f.bI.add(entityWitherSkeleton);
+        this.f.witherSkeletons.add(entityWitherSkeleton);
     }
 
     boolean b(Vec3d vec3d) {

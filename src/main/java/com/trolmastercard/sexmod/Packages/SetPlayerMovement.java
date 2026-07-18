@@ -48,20 +48,15 @@ public class SetPlayerMovement implements IMessage {
                 return null;
             }
             HandlePlayerMovement.a(message.setActive);
-            Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0)
+            Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
             if (message.setActive) {
                 SexUI.hide();
             }
             return null;
         }
-
-                @Override
+        @Override
         public IMessage onMessage(SetPlayerMovement iMessage, MessageContext messageContext) {
             return this.onMessageMain((SetPlayerMovement)iMessage, messageContext);
-        }
-
-        private static Exception a(Exception exception) {
-            return exception;
         }
     }
 }

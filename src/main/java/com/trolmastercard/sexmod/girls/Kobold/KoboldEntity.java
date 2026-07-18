@@ -20,7 +20,6 @@ import com.google.common.base.Optional;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,7 @@ import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockLog;
@@ -1151,7 +1151,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
         int n = (int)((double)((blockPos3.getX() > 0 ? 1 : -1) * 20) * (d == (double)Math.abs(blockPos3.getX()) ? d3 : 1.0 - d3));
         int n2 = (int)((double)((blockPos3.getZ() > 0 ? 1 : -1) * 20) * (d == (double)Math.abs(blockPos3.getZ()) ? d3 : 1.0 - d3));
         BlockPos blockPos4 = this.getPosition().add(n, 0, n2);
-        blockPos4 = new BlockPos(blockPos4.getX(), cj_class134.a(this.world, blockPos4.getX(), blockPos4.getZ()) + 1, blockPos4.getZ());
+        blockPos4 = new BlockPos(blockPos4.getX(), WorldUtils.getSurfaceHeight(this.world, blockPos4.getX(), blockPos4.getZ()) + 1, blockPos4.getZ());
         return blockPos4;
     }
 
@@ -1161,7 +1161,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
         do {
             blockPos = this.getPosition();
             blockPos = blockPos.add((50 + this.getRNG().nextInt(50)) * (this.getRNG().nextBoolean() ? 1 : -1), 0, (50 + this.getRNG().nextInt(50)) * (this.getRNG().nextBoolean() ? 1 : -1));
-        } while (((blockPos = new BlockPos(blockPos.getX(), cj_class134.a(this.world, blockPos.getX(), blockPos.getZ()), blockPos.getZ())).getY() <= 0 || !this.getNavigator().canEntityStandOnPos(blockPos)) && ++n < 100);
+        } while (((blockPos = new BlockPos(blockPos.getX(), WorldUtils.getSurfaceHeight(this.world, blockPos.getX(), blockPos.getZ()), blockPos.getZ())).getY() <= 0 || !this.getNavigator().canEntityStandOnPos(blockPos)) && ++n < 100);
         KoboldManager.b(uUID, blockPos);
     }
 
@@ -1939,7 +1939,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
         if (this.ap == null || this.getDistance(this.ap.getX(), this.ap.getY(), this.ap.getZ()) > this.double_n() || this.ab > 100) {
             int n = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(5);
             int n2 = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(5);
-            int n3 = cj_class134.a(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
+            int n3 = WorldUtils.getSurfaceHeight(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
             this.ap = new BlockPos(this.getPosition().getX() + n, n3, this.getPosition().getZ() + n2);
             this.ab = 0;
         }
@@ -3004,7 +3004,7 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
-                    vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I() + 180.0f);
                     vec3d = vec3d.add(this.net_minecraft_util_math_Vec3d_o());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 70.0f));
                     break;
@@ -3203,10 +3203,6 @@ public class KoboldEntity extends e4_class223 implements bh_class82, IInventory,
             if (++this.a % 20 == 0) {
                 PackageHandler.networkWrapper.sendToServer((IMessage)new GetTribeUIValues());
             }
-        }
-
-        private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-            return concurrentModificationException;
         }
     }
 }

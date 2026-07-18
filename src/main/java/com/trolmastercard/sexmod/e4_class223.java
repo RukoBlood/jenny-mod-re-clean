@@ -5,6 +5,7 @@ package com.trolmastercard.sexmod;
 
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;

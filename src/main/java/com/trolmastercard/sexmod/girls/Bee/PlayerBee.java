@@ -87,11 +87,11 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (this.currentAction() == Action.CITIZEN_CUM && (fp_class3242 == Action.CITIZEN_FAST || fp_class3242 == Action.COWGIRLSLOW)) {
+    public void setCurrentAction(Action action) {
+        if (this.currentAction() == Action.CITIZEN_CUM && (action == Action.CITIZEN_FAST || action == Action.COWGIRLSLOW)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override

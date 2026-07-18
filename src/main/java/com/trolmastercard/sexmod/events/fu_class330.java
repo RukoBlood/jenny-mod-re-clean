@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.trolmastercard.sexmod.Action;
-import com.trolmastercard.sexmod.cj_class134;
+import com.trolmastercard.sexmod.WorldUtils;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.Allie.PlayerAllie;
 import com.trolmastercard.sexmod.girls.Bee.PlayerBee;
@@ -87,7 +87,7 @@ public class fu_class330 {
         if (!ei_class2512.boolean_v()) {
             return;
         }
-        if (!cj_class134.a(world, blockPos, rightClickBlock.getHitVec(), rightClickBlock.getFace(), entityPlayer)) {
+        if (!WorldUtils.checkBedBlock(world, blockPos, rightClickBlock.getHitVec(), rightClickBlock.getFace(), entityPlayer)) {
             return;
         }
         if (ei_class2512.getDataManager().get(GirlEntity.G).booleanValue()) {

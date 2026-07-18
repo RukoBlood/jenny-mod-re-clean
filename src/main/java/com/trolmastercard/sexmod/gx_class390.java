@@ -66,7 +66,7 @@ public class gx_class390 {
     }
 
     public static void a(EntityLivingBase entityLivingBase, float f) {
-        b = cj_class134.a(entityLivingBase, f);
+        b = WorldUtils.getLightDirectionVector(entityLivingBase, f);
     }
 
     public static void a(List<IBone> list, HashSet<String> hashSet, c3_class112 c3_class1122) {

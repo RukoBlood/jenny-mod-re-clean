@@ -122,14 +122,14 @@ extends PlayerGirl {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (this.currentAction() == Action.ANAL_CUM && (fp_class3242 == Action.ANAL_FAST || fp_class3242 == Action.ANAL_SLOW)) {
+    public void setCurrentAction(Action action) {
+        if (this.currentAction() == Action.ANAL_CUM && (action == Action.ANAL_FAST || action == Action.ANAL_SLOW)) {
             return;
         }
-        if (this.currentAction() == Action.PRONE_DOGGY_CUM && (fp_class3242 == Action.PRONE_DOGGY_HARD || fp_class3242 == Action.PRONE_DOGGY_SOFT)) {
+        if (this.currentAction() == Action.PRONE_DOGGY_CUM && (action == Action.PRONE_DOGGY_HARD || action == Action.PRONE_DOGGY_SOFT)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override

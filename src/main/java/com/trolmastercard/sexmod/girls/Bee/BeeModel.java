@@ -4,7 +4,7 @@
 package com.trolmastercard.sexmod.girls.Bee;
 
 import com.trolmastercard.sexmod.Action;
-import com.trolmastercard.sexmod.FakeWorld;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlModel;
 import net.minecraft.util.ResourceLocation;

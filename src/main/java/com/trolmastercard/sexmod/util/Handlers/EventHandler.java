@@ -38,7 +38,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 //Registers Events
 
 public class EventHandler {
-    public static void a(boolean bl) throws IOException {
+    public static void Register(boolean bl) throws IOException {
         MinecraftForge.EVENT_BUS.register((Object)new GirlCombatProtection());
         MinecraftForge.EVENT_BUS.register((Object)new eo_class262());
         MinecraftForge.EVENT_BUS.register((Object)new q_class419());
@@ -100,7 +100,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new CustomModel.a_inner95());
         MinecraftForge.EVENT_BUS.register((Object)new EscapeMinigameUI());
         MinecraftForge.EVENT_BUS.register((Object)new ga_class358());
-        MinecraftForge.EVENT_BUS.register((Object)new hf_class401());
+        MinecraftForge.EVENT_BUS.register((Object)new GalathFlightUI());
     }
 
     static boolean checkIfAsked() {

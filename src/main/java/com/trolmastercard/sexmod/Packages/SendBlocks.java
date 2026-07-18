@@ -10,7 +10,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.cj_class134;
+import com.trolmastercard.sexmod.WorldUtils;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.gm_class376;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -99,7 +99,7 @@ implements IMessage {
                     IBlockState iBlockState = world.getBlockState(blockPos);
                     BlockPos blockPos2 = null;
                     if (iBlockState.getBlock() instanceof BlockBed) {
-                        blockPos2 = cj_class134.a(blockPos, iBlockState);
+                        blockPos2 = WorldUtils.getBedPairPosition(blockPos, iBlockState);
                     }
                     if (iBlockState.getBlock() instanceof BlockChest) {
                         object = ((BlockChest)iBlockState.getBlock()).chestType;

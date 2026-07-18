@@ -19,6 +19,7 @@ import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -184,24 +185,24 @@ implements bh_class82 {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
+    public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
-        if (fp_class3242 == Action.HUGSELECTED && !this.world.isRemote) {
+        if (action == Action.HUGSELECTED && !this.world.isRemote) {
             this.ai = 79;
         }
-        if (fp_class3243 == Action.MISSIONARY_CUM && (fp_class3242 == Action.MISSIONARY_FAST || fp_class3242 == Action.MISSIONARY_SLOW)) {
+        if (fp_class3243 == Action.MISSIONARY_CUM && (action == Action.MISSIONARY_FAST || action == Action.MISSIONARY_SLOW)) {
             return;
         }
-        if (fp_class3243 == Action.COWGIRLCUM && (fp_class3242 == Action.COWGIRLSLOW || fp_class3242 == Action.COWGIRLFAST)) {
+        if (fp_class3243 == Action.COWGIRLCUM && (action == Action.COWGIRLSLOW || action == Action.COWGIRLFAST)) {
             return;
         }
-        if (fp_class3243 == Action.CARRY_CUM && (fp_class3242 == Action.CARRY_SLOW || fp_class3242 == Action.CARRY_FAST)) {
+        if (fp_class3243 == Action.CARRY_CUM && (action == Action.CARRY_SLOW || action == Action.CARRY_FAST)) {
             return;
         }
-        if (fp_class3242 == Action.CARRY_INTRO) {
+        if (action == Action.CARRY_INTRO) {
             this.ak = 0;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override

@@ -461,15 +461,15 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (!this.world.isRemote && fp_class3242 == Action.NULL && this.boolean_Q()) {
+    public void setCurrentAction(Action action) {
+        if (!this.world.isRemote && action == Action.NULL && this.boolean_Q()) {
             System.out.println("prevented a potential animation break");
             return;
         }
-        if (fp_class3242 == Action.STRIP) {
+        if (action == Action.STRIP) {
             this.an = this.world.isRemote ? 5 : 0;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     void f(EntityPlayer entityPlayer) {

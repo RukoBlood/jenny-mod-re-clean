@@ -21,6 +21,7 @@ import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.GirlRenderer;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

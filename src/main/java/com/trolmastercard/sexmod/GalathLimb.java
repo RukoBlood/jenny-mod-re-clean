@@ -11,10 +11,10 @@ import net.minecraft.entity.Entity;
 /*
 * Related to PlayerGalath
 * */
-public class a5_class12 extends ModelBase implements IRenderer {
+public class GalathLimb extends ModelBase implements IRenderer {
     final private ModelRenderer renderer;
 
-    public a5_class12() {
+    public GalathLimb() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.renderer = new ModelRenderer(this);

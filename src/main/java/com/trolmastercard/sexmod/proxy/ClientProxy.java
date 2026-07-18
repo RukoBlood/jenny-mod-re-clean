@@ -20,6 +20,7 @@ import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.RenderHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Handlers.EventHandler;
+import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.KeyBinding;
@@ -58,15 +59,15 @@ extends CommonProxy {
         Main.setConfigs();
         SoundsHandler.RegisterSounds();
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new et_class272(true));
-        EventHandler.a(true);
+        EventHandler.Register(true);
         PackageHandler.RegisterMessages();
-        Minecraft minecraft = Minecraft.getMinecraft();
-        RenderManager renderManager = minecraft.getRenderManager();
-        FakeWorld gj_class3722 = new FakeWorld();
+        Minecraft mc = Minecraft.getMinecraft();
+        RenderManager renderManager = mc.getRenderManager();
+        FakeWorld fakeWorld = new FakeWorld();
         IS_PRELOADING = true;
         try {
-            for (PlayerGirlEntity fy_class3352 : PlayerGirlEntity.values()) {
-                renderManager.renderEntity(fy_class3352.npcClass.getDeclaredConstructor(World.class).newInstance(gj_class3722), 0.0, 0.0, 0.0, 0.0f, 0.0f, false);
+            for (PlayerGirlEntity entity : PlayerGirlEntity.values()) {
+                renderManager.renderEntity(entity.npcClass.getDeclaredConstructor(World.class).newInstance(fakeWorld), 0.0, 0.0, 0.0, 0.0f, 0.0f, false);
             }
         } catch (Exception exception) {
             System.out.println("error while preloading:");

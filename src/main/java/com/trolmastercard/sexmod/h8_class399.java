@@ -57,10 +57,10 @@ public enum h8_class399 {
         for (int i = -10; i < 10; ++i) {
             for (int j = -10; j < 10; ++j) {
                 for (int k = -10; k < 10; ++k) {
-                    RayTraceResult rayTraceResult;
+                    RayTraceResult result;
                     if (i == 0 && j == 0 && k == 0) continue;
                     BlockPos blockPos3 = blockPos2.add(new BlockPos(i, j, k));
-                    if (bl && blockPos.getY() >= blockPos3.getY() || !world.isAirBlock(blockPos3) || !world.isAirBlock(blockPos3.up()) || !world.isAirBlock(blockPos3.up().up()) || (rayTraceResult = world.rayTraceBlocks(new Vec3d(blockPos), new Vec3d(blockPos3), true, true, true)) != null) continue;
+                    if (bl && blockPos.getY() >= blockPos3.getY() || !world.isAirBlock(blockPos3) || !world.isAirBlock(blockPos3.up()) || !world.isAirBlock(blockPos3.up().up()) || (result = world.rayTraceBlocks(new Vec3d(blockPos), new Vec3d(blockPos3), true, true, true)) != null) continue;
                     int n2 = blockPos3.getY();
                     while (--n2 >= 0 && world.getBlockState(new BlockPos(blockPos3.getX(), n2, blockPos3.getZ())).getBlock() instanceof BlockAir) {
                     }
@@ -160,7 +160,7 @@ public enum h8_class399 {
         }
     }, f__class2972 -> f__class2972.ad >= 45, f__class2972 -> {
         f__class2972.ad = 0;
-    }, true, f__class2972 -> f__class2972.bI.size() < 2, true),
+    }, true, f__class2972 -> f__class2972.witherSkeletons.size() < 2, true),
     ATTACK_SWORD(f__class2972 -> {
         f__class2972.a(0);
         f__class2972.setCurrentAction(Action.ATTACK_SWORD);
@@ -255,12 +255,12 @@ public enum h8_class399 {
             Vec3d bl2 = VectorMath.rotate(vec3d, f__class2972.java_lang_Float_I().floatValue());
             d2 = Math.abs(bl2.x);
             if (d2 > (double)0.65f) continue;
-            for (EntityWitherSkeleton by : f__class2972.bI) {
+            for (EntityWitherSkeleton by : f__class2972.witherSkeletons) {
                 Vec3d d3 = by.getPositionVector();
                 by.world.removeEntity(by);
                 PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(d3, true), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(by.dimension, d3.x, d3.y, d3.z, 50.0));
             }
-            f__class2972.bI.clear();
+            f__class2972.witherSkeletons.clear();
             EntityPlayerMP d3 = (EntityPlayerMP)object2;
             f__class2972.c(object2.getPositionVector());
             f__class2972.void_e(object2.getPersistentID());
@@ -294,7 +294,7 @@ public enum h8_class399 {
         vec3d3 = bl ? new Vec3d(Reference.LerpDouble(vec3d6.x, vec3d.x, Math.min(1.0, d2)), Reference.LerpDouble(vec3d6.y, vec3d.y, Math.min(1.0, Reference.EaseInCubic(d2))), Reference.LerpDouble(vec3d6.z, vec3d.z, Math.min(1.0, d2))) : new Vec3d(Reference.LerpDouble(vec3d8.x, vec3d6.x, d2), Reference.LerpDouble(vec3d8.y, vec3d6.y, Reference.EaseOutCubic(d2)), Reference.LerpDouble(vec3d8.z, vec3d6.z, d2));
         f__class2972.setPosition(vec3d3.x, vec3d3.y, vec3d3.z);
         if (bl) {
-            f__class2972.getDataManager().set(GalathEntity.bO, Float.valueOf((float)d2));
+            f__class2972.getDataManager().set(GalathEntity.bO, (float) d2);
         }
     }, f__class2972 -> {
         if (f__class2972.currentAction() == Action.RAPE_INTRO) {
@@ -313,7 +313,7 @@ public enum h8_class399 {
         f__class2972.O = null;
         f__class2972.bd = null;
         f__class2972.aF = 0;
-        f__class2972.getDataManager().set(GalathEntity.bO, Float.valueOf(0.0f));
+        f__class2972.getDataManager().set(GalathEntity.bO, 0.0f);
     }, true, f__class2972 -> true, true);
 
     final h__class400 a;
@@ -324,14 +324,14 @@ public enum h8_class399 {
     final public boolean applyAttackCoolDown;
     final public boolean onlyDoThisOnPlayers;
 
-    private h8_class399(b2_class62 b2_class622, ao_class36 ao_class362, h__class400 h__class4002, u_class425 u_class4252, boolean bl, g1_class342 g1_class3422, boolean bl2) {
+    private h8_class399(b2_class62 b2_class622, ao_class36 ao_class362, h__class400 h__class4002, u_class425 u_class4252, boolean applyAttackCoolDown, g1_class342 g1_class3422, boolean onlyDoThisOnPlayers) {
         this.a = h__class4002;
         this.f = b2_class622;
         this.c = ao_class362;
         this.b = u_class4252;
-        this.applyAttackCoolDown = bl;
+        this.applyAttackCoolDown = applyAttackCoolDown;
         this.d = g1_class3422;
-        this.onlyDoThisOnPlayers = bl2;
+        this.onlyDoThisOnPlayers = onlyDoThisOnPlayers;
     }
 
     public void b(GalathEntity f__class2972) {
@@ -352,10 +352,6 @@ public enum h8_class399 {
 
     public boolean d(GalathEntity f__class2972) {
         return this.d.a(f__class2972);
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

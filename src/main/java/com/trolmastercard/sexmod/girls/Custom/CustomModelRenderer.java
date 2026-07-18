@@ -155,7 +155,7 @@ extends GeoEntityRenderer<CustomModelEntity> {
             return;
         }
         GL11.glDisable(2896);
-        this.j = b_inner962.i() == c8_class117.SEXMOD ? cj_class134.a(cy_class1532, f) : null;
+        this.j = b_inner962.i() == c8_class117.SEXMOD ? WorldUtils.getLightDirectionVector(cy_class1532, f) : null;
     }
 
     // a

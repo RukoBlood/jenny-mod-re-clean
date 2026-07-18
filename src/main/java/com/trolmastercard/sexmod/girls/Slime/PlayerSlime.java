@@ -90,14 +90,14 @@ extends PlayerGirl {
     }
 
     @Override
-    public void setCurrentAction(Action fp_class3242) {
-        if (this.currentAction() == Action.CUMBLOWJOB && (fp_class3242 == Action.THRUSTBLOWJOB || fp_class3242 == Action.SUCKBLOWJOB)) {
+    public void setCurrentAction(Action action) {
+        if (this.currentAction() == Action.CUMBLOWJOB && (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB)) {
             return;
         }
-        if (this.currentAction() == Action.DOGGYCUM && (fp_class3242 == Action.DOGGYFAST || fp_class3242 == Action.DOGGYSLOW)) {
+        if (this.currentAction() == Action.DOGGYCUM && (action == Action.DOGGYFAST || action == Action.DOGGYSLOW)) {
             return;
         }
-        super.setCurrentAction(fp_class3242);
+        super.setCurrentAction(action);
     }
 
     @Override
