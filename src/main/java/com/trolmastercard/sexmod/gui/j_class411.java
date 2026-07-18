@@ -147,7 +147,7 @@ public class j_class411 extends GuiScreen {
         GL11.glEnable(3042);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glBlendFunc(770, 771);
-        this.m = Math.min(1.0f, this.m + this.mc.getTickLength() / 5.0f)
+        this.m = Math.min(1.0f, this.m + this.mc.getTickLength() / 5.0f);
         float f2 = (float) this.a((double) this.m);
         float f3 = (1.0f - f2) * 100.0f;
         this.a += (float) (n < this.width / 2 && n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
