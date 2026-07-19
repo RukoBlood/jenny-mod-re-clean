@@ -10,7 +10,6 @@
  */
 package com.trolmastercard.sexmod;
 
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 
 import com.trolmastercard.sexmod.util.Reference;
@@ -40,6 +39,7 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(value=Side.CLIENT)
 //gm
 //Mark related stuff
+//P.S. Dragon Staff related
 public class gm_class376 {
     final static Vec3i e = new Vec3i(255, 0, 0);
     final static Vec3i g = new Vec3i(0, 255, 0);

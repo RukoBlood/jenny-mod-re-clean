@@ -54,8 +54,8 @@ public class PackageHandler {
         networkWrapper.registerMessage(CatEatingDone.a_inner374.class, CatEatingDone.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(CatThrowAwayItem.a_inner198.class, CatThrowAwayItem.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(ClaimTribe.a_inner355.class, ClaimTribe.class, PackageHandler.discriminator(), Side.SERVER);
-        networkWrapper.registerMessage(GetTribeUIValues.a_inner64.class, GetTribeUIValues.class, PackageHandler.discriminator(), Side.SERVER);
-        networkWrapper.registerMessage(GetTribeUIValues.a_inner64.class, GetTribeUIValues.class, PackageHandler.discriminator(), Side.CLIENT);
+        networkWrapper.registerMessage(GetTribeUIValues.Handler.class, GetTribeUIValues.class, PackageHandler.discriminator(), Side.SERVER);
+        networkWrapper.registerMessage(GetTribeUIValues.Handler.class, GetTribeUIValues.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(SetTribeFollowMode.a_inner316.class, SetTribeFollowMode.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(FallTree.a_inner303.class, FallTree.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SendBlocks.Handler.class, SendBlocks.class, PackageHandler.discriminator(), Side.CLIENT);

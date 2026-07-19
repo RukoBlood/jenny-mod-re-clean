@@ -15,7 +15,7 @@ import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.gui.j_class411;
+import com.trolmastercard.sexmod.gui.DragonStaffGUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
@@ -72,31 +72,27 @@ public class GetTribeUIValues implements IMessage {
         }
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
-    public static class a_inner64
+    public static class Handler
     implements IMessageHandler<GetTribeUIValues, IMessage> {
-        public IMessage a(GetTribeUIValues b3_class632, MessageContext messageContext) {
-            if (!b3_class632.a) {
+        public IMessage a(GetTribeUIValues msg, MessageContext ctx) {
+            if (!msg.a) {
                 System.out.println("received an invalid message @GetTribeUIValues :(");
                 return null;
             }
-            if (messageContext.side.isClient()) {
-                j_class411.d = b3_class632.b;
-                KoboldEntity.aY = b3_class632.c;
+            if (ctx.side.isClient()) {
+                DragonStaffGUI.isTribeFollowing = msg.b;
+                KoboldEntity.aY = msg.c;
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 Object object;
-                UUID uUID = KoboldManager.findTribeIdWith(messageContext.getServerHandler().player.getPersistentID());
+                UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
                 if (uUID == null) {
-                    PackageHandler.networkWrapper.sendTo((IMessage) GetTribeUIValues.a(), messageContext.getServerHandler().player);
+                    PackageHandler.networkWrapper.sendTo((IMessage) GetTribeUIValues.a(), ctx.getServerHandler().player);
                     return;
                 }
                 boolean bl = KoboldManager.c(uUID);
-                EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
+                EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
                 HashMap<UUID, BlockPos> hashMap = KoboldManager.a(uUID, entityPlayerMP.world);
                 List<KoboldEntity> list = KoboldManager.n(uUID);
                 ArrayList<Vector4d> arrayList = new ArrayList<Vector4d>();

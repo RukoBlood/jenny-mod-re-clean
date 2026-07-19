@@ -17,7 +17,7 @@ package com.trolmastercard.sexmod;
 
 import com.trolmastercard.sexmod.Packages.GetTribeUIValues;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
-import com.trolmastercard.sexmod.gui.j_class411;
+import com.trolmastercard.sexmod.gui.DragonStaffGUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -107,7 +107,7 @@ implements IAnimatable {
 
         @SideOnly(value=Side.CLIENT)
         void a() {
-            Minecraft.getMinecraft().displayGuiScreen(new j_class411());
+            Minecraft.getMinecraft().displayGuiScreen(new DragonStaffGUI());
             PackageHandler.networkWrapper.sendToServer((IMessage)new GetTribeUIValues());
         }
 
