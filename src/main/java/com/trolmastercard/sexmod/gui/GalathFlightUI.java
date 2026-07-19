@@ -5,8 +5,9 @@
  *  net.minecraftforge.client.event.RenderGameOverlayEvent
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui;
 
+import com.trolmastercard.sexmod.FlightUITextureBounds;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.client.Minecraft;

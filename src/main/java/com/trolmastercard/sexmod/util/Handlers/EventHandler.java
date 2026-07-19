@@ -27,6 +27,7 @@ import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.girls.Allie.PlayerAllieRenderer;
 import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblin;
 import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
+import com.trolmastercard.sexmod.gui.GalathFlightUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.world.NameStorage;
