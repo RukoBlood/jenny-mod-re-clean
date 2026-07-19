@@ -18,32 +18,32 @@ extends GirlRenderer {
     }
 
     @Override
-    public void render(GeoModel geoModel, GirlEntity em_class2582, float f, float f2, float f3, float f4, float f5) {
-        AllieEntity ev_class2752 = (AllieEntity)em_class2582;
-        if (em_class2582.currentAction() == Action.NULL && !em_class2582.boolean_h()) {
+    public void render(GeoModel model, GirlEntity entity, float partialTicks, float r, float g, float b, float a) {
+        AllieEntity allieEntity = (AllieEntity) entity;
+        if (entity.currentAction() == Action.NULL && !entity.boolean_h()) {
             return;
         }
-        f5 = ev_class2752.U = ev_class2752.U == 1.0f ? ev_class2752.U : ev_class2752.U - 0.01f;
-        GlStateManager.scale(f5, f5, f5);
-        GlStateManager.translate(0.0f, f5 == 1.0f ? 0.0f : 3.0f - f5 * 3.0f, 0.0f);
-        super.render(geoModel, em_class2582, f, f2, f3, f4, f5);
+        a = allieEntity.U = allieEntity.U == 1.0f ? allieEntity.U : allieEntity.U - 0.01f;
+        GlStateManager.scale(a, a, a);
+        GlStateManager.translate(0.0f, a == 1.0f ? 0.0f : 3.0f - a * 3.0f, 0.0f);
+        super.render(model, entity, partialTicks, r, g, b, a);
     }
 
     @Override
-    protected void a(double d, double d2, double d3) {
-        if (this.j.currentAction() == Action.NULL) {
+    protected void renderNameTag(double x, double y, double z) {
+        if (this.renderEntity.currentAction() == Action.NULL) {
             return;
         }
-        if (this.j.boolean_h()) {
+        if (this.renderEntity.boolean_h()) {
             return;
         }
-        if (this.j.currentAction().hideNameTag) {
+        if (this.renderEntity.currentAction().hideNameTag) {
             return;
         }
-        if (AllieRenderer.i.getRenderManager().renderViewEntity == null) {
+        if (AllieRenderer.mc.getRenderManager().renderViewEntity == null) {
             return;
         }
-        this.renderLivingLabel(this.j, this.j.java_lang_String_ab(), d, d2 + (double)this.j.float_i(), d3, 300);
+        this.renderLivingLabel(this.renderEntity, this.renderEntity.java_lang_String_ab(), x, y + (double)this.renderEntity.float_i(), z, 300);
     }
 }
 

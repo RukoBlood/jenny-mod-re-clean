@@ -87,7 +87,7 @@ public class e__class234 {
         double d6 = Math.PI / 180 * (double)player.rotationYaw;
         playerGirl.ao = new Vector2f((float)(d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float)(d4 * Math.sin(d6) + d5 * Math.cos(d6)));
         float f2 = playerGirl.boolean_z() ? e__class234.a(playerGirl, player) : 0.0f;
-        PlayerGirlRenderer.v = true;
+        PlayerGirlRenderer.forceRenderNextFrame = true;
         renderManager.renderEntity(playerGirl, d, d2 + (double)f2, d3, 90.0f, f, false);
     }
 

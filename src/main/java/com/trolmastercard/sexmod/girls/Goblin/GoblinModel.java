@@ -116,7 +116,7 @@ extends GirlModel<GirlEntity> {
         if (em_class2582.currentAction() != Action.START_THROWING) {
             return;
         }
-        if (this.f.gameSettings.thirdPersonView != 0 || !this.f.player.getPersistentID().equals(((PlayerGirl)em_class2582).java_util_UUID_m())) {
+        if (this.f.gameSettings.thirdPersonView != 0 || !this.f.player.getPersistentID().equals(((PlayerGirl)em_class2582).getOwnerUserUUID())) {
             return;
         }
         IBone iBone = animationProcessor.getBone("body");

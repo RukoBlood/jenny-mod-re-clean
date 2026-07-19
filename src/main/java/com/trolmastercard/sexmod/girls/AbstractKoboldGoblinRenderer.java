@@ -8,7 +8,7 @@
  *  javax.vecmath.Vector4f
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,7 +19,8 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.BoneDeformProcessor;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
@@ -54,7 +55,7 @@ public abstract class AbstractKoboldGoblinRenderer<G extends AbstractGoblinKobol
 
     protected Vec3i getBoneColor(GeoBone bone) {
         String boneName = bone.getName();
-        int compositeKey = boneName.hashCode() + ((AbstractGoblinKoboldEntity)this.j).getPersistentID().hashCode();
+        int compositeKey = boneName.hashCode() + ((AbstractGoblinKoboldEntity)this.renderEntity).getPersistentID().hashCode();
         Vec3i cachedColor = colorCache.get(compositeKey);
         if (cachedColor != null) {
             return cachedColor;
@@ -92,8 +93,8 @@ public abstract class AbstractKoboldGoblinRenderer<G extends AbstractGoblinKobol
         GlStateManager.rotate((float)rotation.x, 1.0f, 0.0f, 0.0f);
         GlStateManager.rotate((float)rotation.y, 0.0f, 1.0f, 0.0f);
         GlStateManager.rotate((float)rotation.z, 0.0f, 0.0f, 1.0f);
-        Minecraft.getMinecraft().getItemRenderer().renderItem(this.j, heldItem, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
-        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.j)));
+        Minecraft.getMinecraft().getItemRenderer().renderItem(this.renderEntity, heldItem, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         GL11.glDisable(GL11.GL_LIGHTING);
         GlStateManager.popMatrix();
@@ -128,18 +129,18 @@ public abstract class AbstractKoboldGoblinRenderer<G extends AbstractGoblinKobol
     }
 
     @Override
-    public void renderCustomBones(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a, double textureOffset) {
-        if (((AbstractGoblinKoboldEntity)this.j).world instanceof FakeWorld) {
+    public void renderCustomBones(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a, double uOffset) {
+        if (((AbstractGoblinKoboldEntity)this.renderEntity).world instanceof FakeWorld) {
             return;
         }
         String boneName = bone.getName();
         if (boneName.equals("weapon")) {
             this.RenderHeldItem(buffer, bone);
         }
-        if (boneName.equals("itemRenderer") && ((AbstractGoblinKoboldEntity)this.j).currentAction() == Action.PAYMENT) {
-            this.b(buffer, bone);
+        if (boneName.equals("itemRenderer") && ((AbstractGoblinKoboldEntity)this.renderEntity).currentAction() == Action.PAYMENT) {
+            this.renderTradeOverlay(buffer, bone);
         }
-        this.a(buffer, bone.getName(), bone);
+        this.onBoneProcessing(buffer, bone.getName(), bone);
         MATRIX_STACK.push();
         MATRIX_STACK.translate(bone);
         MATRIX_STACK.moveToPivot(bone);
@@ -150,21 +151,21 @@ public abstract class AbstractKoboldGoblinRenderer<G extends AbstractGoblinKobol
             for (GeoCube cube : bone.childCubes) {
                 MATRIX_STACK.push();
                 GlStateManager.pushMatrix();
-                this.q = bone;
-                this.renderCubeGeometry(buffer, cube, bone, r, g, b, a, textureOffset);
+                this.currentRenderingBone = bone;
+                this.renderCubeGeometry(buffer, cube, bone, r, g, b, a, uOffset);
                 GlStateManager.popMatrix();
                 MATRIX_STACK.pop();
             }
             for (GeoBone childBone : bone.childBones) {
-                this.renderCustomBones(buffer, childBone, r, g, b, a, textureOffset);
+                this.renderCustomBones(buffer, childBone, r, g, b, a, uOffset);
             }
         }
         MATRIX_STACK.pop();
     }
 
     @Override
-    public void renderRecursively(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a) {
-        this.renderCustomBones(buffer, bone, r, g, b, a, 0.0);
+    public void renderRecursively(BufferBuilder buffer, GeoBone bone, float red, float green, float blue, float alpha) {
+        this.renderCustomBones(buffer, bone, red, green, blue, alpha, 0.0);
     }
 
     public void renderCubeGeometry(BufferBuilder buffer, GeoCube cube, GeoBone bone, float r, float g, float b, float a, double textureOffset) {

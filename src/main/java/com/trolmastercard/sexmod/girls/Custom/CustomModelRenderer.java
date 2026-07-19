@@ -199,7 +199,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (!(em_class2583 instanceof PlayerGirl)) {
             em_class2582 = em_class2583;
         } else {
-            object2 = ((PlayerGirl)em_class2583).java_util_UUID_m();
+            object2 = ((PlayerGirl)em_class2583).getOwnerUserUUID();
             if (object2 == null) {
                 return;
             }
@@ -296,7 +296,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (em_class2582 == null) {
             return null;
         }
-        EntityLivingBase entityLivingBase = !(em_class2582 instanceof PlayerGirl) ? em_class2582 : ((entityPlayer = cy_class1532.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).java_util_UUID_m())) == null ? em_class2582 : entityPlayer);
+        EntityLivingBase entityLivingBase = !(em_class2582 instanceof PlayerGirl) ? em_class2582 : ((entityPlayer = cy_class1532.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID())) == null ? em_class2582 : entityPlayer);
         return entityLivingBase;
     }
 

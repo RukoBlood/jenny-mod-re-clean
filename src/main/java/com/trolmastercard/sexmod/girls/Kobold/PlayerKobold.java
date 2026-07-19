@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.TeleportPlayer;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
@@ -684,10 +685,6 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
         animationData.addAnimationController(this.actionController);
         animationData.addAnimationController(this.movementController);
         animationData.addAnimationController(this.eyesController);
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

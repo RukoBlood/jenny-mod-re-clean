@@ -48,21 +48,21 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void void_c() {
+    protected void preRenderCallback() {
         GlStateManager.translate(0.0f, -1.1f, 0.0f);
         GlStateManager.scale(0.7f, 0.7f, 0.7f);
     }
 
     @Override
-    protected void a(boolean bl, ItemStack itemStack) {
-        super.a(bl, itemStack);
-        switch (itemStack.getItem().getItemUseAction(itemStack)) {
+    protected void applyItemPostRotation(boolean isLeftHand, ItemStack stack) {
+        super.applyItemPostRotation(isLeftHand, stack);
+        switch (stack.getItem().getItemUseAction(stack)) {
             case BLOCK: 
             case BOW: {
                 break;
             }
             default: {
-                if (!bl) {
+                if (!isLeftHand) {
                     GlStateManager.rotate(20.0f, 1.0f, 0.0f, 0.0f);
                 }
                 GlStateManager.translate(0.0, 0.05, 0.0);
@@ -71,9 +71,9 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void a(boolean bl) {
-        super.a(bl);
-        if (bl) {
+    protected void applyBowRotation(boolean isLeftHand) {
+        super.applyBowRotation(isLeftHand);
+        if (isLeftHand) {
             GlStateManager.translate(0.15, 0.0, 0.0);
         } else {
             GlStateManager.translate(-0.05, 0.0, 0.0);
@@ -81,14 +81,14 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void a(boolean bl, boolean bl2) {
-        super.a(bl, bl2);
-        if (bl && !bl2) {
+    protected void applyShieldBlockingTransform(boolean isLeftHand, boolean isActive) {
+        super.applyShieldBlockingTransform(isLeftHand, isActive);
+        if (isLeftHand && !isActive) {
             GlStateManager.translate(-0.025, -0.1, -0.1);
             GlStateManager.rotate(10.0f, 1.0f, 0.0f, 0.0f);
             return;
         }
-        if (!bl && !bl2) {
+        if (!isLeftHand && !isActive) {
             GlStateManager.translate(-0.05, -0.125, 0.125);
             GlStateManager.rotate(50.0f, 1.0f, 0.0f, 0.0f);
             return;
@@ -96,26 +96,26 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void a(String string, GeoBone geoBone) {
-        if (this.w.getDataManager().get(GirlEntity.G).booleanValue()) {
+    protected void onBoneRenderStart(String boneName, GeoBone geoBone) {
+        if (this.currentGirl.getDataManager().get(GirlEntity.G).booleanValue()) {
             return;
         }
-        if ("tail".equals(string)) {
+        if ("tail".equals(boneName)) {
             this.a(geoBone, 0.0f, 0.0f, 1.0f);
         }
-        if ("body".equals(string)) {
+        if ("body".equals(boneName)) {
             this.a(geoBone);
         }
-        if (this.w.currentAction() == Action.BOW) {
+        if (this.currentGirl.currentAction() == Action.BOW) {
             return;
         }
-        if ("armL".equals(string)) {
+        if ("armL".equals(boneName)) {
             this.a(geoBone, 0.0f, -0.34906584f, 0.15f);
         }
-        if (this.w.currentAction() == Action.ATTACK) {
+        if (this.currentGirl.currentAction() == Action.ATTACK) {
             return;
         }
-        if ("armR".equals(string)) {
+        if ("armR".equals(boneName)) {
             this.a(geoBone, 0.0f, 0.34906584f, 0.15f);
         }
     }
@@ -123,14 +123,14 @@ extends PlayerGirlRenderer {
     void a(GeoBone geoBone, float f, float f2, float f3) {
         double d = this.C - this.A;
         double d2 = this.z - this.D;
-        double d3 = Math.PI / 180 * (double)this.w.rotationYaw;
+        double d3 = Math.PI / 180 * (double)this.currentGirl.rotationYaw;
         Vec2f vec2f = new Vec2f((float)(d * Math.cos(d3) + d2 * Math.sin(d3)), (float)(-d * Math.sin(d3) + d2 * Math.cos(d3)));
         this.G = vec2f.y * -8.0f;
         this.I = vec2f.x * 8.0f;
         this.G = Utils.clamp(this.G, -1.68f, 1.68f);
         this.I = Utils.clamp(this.I, -1.68f, 1.68f);
-        this.G = Reference.LerpFloat(this.F, this.G, this.y);
-        this.I = Reference.LerpFloat(this.B, this.I, this.y);
+        this.G = Reference.LerpFloat(this.F, this.G, this.partialTicks);
+        this.I = Reference.LerpFloat(this.B, this.I, this.partialTicks);
         geoBone.setRotationX(f + this.G * f3);
         geoBone.setRotationZ(f2 + this.I * f3);
     }
@@ -140,23 +140,23 @@ extends PlayerGirlRenderer {
         double d2 = this.z - this.D;
         this.L = (Math.abs(d) + Math.abs(d2)) * 5.0;
         this.L = Utils.clamp((float)this.L, 0.0f, 1.0f);
-        geoBone.setPositionY((float) Reference.a(5.0, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.y)));
-        if (this.w instanceof PlayerAllie) {
-            ((PlayerAllie)this.w).aq = (float) Reference.a((double)0.3f, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.y));
+        geoBone.setPositionY((float) Reference.a(5.0, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.partialTicks)));
+        if (this.currentGirl instanceof PlayerAllie) {
+            ((PlayerAllie)this.currentGirl).aq = (float) Reference.a((double)0.3f, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.partialTicks));
         }
     }
 
     void void_a() {
-        if (this.w == null) {
+        if (this.currentGirl == null) {
             return;
         }
         this.F = this.G;
         this.B = this.I;
         this.H = this.L;
-        if (this.w.java_util_UUID_m() == null) {
+        if (this.currentGirl.getOwnerUserUUID() == null) {
             return;
         }
-        EntityPlayer entityPlayer = this.j.world.getPlayerEntityByUUID(this.w.java_util_UUID_m());
+        EntityPlayer entityPlayer = this.renderEntity.world.getPlayerEntityByUUID(this.currentGirl.getOwnerUserUUID());
         if (entityPlayer == null) {
             return;
         }

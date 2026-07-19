@@ -34,7 +34,7 @@ public class bu_class100 extends GeoLayerRenderer {
         Fighter e2_class2182 = (Fighter)entityLivingBase;
         ItemStack itemStack = e2_class2182.getDataManager().get(Fighter.ITEM_SLOT_4);
         EntityPlayer entityPlayer = null;
-        if (e2_class2182 instanceof PlayerGirl && (uUID = ((PlayerGirl)e2_class2182).java_util_UUID_m()) != null) {
+        if (e2_class2182 instanceof PlayerGirl && (uUID = ((PlayerGirl)e2_class2182).getOwnerUserUUID()) != null) {
             entityPlayer = entityLivingBase.world.getPlayerEntityByUUID(uUID);
         }
         if (itemStack.getItem() != Items.ELYTRA) {

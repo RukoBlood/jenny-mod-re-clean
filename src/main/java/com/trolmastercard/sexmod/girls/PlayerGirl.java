@@ -101,7 +101,7 @@ public abstract class PlayerGirl extends Fighter {
     public static PlayerGirl com_trolmastercard_sexmod_ei_class251_a(UUID uUID) {
         for (GirlEntity girl : PlayerGirl.GirlEntityList()) {
             PlayerGirl playerGirl;
-            if (girl.world.isRemote || !(girl instanceof PlayerGirl) || !uUID.equals((playerGirl = (PlayerGirl)girl).java_util_UUID_m())) continue;
+            if (girl.world.isRemote || !(girl instanceof PlayerGirl) || !uUID.equals((playerGirl = (PlayerGirl)girl).getOwnerUserUUID())) continue;
             return playerGirl;
         }
         return null;
@@ -113,7 +113,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     public void a(int n, Action action) {
-        PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.java_util_UUID_m(), n, action), this.net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P());
+        PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P());
     }
 
     public EntityPlayer getPlayerEntity(EntityPlayer player) {
@@ -243,10 +243,10 @@ public abstract class PlayerGirl extends Fighter {
         if (!ag) {
             return;
         }
-        if (this.java_util_UUID_m() == null) {
+        if (this.getOwnerUserUUID() == null) {
             return;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.java_util_UUID_m());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
         if (entityPlayer == null) {
             return;
         }
@@ -384,7 +384,7 @@ public abstract class PlayerGirl extends Fighter {
         PlayerGirl.void_C();
         this.void_l();
         this.G();
-        UUID uUID = this.java_util_UUID_m();
+        UUID uUID = this.getOwnerUserUUID();
         if (uUID == null) {
             return;
         }
@@ -472,7 +472,7 @@ public abstract class PlayerGirl extends Fighter {
         super.setCurrentAction(action);
     }
 
-    void f(EntityPlayer entityPlayer) {
+    void syncWithPlayerProperties(EntityPlayer entityPlayer) {
         this.entityDataManager.set(ITEM_SLOT_3, ItemStack.EMPTY);
         this.entityDataManager.set(ITEM_SLOT_4, ItemStack.EMPTY);
         this.entityDataManager.set(ITEM_SLOT_5, ItemStack.EMPTY);
@@ -504,7 +504,7 @@ public abstract class PlayerGirl extends Fighter {
         }
     }
 
-    public UUID java_util_UUID_m() {
+    public UUID getOwnerUserUUID() {
         if (this.entityDataManager.get(ai).isPresent()) {
             return (UUID)this.entityDataManager.get(ai).get();
         }
@@ -512,8 +512,8 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Nullable
-    public EntityPlayer net_minecraft_entity_player_EntityPlayer_k() {
-        UUID uUID = this.java_util_UUID_m();
+    public EntityPlayer getOwnerPlayerEntity() {
+        UUID uUID = this.getOwnerUserUUID();
         if (uUID == null) {
             return null;
         }
@@ -533,8 +533,8 @@ public abstract class PlayerGirl extends Fighter {
     public static void void_C() {
         ArrayList<PlayerGirl> arrayList = new ArrayList<PlayerGirl>();
         for (PlayerGirl ei_class2512 : Z) {
-            if (ei_class2512.java_util_UUID_m() == null) continue;
-            playerGirlUUIDHashtable.put(ei_class2512.java_util_UUID_m(), ei_class2512);
+            if (ei_class2512.getOwnerUserUUID() == null) continue;
+            playerGirlUUIDHashtable.put(ei_class2512.getOwnerUserUUID(), ei_class2512);
             arrayList.add(ei_class2512);
         }
         for (PlayerGirl ei_class2512 : arrayList) {

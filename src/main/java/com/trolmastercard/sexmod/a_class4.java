@@ -123,6 +123,7 @@ public class a_class4 extends GuiScreen {
         this.q.handleMouseInput();
     }
 
+    //somehow related to GirlRenderer
     public static HashSet<String> b() {
         HashSet<String> hashSet = new HashSet<String>();
         for (Map.Entry<gw_class389, Map.Entry<List<String>, Integer>> entry : m) {

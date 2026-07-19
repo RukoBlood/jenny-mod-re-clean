@@ -110,7 +110,7 @@ public class q_class419 {
         Predicate<PlayerGirl> predicate = ei_class2512 -> true;
         List<PlayerGirl> list = world.getEntities(PlayerGirl.class, predicate::test);
         for (PlayerGirl ei_class2514 : list) {
-            if (!ei_class2514.java_util_UUID_m().equals(entityPlayer.getPersistentID()) || playerGirl != null && ei_class2514.getEntityId() == playerGirl.getEntityId()) continue;
+            if (!ei_class2514.getOwnerUserUUID().equals(entityPlayer.getPersistentID()) || playerGirl != null && ei_class2514.getEntityId() == playerGirl.getEntityId()) continue;
             world.removeEntity(ei_class2514);
         }
     }
@@ -128,7 +128,7 @@ public class q_class419 {
                 girlEntity.void_a(false);
                 girlEntity.setCurrentAction(Action.NULL);
             }
-            if (!(girlEntity instanceof PlayerGirl) || !((PlayerGirl)girlEntity).java_util_UUID_m().equals(entityPlayer.getPersistentID()) || girlEntity.getID() == null) continue;
+            if (!(girlEntity instanceof PlayerGirl) || !((PlayerGirl)girlEntity).getOwnerUserUUID().equals(entityPlayer.getPersistentID()) || girlEntity.getID() == null) continue;
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP)playerLoggedOutEvent.player.world.getPlayerEntityByUUID(girlEntity.getID());
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
             ResetGirl.a_inner422.a(entityPlayerMP);

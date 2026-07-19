@@ -87,11 +87,11 @@ implements IModelBoneFilter {
     //formerly a
     @Override
     @Nullable
-    protected Vector3f e(GalathEntity f__class2972) {
-        if (f__class2972.world instanceof FakeWorld) {
+    protected Vector3f getAdditionalOverlayColor(GalathEntity entity) {
+        if (entity.world instanceof FakeWorld) {
             return null;
         }
-        if (f__class2972.bb) {
+        if (entity.bb) {
             return null;
         }
         return y;
@@ -108,37 +108,37 @@ implements IModelBoneFilter {
     }
 
     @Override
-    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, Vector3f f7_class2922, float f) {
-        GalathRenderer.a(tessellator, bufferBuilder, em_class2582, f7_class2922, f);
+    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3f rgb, float thickness) {
+        GalathRenderer.drawCustomOverlayBundle(tessellator, buffer, girl, rgb, thickness);
     }
 
     @Override
-    protected void b(GalathEntity f__class2972) {
+    protected void preRenderCallback(GalathEntity entity) {
         float f;
-        if (f__class2972.currentAction() != Action.MASTERBATE) {
+        if (entity.currentAction() != Action.MASTERBATE) {
             return;
         }
-        f__class2972.rotationYaw = f = f__class2972.java_lang_Float_I();
-        f__class2972.prevRenderYawOffset = f;
-        f__class2972.renderYawOffset = f;
-        f__class2972.prevRotationYawHead = f;
-        f__class2972.rotationYawHead = f;
+        entity.rotationYaw = f = entity.java_lang_Float_I();
+        entity.prevRenderYawOffset = f;
+        entity.renderYawOffset = f;
+        entity.prevRotationYawHead = f;
+        entity.rotationYawHead = f;
     }
 
     @Override
-    public void doRender(GalathEntity f__class2972, double d, double d2, double d3, float f, float f2) {
-        Vec3d vec3d = GalathRenderer.a(f__class2972, f2);
+    public void doRender(GalathEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        Vec3d vec3d = GalathRenderer.a(entity, partialTicks);
         if (vec3d != null) {
-            f__class2972.a(vec3d);
+            entity.a(vec3d);
         }
-        f__class2972.aG = vec3d;
-        GalathEntity.a(f__class2972, f2);
-        this.d_24(f__class2972);
-        this.c(f__class2972);
-        super.doRender(f__class2972, d, d2, d3, f, f2);
-        GalathRenderer.a_27((GirlEntity)f__class2972, f2);
-        if (f__class2972.boolean_b()) {
-            ManglelieRenderer.a((GirlEntity)f__class2972, f2);
+        entity.aG = vec3d;
+        GalathEntity.a(entity, partialTicks);
+        this.d_24(entity);
+        this.c(entity);
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        GalathRenderer.a_27((GirlEntity) entity, partialTicks);
+        if (entity.boolean_b()) {
+            ManglelieRenderer.getInterpolatedYaw((GirlEntity) entity, partialTicks);
         }
     }
 
@@ -183,14 +183,14 @@ implements IModelBoneFilter {
         }
         Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entityLivingBase.prevPosX, entityLivingBase.prevPosY, entityLivingBase.prevPosZ), entityLivingBase.getPositionVector(), (double)f);
         if (f2 == 24.0f && f__class2972.af == -1L) {
-            f__class2972.af = GalathRenderer.i.world.getTotalWorldTime();
+            f__class2972.af = GalathRenderer.mc.world.getTotalWorldTime();
             f__class2972.aH = f__class2972.af + 8L;
         }
         if (Utils.isValueInBounds((double)f2, 24.0, 32.0)) {
             Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
             Vec3d vec3d4 = vec3d.add(0.0, entityLivingBase.getEyeHeight(), 0.0).add(vec3d2);
-            float f3 = ((float) GalathRenderer.i.world.getTotalWorldTime() + f - (float)f__class2972.af) / (float)(f__class2972.aH - f__class2972.af);
+            float f3 = ((float) GalathRenderer.mc.world.getTotalWorldTime() + f - (float)f__class2972.af) / (float)(f__class2972.aH - f__class2972.af);
             return Reference.LerpVec3d(vec3d3, vec3d4, (double)f3);
         }
         if (Utils.isValueInBounds((double)f2, 32.0, 54.0)) {
@@ -201,15 +201,15 @@ implements IModelBoneFilter {
     }
 
     public static void a_27(GirlEntity em_class2582, float f) {
-        EntityPlayerSP entityPlayerSP = GalathRenderer.i.player;
+        EntityPlayerSP entityPlayerSP = GalathRenderer.mc.player;
         if (entityPlayerSP == null) {
             return;
         }
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         GlStateManager.pushMatrix();
-        GalathGeometryRender.setupRenderTranslations(i, em_class2582, f);
-        i.getTextureManager().bindTexture(LINE);
+        GalathGeometryRender.setupRenderTranslations(mc, em_class2582, f);
+        mc.getTextureManager().bindTexture(LINE);
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
         GalathRenderer.a(em_class2582, bufferBuilder, tessellator, Reference.LerpFloat(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f));
@@ -235,7 +235,7 @@ implements IModelBoneFilter {
         GlStateManager.pushMatrix();
         Vec3d vec3d = em_class2582.b("stars");
         GlStateManager.translate(vec3d.x, vec3d.y, vec3d.z);
-        float f2 = (float) GalathRenderer.i.world.getTotalWorldTime() + f;
+        float f2 = (float) GalathRenderer.mc.world.getTotalWorldTime() + f;
         float f3 = (float)(Math.sin((double)f2 * 0.2) * 5.0);
         float f4 = (float)(Math.cos((double)f2 * 0.2) * 5.0);
         float f5 = (float)((double)f2 * 3.0);
@@ -244,9 +244,9 @@ implements IModelBoneFilter {
         GlStateManager.rotate(f4, 0.0f, 0.0f, 1.0f);
         float f6 = TrigMath.toRadians(9.0);
         Vector3f f7_class2922 = GalathEntity.aa;
-        i.getTextureManager().bindTexture(LINE);
+        mc.getTextureManager().bindTexture(LINE);
         bufferBuilder.begin(3, DefaultVertexFormats.POSITION_TEX_COLOR);
-        GlStateManager.glLineWidth(GalathRenderer.a(em_class2582, f, 1.0f, 3.0f));
+        GlStateManager.glLineWidth(GalathRenderer.calculateLineThickness(em_class2582, f, 1.0f, 3.0f));
         float f7 = 0.0f;
         while ((double)f7 < Math.PI * 2) {
             d2 = Math.sin(f7) * (double)0.3f;
@@ -255,7 +255,7 @@ implements IModelBoneFilter {
             f7 += f6;
         }
         tessellator.draw();
-        i.getTextureManager().bindTexture(w);
+        mc.getTextureManager().bindTexture(w);
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         f6 = TrigMath.toRadians(60.0);
         f7 = 0.0f;
@@ -288,7 +288,7 @@ implements IModelBoneFilter {
         if (!((b7_class68)((Object)em_class2582)).boolean_a()) {
             return;
         }
-        i.getTextureManager().bindTexture(GalathModel.h);
+        mc.getTextureManager().bindTexture(GalathModel.h);
         Vec3d[] vec3dArray = new Vec3d[14];
         Vec3d[] vec3dArray2 = new Vec3d[14];
         for (int i = 0; i < 14; ++i) {
@@ -321,8 +321,8 @@ implements IModelBoneFilter {
     }
 
     @Override
-    protected void a(GeoModel geoModel, BufferBuilder bufferBuilder, GalathEntity f__class2972, float f, float f2, float f3, float f4, float f5) {
-        GeoBone geoBone = geoModel.topLevelBones.get(0);
+    protected void processModelSkeleton(GeoModel model, BufferBuilder buffer, GalathEntity entity, float r, float g, float b, float a, float partialTicks) {
+        GeoBone geoBone = model.topLevelBones.get(0);
         GeoBone geoBone2 = null;
         GeoBone geoBone3 = null;
         GeoBone geoBone4 = null;
@@ -352,182 +352,182 @@ implements IModelBoneFilter {
         MATRIX_STACK.rotate(geoBone);
         MATRIX_STACK.scale(geoBone);
         MATRIX_STACK.moveBackFromPivot(geoBone);
-        this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
+        this.renderRecursively(buffer, geoBone2, r, g, b, a);
         Tessellator.getInstance().draw();
-        this.a(bufferBuilder, geoBone3, f__class2972, f5);
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        this.a(buffer, geoBone3, entity, partialTicks);
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         try {
-            Minecraft.getMinecraft().renderEngine.bindTexture(this.d(this.j));
+            Minecraft.getMinecraft().renderEngine.bindTexture(this.getOrCreateDynamicSkin(this.renderEntity));
         } catch (IOException iOException) {
             iOException.printStackTrace();
         }
-        this.renderRecursively(bufferBuilder, geoBone4, f, f2, f3, ((GalathEntity)this.j).float_v());
+        this.renderRecursively(buffer, geoBone4, r, g, b, ((GalathEntity)this.renderEntity).float_v());
         Tessellator.getInstance().draw();
         if (geoBone5 != null) {
-            bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+            buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
             Minecraft.getMinecraft().renderEngine.bindTexture(ManglelieModel.j);
-            this.renderRecursively(bufferBuilder, geoBone5, f, f2, f3, ((GalathEntity)this.j).float_v());
+            this.renderRecursively(buffer, geoBone5, r, g, b, ((GalathEntity)this.renderEntity).float_v());
             Tessellator.getInstance().draw();
         }
         MATRIX_STACK.pop();
     }
 
     @Override
-    protected void a(BufferBuilder bufferBuilder, String string, GeoBone geoBone) {
-        switch (string) {
+    protected void onBoneProcessing(BufferBuilder buffer, String boneName, GeoBone bone) {
+        switch (boneName) {
             case "hairBack": {
-                if (i.isGamePaused()) break;
-                IBone iBone = ((GalathEntity)this.j).b().getBone("head");
+                if (mc.isGamePaused()) break;
+                IBone iBone = ((GalathEntity)this.renderEntity).b().getBone("head");
                 float f = TrigMath.toDegrees(iBone.getRotationX());
                 if (f < 0.0f) {
-                    geoBone.setRotationX(TrigMath.toRadians(-f));
+                    bone.setRotationX(TrigMath.toRadians(-f));
                     break;
                 }
                 float f2 = Math.min(1.0f, f / 45.0f);
-                geoBone.setRotationX(TrigMath.toRadians(-f));
-                geoBone.setPositionY(geoBone.getPositionY() + f2 * 1.5f);
+                bone.setRotationX(TrigMath.toRadians(-f));
+                bone.setPositionY(bone.getPositionY() + f2 * 1.5f);
                 break;
             }
             case "hairDownSideL": 
             case "hairDownSideR": {
-                if (i.isGamePaused()) break;
-                IBone iBone = ((GalathEntity)this.j).b().getBone("head");
+                if (mc.isGamePaused()) break;
+                IBone iBone = ((GalathEntity)this.renderEntity).b().getBone("head");
                 float f = TrigMath.toDegrees(iBone.getRotationX());
                 if (f < 0.0f) {
-                    geoBone.setRotationX(TrigMath.toRadians(-f / 2.0f));
+                    bone.setRotationX(TrigMath.toRadians(-f / 2.0f));
                     break;
                 }
                 float f3 = Math.min(1.0f, f / 45.0f);
-                geoBone.setRotationX(TrigMath.toRadians(-f));
-                geoBone.setPositionY(geoBone.getPositionY() + f3);
+                bone.setRotationX(TrigMath.toRadians(-f));
+                bone.setPositionY(bone.getPositionY() + f3);
                 break;
             }
             case "head": {
                 EntityLivingBase entityLivingBase;
-                this.c(geoBone);
-                Action fp_class3242 = ((GalathEntity)this.j).currentAction();
-                if (fp_class3242 != Action.FLY && fp_class3242 != Action.ATTACK_SWORD || (entityLivingBase = ((GalathEntity)this.j).net_minecraft_entity_EntityLivingBase_M()) == null) break;
-                float f = i.getRenderPartialTicks();
-                Vec3d vec3d = Reference.LerpVec3d(new Vec3d(((GalathEntity)this.j).lastTickPosX, ((GalathEntity)this.j).lastTickPosY, ((GalathEntity)this.j).lastTickPosZ), ((GalathEntity)this.j).getPositionVector(), (double)f);
-                Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.j).getPositionVector(), (double)f);
+                this.c(bone);
+                Action fp_class3242 = ((GalathEntity)this.renderEntity).currentAction();
+                if (fp_class3242 != Action.FLY && fp_class3242 != Action.ATTACK_SWORD || (entityLivingBase = ((GalathEntity)this.renderEntity).net_minecraft_entity_EntityLivingBase_M()) == null) break;
+                float f = mc.getRenderPartialTicks();
+                Vec3d vec3d = Reference.LerpVec3d(new Vec3d(((GalathEntity)this.renderEntity).lastTickPosX, ((GalathEntity)this.renderEntity).lastTickPosY, ((GalathEntity)this.renderEntity).lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)f);
+                Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)f);
                 Vec3d vec3d3 = vec3d.subtract(vec3d2);
-                float f4 = (float) VectorMath.rotate((Vec3d)vec3d3, (float)((GalathEntity)this.j).renderYawOffset).z;
+                float f4 = (float) VectorMath.rotate((Vec3d)vec3d3, (float)((GalathEntity)this.renderEntity).renderYawOffset).z;
                 float f5 = (float)Math.atan2(vec3d3.y, f4);
                 break;
             }
             case "weapon": {
-                if (!((GalathEntity)this.j).ap) break;
+                if (!((GalathEntity)this.renderEntity).ap) break;
                 GlStateManager.pushMatrix();
                 Tessellator.getInstance().draw();
-                GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, geoBone);
+                GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, bone);
                 GL11.glEnable(2896);
                 GlStateManager.scale(1.5, 1.0, 2.0);
                 GlStateManager.translate(0.0, 0.0, 0.05);
                 GlStateManager.rotate(110.0f, 1.0f, 0.0f, 0.0f);
-                Minecraft.getMinecraft().getItemRenderer().renderItem(this.j, new ItemStack(Items.IRON_SWORD), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
-                this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.j)));
-                bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+                Minecraft.getMinecraft().getItemRenderer().renderItem(this.renderEntity, new ItemStack(Items.IRON_SWORD), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+                this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
+                buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
                 GL11.glDisable(2896);
                 GlStateManager.popMatrix();
                 break;
             }
             case "tongue": {
-                this.e(bufferBuilder, geoBone);
+                this.e(buffer, bone);
                 break;
             }
             case "mangTongue": {
-                this.c(bufferBuilder, geoBone);
+                this.c(buffer, bone);
                 break;
             }
             case "head3": {
-                this.d(geoBone);
+                this.d(bone);
                 break;
             }
             case "irisL": 
             case "irisR": {
-                this.a_35(geoBone);
+                this.a_35(bone);
                 break;
             }
             case "irsisFaceR2": 
             case "irsisFaceR3": {
-                this.b_31(geoBone);
+                this.b_31(bone);
                 break;
             }
             case "armL": 
             case "armR": {
                 EntityLivingBase entityLivingBase;
-                if (((GalathEntity)this.j).currentAction() != Action.RAPE_CHARGE || (entityLivingBase = ((GalathEntity)this.j).net_minecraft_entity_EntityLivingBase_M()) == null) break;
-                float f = ((GalathEntity)this.j).renderYawOffset;
-                Vec3d vec3d = entityLivingBase.getPositionVector().subtract(((GalathEntity)this.j).getPositionVector());
+                if (((GalathEntity)this.renderEntity).currentAction() != Action.RAPE_CHARGE || (entityLivingBase = ((GalathEntity)this.renderEntity).net_minecraft_entity_EntityLivingBase_M()) == null) break;
+                float f = ((GalathEntity)this.renderEntity).renderYawOffset;
+                Vec3d vec3d = entityLivingBase.getPositionVector().subtract(((GalathEntity)this.renderEntity).getPositionVector());
                 vec3d = VectorMath.rotate(vec3d, f);
                 double d = -Utils.clamp(vec3d.x, -1.0, 1.0);
-                geoBone.setRotationZ(geoBone.getRotationZ() + TrigMath.toRadians(45.0 * d));
+                bone.setRotationZ(bone.getRotationZ() + TrigMath.toRadians(45.0 * d));
             }
         }
-        if (((GalathEntity)this.j).boolean_b()) {
-            ManglelieRenderer.a(this.j, string, geoBone, true);
+        if (((GalathEntity)this.renderEntity).boolean_b()) {
+            ManglelieRenderer.a(this.renderEntity, boneName, bone, true);
         }
     }
 
     void e(BufferBuilder bufferBuilder, GeoBone geoBone) {
-        if (Action.a(this.j, Action.PUSSY_LICKING, Action.MASTERBATE_SITTING)) {
+        if (Action.a(this.renderEntity, Action.PUSSY_LICKING, Action.MASTERBATE_SITTING)) {
             this.f(bufferBuilder, geoBone);
-        } else if (Action.a(this.j, Action.MORNING_BLOWJOB_SLOW)) {
+        } else if (Action.a(this.renderEntity, Action.MORNING_BLOWJOB_SLOW)) {
             this.d(bufferBuilder, geoBone);
         }
     }
 
     void c(BufferBuilder bufferBuilder, GeoBone geoBone) {
-        if (!Action.a(this.j, Action.MORNING_BLOWJOB_SLOW) && !((GalathEntity)this.j).aD) {
+        if (!Action.a(this.renderEntity, Action.MORNING_BLOWJOB_SLOW) && !((GalathEntity)this.renderEntity).aD) {
             return;
         }
-        float f = ((GalathEntity)this.j).aD ? 1.0f - Math.min(0.29f, Action.a(this.j, i.getRenderPartialTicks())) / 0.29f : 1.0f;
+        float f = ((GalathEntity)this.renderEntity).aD ? 1.0f - Math.min(0.29f, Action.a(this.renderEntity, mc.getRenderPartialTicks())) / 0.29f : 1.0f;
         this.a(bufferBuilder, geoBone, f);
         this.bindTexture(ManglelieModel.j);
     }
 
     void d(GeoBone geoBone) {
-        if (!Action.a(this.j, Action.MORNING_BLOWJOB_SLOW, Action.MORNING_BLOWJOB_FAST)) {
+        if (!Action.a(this.renderEntity, Action.MORNING_BLOWJOB_SLOW, Action.MORNING_BLOWJOB_FAST)) {
             return;
         }
-        if (i.isGamePaused()) {
+        if (mc.isGamePaused()) {
             return;
         }
-        float f = (float) GalathRenderer.i.player.ticksExisted + i.getRenderPartialTicks();
+        float f = (float) GalathRenderer.mc.player.ticksExisted + mc.getRenderPartialTicks();
         float f2 = (float)(Math.sin(f * 0.1f) * (double)0.1f) + 0.2f;
         float f3 = (float)Math.sin(f * 0.1f) * 0.1f;
-        if (Action.a(this.j, Action.MORNING_BLOWJOB_SLOW)) {
+        if (Action.a(this.renderEntity, Action.MORNING_BLOWJOB_SLOW)) {
             geoBone.setRotationY(geoBone.getRotationY() + f2);
             geoBone.setRotationZ(geoBone.getRotationZ() + f3);
             return;
         }
-        if (!((GalathEntity)this.j).aD) {
+        if (!((GalathEntity)this.renderEntity).aD) {
             return;
         }
-        float f4 = 1.0f - Math.min(0.5f, Action.a(this.j, i.getRenderPartialTicks())) / 0.5f;
+        float f4 = 1.0f - Math.min(0.5f, Action.a(this.renderEntity, mc.getRenderPartialTicks())) / 0.5f;
         geoBone.setRotationY(geoBone.getRotationY() + f2 * f4);
         geoBone.setRotationZ(geoBone.getRotationZ() + f3 * f4);
     }
 
     void c(GeoBone geoBone) {
-        if (!Action.a(this.j, Action.MORNING_BLOWJOB_SLOW, Action.MORNING_BLOWJOB_FAST)) {
+        if (!Action.a(this.renderEntity, Action.MORNING_BLOWJOB_SLOW, Action.MORNING_BLOWJOB_FAST)) {
             return;
         }
-        if (i.isGamePaused()) {
+        if (mc.isGamePaused()) {
             return;
         }
-        float f = (float) GalathRenderer.i.player.ticksExisted + i.getRenderPartialTicks();
+        float f = (float) GalathRenderer.mc.player.ticksExisted + mc.getRenderPartialTicks();
         float f2 = (float)Math.sin(f * -0.1f) * 0.1f;
         float f3 = (float)Math.sin(f * 0.1f) * 0.1f;
-        if (Action.a(this.j, Action.MORNING_BLOWJOB_SLOW)) {
+        if (Action.a(this.renderEntity, Action.MORNING_BLOWJOB_SLOW)) {
             geoBone.setRotationY(geoBone.getRotationY() + f2);
             geoBone.setRotationZ(geoBone.getRotationZ() + f3);
             return;
         }
-        if (!((GalathEntity)this.j).aD) {
+        if (!((GalathEntity)this.renderEntity).aD) {
             return;
         }
-        float f4 = Math.min(0.5f, Action.a(this.j, i.getRenderPartialTicks())) / 0.5f;
+        float f4 = Math.min(0.5f, Action.a(this.renderEntity, mc.getRenderPartialTicks())) / 0.5f;
         geoBone.setRotationY(geoBone.getRotationY() + f2 * f4);
         geoBone.setRotationZ(geoBone.getRotationZ() + f3 * f4);
         //super.a((GeoBone)null);
@@ -537,43 +537,43 @@ implements IModelBoneFilter {
     //  this doesnt appear to override anything
     //@Override
     void a_35(GeoBone geoBone) {
-        if (!Action.a(this.j, Action.MORNING_BLOWJOB_SLOW)) {
+        if (!Action.a(this.renderEntity, Action.MORNING_BLOWJOB_SLOW)) {
             return;
         }
-        if (i.isGamePaused()) {
+        if (mc.isGamePaused()) {
             return;
         }
-        float f = (float) GalathRenderer.i.player.ticksExisted + i.getRenderPartialTicks();
+        float f = (float) GalathRenderer.mc.player.ticksExisted + mc.getRenderPartialTicks();
         geoBone.setPositionX((float)((double)geoBone.getPositionX() + Math.sin(f * 0.1f) * (double)-0.1f));
     }
 
     //@Override
     void b_31(GeoBone geoBone) {
-        if (!Action.a(this.j, Action.MORNING_BLOWJOB_SLOW)) {
+        if (!Action.a(this.renderEntity, Action.MORNING_BLOWJOB_SLOW)) {
             return;
         }
-        if (i.isGamePaused()) {
+        if (mc.isGamePaused()) {
             return;
         }
-        float f = (float) GalathRenderer.i.player.ticksExisted + i.getRenderPartialTicks();
+        float f = (float) GalathRenderer.mc.player.ticksExisted + mc.getRenderPartialTicks();
         geoBone.setPositionX((float)((double)geoBone.getPositionX() + Math.sin(f * 0.1f) * (double)-0.15f));
     }
 
     void a(BufferBuilder bufferBuilder, GeoBone geoBone, float f2) {
-        float f4 = Action.d(this.j, i.getRenderPartialTicks());
+        float f4 = Action.d(this.renderEntity, mc.getRenderPartialTicks());
         float f5 = f2 * (float)((double)0.02f * ((double)-0.4f * Math.cos(Math.PI * 2 * (double)f4 + 1.05) + (double)0.6f));
         ProceduralRibbonGenerator.RibbonSettings settings = new ProceduralRibbonGenerator.RibbonSettings(H, 0.0f, 12, f5, (n, f3) -> f2 * (float)(Math.cos(Math.PI * 2 * (double)f4 + (double)0.35f + (double)(-0.2f * (float)n)) * -10.0), (n, f) -> 0.0f, (n, f3) -> f2 * (float)(Math.cos(Math.PI * 2 * (double)f4 + 1.25 + (double)(-0.1f * (float)n)) * -5.0), 0.03f, 0.005f);
         this.a(bufferBuilder, geoBone, settings);
     }
 
     void d(BufferBuilder bufferBuilder, GeoBone geoBone) {
-        float f3 = Action.d(this.j, i.getRenderPartialTicks());
+        float f3 = Action.d(this.renderEntity, mc.getRenderPartialTicks());
         ProceduralRibbonGenerator.RibbonSettings b_inner2472 = new ProceduralRibbonGenerator.RibbonSettings(H, 0.0f, 12, 0.02f, (n, f2) -> (float)(Math.cos(Math.PI * 2 * (double)f3 + (double)(-0.2f * (float)n)) * 15.0), (n, f2) -> (float)(Math.cos(Math.PI * 2 * (double)f3 + (double)(-0.2f * (float)n)) * 5.0), (n, f) -> 0.0f, 0.03f, 0.005f);
         this.a(bufferBuilder, geoBone, b_inner2472);
     }
 
     void f(BufferBuilder bufferBuilder, GeoBone geoBone) {
-        float f = ((GalathEntity)this.j).float_b(i.getRenderPartialTicks());
+        float f = ((GalathEntity)this.renderEntity).float_b(mc.getRenderPartialTicks());
         if (f == 0.0f) {
             this.a(bufferBuilder, geoBone, G);
             return;
@@ -594,8 +594,8 @@ implements IModelBoneFilter {
         GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, geoBone);
         GlStateManager.disableCull();
         this.bindTexture(LINE);
-        ProceduralRibbonGenerator.renderRibbon(bufferBuilder, Tessellator.getInstance(), i, b_inner2472);
-        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.j)));
+        ProceduralRibbonGenerator.renderRibbon(bufferBuilder, Tessellator.getInstance(), mc, b_inner2472);
+        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         GlStateManager.enableCull();
         GlStateManager.popMatrix();
@@ -605,7 +605,7 @@ implements IModelBoneFilter {
         if (f__class2972.currentAction() != Action.GIVE_COIN) {
             return;
         }
-        n = bufferBuilder;
+        tempBuffer = bufferBuilder;
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         MATRIX_STACK.push();
         MATRIX_STACK.translate(geoBone);
@@ -613,12 +613,12 @@ implements IModelBoneFilter {
         MATRIX_STACK.rotate(geoBone);
         MATRIX_STACK.scale(geoBone);
         MATRIX_STACK.moveBackFromPivot(geoBone);
-        if (!this.p.contains(geoBone.getName())) {
+        if (!this.activeCustomPartBones.contains(geoBone.getName())) {
             for (GeoCube geoCube : geoBone.childCubes) {
                 MATRIX_STACK.push();
                 GlStateManager.pushMatrix();
-                this.q = geoBone;
-                this.a(bufferBuilder, geoCube, 1.0f, 1.0f, 1.0f, 1.0f, 0.0);
+                this.currentRenderingBone = geoBone;
+                this.renderCubeGeometry(bufferBuilder, geoCube, 1.0f, 1.0f, 1.0f, 1.0f, 0.0);
                 GlStateManager.popMatrix();
                 MATRIX_STACK.pop();
             }
@@ -640,12 +640,12 @@ implements IModelBoneFilter {
         MATRIX_STACK.rotate(geoBone2);
         MATRIX_STACK.scale(geoBone2);
         MATRIX_STACK.moveBackFromPivot(geoBone2);
-        if (!this.p.contains(geoBone2.getName())) {
+        if (!this.activeCustomPartBones.contains(geoBone2.getName())) {
             for (GeoCube geoCube : geoBone2.childCubes) {
                 MATRIX_STACK.push();
                 GlStateManager.pushMatrix();
-                this.q = geoBone2;
-                this.a(bufferBuilder, geoCube, f7_class2922.x, f7_class2922.y, f7_class2922.z, 1.0f, 0.0);
+                this.currentRenderingBone = geoBone2;
+                this.renderCubeGeometry(bufferBuilder, geoCube, f7_class2922.x, f7_class2922.y, f7_class2922.z, 1.0f, 0.0);
                 GlStateManager.popMatrix();
                 MATRIX_STACK.pop();
             }
@@ -658,16 +658,16 @@ implements IModelBoneFilter {
     }
 
     @Override
-    protected Vec3d a(GalathEntity entity, float f, Vec3d vec3d) {
+    protected Vec3d applyCustomTranslationOffsets(GalathEntity entity, float partialTicks, Vec3d baseVector) {
         if (entity.currentAction() == Action.RUN) {
             float f2;
-            entity.rotationYaw = f2 = entity.java_lang_Float_I().floatValue();
+            entity.rotationYaw = f2 = entity.java_lang_Float_I();
             entity.prevRenderYawOffset = f2;
             entity.renderYawOffset = f2;
             entity.prevRotationYawHead = f2;
             entity.rotationYawHead = f2;
         }
-        return vec3d;
+        return baseVector;
     }
 
     //@Override

@@ -60,7 +60,7 @@ public abstract class ew_class277 extends PlayerGirl {
             this.ar = true;
             return;
         }
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return;
         }

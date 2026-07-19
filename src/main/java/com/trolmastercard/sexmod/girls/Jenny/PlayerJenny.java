@@ -124,7 +124,7 @@ public class PlayerJenny extends PlayerGirl {
             this.a((EntityPlayerMP)entityPlayer, false);
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayer.capabilities.isFlying = true;
-            this.world.getPlayerEntityByUUID((UUID)this.java_util_UUID_m()).capabilities.isFlying = true;
+            this.world.getPlayerEntityByUUID((UUID)this.getOwnerUserUUID()).capabilities.isFlying = true;
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.playerCamPos = null;
             this.setCurrentAction(Action.DOGGYSTART);

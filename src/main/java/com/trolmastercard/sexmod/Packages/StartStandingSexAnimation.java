@@ -67,7 +67,7 @@ implements IMessage {
                     for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
                         if (!(em_class2582 instanceof PlayerGirl)) continue;
                         ei_class2512 = (PlayerGirl) em_class2582;
-                        if (ei_class2512.world.isRemote || !ei_class2512.java_util_UUID_m().equals(eu_class2732.a))
+                        if (ei_class2512.world.isRemote || !ei_class2512.getOwnerUserUUID().equals(eu_class2732.a))
                             continue;
                         break;
                     }

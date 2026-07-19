@@ -91,6 +91,7 @@ public class FutaCommand extends CommandBase implements IClientCommand {
             }
         } catch (Exception e) {
             System.out.println("wtf he thinks sexmod/futa is a file??");
+            e.printStackTrace();
         }
 
     }

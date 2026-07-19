@@ -16,35 +16,35 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void a(boolean bl, ItemStack itemStack) {
-        GlStateManager.rotate(bl ? 290.0f : 90.0f, 1.0f, 0.0f, 0.0f);
+    protected void applyItemPostRotation(boolean isLeftHand, ItemStack stack) {
+        GlStateManager.rotate(isLeftHand ? 290.0f : 90.0f, 1.0f, 0.0f, 0.0f);
     }
 
     @Override
-    protected void void_c() {
+    protected void preRenderCallback() {
         GlStateManager.translate(0.0f, -0.6f, 0.0f);
         GlStateManager.scale(0.4f, 0.4f, 0.4f);
     }
 
     @Override
-    protected void a(boolean bl) {
-        super.a(bl);
-        if (bl) {
+    protected void applyBowRotation(boolean isLeftHand) {
+        super.applyBowRotation(isLeftHand);
+        if (isLeftHand) {
             GlStateManager.translate(0.1, 0.0, 0.0);
         }
     }
 
     @Override
-    protected void a(boolean bl, boolean bl2) {
-        if (bl) {
+    protected void applyShieldBlockingTransform(boolean isLeftHand, boolean isActive) {
+        if (isLeftHand) {
             GlStateManager.rotate(180.0f, 0.0f, 1.0f, 0.0f);
             GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
             GlStateManager.translate(0.0f, -0.14f, -0.17f);
-            if (bl2) {
+            if (isActive) {
                 GlStateManager.rotate(90.0f, 0.0f, 0.0f, 1.0f);
                 GlStateManager.translate(0.067, 0.0, 0.0);
             }
-        } else if (bl2) {
+        } else if (isActive) {
             GlStateManager.rotate(-90.0f, 1.0f, 0.0f, 0.0f);
             GlStateManager.rotate(-90.0f, 0.0f, 0.0f, 1.0f);
             GlStateManager.translate(0.0f, 0.165f, 0.0f);

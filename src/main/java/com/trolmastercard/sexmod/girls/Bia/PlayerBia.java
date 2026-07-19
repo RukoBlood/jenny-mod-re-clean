@@ -221,7 +221,7 @@ extends PlayerGirl {
             Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o();
             Vec3d vec3d2 = vec3d.add(VectorMath.RotateY(0.0, 0.0, 1.0, f));
             this.c(vec3d2);
-            EntityPlayer entityPlayer2 = this.net_minecraft_entity_player_EntityPlayer_k();
+            EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
             if (entityPlayer2 != null) {
                 entityPlayer2.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
             }

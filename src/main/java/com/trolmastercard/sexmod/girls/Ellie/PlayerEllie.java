@@ -208,7 +208,7 @@ extends PlayerGirl {
     }
 
     boolean a_14() {
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return false;
         }
@@ -467,7 +467,7 @@ extends PlayerGirl {
                 case "sitdownDone": {
                     if (!this.boolean_f()) break;
                     this.setCurrentAction(Action.SITDOWNIDLE);
-                    this.void_c(this.world.getPlayerEntityByUUID(this.java_util_UUID_m()));
+                    this.void_c(this.world.getPlayerEntityByUUID(this.getOwnerUserUUID()));
                     break;
                 }
                 case "missionary_startDone": {

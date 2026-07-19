@@ -12,7 +12,8 @@ import java.util.HashSet;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.AbstractKoboldGoblinRenderer;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
@@ -39,7 +40,7 @@ public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
 
     @Override
     protected Vec3i resolveBoneColor(String boneName) {
-        EntityDataManager entityDataManager = ((KoboldEntity)this.j).getDataManager();
+        EntityDataManager entityDataManager = ((KoboldEntity)this.renderEntity).getDataManager();
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
         BlockPos blockPos = (BlockPos)entityDataManager.get(KoboldEntity.ACTION_TARGET_POS);
         if (t.contains(boneName)) {
@@ -55,58 +56,58 @@ public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
     }
 
     @Override
-    protected ItemStack getHeldItem(@Nullable ItemStack heldItem) {
-        switch (((KoboldEntity)this.j).currentAction()) {
+    protected ItemStack getHeldItem(@Nullable ItemStack input) {
+        switch (((KoboldEntity)this.renderEntity).currentAction()) {
             case MINE: {
-                if (((KoboldEntity)this.j).getDataManager().get(KoboldEntity.at).booleanValue()) {
+                if (((KoboldEntity)this.renderEntity).getDataManager().get(KoboldEntity.at).booleanValue()) {
                     return new ItemStack(Items.IRON_AXE);
                 }
                 return new ItemStack(Items.IRON_PICKAXE);
             }
             case NULL: {
-                if (!((KoboldEntity)this.j).getDataManager().get(KoboldEntity.aC).booleanValue()) break;
+                if (!((KoboldEntity)this.renderEntity).getDataManager().get(KoboldEntity.aC).booleanValue()) break;
                 return new ItemStack(Items.IRON_SWORD);
             }
             case ATTACK: {
                 return new ItemStack(Items.IRON_SWORD);
             }
         }
-        return heldItem;
+        return input;
     }
 
     @Override
-    public void renderCustomBones(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a, double textureOffset) {
+    public void renderCustomBones(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a, double uOffset) {
         String[] stringArray;
         int n;
-        if (((KoboldEntity)this.j).world instanceof FakeWorld) {
+        if (((KoboldEntity)this.renderEntity).world instanceof FakeWorld) {
             return;
         }
         String string = bone.getName();
         if ("blowOpening".equals(string)) {
-            textureOffset = 0.0;
+            uOffset = 0.0;
         }
-        if ("mouth".equals(string) && (n = Integer.parseInt((stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j))[7])) == 1) {
-            textureOffset = -0.078125;
+        if ("mouth".equals(string) && (n = Integer.parseInt((stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity))[7])) == 1) {
+            uOffset = -0.078125;
         }
-        super.renderCustomBones(buffer, bone, r, g, b, a, textureOffset);
+        super.renderCustomBones(buffer, bone, r, g, b, a, uOffset);
     }
 
     @Override
-    protected void d() {
-        float f = 0.25f - ((KoboldEntity)this.j).getDataManager().get(PlayerKobold.aA).floatValue();
+    protected void onRenderSetup() {
+        float f = 0.25f - ((KoboldEntity) this.renderEntity).getDataManager().get(PlayerKobold.aA);
         GlStateManager.scale(1.0f - f, 1.0f - f, 1.0f - f);
     }
 
     @Override
-    protected void void_b() {
-        float f = 0.25f - ((KoboldEntity)this.j).getDataManager().get(PlayerKobold.aA).floatValue();
+    protected void onRenderCleanup() {
+        float f = 0.25f - ((KoboldEntity) this.renderEntity).getDataManager().get(PlayerKobold.aA);
         double d = 1.0 / (1.0 - (double)f);
         GlStateManager.scale(d, d, d);
     }
 
     @Override
-    protected ItemStack net_minecraft_item_ItemStack_a() {
-        String string = ((KoboldEntity)this.j).getDataManager().get(GirlEntity.h);
+    protected ItemStack resolveTradePaymentItemStack() {
+        String string = ((KoboldEntity)this.renderEntity).getDataManager().get(GirlEntity.h);
         if ("STARTBLOWJOB".equals(string)) {
             return new ItemStack(Items.IRON_PICKAXE);
         }
@@ -117,30 +118,30 @@ public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
     }
 
     @Override
-    public void doRender(KoboldEntity ff_class3082, double d, double d2, double d3, float f, float f2) {
-        String string = ff_class3082.getDataManager().get(AbstractGoblinKoboldEntity.CURRENT_ACTION);
-        if (ff_class3082.as == null) {
-            ff_class3082.as = string;
+    public void doRender(KoboldEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        String string = entity.getDataManager().get(AbstractGoblinKoboldEntity.CURRENT_ACTION);
+        if (entity.as == null) {
+            entity.as = string;
         }
-        if (!ff_class3082.as.equals(string)) {
+        if (!entity.as.equals(string)) {
             KoboldRenderer.ResetColors();
-            ff_class3082.as = string;
+            entity.as = string;
         }
-        this.v = new Vector3f((float)d, (float)d2, (float)d3);
-        super.doRender(ff_class3082, d, d2, d3, f, f2);
+        this.v = new Vector3f((float) x, (float) y, (float) z);
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
     @Override
-    protected void a(double d, double d2, double d3) {
-        EntityDataManager entityDataManager = ((KoboldEntity)this.j).getDataManager();
+    protected void renderNameTag(double x, double y, double z) {
+        EntityDataManager entityDataManager = ((KoboldEntity)this.renderEntity).getDataManager();
         String string = entityDataManager.get(KoboldEntity.aU);
         if ("null".equals(string)) {
-            super.a(d, d2, d3);
+            super.renderNameTag(x, y, z);
             return;
         }
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
         string = (Object)((Object) eyeAndKoboldColor_.getTextColor()) + " -" + string + "-";
-        this.renderLivingLabel(this.j, ((KoboldEntity)this.j).java_lang_String_ab() + string, d, d2 + (double)((KoboldEntity)this.j).float_i(), d3, 300);
+        this.renderLivingLabel(this.renderEntity, ((KoboldEntity)this.renderEntity).java_lang_String_ab() + string, x, y + (double)((KoboldEntity)this.renderEntity).float_i(), z, 300);
     }
 }
 

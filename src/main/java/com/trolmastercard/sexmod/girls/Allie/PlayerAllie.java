@@ -124,10 +124,10 @@ extends PlayerGirl {
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        if (this.java_util_UUID_m() == null) {
+        if (this.getOwnerUserUUID() == null) {
             return;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.java_util_UUID_m());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
         if (entityPlayer != null && this.as == null) {
             this.c(true);
         }

@@ -31,31 +31,31 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void void_c() {
+    protected void preRenderCallback() {
         GlStateManager.translate(0.0f, -1.25f, 0.0f);
         GlStateManager.scale(0.8f, 0.8f, 0.8f);
     }
 
     @Override
-    protected void a(String string, GeoBone geoBone) {
-        if ("slime".equals(string)) {
+    protected void onBoneRenderStart(String boneName, GeoBone geoBone) {
+        if ("slime".equals(boneName)) {
             this.F = new Vector3f(geoBone.getRotationX(), geoBone.getRotationY(), geoBone.getRotationZ());
             this.A = new Vector3f(geoBone.getScaleX(), geoBone.getScaleY(), geoBone.getScaleZ());
             this.D = new Vector3f(geoBone.getPositionX(), geoBone.getPositionY(), geoBone.getPositionZ());
         }
-        if ("upperBody".equals(string)) {
+        if ("upperBody".equals(boneName)) {
             this.B = new Vector3f(geoBone.getRotationX(), geoBone.getRotationY(), geoBone.getRotationZ());
         }
-        if ("torso".equals(string)) {
+        if ("torso".equals(boneName)) {
             this.E = new Vector3f(geoBone.getRotationX(), geoBone.getRotationY(), geoBone.getRotationZ());
         }
-        if ("head".equals(string)) {
+        if ("head".equals(boneName)) {
             this.C = new Vector3f(geoBone.getRotationX(), geoBone.getRotationY(), geoBone.getRotationZ());
         }
-        if ("boobs".equals(string)) {
+        if ("boobs".equals(boneName)) {
             this.z = new Vector3f(geoBone.getRotationX(), geoBone.getRotationY(), geoBone.getRotationZ());
         }
-        if ("figure".equals(string)) {
+        if ("figure".equals(boneName)) {
             geoBone.setRotationX(this.F.x);
             geoBone.setRotationY(this.F.y);
             geoBone.setRotationZ(this.F.z);
@@ -66,17 +66,17 @@ extends PlayerGirlRenderer {
             geoBone.setPositionY(this.D.y);
             geoBone.setPositionZ(this.D.z);
         }
-        if ("dress".equals(string)) {
+        if ("dress".equals(boneName)) {
             geoBone.setRotationX(this.B.x);
             geoBone.setRotationY(this.B.y);
             geoBone.setRotationZ(this.B.z);
         }
-        if ("hat".equals(string)) {
+        if ("hat".equals(boneName)) {
             geoBone.setRotationX(this.C.x);
             geoBone.setRotationY(this.C.y);
             geoBone.setRotationZ(this.C.z);
         }
-        if ("boobsSlime".equals(string)) {
+        if ("boobsSlime".equals(boneName)) {
             geoBone.setRotationX(this.z.x);
             geoBone.setRotationY(this.z.y);
             geoBone.setRotationZ(this.z.z);
@@ -84,9 +84,9 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void a(boolean bl) {
-        super.a(bl);
-        if (bl) {
+    protected void applyBowRotation(boolean isLeftHand) {
+        super.applyBowRotation(isLeftHand);
+        if (isLeftHand) {
             GlStateManager.translate(0.15f, 0.0f, 0.0f);
         } else {
             GlStateManager.translate(-0.02, 0.0, 0.0);
@@ -102,32 +102,32 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void a(boolean bl, boolean bl2) {
-        super.a(bl, bl2);
-        if (bl && !bl2) {
+    protected void applyShieldBlockingTransform(boolean isLeftHand, boolean isActive) {
+        super.applyShieldBlockingTransform(isLeftHand, isActive);
+        if (isLeftHand && !isActive) {
             GlStateManager.translate(-0.025, -0.025, 0.0);
             return;
         }
-        if (!bl && bl2) {
+        if (!isLeftHand && isActive) {
             GlStateManager.rotate(120.0f, 0.0f, 1.0f, 0.0f);
             return;
         }
-        if (!bl && !bl2) {
+        if (!isLeftHand && !isActive) {
             GlStateManager.translate(0.0, 0.4, -0.1);
             GlStateManager.rotate(-30.0f, 1.0f, 0.0f, 0.0f);
         }
     }
 
     @Override
-    protected void a(boolean bl, ItemStack itemStack) {
-        super.a(bl, itemStack);
-        switch (itemStack.getItem().getItemUseAction(itemStack)) {
+    protected void applyItemPostRotation(boolean isLeftHand, ItemStack stack) {
+        super.applyItemPostRotation(isLeftHand, stack);
+        switch (stack.getItem().getItemUseAction(stack)) {
             case BLOCK: 
             case BOW: {
                 break;
             }
             default: {
-                GlStateManager.rotate(bl ? 30.0f : 135.0f, 1.0f, 0.0f, 0.0f);
+                GlStateManager.rotate(isLeftHand ? 30.0f : 135.0f, 1.0f, 0.0f, 0.0f);
                 GlStateManager.translate(0.0, 0.05, -0.05);
             }
         }

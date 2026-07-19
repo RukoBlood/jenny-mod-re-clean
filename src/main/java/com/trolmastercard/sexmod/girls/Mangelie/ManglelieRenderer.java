@@ -76,21 +76,21 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     @Override
-    public void doRender(ManglelieEntity f8_class2932, double d, double d2, double d3, float f, float f2) {
-        if (this.d_(f8_class2932)) {
+    public void doRender(ManglelieEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        if (this.d_(entity)) {
             return;
         }
-        if (this.a_0(f8_class2932)) {
+        if (this.a_0(entity)) {
             return;
         }
-        if (ManglelieRenderer.c(f8_class2932, 0.5f)) {
+        if (ManglelieRenderer.c(entity, 0.5f)) {
             return;
         }
-        if (this.c(f8_class2932)) {
+        if (this.c(entity)) {
             return;
         }
-        super.doRender(f8_class2932, d, d2, d3, f, f2);
-        ManglelieRenderer.a_9(f8_class2932, f2);
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        ManglelieRenderer.a_9(entity, partialTicks);
     }
 
     boolean c(ManglelieEntity f8_class2932) {
@@ -156,7 +156,7 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     public static void a_9(GirlEntity em_class2582, float f) {
-        EntityPlayerSP entityPlayerSP = ManglelieRenderer.i.player;
+        EntityPlayerSP entityPlayerSP = ManglelieRenderer.mc.player;
         if (entityPlayerSP == null) {
             return;
         }
@@ -169,14 +169,14 @@ extends GirlRenderer<ManglelieEntity> {
         if (em_class2582.boolean_h()) {
             GlStateManager.translate(0.0, 0.01, 0.0);
         } else {
-            GalathGeometryRender.setupRenderTranslations(i, em_class2582, f);
+            GalathGeometryRender.setupRenderTranslations(mc, em_class2582, f);
             ManglelieRenderer.b(em_class2582, f);
         }
-        i.getTextureManager().bindTexture(LINE);
+        mc.getTextureManager().bindTexture(LINE);
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
 
-        ManglelieRenderer.a_6(em_class2582, bufferBuilder, tessellator, GirlRenderer.a(em_class2582, f));
+        ManglelieRenderer.a_6(em_class2582, bufferBuilder, tessellator, GirlRenderer.getInterpolatedYaw(em_class2582, f));
         ManglelieRenderer.a(em_class2582, bufferBuilder, tessellator);
         GlStateManager.popMatrix();
         GlStateManager.enableCull();
@@ -242,17 +242,17 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     @Override
-    protected void a(BufferBuilder bufferBuilder, String string, GeoBone geoBone) {
-        ManglelieRenderer.a(this.j, string, geoBone, false);
-        Entity entity = ((ManglelieEntity)this.j).b_7();
+    protected void onBoneProcessing(BufferBuilder buffer, String boneName, GeoBone bone) {
+        ManglelieRenderer.a(this.renderEntity, boneName, bone, false);
+        Entity entity = ((ManglelieEntity)this.renderEntity).b_7();
         if (entity == null) {
             return;
         }
-        if ("weapon".equals(string) && ((ManglelieEntity)this.j).a(entity, i.getRenderPartialTicks())) {
-            this.a(bufferBuilder, geoBone, true);
+        if ("weapon".equals(boneName) && ((ManglelieEntity)this.renderEntity).a(entity, mc.getRenderPartialTicks())) {
+            this.a(buffer, bone, true);
         }
-        if ("offhand".equals(string) && !((ManglelieEntity)this.j).a(entity, i.getRenderPartialTicks())) {
-            this.a(bufferBuilder, geoBone, false);
+        if ("offhand".equals(boneName) && !((ManglelieEntity)this.renderEntity).a(entity, mc.getRenderPartialTicks())) {
+            this.a(buffer, bone, false);
         }
     }
 
@@ -273,20 +273,20 @@ extends GirlRenderer<ManglelieEntity> {
         }
         GlStateManager.scale(0.7, 0.7, 0.7);
         ItemStack itemStack = new ItemStack(Items.BOW);
-        float f = ((ManglelieEntity)this.j).float_b(i.getRenderPartialTicks());
+        float f = ((ManglelieEntity)this.renderEntity).float_b(mc.getRenderPartialTicks());
         if (f < 1.0f) {
             float f2 = (float) Reference.EaseOutQuart(f);
-            ((ManglelieEntity)this.j).d((int)(11.0f * (1.0f - f2) + 71980.0f));
-            ((ManglelieEntity)this.j).void_a(itemStack);
-            ((ManglelieEntity)this.j).setActiveHand(EnumHand.MAIN_HAND);
-            ((ManglelieEntity)this.j).W();
+            ((ManglelieEntity)this.renderEntity).d((int)(11.0f * (1.0f - f2) + 71980.0f));
+            ((ManglelieEntity)this.renderEntity).void_a(itemStack);
+            ((ManglelieEntity)this.renderEntity).setActiveHand(EnumHand.MAIN_HAND);
+            ((ManglelieEntity)this.renderEntity).W();
         } else {
-            ((ManglelieEntity)this.j).void_a(ItemStack.EMPTY);
-            ((ManglelieEntity)this.j).K();
+            ((ManglelieEntity)this.renderEntity).void_a(ItemStack.EMPTY);
+            ((ManglelieEntity)this.renderEntity).K();
         }
-        itemRenderer.renderItem(this.j, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+        itemRenderer.renderItem(this.renderEntity, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.j)));
+        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
         GL11.glDisable(2896);
         GlStateManager.popMatrix();
         GlStateManager.enableBlend();
@@ -301,7 +301,7 @@ extends GirlRenderer<ManglelieEntity> {
         }
         int n = ManglelieRenderer.a(string);
         if (Utils.isValueInBounds((double)n, 17.0, 35.0)) {
-            if (i.isGamePaused()) {
+            if (mc.isGamePaused()) {
                 return;
             }
             String string3 = string2 = n < 26 ? "cheekL" : "cheekR";
@@ -344,12 +344,12 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     @Override
-    protected void a(GeoModel geoModel, BufferBuilder bufferBuilder, ManglelieEntity f8_class2932, float f, float f2, float f3, float f4, float f5) {
-        if (!ManglelieModel.boolean_c(f8_class2932)) {
-            super.a(geoModel, bufferBuilder, f8_class2932, f, f2, f3, f4, f5);
+    protected void processModelSkeleton(GeoModel model, BufferBuilder buffer, ManglelieEntity entity, float r, float g, float b, float a, float partialTicks) {
+        if (!ManglelieModel.boolean_c(entity)) {
+            super.processModelSkeleton(model, buffer, entity, r, g, b, a, partialTicks);
             return;
         }
-        GeoBone geoBone = geoModel.topLevelBones.get(0);
+        GeoBone geoBone = model.topLevelBones.get(0);
         GeoBone geoBone2 = null;
         GeoBone geoBone3 = null;
         for (GeoBone geoBone4 : geoBone.childBones) {
@@ -369,15 +369,15 @@ extends GirlRenderer<ManglelieEntity> {
         MATRIX_STACK.rotate(geoBone);
         MATRIX_STACK.scale(geoBone);
         MATRIX_STACK.moveBackFromPivot(geoBone);
-        this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
+        this.renderRecursively(buffer, geoBone2, r, g, b, a);
         Tessellator.getInstance().draw();
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         try {
-            Minecraft.getMinecraft().renderEngine.bindTexture(this.d(this.j));
+            Minecraft.getMinecraft().renderEngine.bindTexture(this.getOrCreateDynamicSkin(this.renderEntity));
         } catch (IOException iOException) {
             iOException.printStackTrace();
         }
-        this.renderRecursively(bufferBuilder, geoBone3, f, f2, f3, (this.j).float_v());
+        this.renderRecursively(buffer, geoBone3, r, g, b, (this.renderEntity).float_v());
         Tessellator.getInstance().draw();
         MATRIX_STACK.pop();
     }
@@ -411,22 +411,22 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     @Override
-    protected Vec3d a(ManglelieEntity f8_class2932, float f, Vec3d vec3d) {
+    protected Vec3d applyCustomTranslationOffsets(ManglelieEntity entity, float partialTicks, Vec3d baseVector) {
         GalathEntity f__class2972;
-        if (f8_class2932.currentAction() == Action.RUN) {
+        if (entity.currentAction() == Action.RUN) {
             float f2;
-            f8_class2932.rotationYaw = f2 = f8_class2932.java_lang_Float_I().floatValue();
-            f8_class2932.prevRenderYawOffset = f2;
-            f8_class2932.renderYawOffset = f2;
-            f8_class2932.prevRotationYawHead = f2;
-            f8_class2932.rotationYawHead = f2;
-            return vec3d;
+            entity.rotationYaw = f2 = entity.java_lang_Float_I().floatValue();
+            entity.prevRenderYawOffset = f2;
+            entity.renderYawOffset = f2;
+            entity.prevRotationYawHead = f2;
+            entity.rotationYawHead = f2;
+            return baseVector;
         }
-        if (ManglelieRenderer.b_4(f8_class2932) && (f__class2972 = f8_class2932.com_trolmastercard_sexmod_f__class297_a(false)) != null) {
-            ManglelieRenderer.a(f__class2972, f, f8_class2932);
-            return ManglelieRenderer.b(f__class2972, f);
+        if (ManglelieRenderer.b_4(entity) && (f__class2972 = entity.com_trolmastercard_sexmod_f__class297_a(false)) != null) {
+            ManglelieRenderer.a(f__class2972, partialTicks, entity);
+            return ManglelieRenderer.b(f__class2972, partialTicks);
         }
-        return vec3d;
+        return baseVector;
     }
 
     public static void a(GalathEntity f__class2972, float f, EntityLivingBase entityLivingBase) {
@@ -450,7 +450,7 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     public static Vec3d b(GalathEntity f__class2972, float f) {
-        return ak_class32.a(f__class2972, ManglelieRenderer.i.player, f).add(f__class2972.b("mangPos"));
+        return ak_class32.a(f__class2972, ManglelieRenderer.mc.player, f).add(f__class2972.b("mangPos"));
     }
 
     public static Vec3d a(GalathEntity f__class2972, float f) {

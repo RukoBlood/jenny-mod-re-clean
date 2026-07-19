@@ -8,8 +8,8 @@ package com.trolmastercard.sexmod.girls.Kobold;
 
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.girls.d9_class168;
-import com.trolmastercard.sexmod.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.AbstractPlayerKoblinGoboldRenderer;
+import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.EnumAction;
@@ -20,77 +20,77 @@ import net.minecraft.util.math.Vec3i;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class PlayerKoboldRenderer
-extends d9_class168 {
+extends AbstractPlayerKoblinGoboldRenderer {
     public PlayerKoboldRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
         super(renderManager, animatedGeoModel);
     }
 
     @Override
-    protected Vec3i net_minecraft_util_math_Vec3i_a(String string) {
-        EntityDataManager entityDataManager = this.j.getDataManager();
+    protected Vec3i resolveBoneColor(String name) {
+        EntityDataManager entityDataManager = this.renderEntity.getDataManager();
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
         BlockPos blockPos = (BlockPos)entityDataManager.get(KoboldEntity.ACTION_TARGET_POS);
-        if (KoboldRenderer.t.contains(string)) {
+        if (KoboldRenderer.t.contains(name)) {
             return eyeAndKoboldColor_.getMainColor();
         }
-        if (KoboldRenderer.u.contains(string)) {
+        if (KoboldRenderer.u.contains(name)) {
             return eyeAndKoboldColor_.getSecondaryColor();
         }
-        if ("irisR".equals(string) || "irisL".equals(string)) {
+        if ("irisR".equals(name) || "irisL".equals(name)) {
             return blockPos;
         }
-        return z;
+        return DEFAULT_COLOR;
     }
 
     @Override
-    protected Vector4f a(String string, float f, float f2, float f3) {
+    protected Vector4f calculateBoneArmorColor(String boneName, float r, float g, float b) {
         String[] stringArray;
         int n;
-        if ("mouth".equals(string) && (n = Integer.parseInt((stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j))[7])) == 1) {
-            return new Vector4f(f, f2, f3, -0.078125f);
+        if ("mouth".equals(boneName) && (n = Integer.parseInt((stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity))[7])) == 1) {
+            return new Vector4f(r, g, b, -0.078125f);
         }
-        return super.a(string, f, f2, f3);
+        return super.calculateBoneArmorColor(boneName, r, g, b);
     }
 
     @Override
-    protected void d() {
-        float f = 0.25f - this.j.getDataManager().get(PlayerKobold.aA).floatValue();
+    protected void onRenderSetup() {
+        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.aA).floatValue();
         GlStateManager.scale(1.0f - f, 1.0f - f, 1.0f - f);
     }
 
     @Override
-    protected void void_b() {
-        float f = 0.25f - this.j.getDataManager().get(PlayerKobold.aA).floatValue();
+    protected void onRenderCleanup() {
+        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.aA).floatValue();
         double d = 1.0 / (1.0 - (double)f);
         GlStateManager.scale(d, d, d);
     }
 
     @Override
-    protected void void_c() {
+    protected void preRenderCallback() {
         GlStateManager.translate(0.0, -0.8f, 0.05);
         GlStateManager.scale(0.5, 0.5, 0.5);
     }
 
     @Override
-    protected void a(boolean bl, ItemStack itemStack) {
-        super.a(bl, itemStack);
-        if (itemStack.getItem().getItemUseAction(itemStack) == EnumAction.BOW) {
-            if (!bl) {
+    protected void applyItemPostRotation(boolean isLeftHand, ItemStack stack) {
+        super.applyItemPostRotation(isLeftHand, stack);
+        if (stack.getItem().getItemUseAction(stack) == EnumAction.BOW) {
+            if (!isLeftHand) {
                 GlStateManager.rotate(170.0f, 1.0f, 0.0f, 0.0f);
             }
-            if (bl) {
+            if (isLeftHand) {
                 GlStateManager.translate(0.1f, 0.0f, 0.0f);
             }
             return;
         }
-        GlStateManager.rotate(bl ? 80.0f : 180.0f, 1.0f, 0.0f, 0.0f);
+        GlStateManager.rotate(isLeftHand ? 80.0f : 180.0f, 1.0f, 0.0f, 0.0f);
     }
 
     @Override
-    protected void a(boolean bl, boolean bl2) {
-        super.a(bl, bl2);
-        if (bl) {
-            if (bl2) {
+    protected void applyShieldBlockingTransform(boolean isLeftHand, boolean isActive) {
+        super.applyShieldBlockingTransform(isLeftHand, isActive);
+        if (isLeftHand) {
+            if (isActive) {
                 GlStateManager.translate(0.06, 0.0, -0.13);
                 GlStateManager.rotate(60.0f, 0.0f, 1.0f, 0.0f);
                 GlStateManager.rotate(38.0f, 1.0f, 0.0f, 0.0f);
@@ -99,7 +99,7 @@ extends d9_class168 {
                 GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
                 GlStateManager.translate(0.0, -0.3f, -0.13);
             }
-        } else if (bl2) {
+        } else if (isActive) {
             GlStateManager.rotate(150.0f, 0.0f, 1.0f, 0.0f);
             GlStateManager.translate(0.0, -0.35, 0.0);
         } else {

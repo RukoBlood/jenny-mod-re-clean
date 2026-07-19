@@ -25,6 +25,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
@@ -160,7 +161,7 @@ implements ai_class30 {
 
     @Override
     public boolean boolean_d() {
-        return this.java_util_UUID_e() == null || !Minecraft.getMinecraft().player.getPersistentID().equals(this.java_util_UUID_m());
+        return this.java_util_UUID_e() == null || !Minecraft.getMinecraft().player.getPersistentID().equals(this.getOwnerUserUUID());
     }
 
     @Override
@@ -198,7 +199,7 @@ implements ai_class30 {
         this.void_a(entityPlayer.getPersistentID());
         this.setCurrentAction(Action.PICK_UP);
         this.void_b(45);
-        EntityPlayer entityPlayer2 = this.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
         if (entityPlayer2 == null) {
             return;
         }
@@ -318,7 +319,7 @@ implements ai_class30 {
 
     @SideOnly(value=Side.CLIENT)
     void void_f() {
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return;
         }
@@ -367,7 +368,7 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return;
         }
-        EntityPlayer entityPlayer2 = this.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
         if (entityPlayer2 == null) {
             return;
         }
@@ -383,7 +384,7 @@ implements ai_class30 {
             return;
         }
         eq_class2642.void_c(++n);
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return;
         }
@@ -435,7 +436,7 @@ implements ai_class30 {
         if (this.currentAction() != Action.THROWN) {
             return;
         }
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return;
         }
@@ -531,7 +532,7 @@ implements ai_class30 {
             return;
         }
         this.void_a((UUID)null);
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return;
         }

@@ -37,273 +37,268 @@ import software.bernie.geckolib3.geo.render.built.GeoCube;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-public class PlayerGirlRenderer
-extends GirlRenderer<GirlEntity> {
-    static public boolean v = false;
-    ItemStack s = ItemStack.EMPTY;
-    ItemStack x = ItemStack.EMPTY;
-    boolean r = false;
-    boolean u = false;
-    protected PlayerGirl w;
-    protected float y;
-    float t = 0.0f;
+public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
+    static public boolean forceRenderNextFrame = false;
+    ItemStack mainHandItem = ItemStack.EMPTY;
+    ItemStack offHandItem = ItemStack.EMPTY;
+    boolean isSneaking = false;
+    boolean isUsingItem = false;
+    protected PlayerGirl currentGirl;
+    protected float partialTicks;
+    float bowPullProgress = 0.0f;
 
     public PlayerGirlRenderer(RenderManager renderManager, AnimatedGeoModel<GirlEntity> animatedGeoModel) {
         super(renderManager, animatedGeoModel, 0.0);
     }
 
     @Override
-    public void doRenderShadowAndFire(Entity entity, double d, double d2, double d3, float f, float f2) {
+    public void doRenderShadowAndFire(Entity entity, double x, double y, double z, float yaw, float partialTicks) {
     }
 
     @CheckReturnValue
-    boolean a_13(GirlEntity em_class2582) {
-        if (em_class2582.boolean_h()) {
+    boolean shouldProceedWithRender(GirlEntity girl) {
+        if (girl.boolean_h()) {
             return true;
         }
-        boolean bl = v;
-        v = false;
-        return bl;
+        boolean shouldRender = forceRenderNextFrame;
+        forceRenderNextFrame = false;
+        return shouldRender;
     }
 
-    public void doRender(GirlEntity em_class2582, double d, double d2, double d3, float f, float f2) {
+    public void doRender(GirlEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         // TODO check clash above
-        if (!this.a_13(em_class2582)) {
+        if (!this.shouldProceedWithRender(entity)) {
             return;
         }
-        PlayerGirl ei_class2512 = (PlayerGirl)em_class2582;
-        if (ei_class2512.java_util_UUID_m() == null) {
+        PlayerGirl playerGirl = (PlayerGirl) entity;
+        if (playerGirl.getOwnerUserUUID() == null) {
             return;
         }
-        EntityPlayer entityPlayer = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(ei_class2512.java_util_UUID_m());
-        if (entityPlayer == null) {
+        EntityPlayer owner = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(playerGirl.getOwnerUserUUID());
+        if (owner == null) {
             return;
         }
-        this.s = entityPlayer.getHeldItemMainhand();
-        this.x = entityPlayer.getHeldItemOffhand();
-        this.u = ei_class2512.ah;
-        this.r = ei_class2512.isPlayerSneaking;
-        this.w = (PlayerGirl)em_class2582;
-        this.y = f2;
-        ei_class2512.f(entityPlayer);
-        if (this.a(entityPlayer, em_class2582)) {
-            this.renderLivingLabel(em_class2582, entityPlayer.getName(), d, d2 + (double)ei_class2512.float_i(), d3, 300);
+        this.mainHandItem = owner.getHeldItemMainhand();
+        this.offHandItem = owner.getHeldItemOffhand();
+        this.isUsingItem = playerGirl.ah;
+        this.isSneaking = playerGirl.isPlayerSneaking;
+        this.currentGirl = (PlayerGirl) entity;
+        this.partialTicks = partialTicks;
+        playerGirl.syncWithPlayerProperties(owner);
+        if (this.shouldRenderNameTag(owner, entity)) {
+            this.renderLivingLabel(entity, owner.getName(), x, y + (double)playerGirl.float_i(), z, 300);
         }
-        super.doRender(em_class2582, d, d2, d3, f, f2);
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
     @Override
-    public Entity c(GirlEntity em_class2582) {
-        if (!(em_class2582 instanceof PlayerGirl)) {
-            return em_class2582;
+    public Entity resolveTargetEntity(GirlEntity girl) {
+        if (!(girl instanceof PlayerGirl)) {
+            return girl;
         }
-        PlayerGirl ei_class2512 = (PlayerGirl)em_class2582;
-        EntityPlayer entityPlayer = ei_class2512.net_minecraft_entity_player_EntityPlayer_k();
-        if (entityPlayer == null) {
-            return em_class2582;
+        PlayerGirl girlOwned = (PlayerGirl)girl;
+        EntityPlayer owner = girlOwned.getOwnerPlayerEntity();
+        if (owner == null) {
+            return girl;
         }
-        return entityPlayer;
+        return owner;
     }
 
-    boolean a(EntityPlayer entityPlayer, GirlEntity em_class2582) {
-        if (entityPlayer.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID())) {
+    boolean shouldRenderNameTag(EntityPlayer player, GirlEntity girl) {
+        if (player.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID())) {
             return false;
         }
-        Action fp_class3242 = em_class2582.currentAction();
-        if (fp_class3242 == null) {
+        Action currentAction = girl.currentAction();
+        if (currentAction == null) {
             return true;
         }
-        return !fp_class3242.hideNameTag;
+        return !currentAction.hideNameTag;
     }
 
-    protected void a(String string, GeoBone geoBone) {
+    protected void onBoneRenderStart(String boneName, GeoBone geoBone) {
     }
 
-    protected void a(String string, GeoBone geoBone, PlayerGirl ei_class2512, BufferBuilder bufferBuilder) {
+    protected void onBoneRenderingLayer(String boneName, GeoBone bone, PlayerGirl playerGirl, BufferBuilder buffer) {
     }
 
     @Override
-    public void renderRecursively(BufferBuilder bufferBuilder, GeoBone geoBone, float f, float f2, float f3, float f4) {
+    public void renderRecursively(BufferBuilder buffer, GeoBone bone, float red, float green, float blue, float alpha) {
         //ItemStack itemStack;
-        String string = geoBone.getName();
-        if (this.r) {
-            if (string.equals("upperBody")) {
-                geoBone.setRotationX(geoBone.getRotationX() - 0.5f);
+        String boneName = bone.getName();
+        if (this.isSneaking) {
+            if (boneName.equals("upperBody")) {
+                bone.setRotationX(bone.getRotationX() - 0.5f);
             }
-            if (string.equals("head")) {
-                geoBone.setRotationX(geoBone.getRotationX() + 0.5f);
-            }
-        }
-        if (string.equals("head")) {
-            this.a(bufferBuilder, geoBone, Color.ofRGB(f, f2, f3));
-        }
-        this.a(string, geoBone);
-        this.a(string, geoBone, this.w, bufferBuilder);
-        if (this.u && (this.s.getItem() instanceof ItemBow || this.x.getItem() instanceof ItemBow)) {
-            if (string.equals("armR")) {
-                geoBone.setRotationX(geoBone.getRotationX() - this.j.rotationPitch / 50.0f);
-            }
-            if (string.equals("armL")) {
-                geoBone.setRotationY(geoBone.getRotationY() - this.j.rotationPitch / 50.0f);
-            }
-            if (this.x.getItem() instanceof ItemBow) {
-                ItemStack itemStack = this.x;
-                this.x = this.s;
-                this.s = itemStack;
+            if (boneName.equals("head")) {
+                bone.setRotationX(bone.getRotationX() + 0.5f);
             }
         }
-        if (this.u && this.s.getItem() instanceof ItemShield) {
-            if (string.equals("armR")) {
-                geoBone.setRotationZ(0.0f);
-                geoBone.setRotationX(0.5f);
-            } else if (this.x.getItem() instanceof ItemShield && string.equals("armL")) {
-                geoBone.setRotationZ(0.0f);
-                geoBone.setRotationX(0.5f);
+        if (boneName.equals("head")) {
+            this.renderOverlay(buffer, bone, Color.ofRGB(red, green, blue));
+        }
+        this.onBoneRenderStart(boneName, bone);
+        this.onBoneRenderingLayer(boneName, bone, this.currentGirl, buffer);
+        if (this.isUsingItem && (this.mainHandItem.getItem() instanceof ItemBow || this.offHandItem.getItem() instanceof ItemBow)) {
+            if (boneName.equals("armR")) {
+                bone.setRotationX(bone.getRotationX() - this.renderEntity.rotationPitch / 50.0f);
+            }
+            if (boneName.equals("armL")) {
+                bone.setRotationY(bone.getRotationY() - this.renderEntity.rotationPitch / 50.0f);
+            }
+            if (this.offHandItem.getItem() instanceof ItemBow) {
+                ItemStack itemStack = this.offHandItem;
+                this.offHandItem = this.mainHandItem;
+                this.mainHandItem = itemStack;
             }
         }
-        if (string.equals("weapon") && !this.s.isEmpty()) {
-            this.a(bufferBuilder, geoBone, false);
+        if (this.isUsingItem && this.mainHandItem.getItem() instanceof ItemShield) {
+            if (boneName.equals("armR")) {
+                bone.setRotationZ(0.0f);
+                bone.setRotationX(0.5f);
+            } else if (this.offHandItem.getItem() instanceof ItemShield && boneName.equals("armL")) {
+                bone.setRotationZ(0.0f);
+                bone.setRotationX(0.5f);
+            }
         }
-        if (string.equals("offhand") && !this.x.isEmpty()) {
-            this.a(bufferBuilder, geoBone, true);
+        if (boneName.equals("weapon") && !this.mainHandItem.isEmpty()) {
+            this.renderEquippedItem(buffer, bone, false);
+        }
+        if (boneName.equals("offhand") && !this.offHandItem.isEmpty()) {
+            this.renderEquippedItem(buffer, bone, true);
         }
         MATRIX_STACK.push();
-        MATRIX_STACK.translate(geoBone);
-        MATRIX_STACK.moveToPivot(geoBone);
-        MATRIX_STACK.rotate(geoBone);
-        MATRIX_STACK.scale(geoBone);
-        MATRIX_STACK.moveBackFromPivot(geoBone);
-        if ("Head2".equals(string) && !this.boolean_c()) {
+        MATRIX_STACK.translate(bone);
+        MATRIX_STACK.moveToPivot(bone);
+        MATRIX_STACK.rotate(bone);
+        MATRIX_STACK.scale(bone);
+        MATRIX_STACK.moveBackFromPivot(bone);
+        if ("Head2".equals(boneName) && !this.boolean_c()) {
             MATRIX_STACK.pop();
             return;
         }
-        if (("neck".equals(string) || "head".equals(string)) && this.boolean_a()) {
+        if (("neck".equals(boneName) || "head".equals(boneName)) && this.shouldHideHeadInFirstPerson()) {
             MATRIX_STACK.pop();
             return;
         }
-        if (!geoBone.isHidden) {
-            Vector4f itemStack = this.a(string, f, f2, f3);
-            f = ((Vector4f) itemStack).x;
-            f2 = ((Vector4f) itemStack).y;
-            f3 = ((Vector4f) itemStack).z;
+        if (!bone.isHidden) {
+            Vector4f itemStack = this.calculateBoneArmorColor(boneName, red, green, blue);
+            red = ((Vector4f) itemStack).x;
+            green = ((Vector4f) itemStack).y;
+            blue = ((Vector4f) itemStack).z;
             double d = ((Vector4f) itemStack).w;
-            if (!this.p.contains(string)) {
-                for (GeoCube object : geoBone.childCubes) {
+            if (!this.activeCustomPartBones.contains(boneName)) {
+                for (GeoCube object : bone.childCubes) {
                     MATRIX_STACK.push();
                     GlStateManager.pushMatrix();
-                    this.q = geoBone;
-                    this.a(bufferBuilder, object, f, f2, f3, f4, d);
+                    this.currentRenderingBone = bone;
+                    this.renderCubeGeometry(buffer, object, red, green, blue, alpha, d);
                     GlStateManager.popMatrix();
                     MATRIX_STACK.pop();
                 }
             }
-            for (GeoBone geoBone2 : geoBone.childBones) {
+            for (GeoBone geoBone2 : bone.childBones) {
                 if (d == 0.0) {
-                    this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
+                    this.renderRecursively(buffer, geoBone2, red, green, blue, alpha);
                     continue;
                 }
-                this.renderCustomBones(bufferBuilder, geoBone2, f, f2, f3, f4, d);
+                this.renderCustomBones(buffer, geoBone2, red, green, blue, alpha, d);
             }
         }
         MATRIX_STACK.pop();
     }
 
-    boolean boolean_a() {
-        if (!((PlayerGirl)this.j).boolean_f()) {
+    boolean shouldHideHeadInFirstPerson() {
+        if (!((PlayerGirl)this.renderEntity).boolean_f()) {
             return false;
         }
-        if (PlayerGirlRenderer.i.gameSettings.thirdPersonView != 0) {
+        if (PlayerGirlRenderer.mc.gameSettings.thirdPersonView != 0) {
             return false;
         }
-        return !(PlayerGirlRenderer.i.currentScreen instanceof GuiInventory) && !(PlayerGirlRenderer.i.currentScreen instanceof GuiContainerCreative);
+        return !(PlayerGirlRenderer.mc.currentScreen instanceof GuiInventory) && !(PlayerGirlRenderer.mc.currentScreen instanceof GuiContainerCreative);
     }
 
-    void a(BufferBuilder bufferBuilder, GeoBone geoBone, Color color) {
+    void renderOverlay(BufferBuilder buffer, GeoBone bone, Color color) {
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
-        GL11.glEnable(2896);
-        this.void_c();
-        new bu_class100((IGeoRenderer)this).render(this.j, this.j.limbSwing, this.j.limbSwingAmount, this.y, 0.0f, 0.0f, 0.0f, color);
-        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.j)));
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        this.preRenderCallback();
+        new bu_class100((IGeoRenderer)this).render(this.renderEntity, this.renderEntity.limbSwing, this.renderEntity.limbSwingAmount, this.partialTicks, 0.0f, 0.0f, 0.0f, color);
+        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(2896);
         GlStateManager.popMatrix();
     }
 
-    protected void void_c() {
+    protected void preRenderCallback() {
     }
 
-    void a(BufferBuilder bufferBuilder, GeoBone geoBone, boolean bl) {
+    void renderEquippedItem(BufferBuilder buffer, GeoBone bone, boolean isLeftHand) {
         ItemRenderer itemRenderer = Minecraft.getMinecraft().getItemRenderer();
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
-        GL11.glEnable(2896);
+        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
+        GL11.glEnable(GL11.GL_LIGHTING);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        ItemStack itemStack = bl ? this.x : this.s;
-        switch (itemStack.getItem().getItemUseAction(itemStack)) {
+        ItemStack stack = isLeftHand ? this.offHandItem : this.mainHandItem;
+        switch (stack.getItem().getItemUseAction(stack)) {
             case BOW: {
-                this.a(bl);
+                this.applyBowRotation(isLeftHand);
                 break;
             }
             case BLOCK: {
-                this.a(bl, this.u);
+                this.applyShieldBlockingTransform(isLeftHand, this.isUsingItem);
             }
         }
-        if (this.u && !bl && itemStack.getItem() instanceof ItemBow) {
-            this.t += 0.015f;
-            this.j.d(Math.round(-this.t * 20.0f + (float)itemStack.getMaxItemUseDuration()));
-            this.j.void_a(itemStack);
-            this.j.setActiveHand(EnumHand.MAIN_HAND);
-            this.j.W();
+        if (this.isUsingItem && !isLeftHand && stack.getItem() instanceof ItemBow) {
+            this.bowPullProgress += 0.015f;
+            this.renderEntity.d(Math.round(-this.bowPullProgress * 20.0f + (float)stack.getMaxItemUseDuration()));
+            this.renderEntity.void_a(stack);
+            this.renderEntity.setActiveHand(EnumHand.MAIN_HAND);
+            this.renderEntity.W();
         } else {
-            this.t = 0.0f;
-            this.j.d(0);
-            this.j.void_a(ItemStack.EMPTY);
-            this.j.W();
+            this.bowPullProgress = 0.0f;
+            this.renderEntity.d(0);
+            this.renderEntity.void_a(ItemStack.EMPTY);
+            this.renderEntity.W();
         }
-        this.a(bl, itemStack);
+        this.applyItemPostRotation(isLeftHand, stack);
         GlStateManager.scale(0.75f, 0.75f, 0.75f);
-        itemRenderer.renderItem(this.j, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.j)));
-        GL11.glDisable(2896);
+        itemRenderer.renderItem(this.renderEntity, stack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
+        GL11.glDisable(GL11.GL_LIGHTING);
         GlStateManager.popMatrix();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
     }
 
-    protected void a(boolean bl, ItemStack itemStack) {
-        GlStateManager.rotate(bl ? 200.0f : 90.0f, 1.0f, 0.0f, 0.0f);
+    protected void applyItemPostRotation(boolean isLeftHand, ItemStack stack) {
+        GlStateManager.rotate(isLeftHand ? 200.0f : 90.0f, 1.0f, 0.0f, 0.0f);
     }
 
-    protected void a(boolean bl) {
+    protected void applyBowRotation(boolean isLeftHand) {
         GlStateManager.rotate(20.0f, 1.0f, 0.0f, 0.0f);
     }
 
-    protected void a(boolean bl, boolean bl2) {
-        if (bl) {
+    protected void applyShieldBlockingTransform(boolean isLeftHand, boolean isActive) {
+        if (isLeftHand) {
             GlStateManager.rotate(180.0f, 0.0f, 1.0f, 0.0f);
             GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
-            if (bl2) {
+            if (isActive) {
                 GlStateManager.rotate(-90.0f, 0.0f, 1.0f, 0.0f);
                 GlStateManager.rotate(35.0f, 0.0f, 0.0f, 1.0f);
                 GlStateManager.rotate(-20.0f, 1.0f, 0.0f, 0.0f);
                 GlStateManager.translate(0.0f, 0.0f, 0.228f);
             }
-        } else if (bl2) {
+        } else if (isActive) {
             GlStateManager.rotate(-90.0f, 1.0f, 0.0f, 0.0f);
             GlStateManager.rotate(-90.0f, 0.0f, 0.0f, 1.0f);
             GlStateManager.translate(0.0f, 0.165f, 0.0f);
         }
-    }
-
-    private static IllegalStateException b(IllegalStateException illegalStateException) {
-        return illegalStateException;
     }
 }
 

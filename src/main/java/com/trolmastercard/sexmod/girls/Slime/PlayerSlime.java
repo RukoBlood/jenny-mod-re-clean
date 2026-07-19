@@ -145,7 +145,7 @@ extends PlayerGirl {
         this.setCurrentAction(Action.DOGGYSTART);
         entityPlayer.setNoGravity(true);
         entityPlayer.noClip = true;
-        EntityPlayer entityPlayer2 = this.world.getPlayerEntityByUUID(this.java_util_UUID_m());
+        EntityPlayer entityPlayer2 = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
         entityPlayer2.setNoGravity(true);
         entityPlayer.noClip = true;
         entityPlayer.capabilities.isFlying = true;

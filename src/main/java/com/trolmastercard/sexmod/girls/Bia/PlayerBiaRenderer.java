@@ -17,30 +17,30 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void void_c() {
+    protected void preRenderCallback() {
         GlStateManager.translate(0.0, -1.0, -0.05);
         GlStateManager.scale(0.65f, 0.65f, 0.65f);
     }
 
     @Override
-    protected void a(boolean bl) {
-        super.a(bl);
-        if (bl) {
+    protected void applyBowRotation(boolean isLeftHand) {
+        super.applyBowRotation(isLeftHand);
+        if (isLeftHand) {
             GlStateManager.translate(0.15, 0.0, 0.0);
         }
     }
 
     @Override
-    protected void a(boolean bl, boolean bl2) {
-        super.a(bl, bl2);
-        if (!bl && !bl2) {
+    protected void applyShieldBlockingTransform(boolean isLeftHand, boolean isActive) {
+        super.applyShieldBlockingTransform(isLeftHand, isActive);
+        if (!isLeftHand && !isActive) {
             GlStateManager.translate(0.0, -0.1, 0.05);
             GlStateManager.rotate(40.0f, 1.0f, 0.0f, 0.0f);
             GlStateManager.rotate(0.0f, 0.0f, 1.0f, 0.0f);
             GlStateManager.rotate(0.0f, 0.0f, 0.0f, 1.0f);
             return;
         }
-        if (bl && !bl2) {
+        if (isLeftHand && !isActive) {
             GlStateManager.translate(-0.025, -0.1, 0.0);
             return;
         }

@@ -13,8 +13,9 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.d9_class168;
+import com.trolmastercard.sexmod.girls.AbstractPlayerKoblinGoboldRenderer;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.Vector3f;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -32,8 +33,7 @@ import net.minecraft.util.math.Vec3i;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class PlayerGoblinRenderer
-extends d9_class168 {
+public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
     PlayerGoblin B = null;
     boolean C = false;
     boolean E = false;
@@ -44,38 +44,38 @@ extends d9_class168 {
     }
 
     @Override
-    protected Vec3i net_minecraft_util_math_Vec3i_a(String string) {
-        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j);
+    protected Vec3i resolveBoneColor(String name) {
+        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity);
         if (stringArray.length < 8) {
-            return z;
+            return DEFAULT_COLOR;
         }
-        if (string.contains("band")) {
+        if (name.contains("band")) {
             return GoblinRenderer.w;
         }
-        if (string.contains("eyeColor") || string.contains("eyeColor2")) {
+        if (name.contains("eyeColor") || name.contains("eyeColor2")) {
             return GoblinRenderer.unknownCalcVec(stringArray[8]);
         }
-        if (string.contains("variant") || string.contains("boob")) {
+        if (name.contains("variant") || name.contains("boob")) {
             return GoblinRenderer.c(stringArray[7]);
         }
-        if (string.contains("hair")) {
+        if (name.contains("hair")) {
             return GoblinRenderer.d(stringArray[6]);
         }
-        if (GoblinRenderer.D.contains(string)) {
+        if (GoblinRenderer.D.contains(name)) {
             return GoblinRenderer.c(stringArray[7]);
         }
-        if (GoblinRenderer.M.contains(string)) {
+        if (GoblinRenderer.M.contains(name)) {
             return GoblinRenderer.d(stringArray[6]);
         }
-        return z;
+        return DEFAULT_COLOR;
     }
 
     @Override
-    protected Vector4f a(String string, float f, float f2, float f3) {
-        if (string.startsWith("crown")) {
-            ItemStack itemStack = this.j.getDataManager().get(Fighter.ITEM_SLOT_3);
+    protected Vector4f calculateBoneArmorColor(String boneName, float r, float g, float b) {
+        if (boneName.startsWith("crown")) {
+            ItemStack itemStack = this.renderEntity.getDataManager().get(Fighter.ITEM_SLOT_3);
             if (itemStack.isEmpty()) {
-                return super.a(string, f, f2, f3);
+                return super.calculateBoneArmorColor(boneName, r, g, b);
             }
             ItemArmor itemArmor = (ItemArmor)itemStack.getItem();
             ItemArmor.ArmorMaterial armorMaterial = itemArmor.getArmorMaterial();
@@ -96,14 +96,14 @@ extends d9_class168 {
                     float f5 = (float)(n >> 16 & 0xFF) / 255.0f;
                     float f6 = (float)(n >> 8 & 0xFF) / 255.0f;
                     float f7 = (float)(n & 0xFF) / 255.0f;
-                    f = f5;
-                    f2 = f6;
-                    f3 = f7;
+                    r = f5;
+                    g = f6;
+                    b = f7;
                 }
             }
-            return new Vector4f(f, f2, f3, 72.0f * f4 / 4096.0f);
+            return new Vector4f(r, g, b, 72.0f * f4 / 4096.0f);
         }
-        return super.a(string, f, f2, f3);
+        return super.calculateBoneArmorColor(boneName, r, g, b);
     }
 
     @Override
@@ -132,12 +132,12 @@ extends d9_class168 {
     }
 
     @Override
-    protected void a(String string, GeoBone geoBone) {
-        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.j);
+    protected void onBoneRenderStart(String boneName, GeoBone geoBone) {
+        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity);
         if (stringArray.length < 8) {
             return;
         }
-        switch (string) {
+        switch (boneName) {
             case "earL": {
                 GoblinRenderer.a(geoBone, stringArray[0], stringArray[1], stringArray[3]);
                 break;
@@ -152,7 +152,7 @@ extends d9_class168 {
             }
             case "body": {
                 geoBone.setPivotY(-0.15f);
-                GoblinRenderer.a(this.j, geoBone);
+                GoblinRenderer.a(this.renderEntity, geoBone);
                 break;
             }
             case "LegR": {
@@ -171,132 +171,132 @@ extends d9_class168 {
                 GoblinRenderer.a(this.C, geoBone, 5.0f, 3.0f);
             }
         }
-        if (string.contains("crown")) {
-            GoblinRenderer.a(this.j, geoBone, stringArray[9]);
+        if (boneName.contains("crown")) {
+            GoblinRenderer.a(this.renderEntity, geoBone, stringArray[9]);
         }
     }
 
     @Override
-    public void doRender(GirlEntity em_class2582, double d, double d2, double d3, float f, float f2) {
+    public void doRender(GirlEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         Object object;
-        this.D = v;
-        this.B = (PlayerGoblin)em_class2582;
-        this.C = -420.69f == f && em_class2582.currentAction() == Action.SHOULDER_IDLE;
-        this.E = -420.69f == f && em_class2582.currentAction() == Action.PICK_UP;
-        this.y = f2;
-        GoblinRenderer.B = f;
-        Action fp_class3242 = em_class2582.currentAction();
+        this.D = forceRenderNextFrame;
+        this.B = (PlayerGoblin) entity;
+        this.C = -420.69f == entityYaw && entity.currentAction() == Action.SHOULDER_IDLE;
+        this.E = -420.69f == entityYaw && entity.currentAction() == Action.PICK_UP;
+        this.partialTicks = partialTicks;
+        GoblinRenderer.B = entityYaw;
+        Action fp_class3242 = entity.currentAction();
         UUID uUID = this.B.java_util_UUID_e();
-        if (em_class2582.boolean_h()) {
-            object = GoblinRenderer.a(em_class2582.world, em_class2582, uUID, d, d2, d3);
-            d = ((Vec3d)object).x;
-            d2 = ((Vec3d)object).y;
-            d3 = ((Vec3d)object).z;
+        if (entity.boolean_h()) {
+            object = GoblinRenderer.a(entity.world, entity, uUID, x, y, z);
+            x = ((Vec3d)object).x;
+            y = ((Vec3d)object).y;
+            z = ((Vec3d)object).z;
         }
         if (fp_class3242 == Action.THROWN || fp_class3242 == Action.START_THROWING) {
-            if (PlayerGoblinRenderer.i.gameSettings.thirdPersonView == 0 && f == -420.69f && !em_class2582.boolean_h()) {
+            if (PlayerGoblinRenderer.mc.gameSettings.thirdPersonView == 0 && entityYaw == -420.69f && !entity.boolean_h()) {
                 return;
             }
-            if (!em_class2582.boolean_h()) {
+            if (!entity.boolean_h()) {
                 float f3;
-                em_class2582.prevRenderYawOffset = f3 = em_class2582.java_lang_Float_I().floatValue();
-                em_class2582.renderYawOffset = f3;
+                entity.prevRenderYawOffset = f3 = entity.java_lang_Float_I().floatValue();
+                entity.renderYawOffset = f3;
             }
         }
-        if (GoblinRenderer.a(em_class2582, fp_class3242)) {
-            if (PlayerGoblinRenderer.i.player.getPersistentID().equals(uUID)) {
-                if (-420.69f != f) {
+        if (GoblinRenderer.a(entity, fp_class3242)) {
+            if (PlayerGoblinRenderer.mc.player.getPersistentID().equals(uUID)) {
+                if (-420.69f != entityYaw) {
                     return;
                 }
-                em_class2582.renderYawOffset = PlayerGoblinRenderer.i.player.rotationYaw + 180.0f;
-                em_class2582.prevRenderYawOffset = PlayerGoblinRenderer.i.player.rotationYaw + 180.0f;
-                object = PlayerGoblinRenderer.i.player.getLookVec();
+                entity.renderYawOffset = PlayerGoblinRenderer.mc.player.rotationYaw + 180.0f;
+                entity.prevRenderYawOffset = PlayerGoblinRenderer.mc.player.rotationYaw + 180.0f;
+                object = PlayerGoblinRenderer.mc.player.getLookVec();
                 GlStateManager.pushMatrix();
-                GlStateManager.translate(((Vec3d)object).x, ((Vec3d)object).y + (double) PlayerGoblinRenderer.i.player.getEyeHeight(), ((Vec3d)object).z);
-                Vec3d vec3d = GoblinEntity.b(new Vec3d(-Math.abs(PlayerGoblinRenderer.i.player.rotationPitch), 0.0, 0.0), PlayerGoblinRenderer.i.player.rotationYaw);
-                GlStateManager.rotate(PlayerGoblinRenderer.i.player.rotationPitch, (float)vec3d.x, 0.0f, (float)vec3d.z);
-                d = 0.0;
-                d2 = 0.0;
-                d3 = 0.0;
-            } else if (!this.B.java_util_UUID_m().equals(PlayerGoblinRenderer.i.player.getPersistentID())) {
-                if (!em_class2582.boolean_h() || uUID == null || PlayerGoblinRenderer.i.player.getPersistentID().equals(uUID)) {
-                    if (uUID != null && !PlayerGoblinRenderer.i.player.getPersistentID().equals(uUID)) {
-                        object = em_class2582.world.getPlayerEntityByUUID(uUID);
+                GlStateManager.translate(((Vec3d)object).x, ((Vec3d)object).y + (double) PlayerGoblinRenderer.mc.player.getEyeHeight(), ((Vec3d)object).z);
+                Vec3d vec3d = GoblinEntity.b(new Vec3d(-Math.abs(PlayerGoblinRenderer.mc.player.rotationPitch), 0.0, 0.0), PlayerGoblinRenderer.mc.player.rotationYaw);
+                GlStateManager.rotate(PlayerGoblinRenderer.mc.player.rotationPitch, (float)vec3d.x, 0.0f, (float)vec3d.z);
+                x = 0.0;
+                y = 0.0;
+                z = 0.0;
+            } else if (!this.B.getOwnerUserUUID().equals(PlayerGoblinRenderer.mc.player.getPersistentID())) {
+                if (!entity.boolean_h() || uUID == null || PlayerGoblinRenderer.mc.player.getPersistentID().equals(uUID)) {
+                    if (uUID != null && !PlayerGoblinRenderer.mc.player.getPersistentID().equals(uUID)) {
+                        object = entity.world.getPlayerEntityByUUID(uUID);
                         if (object != null) {
-                            em_class2582.renderYawOffset = ((EntityPlayer)object).rotationYaw;
-                            em_class2582.prevRenderYawOffset = ((EntityPlayer)object).rotationYaw;
+                            entity.renderYawOffset = ((EntityPlayer)object).rotationYaw;
+                            entity.prevRenderYawOffset = ((EntityPlayer)object).rotationYaw;
                         }
                     } else {
-                        em_class2582.renderYawOffset = PlayerGoblinRenderer.i.player.rotationYaw;
-                        em_class2582.prevRenderYawOffset = PlayerGoblinRenderer.i.player.rotationYaw;
+                        entity.renderYawOffset = PlayerGoblinRenderer.mc.player.rotationYaw;
+                        entity.prevRenderYawOffset = PlayerGoblinRenderer.mc.player.rotationYaw;
                     }
                 }
-                object = GoblinRenderer.a(em_class2582, this.B.java_util_UUID_e(), f2);
-                d = ((Vec3d)object).x;
-                d2 = ((Vec3d)object).y;
-                d3 = ((Vec3d)object).z;
+                object = GoblinRenderer.a(entity, this.B.java_util_UUID_e(), partialTicks);
+                x = ((Vec3d)object).x;
+                y = ((Vec3d)object).y;
+                z = ((Vec3d)object).z;
             }
         } else if (this.C) {
-            GoblinRenderer.a(f2);
-            object = new Vec3d(Reference.LerpFloat(-0.1f, 0.2f, PlayerGoblinRenderer.i.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
-            object = GoblinEntity.b((Vec3d)object, PlayerGoblinRenderer.i.player.rotationYaw);
-            d = ((Vec3d)object).x;
-            d2 = ((Vec3d)object).y;
-            d3 = ((Vec3d)object).z;
-            em_class2582.renderYawOffset = PlayerGoblinRenderer.i.player.rotationYaw;
-            em_class2582.prevRenderYawOffset = PlayerGoblinRenderer.i.player.prevRotationYaw;
-            if (PlayerGoblinRenderer.i.player.isSneaking()) {
-                d2 -= 0.075;
+            GoblinRenderer.a(partialTicks);
+            object = new Vec3d(Reference.LerpFloat(-0.1f, 0.2f, PlayerGoblinRenderer.mc.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
+            object = GoblinEntity.b((Vec3d)object, PlayerGoblinRenderer.mc.player.rotationYaw);
+            x = ((Vec3d)object).x;
+            y = ((Vec3d)object).y;
+            z = ((Vec3d)object).z;
+            entity.renderYawOffset = PlayerGoblinRenderer.mc.player.rotationYaw;
+            entity.prevRenderYawOffset = PlayerGoblinRenderer.mc.player.prevRotationYaw;
+            if (PlayerGoblinRenderer.mc.player.isSneaking()) {
+                y -= 0.075;
             }
         } else if (fp_class3242 == Action.SHOULDER_IDLE) {
             if (uUID == null) {
                 return;
             }
-            if (PlayerGoblinRenderer.i.player.getPersistentID().equals(uUID) && PlayerGoblinRenderer.i.gameSettings.thirdPersonView == 0) {
+            if (PlayerGoblinRenderer.mc.player.getPersistentID().equals(uUID) && PlayerGoblinRenderer.mc.gameSettings.thirdPersonView == 0) {
                 return;
             }
-            object = em_class2582.world.getPlayerEntityByUUID(uUID);
+            object = entity.world.getPlayerEntityByUUID(uUID);
             if (object == null) {
                 return;
             }
-            Vector4f vector4f = GoblinRenderer.a_0((EntityPlayer)object, f2);
-            d = vector4f.x;
-            d2 = vector4f.y;
-            d3 = vector4f.z;
-            em_class2582.renderYawOffset = vector4f.w;
+            Vector4f vector4f = GoblinRenderer.a_0((EntityPlayer)object, partialTicks);
+            x = vector4f.x;
+            y = vector4f.y;
+            z = vector4f.z;
+            entity.renderYawOffset = vector4f.w;
             if (((Entity)object).isSneaking()) {
-                d2 -= 0.32;
+                y -= 0.32;
             }
-        } else if (fp_class3242 == Action.PICK_UP && uUID != null && (object = em_class2582.world.getPlayerEntityByUUID(uUID)) != null) {
-            em_class2582.prevRenderYawOffset = ((EntityPlayer)object).prevRotationYawHead;
-            em_class2582.renderYawOffset = ((EntityPlayer)object).rotationYawHead;
+        } else if (fp_class3242 == Action.PICK_UP && uUID != null && (object = entity.world.getPlayerEntityByUUID(uUID)) != null) {
+            entity.prevRenderYawOffset = ((EntityPlayer)object).prevRotationYawHead;
+            entity.renderYawOffset = ((EntityPlayer)object).rotationYawHead;
         }
-        super.doRender(em_class2582, d, d2, d3, f, f2);
-        if (GoblinRenderer.a(em_class2582, fp_class3242) && PlayerGoblinRenderer.i.gameSettings.thirdPersonView == 0 && PlayerGoblinRenderer.i.player.getPersistentID().equals(uUID)) {
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        if (GoblinRenderer.a(entity, fp_class3242) && PlayerGoblinRenderer.mc.gameSettings.thirdPersonView == 0 && PlayerGoblinRenderer.mc.player.getPersistentID().equals(uUID)) {
             GlStateManager.popMatrix();
         }
     }
 
     @Override
-    protected void b(Tessellator tessellator, BufferBuilder bufferBuilder, GirlEntity em_class2582, Vector3f f7_class2922, float f) {
-        PlayerGoblinRenderer.a(tessellator, bufferBuilder, em_class2582, f7_class2922, f);
+    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3f rgb, float thickness) {
+        PlayerGoblinRenderer.drawCustomOverlayBundle(tessellator, buffer, girl, rgb, thickness);
     }
 
     @Nullable
-    protected Vector3f e(GirlEntity em_class2582) {
+    protected Vector3f getAdditionalOverlayColor(GirlEntity entity) {
         if (!this.D) {
             return null;
         }
-        if (!(em_class2582 instanceof PlayerGoblin)) {
+        if (!(entity instanceof PlayerGoblin)) {
             return null;
         }
-        PlayerGoblin eq_class2642 = (PlayerGoblin)em_class2582;
-        UUID uUID = eq_class2642.java_util_UUID_m();
-        EntityPlayerSP entityPlayerSP = PlayerGoblinRenderer.i.player;
-        if (uUID == null || PlayerGoblinRenderer.i.gameSettings.thirdPersonView == 0 && entityPlayerSP.getPersistentID().equals(uUID)) {
+        PlayerGoblin eq_class2642 = (PlayerGoblin) entity;
+        UUID uUID = eq_class2642.getOwnerUserUUID();
+        EntityPlayerSP entityPlayerSP = PlayerGoblinRenderer.mc.player;
+        if (uUID == null || PlayerGoblinRenderer.mc.gameSettings.thirdPersonView == 0 && entityPlayerSP.getPersistentID().equals(uUID)) {
             return null;
         }
-        EntityPlayer entityPlayer = eq_class2642.net_minecraft_entity_player_EntityPlayer_k();
+        EntityPlayer entityPlayer = eq_class2642.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return null;
         }
@@ -329,16 +329,16 @@ extends d9_class168 {
     }
 
     @Override
-    protected void void_c() {
+    protected void preRenderCallback() {
         GlStateManager.translate(0.0, -0.77, -0.05);
         GlStateManager.scale(0.5, 0.5, 0.5);
     }
 
     @Override
-    protected void a(boolean bl, ItemStack itemStack) {
-        super.a(bl, itemStack);
-        if (itemStack.getItem().getItemUseAction(itemStack) == EnumAction.BOW) {
-            if (bl) {
+    protected void applyItemPostRotation(boolean isLeftHand, ItemStack stack) {
+        super.applyItemPostRotation(isLeftHand, stack);
+        if (stack.getItem().getItemUseAction(stack) == EnumAction.BOW) {
+            if (isLeftHand) {
                 GlStateManager.translate(0.1f, 0.0f, 0.0f);
                 GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
             } else {
@@ -346,19 +346,19 @@ extends d9_class168 {
             }
             return;
         }
-        GlStateManager.rotate(bl ? 70.0f : 180.0f, 1.0f, 0.0f, 0.0f);
+        GlStateManager.rotate(isLeftHand ? 70.0f : 180.0f, 1.0f, 0.0f, 0.0f);
         GlStateManager.translate(0.0, 0.05, -0.03);
     }
 
     @Override
-    protected void a(boolean bl) {
+    protected void applyBowRotation(boolean isLeftHand) {
     }
 
     @Override
-    protected void a(boolean bl, boolean bl2) {
-        super.a(bl, bl2);
-        if (bl) {
-            if (bl2) {
+    protected void applyShieldBlockingTransform(boolean isLeftHand, boolean isActive) {
+        super.applyShieldBlockingTransform(isLeftHand, isActive);
+        if (isLeftHand) {
+            if (isActive) {
                 GlStateManager.translate(0.0, 0.2, -0.25);
                 GlStateManager.rotate(85.0f, 0.0f, 1.0f, 0.0f);
                 GlStateManager.rotate(38.0f, 1.0f, 0.0f, 0.0f);
@@ -367,7 +367,7 @@ extends d9_class168 {
                 GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
                 GlStateManager.translate(0.0, -0.265, -0.04);
             }
-        } else if (bl2) {
+        } else if (isActive) {
             GlStateManager.rotate(0.0f, 1.0f, 0.0f, 0.0f);
             GlStateManager.rotate(150.0f, 0.0f, 1.0f, 0.0f);
             GlStateManager.rotate(0.0f, 0.0f, 0.0f, 1.0f);
