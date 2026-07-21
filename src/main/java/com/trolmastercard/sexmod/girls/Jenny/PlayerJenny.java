@@ -51,7 +51,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 1.75f;
     }
 
@@ -345,17 +345,17 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "stripMSG1": {
-                    this.h("Hihi~");
+                    this.broadcastChatMessage("Hihi~");
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "paymentMSG1": {
-                    this.h("Huh?");
+                    this.broadcastChatMessage("Huh?");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_HUH[1]);
                     break;
                 }
                 case "paymentMSG2": {
-                    this.a(SoundsHandler.MISC_PLOB[0], 0.5f);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0], 0.5f);
                     String string = "<" + Minecraft.getMinecraft().player.getName() + "> ";
                     switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
                         case "strip": {
@@ -379,7 +379,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "paymentMSG3": {
-                    this.h("Hehe~");
+                    this.broadcastChatMessage("Hehe~");
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
@@ -389,7 +389,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "paymentMSG4": {
-                    this.a(SoundsHandler.MISC_PLOB[0], 0.25f);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0], 0.25f);
                     break;
                 }
                 case "paymentDone": {
@@ -397,7 +397,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG1": {
-                    this.h("What are you...");
+                    this.broadcastChatMessage("What are you...");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
                     this.cameraYaw = 180.0f;
                     if (!this.isControlledByLocalPlayer()) break;
@@ -405,12 +405,12 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG2": {
-                    this.h("eh... boys...");
+                    this.broadcastChatMessage("eh... boys...");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG3": {
-                    this.h("OHOhh...!");
+                    this.broadcastChatMessage("OHOhh...!");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_AFTERSESSIONMOAN[0]);
                     break;
                 }
@@ -419,29 +419,29 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG5": {
-                    this.h("Was this really necessary?!");
-                    this.a(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
+                    this.broadcastChatMessage("Was this really necessary?!");
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "bjiMSG6": {
-                    this.h("Oh~");
+                    this.broadcastChatMessage("Oh~");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG7": {
-                    this.h("You like it?~");
+                    this.broadcastChatMessage("You like it?~");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[4]);
                     break;
                 }
                 case "bjiMSG8": {
                     this.b("<" + Minecraft.getMinecraft().player.getName() + "> Yee", true);
-                    this.a(SoundsHandler.MISC_PLOB[0], 0.5f);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0], 0.5f);
                     break;
                 }
                 case "bjiMSG9": {
-                    this.h("Hihihi~");
+                    this.broadcastChatMessage("Hihihi~");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[2]);
                     break;
                 }
@@ -484,14 +484,14 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "doggyfastReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     this.ar = true;
                     break;
                 }
                 case "bjtReady": 
                 case "paizuriReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "bjcMSG1": {
@@ -543,17 +543,17 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggyGoOnBedMSG2": {
-                    this.void_a("what are you waiting for?~");
+                    this.sendLocalClientMessage("what are you waiting for?~");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[9]);
                     break;
                 }
                 case "doggyGoOnBedMSG3": {
-                    this.void_a("this ass ain't gonna fuck itself...");
+                    this.sendLocalClientMessage("this ass ain't gonna fuck itself...");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[0]);
                     break;
                 }
                 case "doggyGoOnBedMSG4": {
-                    this.a(SoundsHandler.MISC_SLAP[0], 0.75f);
+                    this.PlaySound(SoundsHandler.MISC_SLAP[0], 0.75f);
                     break;
                 }
                 case "doggyGoOnBedDone": {
@@ -570,7 +570,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG3": {
-                    this.a(SoundsHandler.MISC_BEDRUSTLE[1], 0.5f);
+                    this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[1], 0.5f);
                     break;
                 }
                 case "doggystartMSG4": {
@@ -581,7 +581,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MOAN));
                     break;
                 }
@@ -593,7 +593,7 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "doggyslowMSG1": {
                     this.ar = false;
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
@@ -610,11 +610,11 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggyslowMSG2": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING), 0.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING), 0.5f);
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
@@ -637,8 +637,8 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggycumMSG1": {
-                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 2.0f);
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 2.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MOAN));
                     break;
                 }

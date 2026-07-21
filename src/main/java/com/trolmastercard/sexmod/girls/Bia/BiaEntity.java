@@ -76,13 +76,13 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return -0.2f;
     }
 
     @Override
     public void SetHome() {
-        this.void_a("I am living here now nya~");
+        this.sendLocalClientMessage("I am living here now nya~");
         this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH, new int[0]);
     }
 
@@ -133,7 +133,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 try {
                     TARGET_POS.equals(null);
                 } catch (NullPointerException nullPointerException) {
-                    this.setTargetPosition(this.net_minecraft_util_math_Vec3d_aa());
+                    this.setTargetPosition(this.getFrontOffsetVector());
                 }
                 this.setNoGravity(false);
                 Vec3d vec3d = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
@@ -182,7 +182,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             return true;
         }
         if (this.world.isRemote && !this.openGuiForPlayer(entityPlayer)) {
-            this.void_a(I18n.format("bia.dialogue.busy", new Object[0]));
+            this.sendLocalClientMessage(I18n.format("bia.dialogue.busy", new Object[0]));
         }
         return true;
     }
@@ -279,8 +279,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void ag() {
-        super.ag();
+    public void resetAnimationControllerTicks() {
+        super.resetAnimationControllerTicks();
         if (this.currentAction() != Action.PRONE_DOGGY_HARD) {
             return;
         }
@@ -359,7 +359,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         }
         if (blockPos == null || n == 50) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.void_a(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
+            this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
             return null;
         }
         this.tasks.removeTask(this.avoidWaterGoal);
@@ -382,7 +382,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         }
         if (n2 == -1) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.void_a(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
+            this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
             return null;
         }
         Vec3d vec3d4 = vec3d.add(this.ad[n2][0]);
@@ -409,7 +409,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
         if (blockPos == null) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.void_a(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
+            this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
             return null;
         }
         this.tasks.removeTask(this.avoidWaterGoal);
@@ -430,7 +430,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         }
         if (n == -1) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.void_a(I18n.format("jenny.dialogue.bedobscured", new Object[0]));
+            this.sendLocalClientMessage(I18n.format("jenny.dialogue.bedobscured", new Object[0]));
             return null;
         }
         Vec3d vec3d3 = vec3d.add(this.ad[n][0]);
@@ -699,7 +699,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "stripMSG1": {
-                    this.void_a(I18n.format("bia.dialogue.hihi", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.hihi", new Object[0]));
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
@@ -713,22 +713,22 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "talk_hornyMSG1": {
-                    this.void_a(I18n.format("bia.dialogue.heya", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.heya", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HEY, new int[0]);
                     break;
                 }
                 case "talk_hornyMSG2": {
-                    this.void_a(I18n.format("bia.dialogue.horny", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.horny", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[2]);
                     break;
                 }
                 case "talk_hornyMSG3": {
-                    this.void_a(I18n.format("bia.dialogue.so", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.so", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "talk_hornyMSG4": {
-                    this.void_a(I18n.format("bia.dialogue.fun", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.fun", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
@@ -739,17 +739,17 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "talk_responseMSG1": {
-                    this.void_a(I18n.format("bia.dialogue.huh", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.huh", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[2]);
                     break;
                 }
                 case "talk_responseMSG2": {
-                    this.void_a(I18n.format("bia.dialogue.iuhm", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.iuhm", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[1]);
                     break;
                 }
                 case "talk_responseMSG3": {
-                    this.void_a(I18n.format("bia.dialogue.yes", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.yes", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[0]);
                     break;
                 }
@@ -789,7 +789,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
@@ -820,22 +820,22 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "headpatMSG1": {
-                    this.void_a(I18n.format("bia.dialogue.headpats", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.headpats", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.void_a(I18n.format("bia.dialogue.hmm", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.hmm", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[0]);
                     break;
                 }
                 case "headpatMSG3": {
-                    this.void_a(I18n.format("bia.dialogue.huh2", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.huh2", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
                 case "headpatMSG4": {
-                    this.void_a(I18n.format("bia.dialogue.thankyou", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("bia.dialogue.thankyou", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[1]);
                     break;
                 }
@@ -844,7 +844,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "sitdownMSG1": {
-                    this.void_a("come here big boy~");
+                    this.sendLocalClientMessage("come here big boy~");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH, new int[0]);
                     break;
                 }
@@ -875,11 +875,11 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "doggyReset": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
                     break;
                 }
                 case "orgasm1": {

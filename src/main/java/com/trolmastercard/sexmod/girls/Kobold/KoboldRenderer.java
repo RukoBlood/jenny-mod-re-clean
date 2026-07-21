@@ -141,7 +141,7 @@ public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
         }
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
         string = (Object)((Object) eyeAndKoboldColor_.getTextColor()) + " -" + string + "-";
-        this.renderLivingLabel(this.renderEntity, ((KoboldEntity)this.renderEntity).java_lang_String_ab() + string, x, y + (double)((KoboldEntity)this.renderEntity).float_i(), z, 300);
+        this.renderLivingLabel(this.renderEntity, ((KoboldEntity)this.renderEntity).getDisplayNameText() + string, x, y + (double)((KoboldEntity)this.renderEntity).getNameTagHeightOffset(), z, 300);
     }
 }
 

@@ -322,7 +322,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return this.aF() == null ? 0.5f : 1.35f;
     }
 
@@ -825,7 +825,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void ag() {
+    public void resetAnimationControllerTicks() {
         if (this.currentAction() == Action.GALATH_DE_SUMMON) {
             return;
         }
@@ -833,12 +833,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     @Override
-    public String java_lang_String_ab() {
+    public String getDisplayNameText() {
         EntityPlayer entityPlayer = this.getMasterPlayer();
         if (entityPlayer == null) {
-            return super.java_lang_String_ab();
+            return super.getDisplayNameText();
         }
-        return String.format("%s %s[%s]", new Object[]{super.java_lang_String_ab(), TextFormatting.DARK_PURPLE, entityPlayer.getName()});
+        return String.format("%s %s[%s]", new Object[]{super.getDisplayNameText(), TextFormatting.DARK_PURPLE, entityPlayer.getName()});
     }
 
     void void_h() {
@@ -1230,13 +1230,13 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     @Override
-    public void setCustomName(String string) {
-        super.setCustomName(string);
+    public void setCustomName(String name) {
+        super.setCustomName(name);
         UUID uUID = this.getMasterUUID();
         if (uUID == null) {
             return;
         }
-        NameStorage.setCustomName(uUID, PlayerGirlEntity.GALATH, string);
+        NameStorage.setCustomName(uUID, PlayerGirlEntity.GALATH, name);
     }
 
     public void d(Vec3d vec3d) {
@@ -2406,7 +2406,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             switch (soundKeyframeEvent.sound) {
                 case "goodTiming": {
                     this.PlaySound(SoundsHandler.GIRLS_GALATH_DIALOG[4]);
-                    this.void_a("Good timing boy~");
+                    this.sendLocalClientMessage("Good timing boy~");
                     break;
                 }
                 case "huh": {
@@ -2457,7 +2457,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle0": {
@@ -2568,7 +2568,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 case "corrupt_hard": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.aT = true;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "corrupt_hard_end": {
@@ -2622,7 +2622,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                             return vec3d.subtract(vec3d2).normalize();
                         }, em_class2582 -> em_class2582.b("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
                     }
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": {

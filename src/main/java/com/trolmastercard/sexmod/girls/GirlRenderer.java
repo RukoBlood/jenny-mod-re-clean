@@ -256,7 +256,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         this.activeCustomPartBones.clear();
         this.activeCustomPartBones = this.queryCustomModelParts(((GirlEntity)entity).isLocallyRegistered(), ((GirlEntity)entity).getOutfitIndex() == 0);
         this.onRenderSetup();
-        BoneDeformProcessor.preWarmFilterCache(((GirlEntity)entity).b().getModelRendererList(), this.getBlacklistedBoneNames(), this);
+        BoneDeformProcessor.preWarmFilterCache(((GirlEntity)entity).getAnimationProcessor().getModelRendererList(), this.getBlacklistedBoneNames(), this);
         BoneDeformProcessor.updateGlobalInfluence(entity, partialTicks);
         this.processModelSkeleton(model, buffer, entity, r, g, b, a, partialTicks);
         this.renderAfter(entity, partialTicks, r, g, b, a);
@@ -320,7 +320,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (GirlRenderer.mc.getRenderManager().renderViewEntity == null) {
             return;
         }
-        this.renderLivingLabel(this.renderEntity, ((GirlEntity)this.renderEntity).java_lang_String_ab(), x, y + (double)((GirlEntity)this.renderEntity).float_i(), z, 300);
+        this.renderLivingLabel(this.renderEntity, ((GirlEntity)this.renderEntity).getDisplayNameText(), x, y + (double)((GirlEntity)this.renderEntity).getNameTagHeightOffset(), z, 300);
     }
 
     Vec3d getRidingPassengerVector(EntityPlayer owner, float partialTicks) {
@@ -347,7 +347,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (((GirlEntity)entity).world instanceof FakeWorld) {
             return basePos;
         }
-        if (((GirlEntity)entity).boolean_t()
+        if (((GirlEntity)entity).shouldRenderNameTag()
                 && (!(entity instanceof PlayerGirl)
                 || GirlRenderer.mc.gameSettings.thirdPersonView != 0)) {
             this.renderNameTag(x, y, z);
@@ -504,7 +504,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         bonesToTrack.addAll(((GirlEntity)entity).boneTrackingList);
 
         for (String boneName : bonesToTrack) {
-            MatrixStack matrixStack = ((GirlEntity)entity).a(boneName, !((GirlEntity)entity).isLocallyRegistered());
+            MatrixStack matrixStack = ((GirlEntity)entity).getBoneMatrixStack(boneName, !((GirlEntity)entity).isLocallyRegistered());
             Matrix4f m = matrixStack.getModelMatrix();
             Vec3d translatedVec = new Vec3d(-m.m03, m.m13, -m.m23);
             ((GirlEntity)entity).a(boneName, translatedVec);

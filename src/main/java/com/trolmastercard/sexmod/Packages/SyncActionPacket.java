@@ -81,7 +81,7 @@ implements IMessage {
                     girl.setInteractionPlayerUUID(uUID2);
                 }
                 if (bl2) {
-                    girl.setTargetPosition(girl.net_minecraft_util_math_Vec3d_aa());
+                    girl.setTargetPosition(girl.getFrontOffsetVector());
                 }
                 girl.snapPlayerToPosition(girl.getID());
                 if (!bl) {

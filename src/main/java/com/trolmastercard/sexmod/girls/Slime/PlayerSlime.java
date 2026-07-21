@@ -45,7 +45,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 1.6f;
     }
 
@@ -306,16 +306,16 @@ extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG11": {
-                    this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
+                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjiMSG12": {
                     if (Reference.RANDOM.nextInt(5) == 0) {
-                        this.a(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
+                        this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
-                    this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
+                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -339,12 +339,12 @@ extends PlayerGirl {
                 }
                 case "doggyfastReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "bjtReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "bjcMSG1": {
@@ -392,17 +392,17 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG3": {
-                    this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.25f);
+                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.25f);
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     break;
                 }
@@ -413,7 +413,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
@@ -430,7 +430,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
@@ -452,8 +452,8 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggycumMSG1": {
-                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                 }
             }

@@ -320,7 +320,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
     void a(CustomModelEntity cy_class1532, GeoBone geoBone, float f, String string) {
         GirlEntity em_class2582 = this.b(cy_class1532);
         EntityLivingBase entityLivingBase = this.c(cy_class1532);
-        cy_class1532.c = em_class2582.a(string, false);
+        cy_class1532.c = em_class2582.getBoneMatrixStack(string, false);
         if (!cy_class1532.f || f != 2.876945f) {
             return;
         }

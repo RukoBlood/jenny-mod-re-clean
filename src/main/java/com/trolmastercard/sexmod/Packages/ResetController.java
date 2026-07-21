@@ -69,7 +69,7 @@ implements IMessage {
             }
             GirlEntity girlEntity = GirlEntity.getClientGirlEntity(a1_class72.a);
             if (girlEntity != null) {
-                girlEntity.ag();
+                girlEntity.resetAnimationControllerTicks();
             }
             return null;
         }

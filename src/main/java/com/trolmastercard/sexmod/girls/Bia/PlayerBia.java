@@ -47,7 +47,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 1.5f;
     }
 
@@ -233,8 +233,8 @@ extends PlayerGirl {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void ag() {
-        super.ag();
+    public void resetAnimationControllerTicks() {
+        super.resetAnimationControllerTicks();
         if (this.currentAction() != Action.PRONE_DOGGY_HARD) {
             return;
         }
@@ -410,7 +410,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "stripMSG1": {
-                    this.h("Hihi~");
+                    this.broadcastChatMessage("Hihi~");
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
@@ -424,37 +424,37 @@ extends PlayerGirl {
                     break;
                 }
                 case "talk_hornyMSG1": {
-                    this.void_a("Heyaaa~");
+                    this.sendLocalClientMessage("Heyaaa~");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HEY[3]);
                     break;
                 }
                 case "talk_hornyMSG2": {
-                    this.void_a("I am Hornyyyyy~");
+                    this.sendLocalClientMessage("I am Hornyyyyy~");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[2]);
                     break;
                 }
                 case "talk_hornyMSG3": {
-                    this.void_a("So...");
+                    this.sendLocalClientMessage("So...");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "talk_hornyMSG4": {
-                    this.void_a("Are we gonna have some fun nyaa?");
+                    this.sendLocalClientMessage("Are we gonna have some fun nyaa?");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
                 case "talk_responseMSG1": {
-                    this.void_a("Huh?!...");
+                    this.sendLocalClientMessage("Huh?!...");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[2]);
                     break;
                 }
                 case "talk_responseMSG2": {
-                    this.void_a("I... uhm...");
+                    this.sendLocalClientMessage("I... uhm...");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[1]);
                     break;
                 }
                 case "talk_responseMSG3": {
-                    this.void_a("yes~");
+                    this.sendLocalClientMessage("yes~");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[0]);
                     break;
                 }
@@ -493,7 +493,7 @@ extends PlayerGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
@@ -502,7 +502,7 @@ extends PlayerGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
@@ -533,22 +533,22 @@ extends PlayerGirl {
                     break;
                 }
                 case "headpatMSG1": {
-                    this.void_a("Ooh headpats!");
+                    this.sendLocalClientMessage("Ooh headpats!");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.void_a("Hmmm.... :D");
+                    this.sendLocalClientMessage("Hmmm.... :D");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[0]);
                     break;
                 }
                 case "headpatMSG3": {
-                    this.void_a("huh...?");
+                    this.sendLocalClientMessage("huh...?");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
                 case "headpatMSG4": {
-                    this.void_a("Tanku hehe");
+                    this.sendLocalClientMessage("Tanku hehe");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[1]);
                     break;
                 }
@@ -558,7 +558,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "sitdownMSG1": {
-                    this.void_a("come here big boy~");
+                    this.sendLocalClientMessage("come here big boy~");
                     this.a(SoundsHandler.GIRLS_BIA_BREATH);
                     break;
                 }
@@ -589,11 +589,11 @@ extends PlayerGirl {
                 }
                 case "doggyReset": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
                     break;
                 }
                 case "orgasm1": {

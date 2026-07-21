@@ -90,7 +90,7 @@ implements ai_class30 {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 0.9f;
     }
 
@@ -885,27 +885,27 @@ implements ai_class30 {
                     break;
                 }
                 case "catchEh": {
-                    this.void_a("ehh..");
+                    this.sendLocalClientMessage("ehh..");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchAkward": {
-                    this.void_a("awkward..");
+                    this.sendLocalClientMessage("awkward..");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchWell": {
-                    this.void_a("well...");
+                    this.sendLocalClientMessage("well...");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchRather": {
-                    this.void_a("would you rather have this stupid... thing?");
+                    this.sendLocalClientMessage("would you rather have this stupid... thing?");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchMe": {
-                    this.void_a("...or use me?~");
+                    this.sendLocalClientMessage("...or use me?~");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
@@ -922,17 +922,17 @@ implements ai_class30 {
                     break;
                 }
                 case "paizuriChoice": {
-                    this.void_a("good choice!~");
+                    this.sendLocalClientMessage("good choice!~");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriBoth": {
-                    this.void_a("...for both of us!");
+                    this.sendLocalClientMessage("...for both of us!");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizruiUse": {
-                    this.void_a("now use me like a fuck toy!~");
+                    this.sendLocalClientMessage("now use me like a fuck toy!~");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
@@ -942,7 +942,7 @@ implements ai_class30 {
                     break;
                 }
                 case "touch": {
-                    this.a(SoundsHandler.MISC_TOUCH, 3.0f);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH, 3.0f);
                     break;
                 }
                 case "pound": {
@@ -969,11 +969,11 @@ implements ai_class30 {
                 case "paizuriFastContinuesReady": 
                 case "neslon_fastBackSwitch": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "smallPound": {
-                    this.a(SoundsHandler.MISC_POUNDING, 0.25f);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING, 0.25f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -991,7 +991,7 @@ implements ai_class30 {
                     break;
                 }
                 case "cumSound": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "jumpCam": {
@@ -1011,17 +1011,17 @@ implements ai_class30 {
                         minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                         minecraft.gameSettings.thirdPersonView = 0;
                     }
-                    this.void_a("hmm...");
+                    this.sendLocalClientMessage("hmm...");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingFound": {
-                    this.void_a("guess we found a worthy breeding partner!");
+                    this.sendLocalClientMessage("guess we found a worthy breeding partner!");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingEnough": {
-                    this.void_a("Eh.. go pin him down, before he runs off!");
+                    this.sendLocalClientMessage("Eh.. go pin him down, before he runs off!");
                     this.a(SoundsHandler.MISC_PLOB);
                     break;
                 }
@@ -1057,12 +1057,12 @@ implements ai_class30 {
                 case "breeding_fast1Ready": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.aH = true;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     this.actionController.tickOffset = 0.0;
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "breeding_intro_3Done": {

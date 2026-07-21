@@ -70,7 +70,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return -0.1f;
     }
 
@@ -163,7 +163,7 @@ public class BeeEntity extends Supporter {
             this.N = 0.0f;
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             this.entityDataManager.set(IS_ANCHORED, true);
-            this.setTargetPosition(this.net_minecraft_util_math_Vec3d_aa());
+            this.setTargetPosition(this.getFrontOffsetVector());
             this.setYawRotation(entityPlayer.rotationYaw - 180.0f);
             this.pathNavigator.clearPath();
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
@@ -381,7 +381,7 @@ public class BeeEntity extends Supporter {
                     break;
                 }
                 case "sex_cumMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 2.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 2.0f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     break;
                 }
@@ -398,7 +398,7 @@ public class BeeEntity extends Supporter {
                 }
                 case "sex_fastReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                 }
             }
         };

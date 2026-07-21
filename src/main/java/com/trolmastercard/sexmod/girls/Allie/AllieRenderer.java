@@ -43,7 +43,7 @@ extends GirlRenderer {
         if (AllieRenderer.mc.getRenderManager().renderViewEntity == null) {
             return;
         }
-        this.renderLivingLabel(this.renderEntity, this.renderEntity.java_lang_String_ab(), x, y + (double)this.renderEntity.float_i(), z, 300);
+        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText(), x, y + (double)this.renderEntity.getNameTagHeightOffset(), z, 300);
     }
 }
 

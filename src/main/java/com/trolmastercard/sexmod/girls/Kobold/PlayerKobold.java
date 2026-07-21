@@ -159,7 +159,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         float f = 0.25f - this.entityDataManager.get(aA).floatValue();
         return 1.4f - f;
     }
@@ -200,10 +200,10 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    protected MatrixStack a(MatrixStack matrixStack) {
+    protected MatrixStack applyAdditionalMatrixTransformations(MatrixStack stack) {
         float f = 0.25f - this.entityDataManager.get(aA).floatValue();
-        matrixStack.scale(1.0f - f, 1.0f - f, 1.0f - f);
-        return matrixStack;
+        stack.scale(1.0f - f, 1.0f - f, 1.0f - f);
+        return stack;
     }
 
     @Override
@@ -479,9 +479,9 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 }
                 case "lipsound": {
                     if (this.getRNG().nextBoolean()) {
-                        this.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
+                        this.PlaySound(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
                     } else {
-                        this.a(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
+                        this.PlaySound(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
                     }
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -515,11 +515,11 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "cumLoud": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "cumQuiet": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
                     break;
                 }
                 case "analCumDone": 
@@ -549,7 +549,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 case "analFastRapid": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     if (this.currentAction() == Action.KOBOLD_ANAL_FAST) {
-                        this.N();
+                        this.resetAnimationControllerOffset();
                         break;
                     }
                     this.setCurrentAction(Action.KOBOLD_ANAL_FAST);
@@ -571,7 +571,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle": {
@@ -657,7 +657,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                         SexUI.addCumPercentage(0.04f);
                     }
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "mating_cum_cam": {
@@ -670,7 +670,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "cumMsg": {
-                    this.void_a("I.. hope I am satisfying you sir");
+                    this.sendLocalClientMessage("I.. hope I am satisfying you sir");
                     this.b(SoundsHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
                     break;
                 }

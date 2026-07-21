@@ -51,7 +51,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 1.9f + this.aq;
     }
 
@@ -198,12 +198,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_prepareMSG1": {
-                    this.void_a(I18n.format("allie.dialogue.hihi", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("allie.dialogue.hihi", new Object[0]));
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "deepthroat_prepareMSG2": {
-                    this.void_a(I18n.format("allie.dialogue.boys", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("allie.dialogue.boys", new Object[0]));
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
@@ -246,7 +246,7 @@ extends PlayerGirl {
                 }
                 case "deepthroat_cumMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 1.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 1.5f);
                     break;
                 }
                 case "cowgirl_cumDone": 
@@ -256,7 +256,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_normal_prepareMSG1": {
-                    this.void_a(I18n.format("allie.dialogue.alright", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("allie.dialogue.alright", new Object[0]));
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_PLOB));
                     break;
                 }
@@ -314,7 +314,7 @@ extends PlayerGirl {
                         this.setCurrentAction(Action.REVERSE_COWGIRL_FAST_CONTINUES);
                         break;
                     }
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     int n = this.av;
                     do {
                         this.av = this.getRNG().nextInt(3) + 1;
@@ -327,7 +327,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
                     break;
                 }
                 case "aftermoan": {

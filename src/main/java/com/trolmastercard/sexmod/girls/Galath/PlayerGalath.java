@@ -86,7 +86,7 @@ implements b7_class68 {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 2.3f;
     }
 
@@ -346,7 +346,7 @@ implements b7_class68 {
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "pound": {
@@ -409,7 +409,7 @@ implements b7_class68 {
                 case "corrupt_hard": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.as = true;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "corrupt_hard_end": {
@@ -453,7 +453,7 @@ implements b7_class68 {
                         return vec3d.subtract(vec3d2).normalize();
                     }, em_class2582 -> em_class2582.b("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
                     ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": 

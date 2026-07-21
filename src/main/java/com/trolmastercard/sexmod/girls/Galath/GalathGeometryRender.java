@@ -130,7 +130,7 @@ public class GalathGeometryRender {
                                           String parentBoneName
     ) {
         int i;
-        IBone bone = entity.b().getBone(parentBoneName);
+        IBone bone = entity.getAnimationProcessor().getBone(parentBoneName);
 
         if (bone == null) {
             Vec3d[] zeroArray = new Vec3d[12];

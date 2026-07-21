@@ -67,7 +67,7 @@ implements IMessage {
             for (GirlEntity em_class2582 : arrayList) {
                 if (!em_class2582.world.isRemote) continue;
                 for (int i = 0; i < en_class2602.a; ++i) {
-                    GirlEntity.a(EnumParticleTypes.getByName(en_class2602.b), em_class2582);
+                    GirlEntity.spawnParticlesAround(EnumParticleTypes.getByName(en_class2602.b), em_class2582);
                 }
             }
             return null;

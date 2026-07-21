@@ -47,7 +47,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 1.4f;
     }
 
@@ -216,7 +216,7 @@ public class PlayerBee extends PlayerGirl {
                 }
                 case "sex_fastReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "sex_fastDone": {
@@ -229,7 +229,7 @@ public class PlayerBee extends PlayerGirl {
                     break;
                 }
                 case "sex_cumMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 2.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 2.0f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     break;
                 }

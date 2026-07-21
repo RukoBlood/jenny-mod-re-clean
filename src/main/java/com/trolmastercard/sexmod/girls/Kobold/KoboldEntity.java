@@ -346,7 +346,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 0.2f - (0.25f - this.entityDataManager.get(aE).floatValue());
     }
 
@@ -714,7 +714,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         float f = this.getDistance(entityPlayer);
         if (f < 2.0f && this.S > 2.0f) {
             this.b(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_KOBOLD_HEYMASTER));
-            this.void_a("Hey master!");
+            this.sendLocalClientMessage("Hey master!");
             aV = this.world.getTotalWorldTime();
         }
         this.S = f;
@@ -929,7 +929,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 case REST: {
                     this.p(uUID);
                     KoboldManager.b(uUID, (BlockPos) null);
-                    this.h("okay resting time owo");
+                    this.broadcastChatMessage("okay resting time owo");
                     break;
                 }
                 case ACTIVE: {
@@ -1085,7 +1085,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (collection.isEmpty()) {
             this.ao = false;
             this.r(uUID);
-            this.h("Lets go somewhere else");
+            this.broadcastChatMessage("Lets go somewhere else");
         }
     }
 
@@ -1111,7 +1111,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return;
         }
         this.ao = true;
-        this.h("Time to work bitches!");
+        this.broadcastChatMessage("Time to work bitches!");
         int n = KoboldManager.h(uUID);
         for (int i = 1; i < n; ++i) {
             this.c(uUID, collection);
@@ -1187,7 +1187,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return;
         }
         bs_class97.a(this.world, blockPos, uUID);
-        this.h("Someone, go fall this tree!");
+        this.broadcastChatMessage("Someone, go fall this tree!");
     }
 
     @CheckReturnValue
@@ -1341,10 +1341,10 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 bs_class972 = bs_class973;
                 this.aI = null;
                 if (bs_class973.getTaskType() == bs_class97.KoboldTask.FALL_TREE) {
-                    this.h("Ima fall this tree owo");
+                    this.broadcastChatMessage("Ima fall this tree owo");
                     break;
                 }
-                this.h("Ima go mine uwu");
+                this.broadcastChatMessage("Ima go mine uwu");
                 this.b(bs_class973.b());
                 this.world.setBlockState(bs_class973.b(), Blocks.AIR.getDefaultState());
                 break;
@@ -2215,7 +2215,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return;
         }
         if (this.W == 0) {
-            PackageHandler.networkWrapper.sendToAllAround((IMessage)new ResetController(this.girlID()), this.net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P());
+            PackageHandler.networkWrapper.sendToAllAround((IMessage)new ResetController(this.girlID()), this.getTargetNetworkPoint());
         }
         if (this.world.getBlockState(blockPos).getBlock() == Blocks.AIR) {
             this.a(uUID, bs_class972, blockPos);
@@ -2822,9 +2822,9 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 }
                 case "lipsound": {
                     if (this.getRNG().nextBoolean()) {
-                        this.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
+                        this.PlaySound(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
                     } else {
-                        this.a(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
+                        this.PlaySound(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
                     }
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -2858,11 +2858,11 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "cumLoud": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "cumQuiet": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
                     break;
                 }
                 case "analCumDone": 
@@ -2913,7 +2913,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle": {
@@ -2999,7 +2999,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                         SexUI.addCumPercentage(0.04f);
                     }
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "mating_cum_cam": {
@@ -3012,13 +3012,13 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "cumMsg": {
-                    this.void_a("I.. hope I am satisfying you sir");
+                    this.sendLocalClientMessage("I.. hope I am satisfying you sir");
                     this.b(SoundsHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
                     break;
                 }
                 case "renderEgg": {
                     this.Q = true;
-                    this.a(SoundsHandler.MISC_PLOB, 0.5f);
+                    this.PlaySound(SoundsHandler.MISC_PLOB, 0.5f);
                     break;
                 }
                 case "mating_press_cumDone": {

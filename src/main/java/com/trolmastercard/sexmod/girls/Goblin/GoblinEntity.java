@@ -256,7 +256,7 @@ implements ai_class30 {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 0.1f;
     }
 
@@ -687,7 +687,7 @@ implements ai_class30 {
         if (!bl) {
             return;
         }
-        this.h("Farewell my knight. You are welcome once I am breedable again.");
+        this.broadcastChatMessage("Farewell my knight. You are welcome once I am breedable again.");
         for (GoblinEntity e3_class2192 : this.ab) {
             if (e3_class2192.getDataManager().get(aC).booleanValue()) continue;
             e3_class2192.setCurrentAction(Action.VANISH);
@@ -746,7 +746,7 @@ implements ai_class30 {
         entityPlayer.rotationPitch = 30.0f;
         entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
-        this.h("Thanks to you, my clan is soon going to get a few new members! In return I will bear of one of my guards to serve as your personal Onahole. Choose wisely~");
+        this.broadcastChatMessage("Thanks to you, my clan is soon going to get a few new members! In return I will bear of one of my guards to serve as your personal Onahole. Choose wisely~");
     }
 
     void void_w() {
@@ -1425,7 +1425,7 @@ implements ai_class30 {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_t() {
+    public boolean shouldRenderNameTag() {
         if (this.currentAction() != Action.NULL) {
             return false;
         }
@@ -1725,27 +1725,27 @@ implements ai_class30 {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "catchEh": {
-                    this.void_a("ehh..");
+                    this.sendLocalClientMessage("ehh..");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchAkward": {
-                    this.void_a("awkward..");
+                    this.sendLocalClientMessage("awkward..");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchWell": {
-                    this.void_a("well...");
+                    this.sendLocalClientMessage("well...");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchRather": {
-                    this.void_a("would you rather have this stupid... thing?");
+                    this.sendLocalClientMessage("would you rather have this stupid... thing?");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "catchMe": {
-                    this.void_a("...or use me?~");
+                    this.sendLocalClientMessage("...or use me?~");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
@@ -1762,17 +1762,17 @@ implements ai_class30 {
                     break;
                 }
                 case "paizuriChoice": {
-                    this.void_a("good choice!~");
+                    this.sendLocalClientMessage("good choice!~");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "paizuriBoth": {
-                    this.void_a("...for both of us!");
+                    this.sendLocalClientMessage("...for both of us!");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "paizruiUse": {
-                    this.void_a("now use me like a fuck toy!~");
+                    this.sendLocalClientMessage("now use me like a fuck toy!~");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
@@ -1782,7 +1782,7 @@ implements ai_class30 {
                     break;
                 }
                 case "touch": {
-                    this.a(SoundsHandler.MISC_TOUCH, 3.0f);
+                    this.PlaySound(SoundsHandler.MISC_TOUCH, 3.0f);
                     break;
                 }
                 case "pound": {
@@ -1808,11 +1808,11 @@ implements ai_class30 {
                 }
                 case "paizuriFastContinuesReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "smallPound": {
-                    this.a(SoundsHandler.MISC_POUNDING, 0.25f);
+                    this.PlaySound(SoundsHandler.MISC_POUNDING, 0.25f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -1834,7 +1834,7 @@ implements ai_class30 {
                     break;
                 }
                 case "cumSound": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "jumpCam": {
@@ -1854,17 +1854,17 @@ implements ai_class30 {
                         minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                         minecraft.gameSettings.thirdPersonView = 0;
                     }
-                    this.void_a("hmm...");
+                    this.sendLocalClientMessage("hmm...");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "breedingFound": {
-                    this.void_a("guess we found a worthy breeding partner!");
+                    this.sendLocalClientMessage("guess we found a worthy breeding partner!");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "breedingEnough": {
-                    this.void_a("Eh.. go pin him down, before he runs off!");
+                    this.sendLocalClientMessage("Eh.. go pin him down, before he runs off!");
                     this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
@@ -1900,12 +1900,12 @@ implements ai_class30 {
                 case "breeding_fast1Ready": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.ay = true;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     this.actionController.tickOffset = 0.0;
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "breeding_intro_3Done": {

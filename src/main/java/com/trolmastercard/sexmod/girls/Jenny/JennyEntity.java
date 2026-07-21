@@ -86,7 +86,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return -0.2f;
     }
 
@@ -98,7 +98,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public void SetHome() {
-        this.void_a("Alright, this is my new Home~");
+        this.sendLocalClientMessage("Alright, this is my new Home~");
         this.PlaySound(SoundsHandler.GIRLS_JENNY_HAPPYOH[1]);
     }
 
@@ -169,7 +169,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 this.setCurrentAction(Action.PAYMENT);
             } else {
                 this.rotationYaw = this.getYawRotation().floatValue();
-                this.setTargetPosition(this.net_minecraft_util_math_Vec3d_aa());
+                this.setTargetPosition(this.getFrontOffsetVector());
                 this.setNoGravity(false);
                 Vec3d object = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
                 this.setPosition(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
@@ -183,7 +183,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             return true;
         }
         if (this.world.isRemote && !this.openGuiForPlayer(entityPlayer)) {
-            this.void_a(I18n.format("jenny.dialogue.busy", new Object[0]));
+            this.sendLocalClientMessage(I18n.format("jenny.dialogue.busy", new Object[0]));
         }
         return true;
     }
@@ -240,7 +240,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
         if (blockPos == null) {
             this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[2]);
-            this.void_a(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
+            this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
         } else {
             this.tasks.removeTask(this.avoidWaterGoal);
             this.tasks.removeTask(this.followPlayerGoal);
@@ -262,7 +262,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             }
             if (n == -1) {
                 this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[2]);
-                this.void_a(I18n.format("jenny.dialogue.bedobscured", new Object[0]));
+                this.sendLocalClientMessage(I18n.format("jenny.dialogue.bedobscured", new Object[0]));
                 return;
             }
             Vec3d vec3d3 = vec3d.add(vec3dArrayArray[n][0]);
@@ -576,17 +576,17 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "stripMSG1": {
-                    this.h(I18n.format("jenny.dialogue.hihi", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.hihi", new Object[0]));
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "paymentMSG1": {
-                    this.h(I18n.format("jenny.dialogue.huh", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.huh", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_HUH[1]);
                     break;
                 }
                 case "paymentMSG2": {
-                    this.a(SoundsHandler.MISC_PLOB[0], 0.5f);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0], 0.5f);
                     String string = "<" + Minecraft.getMinecraft().player.getName() + "> ";
                     switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
                         case "strip": {
@@ -610,7 +610,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "paymentMSG3": {
-                    this.h(I18n.format("jenny.dialogue.hehe", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.hehe", new Object[0]));
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
@@ -620,7 +620,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "paymentMSG4": {
-                    this.a(SoundsHandler.MISC_PLOB[0], 0.25f);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0], 0.25f);
                     break;
                 }
                 case "paymentDone": {
@@ -628,7 +628,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "bjiMSG1": {
-                    this.h(I18n.format("jenny.dialogue.blowjobtext1", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext1", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     if (!this.isControlledByLocalPlayer()) break;
@@ -636,12 +636,12 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "bjiMSG2": {
-                    this.h(I18n.format("jenny.dialogue.blowjobtext2", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext2", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG3": {
-                    this.h(I18n.format("jenny.dialogue.blowjobtext3", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext3", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_AFTERSESSIONMOAN[0]);
                     break;
                 }
@@ -650,29 +650,29 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "bjiMSG5": {
-                    this.h(I18n.format("jenny.dialogue.blowjobtext4", new Object[0]));
-                    this.a(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext4", new Object[0]));
+                    this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "bjiMSG6": {
-                    this.h(I18n.format("jenny.dialogue.blowjobtext5", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext5", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG7": {
-                    this.h(I18n.format("jenny.dialogue.blowjobtext6", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext6", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[4]);
                     break;
                 }
                 case "bjiMSG8": {
                     this.b("<" + Minecraft.getMinecraft().player.getName() + "> " + I18n.format("jenny.dialogue.blowjobtext7", new Object[0]), true);
-                    this.a(SoundsHandler.MISC_PLOB[0], 0.5f);
+                    this.PlaySound(SoundsHandler.MISC_PLOB[0], 0.5f);
                     break;
                 }
                 case "bjiMSG9": {
-                    this.h(I18n.format("jenny.dialogue.blowjobtext8", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext8", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[2]);
                     break;
                 }
@@ -683,7 +683,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "bjiMSG11": {
                     if (this.isControlledByLocalPlayer() && HandlePlayerMovement.isThrusting) {
-                        this.N();
+                        this.resetAnimationControllerOffset();
                     }
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
                     if (!this.isControlledByLocalPlayer()) break;
@@ -718,14 +718,14 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "doggyfastReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     this.aa = true;
                     break;
                 }
                 case "bjtReady": 
                 case "paizuriReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.N();
+                    this.resetAnimationControllerOffset();
                     break;
                 }
                 case "bjcMSG1": {
@@ -777,17 +777,17 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggyGoOnBedMSG2": {
-                    this.void_a(I18n.format("jenny.dialogue.doggytext1", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("jenny.dialogue.doggytext1", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[9]);
                     break;
                 }
                 case "doggyGoOnBedMSG3": {
-                    this.void_a(I18n.format("jenny.dialogue.doggytext2", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("jenny.dialogue.doggytext2", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[0]);
                     break;
                 }
                 case "doggyGoOnBedMSG4": {
-                    this.a(SoundsHandler.MISC_SLAP[0], 0.75f);
+                    this.PlaySound(SoundsHandler.MISC_SLAP[0], 0.75f);
                     break;
                 }
                 case "doggyGoOnBedDone": {
@@ -804,7 +804,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggystartMSG3": {
-                    this.a(SoundsHandler.MISC_BEDRUSTLE[1], 0.5f);
+                    this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[1], 0.5f);
                     break;
                 }
                 case "doggystartMSG4": {
@@ -815,7 +815,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MOAN));
                     break;
                 }
@@ -854,7 +854,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 //                }
                 case "doggyslowMSG1": {
                     this.aa = false;
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
@@ -871,11 +871,11 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggyslowMSG2": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING), 0.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING), 0.5f);
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
@@ -898,8 +898,8 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggycumMSG1": {
-                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 2.0f);
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 2.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MOAN));
                     break;
                 }

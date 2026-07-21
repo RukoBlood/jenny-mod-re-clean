@@ -86,7 +86,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         this.partialTicks = partialTicks;
         playerGirl.syncWithPlayerProperties(owner);
         if (this.shouldRenderNameTag(owner, entity)) {
-            this.renderLivingLabel(entity, owner.getName(), x, y + (double)playerGirl.float_i(), z, 300);
+            this.renderLivingLabel(entity, owner.getName(), x, y + (double)playerGirl.getNameTagHeightOffset(), z, 300);
         }
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }

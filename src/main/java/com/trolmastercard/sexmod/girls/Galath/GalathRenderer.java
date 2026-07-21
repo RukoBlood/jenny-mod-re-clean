@@ -377,7 +377,7 @@ implements IModelBoneFilter {
         switch (boneName) {
             case "hairBack": {
                 if (mc.isGamePaused()) break;
-                IBone iBone = ((GalathEntity)this.renderEntity).b().getBone("head");
+                IBone iBone = ((GalathEntity)this.renderEntity).getAnimationProcessor().getBone("head");
                 float f = TrigMath.toDegrees(iBone.getRotationX());
                 if (f < 0.0f) {
                     bone.setRotationX(TrigMath.toRadians(-f));
@@ -391,7 +391,7 @@ implements IModelBoneFilter {
             case "hairDownSideL": 
             case "hairDownSideR": {
                 if (mc.isGamePaused()) break;
-                IBone iBone = ((GalathEntity)this.renderEntity).b().getBone("head");
+                IBone iBone = ((GalathEntity)this.renderEntity).getAnimationProcessor().getBone("head");
                 float f = TrigMath.toDegrees(iBone.getRotationX());
                 if (f < 0.0f) {
                     bone.setRotationX(TrigMath.toRadians(-f / 2.0f));

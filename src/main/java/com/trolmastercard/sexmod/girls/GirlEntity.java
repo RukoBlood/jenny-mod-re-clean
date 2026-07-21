@@ -88,6 +88,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -1010,13 +1011,13 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
     //end of deobfuscation part #4
 
-    public void N() {
-        this.ag();
+    public void resetAnimationControllerOffset() {
+        this.resetAnimationControllerTicks();
         PackageHandler.networkWrapper.sendToServer((IMessage)new ResetController(this.girlID()));
     }
 
     @SideOnly(value=Side.CLIENT)
-    public void ag() {
+    public void resetAnimationControllerTicks() {
         this.actionController.tickOffset = 0.0;
     }
 
@@ -1027,8 +1028,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     protected abstract Action CumAction(Action action);
 
-    public net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P() {
-        return new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 50.0);
+    public NetworkRegistry.TargetPoint getTargetNetworkPoint() {
+        return new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 50.0);
     }
 
     protected void moveCamera(double x, double y, double z, float yaw, float pitch) {
@@ -1036,20 +1037,26 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             System.out.println("couldnt move camera because the player isn't set");
             return;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+
+        EntityPlayer player = this.world.getPlayerEntityByUUID(this.getID());
         if (this.playerCameraOffsetPos == null) {
-            this.playerCameraOffsetPos = entityPlayer.getPositionVector();
+            assert player != null;
+            this.playerCameraOffsetPos = player.getPositionVector();
         }
+
         Vec3d newPos = this.playerCameraOffsetPos;
         newPos = newPos.add(-Math.sin((double)(this.cameraYaw + 90.0f) * (Math.PI / 180)) * x, 0.0, Math.cos((double)(this.cameraYaw + 90.0f) * (Math.PI / 180)) * x);
         newPos = newPos.add(0.0, y, 0.0);
         newPos = newPos.add(-Math.sin((double)this.cameraYaw * (Math.PI / 180)) * z, 0.0, Math.cos((double)this.cameraYaw * (Math.PI / 180)) * z);
         if (this.world.isRemote) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayer.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
+            assert player != null;
+            PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(player.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
             return;
         }
-        entityPlayer.setPositionAndRotation(newPos.x, newPos.y, newPos.z, this.cameraYaw + yaw, pitch);
-        entityPlayer.setPositionAndUpdate(newPos.x, newPos.y, newPos.z);
+
+        assert player != null;
+        player.setPositionAndRotation(newPos.x, newPos.y, newPos.z, this.cameraYaw + yaw, pitch);
+        player.setPositionAndUpdate(newPos.x, newPos.y, newPos.z);
         this.motionX = 0.0;
         this.motionY = 0.0;
         this.motionZ = 0.0;
@@ -1060,15 +1067,15 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (!this.world.isRemote) {
             return false;
         }
-        EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-        return entityPlayerSP.getPersistentID().equals(this.getID()) || entityPlayerSP.getUniqueID().equals(this.getID());
+        EntityPlayerSP clientPlayer = Minecraft.getMinecraft().player;
+        return clientPlayer.getPersistentID().equals(this.getID()) || clientPlayer.getUniqueID().equals(this.getID());
     }
 
     protected void U() {
     }
 
-    public void setCustomName(String string) {
-        this.entityDataManager.set(CUSTOM_NAME, string);
+    public void setCustomName(String name) {
+        this.entityDataManager.set(CUSTOM_NAME, name);
     }
 
     public String getCustomName() {
@@ -1077,35 +1084,35 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public abstract String getGirlName();
 
-    public String java_lang_String_ab() {
-        String string = this.entityDataManager.get(CUSTOM_NAME);
-        if (!string.isEmpty()) {
-            return string;
+    public String getDisplayNameText() {
+        String name = this.entityDataManager.get(CUSTOM_NAME);
+        if (!name.isEmpty()) {
+            return name;
         }
         return this.getGirlName();
     }
 
-    public abstract float float_i();
+    public abstract float getNameTagHeightOffset();
 
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_t() {
+    public boolean shouldRenderNameTag() {
         return true;
     }
 
-    public void h(String string) {
+    public void broadcastChatMessage(String text) {
         if (!this.world.isRemote) {
-            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(String.format("<%s> %s", this.java_lang_String_ab(), string), this.dimension, this.girlID()), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
         } else if (this.isControlledByLocalPlayer()) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new SendChatMessage(String.format("<%s> %s", this.java_lang_String_ab(), string), this.dimension, this.girlID()));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()));
         }
     }
 
     protected void b(String string, boolean bl) {
         if (!bl) {
-            this.h(string);
+            this.broadcastChatMessage(string);
         }
         if (!this.world.isRemote) {
-            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(string, this.dimension, this.girlID()), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(string, this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
             return;
         }
         if (this.isControlledByLocalPlayer()) {
@@ -1113,9 +1120,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    protected void void_a(String string) {
+    protected void sendLocalClientMessage(String string) {
         if (this.world.isRemote) {
-            Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("<%s> %s", this.java_lang_String_ab(), string)));
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("<%s> %s", this.getDisplayNameText(), string)));
         }
     }
 
@@ -1130,12 +1137,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    public void PlaySoundAtPosition(SoundEvent soundEvent, float volume, float pitch) {
-        this.world.playSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ(), soundEvent, SoundCategory.NEUTRAL, volume, pitch, false);
+    public void PlaySoundAtPosition(SoundEvent sound, float volume, float pitch) {
+        this.world.playSound(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ(), sound, SoundCategory.NEUTRAL, volume, pitch, false);
     }
 
-    public void PlaySound(SoundEvent soundEvent) {
-        this.PlaySoundAtPosition(soundEvent, 1.0f, 1.0f);
+    public void PlaySound(SoundEvent sound) {
+        this.PlaySoundAtPosition(sound, 1.0f, 1.0f);
     }
 
     public void PlaySound(SoundEvent[] soundEventArray, int ... nArray) {
@@ -1146,12 +1153,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.PlaySoundAtPosition(soundEventArray[nArray[this.getRNG().nextInt(nArray.length)]], 1.0f, 1.0f);
     }
 
-    public void a(SoundEvent[] soundEventArray, float f) {
-        this.PlaySoundAtPosition(soundEventArray[this.getRNG().nextInt(soundEventArray.length)], f, 1.0f);
+    public void PlaySound(SoundEvent[] sounds, float volume) {
+        this.PlaySoundAtPosition(sounds[this.getRNG().nextInt(sounds.length)], volume, 1.0f);
     }
 
-    public void a(SoundEvent soundEvent, float f) {
-        this.PlaySoundAtPosition(soundEvent, f, 1.0f);
+    public void PlaySound(SoundEvent sound, float volume) {
+        this.PlaySoundAtPosition(sound, volume, 1.0f);
     }
 
     public static boolean isValidGirl(Entity entity) {
@@ -1178,30 +1185,31 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return entityPlayer.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID());
     }
 
-    public Vec3d net_minecraft_util_math_Vec3d_aa() {
+    public Vec3d getFrontOffsetVector() {
         return this.getFrontOffsetVector(1.0);
     }
 
-    public Vec3d getFrontOffsetVector(double d) {
+    public Vec3d getFrontOffsetVector(double distance) {
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+        assert entityPlayer != null;
         float yaw = entityPlayer.rotationYaw;
-        return entityPlayer.getPositionVector().add(-Math.sin((double)yaw * (Math.PI / 180)) * d, 0.0, Math.cos((double)yaw * (Math.PI / 180)) * d);
+        return entityPlayer.getPositionVector().add(-Math.sin((double)yaw * (Math.PI / 180)) * distance, 0.0, Math.cos((double)yaw * (Math.PI / 180)) * distance);
     }
 
     public Vec3d net_minecraft_util_math_Vec3d_a(Vec3d vec3d, float f) {
         return vec3d;
     }
 
-    public static void a(EnumParticleTypes enumParticleTypes, GirlEntity em_class2582) {
-        double d = Reference.RANDOM.nextGaussian() * 0.02;
-        double d2 = Reference.RANDOM.nextGaussian() * 0.02;
-        double d3 = Reference.RANDOM.nextGaussian() * 0.02;
-        em_class2582.world.spawnParticle(enumParticleTypes, em_class2582.posX + (double)(Reference.RANDOM.nextFloat() * em_class2582.width * 2.0f) - (double)em_class2582.width, em_class2582.posY + 0.5 + (double)(Reference.RANDOM.nextFloat() * em_class2582.height), em_class2582.posZ + (double)(Reference.RANDOM.nextFloat() * em_class2582.width * 2.0f) - (double)em_class2582.width, d, d2, d3, new int[0]);
+    public static void spawnParticlesAround(EnumParticleTypes particle, GirlEntity girl) {
+        double vx = Reference.RANDOM.nextGaussian() * 0.02;
+        double vy = Reference.RANDOM.nextGaussian() * 0.02;
+        double vz = Reference.RANDOM.nextGaussian() * 0.02;
+        girl.world.spawnParticle(particle, girl.posX + (double)(Reference.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, girl.posY + 0.5 + (double)(Reference.RANDOM.nextFloat() * girl.height), girl.posZ + (double)(Reference.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, vx, vy, vz, new int[0]);
     }
 
-    public static void a(EnumParticleTypes enumParticleTypes, GirlEntity em_class2582, int n) {
-        for (int i = 0; i < n; ++i) {
-            GirlEntity.a(enumParticleTypes, em_class2582);
+    public static void spawnParticlesAround(EnumParticleTypes particle, GirlEntity girl, int times) {
+        for (int i = 0; i < times; ++i) {
+            GirlEntity.spawnParticlesAround(particle, girl);
         }
     }
 
@@ -1220,9 +1228,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     protected SoundEvent getAmbientSound() {
         if (this.getRNG().nextInt(10000) == 0) {
             if (this.world.isRemote && Minecraft.getMinecraft().player.getPositionVector().distanceTo(this.getPositionVector()) < 10.0) {
-                this.void_a("whopa");
+                this.sendLocalClientMessage("whopa");
             }
-            return SoundsHandler.getRandomSound(SoundsHandler.MISC_FART);
+            return SoundsHandler.getRandomSound(SoundsHandler.MISC_FART); //Why fart?
         }
         return null;
     }
@@ -1236,54 +1244,57 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public MatrixStack a(String string, boolean bl) {
-        IBone iBone;
+    public MatrixStack getBoneMatrixStack(String boneName, boolean applyYaw) {
+        IBone bone;
         if (this.cachedAnimationProcessor == null) {
-            this.cachedAnimationProcessor = this.b();
+            this.cachedAnimationProcessor = this.getAnimationProcessor();
         }
-        if ((iBone = this.cachedAnimationProcessor.getBone(string)) == null) {
-            if (!GirlModel.CAMERA_PLACEMENTS.contains(string)) {
+        if ((bone = this.cachedAnimationProcessor.getBone(boneName)) == null) {
+            if (!GirlModel.CAMERA_PLACEMENTS.contains(boneName)) {
                 Main.LOGGER.log(Level.WARN, String.format("The bone '%s' does not exist on %s. " +
-                        "Bone model matrix couldn't be calculated", string, this.getGirlName()));
-                this.boneTrackingList.remove(string);
+                        "Bone model matrix couldn't be calculated", boneName, this.getGirlName()));
+                this.boneTrackingList.remove(boneName);
             }
             return new MatrixStack();
         }
-        GeoBone geoBone = (GeoBone)iBone;
-        ArrayList<GeoBone> arrayList = new ArrayList<GeoBone>();
+        GeoBone geoBone = (GeoBone)bone;
+        ArrayList<GeoBone> boneHierarchy = new ArrayList<GeoBone>();
         {
-            GeoBone object = geoBone;
-            while (object.parent != null) {
-                GeoBone geoBone2 = object.parent;
-                arrayList.add(geoBone2);
-                object = geoBone2;
+            GeoBone parent = geoBone;
+            while (parent.parent != null) {
+                GeoBone geoBone2 = parent.parent;
+                boneHierarchy.add(geoBone2);
+                parent = geoBone2;
             }
         }
-        Collections.reverse(arrayList);
-        MatrixStack object = new MatrixStack();
-        if (this.isAnchored()) {
-            ((MatrixStack)object).rotateY((float)(-Math.toRadians(this.getYawRotation().floatValue())));
-        } else if (bl) {
-            ((MatrixStack)object).rotateY((float)(-Math.toRadians(Reference.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
-        }
-        for (GeoBone geoBone3 : arrayList) {
-            ((MatrixStack)object).translate(geoBone3);
-            ((MatrixStack)object).moveToPivot(geoBone3);
-            ((MatrixStack)object).rotate(geoBone3);
-            ((MatrixStack)object).scale(geoBone3);
-            ((MatrixStack)object).moveBackFromPivot(geoBone3);
-        }
-        ((MatrixStack)object).translate(geoBone);
-        ((MatrixStack)object).moveToPivot(geoBone);
-        ((MatrixStack)object).rotate(geoBone);
-        ((MatrixStack)object).scale(geoBone);
-        object = this.a((MatrixStack)object);
-        return object;
-    }
+        Collections.reverse(boneHierarchy);
 
-    protected MatrixStack a(MatrixStack matrixStack) {
+        MatrixStack matrixStack = new MatrixStack();
+        if (this.isAnchored()) {
+            ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(this.getYawRotation())));
+        } else if (applyYaw) {
+            ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(Reference.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
+        }
+
+        for (GeoBone ancestor : boneHierarchy) {
+            ((MatrixStack)matrixStack).translate(ancestor);
+            ((MatrixStack)matrixStack).moveToPivot(ancestor);
+            ((MatrixStack)matrixStack).rotate(ancestor);
+            ((MatrixStack)matrixStack).scale(ancestor);
+            ((MatrixStack)matrixStack).moveBackFromPivot(ancestor);
+        }
+        ((MatrixStack)matrixStack).translate(geoBone);
+        ((MatrixStack)matrixStack).moveToPivot(geoBone);
+        ((MatrixStack)matrixStack).rotate(geoBone);
+        ((MatrixStack)matrixStack).scale(geoBone);
+        matrixStack = this.applyAdditionalMatrixTransformations((MatrixStack)matrixStack);
         return matrixStack;
     }
+
+    protected MatrixStack applyAdditionalMatrixTransformations(MatrixStack stack) {
+        return stack;
+    }
+    //end of deobfuscation part 5
 
     @SideOnly(value=Side.CLIENT)
     public Vec3d b(String string) {
@@ -1308,7 +1319,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     public float float_R() {
-        AnimationProcessor<?> animationProcessor = this.b();
+        AnimationProcessor<?> animationProcessor = this.getAnimationProcessor();
         IBone iBone = animationProcessor.getBone("girlCam");
         if (iBone == null) {
             return 0.0f;
@@ -1350,7 +1361,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @CheckReturnValue
-    public AnimationProcessor<?> b() {
+    public AnimationProcessor<?> getAnimationProcessor() {
         return this.a().getAnimationProcessor();
     }
 

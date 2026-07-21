@@ -48,7 +48,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 1.6f;
     }
 
@@ -345,19 +345,19 @@ extends PlayerGirl {
                     break;
                 }
                 case "paymentMSG2": {
-                    this.void_a("huh~?");
+                    this.sendLocalClientMessage("huh~?");
                     this.a(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "paymentMSG3": {
-                    this.void_a("nyyyaaaa~ :D");
+                    this.sendLocalClientMessage("nyyyaaaa~ :D");
                     int[] nArray = new int[]{1, 7, 10, 11};
                     int n = nArray[this.getRNG().nextInt(nArray.length)];
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[n]);
                     break;
                 }
                 case "paymentMSG4": {
-                    this.void_a("tankuuuu owowowo");
+                    this.sendLocalClientMessage("tankuuuu owowowo");
                     this.a(SoundsHandler.GIRLS_LUNA_OWO);
                     break;
                 }
@@ -403,7 +403,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "touch_boobsMSG1": {
-                    this.void_a("comon~ touch me hihi~");
+                    this.sendLocalClientMessage("comon~ touch me hihi~");
                     this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
@@ -412,7 +412,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "jump": {
-                    this.a(SoundsHandler.MISC_JUMP[0], 0.2f);
+                    this.PlaySound(SoundsHandler.MISC_JUMP[0], 0.2f);
                     break;
                 }
                 case "horninya": {
@@ -423,7 +423,7 @@ extends PlayerGirl {
                 case "touch_boobs_cumMSG3": 
                 case "sitting_cumMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[1]);
-                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 5.0f);
+                    this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 5.0f);
                     break;
                 }
                 case "moan": {
@@ -495,7 +495,7 @@ extends PlayerGirl {
                 }
                 case "call_playerMSG1": {
                     this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
-                    this.void_a("come here - big guy hehe~");
+                    this.sendLocalClientMessage("come here - big guy hehe~");
                     break;
                 }
                 case "pounding": {
@@ -504,7 +504,7 @@ extends PlayerGirl {
                 }
                 case "sitting_introMSG1": {
                     this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
-                    this.void_a("hehe~");
+                    this.sendLocalClientMessage("hehe~");
                     break;
                 }
                 case "sitting_introDone": {
@@ -554,7 +554,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "headpatMSG1": {
-                    this.void_a("huh?~");
+                    this.sendLocalClientMessage("huh?~");
                     this.a(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
@@ -563,7 +563,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "headpatMSG3": {
-                    this.void_a("nya~");
+                    this.sendLocalClientMessage("nya~");
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[0]);
                 }
             }

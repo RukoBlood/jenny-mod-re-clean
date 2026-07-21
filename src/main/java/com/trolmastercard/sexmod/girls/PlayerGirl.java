@@ -50,6 +50,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -108,12 +109,12 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Override
-    public net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P() {
-        return new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY - 0.0, this.posZ, 50.0);
+    public NetworkRegistry.TargetPoint getTargetNetworkPoint() {
+        return new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY - 0.0, this.posZ, 50.0);
     }
 
     public void a(int n, Action action) {
-        PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P());
+        PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.getTargetNetworkPoint());
     }
 
     public EntityPlayer getPlayerEntity(EntityPlayer player) {
@@ -588,18 +589,18 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Override
-    public void PlaySoundAtPosition(SoundEvent soundEvent, float volume, float pitch) {
+    public void PlaySoundAtPosition(SoundEvent sound, float volume, float pitch) {
         Vec3d vec3d = this.net_minecraft_util_math_Vec3d_w();
         if (this.world.isRemote) {
-            this.world.playSound(vec3d.x, vec3d.y, vec3d.z, soundEvent, SoundCategory.NEUTRAL, volume, pitch, false);
+            this.world.playSound(vec3d.x, vec3d.y, vec3d.z, sound, SoundCategory.NEUTRAL, volume, pitch, false);
         } else {
-            this.world.playSound(null, new BlockPos(vec3d.x, vec3d.y, vec3d.z), soundEvent, SoundCategory.PLAYERS, volume, pitch);
+            this.world.playSound(null, new BlockPos(vec3d.x, vec3d.y, vec3d.z), sound, SoundCategory.PLAYERS, volume, pitch);
         }
     }
 
     @Override
-    public void PlaySound(SoundEvent soundEvent) {
-        this.PlaySoundAtPosition(soundEvent, 1.0f, 1.0f);
+    public void PlaySound(SoundEvent sound) {
+        this.PlaySoundAtPosition(sound, 1.0f, 1.0f);
     }
 
     public void a(SoundEvent[] soundEventArray) {
@@ -607,8 +608,8 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Override
-    public void a(SoundEvent soundEvent, float f) {
-        this.PlaySoundAtPosition(soundEvent, f, 1.0f);
+    public void PlaySound(SoundEvent sound, float volume) {
+        this.PlaySoundAtPosition(sound, volume, 1.0f);
     }
 
     @Override

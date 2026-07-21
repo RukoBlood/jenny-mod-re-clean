@@ -127,7 +127,7 @@ implements bh_class82,
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return -0.2f;
     }
 
@@ -142,7 +142,7 @@ implements bh_class82,
 
     @Override
     public void SetHome() {
-        this.void_a("Love it here owo");
+        this.sendLocalClientMessage("Love it here owo");
         this.PlaySound(SoundsHandler.GIRLS_LUNA_OWO, new int[0]);
     }
 
@@ -180,7 +180,7 @@ implements bh_class82,
             return true;
         }
         if (this.world.isRemote && !this.openGuiForPlayer(entityPlayer)) {
-            this.void_a(I18n.format("bia.dialogue.busy", new Object[0]));
+            this.sendLocalClientMessage(I18n.format("bia.dialogue.busy", new Object[0]));
         }
         return true;
     }
@@ -328,7 +328,7 @@ implements bh_class82,
         BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
         if (blockPos == null) {
             this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
-            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.net_minecraftforge_fml_common_network_NetworkRegistry$TargetPoint_P());
+            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
         } else {
             Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
@@ -348,7 +348,7 @@ implements bh_class82,
             }
             if (n == -1) {
                 this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
-                this.void_a("Heh.. the bed is obscured.. but I already ate the fish so nya~ hehe");
+                this.sendLocalClientMessage("Heh.. the bed is obscured.. but I already ate the fish so nya~ hehe");
                 return;
             }
             Vec3d vec3d3 = vec3d.add(vec3dArrayArray[n][0]);
@@ -855,19 +855,19 @@ implements bh_class82,
                     break;
                 }
                 case "paymentMSG2": {
-                    this.void_a("huh~?");
+                    this.sendLocalClientMessage("huh~?");
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_HUH, new int[0]);
                     break;
                 }
                 case "paymentMSG3": {
-                    this.void_a("nyyyaaaa~ :D");
+                    this.sendLocalClientMessage("nyyyaaaa~ :D");
                     int[] nArray = new int[]{1, 7, 10, 11};
                     int n = nArray[this.getRNG().nextInt(nArray.length)];
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[n]);
                     break;
                 }
                 case "paymentMSG4": {
-                    this.void_a("tankuuuu owowowo");
+                    this.sendLocalClientMessage("tankuuuu owowowo");
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_OWO, new int[0]);
                     break;
                 }
@@ -913,7 +913,7 @@ implements bh_class82,
                     break;
                 }
                 case "touch_boobsMSG1": {
-                    this.void_a("comon~ touch me hihi~");
+                    this.sendLocalClientMessage("comon~ touch me hihi~");
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
                     break;
                 }
@@ -922,7 +922,7 @@ implements bh_class82,
                     break;
                 }
                 case "jump": {
-                    this.a(SoundsHandler.MISC_JUMP[0], 0.2f);
+                    this.PlaySound(SoundsHandler.MISC_JUMP[0], 0.2f);
                     break;
                 }
                 case "horninya": {
@@ -933,7 +933,7 @@ implements bh_class82,
                 case "touch_boobs_cumMSG3": 
                 case "sitting_cumMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[1]);
-                    this.a(SoundsHandler.MISC_CUMINFLATION[0], 5.0f);
+                    this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 5.0f);
                     break;
                 }
                 case "moan": {
@@ -1005,7 +1005,7 @@ implements bh_class82,
                 }
                 case "call_playerMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
-                    this.void_a("come here - big guy hehe~");
+                    this.sendLocalClientMessage("come here - big guy hehe~");
                     break;
                 }
                 case "pounding": {
@@ -1014,7 +1014,7 @@ implements bh_class82,
                 }
                 case "sitting_introMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
-                    this.void_a("hehe~");
+                    this.sendLocalClientMessage("hehe~");
                     break;
                 }
                 case "sitting_introDone": {
@@ -1064,7 +1064,7 @@ implements bh_class82,
                     break;
                 }
                 case "headpatMSG1": {
-                    this.void_a("huh?~");
+                    this.sendLocalClientMessage("huh?~");
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_HUH, new int[0]);
                     break;
                 }
@@ -1073,7 +1073,7 @@ implements bh_class82,
                     break;
                 }
                 case "headpatMSG3": {
-                    this.void_a("nya~");
+                    this.sendLocalClientMessage("nya~");
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[0]);
                 }
             }

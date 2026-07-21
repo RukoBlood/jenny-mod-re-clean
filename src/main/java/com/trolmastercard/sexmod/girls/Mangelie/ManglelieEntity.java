@@ -119,7 +119,7 @@ extends GirlEntity {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 0.0f;
     }
 
@@ -146,7 +146,7 @@ extends GirlEntity {
     }
 
     @Override
-    public boolean boolean_t() {
+    public boolean shouldRenderNameTag() {
         return !this.boolean_r();
     }
 
@@ -389,7 +389,7 @@ extends GirlEntity {
     }
 
     void void_n() {
-        if (this.b() != null) {
+        if (this.getAnimationProcessor() != null) {
             return;
         }
         if (!this.boolean_r()) {
@@ -782,7 +782,7 @@ extends GirlEntity {
     protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         AnimationController animationController = event.getController();
         if (this.eyesController == animationController) {
-            if (this.b() == null) {
+            if (this.getAnimationProcessor() == null) {
                 return PlayState.STOP;
             }
             this.createAnimation("animation.manglelie.angry_face", true, event);
@@ -869,7 +869,7 @@ extends GirlEntity {
                     break;
                 }
                 case "doubleSemen0": {
-                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
                     this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                 }
                 case "doubleSemen": {

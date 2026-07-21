@@ -78,8 +78,8 @@ implements bh_class82 {
 
     @Override
     public void SetHome() {
-        this.void_a("Okay, I will be residing here then..");
-        this.a(SoundsHandler.GIRLS_ELLIE_HUH[0], 6.0f);
+        this.sendLocalClientMessage("Okay, I will be residing here then..");
+        this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[0], 6.0f);
     }
 
     @Override
@@ -105,7 +105,7 @@ implements bh_class82 {
     }
 
     @Override
-    public float float_i() {
+    public float getNameTagHeightOffset() {
         return 0.4f;
     }
 
@@ -128,7 +128,7 @@ implements bh_class82 {
     }
 
     @Override
-    public boolean boolean_t() {
+    public boolean shouldRenderNameTag() {
         return this.currentAction() != Action.CARRY_INTRO;
     }
 
@@ -148,8 +148,8 @@ implements bh_class82 {
     @Override
     public void goHome() {
         super.goHome();
-        this.void_a("stay safe darling~");
-        this.a(SoundsHandler.GIRLS_ELLIE_SIGH[1], 6.0f);
+        this.sendLocalClientMessage("stay safe darling~");
+        this.PlaySound(SoundsHandler.GIRLS_ELLIE_SIGH[1], 6.0f);
     }
 
     @Override
@@ -389,7 +389,7 @@ implements bh_class82 {
             this.am = this.java_lang_Object_arr_g();
         }
         if (this.am == null) {
-            this.h("no bed in sight...");
+            this.broadcastChatMessage("no bed in sight...");
             this.world.playSound(null, this.getPosition(), SoundsHandler.GIRLS_ELLIE_SIGH[0], SoundCategory.NEUTRAL, 6.0f, 1.0f);
             this.resetGirlState();
             this.void_f();
@@ -732,23 +732,23 @@ implements bh_class82 {
                     break;
                 }
                 case "hugMSG2": {
-                    this.h("Hmm...");
-                    this.a(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
+                    this.broadcastChatMessage("Hmm...");
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
                     break;
                 }
                 case "hugMSG3": {
-                    this.h("Hey!");
-                    this.a(SoundsHandler.GIRLS_ELLIE_HUH[1], 1.0f);
+                    this.broadcastChatMessage("Hey!");
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[1], 1.0f);
                     break;
                 }
                 case "hugMSG4": {
-                    this.h(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
-                    this.a(SoundsHandler.GIRLS_ELLIE_MOMMYHORNY, 0.5f);
+                    this.broadcastChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_MOMMYHORNY, 0.5f);
                     break;
                 }
                 case "hugMSG5": {
-                    this.h(I18n.format("ellie.dialogue.whattodo", new Object[0]));
-                    this.a(SoundsHandler.GIRLS_ELLIE_HUH[1], 6.0f);
+                    this.broadcastChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[1], 6.0f);
                     break;
                 }
                 case "hugDone": {
@@ -757,36 +757,36 @@ implements bh_class82 {
                     break;
                 }
                 case "hugselectedMSG1": {
-                    this.h(I18n.format("ellie.dialogue.iknow", new Object[0]));
-                    this.a(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
+                    this.broadcastChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
                     break;
                 }
                 case "hugselectedMSG2": {
-                    this.h(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
-                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
+                    this.broadcastChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
                     if (!this.isControlledByLocalPlayer()) break;
                     HandlePlayerMovement.setMovementLock(true);
                     break;
                 }
                 case "sitdownMSG1": {
-                    this.a(SoundsHandler.GIRLS_ELLIE_COMETOMOMMY, 0.5f);
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_COMETOMOMMY, 0.5f);
                     if (!this.boolean_e()) break;
-                    this.h(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
+                    this.broadcastChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
                     break;
                 }
                 case "cowgirlStartMSG0": {
-                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 6.0f);
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 6.0f);
                     break;
                 }
                 case "cowgirlStartMSG1": {
                     if (!this.boolean_e()) break;
-                    this.void_a(I18n.format("ellie.dialogue.like", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("ellie.dialogue.like", new Object[0]));
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "cowgirlStartMSG2": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -801,9 +801,9 @@ implements bh_class82 {
                     if (this.aj) {
                         this.aj = false;
                     } else {
-                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
@@ -814,23 +814,23 @@ implements bh_class82 {
                     break;
                 }
                 case "cowgirlfastdomMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.2);
                     break;
                 }
                 case "cowgirlcumMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG2": {
-                    this.a(SoundsHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG3": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG4": {
@@ -840,9 +840,9 @@ implements bh_class82 {
                 }
                 case "cowgirlcumMSG5": 
                 case "missionary_cumMSG2": {
-                    this.a(SoundsHandler.GIRLS_ELLIE_GOODBOY, 0.5f);
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GOODBOY, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.void_a(I18n.format("ellie.dialogue.goodboy", new Object[0]));
+                    this.sendLocalClientMessage(I18n.format("ellie.dialogue.goodboy", new Object[0]));
                     break;
                 }
                 case "cowgirlcumMSG6": 
@@ -881,9 +881,9 @@ implements bh_class82 {
                 case "missionary_slowMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() && this.getRNG().nextBoolean()) {
-                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
                     } else {
-                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
@@ -892,9 +892,9 @@ implements bh_class82 {
                 case "missionary_fastMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() || this.getRNG().nextBoolean()) {
-                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
                     } else {
-                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.05);
@@ -921,17 +921,17 @@ implements bh_class82 {
                     break;
                 }
                 case "missionary_cumMSG1": {
-                    this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     break;
                 }
                 case "carry_introMSG1": {
-                    this.void_a("I'm hungry..");
-                    this.a(SoundsHandler.GIRLS_ELLIE_HMPH, 6.0f);
+                    this.sendLocalClientMessage("I'm hungry..");
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH, 6.0f);
                     break;
                 }
                 case "carry_introMSG2": {
-                    this.void_a("heh~");
-                    this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
+                    this.sendLocalClientMessage("heh~");
+                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
                     break;
                 }
                 case "lipsound": {
@@ -941,7 +941,7 @@ implements bh_class82 {
                     break;
                 }
                 case "cum": {
-                    this.a(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
                     this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                     break;
                 }

@@ -308,7 +308,7 @@ extends GirlRenderer<ManglelieEntity> {
             if (bl) {
                 string2 = string2 + "2";
             }
-            if ((f = TrigMath.toDegrees(em_class2582.b().getBone(string2).getRotationX())) < 0.0f) {
+            if ((f = TrigMath.toDegrees(em_class2582.getAnimationProcessor().getBone(string2).getRotationX())) < 0.0f) {
                 return;
             }
             geoBone.setPositionY(geoBone.getPositionY() + f * 0.01f);
@@ -321,7 +321,7 @@ extends GirlRenderer<ManglelieEntity> {
             if (bl) {
                 string2 = string2 + "2";
             }
-            if ((f = TrigMath.toDegrees(em_class2582.b().getBone(string2).getRotationX())) < 0.0f) {
+            if ((f = TrigMath.toDegrees(em_class2582.getAnimationProcessor().getBone(string2).getRotationX())) < 0.0f) {
                 return;
             }
             geoBone.setRotationX(TrigMath.toRadians(f));
