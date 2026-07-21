@@ -127,17 +127,17 @@ extends GirlEntity {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        super.writeEntityToNBT(nBTTagCompound);
-        nBTTagCompound.setInteger("hornyLevel", this.entityDataManager.get(HornyLevel));
-        nBTTagCompound.setInteger("ticksUntilBirth", this.entityDataManager.get(TicksUntilBirth));
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setInteger("hornyLevel", this.entityDataManager.get(HornyLevel));
+        nbt.setInteger("ticksUntilBirth", this.entityDataManager.get(TicksUntilBirth));
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
-        super.readEntityFromNBT(nBTTagCompound);
-        this.entityDataManager.set(HornyLevel, nBTTagCompound.getInteger("hornyLevel"));
-        this.entityDataManager.set(TicksUntilBirth, nBTTagCompound.getInteger("ticksUntilBirth"));
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        this.entityDataManager.set(HornyLevel, nbt.getInteger("hornyLevel"));
+        this.entityDataManager.set(TicksUntilBirth, nbt.getInteger("ticksUntilBirth"));
         if (this.entityDataManager.get(HornyLevel) != 0) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
         }
@@ -195,7 +195,7 @@ extends GirlEntity {
             return;
         }
         Vec3d vec3d = this.getPositionVector();
-        Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.java_lang_Float_I().floatValue());
+        Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation().floatValue());
         vec3d = vec3d.add(vec3d2);
         entityPlayerSP.setPosition(vec3d.x, vec3d.y, vec3d.z);
         entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
@@ -234,7 +234,7 @@ extends GirlEntity {
         }
         if (n >= 4 && this.onGround && this.currentAction() == Action.NULL) {
             this.setTargetPosition(this.getPositionVector());
-            this.void_b(this.rotationYaw);
+            this.setYawRotation(this.rotationYaw);
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setNoGravity(true);
             this.noClip = true;
@@ -246,7 +246,7 @@ extends GirlEntity {
             return;
         }
         this.setTargetPosition(this.getPositionVector());
-        this.void_b(this.rotationYaw);
+        this.setYawRotation(this.rotationYaw);
         this.entityDataManager.set(IS_ANCHORED, true);
         this.setNoGravity(true);
         this.noClip = true;
@@ -254,8 +254,8 @@ extends GirlEntity {
         entityPlayer.noClip = true;
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-        entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
-        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.java_lang_Float_I().floatValue());
+        entityPlayer.rotationYaw = this.getYawRotation().floatValue();
+        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation().floatValue());
         entityPlayer.setPosition(this.posX + vec3d.x, this.posY, this.posZ + vec3d.z);
         if (this.currentAction() == Action.WAITDOGGY) {
             this.setCurrentAction(Action.DOGGYSTART);

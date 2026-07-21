@@ -57,7 +57,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
 
     @CheckReturnValue
     boolean shouldProceedWithRender(GirlEntity girl) {
-        if (girl.boolean_h()) {
+        if (girl.isLocallyRegistered()) {
             return true;
         }
         boolean shouldRender = forceRenderNextFrame;

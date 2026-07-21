@@ -93,7 +93,7 @@ implements bh_class82 {
     }
 
     boolean boolean_i() {
-        if (this.boolean_h()) {
+        if (this.isLocallyRegistered()) {
             return false;
         }
         return this.world.getBlockState(this.getPosition().add(0, 2, 0)).getBlock() != Blocks.AIR;
@@ -122,9 +122,9 @@ implements bh_class82 {
             return;
         }
         float f = entityPlayer.rotationYaw - 180.0f;
-        this.void_b(f);
+        this.setYawRotation(f);
         this.setCurrentAction(Action.CARRY_INTRO);
-        this.void_a(true);
+        this.setAnchored(true);
     }
 
     @Override
@@ -246,7 +246,7 @@ implements bh_class82 {
         if (entityPlayer == null) {
             return;
         }
-        float f = this.java_lang_Float_I().floatValue();
+        float f = this.getYawRotation().floatValue();
         Vec3d vec3d = this.getTargetPosition().add(VectorMath.rotate(new Vec3d(0.0, 2.5625f - entityPlayer.getEyeHeight(), -0.3125), 180.0f + f));
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
@@ -311,7 +311,7 @@ implements bh_class82 {
             entityPlayer.setNoGravity(true);
             entityPlayer.noClip = true;
             vec3d2 = this.getTargetPosition();
-            entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
+            entityPlayer.rotationYaw = this.getYawRotation().floatValue();
             vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.1), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
             entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
@@ -332,7 +332,7 @@ implements bh_class82 {
             entityPlayer.setNoGravity(true);
             entityPlayer.noClip = true;
             vec3d2 = this.getTargetPosition();
-            entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
+            entityPlayer.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
             vec3d = VectorMath.rotate(new Vec3d(0.0, 1.0 - (double)entityPlayer.eyeHeight, -1.8125), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
             entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
@@ -408,7 +408,7 @@ implements bh_class82 {
             return;
         }
         this.setTargetPosition(vec3d);
-        this.void_b(n);
+        this.setYawRotation(n);
         this.setCurrentAction(Action.SITDOWN);
         this.entityDataManager.set(IS_ANCHORED, true);
         this.al = 109;
@@ -467,7 +467,7 @@ implements bh_class82 {
         this.removeActivePotionEffect(HornyPotion.HORNY_POTION);
         this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
         float f = (float)(Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29577951308232);
-        this.void_b(f);
+        this.setYawRotation(f);
         this.setTargetPosition(this.getPositionVector());
         this.entityDataManager.set(IS_ANCHORED, true);
         this.setCurrentAction(Action.DASH);
@@ -476,7 +476,7 @@ implements bh_class82 {
         this.noClip = true;
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         this.tasks.removeTask(this.avoidWaterGoal);
-        this.tasks.removeTask(this.o);
+        this.tasks.removeTask(this.followPlayerGoal);
     }
 
     void void_n() {
@@ -498,7 +498,7 @@ implements bh_class82 {
         Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, -0.5), entityPlayer.rotationYaw);
         Vec3d vec3d2 = vec3d.add(entityPlayer.getPositionVector());
         this.setTargetPosition(vec3d2);
-        this.void_b(entityPlayer.rotationYaw);
+        this.setYawRotation(entityPlayer.rotationYaw);
         this.setCurrentAction(Action.HUG);
         this.Y = 150;
     }
@@ -716,7 +716,7 @@ implements bh_class82 {
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {

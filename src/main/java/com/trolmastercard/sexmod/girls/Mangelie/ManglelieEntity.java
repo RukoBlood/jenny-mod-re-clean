@@ -173,8 +173,8 @@ extends GirlEntity {
     }
 
     @Override
-    public Float java_lang_Float_I() {
-        float f = super.java_lang_Float_I().floatValue();
+    public Float getYawRotation() {
+        float f = super.getYawRotation().floatValue();
         if (ManglelieModel.boolean_c(this)) {
             f += 180.0f;
         }
@@ -308,7 +308,7 @@ extends GirlEntity {
     @Override
     @SideOnly(value=Side.CLIENT)
     public Vec3d a(Minecraft minecraft, CustomModelEntity cy_class1532, EntityLivingBase entityLivingBase, float f) {
-        if (this.boolean_h()) {
+        if (this.isLocallyRegistered()) {
             return super.a(minecraft, cy_class1532, entityLivingBase, f);
         }
         if (!this.boolean_r()) {
@@ -452,7 +452,7 @@ extends GirlEntity {
         this.setCurrentAction(Action.RIDE_MOMMY_HEAD);
         this.Q = null;
         if (f__class2972.currentAction() == Action.HUG_MANG) {
-            f__class2972.void_a(false);
+            f__class2972.setAnchored(false);
             f__class2972.setCurrentAction((Action)null);
         }
     }
@@ -481,14 +481,14 @@ extends GirlEntity {
             this.world.removeEntity(this);
             return;
         }
-        this.void_b(0.0f);
+        this.setYawRotation(0.0f);
         this.setTargetPosition(f__class2972.getPositionVector());
-        this.void_a(true);
+        this.setAnchored(true);
     }
 
     @Override
-    public void void_b(float f) {
-        super.void_b(f);
+    public void setYawRotation(float yaw) {
+        super.setYawRotation(yaw);
     }
 
     @Override
@@ -539,7 +539,7 @@ extends GirlEntity {
         Vec3d vec3d2 = entity.getPositionVector();
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
         float f = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
-        this.void_b(f);
+        this.setYawRotation(f);
         this.pathNavigator = this.getNavigator();
         this.pathNavigator.clearPath();
         this.pathNavigator.tryMoveToEntityLiving(entity, 0.65f);
@@ -635,13 +635,13 @@ extends GirlEntity {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        super.writeEntityToNBT(nBTTagCompound);
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
         UUID uUID = this.java_util_UUID_v();
-        nBTTagCompound.setString(ac, uUID == null ? "" : uUID.toString());
-        nBTTagCompound.setBoolean("sexmod:iswild", this.aq);
+        nbt.setString(ac, uUID == null ? "" : uUID.toString());
+        nbt.setBoolean("sexmod:iswild", this.aq);
         if (this.S) {
-            nBTTagCompound.setBoolean("sexmod:despawned", true);
+            nbt.setBoolean("sexmod:despawned", true);
         }
     }
 
@@ -659,13 +659,13 @@ extends GirlEntity {
     }
 
     @Override
-    protected boolean boolean_X() {
+    protected boolean supportsCustomModels() {
         return false;
     }
 
     @Override
-    public void f(String string) {
-        super.f(string);
+    public void setCustomModelKey(String string) {
+        super.setCustomModelKey(string);
         bj_class84.a(this);
     }
 
@@ -673,7 +673,7 @@ extends GirlEntity {
         if (this.Z) {
             return;
         }
-        this.f(bj_class84.c(this));
+        this.setCustomModelKey(bj_class84.c(this));
         this.Z = true;
     }
 
@@ -695,7 +695,7 @@ extends GirlEntity {
     public void void_g() {
         if (this.boolean_r()) {
             this.setCurrentAction(Action.RIDE_MOMMY_HEAD);
-            this.void_b(0.0f);
+            this.setYawRotation(0.0f);
             this.entityDataManager.setDirty(YAW_ROTATION);
         }
     }

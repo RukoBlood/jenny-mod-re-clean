@@ -137,8 +137,8 @@ extends PlayerGirl {
         }
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-        entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
-        this.cameraYaw = this.java_lang_Float_I().floatValue();
+        entityPlayer.rotationYaw = this.getYawRotation().floatValue();
+        this.cameraYaw = this.getYawRotation().floatValue();
         entityPlayer.setPosition(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z);
         entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
         this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
@@ -272,7 +272,7 @@ extends PlayerGirl {
     @Override
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             String string;

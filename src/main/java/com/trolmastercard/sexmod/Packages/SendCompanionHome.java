@@ -59,7 +59,7 @@ public class SendCompanionHome implements IMessage {
                     if (girlEntity.world.isRemote) continue;
                     if (girlEntity.currentAction() != Action.THROW_PEARL) {
                         girlEntity.setCurrentAction(Action.THROW_PEARL);
-                        girlEntity.void_b((float)Math.atan2(girlEntity.posZ - girlEntity.homeCoords.z, girlEntity.posX - girlEntity.homeCoords.x) * 57.29578f + 90.0f);
+                        girlEntity.setYawRotation((float)Math.atan2(girlEntity.posZ - girlEntity.homeCoords.z, girlEntity.posX - girlEntity.homeCoords.x) * 57.29578f + 90.0f);
                         girlEntity.setTargetPosition(girlEntity.getPositionVector());
                         girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, true);
                         girlEntity.activePearl = null;

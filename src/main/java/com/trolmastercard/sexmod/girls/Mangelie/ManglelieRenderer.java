@@ -166,7 +166,7 @@ extends GirlRenderer<ManglelieEntity> {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         GlStateManager.pushMatrix();
-        if (em_class2582.boolean_h()) {
+        if (em_class2582.isLocallyRegistered()) {
             GlStateManager.translate(0.0, 0.01, 0.0);
         } else {
             GalathGeometryRender.setupRenderTranslations(mc, em_class2582, f);
@@ -415,7 +415,7 @@ extends GirlRenderer<ManglelieEntity> {
         GalathEntity f__class2972;
         if (entity.currentAction() == Action.RUN) {
             float f2;
-            entity.rotationYaw = f2 = entity.java_lang_Float_I().floatValue();
+            entity.rotationYaw = f2 = entity.getYawRotation().floatValue();
             entity.prevRenderYawOffset = f2;
             entity.renderYawOffset = f2;
             entity.prevRotationYawHead = f2;
@@ -430,9 +430,9 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     public static void a(GalathEntity f__class2972, float f, EntityLivingBase entityLivingBase) {
-        boolean bl = f__class2972.boolean_Q();
-        float f2 = bl ? f__class2972.java_lang_Float_I().floatValue() : f__class2972.rotationYawHead;
-        float f3 = bl ? f__class2972.java_lang_Float_I().floatValue() : f__class2972.prevRotationYawHead;
+        boolean bl = f__class2972.isAnchored();
+        float f2 = bl ? f__class2972.getYawRotation().floatValue() : f__class2972.rotationYawHead;
+        float f3 = bl ? f__class2972.getYawRotation().floatValue() : f__class2972.prevRotationYawHead;
         Float f4 = GalathEntity.a(f__class2972, f);
         if (f4 != null) {
             f2 = f4.floatValue();

@@ -69,7 +69,7 @@ extends Item {
             return;
         }
         RayTraceResult rayTraceResult = Minecraft.getMinecraft().objectMouseOver;
-        itemStack.setItemDamage(rayTraceResult != null && GirlEntity.boolean_a(rayTraceResult.entityHit) ? 1 : 0);
+        itemStack.setItemDamage(rayTraceResult != null && GirlEntity.isValidGirl(rayTraceResult.entityHit) ? 1 : 0);
     }
 
     @SubscribeEvent
@@ -78,7 +78,7 @@ extends Item {
         if (!(entity instanceof GirlEntity)) {
             return;
         }
-        if (!GirlEntity.boolean_a(entity)) {
+        if (!GirlEntity.isValidGirl(entity)) {
             return;
         }
         EntityPlayer entityPlayer = entityInteract.getEntityPlayer();
@@ -170,7 +170,7 @@ extends Item {
         }
         String string = ei_class2512.java_lang_String_C();
         String string2 = GirlEntity.c(GirlEntity.h(ei_class2512.girlID()));
-        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{Utils.CapitalizeString(PlayerGirlEntity.a(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
+        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{Utils.CapitalizeString(PlayerGirlEntity.fromGirl(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
         Utils.copyToClipboard(String.format("%s$%s", string, string2));
         return true;

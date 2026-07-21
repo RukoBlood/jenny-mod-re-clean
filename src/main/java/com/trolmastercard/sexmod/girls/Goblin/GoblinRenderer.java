@@ -162,19 +162,19 @@ public class GoblinRenderer extends AbstractKoboldGoblinRenderer<GoblinEntity> {
         B = entityYaw;
         Action action = entity.currentAction();
         UUID uUID = entity.java_util_UUID_e();
-        if (entity.boolean_h()) {
+        if (entity.isLocallyRegistered()) {
             object = GoblinRenderer.a(entity.world, entity, uUID, x, y, z);
             x = ((Vec3d)object).x;
             y = ((Vec3d)object).y;
             z = ((Vec3d)object).z;
         }
         if (action == Action.THROWN || action == Action.START_THROWING) {
-            if (GoblinRenderer.minecraft.gameSettings.thirdPersonView == 0 && entityYaw == -420.69f && !entity.boolean_h()) {
+            if (GoblinRenderer.minecraft.gameSettings.thirdPersonView == 0 && entityYaw == -420.69f && !entity.isLocallyRegistered()) {
                 return;
             }
-            if (!entity.boolean_h()) {
+            if (!entity.isLocallyRegistered()) {
                 float f3;
-                entity.prevRenderYawOffset = f3 = entity.java_lang_Float_I().floatValue();
+                entity.prevRenderYawOffset = f3 = entity.getYawRotation().floatValue();
                 entity.renderYawOffset = f3;
             }
         }
@@ -194,7 +194,7 @@ public class GoblinRenderer extends AbstractKoboldGoblinRenderer<GoblinEntity> {
                 y = 0.0;
                 z = 0.0;
             } else {
-                if (!entity.boolean_h() || uUID == null || GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
+                if (!entity.isLocallyRegistered() || uUID == null || GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
                     if (uUID != null && !GoblinRenderer.minecraft.player.getPersistentID().equals(uUID)) {
                         object = entity.world.getPlayerEntityByUUID(uUID);
                         if (object != null) {
@@ -253,7 +253,7 @@ public class GoblinRenderer extends AbstractKoboldGoblinRenderer<GoblinEntity> {
     }
 
     public static boolean a(GirlEntity em_class2582, Action fp_class3242) {
-        if (fp_class3242 == Action.START_THROWING && !em_class2582.boolean_h()) {
+        if (fp_class3242 == Action.START_THROWING && !em_class2582.isLocallyRegistered()) {
             return false;
         }
         if (GoblinRenderer.minecraft.gameSettings.thirdPersonView != 0 && (fp_class3242 == Action.START_THROWING || fp_class3242 == Action.PICK_UP)) {
@@ -381,7 +381,7 @@ public class GoblinRenderer extends AbstractKoboldGoblinRenderer<GoblinEntity> {
     }
 
     public static void a(GirlEntity em_class2582, GeoBone geoBone, String string) {
-        if (em_class2582.boolean_h()) {
+        if (em_class2582.isLocallyRegistered()) {
             geoBone.setHidden(true);
         } else if (em_class2582 instanceof GoblinEntity) {
             int n = Integer.parseInt(string);

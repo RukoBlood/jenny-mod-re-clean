@@ -79,7 +79,7 @@ implements IMessage {
                 ((EntityPlayer)object2).capabilities.isFlying = false;
                 ((Entity)object2).setNoGravity(false);
                 ((EntityPlayer)object2).noClip = false;
-                em_class2582.void_a(false);
+                em_class2582.setAnchored(false);
                 em_class2582.setCurrentAction(Action.NULL);
                 if (em_class2582.getID() != null && (object = em_class2582.world.getPlayerEntityByUUID(em_class2582.getID())) != null) {
                     ((EntityPlayer)object).capabilities.isFlying = false;
@@ -87,7 +87,7 @@ implements IMessage {
                     ((EntityPlayer)object).noClip = false;
                 }
             }
-            em_class2582.void_a(false);
+            em_class2582.setAnchored(false);
             em_class2582.setInteractionPlayerUUID((UUID)null);
             em_class2582.playerCameraOffsetPos = null;
             em_class2582.setNoGravity(false);

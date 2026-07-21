@@ -133,10 +133,10 @@ extends PlayerGirl {
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.net_minecraft_util_math_Vec3d_w().y, this.getPositionVector().z);
             this.setCurrentAction(Action.COWGIRL_SITTING_INTRO);
-            entityPlayer.setRotationYawHead(this.java_lang_Float_I().floatValue() + 180.0f);
-            entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
-            entityPlayer.prevRotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
-            this.cameraYaw = this.java_lang_Float_I().floatValue() + 180.0f;
+            entityPlayer.setRotationYawHead(this.getYawRotation().floatValue() + 180.0f);
+            entityPlayer.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
+            entityPlayer.prevRotationYaw = this.getYawRotation().floatValue() + 180.0f;
+            this.cameraYaw = this.getYawRotation().floatValue() + 180.0f;
             this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
             this.entityDataManager.set(OUTFIT_INDEX, 0);
         }
@@ -318,7 +318,7 @@ extends PlayerGirl {
     @Override
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
@@ -542,14 +542,14 @@ extends PlayerGirl {
                     if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     Vec3d vec3d = new Vec3d(0.0, -0.075f, -0.7109375);
-                    Vec3d vec3d2 = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d2 = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     Minecraft.getMinecraft().player.setPosition(this.getTargetPosition().x + vec3d2.x, this.getTargetPosition().y - 0.0 + vec3d2.y, this.getTargetPosition().z + vec3d2.z);
                     break;
                 }
                 case "sitting_fastTp": {
                     if (!this.boolean_n()) break;
                     Vec3d vec3d = new Vec3d(0.0, -0.160625, -0.9925);
-                    Vec3d vec3d3 = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d3 = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     Minecraft.getMinecraft().player.setPosition(this.getTargetPosition().x + vec3d3.x, this.getTargetPosition().y - 0.0 + vec3d3.y, this.getTargetPosition().z + vec3d3.z);
                     break;
                 }

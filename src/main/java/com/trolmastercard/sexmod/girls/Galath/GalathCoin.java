@@ -287,9 +287,9 @@ implements IAnimatable {
     public static void a(GalathEntity f__class2972) {
         f__class2972.setCurrentAction(Action.GALATH_DE_SUMMON);
         f__class2972.aC();
-        f__class2972.void_a(true);
+        f__class2972.setAnchored(true);
         f__class2972.setTargetPosition(f__class2972.getPositionVector());
-        f__class2972.void_b(f__class2972.rotationYaw);
+        f__class2972.setYawRotation(f__class2972.rotationYaw);
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -310,7 +310,7 @@ implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     public static void a(UUID uUID, GalathEntity f__class2972) {
         World world = f__class2972.world;
-        Vec3d vec3d = f__class2972.boolean_Q() ? f__class2972.getTargetPosition() : f__class2972.getPositionVector();
+        Vec3d vec3d = f__class2972.isAnchored() ? f__class2972.getTargetPosition() : f__class2972.getPositionVector();
         Vec3d vec3d2 = vec3d.add(0.0, 1.5, 0.0);
         Random random = f__class2972.getRNG();
         int n = 0;

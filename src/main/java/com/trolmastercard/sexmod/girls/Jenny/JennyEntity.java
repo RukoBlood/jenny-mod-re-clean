@@ -159,7 +159,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             if (this.getPositionVector().equals(GirlEntity.TARGET_POS) || this.ac > 40) {
                 this.ab = false;
                 this.ac = 0;
-                this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 if (this.entityDataManager.get(Y)) {
@@ -168,7 +168,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 this.setCurrentAction(Action.PAYMENT);
             } else {
-                this.rotationYaw = this.java_lang_Float_I().floatValue();
+                this.rotationYaw = this.getYawRotation().floatValue();
                 this.setTargetPosition(this.net_minecraft_util_math_Vec3d_aa());
                 this.setNoGravity(false);
                 Vec3d object = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
@@ -243,7 +243,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             this.void_a(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
         } else {
             this.tasks.removeTask(this.avoidWaterGoal);
-            this.tasks.removeTask(this.o);
+            this.tasks.removeTask(this.followPlayerGoal);
             Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
             Vec3d[][] vec3dArrayArray = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.5), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(0.5, 0.0, 1.5), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(-0.5, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0)}, {new Vec3d(1.5, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0)}};
@@ -266,10 +266,10 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 return;
             }
             Vec3d vec3d3 = vec3d.add(vec3dArrayArray[n][0]);
-            this.void_a(false);
-            this.void_b(nArray[n]);
+            this.setAnchored(false);
+            this.setYawRotation(nArray[n]);
             this.setTargetPosition(new Vec3d(vec3d3.x, vec3d3.y, vec3d3.z));
-            this.cameraYaw = this.java_lang_Float_I().floatValue();
+            this.cameraYaw = this.getYawRotation().floatValue();
             this.getNavigator().clearPath();
             this.getNavigator().tryMoveToXYZ(vec3d3.x, vec3d3.y, vec3d3.z, 0.35);
             this.Z = true;
@@ -301,7 +301,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (entityPlayer == null) {
             return;
         }
-        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.2), this.java_lang_Float_I().floatValue() + 180.0f);
+        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.2), this.getYawRotation().floatValue() + 180.0f);
         entityPlayer.setPositionAndUpdate(entityPlayer.posX + vec3d.x, entityPlayer.posY, entityPlayer.posZ + vec3d.z);
     }
 
@@ -348,8 +348,8 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     @Override
     public void void_g() {
         this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.o);
+        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.followPlayerGoal);
         this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
@@ -549,7 +549,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             block71 : switch (soundKeyframeEvent.sound) {

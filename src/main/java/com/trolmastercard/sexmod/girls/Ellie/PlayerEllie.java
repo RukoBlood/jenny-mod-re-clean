@@ -196,12 +196,12 @@ extends PlayerGirl {
             if ("Missionary".equals(string)) {
                 this.setCurrentAction(Action.MISSIONARY_START);
                 Vec3d vec3d = this.net_minecraft_util_math_Vec3d_w().subtract(0.0, 0.1, 0.0);
-                entityPlayer.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, this.java_lang_Float_I().floatValue(), 60.0f);
+                entityPlayer.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, this.getYawRotation().floatValue(), 60.0f);
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else {
                 this.setCurrentAction(Action.COWGIRLSTART);
-                Vec3d vec3d = this.net_minecraft_util_math_Vec3d_w().add(new Vec3d(-Math.sin((double)this.java_lang_Float_I().floatValue() * (Math.PI / 180)) * 1.8, -0.65, Math.cos((double)this.java_lang_Float_I().floatValue() * (Math.PI / 180)) * 1.8));
-                entityPlayer.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, 180.0f + this.java_lang_Float_I().floatValue(), -30.0f);
+                Vec3d vec3d = this.net_minecraft_util_math_Vec3d_w().add(new Vec3d(-Math.sin((double)this.getYawRotation().floatValue() * (Math.PI / 180)) * 1.8, -0.65, Math.cos((double)this.getYawRotation().floatValue() * (Math.PI / 180)) * 1.8));
+                entityPlayer.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, 180.0f + this.getYawRotation().floatValue(), -30.0f);
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             }
         }
@@ -375,7 +375,7 @@ extends PlayerGirl {
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {

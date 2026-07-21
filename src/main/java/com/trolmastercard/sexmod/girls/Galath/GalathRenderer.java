@@ -118,7 +118,7 @@ implements IModelBoneFilter {
         if (entity.currentAction() != Action.MASTERBATE) {
             return;
         }
-        entity.rotationYaw = f = entity.java_lang_Float_I();
+        entity.rotationYaw = f = entity.getYawRotation();
         entity.prevRenderYawOffset = f;
         entity.renderYawOffset = f;
         entity.prevRotationYawHead = f;
@@ -129,7 +129,7 @@ implements IModelBoneFilter {
     public void doRender(GalathEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         Vec3d vec3d = GalathRenderer.a(entity, partialTicks);
         if (vec3d != null) {
-            entity.a(vec3d);
+            entity.setTargetPositionDirect(vec3d);
         }
         entity.aG = vec3d;
         GalathEntity.a(entity, partialTicks);
@@ -146,7 +146,7 @@ implements IModelBoneFilter {
         if (f__class2972.currentAction() != Action.RAPE_CHARGE) {
             return;
         }
-        f__class2972.prevRenderYawOffset = f__class2972.renderYawOffset = f__class2972.java_lang_Float_I().floatValue();
+        f__class2972.prevRenderYawOffset = f__class2972.renderYawOffset = f__class2972.getYawRotation().floatValue();
     }
 
     // TODO
@@ -187,14 +187,14 @@ implements IModelBoneFilter {
             f__class2972.aH = f__class2972.af + 8L;
         }
         if (Utils.isValueInBounds((double)f2, 24.0, 32.0)) {
-            Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
+            Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), f__class2972.getYawRotation().floatValue() + 180.0f);
             Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
             Vec3d vec3d4 = vec3d.add(0.0, entityLivingBase.getEyeHeight(), 0.0).add(vec3d2);
             float f3 = ((float) GalathRenderer.mc.world.getTotalWorldTime() + f - (float)f__class2972.af) / (float)(f__class2972.aH - f__class2972.af);
             return Reference.LerpVec3d(vec3d3, vec3d4, (double)f3);
         }
         if (Utils.isValueInBounds((double)f2, 32.0, 54.0)) {
-            Vec3d vec3d5 = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
+            Vec3d vec3d5 = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.getYawRotation().floatValue() + 180.0f);
             return vec3d.add(vec3d5);
         }
         return null;
@@ -661,7 +661,7 @@ implements IModelBoneFilter {
     protected Vec3d applyCustomTranslationOffsets(GalathEntity entity, float partialTicks, Vec3d baseVector) {
         if (entity.currentAction() == Action.RUN) {
             float f2;
-            entity.rotationYaw = f2 = entity.java_lang_Float_I();
+            entity.rotationYaw = f2 = entity.getYawRotation();
             entity.prevRenderYawOffset = f2;
             entity.renderYawOffset = f2;
             entity.prevRotationYawHead = f2;

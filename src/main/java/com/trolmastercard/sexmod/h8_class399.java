@@ -112,7 +112,7 @@ public enum h8_class399 {
         f__class2972.motionZ = vec3d4.z * (double)0.6f;
         f__class2972.motionY = Utils.clamp(vec3d3.y * (double)0.6f, (double)-0.6f, (double)0.6f);
     }, f__class2972 -> f__class2972.ar() > 23, f__class2972 -> {
-        f__class2972.b(Vec3d.ZERO);
+        f__class2972.setMotionVector(Vec3d.ZERO);
         f__class2972.b(0);
         f__class2972.bL = null;
     }, false, f__class2972 -> true, false),
@@ -129,7 +129,7 @@ public enum h8_class399 {
         Vec3d vec3d;
         Vec3d vec3d2;
         Vec3d vec3d3;
-        f__class2972.b(Vec3d.ZERO);
+        f__class2972.setMotionVector(Vec3d.ZERO);
         if ((float)f__class2972.ad != 30.0f) {
             return;
         }
@@ -164,15 +164,15 @@ public enum h8_class399 {
     ATTACK_SWORD(f__class2972 -> {
         f__class2972.a(0);
         f__class2972.setCurrentAction(Action.ATTACK_SWORD);
-        f__class2972.b(Vec3d.ZERO);
+        f__class2972.setMotionVector(Vec3d.ZERO);
         Vec3d vec3d = f__class2972.getPositionVector();
         f__class2972.e(vec3d);
         Vec3d vec3d2 = f__class2972.net_minecraft_entity_EntityLivingBase_M().getPositionVector();
         g8_class353 g8_class3532 = new g8_class353(vec3d2.x - vec3d.x, vec3d2.z - vec3d.z);
         double d = TrigMath.toDegrees(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
-        f__class2972.void_a(true);
+        f__class2972.setAnchored(true);
         f__class2972.setTargetPosition(vec3d);
-        f__class2972.void_b((float)d);
+        f__class2972.setYawRotation((float)d);
         GirlEntity.playRandomSound((GirlEntity)f__class2972, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
     }, f__class2972 -> {
         EntityLivingBase entityLivingBase = f__class2972.net_minecraft_entity_EntityLivingBase_M();
@@ -182,7 +182,7 @@ public enum h8_class399 {
             Vec3d vec3d = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight(), 0.0);
             g8_class353 g8_class3532 = new g8_class353(vec3d.x - f__class2972.posX, vec3d.z - f__class2972.posZ);
             double d = TrigMath.toDegrees(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
-            f__class2972.void_b((float)d);
+            f__class2972.setYawRotation((float)d);
             Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), (float)(d + 180.0));
             Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
             Vec3d vec3d4 = vec3d.add(vec3d2);
@@ -190,7 +190,7 @@ public enum h8_class399 {
             Vec3d vec3d5 = Reference.LerpVec3d(vec3d3, vec3d4, (double)f);
             f__class2972.setTargetPosition(vec3d5);
         } else if (Utils.isValueInBounds((double)n, 32.0, 54.0)) {
-            Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
+            Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.getYawRotation().floatValue() + 180.0f);
             Vec3d vec3d6 = entityLivingBase.getPositionVector().add(vec3d);
             f__class2972.setTargetPosition(vec3d6);
             GalathDamageSource damageSource = new GalathDamageSource(f__class2972);
@@ -203,7 +203,7 @@ public enum h8_class399 {
                 entityLivingBase.attackEntityFrom(damageSource, 5.0f);
             }
         } else if (n == 54) {
-            f__class2972.void_a(false);
+            f__class2972.setAnchored(false);
             f__class2972.setCurrentAction(Action.FLY);
             Vec3d vec3d = f__class2972.net_minecraft_util_math_Vec3d_B().subtract(f__class2972.getPositionVector()).normalize();
             f__class2972.motionX = vec3d.x * (double)0.6f;
@@ -215,9 +215,9 @@ public enum h8_class399 {
         }
     }, f__class2972 -> f__class2972.ar() > 23, f__class2972 -> {
         f__class2972.b(0);
-        f__class2972.b(Vec3d.ZERO);
+        f__class2972.setMotionVector(Vec3d.ZERO);
         f__class2972.a(-1);
-        f__class2972.void_a(false);
+        f__class2972.setAnchored(false);
     }, true, f__class2972 -> true, false),
     RAPE(f__class2972 -> {
         f__class2972.setCurrentAction(Action.RAPE_PREPARE);
@@ -241,7 +241,7 @@ public enum h8_class399 {
             f__class2972.O = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
             f__class2972.bd = f__class2972.getPositionVector();
             vec3d3 = entityLivingBase.getPositionVector().subtract(f__class2972.getPositionVector()).normalize();
-            f__class2972.void_b((float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0));
+            f__class2972.setYawRotation((float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0));
         }
         vec3d3 = f__class2972.getPositionVector();
         Vec3d vec3d4 = vec3d3.subtract(0.65f, 0.65f, 0.65f);
@@ -252,7 +252,7 @@ public enum h8_class399 {
             if (object2.isDead || !object2.onGround || GirlEntity.a(object2.getPersistentID(), true) != null) continue;
             vec3d2 = object2.getPositionVector();
             vec3d = vec3d3.subtract(vec3d2);
-            Vec3d bl2 = VectorMath.rotate(vec3d, f__class2972.java_lang_Float_I().floatValue());
+            Vec3d bl2 = VectorMath.rotate(vec3d, f__class2972.getYawRotation().floatValue());
             d2 = Math.abs(bl2.x);
             if (d2 > (double)0.65f) continue;
             for (EntityWitherSkeleton by : f__class2972.witherSkeletons) {
@@ -264,9 +264,9 @@ public enum h8_class399 {
             EntityPlayerMP d3 = (EntityPlayerMP)object2;
             f__class2972.setTargetPosition(object2.getPositionVector());
             f__class2972.setInteractionPlayerUUID(object2.getPersistentID());
-            f__class2972.void_a(true);
+            f__class2972.setAnchored(true);
             f__class2972.setCurrentAction(Action.RAPE_INTRO);
-            byte by = (byte)MathHelper.floor((f__class2972.java_lang_Float_I().floatValue() + 180.0f) * 256.0f / 360.0f);
+            byte by = (byte)MathHelper.floor((f__class2972.getYawRotation().floatValue() + 180.0f) * 256.0f / 360.0f);
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), d3);
             d3.connection.sendPacket(new SPacketEntityVelocity(d3.getEntityId(), 0.0, 0.0, 0.0));
             d3.connection.sendPacket(new SPacketEntity.S16PacketEntityLook(d3.getEntityId(), (byte)by, (byte)-14, true));

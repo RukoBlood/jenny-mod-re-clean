@@ -377,11 +377,11 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     @Override
     protected void initEntityAI() {
-        this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new AutoCloseDoorGoal(this));
-        this.tasks.addTask(5, this.o);
+        this.tasks.addTask(5, this.followPlayerGoal);
     }
 
     @Override
@@ -452,7 +452,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         } else {
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             this.getNavigator().clearPath();
-            this.void_b((float)(Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29577951308232 + 90.0));
+            this.setYawRotation((float)(Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29577951308232 + 90.0));
             this.setTargetPosition(new Vec3d(this.posX, Math.floor(this.posY), this.posZ));
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setCurrentAction(Action.NULL);
@@ -541,7 +541,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.a2 = false;
             this.aD = 0;
             EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
-            this.void_b(entityPlayer.rotationYaw + 180.0f);
+            this.setYawRotation(entityPlayer.rotationYaw + 180.0f);
             this.entityDataManager.set(IS_ANCHORED, true);
             entityPlayer.noClip = true;
             entityPlayer.setNoGravity(true);
@@ -551,7 +551,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.U();
             return true;
         }
-        this.rotationYaw = this.java_lang_Float_I().floatValue();
+        this.rotationYaw = this.getYawRotation().floatValue();
         this.setNoGravity(false);
         Vec3d vec3d = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.aD);
         this.setPosition(vec3d.x, vec3d.y, vec3d.z);
@@ -639,8 +639,8 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         --this.aP;
         if (this.currentAction() == Action.ATTACK) {
             this.getNavigator().clearPath();
-            this.rotationYaw = this.java_lang_Float_I().floatValue();
-            this.rotationYawHead = this.java_lang_Float_I().floatValue();
+            this.rotationYaw = this.getYawRotation().floatValue();
+            this.rotationYawHead = this.getYawRotation().floatValue();
             ++this.U;
             if (22 == this.U) {
                 this.u_();
@@ -670,7 +670,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         this.entityDataManager.set(ak, KoboldManager.c((UUID)optional.get()));
         this.void_d();
         this.void_h();
-        this.o.a = this.boolean_o();
+        this.followPlayerGoal.a = this.boolean_o();
     }
 
     @Override
@@ -998,7 +998,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             Vec3d vec3d3 = Reference.LerpVec3d(vec3d, vec3d2, 0.5);
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setTargetPosition(vec3d3);
-            this.void_b(bl ? 0.0f : 90.0f);
+            this.setYawRotation(bl ? 0.0f : 90.0f);
             this.noClip = true;
             this.setNoGravity(true);
             return;
@@ -1257,7 +1257,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return true;
         }
         float f = (float)(Math.atan2(this.posZ - ((EntityLivingBase)object3).posZ, this.posX - ((EntityLivingBase)object3).posX) * 57.29577951308232 + 90.0);
-        this.void_b(f);
+        this.setYawRotation(f);
         this.setCurrentAction(Action.ATTACK);
         this.aP = 84;
         return true;
@@ -2196,7 +2196,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         this.W = 0;
         this.ad = null;
         this.setCurrentAction(Action.NULL);
-        this.void_a(false);
+        this.setAnchored(false);
         EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_z();
         HashSet<BlockPos> hashSet = bs_class972.g();
         if (entityPlayer != null && !hashSet.isEmpty()) {
@@ -2392,7 +2392,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             f = -90.0f;
         }
         this.setTargetPosition(new Vec3d((double)vec3i.getX() + 0.5, vec3i.getY(), (double)vec3i.getZ() + 0.5));
-        this.void_b(f);
+        this.setYawRotation(f);
         this.entityDataManager.set(IS_ANCHORED, true);
         this.entityDataManager.set(at, true);
         this.setCurrentAction(Action.MINE);
@@ -2471,49 +2471,49 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        super.writeEntityToNBT(nBTTagCompound);
-        nBTTagCompound.setFloat("body_size", this.entityDataManager.get(aE).floatValue());
-        nBTTagCompound.setInteger("eyeColorX", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getX());
-        nBTTagCompound.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getY());
-        nBTTagCompound.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getZ());
-        nBTTagCompound.setString("model", (String)this.entityDataManager.get(APPEARANCE_DNA));
-        nBTTagCompound.setString("name", this.entityDataManager.get(T));
-        nBTTagCompound.setString("master", (String)this.entityDataManager.get(MASTER_UUID));
-        nBTTagCompound.setTag("inventory", this.X.serializeNBT());
-        nBTTagCompound.setString("bodyColor", (String)this.entityDataManager.get(CURRENT_ACTION));
-        nBTTagCompound.setBoolean("editedColorManually", this.aA);
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setFloat("body_size", this.entityDataManager.get(aE).floatValue());
+        nbt.setInteger("eyeColorX", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getX());
+        nbt.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getY());
+        nbt.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getZ());
+        nbt.setString("model", (String)this.entityDataManager.get(APPEARANCE_DNA));
+        nbt.setString("name", this.entityDataManager.get(T));
+        nbt.setString("master", (String)this.entityDataManager.get(MASTER_UUID));
+        nbt.setTag("inventory", this.X.serializeNBT());
+        nbt.setString("bodyColor", (String)this.entityDataManager.get(CURRENT_ACTION));
+        nbt.setBoolean("editedColorManually", this.aA);
         Optional<UUID> optional = this.entityDataManager.get(aL);
         if (optional.isPresent()) {
-            nBTTagCompound.setUniqueId("tribeId", (UUID)optional.get());
-            nBTTagCompound.setBoolean("isLeader", KoboldManager.e((UUID)optional.get(), this));
-            nBTTagCompound.setString("tribeName", this.entityDataManager.get(aU));
+            nbt.setUniqueId("tribeId", (UUID)optional.get());
+            nbt.setBoolean("isLeader", KoboldManager.e((UUID)optional.get(), this));
+            nbt.setString("tribeName", this.entityDataManager.get(aU));
         }
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
+    public void readEntityFromNBT(NBTTagCompound nbt) {
         BlockPos blockPos;
-        super.readEntityFromNBT(nBTTagCompound);
-        String string = nBTTagCompound.getString("model");
+        super.readEntityFromNBT(nbt);
+        String string = nbt.getString("model");
         if (!"".equals(string)) {
             this.entityDataManager.set(APPEARANCE_DNA, string);
         }
-        if (!BlockPos.ORIGIN.equals(blockPos = new BlockPos(nBTTagCompound.getInteger("eyeColorX"), nBTTagCompound.getInteger("eyeColorY"), nBTTagCompound.getInteger("eyeColorZ")))) {
+        if (!BlockPos.ORIGIN.equals(blockPos = new BlockPos(nbt.getInteger("eyeColorX"), nbt.getInteger("eyeColorY"), nbt.getInteger("eyeColorZ")))) {
             this.entityDataManager.set(ACTION_TARGET_POS, blockPos);
         }
-        this.entityDataManager.set(aE, Float.valueOf(nBTTagCompound.getFloat("body_size")));
-        this.entityDataManager.set(T, nBTTagCompound.getString("name"));
-        this.entityDataManager.set(MASTER_UUID, nBTTagCompound.getString("master"));
-        this.X.deserializeNBT(nBTTagCompound.getCompoundTag("inventory"));
-        String string2 = nBTTagCompound.getString("bodyColor");
+        this.entityDataManager.set(aE, Float.valueOf(nbt.getFloat("body_size")));
+        this.entityDataManager.set(T, nbt.getString("name"));
+        this.entityDataManager.set(MASTER_UUID, nbt.getString("master"));
+        this.X.deserializeNBT(nbt.getCompoundTag("inventory"));
+        String string2 = nbt.getString("bodyColor");
         if (!string2.isEmpty()) {
-            this.entityDataManager.set(CURRENT_ACTION, nBTTagCompound.getString("bodyColor"));
+            this.entityDataManager.set(CURRENT_ACTION, nbt.getString("bodyColor"));
         }
-        this.aA = nBTTagCompound.getBoolean("editedColorManually");
+        this.aA = nbt.getBoolean("editedColorManually");
         //if (uUID != null && !this.isDead) {
-        UUID tribeId = nBTTagCompound.getUniqueId("tribeId");
-        if (nBTTagCompound.hasUniqueId("tribeId") && tribeId != null && !this.isDead) {
+        UUID tribeId = nbt.getUniqueId("tribeId");
+        if (nbt.hasUniqueId("tribeId") && tribeId != null && !this.isDead) {
             if (tribeId.getLeastSignificantBits() == 0 || tribeId.getMostSignificantBits() == 0) {
                 // TODO tribeId return a 00000... UUID when missing... super weird
                 return;
@@ -2523,16 +2523,16 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 KoboldManager.a(tribeId, EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(CURRENT_ACTION)));
             }
             KoboldManager.c(tribeId, this);
-            if (nBTTagCompound.getBoolean("isLeader")) {
+            if (nbt.getBoolean("isLeader")) {
                 KoboldManager.d(tribeId, this);
             }
-            this.entityDataManager.set(aU, nBTTagCompound.getString("tribeName"));
+            this.entityDataManager.set(aU, nbt.getString("tribeName"));
         }
     }
 
     @Override
     public boolean boolean_a() {
-        if (this.boolean_h()) {
+        if (this.isLocallyRegistered()) {
             return false;
         }
         Block block = this.world.getBlockState(this.getPosition().add(0, 1, 0)).getBlock();
@@ -2640,7 +2640,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return PlayState.STOP;
         }
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         float f = 0.25f - this.getDataManager().get(aE).floatValue();
         GeckoLibCache.getInstance().parser.setValue("size", f);
@@ -2779,7 +2779,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
@@ -2809,15 +2809,15 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 case "blowjobStartMSG1": {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f, 0.0f));
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f - 40.0f, 0.0f));
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
                 case "lipsound": {
@@ -2881,8 +2881,8 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 case "analStartCam": {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue(), 0.0f));
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
                     break;
                 }
                 case "pounding": {
@@ -2971,9 +2971,9 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
-                    vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    vec3d = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 10.0f));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 10.0f));
                     break;
                 }
                 case "mating_press_startDone": {
@@ -3006,9 +3006,9 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
-                    vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I() + 180.0f);
+                    vec3d = VectorMath.rotate(vec3d, this.getYawRotation() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 70.0f));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 70.0f));
                     break;
                 }
                 case "cumMsg": {

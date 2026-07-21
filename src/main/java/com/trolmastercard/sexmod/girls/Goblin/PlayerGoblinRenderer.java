@@ -187,19 +187,19 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
         GoblinRenderer.B = entityYaw;
         Action fp_class3242 = entity.currentAction();
         UUID uUID = this.B.java_util_UUID_e();
-        if (entity.boolean_h()) {
+        if (entity.isLocallyRegistered()) {
             object = GoblinRenderer.a(entity.world, entity, uUID, x, y, z);
             x = ((Vec3d)object).x;
             y = ((Vec3d)object).y;
             z = ((Vec3d)object).z;
         }
         if (fp_class3242 == Action.THROWN || fp_class3242 == Action.START_THROWING) {
-            if (PlayerGoblinRenderer.mc.gameSettings.thirdPersonView == 0 && entityYaw == -420.69f && !entity.boolean_h()) {
+            if (PlayerGoblinRenderer.mc.gameSettings.thirdPersonView == 0 && entityYaw == -420.69f && !entity.isLocallyRegistered()) {
                 return;
             }
-            if (!entity.boolean_h()) {
+            if (!entity.isLocallyRegistered()) {
                 float f3;
-                entity.prevRenderYawOffset = f3 = entity.java_lang_Float_I().floatValue();
+                entity.prevRenderYawOffset = f3 = entity.getYawRotation().floatValue();
                 entity.renderYawOffset = f3;
             }
         }
@@ -219,7 +219,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
                 y = 0.0;
                 z = 0.0;
             } else if (!this.B.getOwnerUserUUID().equals(PlayerGoblinRenderer.mc.player.getPersistentID())) {
-                if (!entity.boolean_h() || uUID == null || PlayerGoblinRenderer.mc.player.getPersistentID().equals(uUID)) {
+                if (!entity.isLocallyRegistered() || uUID == null || PlayerGoblinRenderer.mc.player.getPersistentID().equals(uUID)) {
                     if (uUID != null && !PlayerGoblinRenderer.mc.player.getPersistentID().equals(uUID)) {
                         object = entity.world.getPlayerEntityByUUID(uUID);
                         if (object != null) {

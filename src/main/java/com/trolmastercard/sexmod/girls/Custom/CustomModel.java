@@ -67,7 +67,7 @@ public class CustomModel {
     final static public String f = "sexmod_custom_models";
     static Map<String, b_inner96> c = new HashMap<String, b_inner96>();
     static public boolean d = false;
-    static public boolean e = false;
+    static public boolean isLoaded = false;
 
     public static Map<String, b_inner96> i() {
         return c;
@@ -223,7 +223,7 @@ public class CustomModel {
         ((Entity)entityPlayerSP).sendMessage(new TextComponentString(textFormatting.toString() + string));
     }
 
-    public static String h() {
+    public static String getCurrentGroup() {
         if (Main.proxy instanceof ClientProxy) {
             return CustomModel.d();
         }
@@ -257,7 +257,7 @@ public class CustomModel {
 
     public static int LoadModels(boolean bl) {
         CustomModel.log(Level.INFO, "loading up custom models...");
-        String string2 = CustomModel.h();
+        String string2 = CustomModel.getCurrentGroup();
         File file2 = new File(string2);
         file2.mkdirs();
         String[] stringArray = file2.list((file, string) -> new File(file, string).isDirectory());
@@ -268,7 +268,7 @@ public class CustomModel {
         CustomModel.log(Level.INFO, String.format("found %s custom model(s)", stringArray.length));
         int n = 0;
         for (String string3 : stringArray) {
-            String string4 = CustomModel.a(string3, string2);
+            String string4 = CustomModel.getPartName(string3, string2);
             if (!"".equals(string4)) {
                 CustomModel.log(Level.ERROR, string4);
                 return -1;
@@ -281,11 +281,11 @@ public class CustomModel {
             ++n;
         }
         CustomModel.log(Level.DEBUG, String.format("successfully registered %s custom models", n));
-        e = true;
+        isLoaded = true;
         return 0;
     }
 
-    public static String a(String string, String string2) {
+    public static String getPartName(String string, String string2) {
         String string3 = String.format("%s/%s", string2, string);
         File file = new File(String.format("%s/%s.geo.json", string3, string));
         File file2 = new File(String.format("%s/%s.png", string3, string));
@@ -434,7 +434,7 @@ public class CustomModel {
         return b_inner962.d;
     }
 
-    public static HashSet<PlayerGirlEntity> a(String string) {
+    public static HashSet<PlayerGirlEntity> getAllowedEntities(String string) {
         b_inner96 b_inner962 = c.get(string);
         if (b_inner962 == null) {
             if (!string.equals("cross")) {
@@ -483,7 +483,7 @@ public class CustomModel {
             object = (b_inner96)entry.getValue();
             EnumCustomPartCategory gw_class3892 = ((b_inner96)object).d;
             List<String> list = hashMap.get((Object)gw_class3892);
-            if (!((b_inner96)object).g.isEmpty() && !((b_inner96)object).g.contains((Object) PlayerGirlEntity.a(em_class2582))) continue;
+            if (!((b_inner96)object).g.isEmpty() && !((b_inner96)object).g.contains((Object) PlayerGirlEntity.fromGirl(em_class2582))) continue;
             list.add(string);
             hashMap.put(gw_class3892, list);
         }

@@ -41,7 +41,7 @@ public class b5_class66 extends GuiScreen {
             try {
                 Constructor<? extends GirlEntity> constructor = fy_class3352.npcClass.getConstructor(World.class);
                 GirlEntity em_class2582 = constructor.newInstance(this.mc.world);
-                em_class2582.b(true);
+                em_class2582.setLocallyRegistered(true);
                 this.a.add(em_class2582);
                 String string = hashMap.get((Object)fy_class3352);
                 if (string == null) continue;
@@ -72,7 +72,7 @@ public class b5_class66 extends GuiScreen {
             this.b = this.a.size() - 1;
         }
         if (guiButton.id == 0) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.a(this.a.get(this.b))));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.fromGirl(this.a.get(this.b))));
             EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
             ((EntityPlayer)entityPlayerSP).closeScreen();
             entityPlayerSP.eyeHeight = entityPlayerSP.getDefaultEyeHeight();

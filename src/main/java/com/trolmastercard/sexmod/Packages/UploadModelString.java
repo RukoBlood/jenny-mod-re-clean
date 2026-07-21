@@ -86,7 +86,7 @@ implements IMessage {
                     em_class2582.void_a(fw_class3322.d);
                 }
                 if (!(em_class2582 instanceof PlayerGirl)) {
-                    em_class2582.f(fw_class3322.c);
+                    em_class2582.setCustomModelKey(fw_class3322.c);
                     return;
                 }
                 EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
@@ -95,7 +95,7 @@ implements IMessage {
                 if (ei_class2512 == null) {
                     return;
                 }
-                PlayerGirlEntity fy_class3352 = PlayerGirlEntity.a(ei_class2512);
+                PlayerGirlEntity fy_class3352 = PlayerGirlEntity.fromGirl(ei_class2512);
                 nBTTagCompound.setString("sexmod:CustomModel" + fy_class3352.toString(), fw_class3322.c);
                 if (bl && bl2) {
                     nBTTagCompound.setString("sexmod:GirlSpecific" + fy_class3352.toString(), GirlEntity.c(fw_class3322.d));

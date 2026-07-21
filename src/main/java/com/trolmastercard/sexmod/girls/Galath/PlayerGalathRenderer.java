@@ -65,7 +65,7 @@ extends PlayerGirlRenderer {
     @Override
     public void doRender(GirlEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
-        if (PlayerGalathRenderer.mc.gameSettings.thirdPersonView == 0 && PlayerGalathRenderer.mc.player.getPersistentID().equals(((PlayerGirl) entity).getOwnerUserUUID()) && !entity.boolean_Q()) {
+        if (PlayerGalathRenderer.mc.gameSettings.thirdPersonView == 0 && PlayerGalathRenderer.mc.player.getPersistentID().equals(((PlayerGirl) entity).getOwnerUserUUID()) && !entity.isAnchored()) {
             return;
         }
         GalathRenderer.a_27(entity, partialTicks);

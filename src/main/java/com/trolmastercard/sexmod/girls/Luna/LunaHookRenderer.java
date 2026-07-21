@@ -106,8 +106,8 @@ extends Render<LunaHookEntity> {
         if (!(((ItemStack)object).getItem() instanceof ItemFishingRod)) {
             n = -n;
         }
-        eb_class2362.rotationYaw = eb_class2362.java_lang_Float_I().floatValue();
-        eb_class2362.renderYawOffset = eb_class2362.java_lang_Float_I().floatValue();
+        eb_class2362.rotationYaw = eb_class2362.getYawRotation().floatValue();
+        eb_class2362.renderYawOffset = eb_class2362.getYawRotation().floatValue();
         eb_class2362.posX = eb_class2362.getTargetPosition().x;
         eb_class2362.posY = eb_class2362.getTargetPosition().y;
         eb_class2362.posZ = eb_class2362.getTargetPosition().z;
@@ -122,9 +122,9 @@ extends Render<LunaHookEntity> {
         double d8 = eb_class2362.prevPosY + (double)eb_class2362.getEyeHeight() + (eb_class2362.posY - eb_class2362.prevPosY) * (double)f2 - 0.45;
         double d9 = eb_class2362.prevPosZ + (eb_class2362.posZ - eb_class2362.prevPosZ) * (double)f2 - d4 * d6 + d5 * 0.8;
         double d10 = eb_class2362.isSneaking() ? -0.1875 : 0.0;
-        double d11 = gi_class3702.prevPosX + (gi_class3702.posX - gi_class3702.prevPosX) * (double)f2 - Math.sin((double)(eb_class2362.java_lang_Float_I().floatValue() + 90.0f) * (Math.PI / 180)) * 0.1896224320030116 - Math.sin((double)eb_class2362.java_lang_Float_I().floatValue() * (Math.PI / 180)) * 0.08742380916962415;
+        double d11 = gi_class3702.prevPosX + (gi_class3702.posX - gi_class3702.prevPosX) * (double)f2 - Math.sin((double)(eb_class2362.getYawRotation().floatValue() + 90.0f) * (Math.PI / 180)) * 0.1896224320030116 - Math.sin((double)eb_class2362.getYawRotation().floatValue() * (Math.PI / 180)) * 0.08742380916962415;
         double d12 = gi_class3702.prevPosY + (gi_class3702.posY - gi_class3702.prevPosY) * (double)f2 + 0.25 + -0.5;
-        double d13 = gi_class3702.prevPosZ + (gi_class3702.posZ - gi_class3702.prevPosZ) * (double)f2 + Math.cos((double)(eb_class2362.java_lang_Float_I().floatValue() + 90.0f) * (Math.PI / 180)) * 0.1896224320030116 + Math.cos((double)eb_class2362.java_lang_Float_I().floatValue() * (Math.PI / 180)) * 0.08742380916962415;
+        double d13 = gi_class3702.prevPosZ + (gi_class3702.posZ - gi_class3702.prevPosZ) * (double)f2 + Math.cos((double)(eb_class2362.getYawRotation().floatValue() + 90.0f) * (Math.PI / 180)) * 0.1896224320030116 + Math.cos((double)eb_class2362.getYawRotation().floatValue() * (Math.PI / 180)) * 0.08742380916962415;
         double d14 = (float)(d7 - d11);
         double d15 = (double)((float)(d8 - d12)) + d10;
         double d16 = (float)(d9 - d13);

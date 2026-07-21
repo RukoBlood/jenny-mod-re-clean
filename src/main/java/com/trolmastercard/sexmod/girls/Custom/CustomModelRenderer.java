@@ -103,9 +103,9 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (em_class2582 == null) {
             return true;
         }
-        HashSet<String> hashSet = em_class2582.Y();
+        HashSet<String> hashSet = em_class2582.getCustomPartsSet();
         hashSet.remove(string);
-        String string2 = GirlEntity.a(hashSet);
+        String string2 = GirlEntity.serializePartsSet(hashSet);
         PackageHandler.networkWrapper.sendToServer((IMessage)new UploadModelString(string2, cy_class1532.b()));
         return true;
     }
@@ -122,7 +122,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
             return;
         }
         RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
-        for (String string : em_class2582.Y()) {
+        for (String string : em_class2582.getCustomPartsSet()) {
             CustomModelEntity cy_class1532 = new CustomModelEntity(em_class2582.world, em_class2582.girlID(), string);
             k = true;
             renderManager.renderEntity(cy_class1532, 0.0, 0.0, 0.0, 0.0f, f, false);
@@ -214,8 +214,8 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         this.d = new Vec3d(vec3d.x * (double)f3, vec3d.y * (double)f3, vec3d.z * (double)f3);
         GlStateManager.pushMatrix();
         GlStateManager.translate(((Vec3d)object2).x, ((Vec3d)object2).y, ((Vec3d)object2).z);
-        if (em_class2583.boolean_Q()) {
-            GlStateManager.rotate(em_class2583.java_lang_Float_I().floatValue(), 0.0f, 1.0f, 0.0f);
+        if (em_class2583.isAnchored()) {
+            GlStateManager.rotate(em_class2583.getYawRotation().floatValue(), 0.0f, 1.0f, 0.0f);
         }
         super.doRender(cy_class1532, 0.0, 0.0, 0.0, f, f2);
         GlStateManager.popMatrix();
@@ -225,9 +225,9 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
     public static Vec3d a(Minecraft minecraft, CustomModelEntity cy_class1532, EntityLivingBase entityLivingBase, GirlEntity em_class2582, float f) {
         Vec3d vec3d;
         //Object object;
-        if (em_class2582.boolean_Q()) {
+        if (em_class2582.isAnchored()) {
             Vec3d object = em_class2582.getTargetPosition();
-            float f2 = em_class2582.java_lang_Float_I();
+            float f2 = em_class2582.getYawRotation();
             cy_class1532.prevPosX = ((Vec3d)object).x;
             cy_class1532.prevPosY = ((Vec3d)object).y;
             cy_class1532.prevPosZ = ((Vec3d)object).z;

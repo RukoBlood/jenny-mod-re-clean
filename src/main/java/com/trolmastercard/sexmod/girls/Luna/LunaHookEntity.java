@@ -136,7 +136,7 @@ extends Entity {
         BlockPos blockPos = eb_class2362.ai;
         float f = (float)Math.sqrt(eb_class2362.getPositionVector().squareDistanceTo(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
         float f2 = -22.5f + 45.0f * (f / 7.0f);
-        float f3 = eb_class2362.java_lang_Float_I().floatValue();
+        float f3 = eb_class2362.getYawRotation().floatValue();
         float f4 = MathHelper.cos(-f3 * ((float)Math.PI / 180) - (float)Math.PI);
         float f5 = MathHelper.sin(-f3 * ((float)Math.PI / 180) - (float)Math.PI);
         float f6 = -MathHelper.cos(-f2 * ((float)Math.PI / 180));

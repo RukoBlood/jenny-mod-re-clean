@@ -161,7 +161,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     @CheckReturnValue
     public static float getInterpolatedYaw(GirlEntity girl, float partialTicks) {
-        return girl.boolean_Q() ? girl.java_lang_Float_I() : Reference.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, partialTicks);
+        return girl.isAnchored() ? girl.getYawRotation() : Reference.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, partialTicks);
     }
 
     protected void onRenderSetup() {}
@@ -225,7 +225,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (ClientProxy.IS_PRELOADING) {
             return new HashSet<String>();
         }
-        HashSet<String> rawParts = isSpecialState != false ? a_class4.b() : ((GirlEntity)this.renderEntity).Y();
+        HashSet<String> rawParts = isSpecialState != false ? a_class4.b() : ((GirlEntity)this.renderEntity).getCustomPartsSet();
         HashSet<String> validatedBones = new HashSet<String>();
         for (String partKey : rawParts) {
             CustomModel.b_inner96 modelPart = CustomModel.b(partKey);
@@ -240,8 +240,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     @Override
     public void render(GeoModel model, T entity, float partialTicks, float r, float g, float b, float a) {
         if (GirlRenderer.mc.player != null
-                && !((GirlEntity)entity).boolean_h()
-                && ((GirlEntity)entity).boolean_d()
+                && !((GirlEntity)entity).isLocallyRegistered()
+                && ((GirlEntity)entity).isInteractable()
                 && !this.isVisibleToPlayer(entity, GirlRenderer.mc.player)
         ) {
             return;
@@ -254,7 +254,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
         this.activeCustomPartBones.clear();
-        this.activeCustomPartBones = this.queryCustomModelParts(((GirlEntity)entity).boolean_h(), ((GirlEntity)entity).getOutfitIndex() == 0);
+        this.activeCustomPartBones = this.queryCustomModelParts(((GirlEntity)entity).isLocallyRegistered(), ((GirlEntity)entity).getOutfitIndex() == 0);
         this.onRenderSetup();
         BoneDeformProcessor.preWarmFilterCache(((GirlEntity)entity).b().getModelRendererList(), this.getBlacklistedBoneNames(), this);
         BoneDeformProcessor.updateGlobalInfluence(entity, partialTicks);
@@ -311,7 +311,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     }
 
     protected void renderNameTag(double x, double y, double z) {
-        if (((GirlEntity)this.renderEntity).boolean_h()) {
+        if (((GirlEntity)this.renderEntity).isLocallyRegistered()) {
             return;
         }
         if (((GirlEntity)this.renderEntity).currentAction().hideNameTag) {
@@ -359,7 +359,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             return this.getRidingPassengerVector(owner, partialTicks);
         }
 
-        if (!((GirlEntity)entity).boolean_Q()) {
+        if (!((GirlEntity)entity).isAnchored()) {
             return basePos;
         }
 
@@ -367,7 +367,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             Vec3d clientPlayerPos = Reference.LerpVec3d(new Vec3d(GirlRenderer.mc.player.lastTickPosX, GirlRenderer.mc.player.lastTickPosY, GirlRenderer.mc.player.lastTickPosZ), GirlRenderer.mc.player.getPositionVector(), (double)partialTicks);
             basePos = ((GirlEntity)entity).getTargetPosition().subtract(clientPlayerPos);
         }
-        ((GirlEntity)entity).rotationYaw = yaw = ((GirlEntity) entity).java_lang_Float_I();
+        ((GirlEntity)entity).rotationYaw = yaw = ((GirlEntity) entity).getYawRotation();
         ((GirlEntity)entity).prevRenderYawOffset = yaw;
         ((GirlEntity)entity).renderYawOffset = yaw;
         ((GirlEntity)entity).prevRotationYawHead = yaw;
@@ -504,7 +504,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         bonesToTrack.addAll(((GirlEntity)entity).boneTrackingList);
 
         for (String boneName : bonesToTrack) {
-            MatrixStack matrixStack = ((GirlEntity)entity).a(boneName, !((GirlEntity)entity).boolean_h());
+            MatrixStack matrixStack = ((GirlEntity)entity).a(boneName, !((GirlEntity)entity).isLocallyRegistered());
             Matrix4f m = matrixStack.getModelMatrix();
             Vec3d translatedVec = new Vec3d(-m.m03, m.m13, -m.m23);
             ((GirlEntity)entity).a(boneName, translatedVec);
@@ -530,7 +530,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GlStateManager.translate(0.0, 0.01, 0.0);
         Entity resolvedEntity = this.resolveTargetEntity(girl);
 
-        Vec3d interpTarget = girl.boolean_Q() ? girl.getTargetPosition() : Reference.LerpVec3d(new Vec3d(resolvedEntity.lastTickPosX, resolvedEntity.lastTickPosY, resolvedEntity.lastTickPosZ), resolvedEntity.getPositionVector(), (double)partialTicks);
+        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : Reference.LerpVec3d(new Vec3d(resolvedEntity.lastTickPosX, resolvedEntity.lastTickPosY, resolvedEntity.lastTickPosZ), resolvedEntity.getPositionVector(), (double)partialTicks);
         Vec3d interpClient = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)partialTicks);
         Vec3d relativeVector = interpTarget.subtract(interpClient);
         GlStateManager.translate(relativeVector.x, relativeVector.y, relativeVector.z);
@@ -544,7 +544,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     protected static float calculateLineThickness(GirlEntity girl, float partialTicks, float min, float max) {
         EntityPlayerSP player = GirlRenderer.mc.player;
         Entity target = ((GirlRenderer) mc.getRenderManager().getEntityRenderObject(girl)).resolveTargetEntity(girl);
-        Vec3d interpTarget = girl.boolean_Q() ? girl.getTargetPosition() : Reference.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
+        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : Reference.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
         Vec3d interpClient = Reference.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), (double)partialTicks);
         Vec3d cameraPos = ActiveRenderInfo.getCameraPosition().add(interpClient);
         float distance = (float)cameraPos.distanceTo(interpTarget);

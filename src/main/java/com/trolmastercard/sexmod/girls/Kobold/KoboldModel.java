@@ -47,7 +47,7 @@ extends GirlModel<GirlEntity> {
             return;
         }
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
-        if (!girl.boolean_h() && girl instanceof KoboldEntity) {
+        if (!girl.isLocallyRegistered() && girl instanceof KoboldEntity) {
             animationProcessor.getBone("crown").setHidden(girl.getDataManager().get(KoboldEntity.aZ) == false);
             animationProcessor.getBone("egg").setHidden(!((KoboldEntity) girl).Q);
         } else {

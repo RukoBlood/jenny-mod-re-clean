@@ -71,7 +71,7 @@ implements IMessage {
             for (GirlEntity em_class2582 : GirlEntity.girlList(uUID)) {
                 if (em_class2582.world.isRemote) continue;
                 if (em_class2582 instanceof JennyEntity || em_class2582 instanceof EllieEntity || em_class2582 instanceof LunaEntity) {
-                    em_class2582.tasks.removeTask(em_class2582.o);
+                    em_class2582.tasks.removeTask(em_class2582.followPlayerGoal);
                     em_class2582.tasks.removeTask(em_class2582.avoidWaterGoal);
                 }
                 em_class2582.getNavigator().clearPath();

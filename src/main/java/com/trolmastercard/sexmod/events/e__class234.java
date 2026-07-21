@@ -152,7 +152,7 @@ public class e__class234 {
         minecraft.player.lastTickPosY = vec3d.y - (double)minecraft.player.getEyeHeight();
         minecraft.player.lastTickPosZ = vec3d.z;
         Action fp_class3242 = ei_class2512.currentAction();
-        float f = ei_class2512.java_lang_Float_I().floatValue();
+        float f = ei_class2512.getYawRotation().floatValue();
         if (ei_class2512.a(fp_class3242, minecraft.player)) {
             return;
         }
@@ -191,7 +191,7 @@ public class e__class234 {
         if (!ei_class2512.boolean_F()) {
             return;
         }
-        if (!ei_class2512.boolean_Q()) {
+        if (!ei_class2512.isAnchored()) {
             return;
         }
         cameraSetup.setRoll(180.0f);
@@ -240,7 +240,7 @@ public class e__class234 {
             }
             return;
         }
-        if (ei_class2512.boolean_Q()) {
+        if (ei_class2512.isAnchored()) {
             if (this.e) {
                 this.e = false;
                 minecraft.player.eyeHeight = minecraft.player.getDefaultEyeHeight();

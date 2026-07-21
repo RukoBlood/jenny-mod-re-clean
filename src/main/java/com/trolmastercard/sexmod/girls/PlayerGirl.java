@@ -329,7 +329,7 @@ public abstract class PlayerGirl extends Fighter {
         this.j(uUID);
         this.entityDataManager.set(IS_ANCHORED, true);
         this.setTargetPosition(vec3d);
-        this.void_b(0.0f);
+        this.setYawRotation(0.0f);
     }
 
     @Override
@@ -374,16 +374,16 @@ public abstract class PlayerGirl extends Fighter {
 
     void void_d(EntityPlayer entityPlayer) {
         NBTTagCompound nBTTagCompound = entityPlayer.getEntityData();
-        String string = nBTTagCompound.getString(aa + (Object)((Object) PlayerGirlEntity.a(this)));
-        this.f(string);
+        String string = nBTTagCompound.getString(aa + (Object)((Object) PlayerGirlEntity.fromGirl(this)));
+        this.setCustomModelKey(string);
     }
 
     @Override
     public void updateAITasks() {
         //Object object;
         PlayerGirl.void_C();
-        this.void_l();
-        this.G();
+        this.updateActionTicks();
+        this.updateCustomModelParts();
         UUID uUID = this.getOwnerUserUUID();
         if (uUID == null) {
             return;
@@ -394,7 +394,7 @@ public abstract class PlayerGirl extends Fighter {
             return;
         }
         this.void_d(entityPlayer);
-        if (this.boolean_Q()) {
+        if (this.isAnchored()) {
             Vec3d object = this.getTargetPosition();
             this.setPositionAndUpdate(object.x, object.y, object.z);
         } else {
@@ -442,7 +442,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     public boolean boolean_o() {
-        return this.boolean_Q();
+        return this.isAnchored();
     }
 
     public Vec3d b(Vec3d vec3d, float f) {
@@ -462,7 +462,7 @@ public abstract class PlayerGirl extends Fighter {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (!this.world.isRemote && action == Action.NULL && this.boolean_Q()) {
+        if (!this.world.isRemote && action == Action.NULL && this.isAnchored()) {
             System.out.println("prevented a potential animation break");
             return;
         }
@@ -575,15 +575,15 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        super.writeEntityToNBT(nBTTagCompound);
-        nBTTagCompound.setString("owner", ((UUID)this.entityDataManager.get(ai).get()).toString());
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setString("owner", ((UUID)this.entityDataManager.get(ai).get()).toString());
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
-        super.readEntityFromNBT(nBTTagCompound);
-        this.entityDataManager.set(ai, Optional.of(UUID.fromString(nBTTagCompound.getString("owner"))));
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        this.entityDataManager.set(ai, Optional.of(UUID.fromString(nbt.getString("owner"))));
         Z.add(this);
     }
 

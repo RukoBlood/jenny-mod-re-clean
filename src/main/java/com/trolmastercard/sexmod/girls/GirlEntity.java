@@ -114,7 +114,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     final static protected long TICK_RATE = 20L;
     final private AnimationFactory factory = new AnimationFactory(this);
     public EntityAIWanderAvoidWater avoidWaterGoal;
-    public df_class178 o;
+    public FollowPlayer followPlayerGoal;
     static public HashSet<GirlEntity> GLOBAL_GIRL_CACHE = new HashSet();
     public Vec3d playerCameraOffsetPos;
     protected float cameraYaw;
@@ -297,27 +297,27 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
     //end of reversing #1
 
-    public void a(Vec3d vec3d) {
-        this.entityDataManager.set(TARGET_POS, vec3d.x + "|" + vec3d.y + "|" + vec3d.z);
+    public void setTargetPositionDirect(Vec3d pos) {
+        this.entityDataManager.set(TARGET_POS, pos.x + "|" + pos.y + "|" + pos.z);
     }
 
-    public Float java_lang_Float_I() {
+    public Float getYawRotation() {
         return this.entityDataManager.get(YAW_ROTATION);
     }
 
-    public void void_b(float f) {
-        this.entityDataManager.set(YAW_ROTATION, Float.valueOf(f));
+    public void setYawRotation(float yaw) {
+        this.entityDataManager.set(YAW_ROTATION, yaw);
     }
 
-    public void void_a(boolean bl) {
+    public void setAnchored(boolean anchored) {
         if (this.world.isRemote) {
-            this.changeDataParameterFromClient("shouldbeattargetpos", String.valueOf(bl));
+            this.changeDataParameterFromClient("shouldbeattargetpos", String.valueOf(anchored));
             return;
         }
-        this.entityDataManager.set(IS_ANCHORED, bl);
+        this.entityDataManager.set(IS_ANCHORED, anchored);
     }
 
-    public boolean boolean_Q() {
+    public boolean isAnchored() {
         return this.entityDataManager.get(IS_ANCHORED);
     }
 
@@ -329,19 +329,19 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     protected GirlEntity(World world) {
         super(world);
         if (world.isRemote) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         if (world.isRemote && world instanceof FakeWorld) {
             return;
         }
-        PathNavigate pathNavigate = this.getNavigator();
-        if (pathNavigate instanceof PathNavigateGround) {
-            ((PathNavigateGround)pathNavigate).setBreakDoors(true);
+        PathNavigate nav = this.getNavigator();
+        if (nav instanceof PathNavigateGround) {
+            ((PathNavigateGround)nav).setBreakDoors(true);
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected void void_p() {
+    protected void initAnimationControllers() {
         this.actionController = new AnimationController<GirlEntity>(this, "action", 0.0f, this::predicate);
         this.movementController = new AnimationController<GirlEntity>(this, "movement", 5.0f, this::predicate);
         this.eyesController = new AnimationController<GirlEntity>(this, "eyes", 10.0f, this::predicate);
@@ -361,7 +361,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.register(GIRL_HAND_STATES, "");
         this.entityDataManager.register(INTERACTION_PARTNER_UUID, "null");
         this.entityDataManager.register(IS_ANCHORED, false);
-        this.entityDataManager.register(YAW_ROTATION, Float.valueOf(0.0f));
+        this.entityDataManager.register(YAW_ROTATION, 0.0f);
         this.entityDataManager.register(TARGET_POS, "0|0|0");
         this.entityDataManager.register(MASTER_UUID, "");
         this.entityDataManager.register(WALK_TYPE, WalkTypes.WALK.toString());
@@ -369,44 +369,44 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.register(CUSTOM_NAME, "");
     }
 
-    public void b(boolean bl) {
-        this.isRegisteredLocally = bl;
-        if (bl) {
+    public void setLocallyRegistered(boolean registered) {
+        this.isRegisteredLocally = registered;
+        if (registered) {
             GirlID.PutGirlInList(this);
         } else {
             GirlID.RemoveGirlInList(this);
         }
     }
 
-    public boolean boolean_h() {
+    public boolean isLocallyRegistered() {
         return this.isRegisteredLocally;
     }
 
     public static List<GirlEntity> GirlEntityList() {
         if (!ClientServerCheck.getInstance()) {
-            return GirlEntity.Z();
+            return GirlEntity.getClientGirls();
         }
-        WorldServer[] worldServerArray = FMLCommonHandler.instance().getMinecraftServerInstance().worlds;
-        if (worldServerArray.length == 0) {
+        WorldServer[] worlds = FMLCommonHandler.instance().getMinecraftServerInstance().worlds;
+        if (worlds.length == 0) {
             return new ArrayList<GirlEntity>();
         }
-        ArrayList<GirlEntity> arrayList = new ArrayList<GirlEntity>();
-        for (WorldServer worldServer : worldServerArray) {
-            arrayList.addAll(worldServer.getEntities(GirlEntity.class, em_class2582 -> true));
+        ArrayList<GirlEntity> list = new ArrayList<GirlEntity>();
+        for (WorldServer world : worlds) {
+            list.addAll(world.getEntities(GirlEntity.class, girl -> true));
         }
-        return arrayList;
+        return list;
     }
 
     @SideOnly(value=Side.CLIENT)
-    private static List<GirlEntity> Z() {
-        WorldClient worldClient = Minecraft.getMinecraft().world;
-        if (worldClient == null) {
+    private static List<GirlEntity> getClientGirls() {
+        WorldClient clientWorld = Minecraft.getMinecraft().world;
+        if (clientWorld == null) {
             return new ArrayList<GirlEntity>();
         }
-        return worldClient.getEntities(GirlEntity.class, em_class2582 -> true);
+        return clientWorld.getEntities(GirlEntity.class, girl -> true);
     }
 
-    public boolean boolean_B() {
+    public boolean canBeInteractedWith() {
         return true;
     }
 
@@ -421,133 +421,135 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @Override
     protected void initEntityAI() {
         this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new AutoCloseDoorGoal(this));
-        this.tasks.addTask(5, this.o);
+        this.tasks.addTask(5, this.followPlayerGoal);
         this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        nBTTagCompound.setDouble("homeX", this.homeCoords.x);
-        nBTTagCompound.setDouble("homeY", this.homeCoords.y);
-        nBTTagCompound.setDouble("homeZ", this.homeCoords.z);
-        nBTTagCompound.setString("girlID", this.entityDataManager.get(GIRL_ID));
-        String string = this.java_lang_String_w();
-        if (!"".equals(string)) {
-            nBTTagCompound.setString("sexmod:customname", string);
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        nbt.setDouble("homeX", this.homeCoords.x);
+        nbt.setDouble("homeY", this.homeCoords.y);
+        nbt.setDouble("homeZ", this.homeCoords.z);
+        nbt.setString("girlID", this.entityDataManager.get(GIRL_ID));
+        String customName = this.getCustomName();
+        if (!"".equals(customName)) {
+            nbt.setString("sexmod:customname", customName);
         }
-        if (this.boolean_X()) {
-            nBTTagCompound.setString("sexmod:customModel", this.java_lang_String_C());
+        if (this.supportsCustomModels()) {
+            nbt.setString("sexmod:customModel", this.java_lang_String_C());
         }
-        super.writeEntityToNBT(nBTTagCompound);
+        super.writeEntityToNBT(nbt);
     }
 
-    protected boolean boolean_X() {
-        return GirlEntity.boolean_a((Entity)this);
+    protected boolean supportsCustomModels() {
+        return GirlEntity.isValidGirl((Entity)this);
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
-        String string;
-        super.readEntityFromNBT(nBTTagCompound);
-        this.homeCoords = new Vec3d(nBTTagCompound.getDouble("homeX"), nBTTagCompound.getDouble("homeY"), nBTTagCompound.getDouble("homeZ"));
-        String string2 = nBTTagCompound.getString("sexmod:customname");
-        if (!string2.isEmpty()) {
-            this.g(string2);
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        String uuidStr;
+        super.readEntityFromNBT(nbt);
+        this.homeCoords = new Vec3d(nbt.getDouble("homeX"), nbt.getDouble("homeY"), nbt.getDouble("homeZ"));
+        String customName = nbt.getString("sexmod:customname");
+        if (!customName.isEmpty()) {
+            this.setCustomName(customName);
         }
-        if ((string = nBTTagCompound.getString("girlID")).isEmpty()) {
+
+        if ((uuidStr = nbt.getString("girlID")).isEmpty()) {
             return;
         }
-        UUID uUID = UUID.fromString(string);
-        boolean bl = false;
-        for (GirlEntity em_class2582 : GirlEntity.girlList(uUID)) {
-            if (em_class2582.world.isRemote || em_class2582 == this || em_class2582.isDead || !em_class2582.isAddedToWorld()) continue;
-            bl = true;
+        UUID uUID = UUID.fromString(uuidStr);
+        boolean isDuplicate = false;
+        for (GirlEntity girl : GirlEntity.girlList(uUID)) {
+            if (girl.world.isRemote || girl == this || girl.isDead || !girl.isAddedToWorld()) continue;
+            isDuplicate = true;
             break;
         }
-        if (bl) {
+        if (isDuplicate) {
             Main.LOGGER.log(Level.WARN, String.format("got a duped %s with id '%s'. Deleted her", this.getGirlName(), uUID));
             this.world.removeEntity(this);
             return;
         }
         this.entityDataManager.set(GIRL_ID, uUID.toString());
-        if (this.boolean_X()) {
-            this.f(nBTTagCompound.getString("sexmod:customModel"));
+        if (this.supportsCustomModels()) {
+            this.setCustomModelKey(nbt.getString("sexmod:customModel"));
         }
     }
 
-    public boolean boolean_d() {
+    public boolean isInteractable() {
         return true;
     }
 
     @Override
-    public void setVelocity(double d, double d2, double d3) {
-        this.motionX = d;
-        this.motionY = d2;
-        this.motionZ = d3;
+    public void setVelocity(double x, double y, double z) {
+        this.motionX = x;
+        this.motionY = y;
+        this.motionZ = z;
     }
 
-    public void b(Vec3d vec3d) {
-        this.motionX = vec3d.x;
-        this.motionY = vec3d.y;
-        this.motionZ = vec3d.z;
+    public void setMotionVector(Vec3d motion) {
+        this.motionX = motion.x;
+        this.motionY = motion.y;
+        this.motionZ = motion.z;
     }
 
-    public Vec3d net_minecraft_util_math_Vec3d_j() {
+    public Vec3d getLastTickPosition() {
         return new Vec3d(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ);
     }
 
     @Override
     public void updateAITasks() {
-        if (this.entityDataManager.get(IS_ANCHORED).booleanValue()) {
-            this.setRotationYawHead(this.java_lang_Float_I().floatValue());
-            this.setPositionAndRotation(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, this.java_lang_Float_I().floatValue(), 0.0f);
-            this.setRotation(this.java_lang_Float_I().floatValue(), this.rotationPitch);
+        if (this.entityDataManager.get(IS_ANCHORED)) {
+            this.setRotationYawHead(this.getYawRotation());
+            this.setPositionAndRotation(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, this.getYawRotation().floatValue(), 0.0f);
+            this.setRotation(this.getYawRotation(), this.rotationPitch);
         }
         if (this.homeCoords.equals(Vec3d.ZERO)) {
             this.homeCoords = new Vec3d(this.getPosition());
         }
-        this.G();
+        this.updateCustomModelParts();
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        this.void_l();
+        this.updateActionTicks();
     }
 
-    protected void G() {
-        if (!CustomModel.e) {
+    protected void updateCustomModelParts() {
+        if (!CustomModel.isLoaded) {
             return;
         }
-        HashSet<String> hashSet = this.Y();
-        PlayerGirlEntity fy_class3352 = PlayerGirlEntity.a(this);
-        HashSet<String> hashSet2 = new HashSet<String>();
-        String string = CustomModel.h();
-        for (String string2 : hashSet) {
-            if (!"".equals(CustomModel.a(string2, string))) {
-                hashSet2.add(string2);
+        HashSet<String> activeParts = this.getCustomPartsSet();
+        PlayerGirlEntity playerGirl = PlayerGirlEntity.fromGirl(this);
+        HashSet<String> partsToRemove = new HashSet<String>();
+        String currentGroup = CustomModel.getCurrentGroup();
+        for (String part : activeParts) {
+            if (!CustomModel.getPartName(part, currentGroup).isEmpty()) {
+                partsToRemove.add(part);
                 continue;
             }
-            HashSet<PlayerGirlEntity> hashSet3 = CustomModel.a(string2);
-            if (hashSet3 == null) {
-                hashSet2.add(string2);
+            HashSet<PlayerGirlEntity> allowedEntities = CustomModel.getAllowedEntities(part);
+            if (allowedEntities == null) {
+                partsToRemove.add(part);
                 continue;
             }
-            if (hashSet3.isEmpty() || hashSet3.contains((Object)fy_class3352)) continue;
-            hashSet2.add(string2);
+            if (allowedEntities.isEmpty() || allowedEntities.contains((Object)playerGirl)) continue;
+            partsToRemove.add(part);
         }
-        if (hashSet2.isEmpty()) {
+        if (partsToRemove.isEmpty()) {
             return;
         }
-        hashSet.removeAll(hashSet2);
-        this.f(GirlEntity.a(hashSet));
+        activeParts.removeAll(partsToRemove);
+        this.setCustomModelKey(GirlEntity.serializePartsSet(activeParts));
     }
+    //end of deobfuscation #2
 
-    protected void void_l() {
+    protected void updateActionTicks() {
         Action fp_class3242 = this.currentAction();
         int n = this.world.isRemote ? 1 : 0;
         fp_class3242.ticksPlaying[n] = fp_class3242.ticksPlaying[n] + 1;
@@ -652,7 +654,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         entityPlayer.motionZ = 0.0;
         Vec3d vec3d = this.a(0.35);
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-        this.void_b(entityPlayer.rotationYawHead + 180.0f);
+        this.setYawRotation(entityPlayer.rotationYawHead + 180.0f);
     }
 
     protected void a(boolean bl, boolean bl2, UUID uUID) {
@@ -1044,11 +1046,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     protected void U() {
     }
 
-    public void g(String string) {
+    public void setCustomName(String string) {
         this.entityDataManager.set(CUSTOM_NAME, string);
     }
 
-    public String java_lang_String_w() {
+    public String getCustomName() {
         return this.entityDataManager.get(CUSTOM_NAME);
     }
 
@@ -1131,7 +1133,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.PlaySoundAtPosition(soundEvent, f, 1.0f);
     }
 
-    public static boolean boolean_a(Entity entity) {
+    public static boolean isValidGirl(Entity entity) {
         if (entity == null) {
             return false;
         }
@@ -1238,8 +1240,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
         Collections.reverse(arrayList);
         MatrixStack object = new MatrixStack();
-        if (this.boolean_Q()) {
-            ((MatrixStack)object).rotateY((float)(-Math.toRadians(this.java_lang_Float_I().floatValue())));
+        if (this.isAnchored()) {
+            ((MatrixStack)object).rotateY((float)(-Math.toRadians(this.getYawRotation().floatValue())));
         } else if (bl) {
             ((MatrixStack)object).rotateY((float)(-Math.toRadians(Reference.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
         }
@@ -1458,7 +1460,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return new ArrayList<Integer>();
     }
 
-    public void f(String string) {
+    public void setCustomModelKey(String string) {
         this.entityDataManager.set(CUSTOM_MODEL_KEY, string);
     }
 
@@ -1466,7 +1468,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return this.entityDataManager.get(CUSTOM_MODEL_KEY);
     }
 
-    public static String a(HashSet<String> hashSet) {
+    public static String serializePartsSet(HashSet<String> hashSet) {
         if (hashSet == null) {
             return "";
         }
@@ -1481,7 +1483,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return stringBuilder.toString();
     }
 
-    public HashSet<String> Y() {
+    public HashSet<String> getCustomPartsSet() {
         String string = this.java_lang_String_C();
         String[] stringArray = string.split("#");
         HashSet<String> hashSet = new HashSet<String>();

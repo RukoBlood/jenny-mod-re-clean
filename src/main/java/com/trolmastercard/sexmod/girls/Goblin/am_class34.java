@@ -80,9 +80,9 @@ public class am_class34 {
             if (!girlEntity.world.isRemote || girlEntity.isDead || !(girlEntity instanceof ai_class30)) continue;
             ai_class30 ai_class302 = (ai_class30) ((Object) girlEntity);
             if (girlEntity.currentAction() != Action.START_THROWING) continue;
-            girlEntity.b(true);
+            girlEntity.setLocallyRegistered(true);
             minecraft.getRenderManager().renderEntity(girlEntity, 0.0, 0.0, 0.0, uUID.equals(ai_class302.java_util_UUID_e()) ? -420.69f : 0.0f, minecraft.getRenderPartialTicks(), false);
-            girlEntity.b(false);
+            girlEntity.setLocallyRegistered(false);
             return;
         }
         GlStateManager.enableLighting();

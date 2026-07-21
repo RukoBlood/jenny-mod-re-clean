@@ -205,8 +205,8 @@ implements bh_class82,
     @Override
     public void void_g() {
         this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.o);
+        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.followPlayerGoal);
         this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
@@ -247,12 +247,12 @@ implements bh_class82,
             if (this.getPositionVector().equals(this.getTargetPosition()) || this.aw > 40) {
                 this.ac = false;
                 this.aw = 0;
-                this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.U();
             } else {
-                this.rotationYaw = this.java_lang_Float_I().floatValue();
+                this.rotationYaw = this.getYawRotation().floatValue();
                 this.setNoGravity(false);
                 Vec3d vec3d = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.aw);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
@@ -297,10 +297,10 @@ implements bh_class82,
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
             this.setCurrentAction(Action.COWGIRL_SITTING_INTRO);
-            entityPlayer.setRotationYawHead(this.java_lang_Float_I().floatValue() + 180.0f);
-            entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
-            entityPlayer.prevRotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
-            this.cameraYaw = this.java_lang_Float_I().floatValue() + 180.0f;
+            entityPlayer.setRotationYawHead(this.getYawRotation().floatValue() + 180.0f);
+            entityPlayer.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
+            entityPlayer.prevRotationYaw = this.getYawRotation().floatValue() + 180.0f;
+            this.cameraYaw = this.getYawRotation().floatValue() + 180.0f;
             this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
             this.entityDataManager.set(OUTFIT_INDEX, 0);
         }
@@ -352,9 +352,9 @@ implements bh_class82,
                 return;
             }
             Vec3d vec3d3 = vec3d.add(vec3dArrayArray[n][0]);
-            this.void_b(nArray[n]);
+            this.setYawRotation(nArray[n]);
             this.setTargetPosition(new Vec3d(vec3d3.x, vec3d3.y, vec3d3.z));
-            this.cameraYaw = this.java_lang_Float_I();
+            this.cameraYaw = this.getYawRotation();
             this.getNavigator().clearPath();
             this.getNavigator().tryMoveToXYZ(vec3d3.x, vec3d3.y, vec3d3.z, 0.2);
             this.ay = true;
@@ -388,8 +388,8 @@ implements bh_class82,
         if (this.getID() != null) {
             return;
         }
-        this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.o);
+        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.followPlayerGoal);
         if (this.boolean_J()) {
             return;
         }
@@ -440,15 +440,15 @@ implements bh_class82,
                 this.tasks.removeTask(this.avoidWaterGoal);
                 this.avoidWaterGoal = null;
             }
-            if (this.o != null) {
-                this.tasks.removeTask(this.o);
-                this.o = null;
+            if (this.followPlayerGoal != null) {
+                this.tasks.removeTask(this.followPlayerGoal);
+                this.followPlayerGoal = null;
             }
             if (this.currentAction() == Action.NULL) {
                 this.setCurrentAction(Action.FISHING_START);
                 this.setTargetPosition(this.getPositionVector());
                 this.entityDataManager.set(IS_ANCHORED, true);
-                this.void_b((float)Math.atan2(this.posZ - (double)this.ai.getZ(), this.posX - (double)this.ai.getX()) * 57.29578f + 90.0f);
+                this.setYawRotation((float)Math.atan2(this.posZ - (double)this.ai.getZ(), this.posX - (double)this.ai.getX()) * 57.29578f + 90.0f);
             }
             return;
         }
@@ -778,7 +778,7 @@ implements bh_class82,
     @Override
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
@@ -1052,14 +1052,14 @@ implements bh_class82,
                     if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     Vec3d vec3d = new Vec3d(0.0, -0.075f, -0.7109375);
-                    Vec3d vec3d2 = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d2 = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     Minecraft.getMinecraft().player.setPosition(this.getTargetPosition().x + vec3d2.x, this.getTargetPosition().y + vec3d2.y, this.getTargetPosition().z + vec3d2.z);
                     break;
                 }
                 case "sitting_fastTp": {
                     if (!this.boolean_n()) break;
                     Vec3d vec3d = new Vec3d(0.0, -0.160625, -0.9925);
-                    Vec3d vec3d3 = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
+                    Vec3d vec3d3 = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     Minecraft.getMinecraft().player.setPosition(this.getTargetPosition().x + vec3d3.x, this.getTargetPosition().y + vec3d3.y, this.getTargetPosition().z + vec3d3.z);
                     break;
                 }
@@ -1086,8 +1086,8 @@ implements bh_class82,
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
-        super.readEntityFromNBT(nBTTagCompound);
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
         this.setNoGravity(false);
     }
 

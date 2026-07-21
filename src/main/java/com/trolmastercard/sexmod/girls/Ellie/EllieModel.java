@@ -68,7 +68,7 @@ extends GirlModel<GirlEntity> {
         }
         IBone iBone = this.getAnimationProcessor().getBone("head");
         Vec3d vec3d = girl.getPositionVector().subtract(entityPlayer.getPositionVector());
-        int n2 = Math.round(girl.java_lang_Float_I().floatValue());
+        int n2 = Math.round(girl.getYawRotation().floatValue());
         if (n2 == 180) {
             f2 = (float)Math.atan2(vec3d.x, vec3d.z) * 1.2f;
             f2 = f2 > 0.0f ? Math.max(1.5f, Math.min(3.14f, f2)) : Math.max(-3.14f, Math.min(-1.5f, f2));
@@ -76,7 +76,7 @@ extends GirlModel<GirlEntity> {
         } else {
             f = this.f.get(n2)[1];
             float f3 = this.f.get(n2)[2];
-            f2 = ((float)(Math.atan2(vec3d.x, vec3d.z) + (double)this.f.get(n2)[0]) + girl.java_lang_Float_I().floatValue()) * 0.8f;
+            f2 = ((float)(Math.atan2(vec3d.x, vec3d.z) + (double)this.f.get(n2)[0]) + girl.getYawRotation().floatValue()) * 0.8f;
             if ((f2 = Utils.clamp(f2, f, f3)) == f || f2 == f3) {
                 f2 = 0.0f;
             }

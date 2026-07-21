@@ -133,15 +133,15 @@ public abstract class Fighter extends GirlEntity {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        nBTTagCompound.setTag("inventory", this.items.serializeNBT());
-        super.writeEntityToNBT(nBTTagCompound);
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        nbt.setTag("inventory", this.items.serializeNBT());
+        super.writeEntityToNBT(nbt);
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
-        super.readEntityFromNBT(nBTTagCompound);
-        this.items.deserializeNBT(nBTTagCompound.getCompoundTag("inventory"));
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        this.items.deserializeNBT(nbt.getCompoundTag("inventory"));
     }
 
     public boolean hasCapability(Capability<?> capability, EnumFacing enumFacing) {

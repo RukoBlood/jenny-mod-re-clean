@@ -174,9 +174,9 @@ implements ai_class30 {
         this.al = vec3d;
         this.aX = true;
         this.setTargetPosition(vec3d);
-        this.void_b(f);
+        this.setYawRotation(f);
         this.setCurrentAction(Action.SIT);
-        this.void_a(true);
+        this.setAnchored(true);
         this.setPosition(vec3d.x, vec3d.y, vec3d.z);
     }
 
@@ -424,60 +424,60 @@ implements ai_class30 {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        super.writeEntityToNBT(nBTTagCompound);
-        nBTTagCompound.setString("bodyColor", (String)this.entityDataManager.get(CURRENT_ACTION));
-        nBTTagCompound.setInteger("eyeColorX", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getX());
-        nBTTagCompound.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getY());
-        nBTTagCompound.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getZ());
-        nBTTagCompound.setString("model", (String)this.entityDataManager.get(APPEARANCE_DNA));
-        nBTTagCompound.setString("girlID", (String)this.entityDataManager.get(GIRL_ID));
-        nBTTagCompound.setString("queen", this.entityDataManager.get(aK));
-        nBTTagCompound.setBoolean("isQueen", this.aX);
-        nBTTagCompound.setBoolean("isTamed", this.entityDataManager.get(aC));
-        nBTTagCompound.setInteger("robTicks", this.aO);
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setString("bodyColor", (String)this.entityDataManager.get(CURRENT_ACTION));
+        nbt.setInteger("eyeColorX", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getX());
+        nbt.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getY());
+        nbt.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getZ());
+        nbt.setString("model", (String)this.entityDataManager.get(APPEARANCE_DNA));
+        nbt.setString("girlID", (String)this.entityDataManager.get(GIRL_ID));
+        nbt.setString("queen", this.entityDataManager.get(aK));
+        nbt.setBoolean("isQueen", this.aX);
+        nbt.setBoolean("isTamed", this.entityDataManager.get(aC));
+        nbt.setInteger("robTicks", this.aO);
         if (!this.aX) {
             return;
         }
-        nBTTagCompound.setBoolean("preggo", this.entityDataManager.get(aV));
-        nBTTagCompound.setFloat("throneRot", this.ac);
-        nBTTagCompound.setDouble("thronePosX", this.al.x);
-        nBTTagCompound.setDouble("thronePosY", this.al.y);
-        nBTTagCompound.setDouble("thronePosZ", this.al.z);
-        nBTTagCompound.setLong("impregnationTick", this.av);
+        nbt.setBoolean("preggo", this.entityDataManager.get(aV));
+        nbt.setFloat("throneRot", this.ac);
+        nbt.setDouble("thronePosX", this.al.x);
+        nbt.setDouble("thronePosY", this.al.y);
+        nbt.setDouble("thronePosZ", this.al.z);
+        nbt.setLong("impregnationTick", this.av);
         for (int i = 0; i < this.T.size(); ++i) {
-            nBTTagCompound.setString("guard" + i, this.T.get(i).toString());
+            nbt.setString("guard" + i, this.T.get(i).toString());
         }
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
-        super.readEntityFromNBT(nBTTagCompound);
-        this.aX = nBTTagCompound.getBoolean("isQueen");
-        this.entityDataManager.set(APPEARANCE_DNA, nBTTagCompound.getString("model"));
-        this.entityDataManager.set(CURRENT_ACTION, nBTTagCompound.getString("bodyColor"));
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        this.aX = nbt.getBoolean("isQueen");
+        this.entityDataManager.set(APPEARANCE_DNA, nbt.getString("model"));
+        this.entityDataManager.set(CURRENT_ACTION, nbt.getString("bodyColor"));
         String[] stringArray = GoblinEntity.SplitDnaIntoGenes(this);
         if (Integer.parseInt(stringArray[3]) > 7 || Integer.parseInt(stringArray[4]) > 7) {
             this.entityDataManager.set(APPEARANCE_DNA, this.java_lang_String_a(new StringBuilder(), this.int_k()));
             Main.LOGGER.log(Level.INFO, "updated an old Goblin");
         }
-        this.entityDataManager.set(ACTION_TARGET_POS, new BlockPos(nBTTagCompound.getInteger("eyeColorX"), nBTTagCompound.getInteger("eyeColorY"), nBTTagCompound.getInteger("eyeColorZ")));
-        this.entityDataManager.set(GIRL_ID, nBTTagCompound.getString("girlID"));
-        this.entityDataManager.set(aK, nBTTagCompound.getString("queen"));
-        this.entityDataManager.set(aC, nBTTagCompound.getBoolean("isTamed"));
-        this.aO = nBTTagCompound.getInteger("robTicks");
+        this.entityDataManager.set(ACTION_TARGET_POS, new BlockPos(nbt.getInteger("eyeColorX"), nbt.getInteger("eyeColorY"), nbt.getInteger("eyeColorZ")));
+        this.entityDataManager.set(GIRL_ID, nbt.getString("girlID"));
+        this.entityDataManager.set(aK, nbt.getString("queen"));
+        this.entityDataManager.set(aC, nbt.getBoolean("isTamed"));
+        this.aO = nbt.getInteger("robTicks");
         if (!this.aX) {
             return;
         }
-        this.ac = nBTTagCompound.getFloat("throneRot");
-        this.al = new Vec3d(nBTTagCompound.getDouble("thronePosX"), nBTTagCompound.getDouble("thronePosY"), nBTTagCompound.getDouble("thronePosZ"));
+        this.ac = nbt.getFloat("throneRot");
+        this.al = new Vec3d(nbt.getDouble("thronePosX"), nbt.getDouble("thronePosY"), nbt.getDouble("thronePosZ"));
         int n = 0;
-        while (!"".equals(nBTTagCompound.getString("guard" + n))) {
-            this.T.add(UUID.fromString(nBTTagCompound.getString("guard" + n)));
+        while (!"".equals(nbt.getString("guard" + n))) {
+            this.T.add(UUID.fromString(nbt.getString("guard" + n)));
             ++n;
         }
-        this.entityDataManager.set(aV, nBTTagCompound.getBoolean("preggo"));
-        this.av = nBTTagCompound.getLong("impregnationTick");
+        this.entityDataManager.set(aV, nbt.getBoolean("preggo"));
+        this.av = nbt.getLong("impregnationTick");
     }
 
     @Override
@@ -493,7 +493,7 @@ implements ai_class30 {
                 entityPlayer.sendStatusMessage(new TextComponentString("get a bit closer..."), true);
             } else {
                 this.setTargetPosition(entityPlayer.getPositionVector());
-                this.void_b(entityPlayer.rotationYaw);
+                this.setYawRotation(entityPlayer.rotationYaw);
                 this.setCurrentAction(Action.CATCH);
                 this.entityDataManager.set(GIRL_HAND_STATES, "bj");
                 this.void_a(entityPlayer.getPersistentID());
@@ -511,7 +511,7 @@ implements ai_class30 {
             this.void_a(entityPlayer.getPersistentID());
             this.setCurrentAction(Action.PICK_UP);
             this.aQ = 45;
-            this.void_a(false);
+            this.setAnchored(false);
             this.entityDataManager.set(aC, true);
             this.getNavigator().clearPath();
         }
@@ -533,10 +533,10 @@ implements ai_class30 {
 
     @Override
     protected void initEntityAI() {
-        this.o = new df_class178(this, EntityPlayer.class, 2.0f, 1.0f);
+        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 2.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(3, new AutoCloseDoorGoal(this));
-        this.tasks.addTask(5, this.o);
+        this.tasks.addTask(5, this.followPlayerGoal);
     }
 
     @Override
@@ -730,10 +730,10 @@ implements ai_class30 {
         GoblinEntity e3_class2194 = (GoblinEntity)list.get(1);
         e3_class2193.setTargetPosition(vec3d);
         e3_class2194.setTargetPosition(vec3d2);
-        e3_class2193.void_b(0.0f);
-        e3_class2194.void_b(0.0f);
-        e3_class2193.void_a(true);
-        e3_class2194.void_a(true);
+        e3_class2193.setYawRotation(0.0f);
+        e3_class2194.setYawRotation(0.0f);
+        e3_class2193.setAnchored(true);
+        e3_class2194.setAnchored(true);
         e3_class2193.setCurrentAction(Action.AWAIT_PICK_UP);
         e3_class2194.setCurrentAction(Action.AWAIT_PICK_UP);
         e3_class2193.setNoGravity(false);
@@ -822,7 +822,7 @@ implements ai_class30 {
             return;
         }
         this.setTargetPosition(vec3d);
-        this.void_b(this.ac);
+        this.setYawRotation(this.ac);
         this.setCurrentAction(Action.BREEDING_INTRO_0);
         this.noClip = true;
         this.setNoGravity(true);
@@ -834,7 +834,7 @@ implements ai_class30 {
         if (list.size() >= 1) {
             e3_class2192 = list.get(0);
             e3_class2192.setTargetPosition(vec3d);
-            e3_class2192.void_b(this.ac);
+            e3_class2192.setYawRotation(this.ac);
             e3_class2192.setCurrentAction(Action.BREEDING_INTRO_1);
             e3_class2192.noClip = true;
             e3_class2192.setNoGravity(true);
@@ -842,7 +842,7 @@ implements ai_class30 {
         if (list.size() >= 2) {
             e3_class2192 = list.get(1);
             e3_class2192.setTargetPosition(vec3d);
-            e3_class2192.void_b(this.ac);
+            e3_class2192.setYawRotation(this.ac);
             e3_class2192.setCurrentAction(Action.BREEDING_INTRO_2);
             e3_class2192.noClip = true;
             e3_class2192.setNoGravity(true);
@@ -906,23 +906,23 @@ implements ai_class30 {
         this.setInteractionPlayerUUID(uUID);
         this.setCurrentAction(Action.JUMP_0);
         this.setTargetPosition(vec3d3);
-        this.void_b(f);
-        this.void_a(true);
+        this.setYawRotation(f);
+        this.setAnchored(true);
         List<GoblinEntity> list2 = this.I();
         if (list2.size() > 0) {
             GoblinEntity e3_class2192 = list2.get(0);
             e3_class2192.setInteractionPlayerUUID(uUID);
             e3_class2192.setCurrentAction(Action.JUMP_1);
             e3_class2192.setTargetPosition(vec3d3);
-            e3_class2192.void_b(f);
-            e3_class2192.void_a(true);
+            e3_class2192.setYawRotation(f);
+            e3_class2192.setAnchored(true);
             if (list2.size() > 1) {
                 GoblinEntity e3_class2193 = list2.get(1);
                 e3_class2193.setInteractionPlayerUUID(uUID);
                 e3_class2193.setCurrentAction(Action.JUMP_2);
                 e3_class2193.setTargetPosition(vec3d3);
-                e3_class2193.void_b(f);
-                e3_class2193.void_a(true);
+                e3_class2193.setYawRotation(f);
+                e3_class2193.setAnchored(true);
             }
         }
     }
@@ -976,7 +976,7 @@ implements ai_class30 {
             this.motionY = vec3d2.y;
             this.motionZ = vec3d2.z;
             if (!this.world.isRemote) {
-                this.void_b(f2);
+                this.setYawRotation(f2);
             }
         }
         this.noClip = false;
@@ -1157,8 +1157,8 @@ implements ai_class30 {
             return;
         }
         this.setTargetPosition(this.al);
-        this.void_b(this.ac);
-        this.void_a(true);
+        this.setYawRotation(this.ac);
+        this.setAnchored(true);
         this.setNoGravity(true);
         this.setCurrentAction(Action.SIT);
     }
@@ -1330,7 +1330,7 @@ implements ai_class30 {
             ResetGirl.a_inner422.a((EntityPlayerMP)entityPlayer);
         }
         this.setInteractionPlayerUUID((UUID)null);
-        this.void_a(false);
+        this.setAnchored(false);
         this.noClip = false;
         this.setNoGravity(false);
         this.entityDataManager.set(a0, ItemStack.EMPTY);
@@ -1347,8 +1347,8 @@ implements ai_class30 {
         }
         this.void_a((UUID)null);
         this.setTargetPosition(entityPlayer.getPositionVector());
-        this.void_b(entityPlayer.rotationYaw);
-        this.void_a(true);
+        this.setYawRotation(entityPlayer.rotationYaw);
+        this.setAnchored(true);
         this.noClip = true;
         this.setNoGravity(true);
         entityPlayer.setNoGravity(true);
@@ -1363,8 +1363,8 @@ implements ai_class30 {
         }
         this.void_a((UUID)null);
         this.setTargetPosition(entityPlayer.getPositionVector());
-        this.void_b(entityPlayer.rotationYaw + 180.0f);
-        this.void_a(true);
+        this.setYawRotation(entityPlayer.rotationYaw + 180.0f);
+        this.setAnchored(true);
         this.noClip = true;
         this.setNoGravity(true);
         entityPlayer.setNoGravity(true);
@@ -1525,7 +1525,7 @@ implements ai_class30 {
             return PlayState.STOP;
         }
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         block5 : switch (animationEvent.getController().getName()) {
             case "eyes": {
@@ -1720,7 +1720,7 @@ implements ai_class30 {
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
@@ -1840,7 +1840,7 @@ implements ai_class30 {
                 case "jumpCam": {
                     if (!this.boolean_n()) break;
                     Minecraft minecraft = Minecraft.getMinecraft();
-                    minecraft.player.rotationYaw = this.java_lang_Float_I().floatValue() + 170.0f;
+                    minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 170.0f;
                     minecraft.player.rotationPitch = -20.0f;
                     minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                     minecraft.gameSettings.thirdPersonView = 2;
@@ -1849,7 +1849,7 @@ implements ai_class30 {
                 case "breedingHmm": {
                     if (this.boolean_n()) {
                         Minecraft minecraft = Minecraft.getMinecraft();
-                        minecraft.player.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
+                        minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
                         minecraft.player.rotationPitch = -15.0f;
                         minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                         minecraft.gameSettings.thirdPersonView = 0;
@@ -1872,7 +1872,7 @@ implements ai_class30 {
                     if (this.boolean_n()) {
                         Minecraft minecraft = Minecraft.getMinecraft();
                         minecraft.gameSettings.thirdPersonView = 2;
-                        minecraft.player.rotationYaw = this.java_lang_Float_I().floatValue() - 120.0f;
+                        minecraft.player.rotationYaw = this.getYawRotation().floatValue() - 120.0f;
                         minecraft.player.rotationPitch = -30.0f;
                     }
                 }
@@ -1930,7 +1930,7 @@ implements ai_class30 {
                     if (!this.boolean_n()) break;
                     Minecraft minecraft = Minecraft.getMinecraft();
                     minecraft.gameSettings.thirdPersonView = 0;
-                    minecraft.player.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
+                    minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
                     minecraft.player.rotationPitch = -15.0f;
                     minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                     minecraft.gameSettings.thirdPersonView = 0;
@@ -2038,7 +2038,7 @@ implements ai_class30 {
                 GoblinEntity e3_class2194 = new GoblinEntity(world);
                 e3_class2194.dimension = n;
                 e3_class2194.forceSpawn = true;
-                e3_class2194.f(string);
+                e3_class2194.setCustomModelKey(string);
                 e3_class2194.e(string2);
                 GoblinEntity.access$000(e3_class2194).set(aC, true);
                 world.spawnEntity(e3_class2194);

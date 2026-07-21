@@ -215,8 +215,8 @@ public class LampItem extends Item implements IAnimatable {
         vec3d = this.a(entityPlayer);
         ev_class2752.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, entityPlayer.rotationYaw + 180.0f, entityPlayer.rotationPitch);
         ev_class2752.setTargetPosition(ev_class2752.getPositionVector());
-        ev_class2752.void_b(entityPlayer.rotationYaw + 180.0f);
-        ev_class2752.void_a(true);
+        ev_class2752.setYawRotation(entityPlayer.rotationYaw + 180.0f);
+        ev_class2752.setAnchored(true);
         ev_class2752.setNoGravity(true);
         ev_class2752.noClip = true;
         entityPlayer.world.spawnEntity(ev_class2752);

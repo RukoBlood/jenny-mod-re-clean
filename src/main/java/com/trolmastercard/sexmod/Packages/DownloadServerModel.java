@@ -147,7 +147,7 @@ implements IMessage {
                 String string = cu_class1462.e;
                 b_inner148 b_inner1482 = cu_class1462.f;
                 byte[] byArray = cu_class1462.b;
-                String string2 = CustomModel.h() + "/" + string;
+                String string2 = CustomModel.getCurrentGroup() + "/" + string;
                 File file = new File(string2);
                 file.mkdirs();
                 File file2 = new File(string2 + "/" + string + b_inner1482.ending);

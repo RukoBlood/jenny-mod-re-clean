@@ -112,8 +112,8 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
     @Override
     public void updateTask() {
         this.CurState = this.getNewState();
-        if (this.entity.o != null) {
-            this.entity.o.a = this.CurState == States.IDLE;
+        if (this.entity.followPlayerGoal != null) {
+            this.entity.followPlayerGoal.a = this.CurState == States.IDLE;
         }
         this.CompanionStates(this.CurState);
     }

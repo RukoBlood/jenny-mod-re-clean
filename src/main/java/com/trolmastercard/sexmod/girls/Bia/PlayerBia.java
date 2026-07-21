@@ -206,14 +206,14 @@ extends PlayerGirl {
         if (fp_class3242 == Action.ANAL_WAIT) {
             if (!this.world.isRemote) {
                 this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
+                Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.boolean_n()) {
                 SexUI.init();
             }
             return;
         }
-        entityPlayer.rotationYaw = f = this.java_lang_Float_I().floatValue();
+        entityPlayer.rotationYaw = f = this.getYawRotation().floatValue();
         entityPlayer.rotationPitch = 60.0f;
         if (!this.world.isRemote) {
             this.setOutfitIndex(0);
@@ -227,7 +227,7 @@ extends PlayerGirl {
             }
             Vec3d vec3d3 = vec3d.add(VectorMath.RotateY(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
             entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
-            this.void_a(true);
+            this.setAnchored(true);
         }
     }
 
@@ -400,7 +400,7 @@ extends PlayerGirl {
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {

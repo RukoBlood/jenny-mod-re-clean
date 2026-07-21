@@ -89,7 +89,7 @@ public class Main {
         GalathMangTracker.clear();
         WorldGeneration.Generate().clear();
         GirlID.ClearGirlList();
-        CustomModel.e = false;
+        CustomModel.isLoaded = false;
         bj_class84.a();
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             Main.clientReset();

@@ -335,7 +335,7 @@ public class PlayerJenny extends PlayerGirl {
     @Override
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             block68 : switch (soundKeyframeEvent.sound) {

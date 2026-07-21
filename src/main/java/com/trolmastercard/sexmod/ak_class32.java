@@ -31,7 +31,7 @@ public class ak_class32 {
             return ak_class32.b(entity, f);
         }
         GirlEntity em_class2582 = (GirlEntity)entity;
-        if (!em_class2582.boolean_Q()) {
+        if (!em_class2582.isAnchored()) {
             return ak_class32.b(entity, f);
         }
         return em_class2582.getTargetPosition();

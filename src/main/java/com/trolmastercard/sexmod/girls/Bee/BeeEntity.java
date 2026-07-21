@@ -107,11 +107,11 @@ public class BeeEntity extends Supporter {
 
     @Override
     protected void initEntityAI() {
-        this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new FollowPlayerGoal(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.25));
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, this.o);
+        this.tasks.addTask(2, this.followPlayerGoal);
         this.tasks.addTask(3, new EntityAIWanderAvoidWaterFlying(this, 1.0));
     }
 
@@ -164,7 +164,7 @@ public class BeeEntity extends Supporter {
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setTargetPosition(this.net_minecraft_util_math_Vec3d_aa());
-            this.void_b(entityPlayer.rotationYaw - 180.0f);
+            this.setYawRotation(entityPlayer.rotationYaw - 180.0f);
             this.pathNavigator.clearPath();
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
             this.setCurrentAction(Action.CITIZEN_START);
@@ -283,11 +283,11 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        super.writeEntityToNBT(nBTTagCompound);
-        nBTTagCompound.setBoolean("isTamed", this.entityDataManager.get(M));
-        nBTTagCompound.setBoolean("hasChest", (Boolean)this.entityDataManager.get(HAS_CHEST));
-        nBTTagCompound.setTag("inventory", this.invHandler.serializeNBT());
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setBoolean("isTamed", this.entityDataManager.get(M));
+        nbt.setBoolean("hasChest", (Boolean)this.entityDataManager.get(HAS_CHEST));
+        nbt.setTag("inventory", this.invHandler.serializeNBT());
     }
 
     @Override
@@ -345,7 +345,7 @@ public class BeeEntity extends Supporter {
     @Override
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {

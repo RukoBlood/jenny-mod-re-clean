@@ -236,7 +236,7 @@ extends GirlModel<GirlEntity> {
     }
 
     void a(IBone iBone, AnimationProcessor animationProcessor, GirlEntity em_class2582) {
-        if (em_class2582.boolean_h()) {
+        if (em_class2582.isLocallyRegistered()) {
             iBone.setHidden(true);
         } else {
             iBone.setHidden(false);
@@ -245,12 +245,12 @@ extends GirlModel<GirlEntity> {
     }
 
     void a(IBone iBone, AnimationProcessor animationProcessor, GirlEntity em_class2582, ai_class30 ai_class302) {
-        if (em_class2582.boolean_h()) {
+        if (em_class2582.isLocallyRegistered()) {
             iBone.setHidden(true);
         } else {
             iBone.setHidden(ai_class302.int_a() < 15);
         }
-        if (!em_class2582.boolean_h()) {
+        if (!em_class2582.isLocallyRegistered()) {
             animationProcessor.getBone("steve").setHidden(true);
         }
     }

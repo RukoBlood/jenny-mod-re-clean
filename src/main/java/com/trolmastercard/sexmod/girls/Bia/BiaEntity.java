@@ -124,12 +124,12 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             if (this.getPositionVector().equals(this.getTargetPosition()) || this.ag > 40) {
                 this.Y = false;
                 this.ag = 0;
-                this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.U();
             } else {
-                this.rotationYaw = this.java_lang_Float_I().floatValue();
+                this.rotationYaw = this.getYawRotation().floatValue();
                 try {
                     TARGET_POS.equals(null);
                 } catch (NullPointerException nullPointerException) {
@@ -203,7 +203,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public void ac() {
-        if (this.boolean_Q() && !this.aa) {
+        if (this.isAnchored() && !this.aa) {
             this.void_r();
         }
         this.aa = false;
@@ -256,14 +256,14 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         if (fp_class3242 == Action.ANAL_WAIT) {
             if (!this.world.isRemote) {
                 this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
+                Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.boolean_n()) {
                 SexUI.init();
             }
             return;
         }
-        entityPlayer.rotationYaw = f = this.java_lang_Float_I().floatValue();
+        entityPlayer.rotationYaw = f = this.getYawRotation().floatValue();
         entityPlayer.rotationPitch = 60.0f;
         if (!this.world.isRemote) {
             this.setOutfitIndex(0);
@@ -273,7 +273,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             this.setTargetPosition(vec3d2);
             Vec3d vec3d3 = vec3d.add(VectorMath.RotateY(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
             entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
-            this.void_a(true);
+            this.setAnchored(true);
         }
     }
 
@@ -293,8 +293,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void void_g() {
         this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.o);
+        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.followPlayerGoal);
         this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
@@ -363,7 +363,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             return null;
         }
         this.tasks.removeTask(this.avoidWaterGoal);
-        this.tasks.removeTask(this.o);
+        this.tasks.removeTask(this.followPlayerGoal);
         Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         int n2 = -1;
         for (int i = 0; i < this.ad.length; ++i) {
@@ -413,7 +413,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             return null;
         }
         this.tasks.removeTask(this.avoidWaterGoal);
-        this.tasks.removeTask(this.o);
+        this.tasks.removeTask(this.followPlayerGoal);
         Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         int n = -1;
         for (int i = 0; i < this.ad.length; ++i) {
@@ -446,9 +446,9 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             return;
         }
         Vec3d vec3d = new Vec3d(vector4d.getX(), vector4d.getY(), vector4d.getZ());
-        this.void_b((float)vector4d.getW());
+        this.setYawRotation((float)vector4d.getW());
         this.setTargetPosition(vec3d);
-        this.cameraYaw = this.java_lang_Float_I().floatValue();
+        this.cameraYaw = this.getYawRotation().floatValue();
         this.getNavigator().clearPath();
         this.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 0.35);
         this.af = true;
@@ -678,7 +678,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {

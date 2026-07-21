@@ -48,7 +48,7 @@ implements IMessage {
                 ev_class2752.setInteractionPlayerUUID(entityPlayerMP.getPersistentID());
                 ev_class2752.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, entityPlayerMP.rotationYawHead + 180.0f, entityPlayerMP.rotationPitch);
                 ev_class2752.setTargetPosition(ev_class2752.getPositionVector());
-                ev_class2752.void_b(entityPlayerMP.rotationYawHead + 180.0f);
+                ev_class2752.setYawRotation(entityPlayerMP.rotationYawHead + 180.0f);
                 ev_class2752.setNoGravity(true);
                 ev_class2752.noClip = true;
                 entityPlayerMP.world.spawnEntity(ev_class2752);

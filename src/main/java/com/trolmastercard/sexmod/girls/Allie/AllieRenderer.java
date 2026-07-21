@@ -20,7 +20,7 @@ extends GirlRenderer {
     @Override
     public void render(GeoModel model, GirlEntity entity, float partialTicks, float r, float g, float b, float a) {
         AllieEntity allieEntity = (AllieEntity) entity;
-        if (entity.currentAction() == Action.NULL && !entity.boolean_h()) {
+        if (entity.currentAction() == Action.NULL && !entity.isLocallyRegistered()) {
             return;
         }
         a = allieEntity.U = allieEntity.U == 1.0f ? allieEntity.U : allieEntity.U - 0.01f;
@@ -34,7 +34,7 @@ extends GirlRenderer {
         if (this.renderEntity.currentAction() == Action.NULL) {
             return;
         }
-        if (this.renderEntity.boolean_h()) {
+        if (this.renderEntity.isLocallyRegistered()) {
             return;
         }
         if (this.renderEntity.currentAction().hideNameTag) {

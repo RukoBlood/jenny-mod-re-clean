@@ -85,7 +85,7 @@ implements IClientCommand {
 
     String a(GirlEntity em_class2582) {
         if (em_class2582 instanceof PlayerGirl) {
-            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + Utils.CapitalizeString(PlayerGirlEntity.a(em_class2582).toString());
+            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + Utils.CapitalizeString(PlayerGirlEntity.fromGirl(em_class2582).toString());
         }
         return (Object)((Object)TextFormatting.YELLOW) + "applied model code to this " + em_class2582.getGirlName();
     }
@@ -95,7 +95,7 @@ implements IClientCommand {
         if (rayTraceResult == null) {
             return PlayerGirl.GetPlayer(Minecraft.getMinecraft().player);
         }
-        if (GirlEntity.boolean_a(rayTraceResult.entityHit)) {
+        if (GirlEntity.isValidGirl(rayTraceResult.entityHit)) {
             return (GirlEntity)rayTraceResult.entityHit;
         }
         return PlayerGirl.GetPlayer(Minecraft.getMinecraft().player);

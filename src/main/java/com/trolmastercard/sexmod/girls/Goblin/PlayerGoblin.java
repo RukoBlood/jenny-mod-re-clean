@@ -160,7 +160,7 @@ implements ai_class30 {
     }
 
     @Override
-    public boolean boolean_d() {
+    public boolean isInteractable() {
         return this.java_util_UUID_e() == null || !Minecraft.getMinecraft().player.getPersistentID().equals(this.getOwnerUserUUID());
     }
 
@@ -261,7 +261,7 @@ implements ai_class30 {
 
     @Override
     public boolean boolean_o() {
-        return this.boolean_Q() || this.java_util_UUID_e() != null;
+        return this.isAnchored() || this.java_util_UUID_e() != null;
     }
 
     @Override
@@ -400,7 +400,7 @@ implements ai_class30 {
             entityPlayer.motionY = vec3d2.y;
             entityPlayer.motionZ = vec3d2.z;
             if (!this.world.isRemote) {
-                this.void_b(f2);
+                this.setYawRotation(f2);
             }
         }
         entityPlayer.noClip = false;
@@ -628,7 +628,7 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return;
         }
-        this.void_b(entityPlayer.rotationYaw);
+        this.setYawRotation(entityPlayer.rotationYaw);
         this.noClip = true;
         this.setNoGravity(true);
         entityPlayer.setNoGravity(true);
@@ -641,7 +641,7 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return;
         }
-        this.void_b(entityPlayer.rotationYaw + 180.0f);
+        this.setYawRotation(entityPlayer.rotationYaw + 180.0f);
         this.noClip = true;
         this.setNoGravity(true);
         entityPlayer.setNoGravity(true);
@@ -662,7 +662,7 @@ implements ai_class30 {
             return;
         }
         ResetGirl.a_inner422.a(this);
-        this.void_a(false);
+        this.setAnchored(false);
         this.setCurrentAction(Action.NULL);
         this.void_a((UUID)null);
     }
@@ -875,7 +875,7 @@ implements ai_class30 {
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData animationData) {
         if (this.actionController == null) {
-            this.void_p();
+            this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
@@ -997,7 +997,7 @@ implements ai_class30 {
                 case "jumpCam": {
                     if (!this.boolean_n()) break;
                     Minecraft minecraft = Minecraft.getMinecraft();
-                    minecraft.player.rotationYaw = this.java_lang_Float_I().floatValue() + 170.0f;
+                    minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 170.0f;
                     minecraft.player.rotationPitch = -20.0f;
                     minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                     minecraft.gameSettings.thirdPersonView = 2;
@@ -1006,7 +1006,7 @@ implements ai_class30 {
                 case "breedingHmm": {
                     if (this.boolean_n()) {
                         Minecraft minecraft = Minecraft.getMinecraft();
-                        minecraft.player.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
+                        minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
                         minecraft.player.rotationPitch = -15.0f;
                         minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                         minecraft.gameSettings.thirdPersonView = 0;
@@ -1029,7 +1029,7 @@ implements ai_class30 {
                     if (this.boolean_n()) {
                         Minecraft minecraft = Minecraft.getMinecraft();
                         minecraft.gameSettings.thirdPersonView = 2;
-                        minecraft.player.rotationYaw = this.java_lang_Float_I().floatValue() - 120.0f;
+                        minecraft.player.rotationYaw = this.getYawRotation().floatValue() - 120.0f;
                         minecraft.player.rotationPitch = -30.0f;
                     }
                 }
@@ -1087,7 +1087,7 @@ implements ai_class30 {
                     if (!this.boolean_n()) break;
                     Minecraft minecraft = Minecraft.getMinecraft();
                     minecraft.gameSettings.thirdPersonView = 0;
-                    minecraft.player.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
+                    minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
                     minecraft.player.rotationPitch = -15.0f;
                     minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                     minecraft.gameSettings.thirdPersonView = 0;

@@ -145,7 +145,7 @@ public class fu_class330 {
             return;
         }
         ei_class2512.setTargetPosition(new Vec3d((double)vec3i.getX() + 0.5, (float)vec3i.getY() + 0.0f, (double)vec3i.getZ() + 0.5));
-        ei_class2512.void_b(entityPlayer.rotationYaw);
+        ei_class2512.setYawRotation(entityPlayer.rotationYaw);
         ei_class2512.getDataManager().set(GirlEntity.IS_ANCHORED, true);
         ei_class2512.u_();
     }
@@ -263,7 +263,7 @@ public class fu_class330 {
         }
         entityPlayer.setPosition(vec3d2.x, Math.floor(vec3d.y), vec3d2.z);
         ei_class2512.setTargetPosition(vec3d2);
-        ei_class2512.void_b(entityPlayer.rotationYaw);
+        ei_class2512.setYawRotation(entityPlayer.rotationYaw);
         ei_class2512.getDataManager().set(GirlEntity.IS_ANCHORED, true);
         ei_class2512.getDataManager().set(GirlEntity.OUTFIT_INDEX, 0);
         ei_class2512.setCurrentAction(Action.STARTDOGGY);

@@ -77,14 +77,14 @@ public class a_class4 extends GuiScreen {
         //Object object;
         this.mc = Minecraft.getMinecraft();
         this.ID = girlEntity.girlID();
-        PlayerGirlEntity playerGirlEntity = PlayerGirlEntity.a(girlEntity);
+        PlayerGirlEntity playerGirlEntity = PlayerGirlEntity.fromGirl(girlEntity);
         if (playerGirlEntity == null) {
             playerGirlEntity = PlayerGirlEntity.JENNY;
         }
         try {
             Object object = playerGirlEntity.npcClass.getConstructor(World.class);
             this.c = (GirlEntity)((Constructor)object).newInstance(this.mc.world);
-            this.c.b(true);
+            this.c.setLocallyRegistered(true);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -92,7 +92,7 @@ public class a_class4 extends GuiScreen {
         String object = girlEntity.java_lang_String_C();
         this.c.getDataManager().set(GirlEntity.CUSTOM_MODEL_KEY, object);
         int n = 0;
-        for (String string : this.c.Y()) {
+        for (String string : this.c.getCustomPartsSet()) {
             EnumCustomPartCategory gw_class3892 = CustomModel.e(string);
             if (EnumCustomPartCategory.CUSTOM_BONE.equals((Object)gw_class3892)) {
                 ++n;
@@ -249,7 +249,7 @@ public class a_class4 extends GuiScreen {
             String string = entry2.getKey().get(n);
             hashSet.add(string);
         }
-        PackageHandler.networkWrapper.sendToServer((IMessage)new UploadModelString(GirlEntity.a(hashSet), this.ID, arrayList));
+        PackageHandler.networkWrapper.sendToServer((IMessage)new UploadModelString(GirlEntity.serializePartsSet(hashSet), this.ID, arrayList));
         this.mc.player.closeScreen();
     }
 

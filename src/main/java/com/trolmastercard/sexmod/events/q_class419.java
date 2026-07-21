@@ -69,7 +69,7 @@ public class q_class419 {
         World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
         this.a(world, (EntityPlayer)entityPlayerMP, playerGirl);
         if (playerGirl != null) {
-            playerGirl.void_a(false);
+            playerGirl.setAnchored(false);
             playerGirl.setCurrentAction(Action.NULL);
             ResetGirl.a_inner422.a(playerGirl);
         }
@@ -125,7 +125,7 @@ public class q_class419 {
             if (girlEntity.getID() == null) continue;
             if (girlEntity.getID().equals(entityPlayer.getPersistentID()) || girlEntity.getID().equals(entityPlayer.getUniqueID())) {
                 ResetGirl.a_inner422.a(girlEntity);
-                girlEntity.void_a(false);
+                girlEntity.setAnchored(false);
                 girlEntity.setCurrentAction(Action.NULL);
             }
             if (!(girlEntity instanceof PlayerGirl) || !((PlayerGirl)girlEntity).getOwnerUserUUID().equals(entityPlayer.getPersistentID()) || girlEntity.getID() == null) continue;

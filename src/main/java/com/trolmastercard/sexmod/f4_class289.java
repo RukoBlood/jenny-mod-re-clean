@@ -37,7 +37,7 @@ public class f4_class289 {
         if (string.isEmpty()) {
             return;
         }
-        ((GirlEntity)entity).g(string);
+        ((GirlEntity)entity).setCustomName(string);
         if (!entityPlayer.capabilities.isCreativeMode) {
             itemStack.shrink(1);
         }
