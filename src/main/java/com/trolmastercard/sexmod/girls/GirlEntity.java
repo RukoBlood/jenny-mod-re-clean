@@ -342,9 +342,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected void initAnimationControllers() {
-        this.actionController = new AnimationController<GirlEntity>(this, "action", 0.0f, this::predicate);
-        this.movementController = new AnimationController<GirlEntity>(this, "movement", 5.0f, this::predicate);
-        this.eyesController = new AnimationController<GirlEntity>(this, "eyes", 10.0f, this::predicate);
+        this.actionController = new AnimationController<GirlEntity>(this, "action", 0.0f, this::animationPredicate);
+        this.movementController = new AnimationController<GirlEntity>(this, "movement", 5.0f, this::animationPredicate);
+        this.eyesController = new AnimationController<GirlEntity>(this, "eyes", 10.0f, this::animationPredicate);
 
         // TODO not sure where to insert sound keyframe inserter, or how to even add custom insertions in Java for geckolib
 
@@ -780,26 +780,27 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return arrayList;
     }
 
-    public boolean boolean_J() {
+    public boolean isMasterAssigned() {
         return !this.entityDataManager.get(MASTER_UUID).isEmpty();
     }
 
     @Nullable
-    public UUID java_util_UUID_O() {
+    public UUID getMasterUUID() {
         String string = this.entityDataManager.get(MASTER_UUID);
-        if ("".equals(string)) {
+        if (string.isEmpty()) {
             return null;
         }
         try {
             return UUID.fromString(string);
-        } catch (IllegalArgumentException illegalArgumentException) {
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return null;
         }
     }
 
     @Nullable
-    public EntityPlayer net_minecraft_entity_player_EntityPlayer_z() {
-        UUID uUID = this.java_util_UUID_O();
+    public EntityPlayer getMasterPlayer() {
+        UUID uUID = this.getMasterUUID();
         if (uUID == null) {
             return null;
         }
@@ -817,16 +818,16 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     // TODO rename animationPredicateHandler or whatever
     @SideOnly(value=Side.CLIENT)
-    protected abstract <E extends IAnimatable> PlayState predicate(AnimationEvent<E> var1);
+    protected abstract <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event);
 
     @SideOnly(value=Side.CLIENT)
-    protected boolean a(Action action, String string, boolean bl, AnimationEvent animationEvent) {
+    protected boolean handleActionAnimationOverrides(Action action, String animName, boolean flag, AnimationEvent event) {
         return false;
     }
 
     @SideOnly(value=Side.CLIENT)
     protected void createAnimation(String animName, boolean looped, AnimationEvent event, boolean bl2) {
-        if (!bl2 && Action.b(this, event.getPartialTick()) && this.a(this.currentAction(), animName, HandlePlayerMovement.isThrusting, event)) {
+        if (!bl2 && Action.isPlayingInteractiveAction(this, event.getPartialTick()) && this.handleActionAnimationOverrides(this.currentAction(), animName, HandlePlayerMovement.isThrusting, event)) {
             return;
         }
         ILoopType.EDefaultLoopTypes eDefaultLoopTypes = looped ? ILoopType.EDefaultLoopTypes.LOOP : ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME;
@@ -840,55 +841,72 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected void a(String string, int n, float f, AnimationEvent animationEvent, boolean bl) {
-        if (!bl && Action.b(this, animationEvent.getPartialTick()) && this.a(this.currentAction(), string, HandlePlayerMovement.isThrusting, animationEvent)) {
+    protected void playRandomizedAnimation(String baseAnimNade, int maxVariants, float chance, AnimationEvent event, boolean disableThrustOverride) {
+
+        if (!disableThrustOverride
+                && Action.isPlayingInteractiveAction(this, event.getPartialTick())
+                && this.handleActionAnimationOverrides(this.currentAction(), baseAnimNade, HandlePlayerMovement.isThrusting, event)
+        ) {
             return;
         }
-        AnimationController animationController = animationEvent.getController();
-        Pair pair = this.animationVariantMap.get(string);
-        if (pair == null) {
-            pair = Pair.of((Object)0, (Object)0);
+
+        AnimationController controller = event.getController();
+        Pair state = this.animationVariantMap.get(baseAnimNade);
+        if (state == null) {
+            state = Pair.of((Object)0, (Object)0);
         }
-        int n2 = (Integer)pair.first();
-        int n3 = (Integer)pair.second();
-        if (!Action.b(this, animationEvent.getPartialTick())) {
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation(n2 == 0 ? string : string + n2, ILoopType.EDefaultLoopTypes.LOOP));
-            animationEvent.getController().transitionLengthTicks = 0.0;
+        int currentVariant = (Integer)state.first();
+        int previousVariant = (Integer)state.second();
+
+        if (!Action.isPlayingInteractiveAction(this, event.getPartialTick())) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(
+                            currentVariant == 0
+                                    ? baseAnimNade
+                                    : baseAnimNade + currentVariant, ILoopType.EDefaultLoopTypes.LOOP
+                            )
+                    );
+            event.getController().transitionLengthTicks = 0.0;
             return;
         }
-        int n4 = this.a(n2, n3, n, f);
-        animationController.setAnimation(new AnimationBuilder().addAnimation(n4 == 0 ? string : string + n4, ILoopType.EDefaultLoopTypes.LOOP));
-        animationController.transitionLengthTicks = 0.0;
-        this.animationVariantMap.put(string, Pair.of(n4, (n4 == 0 ? n3 : n4)));
+
+        int nextVariant = this.pickRandomVariantIndex(currentVariant, previousVariant, maxVariants, chance);
+        controller.setAnimation(new AnimationBuilder().addAnimation(
+                nextVariant == 0
+                        ? baseAnimNade
+                        : baseAnimNade + nextVariant, ILoopType.EDefaultLoopTypes.LOOP));
+
+        controller.transitionLengthTicks = 0.0;
+        this.animationVariantMap.put(baseAnimNade, Pair.of(nextVariant, (nextVariant == 0 ? previousVariant : nextVariant)));
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected void a(String string, int n, float f, AnimationEvent animationEvent) {
-        this.a(string, n, f, animationEvent, false);
+    protected void playRandomizedAnimation(String baseAnimName, int maxVariants, float chance, AnimationEvent event) {
+        this.playRandomizedAnimation(baseAnimName, maxVariants, chance, event, false);
     }
 
     // TODO probably utilized for random sounds
-    int a(int n, int n2, int n3, float f) {
-        int n4;
-        if (n != 0) {
+    // DOTO: No, it's for random variant index
+    int pickRandomVariantIndex(int current, int previous, int maxVariants, float chance) {
+        int next;
+        if (current != 0) {
             return 0;
         }
-        Random random = this.getRNG();
-        if (random.nextFloat() > f) {
+        Random rng = this.getRNG();
+        if (rng.nextFloat() > chance) {
             return 0;
         }
         while (true) {
-            if (((n4 = random.nextInt(n3)) != n2 && n4 != 0) || n3 <= 2) break;
+            if (((next = rng.nextInt(maxVariants)) != previous && next != 0) || maxVariants <= 2) break;
         }
-        return n4;
+        return next;
     }
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public abstract void registerControllers(AnimationData var1);
+    public abstract void registerControllers(AnimationData data);
 
-    protected void s() {
-        if (this.world.isRemote && this.boolean_n()) {
+    protected void resetGirlState() {
+        if (this.world.isRemote && this.isControlledByLocalPlayer()) {
             this.playerCameraOffsetPos = null;
             PackageHandler.networkWrapper.sendToServer(new ResetGirl(this.girlID(), true));
         } else if (!this.world.isRemote) {
@@ -896,100 +914,101 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    public static GirlEntity com_trolmastercard_sexmod_em_class258_c(EntityPlayer entityPlayer) {
-        if (entityPlayer == null) {
+    public static GirlEntity getCompanionInteractingWithPlayer(EntityPlayer player) {
+        if (player == null) {
             return null;
         }
-        return GirlEntity.com_trolmastercard_sexmod_em_class258_i(entityPlayer.getPersistentID());
+        return GirlEntity.getGirlByUUID(player.getPersistentID());
     }
 
     @SideOnly(value=Side.CLIENT)
-    public Vec3d a(Minecraft minecraft, CustomModelEntity cy_class1532, EntityLivingBase entityLivingBase, float f) {
-        return CustomModelRenderer.a(minecraft, cy_class1532, entityLivingBase, this, f);
+    public Vec3d renderCustomModelTransform(Minecraft mc, CustomModelEntity entity, EntityLivingBase renderEntity, float partialTicks) {
+        return CustomModelRenderer.renderTransformedModel(mc, entity, renderEntity, this, partialTicks);
     }
 
-    public static GirlEntity com_trolmastercard_sexmod_em_class258_i(@Nonnull UUID uUID) {
-        return GirlEntity.a(uUID, (Boolean) null);
+    public static GirlEntity getGirlByUUID(@Nonnull UUID uUID) {
+        return GirlEntity.getGirlByUUID(uUID, (Boolean) null);
     }
 
-    public static GirlEntity a(@Nonnull UUID uUID, Boolean bl) {
-        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-            if (em_class2582.isDead || !uUID.equals(em_class2582.getID())) continue;
-            if (bl == null) {
-                return em_class2582;
+    public static GirlEntity getGirlByUUID(@Nonnull UUID uUID, Boolean isServerSide) {
+        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            if (girl.isDead || !uUID.equals(girl.getID())) continue;
+            if (isServerSide == null) {
+                return girl;
             }
-            boolean bl2 = em_class2582.world.isRemote;
-            if (bl2 && !bl) {
-                return em_class2582;
+            boolean isRemote = girl.world.isRemote;
+            if (isRemote && !isServerSide) {
+                return girl;
             }
-            if (bl2 || !bl) continue;
-            return em_class2582;
+            if (isRemote || !isServerSide) continue;
+            return girl;
         }
         return null;
     }
 
     @Nullable
-    public static GirlEntity com_trolmastercard_sexmod_em_class258_c(@Nonnull UUID uUID) {
+    public static GirlEntity getActiveSceneInfo(@Nonnull UUID uUID) {
         boolean bl = FMLCommonHandler.instance().getMinecraftServerInstance() == null;
-        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
             boolean bl2;
-            if (em_class2582.isDead || (bl2 = em_class2582.world.isRemote) != bl || !uUID.equals(em_class2582.getID()))
+            if (girl.isDead || (bl2 = girl.world.isRemote) != bl || !uUID.equals(girl.getID()))
                 continue;
-            return em_class2582;
+            return girl;
         }
         return null;
     }
 
-    public static GirlEntity getActiveSceneInfo(@Nonnull EntityPlayer entityPlayer) {
-        return GirlEntity.com_trolmastercard_sexmod_em_class258_c(entityPlayer.getPersistentID());
+    public static GirlEntity getActiveSceneInfo(@Nonnull EntityPlayer player) {
+        return GirlEntity.getActiveSceneInfo(player.getPersistentID());
     }
 
     @SideOnly(value=Side.CLIENT)
     public void ac() {
     }
 
-    public void void_r() {
+    public void resetCameraAndPhysics() {
         this.playerCameraOffsetPos = null;
         this.setNoGravity(false);
         this.setCurrentAction((Action)null);
         if (this.world.isRemote) {
-            this.V();
+            this.resetLocalPlayerClientState();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected void V() {
-        if (this.boolean_n()) {
-            HandlePlayerMovement.a(true);
+    protected void resetLocalPlayerClientState() {
+        if (this.isControlledByLocalPlayer()) {
+            HandlePlayerMovement.setMovementLock(true);
             Minecraft.getMinecraft().player.setInvisible(false);
             PackageHandler.networkWrapper.sendToServer((IMessage)new ResetGirl(this.girlID()));
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static void k(UUID uUID) {
-        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-            UUID uUID2 = em_class2582.getID();
-            if (uUID2 == null || !uUID2.equals(uUID)) continue;
-            Action fp_class3242 = em_class2582.FastSexAction(em_class2582.currentAction());
-            if (fp_class3242 == null) {
+    public static void triggerFastSexAction(UUID uUID) {
+        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            UUID id = girl.getID();
+            if (id == null || !id.equals(uUID)) continue;
+            Action fastSexAction = girl.FastSexAction(girl.currentAction());
+            if (fastSexAction == null) {
                 return;
             }
-            em_class2582.setCurrentAction(fp_class3242);
+            girl.setCurrentAction(fastSexAction);
             return;
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static void f(UUID uUID) {
-        for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
-            Action action;
-            UUID uUID2;
-            if (girlEntity.isDead || !girlEntity.world.isRemote || (uUID2 = girlEntity.getID()) == null || !uUID2.equals(uUID) || (action = girlEntity.CumAction(girlEntity.currentAction())) == null)
+    public static void triggerCumAction(UUID uUID) {
+        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            Action cumAction;
+            UUID id;
+            if (girl.isDead || !girl.world.isRemote || (id = girl.getID()) == null || !id.equals(uUID) || (cumAction = girl.CumAction(girl.currentAction())) == null)
                 continue;
-            girlEntity.setCurrentAction(action);
+            girl.setCurrentAction(cumAction);
         }
     }
+    //end of deobfuscation part #4
 
     public void N() {
         this.ag();
@@ -1037,7 +1056,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected boolean boolean_n() {
+    protected boolean isControlledByLocalPlayer() {
         if (!this.world.isRemote) {
             return false;
         }
@@ -1076,7 +1095,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public void h(String string) {
         if (!this.world.isRemote) {
             PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(String.format("<%s> %s", this.java_lang_String_ab(), string), this.dimension, this.girlID()), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
-        } else if (this.boolean_n()) {
+        } else if (this.isControlledByLocalPlayer()) {
             PackageHandler.networkWrapper.sendToServer((IMessage)new SendChatMessage(String.format("<%s> %s", this.java_lang_String_ab(), string), this.dimension, this.girlID()));
         }
     }
@@ -1089,7 +1108,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(string, this.dimension, this.girlID()), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
             return;
         }
-        if (this.boolean_n()) {
+        if (this.isControlledByLocalPlayer()) {
             PackageHandler.networkWrapper.sendToServer((IMessage)new SendChatMessage(string, this.dimension, this.girlID()));
         }
     }

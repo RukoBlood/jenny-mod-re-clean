@@ -249,7 +249,7 @@ public enum h8_class399 {
         AxisAlignedBB axisAlignedBB = new AxisAlignedBB(vec3d4.x, vec3d4.y, vec3d4.z, vec3d5.x, vec3d5.y, vec3d5.z);
         List<EntityPlayer> list = f__class2972.world.getEntitiesWithinAABB(EntityPlayer.class, axisAlignedBB);
         for (EntityPlayer object2 : list) {
-            if (object2.isDead || !object2.onGround || GirlEntity.a(object2.getPersistentID(), true) != null) continue;
+            if (object2.isDead || !object2.onGround || GirlEntity.getGirlByUUID(object2.getPersistentID(), true) != null) continue;
             vec3d2 = object2.getPositionVector();
             vec3d = vec3d3.subtract(vec3d2);
             Vec3d bl2 = VectorMath.rotate(vec3d, f__class2972.getYawRotation().floatValue());

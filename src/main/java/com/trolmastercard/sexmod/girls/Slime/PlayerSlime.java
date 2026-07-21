@@ -153,115 +153,115 @@ extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        block5 : switch (animationEvent.getController().getName()) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() == Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.slime.null", true, animationEvent);
+                    this.createAnimation("animation.slime.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.slime.fhappy", true, animationEvent);
+                this.createAnimation("animation.slime.fhappy", true, event);
                 break;
             }
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.slime.null", true, animationEvent);
+                    this.createAnimation("animation.slime.null", true, event);
                     break;
                 }
                 if (this.isPlayerRiding) {
-                    this.createAnimation("animation.slime.sit", true, animationEvent);
+                    this.createAnimation("animation.slime.sit", true, event);
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.ap = !this.ap;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.slime.fly" + (this.ap ? "2" : ""), true, animationEvent);
+                    this.createAnimation("animation.slime.fly" + (this.ap ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
-                        this.createAnimation("animation.slime.run", true, animationEvent);
+                        this.createAnimation("animation.slime.run", true, event);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
-                        this.createAnimation("animation.slime.walk", true, animationEvent);
+                        this.createAnimation("animation.slime.walk", true, event);
                         break;
                     }
-                    this.createAnimation("animation.slime.backwards_walk", true, animationEvent);
+                    this.createAnimation("animation.slime.backwards_walk", true, event);
                     break;
                 }
-                this.createAnimation("animation.slime.idle", true, animationEvent);
+                this.createAnimation("animation.slime.idle", true, event);
                 break;
             }
             case "action": {
                 if (this.currentAction() == Action.NULL) {
-                    this.createAnimation("animation.slime.null", true, animationEvent);
+                    this.createAnimation("animation.slime.null", true, event);
                     break;
                 }
                 switch (this.currentAction()) {
                     case UNDRESS: {
-                        this.createAnimation("animation.slime.undress", false, animationEvent);
+                        this.createAnimation("animation.slime.undress", false, event);
                         break block5;
                     }
                     case DRESS: {
-                        this.createAnimation("animation.slime.dress", false, animationEvent);
+                        this.createAnimation("animation.slime.dress", false, event);
                         break block5;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.slime.strip", false, animationEvent);
+                        this.createAnimation("animation.slime.strip", false, event);
                         break block5;
                     }
                     case SUCKBLOWJOB: {
-                        this.createAnimation("animation.slime.blowjobsuck", true, animationEvent);
+                        this.createAnimation("animation.slime.blowjobsuck", true, event);
                         break block5;
                     }
                     case THRUSTBLOWJOB: {
-                        this.createAnimation("animation.slime.blowjobthrust", true, animationEvent);
+                        this.createAnimation("animation.slime.blowjobthrust", true, event);
                         break block5;
                     }
                     case CUMBLOWJOB: {
-                        this.createAnimation("animation.slime.blowjobcum", false, animationEvent);
+                        this.createAnimation("animation.slime.blowjobcum", false, event);
                         break block5;
                     }
                     case STARTDOGGY: {
-                        this.createAnimation("animation.slime.doggygoonbed", false, animationEvent);
+                        this.createAnimation("animation.slime.doggygoonbed", false, event);
                         break block5;
                     }
                     case WAITDOGGY: {
-                        this.createAnimation("animation.slime.doggywait", true, animationEvent);
+                        this.createAnimation("animation.slime.doggywait", true, event);
                         break block5;
                     }
                     case DOGGYSTART: {
-                        this.createAnimation("animation.slime.doggystart", false, animationEvent);
+                        this.createAnimation("animation.slime.doggystart", false, event);
                         break block5;
                     }
                     case DOGGYSLOW: {
-                        this.createAnimation("animation.slime.doggyslow", true, animationEvent);
+                        this.createAnimation("animation.slime.doggyslow", true, event);
                         break block5;
                     }
                     case DOGGYFAST: {
-                        this.createAnimation("animation.slime.doggyfast", true, animationEvent);
+                        this.createAnimation("animation.slime.doggyfast", true, event);
                         break block5;
                     }
                     case DOGGYCUM: {
-                        this.createAnimation("animation.slime.doggycum", false, animationEvent);
+                        this.createAnimation("animation.slime.doggycum", false, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.slime.attack" + this.S, false, animationEvent);
+                        this.createAnimation("animation.slime.attack" + this.S, false, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.slime.bowcharge", false, animationEvent);
+                        this.createAnimation("animation.slime.bowcharge", false, event);
                         break block5;
                     }
                     case RIDE: {
-                        this.createAnimation("animation.slime.ride", true, animationEvent);
+                        this.createAnimation("animation.slime.ride", true, event);
                         break block5;
                     }
                     case SIT: {
-                        this.createAnimation("animation.slime.sit", true, animationEvent);
+                        this.createAnimation("animation.slime.sit", true, event);
                     }
                 }
             }
@@ -270,7 +270,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -285,29 +285,29 @@ extends PlayerGirl {
                 case "undress": {
                     if (!this.boolean_e()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 0);
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "dress": {
                     if (!this.boolean_e()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 1);
                     this.setCurrentAction((Action)null);
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "sexUiOn": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
                 case "bjiMSG10": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.moveCamera(-0.4, -0.8, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "bjiMSG11": {
                     this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
@@ -316,20 +316,20 @@ extends PlayerGirl {
                         this.a(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
                     this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjtMSG1": {
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -338,12 +338,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggyfastReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "bjtReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -353,7 +353,7 @@ extends PlayerGirl {
                 }
                 case "bjcMSG2": {
                     this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.hide();
                     break;
                 }
@@ -362,15 +362,15 @@ extends PlayerGirl {
                     break;
                 }
                 case "bjcBlackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "bjcDone": 
                 case "doggyCumDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "doggyGoOnBedMSG1": {
@@ -397,7 +397,7 @@ extends PlayerGirl {
                 }
                 case "doggystartMSG4": {
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -408,7 +408,7 @@ extends PlayerGirl {
                 }
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -425,13 +425,13 @@ extends PlayerGirl {
                     } else {
                         this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.00666);
                     break;
                 }
                 case "doggyfastMSG1": {
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
                     ++this.aq;
@@ -459,9 +459,9 @@ extends PlayerGirl {
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.eyesController);
-        animationData.addAnimationController(this.movementController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.eyesController);
+        data.addAnimationController(this.movementController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

@@ -202,7 +202,7 @@ public class LampItem extends Item implements IAnimatable {
         nBTTagCompound.setBoolean(e, false);
         nBTTagCompound.setInteger(d, 0);
         if (world.isRemote) {
-            HandlePlayerMovement.a(false);
+            HandlePlayerMovement.setMovementLock(false);
             return;
         }
         NBTTagCompound nBTTagCompound2 = itemStack.getTagCompound();

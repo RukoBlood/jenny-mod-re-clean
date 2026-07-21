@@ -142,7 +142,7 @@ implements IAnimatable {
             return;
         }
         GalathEntity f__class2972 = (GalathEntity)entity;
-        if (!entityPlayer.getPersistentID().equals(f__class2972.java_util_UUID_O())) {
+        if (!entityPlayer.getPersistentID().equals(f__class2972.getMasterUUID())) {
             return;
         }
         entityPlayer.world.playSound(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundsHandler.MISC_WEOWEO[0], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
@@ -184,7 +184,7 @@ implements IAnimatable {
         }
         GalathEntity f__class2972 = null;
         for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
-            if (object2.isDead || !object2.world.isRemote || !(object2 instanceof GalathEntity) || !entityPlayer.equals(object2.net_minecraft_entity_player_EntityPlayer_z()))
+            if (object2.isDead || !object2.world.isRemote || !(object2 instanceof GalathEntity) || !entityPlayer.equals(object2.getMasterPlayer()))
                 continue;
             f__class2972 = (GalathEntity) object2;
             break;
@@ -296,7 +296,7 @@ implements IAnimatable {
     void b(EntityPlayer entityPlayer) {
         GalathEntity f__class2972 = null;
         for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
-            if (em_class2582.isDead || !em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !entityPlayer.equals(em_class2582.net_minecraft_entity_player_EntityPlayer_z()))
+            if (em_class2582.isDead || !em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !entityPlayer.equals(em_class2582.getMasterPlayer()))
                 continue;
             f__class2972 = (GalathEntity) em_class2582;
             break;

@@ -307,19 +307,19 @@ extends GirlEntity {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public Vec3d a(Minecraft minecraft, CustomModelEntity cy_class1532, EntityLivingBase entityLivingBase, float f) {
+    public Vec3d renderCustomModelTransform(Minecraft mc, CustomModelEntity entity, EntityLivingBase renderEntity, float partialTicks) {
         if (this.isLocallyRegistered()) {
-            return super.a(minecraft, cy_class1532, entityLivingBase, f);
+            return super.renderCustomModelTransform(mc, entity, renderEntity, partialTicks);
         }
         if (!this.boolean_r()) {
-            return super.a(minecraft, cy_class1532, entityLivingBase, f);
+            return super.renderCustomModelTransform(mc, entity, renderEntity, partialTicks);
         }
         GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(false);
         if (f__class2972 == null) {
-            return super.a(minecraft, cy_class1532, entityLivingBase, f);
+            return super.renderCustomModelTransform(mc, entity, renderEntity, partialTicks);
         }
-        ManglelieRenderer.a(f__class2972, f, cy_class1532);
-        return ManglelieRenderer.b(f__class2972, f);
+        ManglelieRenderer.a(f__class2972, partialTicks, entity);
+        return ManglelieRenderer.b(f__class2972, partialTicks);
     }
 
     public float float_b(float f) {
@@ -718,34 +718,34 @@ extends GirlEntity {
     }
 
     @Override
-    protected boolean a(Action fp_class3242, String string, boolean bl, AnimationEvent animationEvent) {
-        if (fp_class3242 == Action.THREESOME_CUM) {
+    protected boolean handleActionAnimationOverrides(Action action, String animName, boolean flag, AnimationEvent event) {
+        if (action == Action.THREESOME_CUM) {
             this.N = false;
             this.Y = false;
             this.M = false;
             this.an = 2;
-            this.void_r();
+            this.resetCameraAndPhysics();
             GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(false);
             if (f__class2972 != null) {
-                f__class2972.void_r();
+                f__class2972.resetCameraAndPhysics();
                 ga_class358.a(f__class2972);
             }
             ga_class358.a(this);
             return true;
         }
-        if (this.N && fp_class3242 == Action.THREESOME_FAST) {
+        if (this.N && action == Action.THREESOME_FAST) {
             this.setCurrentAction(Action.THREESOME_CUM);
-            this.createAnimation("animation.shared.double_holding_cum", true, animationEvent, true);
+            this.createAnimation("animation.shared.double_holding_cum", true, event, true);
             GalathEntity f__class2973 = this.com_trolmastercard_sexmod_f__class297_a(false);
             if (f__class2973 != null) {
                 f__class2973.setCurrentAction(Action.MASTERBATE_SITTING_CUM);
             }
             return true;
         }
-        if ((this.N || bl) && fp_class3242 == Action.THREESOME_SLOW) {
+        if ((this.N || flag) && action == Action.THREESOME_SLOW) {
             this.Y = false;
             this.setCurrentAction(Action.THREESOME_FAST);
-            this.createAnimation("animation.shared.double_holding_soft", true, animationEvent, true);
+            this.createAnimation("animation.shared.double_holding_soft", true, event, true);
             GalathEntity f__class2974 = this.com_trolmastercard_sexmod_f__class297_a(false);
             if (f__class2974 != null) {
                 f__class2974.ak();
@@ -755,37 +755,37 @@ extends GirlEntity {
         if (this.N) {
             return false;
         }
-        if (bl && !this.Y && fp_class3242 == Action.THREESOME_FAST) {
+        if (flag && !this.Y && action == Action.THREESOME_FAST) {
             this.Y = true;
-            this.createAnimation("animation.shared.double_holding_hard", true, animationEvent, true);
+            this.createAnimation("animation.shared.double_holding_hard", true, event, true);
             return true;
         }
-        if (!bl && fp_class3242 == Action.THREESOME_FAST) {
+        if (!flag && action == Action.THREESOME_FAST) {
             this.M = true;
             this.setCurrentAction(Action.THREESOME_SLOW);
-            this.createAnimation("animation.shared.double_holding_back", true, animationEvent, true);
+            this.createAnimation("animation.shared.double_holding_back", true, event, true);
             GalathEntity f__class2975 = this.com_trolmastercard_sexmod_f__class297_a(false);
             if (f__class2975 != null) {
                 f__class2975.void_a();
             }
             return true;
         }
-        if (this.M && fp_class3242 == Action.THREESOME_SLOW) {
+        if (this.M && action == Action.THREESOME_SLOW) {
             this.M = false;
-            this.createAnimation("animation.shared.double_holding_slow", true, animationEvent, true);
+            this.createAnimation("animation.shared.double_holding_slow", true, event, true);
             return true;
         }
         return false;
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        AnimationController animationController = animationEvent.getController();
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+        AnimationController animationController = event.getController();
         if (this.eyesController == animationController) {
             if (this.b() == null) {
                 return PlayState.STOP;
             }
-            this.createAnimation("animation.manglelie.angry_face", true, animationEvent);
+            this.createAnimation("animation.manglelie.angry_face", true, event);
             return PlayState.CONTINUE;
         }
         if (this.movementController == animationController) {
@@ -794,14 +794,14 @@ extends GirlEntity {
             }
             if (Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ) > 0.0) {
                 if (this.entityDataManager.get(ar).booleanValue()) {
-                    this.createAnimation("animation.manglelie.scared_run", true, animationEvent);
+                    this.createAnimation("animation.manglelie.scared_run", true, event);
                 } else {
-                    this.createAnimation("animation.manglelie.walk", true, animationEvent);
+                    this.createAnimation("animation.manglelie.walk", true, event);
                 }
                 this.rotationYaw = this.rotationYawHead;
                 return PlayState.CONTINUE;
             }
-            this.createAnimation("animation.manglelie.idle", true, animationEvent);
+            this.createAnimation("animation.manglelie.idle", true, event);
             return PlayState.CONTINUE;
         }
         switch (this.currentAction()) {
@@ -809,45 +809,45 @@ extends GirlEntity {
                 return PlayState.STOP;
             }
             case RUN: {
-                this.createAnimation("animation.manglelie.running", true, animationEvent);
+                this.createAnimation("animation.manglelie.running", true, event);
                 break;
             }
             case RIDE_MOMMY_HEAD: {
-                this.createAnimation("animation.manglelie.sit_on_galath", true, animationEvent);
+                this.createAnimation("animation.manglelie.sit_on_galath", true, event);
                 break;
             }
             case THREESOME_SLOW: {
                 if (this.M) {
-                    this.createAnimation("animation.shared.double_holding_back", true, animationEvent);
+                    this.createAnimation("animation.shared.double_holding_back", true, event);
                     break;
                 }
-                this.a("animation.shared.double_holding_slow", 4, 0.33f, animationEvent);
+                this.playRandomizedAnimation("animation.shared.double_holding_slow", 4, 0.33f, event);
                 break;
             }
             case THREESOME_FAST: {
                 if (this.Y) {
-                    this.a("animation.shared.double_holding_hard", 3, 0.33f, animationEvent);
+                    this.playRandomizedAnimation("animation.shared.double_holding_hard", 3, 0.33f, event);
                     break;
                 }
-                this.createAnimation("animation.shared.double_holding_soft", true, animationEvent);
+                this.createAnimation("animation.shared.double_holding_soft", true, event);
                 break;
             }
             case THREESOME_CUM: {
-                this.createAnimation("animation.shared.double_holding_cum", true, animationEvent);
+                this.createAnimation("animation.shared.double_holding_cum", true, event);
             }
         }
         return PlayState.CONTINUE;
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
         this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "pound": {
                     this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
@@ -864,7 +864,7 @@ extends GirlEntity {
                     break;
                 }
                 case "sexui": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -881,12 +881,12 @@ extends GirlEntity {
                     break;
                 }
                 case "blackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                 }
             }
         });
-        animationData.addAnimationController(this.actionController);
+        data.addAnimationController(this.actionController);
     }
 
     private static Exception a(Exception exception) {

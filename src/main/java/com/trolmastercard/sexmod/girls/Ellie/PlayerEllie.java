@@ -216,154 +216,154 @@ extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        block5 : switch (animationEvent.getController().getName()) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.ellie.null", true, animationEvent);
+                    this.createAnimation("animation.ellie.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.ellie.eyes", true, animationEvent);
+                this.createAnimation("animation.ellie.eyes", true, event);
                 break;
             }
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.ellie.null", true, animationEvent);
+                    this.createAnimation("animation.ellie.null", true, event);
                     break;
                 }
                 if (this.isPlayerRiding) {
-                    this.createAnimation("animation.ellie.ride", true, animationEvent);
+                    this.createAnimation("animation.ellie.ride", true, event);
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.ar = !this.ar;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.ellie.fly" + (this.ar ? "2" : ""), true, animationEvent);
+                    this.createAnimation("animation.ellie.fly" + (this.ar ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.5);
-                        this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.run", true, animationEvent);
+                        this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.run", true, event);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(2.0);
-                        this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.fastwalk", true, animationEvent);
+                        this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.fastwalk", true, event);
                         break;
                     }
                     this.movementController.setAnimationSpeed(1.5);
-                    this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.backwards_walk", true, animationEvent);
+                    this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.backwards_walk", true, event);
                     break;
                 }
-                this.createAnimation(this.a_14() ? "animation.ellie.crouchidle" : "animation.ellie.idle", true, animationEvent);
+                this.createAnimation(this.a_14() ? "animation.ellie.crouchidle" : "animation.ellie.idle", true, event);
                 break;
             }
             case "action": {
                 switch (this.currentAction()) {
                     case NULL: {
-                        this.createAnimation("animation.ellie.null", true, animationEvent);
+                        this.createAnimation("animation.ellie.null", true, event);
                         break block5;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.ellie.strip", false, animationEvent);
+                        this.createAnimation("animation.ellie.strip", false, event);
                         break block5;
                     }
                     case DASH: {
-                        this.createAnimation("animation.ellie.dash", false, animationEvent);
+                        this.createAnimation("animation.ellie.dash", false, event);
                         break block5;
                     }
                     case HUG: {
-                        this.createAnimation("animation.ellie.hug", false, animationEvent);
+                        this.createAnimation("animation.ellie.hug", false, event);
                         break block5;
                     }
                     case HUGIDLE: {
-                        this.createAnimation("animation.ellie.hugidle", true, animationEvent);
+                        this.createAnimation("animation.ellie.hugidle", true, event);
                         break block5;
                     }
                     case HUGSELECTED: {
-                        this.createAnimation("animation.ellie.hugselected", false, animationEvent);
+                        this.createAnimation("animation.ellie.hugselected", false, event);
                         break block5;
                     }
                     case SITDOWN: {
-                        this.createAnimation("animation.ellie.sitdown", false, animationEvent);
+                        this.createAnimation("animation.ellie.sitdown", false, event);
                         break block5;
                     }
                     case SITDOWNIDLE: {
-                        this.createAnimation("animation.ellie.sitdownidle", true, animationEvent);
+                        this.createAnimation("animation.ellie.sitdownidle", true, event);
                         break block5;
                     }
                     case COWGIRLSTART: {
-                        this.createAnimation("animation.ellie.cowgirlstart", false, animationEvent);
+                        this.createAnimation("animation.ellie.cowgirlstart", false, event);
                         break block5;
                     }
                     case COWGIRLSLOW: {
-                        this.createAnimation("animation.ellie.cowgirlslow2", true, animationEvent);
+                        this.createAnimation("animation.ellie.cowgirlslow2", true, event);
                         break block5;
                     }
                     case COWGIRLFAST: {
-                        this.createAnimation("animation.ellie.cowgirlfast", true, animationEvent);
+                        this.createAnimation("animation.ellie.cowgirlfast", true, event);
                         break block5;
                     }
                     case COWGIRLCUM: {
-                        this.createAnimation("animation.ellie.cowgirlcum", true, animationEvent);
+                        this.createAnimation("animation.ellie.cowgirlcum", true, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.ellie.attack" + this.S, false, animationEvent);
+                        this.createAnimation("animation.ellie.attack" + this.S, false, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.ellie.bowcharge", false, animationEvent);
+                        this.createAnimation("animation.ellie.bowcharge", false, event);
                         break block5;
                     }
                     case RIDE: {
-                        this.createAnimation("animation.ellie.ride", true, animationEvent);
+                        this.createAnimation("animation.ellie.ride", true, event);
                         break block5;
                     }
                     case SIT: {
-                        this.createAnimation("animation.ellie.sit", true, animationEvent);
+                        this.createAnimation("animation.ellie.sit", true, event);
                         break block5;
                     }
                     case THROW_PEARL: {
-                        this.createAnimation("animation.ellie.throwpearl", false, animationEvent);
+                        this.createAnimation("animation.ellie.throwpearl", false, event);
                         break block5;
                     }
                     case DOWNED: {
-                        this.createAnimation("animation.ellie.downed", true, animationEvent);
+                        this.createAnimation("animation.ellie.downed", true, event);
                         break block5;
                     }
                     case MISSIONARY_START: {
-                        this.createAnimation("animation.ellie.missionary_start", false, animationEvent);
+                        this.createAnimation("animation.ellie.missionary_start", false, event);
                         break block5;
                     }
                     case MISSIONARY_SLOW: {
-                        this.createAnimation("animation.ellie.missionary_slow", true, animationEvent);
+                        this.createAnimation("animation.ellie.missionary_slow", true, event);
                         break block5;
                     }
                     case MISSIONARY_FAST: {
-                        this.createAnimation("animation.ellie.missionary_fast", true, animationEvent);
+                        this.createAnimation("animation.ellie.missionary_fast", true, event);
                         break block5;
                     }
                     case MISSIONARY_CUM: {
-                        this.createAnimation("animation.ellie.missionary_cum", false, animationEvent);
+                        this.createAnimation("animation.ellie.missionary_cum", false, event);
                         break block5;
                     }
                     case CARRY_INTRO: {
-                        this.createAnimation("animation.ellie.carry_intro", false, animationEvent);
+                        this.createAnimation("animation.ellie.carry_intro", false, event);
                         break block5;
                     }
                     case CARRY_SLOW: {
-                        this.createAnimation("animation.ellie.carry_slow" + this.ap, true, animationEvent);
+                        this.createAnimation("animation.ellie.carry_slow" + this.ap, true, event);
                         break block5;
                     }
                     case CARRY_FAST: {
-                        this.createAnimation("animation.ellie.carry_fast", true, animationEvent);
+                        this.createAnimation("animation.ellie.carry_fast", true, event);
                         break block5;
                     }
                     case CARRY_CUM: {
-                        this.createAnimation("animation.ellie.carry_cum", true, animationEvent);
+                        this.createAnimation("animation.ellie.carry_cum", true, event);
                     }
                 }
             }
@@ -373,7 +373,7 @@ extends PlayerGirl {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -453,7 +453,7 @@ extends PlayerGirl {
                     vec3d = vec3d.add(-Math.sin((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579, 0.0, Math.cos((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579);
                     String string = vec3d.x + "f" + vec3d.y + "f" + vec3d.z + "f";
                     PackageHandler.networkWrapper.sendToServer((IMessage)new ChangeDataParameter(this.girlID(), "targetPos", string));
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
                     this.setCurrentAction(Action.NULL);
                     break;
@@ -471,7 +471,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "missionary_startDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.MISSIONARY_SLOW);
                     SexUI.init();
                     break;
@@ -489,12 +489,12 @@ extends PlayerGirl {
                 case "cowgirlStartMSG2": {
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "cowgirlStartDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.COWGIRLSLOW);
                     SexUI.init();
                     break;
@@ -506,12 +506,12 @@ extends PlayerGirl {
                         this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "cowgirlfastReady": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     if (!HandlePlayerMovement.isThrusting) {
                         this.setCurrentAction(Action.COWGIRLSLOW);
                         break;
@@ -522,7 +522,7 @@ extends PlayerGirl {
                 }
                 case "cowgirlfastdomMSG1": {
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.2);
                     break;
                 }
@@ -541,28 +541,28 @@ extends PlayerGirl {
                     break;
                 }
                 case "cowgirlcumMSG4": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.hide();
                     break;
                 }
                 case "cowgirlcumMSG5": 
                 case "missionary_cumMSG2": {
                     this.a(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.void_a(I18n.format("ellie.dialogue.goodboy", new Object[0]));
                     break;
                 }
                 case "cowgirlcumMSG6": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "missionary_cumDone": 
                 case "cowgirlcumDone": 
                 case "carry_cumDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "attackDone": {
@@ -575,7 +575,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "openSexUi": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -586,7 +586,7 @@ extends PlayerGirl {
                     } else {
                         this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
@@ -597,12 +597,12 @@ extends PlayerGirl {
                     } else {
                         this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.05);
                     break;
                 }
                 case "missionary_fastDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     if (HandlePlayerMovement.isThrusting) {
                         this.setCurrentAction(Action.MISSIONARY_FAST);
                         break;
@@ -635,7 +635,7 @@ extends PlayerGirl {
                 }
                 case "lipsound": {
                     this.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
@@ -646,7 +646,7 @@ extends PlayerGirl {
                 }
                 case "pound": {
                     this.a(SoundsHandler.MISC_POUNDING);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
@@ -658,20 +658,20 @@ extends PlayerGirl {
                     break;
                 }
                 case "carry_fastDone": {
-                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.CARRY_SLOW);
                     break;
                 }
                 case "sexUI": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                 }
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

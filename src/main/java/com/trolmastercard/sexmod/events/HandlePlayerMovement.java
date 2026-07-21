@@ -40,10 +40,10 @@ public class HandlePlayerMovement {
             PlayerGirl.void_i();
         }
         if (HandlePlayerMovement.movement.sneak) {
-            GirlEntity.k(Minecraft.getMinecraft().player.getPersistentID());
+            GirlEntity.triggerFastSexAction(Minecraft.getMinecraft().player.getPersistentID());
         }
         if (HandlePlayerMovement.movement.jump && SexUI.cumPercentage >= 1.0) {
-            GirlEntity.f(Minecraft.getMinecraft().player.getPersistentID());
+            GirlEntity.triggerCumAction(Minecraft.getMinecraft().player.getPersistentID());
         }
         HandlePlayerMovement.movement.backKeyDown = false;
         HandlePlayerMovement.movement.forwardKeyDown = false;
@@ -60,7 +60,7 @@ public class HandlePlayerMovement {
         return active;
     }
 
-    public static void a(boolean bl) {
+    public static void setMovementLock(boolean bl) {
         active = bl;
         if (!bl) {
             HandlePlayerMovement.a();

@@ -142,7 +142,7 @@ public class BeeEntity extends Supporter {
         if (this.getID() != null) {
             return;
         }
-        if (this.boolean_J()) {
+        if (this.isMasterAssigned()) {
             return;
         }
         this.N += 1.0f;
@@ -302,39 +302,39 @@ public class BeeEntity extends Supporter {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        block4 : switch (animationEvent.getController().getName()) {
+        block4 : switch (event.getController().getName()) {
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.bee.null", true, animationEvent);
+                    this.createAnimation("animation.bee.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.bee." + ((Boolean) this.entityDataManager.get(HAS_CHEST) ? "idle_has_chest" : "idle"), true, animationEvent);
+                this.createAnimation("animation.bee." + ((Boolean) this.entityDataManager.get(HAS_CHEST) ? "idle_has_chest" : "idle"), true, event);
                 break;
             }
             case "action": {
                 switch (this.currentAction()) {
                     case CITIZEN_START: {
-                        this.createAnimation("animation.bee.sex_start", false, animationEvent);
+                        this.createAnimation("animation.bee.sex_start", false, event);
                         break block4;
                     }
                     case CITIZEN_SLOW: {
-                        this.createAnimation("animation.bee.sex_slow", true, animationEvent);
+                        this.createAnimation("animation.bee.sex_slow", true, event);
                         break block4;
                     }
                     case CITIZEN_FAST: {
-                        this.createAnimation("animation.bee.sex_fast", true, animationEvent);
+                        this.createAnimation("animation.bee.sex_fast", true, event);
                         break block4;
                     }
                     case CITIZEN_CUM: {
-                        this.createAnimation("animation.bee.sex_cum", false, animationEvent);
+                        this.createAnimation("animation.bee.sex_cum", false, event);
                         break block4;
                     }
                     case THROW_PEARL: {
-                        this.createAnimation("animation.bee.throw_pearl", true, animationEvent);
+                        this.createAnimation("animation.bee.throw_pearl", true, event);
                     }
                 }
             }
@@ -343,7 +343,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -355,28 +355,28 @@ public class BeeEntity extends Supporter {
                     break;
                 }
                 case "resetCumPercentage": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "sex_fastMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "sex_startMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "sex_fastDone": {
-                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                 }
                 case "sex_startDone": {
                     this.setCurrentAction(Action.CITIZEN_SLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -386,26 +386,26 @@ public class BeeEntity extends Supporter {
                     break;
                 }
                 case "blackscreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "sex_cumDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "sex_fastReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                 }
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException b(RuntimeException runtimeException) {

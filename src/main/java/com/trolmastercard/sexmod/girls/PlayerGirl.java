@@ -206,23 +206,23 @@ public abstract class PlayerGirl extends Fighter {
         if (ei_class2512 == null) {
             return;
         }
-        ei_class2512.void_r();
+        ei_class2512.resetCameraAndPhysics();
     }
 
     @Override
-    public void void_r() {
+    public void resetCameraAndPhysics() {
         this.playerCameraOffsetPos = null;
         this.setNoGravity(false);
         if (this.world.isRemote) {
-            this.V();
+            this.resetLocalPlayerClientState();
         }
     }
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    protected void V() {
-        if (this.boolean_n() || this.boolean_f()) {
-            HandlePlayerMovement.a(true);
+    protected void resetLocalPlayerClientState() {
+        if (this.isControlledByLocalPlayer() || this.boolean_f()) {
+            HandlePlayerMovement.setMovementLock(true);
             EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
             entityPlayerSP.setInvisible(false);
             entityPlayerSP.setNoGravity(false);
@@ -437,7 +437,7 @@ public abstract class PlayerGirl extends Fighter {
             Minecraft minecraft = Minecraft.getMinecraft();
             minecraft.gameSettings.thirdPersonView = 0;
             minecraft.entityRenderer.loadEntityShader(minecraft.getRenderViewEntity());
-            HandlePlayerMovement.a(true);
+            HandlePlayerMovement.setMovementLock(true);
         }
     }
 

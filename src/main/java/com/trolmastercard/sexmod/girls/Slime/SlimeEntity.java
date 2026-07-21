@@ -344,75 +344,75 @@ extends GirlEntity {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return null;
         }
-        block4 : switch (animationEvent.getController().getName()) {
+        block4 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() == Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.slime.null", true, animationEvent);
+                    this.createAnimation("animation.slime.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.slime.fhappy", true, animationEvent);
+                this.createAnimation("animation.slime.fhappy", true, event);
                 break;
             }
             case "action": {
                 if (this.currentAction() == Action.NULL) {
-                    this.createAnimation(this.slimeActions.a, true, animationEvent);
+                    this.createAnimation(this.slimeActions.a, true, event);
                     break;
                 }
                 switch (this.currentAction()) {
                     case UNDRESS: {
-                        this.createAnimation("animation.slime.undress", false, animationEvent);
+                        this.createAnimation("animation.slime.undress", false, event);
                         break block4;
                     }
                     case DRESS: {
-                        this.createAnimation("animation.slime.dress", false, animationEvent);
+                        this.createAnimation("animation.slime.dress", false, event);
                         break block4;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.slime.strip", false, animationEvent);
+                        this.createAnimation("animation.slime.strip", false, event);
                         break block4;
                     }
                     case STARTBLOWJOB: {
-                        this.createAnimation("animation.slime.blowjobintro", false, animationEvent);
+                        this.createAnimation("animation.slime.blowjobintro", false, event);
                         break block4;
                     }
                     case SUCKBLOWJOB: {
-                        this.createAnimation("animation.slime.blowjobsuck", true, animationEvent);
+                        this.createAnimation("animation.slime.blowjobsuck", true, event);
                         break block4;
                     }
                     case THRUSTBLOWJOB: {
-                        this.createAnimation("animation.slime.blowjobthrust", true, animationEvent);
+                        this.createAnimation("animation.slime.blowjobthrust", true, event);
                         break block4;
                     }
                     case CUMBLOWJOB: {
-                        this.createAnimation("animation.slime.blowjobcum", false, animationEvent);
+                        this.createAnimation("animation.slime.blowjobcum", false, event);
                         break block4;
                     }
                     case STARTDOGGY: {
-                        this.createAnimation("animation.slime.doggygoonbed", false, animationEvent);
+                        this.createAnimation("animation.slime.doggygoonbed", false, event);
                         break block4;
                     }
                     case WAITDOGGY: {
-                        this.createAnimation("animation.slime.doggywait", true, animationEvent);
+                        this.createAnimation("animation.slime.doggywait", true, event);
                         break block4;
                     }
                     case DOGGYSTART: {
-                        this.createAnimation("animation.slime.doggystart", false, animationEvent);
+                        this.createAnimation("animation.slime.doggystart", false, event);
                         break block4;
                     }
                     case DOGGYSLOW: {
-                        this.createAnimation("animation.slime.doggyslow", true, animationEvent);
+                        this.createAnimation("animation.slime.doggyslow", true, event);
                         break block4;
                     }
                     case DOGGYFAST: {
-                        this.createAnimation("animation.slime.doggyfast", true, animationEvent);
+                        this.createAnimation("animation.slime.doggyfast", true, event);
                         break block4;
                     }
                     case DOGGYCUM: {
-                        this.createAnimation("animation.slime.doggycum", false, animationEvent);
+                        this.createAnimation("animation.slime.doggycum", false, event);
                     }
                 }
             }
@@ -421,7 +421,7 @@ extends GirlEntity {
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "undress": {
@@ -434,7 +434,7 @@ extends GirlEntity {
                     if (!this.boolean_e()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 1);
                     this.setCurrentAction((Action)null);
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "becomeNude": {
@@ -442,18 +442,18 @@ extends GirlEntity {
                     break;
                 }
                 case "sexUiOn": {
-                    if (!this.boolean_n() || SexUI.shouldBeRendered) break;
+                    if (!this.isControlledByLocalPlayer() || SexUI.shouldBeRendered) break;
                     SexUI.init();
                     break;
                 }
                 case "bjiMSG10": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.moveCamera(-0.4, -0.8, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "bjiMSG11": {
                     this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
@@ -462,20 +462,20 @@ extends GirlEntity {
                         this.a(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
                     this.a(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjtMSG1": {
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -485,7 +485,7 @@ extends GirlEntity {
                 }
                 case "bjtReady": 
                 case "doggyfastReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -495,7 +495,7 @@ extends GirlEntity {
                 }
                 case "bjcMSG2": {
                     this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.hide();
                     break;
                 }
@@ -504,15 +504,15 @@ extends GirlEntity {
                     break;
                 }
                 case "bjcBlackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "bjcDone": 
                 case "doggyCumDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     this.changeDataParameterFromClient("pregnant", String.valueOf(2400));
                     break;
                 }
@@ -548,7 +548,7 @@ extends GirlEntity {
                 }
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -565,13 +565,13 @@ extends GirlEntity {
                     } else {
                         this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "doggyfastMSG1": {
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04);
                     }
                     ++this.P;
@@ -615,8 +615,8 @@ extends GirlEntity {
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

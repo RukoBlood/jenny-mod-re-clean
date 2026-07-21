@@ -92,7 +92,7 @@ public abstract class Fighter extends GirlEntity {
     public void updateAITasks() {
         super.updateAITasks();
         if (this.ticksExisted % 80 == 0 && this.getHealth() != this.getMaxHealth()) {
-            if (!this.boolean_J()) {
+            if (!this.isMasterAssigned()) {
                 this.heal(1.0f);
             } else {
                 List<EntityMob> entityList = this.world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(new BlockPos(this.posX - 7.0, this.posY - 1.0, this.posZ - 7.0), new BlockPos(this.posX + 7.0, this.posY + 1.0, this.posZ + 7.0)));
@@ -101,7 +101,7 @@ public abstract class Fighter extends GirlEntity {
                 ((WorldServer)this.world).spawnParticle(EnumParticleTypes.HEART, false, this.posX, this.posY + 1.0 + Reference.RANDOM.nextDouble(), this.posZ, n, 1.0, 1.0, 1.0, Reference.RANDOM.nextGaussian(), new int[0]);
             }
         }
-        if (this.N && !this.boolean_J()) {
+        if (this.N && !this.isMasterAssigned()) {
             this.N = false;
         }
         this.entityDataManager.set(HAND_STATES, Byte.valueOf("1"));

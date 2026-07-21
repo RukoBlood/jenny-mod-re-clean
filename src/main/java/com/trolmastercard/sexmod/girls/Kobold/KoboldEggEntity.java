@@ -125,7 +125,7 @@ implements IAnimatable {
     }
 
     void a(KoboldEntity ff_class3082) {
-        EntityPlayer entityPlayer = ff_class3082.net_minecraft_entity_player_EntityPlayer_z();
+        EntityPlayer entityPlayer = ff_class3082.getMasterPlayer();
         if (entityPlayer == null) {
             return;
         }

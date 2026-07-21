@@ -94,7 +94,7 @@ public class GirlRenderEvent {
             return;
         }
 
-        GirlEntity girlEntity = GirlEntity.a(mc.player.getPersistentID(), false);
+        GirlEntity girlEntity = GirlEntity.getGirlByUUID(mc.player.getPersistentID(), false);
         if (girlEntity == null) {
             return;
         }

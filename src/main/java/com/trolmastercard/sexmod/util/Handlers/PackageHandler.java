@@ -74,7 +74,7 @@ public class PackageHandler {
         networkWrapper.registerMessage(DownloadServerModel.a_inner147.class, DownloadServerModel.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(DownloadServerModel.a_inner147.class, DownloadServerModel.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(SpawnEnergyBallParticlesAlt.a_inner102.class, SpawnEnergyBallParticlesAlt.class, PackageHandler.discriminator(), Side.CLIENT);
-        networkWrapper.registerMessage(GalathBackOffRape.a_inner126.class, GalathBackOffRape.class, PackageHandler.discriminator(), Side.SERVER);
+        networkWrapper.registerMessage(GalathBackOffRape.Handler.class, GalathBackOffRape.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(InformOfOwnership.Handler.class, InformOfOwnership.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(RequestRiding.Handler.class, RequestRiding.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SpawnEnergyBallParticles.Handler.class, SpawnEnergyBallParticles.class, PackageHandler.discriminator(), Side.CLIENT);

@@ -189,7 +189,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.getID() == null && (!this.boolean_J() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.getID() == null && (!this.isMasterAssigned() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.openInventoryGui(player, this, stringArray, true);
             return true;
@@ -204,7 +204,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void ac() {
         if (this.isAnchored() && !this.aa) {
-            this.void_r();
+            this.resetCameraAndPhysics();
         }
         this.aa = false;
     }
@@ -212,15 +212,15 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.world.isRemote && this.boolean_n() && this.currentAction() == Action.PRONE_DOGGY_INTRO && !fh_class313.a()) {
+        if (this.world.isRemote && this.isControlledByLocalPlayer() && this.currentAction() == Action.PRONE_DOGGY_INTRO && !fh_class313.a()) {
             SexUI.init();
         }
         this.void_d();
     }
 
     @Override
-    protected void V() {
-        super.V();
+    protected void resetLocalPlayerClientState() {
+        super.resetLocalPlayerClientState();
         this.ac = -1;
     }
 
@@ -240,7 +240,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         if (this.ac == -1) {
             if (this.world.isRemote) {
                 fh_class313.b();
-                HandlePlayerMovement.a(false);
+                HandlePlayerMovement.setMovementLock(false);
             } else {
                 this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             }
@@ -258,7 +258,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 this.setCurrentAction(Action.ANAL_START);
                 Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-            } else if (this.boolean_n()) {
+            } else if (this.isControlledByLocalPlayer()) {
                 SexUI.init();
             }
             return;
@@ -347,7 +347,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     void void_a(UUID uUID) {
         this.triggerActionSync(true, true, uUID);
-        HandlePlayerMovement.a(false);
+        HandlePlayerMovement.setMovementLock(false);
     }
 
     Vector4d javax_vecmath_Vector4d_a() {
@@ -489,12 +489,12 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 break;
             }
             case "doggy": {
-                this.void_r();
+                this.resetCameraAndPhysics();
                 PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
                 return;
             }//И где собственно код??? TODO: Код запилить
             case "anal": {
-                this.void_r();
+                this.resetCameraAndPhysics();
                 PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
                 return;
             }
@@ -517,156 +517,156 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return null;
         }
-        block5 : switch (animationEvent.getController().getName()) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.bia.null", true, animationEvent);
+                    this.createAnimation("animation.bia.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.bia.fhappy", true, animationEvent);
+                this.createAnimation("animation.bia.fhappy", true, event);
                 break;
             }
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.bia.null", true, animationEvent);
+                    this.createAnimation("animation.bia.null", true, event);
                     break;
                 }
                 if (this.isRiding()) {
-                    this.createAnimation("animation.bia.sit", true, animationEvent);
+                    this.createAnimation("animation.bia.sit", true, event);
                     break;
                 }
                 if (Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ) > 0.0) {
                     switch (this.getWalkType()) {
                         case RUN: {
-                            this.createAnimation("animation.bia.run", true, animationEvent);
+                            this.createAnimation("animation.bia.run", true, event);
                             break;
                         }
                         case FAST_WALK: {
-                            this.createAnimation("animation.bia.fastwalk", true, animationEvent);
+                            this.createAnimation("animation.bia.fastwalk", true, event);
                             break;
                         }
                         case WALK: {
-                            this.createAnimation("animation.bia.walk", true, animationEvent);
+                            this.createAnimation("animation.bia.walk", true, event);
                         }
                     }
                     this.rotationYaw = this.rotationYawHead;
                     break;
                 }
-                this.createAnimation("animation.bia.idle", true, animationEvent);
+                this.createAnimation("animation.bia.idle", true, event);
                 break;
             }
             case "action": {
                 switch (this.currentAction()) {
                     case NULL: {
-                        this.createAnimation("animation.bia.null", true, animationEvent);
+                        this.createAnimation("animation.bia.null", true, event);
                         break block5;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.bia.strip", false, animationEvent);
+                        this.createAnimation("animation.bia.strip", false, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.bia.attack" + this.S, false, animationEvent);
+                        this.createAnimation("animation.bia.attack" + this.S, false, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.bia.bowcharge", false, animationEvent);
+                        this.createAnimation("animation.bia.bowcharge", false, event);
                         break block5;
                     }
                     case RIDE: {
-                        this.createAnimation("animation.bia.ride", true, animationEvent);
+                        this.createAnimation("animation.bia.ride", true, event);
                         break block5;
                     }
                     case SIT: {
-                        this.createAnimation("animation.bia.sit", true, animationEvent);
+                        this.createAnimation("animation.bia.sit", true, event);
                         break block5;
                     }
                     case THROW_PEARL: {
-                        this.createAnimation("animation.bia.throwpearl", false, animationEvent);
+                        this.createAnimation("animation.bia.throwpearl", false, event);
                         break block5;
                     }
                     case DOWNED: {
-                        this.createAnimation("animation.bia.downed", true, animationEvent);
+                        this.createAnimation("animation.bia.downed", true, event);
                         break block5;
                     }
                     case TALK_HORNY: {
-                        this.createAnimation("animation.bia.talk_horny2", true, animationEvent);
+                        this.createAnimation("animation.bia.talk_horny2", true, event);
                         break block5;
                     }
                     case TALK_IDLE: {
-                        this.createAnimation("animation.bia.talk_idle2", true, animationEvent);
+                        this.createAnimation("animation.bia.talk_idle2", true, event);
                         break block5;
                     }
                     case TALK_RESPONSE: {
-                        this.createAnimation("animation.bia.talk_response", true, animationEvent);
+                        this.createAnimation("animation.bia.talk_response", true, event);
                         break block5;
                     }
                     case ANAL_PREPARE: {
-                        this.createAnimation("animation.bia.anal_prepare", false, animationEvent);
+                        this.createAnimation("animation.bia.anal_prepare", false, event);
                         break block5;
                     }
                     case ANAL_WAIT: {
-                        this.createAnimation("animation.bia.anal_wait", false, animationEvent);
+                        this.createAnimation("animation.bia.anal_wait", false, event);
                         break block5;
                     }
                     case ANAL_START: {
-                        this.createAnimation("animation.bia.anal_start", true, animationEvent);
+                        this.createAnimation("animation.bia.anal_start", true, event);
                         break block5;
                     }
                     case ANAL_SLOW: {
-                        this.createAnimation("animation.bia.anal_slow", true, animationEvent);
+                        this.createAnimation("animation.bia.anal_slow", true, event);
                         break block5;
                     }
                     case ANAL_FAST: {
-                        this.createAnimation("animation.bia.anal_fast", true, animationEvent);
+                        this.createAnimation("animation.bia.anal_fast", true, event);
                         break block5;
                     }
                     case ANAL_CUM: {
-                        this.createAnimation("animation.bia.anal_cum", false, animationEvent);
+                        this.createAnimation("animation.bia.anal_cum", false, event);
                         break block5;
                     }
                     case HEAD_PAT: {
-                        this.createAnimation("animation.bia.headpat", false, animationEvent);
+                        this.createAnimation("animation.bia.headpat", false, event);
                         break block5;
                     }
                     case SITDOWN: {
-                        this.createAnimation("animation.bia.sitdown", false, animationEvent);
+                        this.createAnimation("animation.bia.sitdown", false, event);
                         break block5;
                     }
                     case SITDOWNIDLE: {
-                        this.createAnimation("animation.bia.sitdownidle", true, animationEvent);
+                        this.createAnimation("animation.bia.sitdownidle", true, event);
                         break block5;
                     }
                     case PRONE_DOGGY_INTRO: {
-                        this.createAnimation("animation.bia.prone_doggy_intro", true, animationEvent);
+                        this.createAnimation("animation.bia.prone_doggy_intro", true, event);
                         break block5;
                     }
                     case PRONE_DOGGY_INSERT: {
-                        this.createAnimation("animation.bia.prone_doggy_insert", true, animationEvent);
+                        this.createAnimation("animation.bia.prone_doggy_insert", true, event);
                         break block5;
                     }
                     case PRONE_DOGGY_SOFT: {
-                        this.createAnimation("animation.bia.prone_doggy_soft", true, animationEvent);
+                        this.createAnimation("animation.bia.prone_doggy_soft", true, event);
                         break block5;
                     }
                     case PRONE_DOGGY_HARD: {
-                        this.createAnimation("animation.bia.prone_doggy_hard" + this.ah, true, animationEvent);
+                        this.createAnimation("animation.bia.prone_doggy_hard" + this.ah, true, event);
                         break block5;
                     }
                     case PRONE_DOGGY_CUM: {
-                        this.createAnimation("animation.bia.prone_doggy_cum", true, animationEvent);
+                        this.createAnimation("animation.bia.prone_doggy_cum", true, event);
                         break block5;
                     }
                     case WAVE_IDLE: {
-                        this.createAnimation("animation.bia.wave_idle", true, animationEvent);
+                        this.createAnimation("animation.bia.wave_idle", true, event);
                         break block5;
                     }
                     case WAVE: {
-                        this.createAnimation("animation.bia.wave", true, animationEvent);
+                        this.createAnimation("animation.bia.wave", true, event);
                     }
                 }
             }
@@ -676,7 +676,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -694,7 +694,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "stripDone": {
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     this.U();
                     break;
                 }
@@ -704,7 +704,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "sexUiOn": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -734,7 +734,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "talk_hornyDone": {
                     this.setCurrentAction(Action.TALK_IDLE);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.void_b(Minecraft.getMinecraft().player);
                     break;
                 }
@@ -754,8 +754,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "talk_responseDone": {
-                    if (this.boolean_n()) {
-                        this.s();
+                    if (this.isControlledByLocalPlayer()) {
+                        this.resetGirlState();
                     }
                     this.U();
                     break;
@@ -770,7 +770,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "anal_prepareDone": {
                     this.setCurrentAction(Action.ANAL_WAIT);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -780,13 +780,13 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "anal_fastMSG1": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
                 }
                 case "anal_slowMSG1": 
                 case "anal_startMSG2": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
@@ -794,11 +794,11 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "anal_fastDone": {
-                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                 }
                 case "anal_startDone": {
                     this.setCurrentAction(Action.ANAL_SLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -808,15 +808,15 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "blackScreen": 
                 case "anal_cumBlackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "doggy_cumDone": 
                 case "anal_cumDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "headpatMSG1": {
@@ -840,7 +840,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "headpatDone": {
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "sitdownMSG1": {
@@ -854,7 +854,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "slide": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SLIDE));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.005);
                     break;
                 }
@@ -864,17 +864,17 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "doggyMoan": {
                     this.PlaySound(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_BIA_AHH : SoundsHandler.GIRLS_BIA_MMM, new int[0]);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "doggySwitch": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.PRONE_DOGGY_HARD);
                     break;
                 }
                 case "doggyReset": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -892,9 +892,9 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
     }
 }
 

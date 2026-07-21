@@ -426,7 +426,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (itemStack2.getItem() != DragonStaffItem.DRAGON_STAFF) {
             itemStack2 = entityPlayer.getHeldItem(EnumHand.OFF_HAND);
         }
-        if (!this.boolean_J() && itemStack2.getItem() == DragonStaffItem.DRAGON_STAFF) {
+        if (!this.isMasterAssigned() && itemStack2.getItem() == DragonStaffItem.DRAGON_STAFF) {
             if (!this.world.isRemote) {
                 return true;
             }
@@ -440,12 +440,12 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.m((UUID)optional.get());
             return true;
         }
-        if (this.boolean_J() && itemStack2.getItem() == DragonStaffItem.DRAGON_STAFF && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
+        if (this.isMasterAssigned() && itemStack2.getItem() == DragonStaffItem.DRAGON_STAFF && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
             entityPlayer.openGui(Main.instance, 1, this.world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
             return true;
         }
         if (this.world.isRemote) {
-            if (this.boolean_J() && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
+            if (this.isMasterAssigned() && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
                 this.a(SoundsHandler.GIRLS_KOBOLD_MASTER);
             }
             this.openGuiForPlayer(entityPlayer);
@@ -468,7 +468,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     @Override
     @SideOnly(value=Side.CLIENT)
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.boolean_J() && player.getPersistentID().toString().equals(this.entityDataManager.get(MASTER_UUID))) {
+        if (this.isMasterAssigned() && player.getPersistentID().toString().equals(this.entityDataManager.get(MASTER_UUID))) {
             Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral", "mating"}, null, false));
             return true;
         }
@@ -492,14 +492,14 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     @Override
-    public void void_r() {
+    public void resetCameraAndPhysics() {
         this.Q = false;
-        super.void_r();
+        super.resetCameraAndPhysics();
     }
 
     protected void a(boolean bl, UUID uUID) {
         super.triggerActionSync(bl, true, uUID);
-        HandlePlayerMovement.a(false);
+        HandlePlayerMovement.setMovementLock(false);
     }
 
     @Override
@@ -610,7 +610,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (optional.isPresent()) {
             this.o((UUID)optional.get());
             KoboldManager.k((UUID)optional.get());
-            EntityPlayer object = this.net_minecraft_entity_player_EntityPlayer_z();
+            EntityPlayer object = this.getMasterPlayer();
             if (object != null) {
                 KoboldManager.a((UUID)optional.get(), object.getPersistentID());
             }
@@ -690,7 +690,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (this.world.getTotalWorldTime() - 300L < aV) {
             return;
         }
-        if (!this.boolean_J()) {
+        if (!this.isMasterAssigned()) {
             return;
         }
         if (this.currentAction() != Action.NULL) {
@@ -730,7 +730,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (!this.entityDataManager.get(ak).booleanValue()) {
             return;
         }
-        if (!this.boolean_J()) {
+        if (!this.isMasterAssigned()) {
             return;
         }
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.entityDataManager.get(MASTER_UUID)));
@@ -744,7 +744,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (this.entityDataManager.get(aC).booleanValue()) {
             return;
         }
-        if (this.boolean_J()) {
+        if (this.isMasterAssigned()) {
             return;
         }
         Optional<UUID> optional = this.entityDataManager.get(aL);
@@ -783,7 +783,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         String string = this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES);
         boolean bl2 = this.getActivePotionEffect(HornyPotion.HORNY_POTION) != null;
         boolean bl3 = false;
-        if (this.boolean_J()) {
+        if (this.isMasterAssigned()) {
             bl3 = ((String)this.entityDataManager.get(MASTER_UUID)).equals(this.getID().toString());
         }
         boolean bl4 = bl = !bl2 && !bl3;
@@ -858,10 +858,10 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         UUID uUID = (UUID)optional.get();
         if (!this.entityDataManager.get(aC).booleanValue() && KoboldManager.c(uUID)) {
-            if (!this.boolean_J()) {
+            if (!this.isMasterAssigned()) {
                 return;
             }
-            EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_z();
+            EntityPlayer entityPlayer = this.getMasterPlayer();
             if (entityPlayer == null) {
                 return;
             }
@@ -917,7 +917,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (this.d_(uUID)) { // TODO clash below
             return;
         }
-        if (!this.boolean_J() && KoboldManager.g(uUID)) {
+        if (!this.isMasterAssigned() && KoboldManager.g(uUID)) {
             this.getNavigator().clearPath();
             this.aM = null;
             return;
@@ -961,7 +961,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     void q(UUID uUID) {
-        if (!this.boolean_J()) {
+        if (!this.isMasterAssigned()) {
             return;
         }
         List<KoboldEntity> list = KoboldManager.n(uUID);
@@ -982,7 +982,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 bs_class972.c(this);
             }
         }
-        if (this.boolean_J()) {
+        if (this.isMasterAssigned()) {
             this.void_i(uUID);
         } else {
             this.void_a(uUID);
@@ -1064,7 +1064,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     void void_c(UUID uUID) {
-        if (this.boolean_J()) {
+        if (this.isMasterAssigned()) {
             KoboldManager.b(uUID, (BlockPos) null);
             this.g_(uUID);
             return;
@@ -1215,7 +1215,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return false;
         }
         for (KoboldEntity object2 : this.world.getEntitiesWithinAABB(KoboldEntity.class, new AxisAlignedBB(ff_class3082.posX - 30.0, ff_class3082.posY - 30.0, ff_class3082.posZ - 30.0, ff_class3082.posX + 30.0, ff_class3082.posY + 30.0, ff_class3082.posZ + 30.0))) {
-            if (!this.canEntityBeSeen(object2) || object2.boolean_J() && this.boolean_J()) continue;
+            if (!this.canEntityBeSeen(object2) || object2.isMasterAssigned() && this.isMasterAssigned()) continue;
             Optional<UUID> optional = object2.getDataManager().get(aL);
             if (!optional.isPresent()) {
                 hashSet.add(object2);
@@ -1332,7 +1332,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         if (bs_class972 == null) {
             for (bs_class97 bs_class973 : collection) {
-                if (this.boolean_J() && !this.c(uUID, bs_class973)) continue;
+                if (this.isMasterAssigned() && !this.c(uUID, bs_class973)) continue;
                 if (!this.a(bs_class973)) {
                     this.ax = true;
                     continue;
@@ -1380,7 +1380,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             IBlockState iBlockState = this.world.getBlockState(this.aI.up());
             if (!(iBlockState.getBlock() instanceof BlockFalling)) {
                 bs_class972.a(this.aI);
-                EntityPlayer object = this.net_minecraft_entity_player_EntityPlayer_z();
+                EntityPlayer object = this.getMasterPlayer();
                 if (object != null) {
                     PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(this.aI, false), (EntityPlayerMP)object);
                 }
@@ -1755,7 +1755,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
                 if (!var12.isEmpty()) {
                     var1.a(var12);
-                    EntityPlayer var23 = this.net_minecraft_entity_player_EntityPlayer_z(); // TODO???
+                    EntityPlayer var23 = this.getMasterPlayer(); // TODO???
                     if (var23 != null) {
                         PackageHandler.networkWrapper.sendTo(new SendBlocks(var12, true), (EntityPlayerMP)var23);
                     }
@@ -1934,7 +1934,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     void void_e() {
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 15.0);
-        if (this.boolean_J() && entityPlayer != null && entityPlayer.getDistance(this) < 2.0f && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
+        if (this.isMasterAssigned() && entityPlayer != null && entityPlayer.getDistance(this) < 2.0f && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
             this.getNavigator().clearPath();
             return;
         }
@@ -2171,7 +2171,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.W = 0;
             this.setCurrentAction(Action.NULL);
             this.entityDataManager.set(IS_ANCHORED, false);
-            EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_z();
+            EntityPlayer entityPlayer = this.getMasterPlayer();
             HashSet<BlockPos> hashSet = bs_class972.g();
             if (entityPlayer != null && !hashSet.isEmpty()) {
                 PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), (EntityPlayerMP)entityPlayer);
@@ -2197,7 +2197,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         this.ad = null;
         this.setCurrentAction(Action.NULL);
         this.setAnchored(false);
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_z();
+        EntityPlayer entityPlayer = this.getMasterPlayer();
         HashSet<BlockPos> hashSet = bs_class972.g();
         if (entityPlayer != null && !hashSet.isEmpty()) {
             PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), (EntityPlayerMP)entityPlayer);
@@ -2228,7 +2228,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         this.aR = 24;
         this.W = 78;
         HashSet<BlockPos> hashSet = new HashSet<BlockPos>();
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_z();
+        EntityPlayer entityPlayer = this.getMasterPlayer();
         for (BlockPos object2 : bs_class972.g()) {
             if (this.world.getBlockState(object2).getBlock() == Blocks.AIR) {
                 hashSet.add(object2);
@@ -2361,7 +2361,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         if (vec3i == null) {
             KoboldManager.b(uUID, this);
-            object = this.net_minecraft_entity_player_EntityPlayer_z();
+            object = this.getMasterPlayer();
             if (object == null) {
                 return;
             }
@@ -2440,7 +2440,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         UUID uUID = (UUID)optional.get();
         KoboldManager.a(uUID, this);
-        if (this.boolean_J() && (player = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.getDataManager().get(MASTER_UUID)))) != null) {
+        if (this.isMasterAssigned() && (player = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.getDataManager().get(MASTER_UUID)))) != null) {
             player.sendMessage(new TextComponentString(String.format("%s%s%s has perished %suwu", new Object[]{TextFormatting.RED, this.getGirlName(), TextFormatting.WHITE, TextFormatting.RED})));
         }
     }
@@ -2635,7 +2635,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
@@ -2644,22 +2644,22 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         float f = 0.25f - this.getDataManager().get(aE).floatValue();
         GeckoLibCache.getInstance().parser.setValue("size", f);
-        block5 : switch (animationEvent.getController().getName()) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.kobold.null", true, animationEvent);
+                    this.createAnimation("animation.kobold.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.kobold.blink", true, animationEvent);
+                this.createAnimation("animation.kobold.blink", true, event);
                 break;
             }
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.kobold.null", true, animationEvent);
+                    this.createAnimation("animation.kobold.null", true, event);
                     break;
                 }
                 if (this.isRiding()) {
-                    this.createAnimation("animation.kobold.sit", true, animationEvent);
+                    this.createAnimation("animation.kobold.sit", true, event);
                     break;
                 }
                 double d = Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ);
@@ -2669,105 +2669,105 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                         double d2 = 1.0 + (double)(f * 2.0f);
                         this.movementController.setAnimationSpeed(d2);
                         if (this.boolean_a()) {
-                            this.createAnimation("animation.kobold.crouch_walk", true, animationEvent);
+                            this.createAnimation("animation.kobold.crouch_walk", true, event);
                             break;
                         }
                         if (this.entityDataManager.get(aC).booleanValue()) {
-                            this.createAnimation("animation.kobold.run_armed", true, animationEvent);
+                            this.createAnimation("animation.kobold.run_armed", true, event);
                             break;
                         }
                         if (d > (double)0.2f) {
-                            this.createAnimation("animation.kobold.run", true, animationEvent);
+                            this.createAnimation("animation.kobold.run", true, event);
                             break;
                         }
-                        this.createAnimation("animation.kobold.walk", true, animationEvent);
+                        this.createAnimation("animation.kobold.walk", true, event);
                         break;
                     }
-                    this.createAnimation("animation.kobold.fly", true, animationEvent);
+                    this.createAnimation("animation.kobold.fly", true, event);
                     break;
                 }
                 if (this.boolean_a()) {
-                    this.createAnimation("animation.kobold.crouch_idle", true, animationEvent);
+                    this.createAnimation("animation.kobold.crouch_idle", true, event);
                     break;
                 }
-                this.createAnimation(this.entityDataManager.get(aC) != false ? "animation.kobold.idle_armed" : "animation.kobold.idle", true, animationEvent);
+                this.createAnimation(this.entityDataManager.get(aC) != false ? "animation.kobold.idle_armed" : "animation.kobold.idle", true, event);
                 break;
             }
             case "action": {
                 switch (this.currentAction()) {
                     case NULL: {
-                        this.createAnimation("animation.kobold.null", true, animationEvent);
+                        this.createAnimation("animation.kobold.null", true, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.kobold.attack", false, animationEvent);
+                        this.createAnimation("animation.kobold.attack", false, event);
                         break block5;
                     }
                     case RIDE: 
                     case SIT: {
-                        this.createAnimation("animation.kobold.sit", true, animationEvent);
+                        this.createAnimation("animation.kobold.sit", true, event);
                         break block5;
                     }
                     case MINE: {
-                        this.createAnimation("animation.kobold.fall_tree", true, animationEvent);
+                        this.createAnimation("animation.kobold.fall_tree", true, event);
                         break block5;
                     }
                     case PAYMENT: {
-                        this.createAnimation("animation.kobold.paymentBackpack", true, animationEvent);
+                        this.createAnimation("animation.kobold.paymentBackpack", true, event);
                         break block5;
                     }
                     case STARTBLOWJOB: {
-                        this.createAnimation("animation.kobold.blowjobStart", false, animationEvent);
+                        this.createAnimation("animation.kobold.blowjobStart", false, event);
                         break block5;
                     }
                     case SUCKBLOWJOB_BLINK: {
                         String string = this.a4 ? "R" : "L";
                         String string2 = this.aT ? "Switch" : "";
-                        this.createAnimation("animation.kobold.blowjobSlow" + string + string2, true, animationEvent);
+                        this.createAnimation("animation.kobold.blowjobSlow" + string + string2, true, event);
                         break block5;
                     }
                     case THRUSTBLOWJOB: {
-                        this.createAnimation("animation.kobold.blowjobFast", true, animationEvent);
+                        this.createAnimation("animation.kobold.blowjobFast", true, event);
                         break block5;
                     }
                     case CUMBLOWJOB: {
-                        this.createAnimation("animation.kobold.blowjobCum", false, animationEvent);
+                        this.createAnimation("animation.kobold.blowjobCum", false, event);
                         break block5;
                     }
                     case KOBOLD_ANAL_START: {
-                        this.createAnimation("animation.kobold.analStart", false, animationEvent);
+                        this.createAnimation("animation.kobold.analStart", false, event);
                         break block5;
                     }
                     case KOBOLD_ANAL_SLOW: {
-                        this.createAnimation("animation.kobold.analSoft", true, animationEvent);
+                        this.createAnimation("animation.kobold.analSoft", true, event);
                         break block5;
                     }
                     case KOBOLD_ANAL_FAST: {
-                        this.createAnimation("animation.kobold.analHard", true, animationEvent);
+                        this.createAnimation("animation.kobold.analHard", true, event);
                         break block5;
                     }
                     case KOBOLD_ANAL_CUM: {
-                        this.createAnimation("animation.kobold.analCum", true, animationEvent);
+                        this.createAnimation("animation.kobold.analCum", true, event);
                         break block5;
                     }
                     case SLEEP: {
-                        this.createAnimation("animation.kobold.sleep", true, animationEvent);
+                        this.createAnimation("animation.kobold.sleep", true, event);
                         break block5;
                     }
                     case MATING_PRESS_START: {
-                        this.createAnimation("animation.kobold.mating_press_start", false, animationEvent);
+                        this.createAnimation("animation.kobold.mating_press_start", false, event);
                         break block5;
                     }
                     case MATING_PRESS_SOFT: {
-                        this.createAnimation("animation.kobold.mating_press_soft", true, animationEvent);
+                        this.createAnimation("animation.kobold.mating_press_soft", true, event);
                         break block5;
                     }
                     case MATING_PRESS_HARD: {
-                        this.createAnimation("animation.kobold.mating_press_hard", true, animationEvent);
+                        this.createAnimation("animation.kobold.mating_press_hard", true, event);
                         break block5;
                     }
                     case MATING_PRESS_CUM: {
-                        this.createAnimation("animation.kobold.mating_press_cum", true, animationEvent);
+                        this.createAnimation("animation.kobold.mating_press_cum", true, event);
                     }
                 }
             }
@@ -2777,7 +2777,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -2797,24 +2797,24 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "blackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "paymentDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.U();
                     break;
                 }
                 case "blowjobStartMSG1": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
@@ -2837,7 +2837,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     this.setCurrentAction(Action.SUCKBLOWJOB_BLINK);
                     this.aT = false;
                     this.a4 = true;
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -2853,7 +2853,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "blowjobFastDone": {
-                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.SUCKBLOWJOB_BLINK);
                     break;
                 }
@@ -2867,19 +2867,19 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 }
                 case "analCumDone": 
                 case "blowjobCumDone": {
-                    if (!this.boolean_n()) break;
-                    this.void_r();
+                    if (!this.isControlledByLocalPlayer()) break;
+                    this.resetCameraAndPhysics();
                     SexUI.hide();
                     break;
                 }
                 case "analStartDone": {
                     this.setCurrentAction(Action.KOBOLD_ANAL_SLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
                 case "analStartCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
@@ -2890,7 +2890,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "analFastRapid": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     if (this.currentAction() == Action.KOBOLD_ANAL_FAST) {
                         this.actionController.tickOffset = 0.0;
                     }
@@ -2903,12 +2903,12 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "analHard": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "analSoft": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
@@ -2968,7 +2968,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "matingCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
                     vec3d = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
@@ -2977,33 +2977,33 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "mating_press_startDone": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.init();
                     }
                 }
                 case "mating_press_hardDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.MATING_PRESS_SOFT);
                     break;
                 }
                 case "mating_press_softReady": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.MATING_PRESS_HARD);
                     break;
                 }
                 case "mating_press_hardReady": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "mating_cum_cam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
                     vec3d = VectorMath.rotate(vec3d, this.getYawRotation() + 180.0f);
@@ -3022,16 +3022,16 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "mating_press_cumDone": {
-                    if (!this.boolean_n()) break;
-                    this.void_r();
+                    if (!this.isControlledByLocalPlayer()) break;
+                    this.resetCameraAndPhysics();
                 }
             }
         };
         this.movementController.transitionLengthTicks = 10.0;
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
     }
 
     @Override
@@ -3162,11 +3162,11 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 if (entityPlayer.capabilities.isCreativeMode) {
                     return;
                 }
-                if (entityPlayer.equals(ff_class3082.net_minecraft_entity_player_EntityPlayer_z())) {
+                if (entityPlayer.equals(ff_class3082.getMasterPlayer())) {
                     return;
                 }
             }
-            if ((entityPlayer = ff_class3082.net_minecraft_entity_player_EntityPlayer_z()) != null) {
+            if ((entityPlayer = ff_class3082.getMasterPlayer()) != null) {
                 entityPlayer.sendStatusMessage(new TextComponentString((Object)((Object)TextFormatting.RED) + "Your Tribe is under Attack!"), true);
             }
             KoboldManager.a((UUID)optional.get(), (EntityLivingBase)entity2);

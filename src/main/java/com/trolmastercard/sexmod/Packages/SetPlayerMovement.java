@@ -47,7 +47,7 @@ public class SetPlayerMovement implements IMessage {
                 System.out.println("received an invalid message @SetPlayerMovement :(");
                 return null;
             }
-            HandlePlayerMovement.a(message.setActive);
+            HandlePlayerMovement.setMovementLock(message.setActive);
             Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
             if (message.setActive) {
                 SexUI.hide();

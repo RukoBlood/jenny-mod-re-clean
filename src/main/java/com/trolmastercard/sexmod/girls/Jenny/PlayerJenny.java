@@ -189,142 +189,142 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        block5 : switch (animationEvent.getController().getName()) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.jenny.null", true, animationEvent);
+                    this.createAnimation("animation.jenny.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.jenny.fhappy", true, animationEvent);
+                this.createAnimation("animation.jenny.fhappy", true, event);
                 break;
             }
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.jenny.null", true, animationEvent);
+                    this.createAnimation("animation.jenny.null", true, event);
                     break;
                 }
                 if (this.isPlayerRiding) {
-                    this.createAnimation("animation.jenny.sit", true, animationEvent);
+                    this.createAnimation("animation.jenny.sit", true, event);
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.ap = !this.ap;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.jenny.fly" + (this.ap ? "2" : ""), true, animationEvent);
+                    this.createAnimation("animation.jenny.fly" + (this.ap ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2f);
-                        this.createAnimation("animation.jenny.run", true, animationEvent);
+                        this.createAnimation("animation.jenny.run", true, event);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(1.5);
-                        this.createAnimation("animation.jenny.fastwalk", true, animationEvent);
+                        this.createAnimation("animation.jenny.fastwalk", true, event);
                         break;
                     }
                     this.movementController.setAnimationSpeed(1.2f);
-                    this.createAnimation("animation.jenny.backwards_walk", true, animationEvent);
+                    this.createAnimation("animation.jenny.backwards_walk", true, event);
                     break;
                 }
-                this.createAnimation("animation.jenny.idle", true, animationEvent);
+                this.createAnimation("animation.jenny.idle", true, event);
                 break;
             }
             case "action": {
                 switch (this.currentAction()) {
                     case NULL: {
-                        this.createAnimation("animation.jenny.null", true, animationEvent);
+                        this.createAnimation("animation.jenny.null", true, event);
                         break block5;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.jenny.strip", false, animationEvent);
+                        this.createAnimation("animation.jenny.strip", false, event);
                         break block5;
                     }
                     case PAYMENT: {
-                        this.createAnimation("animation.jenny.payment", false, animationEvent);
+                        this.createAnimation("animation.jenny.payment", false, event);
                         break block5;
                     }
                     case STARTBLOWJOB: {
-                        this.createAnimation("animation.jenny.blowjobintro", false, animationEvent);
+                        this.createAnimation("animation.jenny.blowjobintro", false, event);
                         break block5;
                     }
                     case SUCKBLOWJOB: {
-                        this.createAnimation("animation.jenny.blowjobsuck", true, animationEvent);
+                        this.createAnimation("animation.jenny.blowjobsuck", true, event);
                         break block5;
                     }
                     case THRUSTBLOWJOB: {
-                        this.createAnimation("animation.jenny.blowjobthrust", true, animationEvent);
+                        this.createAnimation("animation.jenny.blowjobthrust", true, event);
                         break block5;
                     }
                     case CUMBLOWJOB: {
-                        this.createAnimation("animation.jenny.blowjobcum", false, animationEvent);
+                        this.createAnimation("animation.jenny.blowjobcum", false, event);
                         break block5;
                     }
                     case STARTDOGGY: {
-                        this.createAnimation("animation.jenny.doggygoonbed", false, animationEvent);
+                        this.createAnimation("animation.jenny.doggygoonbed", false, event);
                         break block5;
                     }
                     case WAITDOGGY: {
-                        this.createAnimation("animation.jenny.doggywait", true, animationEvent);
+                        this.createAnimation("animation.jenny.doggywait", true, event);
                         break block5;
                     }
                     case DOGGYSTART: {
-                        this.createAnimation("animation.jenny.doggystart", false, animationEvent);
+                        this.createAnimation("animation.jenny.doggystart", false, event);
                         break block5;
                     }
                     case DOGGYSLOW: {
-                        this.createAnimation("animation.jenny.doggyslow", true, animationEvent);
+                        this.createAnimation("animation.jenny.doggyslow", true, event);
                         break block5;
                     }
                     case DOGGYFAST: {
-                        this.createAnimation("animation.jenny.doggyfast_" + (this.ar ? "hard" : "soft"), true, animationEvent);
+                        this.createAnimation("animation.jenny.doggyfast_" + (this.ar ? "hard" : "soft"), true, event);
                         break block5;
                     }
                     case DOGGYCUM: {
-                        this.createAnimation("animation.jenny.doggycum", false, animationEvent);
+                        this.createAnimation("animation.jenny.doggycum", false, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.jenny.attack" + this.S, false, animationEvent);
+                        this.createAnimation("animation.jenny.attack" + this.S, false, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.jenny.bowcharge", false, animationEvent);
+                        this.createAnimation("animation.jenny.bowcharge", false, event);
                         break block5;
                     }
                     case RIDE: {
-                        this.createAnimation("animation.jenny.ride", true, animationEvent);
+                        this.createAnimation("animation.jenny.ride", true, event);
                         break block5;
                     }
                     case SIT: {
-                        this.createAnimation("animation.jenny.sit", true, animationEvent);
+                        this.createAnimation("animation.jenny.sit", true, event);
                         break block5;
                     }
                     case THROW_PEARL: {
-                        this.createAnimation("animation.jenny.throwpearl", false, animationEvent);
+                        this.createAnimation("animation.jenny.throwpearl", false, event);
                         break block5;
                     }
                     case DOWNED: {
-                        this.createAnimation("animation.jenny.downed", true, animationEvent);
+                        this.createAnimation("animation.jenny.downed", true, event);
                         break block5;
                     }
                     case PAIZURI_START: {
-                        this.createAnimation("animation.jenny.paizuri_start", false, animationEvent);
+                        this.createAnimation("animation.jenny.paizuri_start", false, event);
                         break block5;
                     }
                     case PAIZURI_SLOW: {
-                        this.createAnimation("animation.jenny.paizuri_slow", true, animationEvent);
+                        this.createAnimation("animation.jenny.paizuri_slow", true, event);
                         break block5;
                     }
                     case PAIZURI_FAST: {
-                        this.createAnimation("animation.jenny.paizuri_fast", true, animationEvent);
+                        this.createAnimation("animation.jenny.paizuri_fast", true, event);
                         break block5;
                     }
                     case PAIZURI_CUM: {
-                        this.createAnimation("animation.jenny.paizuri_cum", false, animationEvent);
+                        this.createAnimation("animation.jenny.paizuri_cum", false, event);
                     }
                 }
             }
@@ -333,7 +333,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -384,7 +384,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "sexUiOn": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -400,7 +400,7 @@ public class PlayerJenny extends PlayerGirl {
                     this.h("What are you...");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
                     this.cameraYaw = 180.0f;
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -421,7 +421,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "bjiMSG5": {
                     this.h("Was this really necessary?!");
                     this.a(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -446,13 +446,13 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG10": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.moveCamera(-0.4, -0.8, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "bjiMSG11": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
@@ -461,20 +461,20 @@ public class PlayerJenny extends PlayerGirl {
                         this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_BJMOAN));
                     }
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjtMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MMM));
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -483,14 +483,14 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggyfastReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     this.ar = true;
                     break;
                 }
                 case "bjtReady": 
                 case "paizuriReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -500,7 +500,7 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "bjcMSG2": {
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_BJMOAN[7]);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.hide();
                     break;
                 }
@@ -525,16 +525,16 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjcBlackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "bjcDone": 
                 case "paizuri_cumDone": 
                 case "doggyCumDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "doggyGoOnBedMSG1": {
@@ -576,7 +576,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "doggystartMSG4": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[1]);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -587,7 +587,7 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -605,7 +605,7 @@ public class PlayerJenny extends PlayerGirl {
                     } else {
                         this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING));
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.00666);
                     break;
                 }
@@ -615,7 +615,7 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "doggyfastMSG1": {
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
                     ++this.aq;
@@ -663,14 +663,14 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "boobjob_camera": {
-                    if (!this.boolean_n() || this.as) break;
+                    if (!this.isControlledByLocalPlayer() || this.as) break;
                     this.as = true;
                     this.cameraYaw = 180.0f;
                     this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                     break;
                 }
                 case "paizuri_startDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.PAIZURI_SLOW);
                     SexUI.resetCumPercentage();
                     SexUI.init();
@@ -683,20 +683,20 @@ public class PlayerJenny extends PlayerGirl {
                     } else {
                         this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_AHH));
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "paizuriSlowMSG1": 
                 case "paizuriStartMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "paizuri_fastDone": {
                     this.setCurrentAction(Action.PAIZURI_SLOW);
-                    if (!this.boolean_n() || this.as) break;
+                    if (!this.isControlledByLocalPlayer() || this.as) break;
                     this.as = true;
                     this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                     break;
@@ -707,15 +707,15 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "paizuri_cumStart": {
-                    if (!this.boolean_n() || this.as) break;
+                    if (!this.isControlledByLocalPlayer() || this.as) break;
                     this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                 }
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

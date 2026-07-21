@@ -198,7 +198,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.getID() == null && (!this.boolean_J() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.getID() == null && (!this.isMasterAssigned() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
                 GirlEntity.openInventoryGui(player, this, stringArray, true);
@@ -232,7 +232,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     protected void a(boolean bl, UUID uUID) {
         super.triggerActionSync(bl, true, uUID);
-        HandlePlayerMovement.a(false);
+        HandlePlayerMovement.setMovementLock(false);
     }
 
     @Override
@@ -357,7 +357,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     protected void U() {
         switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
             case "strip": {
-                this.s();
+                this.resetGirlState();
                 this.setCurrentAction(Action.STRIP);
                 break;
             }
@@ -376,15 +376,15 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             case "doggy": {
                 if (this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) != 0) {
                     this.setCurrentAction(Action.STRIP);
-                    this.s();
+                    this.resetGirlState();
                     return;
                 }
-                this.void_r();
+                this.resetCameraAndPhysics();
                 if (this.world.isRemote) {
                     PackageHandler.networkWrapper.sendToServer(new SendGirlToSex(this.girlID()));
                     break;
                 }
-                this.s();
+                this.resetGirlState();
                 this.goToSexBed();
             }
         }
@@ -396,148 +396,148 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return null;
         }
-        block5 : switch (animationEvent.getController().getName()) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.jenny.null", true, animationEvent);
+                    this.createAnimation("animation.jenny.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.jenny.fhappy", true, animationEvent);
+                this.createAnimation("animation.jenny.fhappy", true, event);
                 break;
             }
             case "movement": {
                 if (this.currentAction() != Action.NULL && this.currentAction() != null) {
-                    this.createAnimation("animation.jenny.null", true, animationEvent);
+                    this.createAnimation("animation.jenny.null", true, event);
                     break;
                 }
                 if (this.isRiding()) {
-                    this.createAnimation("animation.jenny.sit", true, animationEvent);
+                    this.createAnimation("animation.jenny.sit", true, event);
                     break;
                 }
                 if (Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ) > 0.0) {
                     switch (this.getWalkType()) {
                         case RUN: {
-                            this.createAnimation("animation.jenny.run", true, animationEvent);
+                            this.createAnimation("animation.jenny.run", true, event);
                             break;
                         }
                         case FAST_WALK: {
-                            this.createAnimation("animation.jenny.fastwalk", true, animationEvent);
+                            this.createAnimation("animation.jenny.fastwalk", true, event);
                             break;
                         }
                         case WALK: {
-                            this.createAnimation("animation.jenny.walk", true, animationEvent);
+                            this.createAnimation("animation.jenny.walk", true, event);
                         }
                     }
                     this.rotationYaw = this.rotationYawHead;
                     break;
                 }
-                this.createAnimation("animation.jenny.idle", true, animationEvent);
+                this.createAnimation("animation.jenny.idle", true, event);
                 break;
             }
             case "action": {
                 switch (this.currentAction()) {
                     case NULL: {
-                        this.createAnimation("animation.jenny.null", true, animationEvent);
+                        this.createAnimation("animation.jenny.null", true, event);
                         break block5;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.jenny.strip", false, animationEvent);
+                        this.createAnimation("animation.jenny.strip", false, event);
                         break block5;
                     }
                     case PAYMENT: {
-                        this.createAnimation("animation.jenny.payment", false, animationEvent);
+                        this.createAnimation("animation.jenny.payment", false, event);
                         break block5;
                     }
                     case STARTBLOWJOB: {
-                        this.createAnimation("animation.jenny.blowjobintro", false, animationEvent);
+                        this.createAnimation("animation.jenny.blowjobintro", false, event);
                         break block5;
                     }
                     case SUCKBLOWJOB: {
-                        this.createAnimation("animation.jenny.blowjobsuck", true, animationEvent);
+                        this.createAnimation("animation.jenny.blowjobsuck", true, event);
                         break block5;
                     }
                     case THRUSTBLOWJOB: {
-                        this.createAnimation("animation.jenny.blowjobthrust", true, animationEvent);
+                        this.createAnimation("animation.jenny.blowjobthrust", true, event);
                         break block5;
                     }
                     case CUMBLOWJOB: {
-                        this.createAnimation("animation.jenny.blowjobcum", false, animationEvent);
+                        this.createAnimation("animation.jenny.blowjobcum", false, event);
                         break block5;
                     }
                     case STARTDOGGY: {
-                        this.createAnimation("animation.jenny.doggygoonbed", false, animationEvent);
+                        this.createAnimation("animation.jenny.doggygoonbed", false, event);
                         break block5;
                     }
                     case WAITDOGGY: {
-                        this.createAnimation("animation.jenny.doggywait", true, animationEvent);
+                        this.createAnimation("animation.jenny.doggywait", true, event);
                         break block5;
                     }
                     case DOGGYSTART: {
-                        this.createAnimation("animation.jenny.doggystart", false, animationEvent);
+                        this.createAnimation("animation.jenny.doggystart", false, event);
                         break block5;
                     }
                     case DOGGYSLOW: {
-                        this.createAnimation("animation.jenny.doggyslow", true, animationEvent);
+                        this.createAnimation("animation.jenny.doggyslow", true, event);
                         break block5;
                     }
                     case DOGGYFAST: {
-                        this.createAnimation("animation.jenny.doggyfast_" + (this.aa ? "hard" : "soft"), true, animationEvent);
+                        this.createAnimation("animation.jenny.doggyfast_" + (this.aa ? "hard" : "soft"), true, event);
                         break block5;
                     }
                     case DOGGYCUM: {
-                        this.createAnimation("animation.jenny.doggycum", false, animationEvent);
+                        this.createAnimation("animation.jenny.doggycum", false, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.jenny.attack" + this.S, false, animationEvent);
+                        this.createAnimation("animation.jenny.attack" + this.S, false, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.jenny.bowcharge", false, animationEvent);
+                        this.createAnimation("animation.jenny.bowcharge", false, event);
                         break block5;
                     }
                     case RIDE: {
-                        this.createAnimation("animation.jenny.ride", true, animationEvent);
+                        this.createAnimation("animation.jenny.ride", true, event);
                         break block5;
                     }
                     case SIT: {
-                        this.createAnimation("animation.jenny.sit", true, animationEvent);
+                        this.createAnimation("animation.jenny.sit", true, event);
                         break block5;
                     }
                     case THROW_PEARL: {
-                        this.createAnimation("animation.jenny.throwpearl", false, animationEvent);
+                        this.createAnimation("animation.jenny.throwpearl", false, event);
                         break block5;
                     }
                     case DOWNED: {
-                        this.createAnimation("animation.jenny.downed", true, animationEvent);
+                        this.createAnimation("animation.jenny.downed", true, event);
                         break block5;
                     }
                     case PAIZURI_START: {
-                        this.createAnimation("animation.jenny.paizuri_start", false, animationEvent);
+                        this.createAnimation("animation.jenny.paizuri_start", false, event);
                         break block5;
                     }
                     case PAIZURI_SLOW: {
-                        this.createAnimation("animation.jenny.paizuri_slow", true, animationEvent);
+                        this.createAnimation("animation.jenny.paizuri_slow", true, event);
                         break block5;
                     }
                     case PAIZURI_FAST: {
-                        this.createAnimation("animation.jenny.paizuri_fast", true, animationEvent);
+                        this.createAnimation("animation.jenny.paizuri_fast", true, event);
                         break block5;
                     }
                     case PAIZURI_CUM: {
-                        this.createAnimation("animation.jenny.paizuri_cum", false, animationEvent);
+                        this.createAnimation("animation.jenny.paizuri_cum", false, event);
                         break block5;
                     }
                     case WAVE: {
-                        this.createAnimation("animation.jenny.wave", true, animationEvent);
+                        this.createAnimation("animation.jenny.wave", true, event);
                         break block5;
                     }
                     case WAVE_IDLE: {
-                        this.createAnimation("animation.jenny.wave_idle", true, animationEvent);
+                        this.createAnimation("animation.jenny.wave_idle", true, event);
                     }
                 }
             }
@@ -547,7 +547,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -570,7 +570,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "stripDone": {
                     if (!this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES).equals("boobjob")) {
-                        this.void_r();
+                        this.resetCameraAndPhysics();
                     }
                     this.U();
                     break;
@@ -615,7 +615,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "sexUiOn": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -631,7 +631,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     this.h(I18n.format("jenny.dialogue.blowjobtext1", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
                     this.cameraYaw = this.rotationYaw + 180.0f;
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -652,7 +652,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "bjiMSG5": {
                     this.h(I18n.format("jenny.dialogue.blowjobtext4", new Object[0]));
                     this.a(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -677,16 +677,16 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "bjiMSG10": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.moveCamera(-0.65, -0.8, -0.25, 60.0f, -3.0f);
                     break;
                 }
                 case "bjiMSG11": {
-                    if (this.boolean_n() && HandlePlayerMovement.isThrusting) {
+                    if (this.isControlledByLocalPlayer() && HandlePlayerMovement.isThrusting) {
                         this.N();
                     }
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
@@ -695,20 +695,20 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                         this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_BJMOAN));
                     }
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjtMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MMM));
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -717,14 +717,14 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggyfastReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     this.aa = true;
                     break;
                 }
                 case "bjtReady": 
                 case "paizuriReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
@@ -734,7 +734,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "bjcMSG2": {
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_BJMOAN[7]);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.hide();
                     break;
                 }
@@ -759,16 +759,16 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "bjcBlackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "bjcDone": 
                 case "paizuri_cumDone": 
                 case "doggyCumDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    this.void_r();
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "doggyGoOnBedMSG1": {
@@ -810,7 +810,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "doggystartMSG4": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[1]);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -821,7 +821,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -866,7 +866,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     } else {
                         this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING));
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.00666);
                     break;
                 }
@@ -876,7 +876,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "doggyfastMSG1": {
                     this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
                     ++this.ag;
@@ -934,7 +934,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "paizuri_startDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.PAIZURI_SLOW);
                     SexUI.resetCumPercentage();
                     SexUI.init();
@@ -947,20 +947,20 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     } else {
                         this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_AHH));
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
                 }
                 case "paizuriSlowMSG1": 
                 case "paizuriStartMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "paizuri_fastDone": {
                     this.setCurrentAction(Action.PAIZURI_SLOW);
-                    if (!this.boolean_n() || this.ae) break;
+                    if (!this.isControlledByLocalPlayer() || this.ae) break;
                     this.ae = true;
                     this.moveCamera(-0.7, -0.6, 0.2, 60.0f, -3.0f);
                     break;
@@ -971,15 +971,15 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "paizuri_cumStart": {
-                    if (!this.boolean_n() || this.ae) break;
+                    if (!this.isControlledByLocalPlayer() || this.ae) break;
                     this.moveCamera(-0.7, -0.6, 0.2, 60.0f, -3.0f);
                 }
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
     }
 }
 

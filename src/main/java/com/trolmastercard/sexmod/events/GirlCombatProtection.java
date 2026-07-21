@@ -35,7 +35,7 @@ public class GirlCombatProtection {
             return;
         }
         EntityPlayer player = (EntityPlayer)event.getEntity();
-        GirlEntity activeGirl = GirlEntity.com_trolmastercard_sexmod_em_class258_i(player.getPersistentID());
+        GirlEntity activeGirl = GirlEntity.getGirlByUUID(player.getPersistentID());
         if (activeGirl == null) {
             return;
         }

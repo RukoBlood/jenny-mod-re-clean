@@ -353,7 +353,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             this.renderNameTag(x, y, z);
         }
 
-        if ((owner = ((GirlEntity)entity).net_minecraft_entity_player_EntityPlayer_z()) != null
+        if ((owner = ((GirlEntity)entity).getMasterPlayer()) != null
                 && owner.isRiding() && owner.getRidingEntity() instanceof EntityHorse
                 && ((EntityHorse)owner.getRidingEntity()).isHorseSaddled()) {
             return this.getRidingPassengerVector(owner, partialTicks);
@@ -865,7 +865,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     @CheckReturnValue
     protected boolean boolean_c() {
-        if (!((GirlEntity)this.renderEntity).boolean_n()) {
+        if (!((GirlEntity)this.renderEntity).isControlledByLocalPlayer()) {
             return true;
         }
         return GirlRenderer.mc.gameSettings.thirdPersonView != 0;

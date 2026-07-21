@@ -291,7 +291,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.setCurrentAction(Action.MASTERBATE);
         this.setYawRotation(180.0f - (float) TrigMath.toDegrees(Math.atan2(vec3d.x - entityPlayer.posX, vec3d.z - entityPlayer.posZ)));
         Utils.runDelayedTask(8000, () -> {
-            EntityPlayer p1 = this.net_minecraft_entity_player_EntityPlayer_z();
+            EntityPlayer p1 = this.getMasterPlayer();
             if (p1 == null) {
                 return;
             }
@@ -333,7 +333,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     // TODO
     public boolean maybeMountedByMangFn() {
-        return this.boolean_J();
+        return this.isMasterAssigned();
     }
 
     @Override
@@ -834,7 +834,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     @Override
     public String java_lang_String_ab() {
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_z();
+        EntityPlayer entityPlayer = this.getMasterPlayer();
         if (entityPlayer == null) {
             return super.java_lang_String_ab();
         }
@@ -952,7 +952,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (this.player() != null) {
             return;
         }
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_z();
+        EntityPlayer entityPlayer = this.getMasterPlayer();
         if (entityPlayer == null) {
             return;
         }
@@ -1173,7 +1173,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             return;
         }
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 15.0);
-        if (this.boolean_J() && entityPlayer != null && entityPlayer.getDistance(this) < 2.0f && entityPlayer.getPersistentID().equals(this.java_util_UUID_O())) {
+        if (this.isMasterAssigned() && entityPlayer != null && entityPlayer.getDistance(this) < 2.0f && entityPlayer.getPersistentID().equals(this.getMasterUUID())) {
             this.getNavigator().clearPath();
             return;
         }
@@ -1232,7 +1232,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     @Override
     public void setCustomName(String string) {
         super.setCustomName(string);
-        UUID uUID = this.java_util_UUID_O();
+        UUID uUID = this.getMasterUUID();
         if (uUID == null) {
             return;
         }
@@ -1821,7 +1821,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             return true;
         }
         EntityPlayer player = (EntityPlayer)entityLivingBase;
-        if (GirlEntity.com_trolmastercard_sexmod_em_class258_c(player.getPersistentID()) != null) {
+        if (GirlEntity.getActiveSceneInfo(player.getPersistentID()) != null) {
             return false;
         }
         if (player.isCreative()) {
@@ -1854,7 +1854,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     boolean a(EntityPlayer entityPlayer, EnumHand enumHand) {
-        if (!entityPlayer.getPersistentID().equals(this.java_util_UUID_O())) {
+        if (!entityPlayer.getPersistentID().equals(this.getMasterUUID())) {
             return false;
         }
         if (Action.a((GirlEntity)this, Action.HUG_MANG, Action.RUN, Action.GALATH_SUMMON, Action.GALATH_DE_SUMMON, Action.MASTERBATE)) {
@@ -1881,7 +1881,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         }
         if ("anal".equals(string)) {
             fh_class313.b();
-            HandlePlayerMovement.a(false);
+            HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                 this.setTargetPosition(entityPlayerSP.getPositionVector());
@@ -1894,7 +1894,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         }
         if ("cowgirl".equals(string)) {
             fh_class313.b();
-            HandlePlayerMovement.a(false);
+            HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                 this.setTargetPosition(entityPlayerSP.getPositionVector());
@@ -1911,7 +1911,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 return;
             }
             fh_class313.b();
-            HandlePlayerMovement.a(false);
+            HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 Minecraft minecraft = Minecraft.getMinecraft();
                 EntityPlayerSP entityPlayerSP = minecraft.player;
@@ -2151,7 +2151,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (nbt.getBoolean("sexmod:despawned")) {
             this.P = true;
         }
-        if ((uUID = this.java_util_UUID_O()) != null && (string = NameStorage.getCustomName(uUID, PlayerGirlEntity.GALATH)) != null) {
+        if ((uUID = this.getMasterUUID()) != null && (string = NameStorage.getCustomName(uUID, PlayerGirlEntity.GALATH)) != null) {
             this.setCustomName(string);
         }
     }
@@ -2170,7 +2170,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     @Override
-    protected boolean a(Action action, String string, boolean bl, AnimationEvent event) {
+    protected boolean handleActionAnimationOverrides(Action action, String animName, boolean flag, AnimationEvent event) {
         if (action == Action.MASTERBATE_SITTING && this.bx) {
             this.bx = false;
             this.createAnimation("animation.galath.masterbating_sitting", true, event, true);
@@ -2231,7 +2231,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     // TODO
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.isLocallyRegistered()) {
             this.createAnimation("animation.galath.idle", true, event);
             return PlayState.CONTINUE;
@@ -2386,7 +2386,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     this.createAnimation("animation.shared.bed_soft", true, event);
                     break;
                 }
-                this.a("animation.shared.bed_fast", 4, 0.75f, event);
+                this.playRandomizedAnimation("animation.shared.bed_fast", 4, 0.75f, event);
                 break;
             }
             case MORNING_BLOWJOB_CUM: {
@@ -2398,10 +2398,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void registerControllers(AnimationData animationData) {
-        this.actionController = new bz_class107<>(this, "action", 0.0f, this::predicate);
-        this.movementController = new AnimationController<>(this, "movement", 5.0f, this::predicate);
-        this.eyesController = new AnimationController<>(this, "eyes", 10.0f, this::predicate);
+    public void registerControllers(AnimationData data) {
+        this.actionController = new bz_class107<>(this, "action", 0.0f, this::animationPredicate);
+        this.movementController = new AnimationController<>(this, "movement", 5.0f, this::animationPredicate);
+        this.eyesController = new AnimationController<>(this, "eyes", 10.0f, this::animationPredicate);
         this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "goodTiming": {
@@ -2507,7 +2507,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "rapeIntroDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.RAPE_ON_GOING);
                     break;
                 }
@@ -2518,13 +2518,13 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     do {
                         this.b1 = random.nextInt(3);
                     } while (this.b1 == n);
-                    if (this.maybeMountedByMangFn() || !this.boolean_n() || !(0.0f >= (player = Minecraft.getMinecraft().player).getHealth() - 1.0f)) break;
+                    if (this.maybeMountedByMangFn() || !this.isControlledByLocalPlayer() || !(0.0f >= (player = Minecraft.getMinecraft().player).getHealth() - 1.0f)) break;
                     this.setCurrentAction(Action.RAPE_CUM);
                     break;
                 }
                 case "poundRape": {
                     this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     if (this.maybeMountedByMangFn()) {
                         SexUI.addCumPercentage(0.03f);
                         break;
@@ -2533,12 +2533,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "rapeHurt": {
-                    if (this.maybeMountedByMangFn() || !this.boolean_n()) break;
+                    if (this.maybeMountedByMangFn() || !this.isControlledByLocalPlayer()) break;
                     PackageHandler.networkWrapper.sendToServer((IMessage)new GalathRapePounce(false));
                     break;
                 }
                 case "enableRapeUI": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     if (this.maybeMountedByMangFn()) {
                         SexUI.a(false);
                         break;
@@ -2547,12 +2547,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "removeUI": {
-                    if (!this.boolean_n() || this.maybeMountedByMangFn()) break;
+                    if (!this.isControlledByLocalPlayer() || this.maybeMountedByMangFn()) break;
                     EscapeMinigameUI.StartClosingAnimation();
                     break;
                 }
                 case "reloadRenderer": {
-                    if (!this.boolean_n()) {
+                    if (!this.isControlledByLocalPlayer()) {
                         return;
                     }
                     Minecraft minecraft = Minecraft.getMinecraft();
@@ -2561,12 +2561,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "corruptSwitch": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.CORRUPT_FAST);
                     break;
                 }
                 case "corrupt_hard": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.aT = true;
                     this.N();
                     break;
@@ -2585,7 +2585,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "setCamCorrupt": {
-                    if (!this.boolean_n()) {
+                    if (!this.isControlledByLocalPlayer()) {
                         return;
                     }
                     this.U = true;
@@ -2597,7 +2597,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "enableBoyCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.U = false;
                     break;
                 }
@@ -2629,18 +2629,18 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     if (!this.maybeMountedByMangFn()) break;
                 }
                 case "blackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "blackScreenMaster": {
-                    if (!Minecraft.getMinecraft().player.getPersistentID().equals(this.java_util_UUID_O())) break;
+                    if (!Minecraft.getMinecraft().player.getPersistentID().equals(this.getMasterUUID())) break;
                     fh_class313.b();
-                    HandlePlayerMovement.a(false);
+                    HandlePlayerMovement.setMovementLock(false);
                     break;
                 }
                 case "flapControlled": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     GalathFlightUI.showUI();
                     this.PlaySound(SoundsHandler.MISC_FLAP, new int[0]);
                     Minecraft minecraft = Minecraft.getMinecraft();
@@ -2674,7 +2674,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 }
                 case "setCoinLook": {
                     float f;
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
                     playerSP.rotationYaw = f = this.getYawRotation() + 180.0f;
                     playerSP.prevRotationYaw = f;
@@ -2683,7 +2683,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                     break;
                 }
                 case "sexui": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -2693,9 +2693,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
                 }
             }
         });
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.eyesController);
-        animationData.addAnimationController(this.movementController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.eyesController);
+        data.addAnimationController(this.movementController);
     }
 
     private static Exception a(Exception exception) {
@@ -2799,7 +2799,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         @SubscribeEvent
         public void a(PlayerEvent.PlayerRespawnEvent playerRespawnEvent) {
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP)playerRespawnEvent.player;
-            GirlEntity em_class2582 = GirlEntity.a(entityPlayerMP.getPersistentID(), true);
+            GirlEntity em_class2582 = GirlEntity.getGirlByUUID(entityPlayerMP.getPersistentID(), true);
             if (!(em_class2582 instanceof GalathEntity)) {
                 return;
             }

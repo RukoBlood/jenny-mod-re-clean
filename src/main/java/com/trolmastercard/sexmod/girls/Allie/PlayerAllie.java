@@ -186,7 +186,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -208,13 +208,13 @@ extends PlayerGirl {
                     break;
                 }
                 case "blackscreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "deepthroat_prepareDone": {
                     this.setCurrentAction(Action.DEEPTHROAT_START);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     PackageHandler.networkWrapper.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
@@ -223,13 +223,13 @@ extends PlayerGirl {
                 }
                 case "deepthroat_fastMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_BJMOAN));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "deepthroat_fastDone": {
-                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.DEEPTHROAT_SLOW);
                     break;
                 }
@@ -239,7 +239,7 @@ extends PlayerGirl {
                 }
                 case "deepthroat_slowMSG1": {
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -251,8 +251,8 @@ extends PlayerGirl {
                 }
                 case "cowgirl_cumDone": 
                 case "deepthroat_cumDone": {
-                    if (!this.boolean_n()) break;
-                    this.void_r();
+                    if (!this.isControlledByLocalPlayer()) break;
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "deepthroat_normal_prepareMSG1": {
@@ -284,7 +284,7 @@ extends PlayerGirl {
                     if (this.getRNG().nextBoolean()) {
                         this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_AHH));
                     }
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
@@ -296,7 +296,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "fastMoan": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04f);
                     }
                     if (!this.ap) {
@@ -308,7 +308,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "fastSwitch": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     Action fp_class3242 = this.currentAction();
                     if (fp_class3242 == Action.REVERSE_COWGIRL_FAST_START) {
                         this.setCurrentAction(Action.REVERSE_COWGIRL_FAST_CONTINUES);
@@ -322,7 +322,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "openSexUi": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -336,115 +336,115 @@ extends PlayerGirl {
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        block5 : switch (animationEvent.getController().getName()) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.allie.null", true, animationEvent);
+                    this.createAnimation("animation.allie.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.bia.blink", true, animationEvent);
+                this.createAnimation("animation.bia.blink", true, event);
                 break;
             }
             case "movement": {
                 double d = 4.0 * (Math.abs(this.posX - this.lastTickPosX) + Math.abs(this.posY - this.lastTickPosY) + Math.abs(this.posZ - this.lastTickPosZ));
                 d = Math.min(1.0 + d, 4.0);
                 this.movementController.setAnimationSpeed(d);
-                this.createAnimation("animation.allie.tail", true, animationEvent);
+                this.createAnimation("animation.allie.tail", true, event);
                 break;
             }
             case "action": {
                 switch (this.currentAction()) {
                     case NULL: {
-                        this.createAnimation("animation.allie.null", true, animationEvent);
+                        this.createAnimation("animation.allie.null", true, event);
                         break block5;
                     }
                     case SUMMON: {
-                        this.createAnimation("animation.allie.summon", false, animationEvent);
+                        this.createAnimation("animation.allie.summon", false, event);
                         break block5;
                     }
                     case SUMMON_NORMAL: {
-                        this.createAnimation("animation.allie.summon_normal", false, animationEvent);
+                        this.createAnimation("animation.allie.summon_normal", false, event);
                         break block5;
                     }
                     case SUMMON_NORMAL_WAIT: {
-                        this.createAnimation("animation.allie.summon_normal_wait", true, animationEvent);
+                        this.createAnimation("animation.allie.summon_normal_wait", true, event);
                         break block5;
                     }
                     case SUMMON_WAIT: {
-                        this.createAnimation("animation.allie.summon_wait", true, animationEvent);
+                        this.createAnimation("animation.allie.summon_wait", true, event);
                         break block5;
                     }
                     case ALLIE_PREPARE_FIRST_TIME: {
-                        this.createAnimation("animation.allie.deepthroat_prepare", false, animationEvent);
+                        this.createAnimation("animation.allie.deepthroat_prepare", false, event);
                         break block5;
                     }
                     case ALLIE_PREPARE_NORMAL: {
-                        this.createAnimation("animation.allie.deepthroat_normal_prepare", false, animationEvent);
+                        this.createAnimation("animation.allie.deepthroat_normal_prepare", false, event);
                         break block5;
                     }
                     case DEEPTHROAT_START: {
-                        this.createAnimation("animation.allie.deepthroat_start", false, animationEvent);
+                        this.createAnimation("animation.allie.deepthroat_start", false, event);
                         break block5;
                     }
                     case DEEPTHROAT_SLOW: {
-                        this.createAnimation("animation.allie.deepthroat_slow", true, animationEvent);
+                        this.createAnimation("animation.allie.deepthroat_slow", true, event);
                         break block5;
                     }
                     case DEEPTHROAT_FAST: {
-                        this.createAnimation("animation.allie.deepthroat_fast", true, animationEvent);
+                        this.createAnimation("animation.allie.deepthroat_fast", true, event);
                         break block5;
                     }
                     case DEEPTHROAT_CUM: {
-                        this.createAnimation("animation.allie.deepthroat_cum", false, animationEvent);
+                        this.createAnimation("animation.allie.deepthroat_cum", false, event);
                         break block5;
                     }
                     case RICH_FIRST_TIME: {
-                        this.createAnimation("animation.allie.rich", false, animationEvent);
+                        this.createAnimation("animation.allie.rich", false, event);
                         break block5;
                     }
                     case RICH_NORMAL: {
-                        this.createAnimation("animation.allie.rich_normal", false, animationEvent);
+                        this.createAnimation("animation.allie.rich_normal", false, event);
                         break block5;
                     }
                     case SUMMON_SAND: {
-                        this.createAnimation("animation.allie.summon_sand", false, animationEvent);
+                        this.createAnimation("animation.allie.summon_sand", false, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.allie.attack" + this.S, false, animationEvent);
+                        this.createAnimation("animation.allie.attack" + this.S, false, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.allie.bowcharge", false, animationEvent);
+                        this.createAnimation("animation.allie.bowcharge", false, event);
                         break block5;
                     }
                     case REVERSE_COWGIRL_START: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_start", true, animationEvent);
+                        this.createAnimation("animation.allie.reverse_cowgirl_start", true, event);
                         break block5;
                     }
                     case REVERSE_COWGIRL_SLOW: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_slow" + this.ar, true, animationEvent);
+                        this.createAnimation("animation.allie.reverse_cowgirl_slow" + this.ar, true, event);
                         break block5;
                     }
                     case REVERSE_COWGIRL_FAST_CONTINUES: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_fastc" + this.av, true, animationEvent);
+                        this.createAnimation("animation.allie.reverse_cowgirl_fastc" + this.av, true, event);
                         break block5;
                     }
                     case REVERSE_COWGIRL_FAST_START: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_fasts", true, animationEvent);
+                        this.createAnimation("animation.allie.reverse_cowgirl_fasts", true, event);
                         break block5;
                     }
                     case REVERSE_COWGIRL_CUM: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_cum", true, animationEvent);
+                        this.createAnimation("animation.allie.reverse_cowgirl_cum", true, event);
                     }
                 }
             }

@@ -173,7 +173,7 @@ extends GirlModel<GirlEntity> {
         if (em_class2582.currentAction() != Action.MASTERBATE) {
             return;
         }
-        EntityPlayer entityPlayer = em_class2582.net_minecraft_entity_player_EntityPlayer_z();
+        EntityPlayer entityPlayer = em_class2582.getMasterPlayer();
         if (entityPlayer == null) {
             entityPlayer = this.mc.player;
         }

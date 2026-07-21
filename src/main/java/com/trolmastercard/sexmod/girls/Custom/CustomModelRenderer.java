@@ -206,7 +206,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
             EntityPlayer object = cy_class1532.world.getPlayerEntityByUUID((UUID)object2);
             em_class2582 = object == null ? em_class2583 : object;
         }
-        object2 = em_class2583.a(this.a, cy_class1532, em_class2582, f2);
+        object2 = em_class2583.renderCustomModelTransform(this.a, cy_class1532, em_class2582, f2);
         BlockPos object = new BlockPos(Math.floor(em_class2582.posX), Math.floor(em_class2582.posY), Math.floor(em_class2582.posZ));
         int n = em_class2582.world.getLight((BlockPos)object, true);
         Vec3d vec3d = new Vec3d(1.0, 1.0, 1.0);
@@ -222,7 +222,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         GL11.glEnable(2896);
     }
 
-    public static Vec3d a(Minecraft minecraft, CustomModelEntity cy_class1532, EntityLivingBase entityLivingBase, GirlEntity em_class2582, float f) {
+    public static Vec3d renderTransformedModel(Minecraft minecraft, CustomModelEntity cy_class1532, EntityLivingBase entityLivingBase, GirlEntity em_class2582, float f) {
         Vec3d vec3d;
         //Object object;
         if (em_class2582.isAnchored()) {

@@ -20,26 +20,25 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class GalathBackOffRape implements IMessage {
-    boolean a = false;
+    boolean valid = false;
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = true;
+        this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
     }
 
-    public static class a_inner126
-    implements IMessageHandler<GalathBackOffRape, IMessage> {
-        public IMessage a(GalathBackOffRape cd_class1252, MessageContext messageContext) {
-            if (!cd_class1252.a || !messageContext.side.equals((Object)Side.SERVER)) {
+    public static class Handler implements IMessageHandler<GalathBackOffRape, IMessage> {
+        public IMessage execute(GalathBackOffRape msg, MessageContext ctx) {
+            if (!msg.valid || !ctx.side.equals((Object)Side.SERVER)) {
                 System.out.println("received an invalid Message @GalathBackOffRape :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                GirlEntity em_class2582 = GirlEntity.a(messageContext.getServerHandler().player.getPersistentID(), true);
-                if (em_class2582 instanceof GalathEntity) {
-                    ((GalathEntity)em_class2582).void_w();
+                GirlEntity girl = GirlEntity.getGirlByUUID(ctx.getServerHandler().player.getPersistentID(), true);
+                if (girl instanceof GalathEntity) {
+                    ((GalathEntity)girl).void_w();
                 }
             });
             return null;
@@ -47,11 +46,7 @@ public class GalathBackOffRape implements IMessage {
 
                 @Override
         public IMessage onMessage(GalathBackOffRape iMessage, MessageContext messageContext) {
-            return this.a((GalathBackOffRape)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
+            return this.execute((GalathBackOffRape)iMessage, messageContext);
         }
     }
 }

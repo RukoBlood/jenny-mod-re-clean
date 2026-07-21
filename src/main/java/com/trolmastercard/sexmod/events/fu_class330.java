@@ -140,7 +140,7 @@ public class fu_class330 {
             entityPlayer.rotationYaw = -90.0f;
         }
         if (rightClickBlock.getWorld().isRemote) {
-            HandlePlayerMovement.a(false);
+            HandlePlayerMovement.setMovementLock(false);
             ei_class2512.void_H();
             return;
         }
@@ -268,7 +268,7 @@ public class fu_class330 {
         ei_class2512.getDataManager().set(GirlEntity.OUTFIT_INDEX, 0);
         ei_class2512.setCurrentAction(Action.STARTDOGGY);
         if (rightClickBlock.getWorld().isRemote && Minecraft.getMinecraft().player.getPersistentID().equals(entityPlayer.getPersistentID())) {
-            HandlePlayerMovement.a(false);
+            HandlePlayerMovement.setMovementLock(false);
         }
     }
 
@@ -341,7 +341,7 @@ public class fu_class330 {
         minecraft.gameSettings.thirdPersonView = 2;
         minecraft.entityRenderer.loadEntityShader(null);
         ei_class2512.setCurrentAction(Action.STRIP);
-        HandlePlayerMovement.a(false);
+        HandlePlayerMovement.setMovementLock(false);
         minecraft.player.closeScreen();
     }
 

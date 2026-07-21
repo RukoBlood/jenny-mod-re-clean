@@ -194,7 +194,7 @@ implements b7_class68 {
 
     @SideOnly(value=Side.CLIENT)
     void void_d() {
-        if (!this.boolean_n()) {
+        if (!this.isControlledByLocalPlayer()) {
             return;
         }
         if (this.currentAction() != Action.RAPE_INTRO) {
@@ -229,46 +229,46 @@ implements b7_class68 {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
-        block5 : switch (animationEvent.getController().getName()) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.galath.null", true, animationEvent);
+                    this.createAnimation("animation.galath.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.galath.blink", true, animationEvent);
+                this.createAnimation("animation.galath.blink", true, event);
                 break;
             }
             case "movement": {
                 this.movementController.setAnimationSpeed(1.0);
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.galath.null", true, animationEvent);
+                    this.createAnimation("animation.galath.null", true, event);
                     break;
                 }
                 if (this.isPlayerRiding) {
-                    this.createAnimation("animation.galath.sit", true, animationEvent);
+                    this.createAnimation("animation.galath.sit", true, event);
                     break;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.galath.controlled_flight", true, animationEvent);
+                    this.createAnimation("animation.galath.controlled_flight", true, event);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) == 0.0f) {
-                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchidle" : "animation.galath.idle", true, animationEvent);
+                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchidle" : "animation.galath.idle", true, event);
                     break;
                 }
                 if (this.isPlayerSprinting) {
                     this.movementController.setAnimationSpeed(1.5);
-                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.run", true, animationEvent);
+                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.run", true, event);
                     break;
                 }
                 if (this.ao.y >= -0.1f) {
                     this.movementController.setAnimationSpeed(2.0);
-                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.walk", true, animationEvent);
+                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.walk", true, event);
                     break;
                 }
                 this.movementController.setAnimationSpeed(1.5);
-                this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.backwards_walk", true, animationEvent);
+                this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.backwards_walk", true, event);
                 break;
             }
             case "action": {
@@ -277,56 +277,56 @@ implements b7_class68 {
                         return PlayState.STOP;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.galath.strip", true, animationEvent);
+                        this.createAnimation("animation.galath.strip", true, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.galath.attack" + this.S, true, animationEvent);
+                        this.createAnimation("animation.galath.attack" + this.S, true, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.galath.bowcharge", true, animationEvent);
+                        this.createAnimation("animation.galath.bowcharge", true, event);
                         break block5;
                     }
                     case RIDE:
                     case SIT: {
-                        this.createAnimation("animation.galath.sit", true, animationEvent);
+                        this.createAnimation("animation.galath.sit", true, event);
                         break block5;
                     }
                     case RAPE_INTRO: {
-                        this.createAnimation("animation.galath.rape_intro", true, animationEvent);
+                        this.createAnimation("animation.galath.rape_intro", true, event);
                         break block5;
                     }
                     case RAPE_ON_GOING: {
-                        this.createAnimation("animation.galath.rape" + this.ar, true, animationEvent);
+                        this.createAnimation("animation.galath.rape" + this.ar, true, event);
                         break block5;
                     }
                     case RAPE_CUM: {
-                        this.createAnimation("animation.galath.rape_cum", true, animationEvent);
+                        this.createAnimation("animation.galath.rape_cum", true, event);
                         break block5;
                     }
                     case RAPE_CUM_IDLE: {
-                        this.createAnimation("animation.galath.rape_cum_idle", true, animationEvent);
+                        this.createAnimation("animation.galath.rape_cum_idle", true, event);
                         break block5;
                     }
                     case CORRUPT_FAST: {
-                        this.createAnimation("animation.galath.corrupt_" + (this.as ? "hard" : "soft"), true, animationEvent);
+                        this.createAnimation("animation.galath.corrupt_" + (this.as ? "hard" : "soft"), true, event);
                         break block5;
                     }
                     case CORRUPT_SLOW: {
-                        this.createAnimation("animation.galath.corrupt_slow", true, animationEvent);
+                        this.createAnimation("animation.galath.corrupt_slow", true, event);
                         break block5;
                     }
                     case CORRUPT_INTRO: {
-                        this.createAnimation("animation.galath.corrupt_intro", true, animationEvent);
+                        this.createAnimation("animation.galath.corrupt_intro", true, event);
                         break block5;
                     }
                     case CORRUPT_CUM: {
-                        this.createAnimation("animation.galath.corrupt_cum", true, animationEvent);
+                        this.createAnimation("animation.galath.corrupt_cum", true, event);
                         break block5;
                     }
                     case CONTROLLED_FLIGHT: {
-                        this.createAnimation("animation.galath.controlled_flight", true, animationEvent);
+                        this.createAnimation("animation.galath.controlled_flight", true, event);
                     }
                 }
             }
@@ -336,7 +336,7 @@ implements b7_class68 {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         this.initAnimationControllers();
         this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
@@ -369,7 +369,7 @@ implements b7_class68 {
                     break;
                 }
                 case "rapeIntroDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.RAPE_ON_GOING);
                     break;
                 }
@@ -383,17 +383,17 @@ implements b7_class68 {
                 }
                 case "poundRape": {
                     this.a(SoundsHandler.MISC_POUNDING);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.03f);
                     break;
                 }
                 case "enableRapeUI": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.a(false);
                     break;
                 }
                 case "reloadRenderer": {
-                    if (!this.boolean_n()) {
+                    if (!this.isControlledByLocalPlayer()) {
                         return;
                     }
                     Minecraft minecraft = Minecraft.getMinecraft();
@@ -402,12 +402,12 @@ implements b7_class68 {
                     break;
                 }
                 case "corruptSwitch": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.CORRUPT_FAST);
                     break;
                 }
                 case "corrupt_hard": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.as = true;
                     this.N();
                     break;
@@ -425,12 +425,12 @@ implements b7_class68 {
                     ga_class358.a(this);
                 }
                 case "reset": {
-                    if (!this.boolean_n()) break;
-                    this.void_r();
+                    if (!this.isControlledByLocalPlayer()) break;
+                    this.resetCameraAndPhysics();
                     break;
                 }
                 case "setCamCorrupt": {
-                    if (!this.boolean_n()) {
+                    if (!this.isControlledByLocalPlayer()) {
                         return;
                     }
                     this.aq = true;
@@ -442,7 +442,7 @@ implements b7_class68 {
                     break;
                 }
                 case "enableBoyCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.aq = false;
                     break;
                 }
@@ -458,12 +458,12 @@ implements b7_class68 {
                 }
                 case "blackScreenTamed": 
                 case "blackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "flapControlled": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     GalathFlightUI.showUI();
                     this.a(SoundsHandler.MISC_FLAP);
                     Minecraft minecraft = Minecraft.getMinecraft();
@@ -492,14 +492,14 @@ implements b7_class68 {
                     break;
                 }
                 case "sexui": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                 }
             }
         });
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.eyesController);
-        animationData.addAnimationController(this.movementController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.eyesController);
+        data.addAnimationController(this.movementController);
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {

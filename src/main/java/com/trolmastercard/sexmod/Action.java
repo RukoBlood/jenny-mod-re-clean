@@ -331,7 +331,7 @@ public enum Action {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static boolean b(GirlEntity girl, float f) {
+    public static boolean isPlayingInteractiveAction(GirlEntity girl, float f) {
         return Action.d(girl, f) == 1.0f;
     }
 }

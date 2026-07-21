@@ -50,7 +50,7 @@ public class TargetNearestKoboldGoal extends EntityAINearestAttackableTarget<Kob
         }
         ArrayList<KoboldEntity> arrayList = new ArrayList<>();
         for (KoboldEntity kobold : targets) {
-            if (!kobold.boolean_J()) continue;
+            if (!kobold.isMasterAssigned()) continue;
             arrayList.add(kobold);
         }
         if (arrayList.isEmpty()) {

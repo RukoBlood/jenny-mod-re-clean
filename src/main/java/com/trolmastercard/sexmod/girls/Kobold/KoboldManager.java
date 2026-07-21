@@ -220,10 +220,10 @@ public class KoboldManager {
             c.replace(uUID, a_inner492);
             return;
         }
-        if (!ff_class3082.boolean_J()) {
+        if (!ff_class3082.isMasterAssigned()) {
             return;
         }
-        EntityPlayer object = ff_class3082.net_minecraft_entity_player_EntityPlayer_z();
+        EntityPlayer object = ff_class3082.getMasterPlayer();
         if (object != null) {
             HashSet<BlockPos> hashSet = new HashSet<BlockPos>();
             hashSet.addAll(a_inner492.i);
@@ -531,7 +531,7 @@ public class KoboldManager {
             return null;
         }
         KoboldEntity ff_class3082 = list.get(0);
-        if (!ff_class3082.boolean_J()) {
+        if (!ff_class3082.isMasterAssigned()) {
             return null;
         }
         String string = list.get(0).getDataManager().get(GirlEntity.MASTER_UUID);

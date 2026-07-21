@@ -393,7 +393,7 @@ implements ai_class30 {
             float f = GoblinEntity.d(this);
             float f2 = GoblinEntity.c(this);
             if (this.world.isRemote && this.boolean_f()) {
-                HandlePlayerMovement.a(true);
+                HandlePlayerMovement.setMovementLock(true);
             }
             Vec3d vec3d2 = GoblinEntity.a(new Vec3d(0.0, 0.0, 1.5), f, f2);
             entityPlayer.motionX = vec3d2.x;
@@ -691,51 +691,51 @@ implements ai_class30 {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        block5 : switch (animationEvent.getController().getName()) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.goblin.null", true, animationEvent);
+                    this.createAnimation("animation.goblin.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.goblin.blink", true, animationEvent);
+                this.createAnimation("animation.goblin.blink", true, event);
                 break;
             }
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.goblin.null", true, animationEvent);
+                    this.createAnimation("animation.goblin.null", true, event);
                     break;
                 }
                 if (this.isPlayerRiding) {
-                    this.createAnimation("animation.goblin.sit", true, animationEvent);
+                    this.createAnimation("animation.goblin.sit", true, event);
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.aC = !this.aC;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.goblin.fly" + (this.aC ? "2" : ""), true, animationEvent);
+                    this.createAnimation("animation.goblin.fly" + (this.aC ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2f);
-                        this.createAnimation("animation.goblin.running", true, animationEvent);
+                        this.createAnimation("animation.goblin.running", true, event);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(2.0);
-                        this.createAnimation("animation.goblin.walk", true, animationEvent);
+                        this.createAnimation("animation.goblin.walk", true, event);
                         break;
                     }
                     this.movementController.setAnimationSpeed(1.5);
-                    this.createAnimation("animation.goblin.backwards_walk", true, animationEvent);
+                    this.createAnimation("animation.goblin.backwards_walk", true, event);
                     break;
                 }
-                this.createAnimation("animation.goblin.idle", true, animationEvent);
+                this.createAnimation("animation.goblin.idle", true, event);
                 break;
             }
             case "action": {
@@ -743,127 +743,127 @@ implements ai_class30 {
                 String string = minecraft.player.getPersistentID().equals(this.java_util_UUID_e()) && minecraft.gameSettings.thirdPersonView == 0 ? "1" : "3";
                 switch (this.currentAction()) {
                     case SHOULDER_IDLE: {
-                        this.createAnimation("animation.goblin.shoulder_idle", true, animationEvent);
+                        this.createAnimation("animation.goblin.shoulder_idle", true, event);
                         break block5;
                     }
                     case PICK_UP: {
-                        this.createAnimation(String.format("animation.goblin.pick_up_%sperson", string), true, animationEvent);
+                        this.createAnimation(String.format("animation.goblin.pick_up_%sperson", string), true, event);
                         break block5;
                     }
                     case START_THROWING: {
-                        this.createAnimation(String.format("animation.goblin.throw_%sperson", string), true, animationEvent);
+                        this.createAnimation(String.format("animation.goblin.throw_%sperson", string), true, event);
                         break block5;
                     }
                     case THROWN: {
-                        this.createAnimation("animation.goblin.thrown", true, animationEvent);
+                        this.createAnimation("animation.goblin.thrown", true, event);
                         break block5;
                     }
                     case NULL: {
-                        this.createAnimation("animation.goblin.null", true, animationEvent);
+                        this.createAnimation("animation.goblin.null", true, event);
                         break block5;
                     }
                     case STAND_UP: {
-                        this.createAnimation("animation.goblin.stand_up", false, animationEvent);
+                        this.createAnimation("animation.goblin.stand_up", false, event);
                         break block5;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.goblin.strip", false, animationEvent);
+                        this.createAnimation("animation.goblin.strip", false, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.goblin.attack" + this.S, false, animationEvent);
+                        this.createAnimation("animation.goblin.attack" + this.S, false, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.goblin.bowcharge", false, animationEvent);
+                        this.createAnimation("animation.goblin.bowcharge", false, event);
                         break block5;
                     }
                     case SIT: {
-                        this.createAnimation("animation.goblin.sit", true, animationEvent);
+                        this.createAnimation("animation.goblin.sit", true, event);
                         break block5;
                     }
                     case NELSON_INTRO: {
-                        this.createAnimation("animation.goblin.nelson_intro", true, animationEvent);
+                        this.createAnimation("animation.goblin.nelson_intro", true, event);
                         break block5;
                     }
                     case NELSON_SLOW: {
-                        this.createAnimation("animation.goblin.nelson_slow" + (this.ay ? "" : "2"), true, animationEvent);
+                        this.createAnimation("animation.goblin.nelson_slow" + (this.ay ? "" : "2"), true, event);
                         break block5;
                     }
                     case NELSON_FAST: {
-                        this.createAnimation("animation.goblin.nelson_fast" + (this.aF ? "c" : "s"), true, animationEvent);
+                        this.createAnimation("animation.goblin.nelson_fast" + (this.aF ? "c" : "s"), true, event);
                         break block5;
                     }
                     case NELSON_CUM: {
-                        this.createAnimation("animation.goblin.nelson_cum", true, animationEvent);
+                        this.createAnimation("animation.goblin.nelson_cum", true, event);
                         break block5;
                     }
                     case BREEDING_INTRO_0: {
-                        this.createAnimation("animation.goblin.breeding_intro_1", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_intro_1", true, event);
                         break block5;
                     }
                     case BREEDING_INTRO_1: {
-                        this.createAnimation("animation.goblin.breeding_intro_2", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_intro_2", true, event);
                         break block5;
                     }
                     case BREEDING_INTRO_2: {
-                        this.createAnimation("animation.goblin.breeding_intro_3", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_intro_3", true, event);
                         break block5;
                     }
                     case BREEDING_SLOW_0: {
-                        this.createAnimation("animation.goblin.breeding_slow_1" + (this.aB ? "l" : "r"), true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_slow_1" + (this.aB ? "l" : "r"), true, event);
                         break block5;
                     }
                     case BREEDING_SLOW_2: {
-                        this.createAnimation("animation.goblin.breeding_slow_3", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_slow_3", true, event);
                         break block5;
                     }
                     case BREEDING_FAST_0: {
-                        this.createAnimation("animation.goblin.breeding_fast_1" + (this.aH ? "c" : "s"), true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_fast_1" + (this.aH ? "c" : "s"), true, event);
                         break block5;
                     }
                     case BREEDING_FAST_2: {
-                        this.createAnimation("animation.goblin.breeding_fast_3", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_fast_3", true, event);
                         break block5;
                     }
                     case BREEDING_CUM_0: {
-                        this.createAnimation("animation.goblin.breeding_cum_1", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_cum_1", true, event);
                         break block5;
                     }
                     case BREEDING_CUM_1: {
-                        this.createAnimation("animation.goblin.breeding_cum_2", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_cum_2", true, event);
                         break block5;
                     }
                     case BREEDING_CUM_2: {
-                        this.createAnimation("animation.goblin.breeding_cum_3", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_cum_3", true, event);
                         break block5;
                     }
                     case BREEDING_1: {
-                        this.createAnimation("animation.goblin.breeding_2", true, animationEvent);
+                        this.createAnimation("animation.goblin.breeding_2", true, event);
                         break block5;
                     }
                     case PAIZURI_START: {
-                        this.createAnimation("animation.goblin.paizuri_start", true, animationEvent);
+                        this.createAnimation("animation.goblin.paizuri_start", true, event);
                         break block5;
                     }
                     case PAIZURI_SLOW: {
-                        this.createAnimation("animation.goblin.paizuri_slow" + this.aD, true, animationEvent);
+                        this.createAnimation("animation.goblin.paizuri_slow" + this.aD, true, event);
                         break block5;
                     }
                     case PAIZURI_FAST: {
-                        this.createAnimation("animation.goblin.paizuri_fast", true, animationEvent);
+                        this.createAnimation("animation.goblin.paizuri_fast", true, event);
                         break block5;
                     }
                     case PAIZURI_FAST_CONTINUES: {
-                        this.createAnimation("animation.goblin.paizuri_fast_countinues", true, animationEvent);
+                        this.createAnimation("animation.goblin.paizuri_fast_countinues", true, event);
                         break block5;
                     }
                     case PAIZURI_IDLE: {
-                        this.createAnimation("animation.goblin.paizuri_idle", true, animationEvent);
+                        this.createAnimation("animation.goblin.paizuri_idle", true, event);
                         break block5;
                     }
                     case PAIZURI_CUM: {
-                        this.createAnimation("animation.goblin.paizuri_cum", true, animationEvent);
+                        this.createAnimation("animation.goblin.paizuri_cum", true, event);
                     }
                 }
             }
@@ -873,7 +873,7 @@ implements ai_class30 {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -916,7 +916,7 @@ implements ai_class30 {
                 }
                 case "catchBjDone": {
                     this.setCurrentAction(Action.CATCH_BJ_IDLE);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     PlayerGoblin.openInventoryGui(entityPlayerSP, this, new String[]{"use her", "take ur stuff back"}, null, false);
                     break;
@@ -947,13 +947,13 @@ implements ai_class30 {
                 }
                 case "pound": {
                     this.a(SoundsHandler.MISC_POUNDING);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "paizuri_startDone": {
                     this.setCurrentAction(Action.PAIZURI_IDLE);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -962,31 +962,31 @@ implements ai_class30 {
                     break;
                 }
                 case "paizuriFastReady": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.PAIZURI_FAST_CONTINUES);
                     break;
                 }
                 case "paizuriFastContinuesReady": 
                 case "neslon_fastBackSwitch": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "smallPound": {
                     this.a(SoundsHandler.MISC_POUNDING, 0.25f);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "paizruiCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     entityPlayerSP.rotationPitch = 70.0f;
                     entityPlayerSP.prevRotationPitch = 70.0f;
                     break;
                 }
                 case "blackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
@@ -995,7 +995,7 @@ implements ai_class30 {
                     break;
                 }
                 case "jumpCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     Minecraft minecraft = Minecraft.getMinecraft();
                     minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 170.0f;
                     minecraft.player.rotationPitch = -20.0f;
@@ -1004,7 +1004,7 @@ implements ai_class30 {
                     break;
                 }
                 case "breedingHmm": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         Minecraft minecraft = Minecraft.getMinecraft();
                         minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
                         minecraft.player.rotationPitch = -15.0f;
@@ -1026,7 +1026,7 @@ implements ai_class30 {
                     break;
                 }
                 case "breedingCam2": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         Minecraft minecraft = Minecraft.getMinecraft();
                         minecraft.gameSettings.thirdPersonView = 2;
                         minecraft.player.rotationYaw = this.getYawRotation().floatValue() - 120.0f;
@@ -1035,7 +1035,7 @@ implements ai_class30 {
                 }
                 case "breedingIntroDone": {
                     this.setCurrentAction(Action.BREEDING_SLOW_0);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -1043,19 +1043,19 @@ implements ai_class30 {
                     if (this.getRNG().nextBoolean()) {
                         boolean bl = this.aB = !this.aB;
                     }
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.BREEDING_FAST_0);
                     this.aH = false;
                     break;
                 }
                 case "breeding_fast1Done": {
                     this.setCurrentAction(Action.BREEDING_SLOW_0);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.aH = false;
                     break;
                 }
                 case "breeding_fast1Ready": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.aH = true;
                     this.N();
                     this.actionController.tickOffset = 0.0;
@@ -1075,7 +1075,7 @@ implements ai_class30 {
                     break;
                 }
                 case "breeding_fast_3Done": {
-                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.BREEDING_SLOW_2);
                     break;
                 }
@@ -1084,7 +1084,7 @@ implements ai_class30 {
                     break;
                 }
                 case "breeding_cumCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     Minecraft minecraft = Minecraft.getMinecraft();
                     minecraft.gameSettings.thirdPersonView = 0;
                     minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
@@ -1095,7 +1095,7 @@ implements ai_class30 {
                 }
                 case "neslon_introDone": {
                     this.setCurrentAction(Action.NELSON_SLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -1105,7 +1105,7 @@ implements ai_class30 {
                     break;
                 }
                 case "neslon_fastSwitch": {
-                    if (!this.boolean_n()) {
+                    if (!this.isControlledByLocalPlayer()) {
                         this.aF = true;
                         return;
                     }
@@ -1115,23 +1115,23 @@ implements ai_class30 {
                 }
                 case "nelsonFastDone": {
                     this.aF = false;
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.NELSON_SLOW);
                     break;
                 }
                 case "paizuriCumDone": 
                 case "nelson_cumDone": {
-                    if (!this.boolean_n()) break;
-                    this.void_r();
+                    if (!this.isControlledByLocalPlayer()) break;
+                    this.resetCameraAndPhysics();
                     this.setCurrentAction(Action.NULL);
                 }
             }
         };
         this.actionController.registerSoundListener(iSoundListener);
         this.movementController.transitionLengthTicks = 2.0;
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
     }
 
     private static Exception a(Exception exception) {

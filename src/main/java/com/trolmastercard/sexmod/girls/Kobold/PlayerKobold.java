@@ -274,137 +274,137 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
         float f = 0.25f - this.getDataManager().get(KoboldEntity.aE).floatValue();
         GeckoLibCache.getInstance().parser.setValue("size", f);
-        block5 : switch (animationEvent.getController().getName()) {
+        block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
-                    this.createAnimation("animation.kobold.null", true, animationEvent);
+                    this.createAnimation("animation.kobold.null", true, event);
                     break;
                 }
-                this.createAnimation("animation.kobold.blink", true, animationEvent);
+                this.createAnimation("animation.kobold.blink", true, event);
                 break;
             }
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
-                    this.createAnimation("animation.kobold.null", true, animationEvent);
+                    this.createAnimation("animation.kobold.null", true, event);
                     break;
                 }
                 if (this.isPlayerRiding) {
-                    this.createAnimation("animation.kobold.sit", true, animationEvent);
+                    this.createAnimation("animation.kobold.sit", true, event);
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
                     boolean bl = this.aB = !this.aB;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.kobold.fly" + (this.aB ? "2" : ""), true, animationEvent);
+                    this.createAnimation("animation.kobold.fly" + (this.aB ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2f);
-                        this.createAnimation("animation.kobold.run", true, animationEvent);
+                        this.createAnimation("animation.kobold.run", true, event);
                         break;
                     }
                     if (this.ao.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(2.0);
-                        this.createAnimation("animation.kobold.walk", true, animationEvent);
+                        this.createAnimation("animation.kobold.walk", true, event);
                         break;
                     }
                     this.movementController.setAnimationSpeed(1.75);
-                    this.createAnimation("animation.kobold.backwards_walk", true, animationEvent);
+                    this.createAnimation("animation.kobold.backwards_walk", true, event);
                     break;
                 }
-                this.createAnimation("animation.kobold.idle", true, animationEvent);
+                this.createAnimation("animation.kobold.idle", true, event);
                 break;
             }
             case "action": {
                 switch (this.currentAction()) {
                     case NULL: {
-                        this.createAnimation("animation.kobold.null", true, animationEvent);
+                        this.createAnimation("animation.kobold.null", true, event);
                         break block5;
                     }
                     case STRIP: {
-                        this.createAnimation("animation.kobold.strip", false, animationEvent);
+                        this.createAnimation("animation.kobold.strip", false, event);
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.kobold.attack" + this.S, false, animationEvent);
+                        this.createAnimation("animation.kobold.attack" + this.S, false, event);
                         break block5;
                     }
                     case BOW: {
-                        this.createAnimation("animation.kobold.bowcharge", false, animationEvent);
+                        this.createAnimation("animation.kobold.bowcharge", false, event);
                         break block5;
                     }
                     case SIT: {
-                        this.createAnimation("animation.kobold.sit", true, animationEvent);
+                        this.createAnimation("animation.kobold.sit", true, event);
                         break block5;
                     }
                     case MINE: {
-                        this.createAnimation("animation.kobold.fall_tree", true, animationEvent);
+                        this.createAnimation("animation.kobold.fall_tree", true, event);
                         break block5;
                     }
                     case PAYMENT: {
-                        this.createAnimation("animation.kobold.paymentBackpack", true, animationEvent);
+                        this.createAnimation("animation.kobold.paymentBackpack", true, event);
                         break block5;
                     }
                     case STARTBLOWJOB: {
-                        this.createAnimation("animation.kobold.blowjobStart", false, animationEvent);
+                        this.createAnimation("animation.kobold.blowjobStart", false, event);
                         break block5;
                     }
                     case SUCKBLOWJOB_BLINK: {
                         String string = this.az ? "R" : "L";
                         String string2 = this.ay ? "Switch" : "";
-                        this.createAnimation("animation.kobold.blowjobSlow" + string + string2, true, animationEvent);
+                        this.createAnimation("animation.kobold.blowjobSlow" + string + string2, true, event);
                         break block5;
                     }
                     case THRUSTBLOWJOB: {
-                        this.createAnimation("animation.kobold.blowjobFast", true, animationEvent);
+                        this.createAnimation("animation.kobold.blowjobFast", true, event);
                         break block5;
                     }
                     case CUMBLOWJOB: {
-                        this.createAnimation("animation.kobold.blowjobCum", false, animationEvent);
+                        this.createAnimation("animation.kobold.blowjobCum", false, event);
                         break block5;
                     }
                     case KOBOLD_ANAL_START: {
-                        this.createAnimation("animation.kobold.analStart", false, animationEvent);
+                        this.createAnimation("animation.kobold.analStart", false, event);
                         break block5;
                     }
                     case KOBOLD_ANAL_SLOW: {
-                        this.createAnimation("animation.kobold.analSoft", true, animationEvent);
+                        this.createAnimation("animation.kobold.analSoft", true, event);
                         break block5;
                     }
                     case KOBOLD_ANAL_FAST: {
-                        this.createAnimation("animation.kobold.analHard", true, animationEvent);
+                        this.createAnimation("animation.kobold.analHard", true, event);
                         break block5;
                     }
                     case KOBOLD_ANAL_CUM: {
-                        this.createAnimation("animation.kobold.analCum", true, animationEvent);
+                        this.createAnimation("animation.kobold.analCum", true, event);
                         break block5;
                     }
                     case SLEEP: {
-                        this.createAnimation("animation.kobold.sleep", true, animationEvent);
+                        this.createAnimation("animation.kobold.sleep", true, event);
                         break block5;
                     }
                     case MATING_PRESS_START: {
-                        this.createAnimation("animation.kobold.mating_press_start", false, animationEvent);
+                        this.createAnimation("animation.kobold.mating_press_start", false, event);
                         break block5;
                     }
                     case MATING_PRESS_SOFT: {
-                        this.createAnimation("animation.kobold.mating_press_soft", true, animationEvent);
+                        this.createAnimation("animation.kobold.mating_press_soft", true, event);
                         break block5;
                     }
                     case MATING_PRESS_HARD: {
-                        this.createAnimation("animation.kobold.mating_press_hard", true, animationEvent);
+                        this.createAnimation("animation.kobold.mating_press_hard", true, event);
                         break block5;
                     }
                     case MATING_PRESS_CUM: {
-                        this.createAnimation("animation.kobold.mating_press_cum", true, animationEvent);
+                        this.createAnimation("animation.kobold.mating_press_cum", true, event);
                     }
                 }
             }
@@ -433,7 +433,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimationData data) {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
@@ -454,24 +454,24 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "blackScreen": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     fh_class313.b();
                     break;
                 }
                 case "paymentDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.U();
                     break;
                 }
                 case "blowjobStartMSG1": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
@@ -494,7 +494,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     this.setCurrentAction(Action.SUCKBLOWJOB_BLINK);
                     this.ay = false;
                     this.az = true;
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
@@ -510,7 +510,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "blowjobFastDone": {
-                    if (!this.boolean_n() || HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.SUCKBLOWJOB_BLINK);
                     break;
                 }
@@ -524,19 +524,19 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 }
                 case "analCumDone": 
                 case "blowjobCumDone": {
-                    if (!this.boolean_n()) break;
-                    this.void_r();
+                    if (!this.isControlledByLocalPlayer()) break;
+                    this.resetCameraAndPhysics();
                     SexUI.hide();
                     break;
                 }
                 case "analStartDone": {
                     this.setCurrentAction(Action.KOBOLD_ANAL_SLOW);
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     break;
                 }
                 case "analStartCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
@@ -547,7 +547,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "analFastRapid": {
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     if (this.currentAction() == Action.KOBOLD_ANAL_FAST) {
                         this.N();
                         break;
@@ -561,12 +561,12 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "analHard": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "analSoft": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
@@ -626,7 +626,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "matingCam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
                     vec3d = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
@@ -635,33 +635,33 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "mating_press_startDone": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.init();
                     }
                 }
                 case "mating_press_hardDone": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.MATING_PRESS_SOFT);
                     break;
                 }
                 case "mating_press_softReady": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.MATING_PRESS_HARD);
                     break;
                 }
                 case "mating_press_hardReady": {
-                    if (this.boolean_n()) {
+                    if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.boolean_n() || !HandlePlayerMovement.isThrusting) break;
+                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.N();
                     break;
                 }
                 case "mating_cum_cam": {
-                    if (!this.boolean_n()) break;
+                    if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
                     vec3d = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
@@ -675,16 +675,16 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "mating_press_cumDone": {
-                    if (!this.boolean_n()) break;
-                    this.void_r();
+                    if (!this.isControlledByLocalPlayer()) break;
+                    this.resetCameraAndPhysics();
                 }
             }
         };
         this.movementController.transitionLengthTicks = 3.0;
         this.actionController.registerSoundListener(iSoundListener);
-        animationData.addAnimationController(this.actionController);
-        animationData.addAnimationController(this.movementController);
-        animationData.addAnimationController(this.eyesController);
+        data.addAnimationController(this.actionController);
+        data.addAnimationController(this.movementController);
+        data.addAnimationController(this.eyesController);
     }
 }
 
