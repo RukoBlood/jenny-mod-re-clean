@@ -95,7 +95,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     public void setCurrentAction(Action action) {
         Action fp_class3243 = this.currentAction();
         if (fp_class3243 == Action.ANAL_CUM || fp_class3243 == Action.PRONE_DOGGY_CUM) {
-            this.entityDataManager.set(h, "");
+            this.entityDataManager.set(GIRL_HAND_STATES, "");
         }
         if (fp_class3243 == Action.ANAL_CUM && (action == Action.ANAL_FAST || action == Action.ANAL_SLOW)) {
             return;
@@ -131,7 +131,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             } else {
                 this.rotationYaw = this.java_lang_Float_I().floatValue();
                 try {
-                    e.equals(null);
+                    TARGET_POS.equals(null);
                 } catch (NullPointerException nullPointerException) {
                     this.c(this.net_minecraft_util_math_Vec3d_aa());
                 }
@@ -150,7 +150,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 this.motionX = 0.0;
                 this.motionY = 0.0;
                 this.motionZ = 0.0;
-                if ("anal".equals(this.entityDataManager.get(h))) {
+                if ("anal".equals(this.entityDataManager.get(GIRL_HAND_STATES))) {
                     this.setCurrentAction(Action.ANAL_PREPARE);
                     this.f(0);
                 } else {
@@ -189,7 +189,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public boolean boolean_b(EntityPlayer entityPlayer) {
-        if (this.getID() == null && (!this.boolean_J() || ((String)this.entityDataManager.get(v)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.getID() == null && (!this.boolean_J() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.a(entityPlayer, this, stringArray, true);
             return true;
@@ -244,7 +244,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             } else {
                 this.void_e(entityPlayer.getPersistentID());
             }
-            this.ac = j;
+            this.ac = maxAgeInTicks;
             return;
         }
         if (--this.ac > 0) {
@@ -292,10 +292,10 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public void void_g() {
-        this.avoidWater = new EntityAIWanderAvoidWater(this, 0.35);
+        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.o);
-        this.tasks.addTask(5, this.avoidWater);
+        this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
     @Override
@@ -362,7 +362,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             this.void_a(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
             return null;
         }
-        this.tasks.removeTask(this.avoidWater);
+        this.tasks.removeTask(this.avoidWaterGoal);
         this.tasks.removeTask(this.o);
         Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         int n2 = -1;
@@ -412,7 +412,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             this.void_a(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
             return null;
         }
-        this.tasks.removeTask(this.avoidWater);
+        this.tasks.removeTask(this.avoidWaterGoal);
         this.tasks.removeTask(this.o);
         Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         int n = -1;
@@ -440,7 +440,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void goToSexBed() {
         Vector4d vector4d;
-        String string = (String)this.entityDataManager.get(h);
+        String string = (String)this.entityDataManager.get(GIRL_HAND_STATES);
         Vector4d vector4d2 = vector4d = string.equals("anal") ? this.javax_vecmath_Vector4d_b() : this.javax_vecmath_Vector4d_a();
         if (vector4d == null) {
             return;
@@ -448,7 +448,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         Vec3d vec3d = new Vec3d(vector4d.getX(), vector4d.getY(), vector4d.getZ());
         this.void_b((float)vector4d.getW());
         this.c(vec3d);
-        this.r = this.java_lang_Float_I().floatValue();
+        this.cameraYaw = this.java_lang_Float_I().floatValue();
         this.getNavigator().clearPath();
         this.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 0.35);
         this.af = true;
@@ -479,7 +479,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     protected void U() {
-        switch ((String)this.entityDataManager.get(h)) {
+        switch ((String)this.entityDataManager.get(GIRL_HAND_STATES)) {
             case "talkHorny": {
                 this.setCurrentAction(Action.TALK_HORNY);
                 break;
@@ -502,7 +502,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("animationFollowUp", "");
         } else {
-            this.entityDataManager.set(h, "");
+            this.entityDataManager.set(GIRL_HAND_STATES, "");
         }
     }
 

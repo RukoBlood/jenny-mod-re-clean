@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod;
 
 import com.trolmastercard.sexmod.util.Reference;
 
-public enum gw_class389 {
+public enum EnumCustomPartCategory {
     GIRL_SPECIFIC,
     HEAD(0, "customHead"),
     FOOT_L(60, "customShoeL"),
@@ -20,14 +20,14 @@ public enum gw_class389 {
     public String boneName = null;
     public int iconXPos = 0;
 
-    private gw_class389() {
+    private EnumCustomPartCategory() {
     }
 
-    private gw_class389(int n2) {
+    private EnumCustomPartCategory(int n2) {
         this.iconXPos = n2;
     }
 
-    private gw_class389(int n2, String string2) {
+    private EnumCustomPartCategory(int n2, String string2) {
         this.iconXPos = n2;
         this.boneName = string2;
         ++Reference.i;
@@ -36,7 +36,7 @@ public enum gw_class389 {
     }
 
     public static int a() {
-        return gw_class389.values().length - 2;
+        return EnumCustomPartCategory.values().length - 2;
     }
 }
 

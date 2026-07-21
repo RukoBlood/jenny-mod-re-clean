@@ -35,7 +35,7 @@ public class BeeInventoryUI extends GuiScreen {
     public BeeInventoryUI(Supporter supporter, EntityPlayer entityPlayer) {
         this.supporter = supporter;
         this.player = entityPlayer;
-        this.e = !"".equals(supporter.getDataManager().get(GirlEntity.v));
+        this.e = !"".equals(supporter.getDataManager().get(GirlEntity.MASTER_UUID));
     }
 
     @Override

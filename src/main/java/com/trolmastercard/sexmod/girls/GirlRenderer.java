@@ -501,7 +501,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     void updateModelMatrices(T entity) {
         ArrayList<String> bonesToTrack = new ArrayList<String>(GirlModel.CAMERA_PLACEMENTS);
-        bonesToTrack.addAll(((GirlEntity)entity).p);
+        bonesToTrack.addAll(((GirlEntity)entity).boneTrackingList);
 
         for (String boneName : bonesToTrack) {
             MatrixStack matrixStack = ((GirlEntity)entity).a(boneName, !((GirlEntity)entity).boolean_h());
@@ -902,7 +902,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     @CheckReturnValue
     protected ItemStack resolveTradePaymentItemStack() {
-        switch (((GirlEntity)this.renderEntity).entityDataManager.get(GirlEntity.h)) {
+        switch (((GirlEntity)this.renderEntity).entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
             case "doggy": {
                 return new ItemStack(Items.DIAMOND, 2);
             }
@@ -952,7 +952,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
                     GlStateManager.translate(0.0, 0.0, 0.025);
                 }
             }
-            GlStateManager.scale(((GirlEntity)this.renderEntity).n, ((GirlEntity)this.renderEntity).n, ((GirlEntity)this.renderEntity).n);
+            GlStateManager.scale(((GirlEntity)this.renderEntity).scaleFactor, ((GirlEntity)this.renderEntity).scaleFactor, ((GirlEntity)this.renderEntity).scaleFactor);
             itemRenderer.renderItem((EntityLivingBase)this.renderEntity, new ItemStack(paymentStack.getItem(), 1), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
             this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
             buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);

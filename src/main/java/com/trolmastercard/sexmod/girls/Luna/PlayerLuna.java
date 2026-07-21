@@ -136,7 +136,7 @@ extends PlayerGirl {
             entityPlayer.setRotationYawHead(this.java_lang_Float_I().floatValue() + 180.0f);
             entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             entityPlayer.prevRotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
-            this.r = this.java_lang_Float_I().floatValue() + 180.0f;
+            this.cameraYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
             this.entityDataManager.set(OUTFIT_INDEX, 0);
         }
@@ -365,7 +365,7 @@ extends PlayerGirl {
                     if (this.boolean_e()) {
                         this.U();
                     }
-                    this.n = 1.0f;
+                    this.scaleFactor = 1.0f;
                     break;
                 }
                 case "breath": 

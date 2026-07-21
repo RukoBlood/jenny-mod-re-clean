@@ -150,7 +150,7 @@ public class GirlInventoryUI extends GuiScreen {
         if (this.n == 0.0f) {
             return;
         }
-        boolean bl = !this.entityDataManager.get(GirlEntity.v).equals("");
+        boolean bl = !this.entityDataManager.get(GirlEntity.MASTER_UUID).equals("");
         int n4 = 35;
         int n5 = 70;
         for (int i = 0; i < 5; ++i) {

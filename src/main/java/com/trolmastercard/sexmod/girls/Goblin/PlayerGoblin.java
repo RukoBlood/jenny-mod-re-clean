@@ -910,7 +910,7 @@ implements ai_class30 {
                     break;
                 }
                 case "catchDone": {
-                    if (!"bj".equals(this.entityDataManager.get(h))) break;
+                    if (!"bj".equals(this.entityDataManager.get(GIRL_HAND_STATES))) break;
                     this.setCurrentAction(Action.CATCH_BJ);
                     break;
                 }

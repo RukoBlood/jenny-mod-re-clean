@@ -204,10 +204,10 @@ implements bh_class82,
 
     @Override
     public void void_g() {
-        this.avoidWater = new EntityAIWanderAvoidWater(this, 0.35);
+        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.o);
-        this.tasks.addTask(5, this.avoidWater);
+        this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
     @Override
@@ -300,7 +300,7 @@ implements bh_class82,
             entityPlayer.setRotationYawHead(this.java_lang_Float_I().floatValue() + 180.0f);
             entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             entityPlayer.prevRotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
-            this.r = this.java_lang_Float_I().floatValue() + 180.0f;
+            this.cameraYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
             this.entityDataManager.set(OUTFIT_INDEX, 0);
         }
@@ -354,7 +354,7 @@ implements bh_class82,
             Vec3d vec3d3 = vec3d.add(vec3dArrayArray[n][0]);
             this.void_b(nArray[n]);
             this.c(new Vec3d(vec3d3.x, vec3d3.y, vec3d3.z));
-            this.r = this.java_lang_Float_I();
+            this.cameraYaw = this.java_lang_Float_I();
             this.getNavigator().clearPath();
             this.getNavigator().tryMoveToXYZ(vec3d3.x, vec3d3.y, vec3d3.z, 0.2);
             this.ay = true;
@@ -393,8 +393,8 @@ implements bh_class82,
         if (this.boolean_J()) {
             return;
         }
-        this.avoidWater = new EntityAIWanderAvoidWater(this, 0.35);
-        this.tasks.addTask(5, this.avoidWater);
+        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
+        this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
     public void void_h() {
@@ -436,9 +436,9 @@ implements bh_class82,
         if (this.ai != null && this.au == null && this.getNavigator().getPath() == null && !this.inWater && this.onGround) {
             object = this.world.rayTraceBlocks(this.getPositionVector().add(0.0, this.getEyeHeight(), 0.0), new Vec3d(this.ai.getX(), this.ai.getY(), this.ai.getZ()), true);
             this.setSilent(true);
-            if (this.avoidWater != null) {
-                this.tasks.removeTask(this.avoidWater);
-                this.avoidWater = null;
+            if (this.avoidWaterGoal != null) {
+                this.tasks.removeTask(this.avoidWaterGoal);
+                this.avoidWaterGoal = null;
             }
             if (this.o != null) {
                 this.tasks.removeTask(this.o);
@@ -594,7 +594,7 @@ implements bh_class82,
 
     @Override
     protected void U() {
-        switch ((String)this.entityDataManager.get(h)) {
+        switch ((String)this.entityDataManager.get(GIRL_HAND_STATES)) {
             case "touch_boobs": {
                 if (this.currentAction() != Action.PAYMENT) {
                     this.setCurrentAction(Action.PAYMENT);
@@ -619,7 +619,7 @@ implements bh_class82,
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("animationFollowUp", "");
         } else {
-            this.entityDataManager.set(h, "");
+            this.entityDataManager.set(GIRL_HAND_STATES, "");
         }
     }
 
@@ -821,7 +821,7 @@ implements bh_class82,
                 }
                 case "eatPay": {
                     this.PlaySoundAtPosition(SoundsHandler.a(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
-                    this.n -= 0.33333334f;
+                    this.scaleFactor -= 0.33333334f;
                     break;
                 }
                 case "burp": {
@@ -875,7 +875,7 @@ implements bh_class82,
                     if (this.boolean_e()) {
                         this.U();
                     }
-                    this.n = 1.0f;
+                    this.scaleFactor = 1.0f;
                     break;
                 }
                 case "breath": 

@@ -110,49 +110,52 @@ import software.bernie.geckolib3.util.MatrixStack;
 
 // em_class258
 public abstract class GirlEntity extends EntityCreature implements IAnimatable {
-    static public int j = 22;
-    final static protected long t = 20L;
+    static public int maxAgeInTicks = 22;
+    final static protected long TICK_RATE = 20L;
     final private AnimationFactory factory = new AnimationFactory(this);
-    public EntityAIWanderAvoidWater avoidWater;
+    public EntityAIWanderAvoidWater avoidWaterGoal;
     public df_class178 o;
-    static public HashSet<GirlEntity> k = new HashSet();
-    public Vec3d playerCamPos;
-    protected float r;
+    static public HashSet<GirlEntity> GLOBAL_GIRL_CACHE = new HashSet();
+    public Vec3d playerCameraOffsetPos;
+    protected float cameraYaw;
     protected EntityDataManager entityDataManager;
-    public PathNavigate f;
+    public PathNavigate pathNavigator;
     public Vec3d homeCoords = Vec3d.ZERO;
-    public EntityEnderPearl q;
-    public float n = 1.0f;
-    public boolean F = false;
-    private boolean i = false;
-    HashMap<String, Vec3d> x = new HashMap();
-    final static public DataParameter<String> v = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(110);
+    public EntityEnderPearl activePearl;
+    public float scaleFactor = 1.0f;
+    public boolean isSpecialState = false;
+    private boolean isRegisteredLocally = false;
+
+    HashMap<String, Vec3d> boneTransformCache = new HashMap();
+    final static public DataParameter<String> MASTER_UUID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(110);
     final static public DataParameter<Boolean> IS_ANCHORED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(109);
-    final static public DataParameter<String> e = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(108);
-    final static public DataParameter<Float> w = EntityDataManager.createKey(GirlEntity.class, DataSerializers.FLOAT).getSerializer().createKey(107);
+    final static public DataParameter<String> TARGET_POS = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(108);
+    final static public DataParameter<Float> YAW_ROTATION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.FLOAT).getSerializer().createKey(107);
     final static public DataParameter<String> GIRL_ID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(106);
     final static public DataParameter<Integer> OUTFIT_INDEX = EntityDataManager.createKey(GirlEntity.class, DataSerializers.VARINT).getSerializer().createKey(105);
-    final static public DataParameter<String> J = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(104);
-    final static public DataParameter<String> h = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(103);
-    final static public DataParameter<String> y = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
-    final static public DataParameter<String> a = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
-    final static public DataParameter<String> b = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(100);
-    final static public DataParameter<String> c = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(99);
-    final static protected List<Item> I = Arrays.asList(Items.EMERALD, Items.DIAMOND, Items.GOLD_INGOT, Items.ENDER_PEARL);
+    final static public DataParameter<String> CUR_ACTION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(104);
+    final static public DataParameter<String> GIRL_HAND_STATES = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(103);
+    final static public DataParameter<String> INTERACTION_PARTNER_UUID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
+    final static public DataParameter<String> WALK_TYPE = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
+    final static public DataParameter<String> CUSTOM_MODEL_KEY = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(100);
+    final static public DataParameter<String> CUSTOM_NAME = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(99);
+
+    final static protected List<Item> TEMPTATION_ITEMS = Arrays.asList(Items.EMERALD, Items.DIAMOND, Items.GOLD_INGOT, Items.ENDER_PEARL);
+
     public AnimationController actionController;
     public AnimationController movementController;
     public AnimationController eyesController;
-    HashMap<String, Pair<Integer, Integer>> A = new HashMap();
-    AnimationProcessor<?> H = null;
-    public List<String> p = new ArrayList<String>();
-    protected List<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>> d = null;
+    HashMap<String, Pair<Integer, Integer>> animationVariantMap = new HashMap();
+    AnimationProcessor<?> cachedAnimationProcessor = null;
+    public List<String> boneTrackingList = new ArrayList<String>();
+    protected List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> customPartsData = null;
 
     public void a(WalkTypes a_inner2592) {
-        this.entityDataManager.set(a, a_inner2592.toString());
+        this.entityDataManager.set(WALK_TYPE, a_inner2592.toString());
     }
 
     public WalkTypes com_trolmastercard_sexmod_em_class258$a_inner259_q() {
-        return WalkTypes.valueOf(this.entityDataManager.get(a));
+        return WalkTypes.valueOf(this.entityDataManager.get(WALK_TYPE));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -172,7 +175,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public Action currentAction() {
-        return Action.valueOf(this.entityDataManager.get(J));
+        return Action.valueOf(this.entityDataManager.get(CUR_ACTION));
     }
 
     public void setCurrentAction(Action action) {
@@ -189,7 +192,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             return;
         }
         currentAction.ticksPlaying = new int[]{0, 0};
-        this.entityDataManager.set(J, action.toString());
+        this.entityDataManager.set(CUR_ACTION, action.toString());
     }
 
     public int int_ah() {
@@ -260,7 +263,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @Nullable
     public UUID getID() {
-        String string = this.entityDataManager.get(y);
+        String string = this.entityDataManager.get(INTERACTION_PARTNER_UUID);
         if (string.equals("null")) {
             return null;
         }
@@ -277,9 +280,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             return;
         }
         if (uUID == null) {
-            this.entityDataManager.set(y, "null");
+            this.entityDataManager.set(INTERACTION_PARTNER_UUID, "null");
         } else {
-            this.entityDataManager.set(y, uUID.toString());
+            this.entityDataManager.set(INTERACTION_PARTNER_UUID, uUID.toString());
         }
     }
 
@@ -288,7 +291,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public Vec3d net_minecraft_util_math_Vec3d_o() {
-        String[] stringArray = this.entityDataManager.get(e).split("\\|");
+        String[] stringArray = this.entityDataManager.get(TARGET_POS).split("\\|");
         return new Vec3d(Double.parseDouble(stringArray[0]), Double.parseDouble(stringArray[1]), Double.parseDouble(stringArray[2]));
     }
 
@@ -298,19 +301,19 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             this.changeDataParameterFromClient("targetPos", string);
             return;
         }
-        this.entityDataManager.set(e, vec3d.x + "|" + vec3d.y + "|" + vec3d.z);
+        this.entityDataManager.set(TARGET_POS, vec3d.x + "|" + vec3d.y + "|" + vec3d.z);
     }
 
     public void a(Vec3d vec3d) {
-        this.entityDataManager.set(e, vec3d.x + "|" + vec3d.y + "|" + vec3d.z);
+        this.entityDataManager.set(TARGET_POS, vec3d.x + "|" + vec3d.y + "|" + vec3d.z);
     }
 
     public Float java_lang_Float_I() {
-        return this.entityDataManager.get(w);
+        return this.entityDataManager.get(YAW_ROTATION);
     }
 
     public void void_b(float f) {
-        this.entityDataManager.set(w, Float.valueOf(f));
+        this.entityDataManager.set(YAW_ROTATION, Float.valueOf(f));
     }
 
     public void void_a(boolean bl) {
@@ -357,24 +360,24 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.f = this.getNavigator();
+        this.pathNavigator = this.getNavigator();
         this.entityDataManager = this.getDataManager();
         this.entityDataManager.register(GIRL_ID, UUID.randomUUID().toString());
         this.entityDataManager.register(OUTFIT_INDEX, 1);
-        this.entityDataManager.register(J, Action.NULL.toString());
-        this.entityDataManager.register(h, "");
-        this.entityDataManager.register(y, "null");
+        this.entityDataManager.register(CUR_ACTION, Action.NULL.toString());
+        this.entityDataManager.register(GIRL_HAND_STATES, "");
+        this.entityDataManager.register(INTERACTION_PARTNER_UUID, "null");
         this.entityDataManager.register(IS_ANCHORED, false);
-        this.entityDataManager.register(w, Float.valueOf(0.0f));
-        this.entityDataManager.register(e, "0|0|0");
-        this.entityDataManager.register(v, "");
-        this.entityDataManager.register(a, WalkTypes.WALK.toString());
-        this.entityDataManager.register(b, "");
-        this.entityDataManager.register(c, "");
+        this.entityDataManager.register(YAW_ROTATION, Float.valueOf(0.0f));
+        this.entityDataManager.register(TARGET_POS, "0|0|0");
+        this.entityDataManager.register(MASTER_UUID, "");
+        this.entityDataManager.register(WALK_TYPE, WalkTypes.WALK.toString());
+        this.entityDataManager.register(CUSTOM_MODEL_KEY, "");
+        this.entityDataManager.register(CUSTOM_NAME, "");
     }
 
     public void b(boolean bl) {
-        this.i = bl;
+        this.isRegisteredLocally = bl;
         if (bl) {
             GirlID.PutGirlInList(this);
         } else {
@@ -383,7 +386,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public boolean boolean_h() {
-        return this.i;
+        return this.isRegisteredLocally;
     }
 
     public static List<GirlEntity> GirlEntityList() {
@@ -424,13 +427,13 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @Override
     protected void initEntityAI() {
-        this.avoidWater = new EntityAIWanderAvoidWater(this, 0.35);
+        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(I)));
+        this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new AutoCloseDoorGoal(this));
         this.tasks.addTask(5, this.o);
-        this.tasks.addTask(5, this.avoidWater);
+        this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
     @Override
@@ -634,8 +637,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             this.changeDataParameterFromClient("master", "");
             this.changeDataParameterFromClient("walk speed", WalkTypes.WALK.toString());
         } else {
-            this.entityDataManager.set(v, "");
-            this.entityDataManager.set(a, WalkTypes.WALK.toString());
+            this.entityDataManager.set(MASTER_UUID, "");
+            this.entityDataManager.set(WALK_TYPE, WalkTypes.WALK.toString());
         }
     }
 
@@ -781,12 +784,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public boolean boolean_J() {
-        return !this.entityDataManager.get(v).isEmpty();
+        return !this.entityDataManager.get(MASTER_UUID).isEmpty();
     }
 
     @Nullable
     public UUID java_util_UUID_O() {
-        String string = this.entityDataManager.get(v);
+        String string = this.entityDataManager.get(MASTER_UUID);
         if ("".equals(string)) {
             return null;
         }
@@ -845,7 +848,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             return;
         }
         AnimationController animationController = animationEvent.getController();
-        Pair pair = this.A.get(string);
+        Pair pair = this.animationVariantMap.get(string);
         if (pair == null) {
             pair = Pair.of((Object)0, (Object)0);
         }
@@ -859,7 +862,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         int n4 = this.a(n2, n3, n, f);
         animationController.setAnimation(new AnimationBuilder().addAnimation(n4 == 0 ? string : string + n4, ILoopType.EDefaultLoopTypes.LOOP));
         animationController.transitionLengthTicks = 0.0;
-        this.A.put(string, Pair.of(n4, (n4 == 0 ? n3 : n4)));
+        this.animationVariantMap.put(string, Pair.of(n4, (n4 == 0 ? n3 : n4)));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -889,7 +892,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     protected void s() {
         if (this.world.isRemote && this.boolean_n()) {
-            this.playerCamPos = null;
+            this.playerCameraOffsetPos = null;
             PackageHandler.networkWrapper.sendToServer(new ResetGirl(this.girlID(), true));
         } else if (!this.world.isRemote) {
             ResetGirl.a_inner422.a((EntityPlayerMP)this.world.getPlayerEntityByUUID(this.getID()));
@@ -949,7 +952,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void void_r() {
-        this.playerCamPos = null;
+        this.playerCameraOffsetPos = null;
         this.setNoGravity(false);
         this.setCurrentAction((Action)null);
         if (this.world.isRemote) {
@@ -1018,18 +1021,18 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             return;
         }
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
-        if (this.playerCamPos == null) {
-            this.playerCamPos = entityPlayer.getPositionVector();
+        if (this.playerCameraOffsetPos == null) {
+            this.playerCameraOffsetPos = entityPlayer.getPositionVector();
         }
-        Vec3d newPos = this.playerCamPos;
-        newPos = newPos.add(-Math.sin((double)(this.r + 90.0f) * (Math.PI / 180)) * x, 0.0, Math.cos((double)(this.r + 90.0f) * (Math.PI / 180)) * x);
+        Vec3d newPos = this.playerCameraOffsetPos;
+        newPos = newPos.add(-Math.sin((double)(this.cameraYaw + 90.0f) * (Math.PI / 180)) * x, 0.0, Math.cos((double)(this.cameraYaw + 90.0f) * (Math.PI / 180)) * x);
         newPos = newPos.add(0.0, y, 0.0);
-        newPos = newPos.add(-Math.sin((double)this.r * (Math.PI / 180)) * z, 0.0, Math.cos((double)this.r * (Math.PI / 180)) * z);
+        newPos = newPos.add(-Math.sin((double)this.cameraYaw * (Math.PI / 180)) * z, 0.0, Math.cos((double)this.cameraYaw * (Math.PI / 180)) * z);
         if (this.world.isRemote) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayer.getPersistentID().toString(), newPos, this.r + yaw, pitch));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayer.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
             return;
         }
-        entityPlayer.setPositionAndRotation(newPos.x, newPos.y, newPos.z, this.r + yaw, pitch);
+        entityPlayer.setPositionAndRotation(newPos.x, newPos.y, newPos.z, this.cameraYaw + yaw, pitch);
         entityPlayer.setPositionAndUpdate(newPos.x, newPos.y, newPos.z);
         this.motionX = 0.0;
         this.motionY = 0.0;
@@ -1049,17 +1052,17 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void g(String string) {
-        this.entityDataManager.set(c, string);
+        this.entityDataManager.set(CUSTOM_NAME, string);
     }
 
     public String java_lang_String_w() {
-        return this.entityDataManager.get(c);
+        return this.entityDataManager.get(CUSTOM_NAME);
     }
 
     public abstract String getGirlName();
 
     public String java_lang_String_ab() {
-        String string = this.entityDataManager.get(c);
+        String string = this.entityDataManager.get(CUSTOM_NAME);
         if (!string.isEmpty()) {
             return string;
         }
@@ -1219,14 +1222,14 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     public MatrixStack a(String string, boolean bl) {
         IBone iBone;
-        if (this.H == null) {
-            this.H = this.b();
+        if (this.cachedAnimationProcessor == null) {
+            this.cachedAnimationProcessor = this.b();
         }
-        if ((iBone = this.H.getBone(string)) == null) {
+        if ((iBone = this.cachedAnimationProcessor.getBone(string)) == null) {
             if (!GirlModel.CAMERA_PLACEMENTS.contains(string)) {
                 Main.LOGGER.log(Level.WARN, String.format("The bone '%s' does not exist on %s. " +
                         "Bone model matrix couldn't be calculated", string, this.getGirlName()));
-                this.p.remove(string);
+                this.boneTrackingList.remove(string);
             }
             return new MatrixStack();
         }
@@ -1268,12 +1271,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     public Vec3d b(String string) {
-        Vec3d vec3d = this.x.get(string);
+        Vec3d vec3d = this.boneTransformCache.get(string);
         if (vec3d != null) {
             return vec3d;
         }
-        if (!this.p.contains(string)) {
-            this.p.add(string);
+        if (!this.boneTrackingList.contains(string)) {
+            this.boneTrackingList.add(string);
         }
         return Vec3d.ZERO;
     }
@@ -1284,7 +1287,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void a(String string, Vec3d vec3d) {
-        this.x.put(string, vec3d);
+        this.boneTransformCache.put(string, vec3d);
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1399,16 +1402,16 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return new ArrayList<Integer>();
     }
 
-    public List<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>> d(UUID uUID) {
-        if (this.d != null) {
-            return this.d;
+    public List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> d(UUID uUID) {
+        if (this.customPartsData != null) {
+            return this.customPartsData;
         }
         ArrayList<Integer> arrayList = this.D();
         if (arrayList.isEmpty()) {
-            this.d = new ArrayList<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>>();
-            return this.d;
+            this.customPartsData = new ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>>();
+            return this.customPartsData;
         }
-        ArrayList<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>> arrayList2 = new ArrayList<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>>();
+        ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> arrayList2 = new ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>>();
         List<Integer> list = GirlEntity.h(uUID);
         for (int i = 0; i < arrayList.size(); ++i) {
             //arrayList2.add(new AbstractMap.SimpleEntry(
@@ -1417,26 +1420,26 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
             arrayList2.add(
                     new AbstractMap.SimpleEntry<>(
-                                    gw_class389.GIRL_SPECIFIC, new AbstractMap.SimpleEntry<>(this.e(arrayList.get(i)), list.get(i))));
+                                    EnumCustomPartCategory.GIRL_SPECIFIC, new AbstractMap.SimpleEntry<>(this.e(arrayList.get(i)), list.get(i))));
         }
-        this.d = arrayList2;
+        this.customPartsData = arrayList2;
         return arrayList2;
     }
 
-    public void b(List<Map.Entry<gw_class389, Map.Entry<List<String>, Integer>>> list) {
-        this.d = list;
+    public void b(List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> list) {
+        this.customPartsData = list;
     }
 
     public void a(int n, int n2) {
-        if (this.d == null) {
+        if (this.customPartsData == null) {
             return;
         }
-        if (this.d.size() - 1 < n) {
+        if (this.customPartsData.size() - 1 < n) {
             return;
         }
-        Map.Entry<gw_class389, Map.Entry<List<String>, Integer>> entry = this.d.get(n);
+        Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry = this.customPartsData.get(n);
         entry.getValue().setValue(n2);
-        this.d.set(n, entry);
+        this.customPartsData.set(n, entry);
     }
 
     public void e(String string) {
@@ -1463,11 +1466,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void f(String string) {
-        this.entityDataManager.set(b, string);
+        this.entityDataManager.set(CUSTOM_MODEL_KEY, string);
     }
 
     public String java_lang_String_C() {
-        return this.entityDataManager.get(b);
+        return this.entityDataManager.get(CUSTOM_MODEL_KEY);
     }
 
     public static String a(HashSet<String> hashSet) {
@@ -1499,10 +1502,6 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     public boolean boolean_H() {
         return true;
-    }
-
-    private static RuntimeException c(RuntimeException runtimeException) {
-        return runtimeException;
     }
 
     public static enum WalkTypes {

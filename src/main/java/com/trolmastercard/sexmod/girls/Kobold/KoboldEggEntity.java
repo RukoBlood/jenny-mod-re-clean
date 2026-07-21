@@ -104,7 +104,7 @@ implements IAnimatable {
         KoboldManager.c(this.f, ff_class3082);
         UUID uUID = KoboldManager.b(this.f);
         if (uUID != null) {
-            ff_class3082.getDataManager().set(GirlEntity.v, uUID.toString());
+            ff_class3082.getDataManager().set(GirlEntity.MASTER_UUID, uUID.toString());
         }
         List<KoboldEntity> list = KoboldManager.n(this.f);
         String string = null;

@@ -375,14 +375,14 @@ extends GirlEntity {
                 }
                 case "deepthroat_prepareDone": {
                     if (!this.boolean_n()) break;
-                    if ("reverse_cowgirl".equals(this.entityDataManager.get(h))) {
+                    if ("reverse_cowgirl".equals(this.entityDataManager.get(GIRL_HAND_STATES))) {
                         this.rotationPitch = 30.0f;
                         this.setCurrentAction(Action.REVERSE_COWGIRL_START);
                         break;
                     }
                     this.setCurrentAction(Action.DEEPTHROAT_START);
                     PackageHandler.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), this.getID(), false, true));
-                    this.r = this.rotationYaw + 180.0f;
+                    this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
                     break;

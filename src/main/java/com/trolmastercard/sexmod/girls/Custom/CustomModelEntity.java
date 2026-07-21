@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.gw_class389;
+import com.trolmastercard.sexmod.EnumCustomPartCategory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -39,7 +39,7 @@ implements IAnimatable {
     AnimationFactory g = new AnimationFactory(this);
     public boolean f = false;
     public MatrixStack c = new MatrixStack();
-    gw_class389 d = null;
+    EnumCustomPartCategory d = null;
 
     public CustomModelEntity(World world) {
         super(world);
@@ -53,7 +53,7 @@ implements IAnimatable {
         this.dataManager.set(b, string);
     }
 
-    public static CustomModelEntity a(World world, UUID uUID, gw_class389 gw_class3892) {
+    public static CustomModelEntity a(World world, UUID uUID, EnumCustomPartCategory gw_class3892) {
         CustomModelEntity cy_class1532 = new CustomModelEntity(world);
         cy_class1532.getDataManager().set(a, uUID.toString());
         cy_class1532.f = true;

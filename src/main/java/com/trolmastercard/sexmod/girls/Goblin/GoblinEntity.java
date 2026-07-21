@@ -396,11 +396,11 @@ implements ai_class30 {
     }
 
     void void_i() {
-        if (this.d == null) {
+        if (this.customPartsData == null) {
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry entry : this.d) {
+        for (Map.Entry entry : this.customPartsData) {
             int n = (Integer)((Map.Entry)entry.getValue()).getValue();
             GoblinEntity.appendFixedGene(stringBuilder, n);
         }
@@ -495,7 +495,7 @@ implements ai_class30 {
                 this.c(entityPlayer.getPositionVector());
                 this.void_b(entityPlayer.rotationYaw);
                 this.setCurrentAction(Action.CATCH);
-                this.entityDataManager.set(h, "bj");
+                this.entityDataManager.set(GIRL_HAND_STATES, "bj");
                 this.void_a(entityPlayer.getPersistentID());
                 this.void_e(entityPlayer.getPersistentID());
                 this.getNavigator().clearPath();
@@ -1750,7 +1750,7 @@ implements ai_class30 {
                     break;
                 }
                 case "catchDone": {
-                    if (!"bj".equals(this.entityDataManager.get(h))) break;
+                    if (!"bj".equals(this.entityDataManager.get(GIRL_HAND_STATES))) break;
                     this.setCurrentAction(Action.CATCH_BJ);
                     break;
                 }

@@ -518,7 +518,7 @@ extends GirlEntity {
                 }
                 case "doggyGoOnBedMSG1": {
                     this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH);
-                    this.r = this.rotationYaw;
+                    this.cameraYaw = this.rotationYaw;
                     break;
                 }
                 case "doggyGoOnBedDone": {

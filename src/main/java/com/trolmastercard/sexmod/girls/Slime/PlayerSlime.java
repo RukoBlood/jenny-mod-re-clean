@@ -138,7 +138,7 @@ extends PlayerGirl {
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         this.void_e(entityPlayer.getPersistentID());
         entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
-        this.r = this.java_lang_Float_I().floatValue();
+        this.cameraYaw = this.java_lang_Float_I().floatValue();
         entityPlayer.setPosition(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z);
         entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
         this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
@@ -375,7 +375,7 @@ extends PlayerGirl {
                 }
                 case "doggyGoOnBedMSG1": {
                     this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH);
-                    this.r = this.rotationYaw;
+                    this.cameraYaw = this.rotationYaw;
                     break;
                 }
                 case "doggyGoOnBedDone": {

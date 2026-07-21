@@ -76,7 +76,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     public static JennyEntity a(World world) {
         JennyEntity jennyEntity = new JennyEntity(world);
-        jennyEntity.F = true;
+        jennyEntity.isSpecialState = true;
         return jennyEntity;
     }
 
@@ -124,14 +124,14 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 15.0);
         if (this.af && entityPlayer != null && entityPlayer.getPositionVector().distanceTo(this.getPositionVector()) < 0.5) {
             this.af = false;
-            this.entityDataManager.set(GirlEntity.y, this.world.getClosestPlayerToEntity(this, 15.0).getPersistentID().toString());
+            this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, this.world.getClosestPlayerToEntity(this, 15.0).getPersistentID().toString());
             EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.getID());
-            this.entityDataManager.set(GirlEntity.y, object.getPersistentID().toString());
+            this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, object.getPersistentID().toString());
             ((EntityPlayerMP)object).setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
             this.a((EntityPlayerMP)object, false);
             ((Entity)object).moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
-            this.playerCamPos = null;
+            this.playerCameraOffsetPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)object);
         }
@@ -156,13 +156,13 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         }
         if (this.ab) {
             ++this.ac;
-            if (this.getPositionVector().equals(GirlEntity.e) || this.ac > 40) {
+            if (this.getPositionVector().equals(GirlEntity.TARGET_POS) || this.ac > 40) {
                 this.ab = false;
                 this.ac = 0;
                 this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
                 this.getNavigator().clearPath();
-                if (this.entityDataManager.get(Y).booleanValue()) {
+                if (this.entityDataManager.get(Y)) {
                     this.U();
                     return;
                 }
@@ -198,7 +198,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public boolean boolean_b(EntityPlayer entityPlayer) {
-        if (this.getID() == null && (!this.boolean_J() || this.entityDataManager.get(GirlEntity.v).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.getID() == null && (!this.boolean_J() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
                 GirlEntity.a(entityPlayer, this, stringArray, true);
@@ -242,7 +242,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[2]);
             this.void_a(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
         } else {
-            this.tasks.removeTask(this.avoidWater);
+            this.tasks.removeTask(this.avoidWaterGoal);
             this.tasks.removeTask(this.o);
             Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
@@ -269,7 +269,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             this.void_a(false);
             this.void_b(nArray[n]);
             this.c(new Vec3d(vec3d3.x, vec3d3.y, vec3d3.z));
-            this.r = this.java_lang_Float_I().floatValue();
+            this.cameraYaw = this.java_lang_Float_I().floatValue();
             this.getNavigator().clearPath();
             this.getNavigator().tryMoveToXYZ(vec3d3.x, vec3d3.y, vec3d3.z, 0.35);
             this.Z = true;
@@ -347,15 +347,15 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public void void_g() {
-        this.avoidWater = new EntityAIWanderAvoidWater(this, 0.35);
+        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.o);
-        this.tasks.addTask(5, this.avoidWater);
+        this.tasks.addTask(5, this.avoidWaterGoal);
     }
 
     @Override
     protected void U() {
-        switch (this.entityDataManager.get(GirlEntity.h)) {
+        switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
             case "strip": {
                 this.s();
                 this.setCurrentAction(Action.STRIP);
@@ -391,7 +391,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("animationFollowUp", "");
         } else {
-            this.entityDataManager.set(GirlEntity.h, "");
+            this.entityDataManager.set(GirlEntity.GIRL_HAND_STATES, "");
         }
     }
 
@@ -569,7 +569,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "stripDone": {
-                    if (!this.entityDataManager.get(GirlEntity.h).equals("boobjob")) {
+                    if (!this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES).equals("boobjob")) {
                         this.void_r();
                     }
                     this.U();
@@ -588,7 +588,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "paymentMSG2": {
                     this.a(SoundsHandler.MISC_PLOB[0], 0.5f);
                     String string = "<" + Minecraft.getMinecraft().player.getName() + "> ";
-                    switch (this.entityDataManager.get(GirlEntity.h)) {
+                    switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
                         case "strip": {
                             this.b(string + I18n.format("jenny.dialogue.showBobsandveganapls", new Object[0]), true);
                             break block71;
@@ -630,7 +630,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "bjiMSG1": {
                     this.h(I18n.format("jenny.dialogue.blowjobtext1", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
-                    this.r = this.rotationYaw + 180.0f;
+                    this.cameraYaw = this.rotationYaw + 180.0f;
                     if (!this.boolean_n()) break;
                     SexUI.resetCumPercentage();
                     break;
@@ -773,7 +773,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "doggyGoOnBedMSG1": {
                     this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[0]);
-                    this.r = this.rotationYaw;
+                    this.cameraYaw = this.rotationYaw;
                     break;
                 }
                 case "doggyGoOnBedMSG2": {
@@ -926,7 +926,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "boobjob_camera": {
                     UUID uUID = Minecraft.getMinecraft().player.getPersistentID();
                     if (!uUID.equals(this.world.getClosestPlayerToEntity(this.com_trolmastercard_sexmod_em_class258_af(), 2.0).getPersistentID())) break;
-                    this.r = this.world.getPlayerEntityByUUID((UUID)uUID).rotationYaw;
+                    this.cameraYaw = this.world.getPlayerEntityByUUID((UUID)uUID).rotationYaw;
                     this.void_e(uUID);
                     if (this.ae) break;
                     this.ae = true;

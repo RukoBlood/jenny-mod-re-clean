@@ -62,14 +62,14 @@ public class SendCompanionHome implements IMessage {
                         girlEntity.void_b((float)Math.atan2(girlEntity.posZ - girlEntity.homeCoords.z, girlEntity.posX - girlEntity.homeCoords.x) * 57.29578f + 90.0f);
                         girlEntity.c(girlEntity.getPositionVector());
                         girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, true);
-                        girlEntity.q = null;
+                        girlEntity.activePearl = null;
                         continue;
                     }
-                    if (girlEntity.q == null) {
+                    if (girlEntity.activePearl == null) {
                         float f = (float)girlEntity.getPositionVector().distanceTo(girlEntity.homeCoords);
-                        girlEntity.q = new ho_class404(girlEntity.world, girlEntity);
-                        girlEntity.q.shoot(girlEntity.homeCoords.x - girlEntity.posX, girlEntity.homeCoords.y - girlEntity.posY, girlEntity.homeCoords.z - girlEntity.posZ, Math.min(4.0f, f * 0.1f), 0.0f);
-                        girlEntity.world.spawnEntity(girlEntity.q);
+                        girlEntity.activePearl = new ho_class404(girlEntity.world, girlEntity);
+                        girlEntity.activePearl.shoot(girlEntity.homeCoords.x - girlEntity.posX, girlEntity.homeCoords.y - girlEntity.posY, girlEntity.homeCoords.z - girlEntity.posZ, Math.min(4.0f, f * 0.1f), 0.0f);
+                        girlEntity.world.spawnEntity(girlEntity.activePearl);
                         continue;
                     }
                     WorldServer worldServer = (WorldServer)girlEntity.world;
@@ -77,7 +77,7 @@ public class SendCompanionHome implements IMessage {
                         worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girlEntity.posX, girlEntity.posY + Reference.RANDOM.nextDouble() * 2.0, girlEntity.posZ, 32, 0.2, 0.2, 0.2, Reference.RANDOM.nextGaussian(), new int[0]);
                     }
                     girlEntity.setPosition(girlEntity.homeCoords.x, girlEntity.homeCoords.y, girlEntity.homeCoords.z);
-                    girlEntity.q = null;
+                    girlEntity.activePearl = null;
                     girlEntity.setCurrentAction(Action.NULL);
                     girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, false);
                     girlEntity.goHome();

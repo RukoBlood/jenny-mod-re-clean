@@ -271,12 +271,12 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     void void_m() {
-        if (this.d == null) {
+        if (this.customPartsData == null) {
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
-        block5: for (int i = 0; i < this.d.size(); ++i) {
-            Map.Entry entry = (Map.Entry)this.d.get(i);
+        block5: for (int i = 0; i < this.customPartsData.size(); ++i) {
+            Map.Entry entry = (Map.Entry)this.customPartsData.get(i);
             int n = (Integer)((Map.Entry)entry.getValue()).getValue();
             switch (i) {
                 case 0: {
@@ -379,7 +379,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     protected void initEntityAI() {
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(I)));
+        this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new AutoCloseDoorGoal(this));
         this.tasks.addTask(5, this.o);
     }
@@ -411,7 +411,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (!itemStack.getItem().equals(Items.NAME_TAG)) {
             itemStack = entityPlayer.getHeldItem(EnumHand.OFF_HAND);
         }
-        if (itemStack.getItem().equals(Items.NAME_TAG) && entityPlayer.getPersistentID().toString().equals(this.entityDataManager.get(v))) {
+        if (itemStack.getItem().equals(Items.NAME_TAG) && entityPlayer.getPersistentID().toString().equals(this.entityDataManager.get(MASTER_UUID))) {
             this.entityDataManager.set(T, itemStack.getDisplayName());
             itemStack.shrink(1);
             return true;
@@ -440,12 +440,12 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.m((UUID)optional.get());
             return true;
         }
-        if (this.boolean_J() && itemStack2.getItem() == DragonStaffItem.DRAGON_STAFF && ((String)this.entityDataManager.get(v)).equals(entityPlayer.getPersistentID().toString())) {
+        if (this.boolean_J() && itemStack2.getItem() == DragonStaffItem.DRAGON_STAFF && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
             entityPlayer.openGui(Main.instance, 1, this.world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
             return true;
         }
         if (this.world.isRemote) {
-            if (this.boolean_J() && ((String)this.entityDataManager.get(v)).equals(entityPlayer.getPersistentID().toString())) {
+            if (this.boolean_J() && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
                 this.a(SoundsHandler.GIRLS_KOBOLD_MASTER);
             }
             this.boolean_b(entityPlayer);
@@ -468,7 +468,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     @Override
     @SideOnly(value=Side.CLIENT)
     public boolean boolean_b(EntityPlayer entityPlayer) {
-        if (this.boolean_J() && entityPlayer.getPersistentID().toString().equals(this.entityDataManager.get(v))) {
+        if (this.boolean_J() && entityPlayer.getPersistentID().toString().equals(this.entityDataManager.get(MASTER_UUID))) {
             Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, entityPlayer, new String[]{"anal", "oral", "mating"}, null, false));
             return true;
         }
@@ -696,13 +696,13 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (this.currentAction() != Action.NULL) {
             return;
         }
-        if (!"".equals(this.entityDataManager.get(h))) {
+        if (!"".equals(this.entityDataManager.get(GIRL_HAND_STATES))) {
             return;
         }
         if (this.entityDataManager.get(ak).booleanValue()) {
             return;
         }
-        String string = (String)this.entityDataManager.get(v);
+        String string = (String)this.entityDataManager.get(MASTER_UUID);
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
         if (entityPlayer == null) {
             this.S = Float.MAX_VALUE;
@@ -733,7 +733,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (!this.boolean_J()) {
             return;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.entityDataManager.get(v)));
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.entityDataManager.get(MASTER_UUID)));
         if (entityPlayer == null) {
             return;
         }
@@ -780,11 +780,11 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     @Override
     protected void U() {
         boolean bl;
-        String string = this.entityDataManager.get(GirlEntity.h);
+        String string = this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES);
         boolean bl2 = this.getActivePotionEffect(HornyPotion.HORNY_POTION) != null;
         boolean bl3 = false;
         if (this.boolean_J()) {
-            bl3 = ((String)this.entityDataManager.get(v)).equals(this.getID().toString());
+            bl3 = ((String)this.entityDataManager.get(MASTER_UUID)).equals(this.getID().toString());
         }
         boolean bl4 = bl = !bl2 && !bl3;
         if (string.equals(Action.STARTBLOWJOB.toString())) {
@@ -1934,7 +1934,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     void void_e() {
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 15.0);
-        if (this.boolean_J() && entityPlayer != null && entityPlayer.getDistance(this) < 2.0f && ((String)this.entityDataManager.get(v)).equals(entityPlayer.getPersistentID().toString())) {
+        if (this.boolean_J() && entityPlayer != null && entityPlayer.getDistance(this) < 2.0f && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
             this.getNavigator().clearPath();
             return;
         }
@@ -1969,7 +1969,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return false;
         }
         this.a0 = 300;
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.entityDataManager.get(v)));
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.entityDataManager.get(MASTER_UUID)));
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(CURRENT_ACTION));
         if (entityPlayer != null) {
             entityPlayer.sendStatusMessage(new TextComponentString((Object)((Object) eyeAndKoboldColor_.getTextColor()) + this.getGirlName() + "s " + (Object)((Object)TextFormatting.WHITE) + "inventory is full and there are either no chests to put her items in or said chests are full as well"), false);
@@ -2440,7 +2440,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         UUID uUID = (UUID)optional.get();
         KoboldManager.a(uUID, this);
-        if (this.boolean_J() && (player = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.getDataManager().get(v)))) != null) {
+        if (this.boolean_J() && (player = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.getDataManager().get(MASTER_UUID)))) != null) {
             player.sendMessage(new TextComponentString(String.format("%s%s%s has perished %suwu", new Object[]{TextFormatting.RED, this.getGirlName(), TextFormatting.WHITE, TextFormatting.RED})));
         }
     }
@@ -2479,7 +2479,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         nBTTagCompound.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getZ());
         nBTTagCompound.setString("model", (String)this.entityDataManager.get(APPEARANCE_DNA));
         nBTTagCompound.setString("name", this.entityDataManager.get(T));
-        nBTTagCompound.setString("master", (String)this.entityDataManager.get(v));
+        nBTTagCompound.setString("master", (String)this.entityDataManager.get(MASTER_UUID));
         nBTTagCompound.setTag("inventory", this.X.serializeNBT());
         nBTTagCompound.setString("bodyColor", (String)this.entityDataManager.get(CURRENT_ACTION));
         nBTTagCompound.setBoolean("editedColorManually", this.aA);
@@ -2504,7 +2504,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         this.entityDataManager.set(aE, Float.valueOf(nBTTagCompound.getFloat("body_size")));
         this.entityDataManager.set(T, nBTTagCompound.getString("name"));
-        this.entityDataManager.set(v, nBTTagCompound.getString("master"));
+        this.entityDataManager.set(MASTER_UUID, nBTTagCompound.getString("master"));
         this.X.deserializeNBT(nBTTagCompound.getCompoundTag("inventory"));
         String string2 = nBTTagCompound.getString("bodyColor");
         if (!string2.isEmpty()) {

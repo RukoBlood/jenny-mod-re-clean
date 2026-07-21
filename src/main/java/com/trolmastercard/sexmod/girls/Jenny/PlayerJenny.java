@@ -74,7 +74,7 @@ public class PlayerJenny extends PlayerGirl {
     public void u_() {
         this.setCurrentAction(Action.STARTDOGGY);
         this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
-        this.r = this.entityDataManager.get(GirlEntity.w);
+        this.cameraYaw = this.entityDataManager.get(GirlEntity.YAW_ROTATION);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class PlayerJenny extends PlayerGirl {
             entityPlayer.capabilities.isFlying = true;
             this.world.getPlayerEntityByUUID((UUID)this.getOwnerUserUUID()).capabilities.isFlying = true;
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
-            this.playerCamPos = null;
+            this.playerCameraOffsetPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         }
@@ -357,7 +357,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "paymentMSG2": {
                     this.a(SoundsHandler.MISC_PLOB[0], 0.5f);
                     String string = "<" + Minecraft.getMinecraft().player.getName() + "> ";
-                    switch (this.entityDataManager.get(GirlEntity.h)) {
+                    switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
                         case "strip": {
                             this.b(string + "show Bobs and vegana pls", true);
                             break block68;
@@ -399,7 +399,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "bjiMSG1": {
                     this.h("What are you...");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
-                    this.r = 180.0f;
+                    this.cameraYaw = 180.0f;
                     if (!this.boolean_n()) break;
                     SexUI.resetCumPercentage();
                     break;
@@ -539,7 +539,7 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "doggyGoOnBedMSG1": {
                     this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[0]);
-                    this.r = this.rotationYaw;
+                    this.cameraYaw = this.rotationYaw;
                     break;
                 }
                 case "doggyGoOnBedMSG2": {
@@ -665,7 +665,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "boobjob_camera": {
                     if (!this.boolean_n() || this.as) break;
                     this.as = true;
-                    this.r = 180.0f;
+                    this.cameraYaw = 180.0f;
                     this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                     break;
                 }

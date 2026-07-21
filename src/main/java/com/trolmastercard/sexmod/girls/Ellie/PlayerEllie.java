@@ -172,7 +172,7 @@ extends PlayerGirl {
     public void updateAITasks() {
         super.updateAITasks();
         if (this.currentAction() == Action.SITDOWNIDLE) {
-            String string = this.entityDataManager.get(GirlEntity.h);
+            String string = this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES);
             if (!"Missionary".equals(string) && !"Cowgirl".equals(string)) {
                 return;
             }
@@ -180,7 +180,7 @@ extends PlayerGirl {
             if (entityPlayer == null || entityPlayer.getDistance(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z) > 1.0) {
                 return;
             }
-            this.entityDataManager.set(GirlEntity.h, "");
+            this.entityDataManager.set(GirlEntity.GIRL_HAND_STATES, "");
             this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
             this.void_e(entityPlayer.getPersistentID());
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)((Optional)this.entityDataManager.get(ai)).get());

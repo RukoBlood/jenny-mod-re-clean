@@ -274,7 +274,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     public GalathEntity(World world, @Nonnull EntityPlayer entityPlayer, Vec3d vec3d, boolean bl) {
         this(world);
         UUID uUID = entityPlayer.getPersistentID();
-        this.entityDataManager.set(v, uUID.toString());
+        this.entityDataManager.set(MASTER_UUID, uUID.toString());
         this.aO.setVisible(false);
         this.bG = new BlockPos(this.getPositionVector());
         String string = NameStorage.getCustomName(uUID, PlayerGirlEntity.GALATH);
@@ -408,7 +408,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     protected void initEntityAI() {
         this.o = new df_class178(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(I)));
+        this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new AutoCloseDoorGoal(this));
         this.tasks.addTask(5, this.o);
     }
@@ -1135,9 +1135,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             }
             return;
         }
-        this.f = this.getNavigator();
+        this.pathNavigator = this.getNavigator();
         if (entity.getDistance(this) <= 3.65f) {
-            this.f.clearPath();
+            this.pathNavigator.clearPath();
             this.setCurrentAction(Action.HUG_MANG);
             this.motionX = 0.0;
             this.motionY = 0.0;
@@ -1155,8 +1155,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
         float f = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
         this.void_b(f);
-        this.f.clearPath();
-        this.f.tryMoveToEntityLiving(entity, 0.65f);
+        this.pathNavigator.clearPath();
+        this.pathNavigator.tryMoveToEntityLiving(entity, 0.65f);
         this.setCurrentAction(Action.RUN);
     }
 
@@ -2136,7 +2136,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     @Override
     public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
         super.writeEntityToNBT(nBTTagCompound);
-        nBTTagCompound.setString("sexmod:master", (String)this.entityDataManager.get(v));
+        nBTTagCompound.setString("sexmod:master", (String)this.entityDataManager.get(MASTER_UUID));
         if (this.bA) {
             nBTTagCompound.setBoolean("sexmod:despawned", true);
         }
@@ -2147,7 +2147,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         String string;
         UUID uUID;
         super.readEntityFromNBT(nBTTagCompound);
-        this.entityDataManager.set(v, nBTTagCompound.getString("sexmod:master"));
+        this.entityDataManager.set(MASTER_UUID, nBTTagCompound.getString("sexmod:master"));
         if (nBTTagCompound.getBoolean("sexmod:despawned")) {
             this.P = true;
         }

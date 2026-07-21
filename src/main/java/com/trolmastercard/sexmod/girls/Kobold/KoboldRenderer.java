@@ -107,7 +107,7 @@ public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
 
     @Override
     protected ItemStack resolveTradePaymentItemStack() {
-        String string = ((KoboldEntity)this.renderEntity).getDataManager().get(GirlEntity.h);
+        String string = ((KoboldEntity)this.renderEntity).getDataManager().get(GirlEntity.GIRL_HAND_STATES);
         if ("STARTBLOWJOB".equals(string)) {
             return new ItemStack(Items.IRON_PICKAXE);
         }

@@ -295,7 +295,7 @@ implements bh_class82 {
         Vec3d vec3d2;
         EntityPlayer entityPlayer;
         UUID uUID;
-        String string = (String)this.entityDataManager.get(h);
+        String string = (String)this.entityDataManager.get(GIRL_HAND_STATES);
         if ("Missionary".equals(string)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.MISSIONARY_START);
@@ -475,7 +475,7 @@ implements bh_class82 {
         this.setNoGravity(true);
         this.noClip = true;
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-        this.tasks.removeTask(this.avoidWater);
+        this.tasks.removeTask(this.avoidWaterGoal);
         this.tasks.removeTask(this.o);
     }
 

@@ -85,7 +85,7 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
         this.pathNavigate.clearPath();
         this.CurState = States.IDLE;
         this.entity.setCurrentAction(Action.NULL);
-        this.dataManager.set(GirlEntity.v, "");
+        this.dataManager.set(GirlEntity.MASTER_UUID, "");
         this.pathNavigate = null;
         this.dataManager = null;
         this.player = null;
@@ -93,12 +93,12 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        return !this.entity.getDataManager().get(GirlEntity.v).isEmpty();
+        return !this.entity.getDataManager().get(GirlEntity.MASTER_UUID).isEmpty();
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        String string = this.dataManager.get(GirlEntity.v);
+        String string = this.dataManager.get(GirlEntity.MASTER_UUID);
         return !string.isEmpty() && this.entity.world.getPlayerEntityByUUID(UUID.fromString(string)) != null;
     }
 
@@ -106,7 +106,7 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
     public void startExecuting() {
         this.pathNavigate = this.entity.getNavigator();
         this.dataManager = this.entity.getDataManager();
-        this.player = this.entity.world.getPlayerEntityByUUID(UUID.fromString(this.dataManager.get(GirlEntity.v)));
+        this.player = this.entity.world.getPlayerEntityByUUID(UUID.fromString(this.dataManager.get(GirlEntity.MASTER_UUID)));
     }
 
     @Override
@@ -125,7 +125,7 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
     @SubscribeEvent
     public void onGirlDeath(LivingDeathEvent event) {
         GirlEntity girl;
-        if (event.getEntityLiving() instanceof GirlEntity && !(girl = (GirlEntity) event.getEntityLiving()).getDataManager().get(GirlEntity.v).isEmpty()) {
+        if (event.getEntityLiving() instanceof GirlEntity && !(girl = (GirlEntity) event.getEntityLiving()).getDataManager().get(GirlEntity.MASTER_UUID).isEmpty()) {
             event.setCanceled(true);
         }
     }

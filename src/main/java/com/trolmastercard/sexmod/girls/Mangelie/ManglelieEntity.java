@@ -540,9 +540,9 @@ extends GirlEntity {
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
         float f = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
         this.void_b(f);
-        this.f = this.getNavigator();
-        this.f.clearPath();
-        this.f.tryMoveToEntityLiving(entity, 0.65f);
+        this.pathNavigator = this.getNavigator();
+        this.pathNavigator.clearPath();
+        this.pathNavigator.tryMoveToEntityLiving(entity, 0.65f);
     }
 
     boolean a(Entity entity, float f) {
@@ -696,7 +696,7 @@ extends GirlEntity {
         if (this.boolean_r()) {
             this.setCurrentAction(Action.RIDE_MOMMY_HEAD);
             this.void_b(0.0f);
-            this.entityDataManager.setDirty(w);
+            this.entityDataManager.setDirty(YAW_ROTATION);
         }
     }
 

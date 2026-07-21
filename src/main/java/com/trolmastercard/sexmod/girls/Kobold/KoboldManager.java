@@ -534,7 +534,7 @@ public class KoboldManager {
         if (!ff_class3082.boolean_J()) {
             return null;
         }
-        String string = list.get(0).getDataManager().get(GirlEntity.v);
+        String string = list.get(0).getDataManager().get(GirlEntity.MASTER_UUID);
         return UUID.fromString(string);
     }
 

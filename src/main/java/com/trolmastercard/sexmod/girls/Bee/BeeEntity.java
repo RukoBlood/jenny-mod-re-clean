@@ -86,7 +86,7 @@ public class BeeEntity extends Supporter {
         pathNavigateFlying.setCanOpenDoors(false);
         pathNavigateFlying.setCanFloat(true);
         pathNavigateFlying.setCanEnterDoors(true);
-        this.f = pathNavigateFlying;
+        this.pathNavigator = pathNavigateFlying;
         return pathNavigateFlying;
     }
 
@@ -165,14 +165,14 @@ public class BeeEntity extends Supporter {
             this.entityDataManager.set(IS_ANCHORED, true);
             this.c(this.net_minecraft_util_math_Vec3d_aa());
             this.void_b(entityPlayer.rotationYaw - 180.0f);
-            this.f.clearPath();
+            this.pathNavigator.clearPath();
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
             this.setCurrentAction(Action.CITIZEN_START);
             Vec3d vec3d = this.a(0.2);
             entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
         } else {
-            this.f.clearPath();
-            this.f.tryMoveToEntityLiving(entityPlayer, 1.0);
+            this.pathNavigator.clearPath();
+            this.pathNavigator.tryMoveToEntityLiving(entityPlayer, 1.0);
         }
     }
 

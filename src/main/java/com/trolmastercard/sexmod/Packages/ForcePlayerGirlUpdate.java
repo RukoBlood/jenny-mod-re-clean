@@ -61,7 +61,7 @@ implements IMessage {
             if (ei_class2512 == null) {
                 return null;
             }
-            ei_class2512.getDataManager().set(GirlEntity.J, gd_class3612.a.toString());
+            ei_class2512.getDataManager().set(GirlEntity.CUR_ACTION, gd_class3612.a.toString());
             ei_class2512.getDataManager().set(GirlEntity.OUTFIT_INDEX, gd_class3612.b);
             return null;
         }

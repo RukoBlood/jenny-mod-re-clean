@@ -54,11 +54,7 @@ implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)(this.c == null ? "null" : this.c));
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
-    public static class a_inner416
+    public static class Handler
     implements IMessageHandler<ChangeDataParameter, IMessage> {
         public IMessage a(ChangeDataParameter n_class4152, MessageContext messageContext) {
             if (!n_class4152.b) {
@@ -85,7 +81,7 @@ implements IMessage {
                         break;
                     }
                     case "animationFollowUp": {
-                        girlEntity.getDataManager().set(GirlEntity.h, n_class4152.c);
+                        girlEntity.getDataManager().set(GirlEntity.GIRL_HAND_STATES, n_class4152.c);
                         break;
                     }
                     case "playerSheHasSexWith": {
@@ -103,11 +99,11 @@ implements IMessage {
                         break;
                     }
                     case "master": {
-                        girlEntity.getDataManager().set(GirlEntity.v, n_class4152.c);
+                        girlEntity.getDataManager().set(GirlEntity.MASTER_UUID, n_class4152.c);
                         break;
                     }
                     case "walk speed": {
-                        girlEntity.getDataManager().set(GirlEntity.a, n_class4152.c);
+                        girlEntity.getDataManager().set(GirlEntity.WALK_TYPE, n_class4152.c);
                         break;
                     }
                     case "shouldbeattargetpos": {

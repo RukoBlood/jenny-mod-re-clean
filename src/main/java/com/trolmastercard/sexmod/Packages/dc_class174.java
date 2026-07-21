@@ -72,7 +72,7 @@ implements IMessage {
                 if (em_class2582.world.isRemote) continue;
                 if (em_class2582 instanceof JennyEntity || em_class2582 instanceof EllieEntity || em_class2582 instanceof LunaEntity) {
                     em_class2582.tasks.removeTask(em_class2582.o);
-                    em_class2582.tasks.removeTask(em_class2582.avoidWater);
+                    em_class2582.tasks.removeTask(em_class2582.avoidWaterGoal);
                 }
                 em_class2582.getNavigator().clearPath();
                 em_class2582.motionX = 0.0;

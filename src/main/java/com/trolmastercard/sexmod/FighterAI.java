@@ -346,7 +346,7 @@ public class FighterAI extends BaseCompanionGoal {
                 Fighter e2_class2182 = (Fighter)livingHurtEvent.getEntityLiving();
                 if (e2_class2182.N) {
                     livingHurtEvent.setCanceled(true);
-                } else if (e2_class2182.getHealth() - livingHurtEvent.getAmount() < 0.0f && !((String)e2_class2182.getDataManager().get(Fighter.v)).equals("")) {
+                } else if (e2_class2182.getHealth() - livingHurtEvent.getAmount() < 0.0f && !((String)e2_class2182.getDataManager().get(Fighter.MASTER_UUID)).equals("")) {
                     e2_class2182.N = true;
                     e2_class2182.setCurrentAction(Action.DOWNED);
                     livingHurtEvent.setAmount(e2_class2182.getHealth() - 1.0f);

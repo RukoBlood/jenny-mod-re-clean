@@ -216,7 +216,7 @@ extends PlayerGirl {
                     this.setCurrentAction(Action.DEEPTHROAT_START);
                     if (!this.boolean_n()) break;
                     PackageHandler.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), this.getID(), false, true));
-                    this.r = this.rotationYaw + 180.0f;
+                    this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
                     break;

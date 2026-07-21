@@ -211,7 +211,7 @@ public abstract class PlayerGirl extends Fighter {
 
     @Override
     public void void_r() {
-        this.playerCamPos = null;
+        this.playerCameraOffsetPos = null;
         this.setNoGravity(false);
         if (this.world.isRemote) {
             this.V();

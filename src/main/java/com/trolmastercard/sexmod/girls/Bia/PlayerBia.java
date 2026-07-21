@@ -194,7 +194,7 @@ extends PlayerGirl {
             } else {
                 this.void_e(entityPlayer.getPersistentID());
             }
-            this.ar = GirlEntity.j;
+            this.ar = GirlEntity.maxAgeInTicks;
             return;
         }
         if (--this.ar > 0) {
