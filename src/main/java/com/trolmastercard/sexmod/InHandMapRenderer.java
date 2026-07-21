@@ -51,7 +51,7 @@ public class InHandMapRenderer {
         if (state == null) {
             return;
         }
-        int activeHandIndex = state.int_ah();
+        int activeHandIndex = state.getOutfitIndex();
         this.handModelRenderer = state.getLimbRenderer(activeHandIndex);
         this.texture = new ResourceLocation("sexmod", state.HandTexture(activeHandIndex));
         this.handColor = state.net_minecraft_util_math_Vec3i_b(activeHandIndex);

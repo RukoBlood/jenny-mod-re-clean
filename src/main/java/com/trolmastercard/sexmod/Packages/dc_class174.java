@@ -79,10 +79,10 @@ implements IMessage {
                 em_class2582.motionY = 0.0;
                 em_class2582.motionZ = 0.0;
                 if (em_class2582.getID() == null) {
-                    em_class2582.void_e(uUID2);
+                    em_class2582.setInteractionPlayerUUID(uUID2);
                 }
                 if (bl2) {
-                    em_class2582.c(em_class2582.net_minecraft_util_math_Vec3d_aa());
+                    em_class2582.setTargetPosition(em_class2582.net_minecraft_util_math_Vec3d_aa());
                 }
                 em_class2582.j(em_class2582.getID());
                 if (!bl) {

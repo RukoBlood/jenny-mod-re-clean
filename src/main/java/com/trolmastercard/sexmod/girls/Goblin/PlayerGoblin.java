@@ -128,14 +128,14 @@ implements ai_class30 {
         if ("anal".equals(string)) {
             this.void_b(uUID);
             this.setCurrentAction(Action.NELSON_INTRO);
-            this.a(this.int_ah(), Action.NELSON_INTRO);
-            this.f(0);
+            this.a(this.getOutfitIndex(), Action.NELSON_INTRO);
+            this.setOutfitIndex(0);
         }
         if ("paizuri".equals(string)) {
             this.void_b(uUID);
             this.setCurrentAction(Action.PAIZURI_START);
-            this.a(this.int_ah(), Action.PAIZURI_START);
-            this.f(0);
+            this.a(this.getOutfitIndex(), Action.PAIZURI_START);
+            this.setOutfitIndex(0);
         }
     }
 
@@ -408,7 +408,7 @@ implements ai_class30 {
         if (n == 39) {
             this.void_c(-1);
             this.setCurrentAction(Action.THROWN);
-            this.void_e((UUID)null);
+            this.setInteractionPlayerUUID((UUID)null);
             this.void_a((UUID)null);
         }
     }

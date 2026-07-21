@@ -161,9 +161,9 @@ public class BeeEntity extends Supporter {
         }
         if (entityPlayer.getDistance(this) < 1.5f) {
             this.N = 0.0f;
-            this.void_e(entityPlayer.getPersistentID());
+            this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             this.entityDataManager.set(IS_ANCHORED, true);
-            this.c(this.net_minecraft_util_math_Vec3d_aa());
+            this.setTargetPosition(this.net_minecraft_util_math_Vec3d_aa());
             this.void_b(entityPlayer.rotationYaw - 180.0f);
             this.pathNavigator.clearPath();
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
@@ -360,13 +360,13 @@ public class BeeEntity extends Supporter {
                     break;
                 }
                 case "sex_fastMSG1": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "sex_startMSG1": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -381,8 +381,8 @@ public class BeeEntity extends Supporter {
                     break;
                 }
                 case "sex_cumMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_CUMINFLATION), 2.0f);
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 2.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "blackscreen": {

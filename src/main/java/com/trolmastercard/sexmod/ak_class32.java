@@ -34,7 +34,7 @@ public class ak_class32 {
         if (!em_class2582.boolean_Q()) {
             return ak_class32.b(entity, f);
         }
-        return em_class2582.net_minecraft_util_math_Vec3d_o();
+        return em_class2582.getTargetPosition();
     }
 
     static Vec3d b(Entity entity, float f) {

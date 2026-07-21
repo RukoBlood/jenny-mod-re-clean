@@ -233,7 +233,7 @@ extends GirlEntity {
             return;
         }
         if (n >= 4 && this.onGround && this.currentAction() == Action.NULL) {
-            this.c(this.getPositionVector());
+            this.setTargetPosition(this.getPositionVector());
             this.void_b(this.rotationYaw);
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setNoGravity(true);
@@ -245,7 +245,7 @@ extends GirlEntity {
         if (entityPlayer == null || !entityPlayer.onGround || SlimeEntity.getActiveSceneInfo(entityPlayer) != null) {
             return;
         }
-        this.c(this.getPositionVector());
+        this.setTargetPosition(this.getPositionVector());
         this.void_b(this.rotationYaw);
         this.entityDataManager.set(IS_ANCHORED, true);
         this.setNoGravity(true);
@@ -253,7 +253,7 @@ extends GirlEntity {
         entityPlayer.setNoGravity(true);
         entityPlayer.noClip = true;
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-        this.void_e(entityPlayer.getPersistentID());
+        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
         entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
         Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.java_lang_Float_I().floatValue());
         entityPlayer.setPosition(this.posX + vec3d.x, this.posY, this.posZ + vec3d.z);
@@ -538,11 +538,11 @@ extends GirlEntity {
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     break;
                 }
@@ -553,7 +553,7 @@ extends GirlEntity {
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
@@ -570,7 +570,7 @@ extends GirlEntity {
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.boolean_n()) {
                         SexUI.addCumPercentage(0.04);
                     }
@@ -593,7 +593,7 @@ extends GirlEntity {
                 }
                 case "doggycumMSG1": {
                     this.a(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                     break;
                 }

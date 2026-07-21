@@ -169,20 +169,20 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
         if ("anal".equals(string)) {
             this.void_b(uUID);
             this.setCurrentAction(Action.KOBOLD_ANAL_START);
-            this.a(this.int_ah(), Action.KOBOLD_ANAL_START);
-            this.f(0);
+            this.a(this.getOutfitIndex(), Action.KOBOLD_ANAL_START);
+            this.setOutfitIndex(0);
         }
         if ("oral".equals(string)) {
             this.void_b(uUID);
             this.setCurrentAction(Action.STARTBLOWJOB);
-            this.a(this.int_ah(), Action.STARTBLOWJOB);
-            this.f(0);
+            this.a(this.getOutfitIndex(), Action.STARTBLOWJOB);
+            this.setOutfitIndex(0);
         }
         if ("mating".equals(string)) {
             this.void_b(uUID);
             this.setCurrentAction(Action.MATING_PRESS_START);
-            this.a(this.int_ah(), Action.MATING_PRESS_START);
-            this.f(0);
+            this.a(this.getOutfitIndex(), Action.MATING_PRESS_START);
+            this.setOutfitIndex(0);
         }
     }
 
@@ -467,14 +467,14 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f, 0.0f));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f - 40.0f, 0.0f));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
                 case "lipsound": {
@@ -539,7 +539,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue(), 0.0f));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue(), 0.0f));
                     break;
                 }
                 case "pounding": {
@@ -617,7 +617,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "bjmoan": {
-                    this.b(SoundsHandler.a(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
+                    this.b(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
                     break;
                 }
                 case "blowjobStartbreath": {
@@ -630,7 +630,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
                     vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
-                    vec3d = vec3d.add(this.net_minecraft_util_math_Vec3d_o());
+                    vec3d = vec3d.add(this.getTargetPosition());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 10.0f));
                     break;
                 }
@@ -665,7 +665,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
                     vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
-                    vec3d = vec3d.add(this.net_minecraft_util_math_Vec3d_o());
+                    vec3d = vec3d.add(this.getTargetPosition());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 70.0f));
                     break;
                 }

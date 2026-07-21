@@ -23,10 +23,10 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class RequestRiding
 implements IMessage {
-    boolean a = false;
+    boolean valid = false;
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = true;
+        this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -34,12 +34,12 @@ implements IMessage {
 
     public static class Handler
     implements IMessageHandler<RequestRiding, IMessage> {
-        public IMessage a(RequestRiding bk_class852, MessageContext messageContext) {
-            if (!bk_class852.a || !messageContext.side.equals((Object)Side.SERVER)) {
+        public IMessage a(RequestRiding msg, MessageContext ctx) {
+            if (!msg.valid || !ctx.side.equals((Object)Side.SERVER)) {
                 System.out.println("received an invalid message @RequestRiding :(");
                 return null;
             }
-            EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
+            EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
             UUID uUID = GalathMangTracker.b(entityPlayerMP);
             GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID);
             if (em_class2582 == null) {
@@ -47,7 +47,7 @@ implements IMessage {
             }
             ((Entity)entityPlayerMP).startRiding(em_class2582, true);
             em_class2582.setCurrentAction(Action.CONTROLLED_FLIGHT);
-            em_class2582.void_a(entityPlayerMP);
+            em_class2582.setInteractionPlayer(entityPlayerMP);
             em_class2582.motionY = 0.25;
             entityPlayerMP.world.getChunk(em_class2582.getPosition()).removeEntity(em_class2582);
             return null;
@@ -56,10 +56,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(RequestRiding iMessage, MessageContext messageContext) {
             return this.a((RequestRiding)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

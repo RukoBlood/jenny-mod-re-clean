@@ -95,13 +95,13 @@ implements b7_class68 {
         if ("cowgirl".equals(string)) {
             this.void_b(uUID);
             this.setCurrentAction(Action.RAPE_INTRO);
-            this.a(this.int_ah(), Action.RAPE_INTRO);
+            this.a(this.getOutfitIndex(), Action.RAPE_INTRO);
             return;
         }
         if ("mating press".equals(string)) {
             this.void_b(uUID);
             this.setCurrentAction(Action.CORRUPT_SLOW);
-            this.a(this.int_ah(), Action.CORRUPT_SLOW);
+            this.a(this.getOutfitIndex(), Action.CORRUPT_SLOW);
             this.void_a();
             return;
         }
@@ -130,7 +130,7 @@ implements b7_class68 {
         if (entityPlayer == null) {
             return;
         }
-        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayer.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
+        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayer.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.getTargetPosition());
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
@@ -162,7 +162,7 @@ implements b7_class68 {
 
     @Override
     public boolean boolean_c() {
-        return this.int_ah() == 0 || this.ap;
+        return this.getOutfitIndex() == 0 || this.ap;
     }
 
     @Override
@@ -436,7 +436,7 @@ implements b7_class68 {
                     this.aq = true;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     float f = this.java_lang_Float_I().floatValue() + 220.0f;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.net_minecraft_util_math_Vec3d_o());
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.java_lang_Float_I().floatValue()).add(this.getTargetPosition());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
                     SexUI.init();
                     break;
@@ -451,9 +451,9 @@ implements b7_class68 {
                         Vec3d vec3d = em_class2582.d("futaCockTip");
                         Vec3d vec3d2 = em_class2582.d("futaCockTipDirHelp");
                         return vec3d.subtract(vec3d2).normalize();
-                    }, em_class2582 -> em_class2582.b("futaCockTip").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.3f, 0.3f));
-                    ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.6f, 0.5f));
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
+                    }, em_class2582 -> em_class2582.b("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
+                    ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.java_lang_Float_I().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": 

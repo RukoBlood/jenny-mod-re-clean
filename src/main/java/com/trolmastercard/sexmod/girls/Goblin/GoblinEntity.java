@@ -173,7 +173,7 @@ implements ai_class30 {
         this.ac = f;
         this.al = vec3d;
         this.aX = true;
-        this.c(vec3d);
+        this.setTargetPosition(vec3d);
         this.void_b(f);
         this.setCurrentAction(Action.SIT);
         this.void_a(true);
@@ -235,14 +235,14 @@ implements ai_class30 {
         this.aY = 0;
         fh_class313.b();
         HandlePlayerMovement.a(false);
-        this.void_e(uUID);
+        this.setInteractionPlayerUUID(uUID);
     }
 
     public void void_b(UUID uUID) {
         this.az = 0;
         fh_class313.b();
         HandlePlayerMovement.a(false);
-        this.void_e(uUID);
+        this.setInteractionPlayerUUID(uUID);
     }
 
     @Override
@@ -492,12 +492,12 @@ implements ai_class30 {
             if ((double)this.getDistance(entityPlayer) > 3.5) {
                 entityPlayer.sendStatusMessage(new TextComponentString("get a bit closer..."), true);
             } else {
-                this.c(entityPlayer.getPositionVector());
+                this.setTargetPosition(entityPlayer.getPositionVector());
                 this.void_b(entityPlayer.rotationYaw);
                 this.setCurrentAction(Action.CATCH);
                 this.entityDataManager.set(GIRL_HAND_STATES, "bj");
                 this.void_a(entityPlayer.getPersistentID());
-                this.void_e(entityPlayer.getPersistentID());
+                this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
                 this.getNavigator().clearPath();
                 this.motionX = 0.0;
                 this.motionY = 0.0;
@@ -693,7 +693,7 @@ implements ai_class30 {
             e3_class2192.setCurrentAction(Action.VANISH);
         }
         this.ab.clear();
-        this.void_e((UUID)null);
+        this.setInteractionPlayerUUID((UUID)null);
     }
 
     void void_b() {
@@ -717,9 +717,9 @@ implements ai_class30 {
             this.void_r();
             return;
         }
-        this.void_e((UUID)null);
+        this.setInteractionPlayerUUID((UUID)null);
         for (GoblinEntity e3_class2192 : this.ab) {
-            e3_class2192.void_e((UUID)null);
+            e3_class2192.setInteractionPlayerUUID((UUID)null);
         }
         List<GoblinEntity> list = this.I();
         float f = this.ac + 180.0f;
@@ -728,8 +728,8 @@ implements ai_class30 {
         Vec3d vec3d3 = this.al.add(GoblinEntity.b(as, f));
         GoblinEntity e3_class2193 = (GoblinEntity)list.get(0);
         GoblinEntity e3_class2194 = (GoblinEntity)list.get(1);
-        e3_class2193.c(vec3d);
-        e3_class2194.c(vec3d2);
+        e3_class2193.setTargetPosition(vec3d);
+        e3_class2194.setTargetPosition(vec3d2);
         e3_class2193.void_b(0.0f);
         e3_class2194.void_b(0.0f);
         e3_class2193.void_a(true);
@@ -769,7 +769,7 @@ implements ai_class30 {
             return;
         }
         Vec3d vec3d = GoblinEntity.b(new Vec3d(0.0, 0.15625 - (double)entityPlayer.getEyeHeight(), -0.8859375), this.ac - 180.0f);
-        vec3d = vec3d.add(this.net_minecraft_util_math_Vec3d_o());
+        vec3d = vec3d.add(this.getTargetPosition());
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
@@ -821,7 +821,7 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return;
         }
-        this.c(vec3d);
+        this.setTargetPosition(vec3d);
         this.void_b(this.ac);
         this.setCurrentAction(Action.BREEDING_INTRO_0);
         this.noClip = true;
@@ -833,7 +833,7 @@ implements ai_class30 {
         List<GoblinEntity> list = this.I();
         if (list.size() >= 1) {
             e3_class2192 = list.get(0);
-            e3_class2192.c(vec3d);
+            e3_class2192.setTargetPosition(vec3d);
             e3_class2192.void_b(this.ac);
             e3_class2192.setCurrentAction(Action.BREEDING_INTRO_1);
             e3_class2192.noClip = true;
@@ -841,7 +841,7 @@ implements ai_class30 {
         }
         if (list.size() >= 2) {
             e3_class2192 = list.get(1);
-            e3_class2192.c(vec3d);
+            e3_class2192.setTargetPosition(vec3d);
             e3_class2192.void_b(this.ac);
             e3_class2192.setCurrentAction(Action.BREEDING_INTRO_2);
             e3_class2192.noClip = true;
@@ -903,24 +903,24 @@ implements ai_class30 {
         Vec3d vec3d3 = entityPlayer.getPositionVector();
         float f = entityPlayer.rotationYaw + 180.0f;
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-        this.void_e(uUID);
+        this.setInteractionPlayerUUID(uUID);
         this.setCurrentAction(Action.JUMP_0);
-        this.c(vec3d3);
+        this.setTargetPosition(vec3d3);
         this.void_b(f);
         this.void_a(true);
         List<GoblinEntity> list2 = this.I();
         if (list2.size() > 0) {
             GoblinEntity e3_class2192 = list2.get(0);
-            e3_class2192.void_e(uUID);
+            e3_class2192.setInteractionPlayerUUID(uUID);
             e3_class2192.setCurrentAction(Action.JUMP_1);
-            e3_class2192.c(vec3d3);
+            e3_class2192.setTargetPosition(vec3d3);
             e3_class2192.void_b(f);
             e3_class2192.void_a(true);
             if (list2.size() > 1) {
                 GoblinEntity e3_class2193 = list2.get(1);
-                e3_class2193.void_e(uUID);
+                e3_class2193.setInteractionPlayerUUID(uUID);
                 e3_class2193.setCurrentAction(Action.JUMP_2);
-                e3_class2193.c(vec3d3);
+                e3_class2193.setTargetPosition(vec3d3);
                 e3_class2193.void_b(f);
                 e3_class2193.void_a(true);
             }
@@ -984,7 +984,7 @@ implements ai_class30 {
         if (n == 39) {
             this.void_c(-1);
             this.setCurrentAction(Action.THROWN);
-            this.void_e((UUID)null);
+            this.setInteractionPlayerUUID((UUID)null);
             this.void_a((UUID)null);
         }
     }
@@ -1156,7 +1156,7 @@ implements ai_class30 {
         if (this.getID() != null) {
             return;
         }
-        this.c(this.al);
+        this.setTargetPosition(this.al);
         this.void_b(this.ac);
         this.void_a(true);
         this.setNoGravity(true);
@@ -1249,7 +1249,7 @@ implements ai_class30 {
             return;
         }
         this.setCurrentAction(Action.NULL);
-        this.void_e((UUID)null);
+        this.setInteractionPlayerUUID((UUID)null);
         this.void_a((UUID)null);
         this.world.removeEntity(this);
     }
@@ -1295,7 +1295,7 @@ implements ai_class30 {
             return;
         }
         if (action == Action.START_THROWING && !this.world.isRemote) {
-            this.void_e(this.java_util_UUID_e());
+            this.setInteractionPlayerUUID(this.java_util_UUID_e());
             this.L_();
         }
         if (action == Action.PAIZURI_START && !this.world.isRemote) {
@@ -1329,7 +1329,7 @@ implements ai_class30 {
         if (entityPlayer != null) {
             ResetGirl.a_inner422.a((EntityPlayerMP)entityPlayer);
         }
-        this.void_e((UUID)null);
+        this.setInteractionPlayerUUID((UUID)null);
         this.void_a(false);
         this.noClip = false;
         this.setNoGravity(false);
@@ -1346,14 +1346,14 @@ implements ai_class30 {
             return;
         }
         this.void_a((UUID)null);
-        this.c(entityPlayer.getPositionVector());
+        this.setTargetPosition(entityPlayer.getPositionVector());
         this.void_b(entityPlayer.rotationYaw);
         this.void_a(true);
         this.noClip = true;
         this.setNoGravity(true);
         entityPlayer.setNoGravity(true);
         entityPlayer.noClip = true;
-        this.void_e(entityPlayer.getPersistentID());
+        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
     }
 
     void void_z() {
@@ -1362,14 +1362,14 @@ implements ai_class30 {
             return;
         }
         this.void_a((UUID)null);
-        this.c(entityPlayer.getPositionVector());
+        this.setTargetPosition(entityPlayer.getPositionVector());
         this.void_b(entityPlayer.rotationYaw + 180.0f);
         this.void_a(true);
         this.noClip = true;
         this.setNoGravity(true);
         entityPlayer.setNoGravity(true);
         entityPlayer.noClip = true;
-        this.void_e(entityPlayer.getPersistentID());
+        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
         entityPlayer.setPositionAndUpdate(entityPlayer.posX, entityPlayer.posY - 0.5, entityPlayer.posZ);
         entityPlayer.rotationPitch = 70.0f;
         entityPlayer.prevRotationPitch = 70.0f;
@@ -2013,7 +2013,7 @@ implements ai_class30 {
             }
             for (GoblinEntity e3_class2193 : arrayList) {
                 e3_class2193.void_a((UUID) null);
-                e3_class2193.void_e((UUID) null);
+                e3_class2193.setInteractionPlayerUUID((UUID) null);
                 e3_class2193.setDead();
             }
         }
@@ -2033,7 +2033,7 @@ implements ai_class30 {
                 String string2 = e3_class2193.java_lang_String_F();
                 e3_class2192 = e3_class2193;
                 e3_class2192.void_a((UUID) null);
-                e3_class2192.void_e((UUID) null);
+                e3_class2192.setInteractionPlayerUUID((UUID) null);
                 e3_class2192.setCurrentAction(Action.NULL);
                 GoblinEntity e3_class2194 = new GoblinEntity(world);
                 e3_class2194.dimension = n;

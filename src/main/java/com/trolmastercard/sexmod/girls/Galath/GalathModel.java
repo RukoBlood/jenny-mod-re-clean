@@ -125,7 +125,7 @@ extends GirlModel<GirlEntity> {
         }
         float f2 = (float)(Math.sin(f * 0.3f) * 10.0);
         if (f2 > 0.0f && this.g < 0.0f || f2 < 0.0f && this.g > 0.0f) {
-            em_class2582.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+            em_class2582.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
         }
         this.g = f2;
     }

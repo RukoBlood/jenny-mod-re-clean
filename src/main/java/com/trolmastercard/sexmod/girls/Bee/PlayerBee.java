@@ -69,7 +69,7 @@ public class PlayerBee extends PlayerGirl {
     @Override
     public void b(String string, UUID uUID) {
         this.a(0, Action.CITIZEN_START);
-        this.f(0);
+        this.setOutfitIndex(0);
         this.setCurrentAction(Action.CITIZEN_START);
         this.void_b(uUID);
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
@@ -123,7 +123,7 @@ public class PlayerBee extends PlayerGirl {
     @Override
     public void void_g() {
         super.void_g();
-        this.f(1);
+        this.setOutfitIndex(1);
     }
 
     @Override
@@ -203,13 +203,13 @@ public class PlayerBee extends PlayerGirl {
                     break;
                 }
                 case "sex_fastMSG1": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "sex_startMSG1": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -229,8 +229,8 @@ public class PlayerBee extends PlayerGirl {
                     break;
                 }
                 case "sex_cumMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_CUMINFLATION), 2.0f);
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 2.0f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "blackscreen": {

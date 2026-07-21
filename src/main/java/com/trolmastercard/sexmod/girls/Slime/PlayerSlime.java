@@ -136,7 +136,7 @@ extends PlayerGirl {
             return;
         }
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-        this.void_e(entityPlayer.getPersistentID());
+        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
         entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
         this.cameraYaw = this.java_lang_Float_I().floatValue();
         entityPlayer.setPosition(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z);
@@ -396,13 +396,13 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
                     if (!this.boolean_n()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     break;
                 }
@@ -413,7 +413,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
@@ -430,7 +430,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.boolean_n()) {
                         SexUI.addCumPercentage(0.02);
                     }
@@ -453,7 +453,7 @@ extends PlayerGirl {
                 }
                 case "doggycumMSG1": {
                     this.a(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                 }
             }

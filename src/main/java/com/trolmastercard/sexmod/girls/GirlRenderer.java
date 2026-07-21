@@ -254,7 +254,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
         this.activeCustomPartBones.clear();
-        this.activeCustomPartBones = this.queryCustomModelParts(((GirlEntity)entity).boolean_h(), ((GirlEntity)entity).int_ah() == 0);
+        this.activeCustomPartBones = this.queryCustomModelParts(((GirlEntity)entity).boolean_h(), ((GirlEntity)entity).getOutfitIndex() == 0);
         this.onRenderSetup();
         BoneDeformProcessor.preWarmFilterCache(((GirlEntity)entity).b().getModelRendererList(), this.getBlacklistedBoneNames(), this);
         BoneDeformProcessor.updateGlobalInfluence(entity, partialTicks);
@@ -365,7 +365,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
         if (!(entity instanceof PlayerGirl) || !((PlayerGirl)entity).boolean_f() || GirlRenderer.mc.gameSettings.thirdPersonView == 0) {
             Vec3d clientPlayerPos = Reference.LerpVec3d(new Vec3d(GirlRenderer.mc.player.lastTickPosX, GirlRenderer.mc.player.lastTickPosY, GirlRenderer.mc.player.lastTickPosZ), GirlRenderer.mc.player.getPositionVector(), (double)partialTicks);
-            basePos = ((GirlEntity)entity).net_minecraft_util_math_Vec3d_o().subtract(clientPlayerPos);
+            basePos = ((GirlEntity)entity).getTargetPosition().subtract(clientPlayerPos);
         }
         ((GirlEntity)entity).rotationYaw = yaw = ((GirlEntity) entity).java_lang_Float_I();
         ((GirlEntity)entity).prevRenderYawOffset = yaw;
@@ -530,7 +530,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GlStateManager.translate(0.0, 0.01, 0.0);
         Entity resolvedEntity = this.resolveTargetEntity(girl);
 
-        Vec3d interpTarget = girl.boolean_Q() ? girl.net_minecraft_util_math_Vec3d_o() : Reference.LerpVec3d(new Vec3d(resolvedEntity.lastTickPosX, resolvedEntity.lastTickPosY, resolvedEntity.lastTickPosZ), resolvedEntity.getPositionVector(), (double)partialTicks);
+        Vec3d interpTarget = girl.boolean_Q() ? girl.getTargetPosition() : Reference.LerpVec3d(new Vec3d(resolvedEntity.lastTickPosX, resolvedEntity.lastTickPosY, resolvedEntity.lastTickPosZ), resolvedEntity.getPositionVector(), (double)partialTicks);
         Vec3d interpClient = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)partialTicks);
         Vec3d relativeVector = interpTarget.subtract(interpClient);
         GlStateManager.translate(relativeVector.x, relativeVector.y, relativeVector.z);
@@ -544,7 +544,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     protected static float calculateLineThickness(GirlEntity girl, float partialTicks, float min, float max) {
         EntityPlayerSP player = GirlRenderer.mc.player;
         Entity target = ((GirlRenderer) mc.getRenderManager().getEntityRenderObject(girl)).resolveTargetEntity(girl);
-        Vec3d interpTarget = girl.boolean_Q() ? girl.net_minecraft_util_math_Vec3d_o() : Reference.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
+        Vec3d interpTarget = girl.boolean_Q() ? girl.getTargetPosition() : Reference.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
         Vec3d interpClient = Reference.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), (double)partialTicks);
         Vec3d cameraPos = ActiveRenderInfo.getCameraPosition().add(interpClient);
         float distance = (float)cameraPos.distanceTo(interpTarget);

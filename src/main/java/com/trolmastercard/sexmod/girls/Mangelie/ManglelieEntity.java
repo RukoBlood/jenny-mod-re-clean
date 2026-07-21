@@ -375,7 +375,7 @@ extends GirlEntity {
         if (!GalathMobTarget.isValidTarget(e)) {
             return true;
         }
-        if (!GalathMobTarget.hasLineOfSight(galath.world, galath.net_minecraft_util_math_Vec3d_o().add(0.0, galath.getEyeHeight(), 0.0), e)) {
+        if (!GalathMobTarget.hasLineOfSight(galath.world, galath.getTargetPosition().add(0.0, galath.getEyeHeight(), 0.0), e)) {
             return true;
         }
         Vec3d vec3d = e.getPositionVector().subtract(galath.getPositionVector());
@@ -482,7 +482,7 @@ extends GirlEntity {
             return;
         }
         this.void_b(0.0f);
-        this.c(f__class2972.getPositionVector());
+        this.setTargetPosition(f__class2972.getPositionVector());
         this.void_a(true);
     }
 
@@ -877,7 +877,7 @@ extends GirlEntity {
                         Vec3d vec3d = em_class2582.d("semenEmitter");
                         Vec3d vec3d2 = em_class2582.d("semenDir");
                         return vec3d.subtract(vec3d2).normalize();
-                    }, em_class2582 -> em_class2582.b("semenEmitter").add(em_class2582.net_minecraft_util_math_Vec3d_o()), this, 0.3f, 0.3f));
+                    }, em_class2582 -> em_class2582.b("semenEmitter").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
                     break;
                 }
                 case "blackScreen": {

@@ -101,12 +101,12 @@ public class FighterAI extends BaseCompanionGoal {
                 if (distance < 2.0) {
                     this.dataManager.set(Fighter.M, 1);
                     this.pathNavigate.tryMoveToEntityLiving(this.target, 0.5);
-                    this.fighter.a(GirlEntity.WalkTypes.WALK);
+                    this.fighter.setWalkType(GirlEntity.WalkTypes.WALK);
                     break;
                 }
                 this.dataManager.set(Fighter.M, 1);
                 this.pathNavigate.tryMoveToEntityLiving(this.target, 0.7);
-                this.fighter.a(GirlEntity.WalkTypes.RUN);
+                this.fighter.setWalkType(GirlEntity.WalkTypes.RUN);
                 break;
             }
             case FOLLOW: {
@@ -315,7 +315,7 @@ public class FighterAI extends BaseCompanionGoal {
             d = 0.0;
         }
         this.pathNavigate.setSpeed(d);
-        this.fighter.a(this.fighter.com_trolmastercard_sexmod_em_class258$a_inner259_q());
+        this.fighter.setWalkType(this.fighter.getWalkType());
         return d;
     }
 

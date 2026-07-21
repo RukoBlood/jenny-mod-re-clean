@@ -158,7 +158,7 @@ public class SoundsHandler {
         return soundEvent;
     }
 
-    public static SoundEvent a(SoundEvent[] soundEventArray) {
+    public static SoundEvent getRandomSound(SoundEvent[] soundEventArray) {
         int n;
         lastRandomSound.putIfAbsent(soundEventArray[0], -69);
         int n2 = 0;

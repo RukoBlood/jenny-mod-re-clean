@@ -193,7 +193,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (em_class2583 == null) {
             return;
         }
-        if (b_inner962 != null && !b_inner962.a() && em_class2583.int_ah() == 0) {
+        if (b_inner962 != null && !b_inner962.a() && em_class2583.getOutfitIndex() == 0) {
             return;
         }
         if (!(em_class2583 instanceof PlayerGirl)) {
@@ -226,7 +226,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         Vec3d vec3d;
         //Object object;
         if (em_class2582.boolean_Q()) {
-            Vec3d object = em_class2582.net_minecraft_util_math_Vec3d_o();
+            Vec3d object = em_class2582.getTargetPosition();
             float f2 = em_class2582.java_lang_Float_I();
             cy_class1532.prevPosX = ((Vec3d)object).x;
             cy_class1532.prevPosY = ((Vec3d)object).y;

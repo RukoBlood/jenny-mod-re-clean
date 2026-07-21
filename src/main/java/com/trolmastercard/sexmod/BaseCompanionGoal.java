@@ -76,7 +76,7 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
         }
 
         this.pathNavigate.setSpeed(speed);
-        this.entity.a(walkTypes);
+        this.entity.setWalkType(walkTypes);
         return speed;
     }
 

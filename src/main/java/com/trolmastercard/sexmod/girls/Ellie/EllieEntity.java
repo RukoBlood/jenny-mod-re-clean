@@ -247,7 +247,7 @@ implements bh_class82 {
             return;
         }
         float f = this.java_lang_Float_I().floatValue();
-        Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(VectorMath.rotate(new Vec3d(0.0, 2.5625f - entityPlayer.getEyeHeight(), -0.3125), 180.0f + f));
+        Vec3d vec3d = this.getTargetPosition().add(VectorMath.rotate(new Vec3d(0.0, 2.5625f - entityPlayer.getEyeHeight(), -0.3125), 180.0f + f));
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
@@ -310,7 +310,7 @@ implements bh_class82 {
             }
             entityPlayer.setNoGravity(true);
             entityPlayer.noClip = true;
-            vec3d2 = this.net_minecraft_util_math_Vec3d_o();
+            vec3d2 = this.getTargetPosition();
             entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue();
             vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.1), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
@@ -331,7 +331,7 @@ implements bh_class82 {
             }
             entityPlayer.setNoGravity(true);
             entityPlayer.noClip = true;
-            vec3d2 = this.net_minecraft_util_math_Vec3d_o();
+            vec3d2 = this.getTargetPosition();
             entityPlayer.rotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             vec3d = VectorMath.rotate(new Vec3d(0.0, 1.0 - (double)entityPlayer.eyeHeight, -1.8125), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
@@ -359,7 +359,7 @@ implements bh_class82 {
             return;
         }
         this.af = 20;
-        this.void_e(entityPlayer.getPersistentID());
+        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
     }
 
     void a_10() {
@@ -407,7 +407,7 @@ implements bh_class82 {
             this.void_k();
             return;
         }
-        this.c(vec3d);
+        this.setTargetPosition(vec3d);
         this.void_b(n);
         this.setCurrentAction(Action.SITDOWN);
         this.entityDataManager.set(IS_ANCHORED, true);
@@ -465,10 +465,10 @@ implements bh_class82 {
             return;
         }
         this.removeActivePotionEffect(HornyPotion.HORNY_POTION);
-        this.void_e(entityPlayer.getPersistentID());
+        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
         float f = (float)(Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29577951308232);
         this.void_b(f);
-        this.c(this.getPositionVector());
+        this.setTargetPosition(this.getPositionVector());
         this.entityDataManager.set(IS_ANCHORED, true);
         this.setCurrentAction(Action.DASH);
         this.Z = 16;
@@ -497,7 +497,7 @@ implements bh_class82 {
         entityPlayer.noClip = true;
         Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, -0.5), entityPlayer.rotationYaw);
         Vec3d vec3d2 = vec3d.add(entityPlayer.getPositionVector());
-        this.c(vec3d2);
+        this.setTargetPosition(vec3d2);
         this.void_b(entityPlayer.rotationYaw);
         this.setCurrentAction(Action.HUG);
         this.Y = 150;
@@ -506,7 +506,7 @@ implements bh_class82 {
     void void_f() {
         this.entityDataManager.set(IS_ANCHORED, false);
         this.setCurrentAction(Action.NULL);
-        this.void_e((UUID)null);
+        this.setInteractionPlayerUUID((UUID)null);
         this.noClip = false;
         this.setNoGravity(false);
         this.ah = false;
@@ -586,7 +586,7 @@ implements bh_class82 {
                     this.createAnimation("animation.ellie.crouchwalk", true, animationEvent);
                     break;
                 }
-                switch (this.com_trolmastercard_sexmod_em_class258$a_inner259_q()) {
+                switch (this.getWalkType()) {
                     case RUN: {
                         this.createAnimation("animation.ellie.run", true, animationEvent);
                         break;
@@ -785,8 +785,8 @@ implements bh_class82 {
                     break;
                 }
                 case "cowgirlStartMSG2": {
-                    this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -801,9 +801,9 @@ implements bh_class82 {
                     if (this.aj) {
                         this.aj = false;
                     } else {
-                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
@@ -814,23 +814,23 @@ implements bh_class82 {
                     break;
                 }
                 case "cowgirlfastdomMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.2);
                     break;
                 }
                 case "cowgirlcumMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG2": {
                     this.a(SoundsHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG3": {
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG4": {
@@ -879,22 +879,22 @@ implements bh_class82 {
                     break;
                 }
                 case "missionary_slowMSG1": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() && this.getRNG().nextBoolean()) {
-                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
+                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
                     } else {
-                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "missionary_fastMSG1": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() || this.getRNG().nextBoolean()) {
-                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
+                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
                     } else {
-                        this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.05);
@@ -912,7 +912,7 @@ implements bh_class82 {
                     break;
                 }
                 case "bedRustle": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     this.PlaySound(SoundsHandler.MISC_BEDRUSTLE[0]);
                     break;
                 }
@@ -921,7 +921,7 @@ implements bh_class82 {
                     break;
                 }
                 case "missionary_cumMSG1": {
-                    this.a(SoundsHandler.a(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     break;
                 }
                 case "carry_introMSG1": {

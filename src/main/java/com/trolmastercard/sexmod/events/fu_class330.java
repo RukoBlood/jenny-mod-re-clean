@@ -144,7 +144,7 @@ public class fu_class330 {
             ei_class2512.void_H();
             return;
         }
-        ei_class2512.c(new Vec3d((double)vec3i.getX() + 0.5, (float)vec3i.getY() + 0.0f, (double)vec3i.getZ() + 0.5));
+        ei_class2512.setTargetPosition(new Vec3d((double)vec3i.getX() + 0.5, (float)vec3i.getY() + 0.0f, (double)vec3i.getZ() + 0.5));
         ei_class2512.void_b(entityPlayer.rotationYaw);
         ei_class2512.getDataManager().set(GirlEntity.IS_ANCHORED, true);
         ei_class2512.u_();
@@ -262,7 +262,7 @@ public class fu_class330 {
             return;
         }
         entityPlayer.setPosition(vec3d2.x, Math.floor(vec3d.y), vec3d2.z);
-        ei_class2512.c(vec3d2);
+        ei_class2512.setTargetPosition(vec3d2);
         ei_class2512.void_b(entityPlayer.rotationYaw);
         ei_class2512.getDataManager().set(GirlEntity.IS_ANCHORED, true);
         ei_class2512.getDataManager().set(GirlEntity.OUTFIT_INDEX, 0);
@@ -309,7 +309,7 @@ public class fu_class330 {
             return;
         }
         List list = initGuiEvent.getButtonList();
-        String string = I18n.format(ei_class2512.int_ah() == 0 ? "action.names.dressup" : "action.names.strip", new Object[0]);
+        String string = I18n.format(ei_class2512.getOutfitIndex() == 0 ? "action.names.dressup" : "action.names.strip", new Object[0]);
         list.add(new GuiButton(284453, (int)((double)guiScreen.width * 0.5 - 35.0), (int)((double)guiScreen.height * 0.87), 70, 20, string));
         initGuiEvent.setButtonList(list);
     }

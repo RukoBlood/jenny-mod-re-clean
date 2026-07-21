@@ -450,10 +450,10 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             }
             this.boolean_b(entityPlayer);
         } else {
-            this.void_e(entityPlayer.getPersistentID());
+            this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             this.getNavigator().clearPath();
             this.void_b((float)(Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29577951308232 + 90.0));
-            this.c(new Vec3d(this.posX, Math.floor(this.posY), this.posZ));
+            this.setTargetPosition(new Vec3d(this.posX, Math.floor(this.posY), this.posZ));
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setCurrentAction(Action.NULL);
         }
@@ -487,7 +487,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.az = false;
             return;
         }
-        this.void_e((UUID)null);
+        this.setInteractionPlayerUUID((UUID)null);
         this.changeDataParameterFromClient("shouldbeattargetpos", "false");
     }
 
@@ -553,7 +553,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         this.rotationYaw = this.java_lang_Float_I().floatValue();
         this.setNoGravity(false);
-        Vec3d vec3d = Reference.a(this.getPositionVector(), this.net_minecraft_util_math_Vec3d_o(), 40 - this.aD);
+        Vec3d vec3d = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.aD);
         this.setPosition(vec3d.x, vec3d.y, vec3d.z);
         this.setCurrentAction(Action.NULL);
         Optional<UUID> optional = this.entityDataManager.get(aL);
@@ -713,7 +713,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         float f = this.getDistance(entityPlayer);
         if (f < 2.0f && this.S > 2.0f) {
-            this.b(SoundsHandler.a(SoundsHandler.GIRLS_KOBOLD_HEYMASTER));
+            this.b(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_KOBOLD_HEYMASTER));
             this.void_a("Hey master!");
             aV = this.world.getTotalWorldTime();
         }
@@ -997,7 +997,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             boolean bl = vec3d.subtract((Vec3d)vec3d2).x == 0.0;
             Vec3d vec3d3 = Reference.LerpVec3d(vec3d, vec3d2, 0.5);
             this.entityDataManager.set(IS_ANCHORED, true);
-            this.c(vec3d3);
+            this.setTargetPosition(vec3d3);
             this.void_b(bl ? 0.0f : 90.0f);
             this.noClip = true;
             this.setNoGravity(true);
@@ -2391,7 +2391,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (((BlockPos)vec3i).subtract(blockPos).equals(new BlockPos(-1, 0, 0))) {
             f = -90.0f;
         }
-        this.c(new Vec3d((double)vec3i.getX() + 0.5, vec3i.getY(), (double)vec3i.getZ() + 0.5));
+        this.setTargetPosition(new Vec3d((double)vec3i.getX() + 0.5, vec3i.getY(), (double)vec3i.getZ() + 0.5));
         this.void_b(f);
         this.entityDataManager.set(IS_ANCHORED, true);
         this.entityDataManager.set(at, true);
@@ -2810,14 +2810,14 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f, 0.0f));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f - 40.0f, 0.0f));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
                 case "lipsound": {
@@ -2882,7 +2882,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.java_lang_Float_I().floatValue() + 180.0f);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.net_minecraft_util_math_Vec3d_o().add(vec3d), this.java_lang_Float_I().floatValue(), 0.0f));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.java_lang_Float_I().floatValue(), 0.0f));
                     break;
                 }
                 case "pounding": {
@@ -2959,7 +2959,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 case "bjmoan": {
-                    this.b(SoundsHandler.a(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
+                    this.b(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
                     break;
                 }
                 case "blowjobStartbreath": {
@@ -2972,7 +2972,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
                     vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
-                    vec3d = vec3d.add(this.net_minecraft_util_math_Vec3d_o());
+                    vec3d = vec3d.add(this.getTargetPosition());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 10.0f));
                     break;
                 }
@@ -3007,7 +3007,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
                     vec3d = VectorMath.rotate(vec3d, this.java_lang_Float_I() + 180.0f);
-                    vec3d = vec3d.add(this.net_minecraft_util_math_Vec3d_o());
+                    vec3d = vec3d.add(this.getTargetPosition());
                     PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.java_lang_Float_I().floatValue() + 180.0f, 70.0f));
                     break;
                 }

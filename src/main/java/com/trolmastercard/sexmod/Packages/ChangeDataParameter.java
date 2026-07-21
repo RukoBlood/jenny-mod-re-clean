@@ -86,16 +86,16 @@ implements IMessage {
                     }
                     case "playerSheHasSexWith": {
                         if (n_class4152.c.equals("null")) {
-                            girlEntity.void_e((UUID)null);
+                            girlEntity.setInteractionPlayerUUID((UUID)null);
                             break;
                         }
-                        girlEntity.void_e(UUID.fromString(n_class4152.c));
+                        girlEntity.setInteractionPlayerUUID(UUID.fromString(n_class4152.c));
                         break;
                     }
                     case "targetPos": {
                         String[] stringArray = n_class4152.c.split("f");
                         Vec3d vec3d = new Vec3d(Double.parseDouble(stringArray[0]), Double.parseDouble(stringArray[1]), Double.parseDouble(stringArray[2]));
-                        girlEntity.c(vec3d);
+                        girlEntity.setTargetPosition(vec3d);
                         break;
                     }
                     case "master": {

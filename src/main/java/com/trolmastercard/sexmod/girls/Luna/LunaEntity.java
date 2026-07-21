@@ -226,7 +226,7 @@ implements bh_class82,
             this.lunaHookEntity = null;
         }
         if (this.ay) {
-            double d = this.net_minecraft_util_math_Vec3d_o().distanceTo(this.getPositionVector());
+            double d = this.getTargetPosition().distanceTo(this.getPositionVector());
             if (d < 0.5 || this.ak > 200) {
                 this.ay = false;
                 this.ak = 0;
@@ -239,12 +239,12 @@ implements bh_class82,
                 this.setCurrentAction(Action.WAIT_CAT);
             } else if (++this.ak == 60 || this.ak == 120) {
                 this.getNavigator().clearPath();
-                this.getNavigator().tryMoveToXYZ(this.net_minecraft_util_math_Vec3d_o().x, this.net_minecraft_util_math_Vec3d_o().y, this.net_minecraft_util_math_Vec3d_o().z, 0.2);
+                this.getNavigator().tryMoveToXYZ(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, 0.2);
             }
         }
         if (this.ac) {
             ++this.aw;
-            if (this.getPositionVector().equals(this.net_minecraft_util_math_Vec3d_o()) || this.aw > 40) {
+            if (this.getPositionVector().equals(this.getTargetPosition()) || this.aw > 40) {
                 this.ac = false;
                 this.aw = 0;
                 this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
@@ -254,7 +254,7 @@ implements bh_class82,
             } else {
                 this.rotationYaw = this.java_lang_Float_I().floatValue();
                 this.setNoGravity(false);
-                Vec3d vec3d = Reference.a(this.getPositionVector(), this.net_minecraft_util_math_Vec3d_o(), 40 - this.aw);
+                Vec3d vec3d = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.aw);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
             }
         }
@@ -293,7 +293,7 @@ implements bh_class82,
         if (this.world.isRemote) {
             this.a(entityPlayer, this.ab);
         } else if (this.ab == 25) {
-            this.void_e(entityPlayer.getPersistentID());
+            this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
             this.setCurrentAction(Action.COWGIRL_SITTING_INTRO);
@@ -353,7 +353,7 @@ implements bh_class82,
             }
             Vec3d vec3d3 = vec3d.add(vec3dArrayArray[n][0]);
             this.void_b(nArray[n]);
-            this.c(new Vec3d(vec3d3.x, vec3d3.y, vec3d3.z));
+            this.setTargetPosition(new Vec3d(vec3d3.x, vec3d3.y, vec3d3.z));
             this.cameraYaw = this.java_lang_Float_I();
             this.getNavigator().clearPath();
             this.getNavigator().tryMoveToXYZ(vec3d3.x, vec3d3.y, vec3d3.z, 0.2);
@@ -446,7 +446,7 @@ implements bh_class82,
             }
             if (this.currentAction() == Action.NULL) {
                 this.setCurrentAction(Action.FISHING_START);
-                this.c(this.getPositionVector());
+                this.setTargetPosition(this.getPositionVector());
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.void_b((float)Math.atan2(this.posZ - (double)this.ai.getZ(), this.posX - (double)this.ai.getX()) * 57.29578f + 90.0f);
             }
@@ -550,20 +550,20 @@ implements bh_class82,
     public void a(String string, UUID uUID) {
         super.a(string, uUID);
         if ("action.names.touchboobs".equals(string)) {
-            this.void_e(uUID);
+            this.setInteractionPlayerUUID(uUID);
             this.a(true, true, uUID);
             this.changeDataParameterFromClient("animationFollowUp", "touch_boobs");
             this.changeDataParameterFromClient("currentModel", "0");
             HandlePlayerMovement.a(false);
         }
         if ("action.names.sex".equals(string)) {
-            this.void_e(uUID);
+            this.setInteractionPlayerUUID(uUID);
             this.a(true, true, uUID);
             this.changeDataParameterFromClient("animationFollowUp", "sex");
             HandlePlayerMovement.a(false);
         }
         if ("action.names.headpat".equals(string)) {
-            this.void_e(uUID);
+            this.setInteractionPlayerUUID(uUID);
             this.a(true, true, uUID);
             HandlePlayerMovement.a(false);
             this.changeDataParameterFromClient("animationFollowUp", "headpat");
@@ -815,12 +815,12 @@ implements bh_class82,
                     break;
                 }
                 case "eat": {
-                    this.PlaySoundAtPosition(SoundsHandler.a(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
+                    this.PlaySoundAtPosition(SoundsHandler.getRandomSound(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
                     this.aa -= 0.33333334f;
                     break;
                 }
                 case "eatPay": {
-                    this.PlaySoundAtPosition(SoundsHandler.a(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
+                    this.PlaySoundAtPosition(SoundsHandler.getRandomSound(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
                     this.scaleFactor -= 0.33333334f;
                     break;
                 }
@@ -937,7 +937,7 @@ implements bh_class82,
                     break;
                 }
                 case "moan": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
                     break;
                 }
                 case "touch_boobs_introDone": {
@@ -973,10 +973,10 @@ implements bh_class82,
                 }
                 case "moanOrNya": {
                     if (Math.random() > 0.5) {
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
                         break;
                     }
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     break;
                 }
                 case "blackScreen": {
@@ -1009,7 +1009,7 @@ implements bh_class82,
                     break;
                 }
                 case "pounding": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "sitting_introMSG1": {
@@ -1027,12 +1027,12 @@ implements bh_class82,
                 case "sitting_slowMSG1": {
                     if (this.getRNG().nextBoolean()) {
                         if (this.getRNG().nextBoolean()) {
-                            this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                            this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
                             break;
                         }
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
                     } else {
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING));
                     }
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.02);
@@ -1040,9 +1040,9 @@ implements bh_class82,
                 }
                 case "sitting_fastMSG1": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     } else {
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
                     }
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.04);
@@ -1053,14 +1053,14 @@ implements bh_class82,
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     Vec3d vec3d = new Vec3d(0.0, -0.075f, -0.7109375);
                     Vec3d vec3d2 = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
-                    Minecraft.getMinecraft().player.setPosition(this.net_minecraft_util_math_Vec3d_o().x + vec3d2.x, this.net_minecraft_util_math_Vec3d_o().y + vec3d2.y, this.net_minecraft_util_math_Vec3d_o().z + vec3d2.z);
+                    Minecraft.getMinecraft().player.setPosition(this.getTargetPosition().x + vec3d2.x, this.getTargetPosition().y + vec3d2.y, this.getTargetPosition().z + vec3d2.z);
                     break;
                 }
                 case "sitting_fastTp": {
                     if (!this.boolean_n()) break;
                     Vec3d vec3d = new Vec3d(0.0, -0.160625, -0.9925);
                     Vec3d vec3d3 = VectorMath.rotate(vec3d, this.java_lang_Float_I().floatValue() + 180.0f);
-                    Minecraft.getMinecraft().player.setPosition(this.net_minecraft_util_math_Vec3d_o().x + vec3d3.x, this.net_minecraft_util_math_Vec3d_o().y + vec3d3.y, this.net_minecraft_util_math_Vec3d_o().z + vec3d3.z);
+                    Minecraft.getMinecraft().player.setPosition(this.getTargetPosition().x + vec3d3.x, this.getTargetPosition().y + vec3d3.y, this.getTargetPosition().z + vec3d3.z);
                     break;
                 }
                 case "headpatMSG1": {

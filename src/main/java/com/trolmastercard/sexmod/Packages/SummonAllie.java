@@ -45,9 +45,9 @@ implements IMessage {
                 EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
                 Vec3d vec3d = entityPlayerMP.getPositionVector().add(-Math.sin((double)entityPlayerMP.rotationYawHead * (Math.PI / 180)) * 2.0, 0.0, Math.cos((double)entityPlayerMP.rotationYawHead * (Math.PI / 180)) * 2.0);
                 AllieEntity ev_class2752 = new AllieEntity(entityPlayerMP.world, entityPlayerMP.getHeldItemMainhand());
-                ev_class2752.void_e(entityPlayerMP.getPersistentID());
+                ev_class2752.setInteractionPlayerUUID(entityPlayerMP.getPersistentID());
                 ev_class2752.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, entityPlayerMP.rotationYawHead + 180.0f, entityPlayerMP.rotationPitch);
-                ev_class2752.c(ev_class2752.getPositionVector());
+                ev_class2752.setTargetPosition(ev_class2752.getPositionVector());
                 ev_class2752.void_b(entityPlayerMP.rotationYawHead + 180.0f);
                 ev_class2752.setNoGravity(true);
                 ev_class2752.noClip = true;

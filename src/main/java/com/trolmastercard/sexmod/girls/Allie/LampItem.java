@@ -211,10 +211,10 @@ public class LampItem extends Item implements IAnimatable {
         }
         nBTTagCompound2.setInteger(j, nBTTagCompound2.getInteger(j) + 1);
         AllieEntity ev_class2752 = new AllieEntity(entityPlayer.world, entityPlayer.getHeldItemMainhand());
-        ev_class2752.void_e(entityPlayer.getPersistentID());
+        ev_class2752.setInteractionPlayerUUID(entityPlayer.getPersistentID());
         vec3d = this.a(entityPlayer);
         ev_class2752.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, entityPlayer.rotationYaw + 180.0f, entityPlayer.rotationPitch);
-        ev_class2752.c(ev_class2752.getPositionVector());
+        ev_class2752.setTargetPosition(ev_class2752.getPositionVector());
         ev_class2752.void_b(entityPlayer.rotationYaw + 180.0f);
         ev_class2752.void_a(true);
         ev_class2752.setNoGravity(true);

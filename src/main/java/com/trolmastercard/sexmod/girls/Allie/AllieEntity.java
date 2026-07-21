@@ -204,7 +204,7 @@ extends GirlEntity {
         if (entityPlayer == null) {
             return;
         }
-        Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o();
+        Vec3d vec3d = this.getTargetPosition();
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
@@ -397,7 +397,7 @@ extends GirlEntity {
                     break;
                 }
                 case "deepthroat_fastMSG1": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_BJMOAN));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_BJMOAN));
                     if (!this.boolean_n()) break;
                     SexUI.init();
                     SexUI.addCumPercentage(0.04f);
@@ -405,9 +405,9 @@ extends GirlEntity {
                 }
                 case "deepthroat_slowMSG1": {
                     if (this.getRNG().nextFloat() > 0.33f) {
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
                     } else {
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_BJMOAN));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_BJMOAN));
                     }
                     if (!this.boolean_n()) break;
                     SexUI.init();
@@ -415,9 +415,9 @@ extends GirlEntity {
                     break;
                 }
                 case "deepthroat_cumMSG1": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_MOAN));
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_CUMINFLATION), 1.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_MOAN));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 1.5f);
                     break;
                 }
                 case "cowgirl_cumDone": 
@@ -462,12 +462,12 @@ extends GirlEntity {
                 }
                 case "deepthroat_normal_prepareMSG1": {
                     this.void_a(I18n.format("allie.dialogue.alright", new Object[0]));
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_GIGGLE));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_GIGGLE));
                     break;
                 }
                 case "rich_MSG1": {
                     this.void_a(I18n.format("allie.dialogue.wishgranted", new Object[0]));
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_PLOB));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_PLOB));
                     if (!this.boolean_n()) break;
                     PackageHandler.networkWrapper.sendToServer((IMessage)new MakeRichWish(this.getPositionVector()));
                     break;
@@ -499,7 +499,7 @@ extends GirlEntity {
                     break;
                 }
                 case "mmm": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_MMM));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_MMM));
                     break;
                 }
                 case "slide": {
@@ -508,7 +508,7 @@ extends GirlEntity {
                 }
                 case "slowMoan": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_AHH));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_AHH));
                     }
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.02f);
@@ -526,7 +526,7 @@ extends GirlEntity {
                         SexUI.addCumPercentage(0.04f);
                     }
                     if (!this.M) {
-                        this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_ALLIE_MOAN));
+                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_MOAN));
                         this.M = true;
                         break;
                     }

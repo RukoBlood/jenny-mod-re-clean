@@ -315,7 +315,7 @@ public abstract class PlayerGirl extends Fighter {
         EntityPlayerMP entityPlayerMP2 = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(ai).get());
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP2);
-        this.void_e(uUID);
+        this.setInteractionPlayerUUID(uUID);
         this.rotationYaw = 0.0f;
         this.rotationYawHead = 0.0f;
         entityPlayerMP.rotationYaw = 180.0f;
@@ -328,7 +328,7 @@ public abstract class PlayerGirl extends Fighter {
         entityPlayerMP2.capabilities.isFlying = true;
         this.j(uUID);
         this.entityDataManager.set(IS_ANCHORED, true);
-        this.c(vec3d);
+        this.setTargetPosition(vec3d);
         this.void_b(0.0f);
     }
 
@@ -395,7 +395,7 @@ public abstract class PlayerGirl extends Fighter {
         }
         this.void_d(entityPlayer);
         if (this.boolean_Q()) {
-            Vec3d object = this.net_minecraft_util_math_Vec3d_o();
+            Vec3d object = this.getTargetPosition();
             this.setPositionAndUpdate(object.x, object.y, object.z);
         } else {
             this.setPositionAndUpdate(entityPlayer.posX, entityPlayer.posY + 0.0, entityPlayer.posZ);
@@ -416,7 +416,7 @@ public abstract class PlayerGirl extends Fighter {
         }
         ++this.an;
         if (!this.world.isRemote && this.an == 65) {
-            this.f(this.int_ah() == 0 ? 1 : 0);
+            this.setOutfitIndex(this.getOutfitIndex() == 0 ? 1 : 0);
         }
         if (this.an < 100) {
             return;

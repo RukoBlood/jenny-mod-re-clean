@@ -101,12 +101,12 @@ public class GirlRenderEvent {
         if (!girlEntity.currentAction().useBoyCam) {
             return;
         }
-        if (girlEntity.boolean_m()) {
+        if (girlEntity.isCustomType()) {
             return;
         }
         this.origPos = mc.player.getPositionVector();
         this.origLastTickPos = new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ);
-        Vec3d targetCameraPos = girlEntity.boolean_Q() ? girlEntity.b("boyCam").add(girlEntity.net_minecraft_util_math_Vec3d_o()) : girlEntity.b("boyCam").add(Reference.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
+        Vec3d targetCameraPos = girlEntity.boolean_Q() ? girlEntity.b("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.b("boyCam").add(Reference.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
         mc.player.posX = targetCameraPos.x;
         mc.player.posY = targetCameraPos.y - (double)mc.player.getEyeHeight();
         mc.player.posZ = targetCameraPos.z;

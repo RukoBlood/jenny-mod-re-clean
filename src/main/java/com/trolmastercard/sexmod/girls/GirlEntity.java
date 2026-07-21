@@ -150,24 +150,24 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public List<String> boneTrackingList = new ArrayList<String>();
     protected List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> customPartsData = null;
 
-    public void a(WalkTypes a_inner2592) {
-        this.entityDataManager.set(WALK_TYPE, a_inner2592.toString());
+    public void setWalkType(WalkTypes walkTypes) {
+        this.entityDataManager.set(WALK_TYPE, walkTypes.toString());
     }
 
-    public WalkTypes com_trolmastercard_sexmod_em_class258$a_inner259_q() {
+    public WalkTypes getWalkType() {
         return WalkTypes.valueOf(this.entityDataManager.get(WALK_TYPE));
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected void changeDataParameterFromClient(String string, String string2) {
-        PackageHandler.networkWrapper.sendToServer(new ChangeDataParameter(this.girlID(), string, string2));
+    protected void changeDataParameterFromClient(String paramKey, String paramValue) {
+        PackageHandler.networkWrapper.sendToServer(new ChangeDataParameter(this.girlID(), paramKey, paramValue));
     }
 
     //f
     public UUID girlID() {
         try {
             return UUID.fromString(this.entityDataManager.get(GIRL_ID));
-        } catch (Exception exception) {
+        } catch (Exception e) {
             UUID uUID = UUID.randomUUID();
             this.entityDataManager.set(GIRL_ID, uUID.toString());
             return uUID;
@@ -179,35 +179,35 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void setCurrentAction(Action action) {
-        Action currentAction = this.currentAction();
-        if (currentAction == action) {
+        Action previousAction = this.currentAction();
+        if (previousAction == action) {
             return;
         }
-        if (action == Action.ATTACK && currentAction != Action.NULL) {
+        if (action == Action.ATTACK && previousAction != Action.NULL) {
             return;
         }
-        Action fp_class3244 = action = action == null ? Action.NULL : action;
+        Action targetAction = action == null ? Action.NULL : action;
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("currentAction", action.toString());
             return;
         }
-        currentAction.ticksPlaying = new int[]{0, 0};
+        previousAction.ticksPlaying = new int[]{0, 0};
         this.entityDataManager.set(CUR_ACTION, action.toString());
     }
 
-    public int int_ah() {
+    public int getOutfitIndex() {
         return this.entityDataManager.get(OUTFIT_INDEX);
     }
 
-    public void f(int n) {
+    public void setOutfitIndex(int index) {
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("currentModel", "0");
         } else {
-            this.entityDataManager.set(OUTFIT_INDEX, n);
+            this.entityDataManager.set(OUTFIT_INDEX, index);
         }
     }
 
-    public boolean boolean_m() {
+    public boolean isCustomType() {
         return false;
     }
 
@@ -220,89 +220,82 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return this.world.getPlayerEntityByUUID(uUID);
     }
 
-    public static void a(GirlEntity em_class2582, String string) {
-        for (EntityPlayer entityPlayer : WorldUtils.getPlayersTrackingEntity(em_class2582)) {
-            entityPlayer.sendMessage(new TextComponentString(string));
+    public static void sendMessageToTrackingPlayers(GirlEntity girl, String message) {
+        for (EntityPlayer player : WorldUtils.getPlayersTrackingEntity(girl)) {
+            player.sendMessage(new TextComponentString(message));
         }
     }
 
-    public static void girlPlaySound(GirlEntity girl, SoundEvent sound, boolean bl) {
-        Vec3d pos = girl.getPositionVector();
+    public static void girlPlaySound(GirlEntity girl, SoundEvent sound, boolean positional3D) {
+        Vec3d origin = girl.getPositionVector();
         for (EntityPlayer player : WorldUtils.getPlayersTrackingEntity(girl)) {
-            Vec3d vec3d2;
-            if (!bl) {
-                vec3d2 = pos;
+            Vec3d playPos;
+            if (!positional3D) {
+                playPos = origin;
             } else {
                 Vec3d playerPos = player.getPositionVector();
-                Vec3d vec3d4 = pos.subtract(playerPos).normalize();
-                vec3d2 = playerPos.add(vec3d4);
+                Vec3d dir = origin.subtract(playerPos).normalize();
+                playPos = playerPos.add(dir);
             }
-            ((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(sound, SoundCategory.AMBIENT, vec3d2.x, vec3d2.y, vec3d2.z, 1.0f, 1.0f));
+            ((EntityPlayerMP)player).connection.sendPacket(new SPacketSoundEffect(sound, SoundCategory.AMBIENT, playPos.x, playPos.y, playPos.z, 1.0f, 1.0f));
         }
     }
 
-    public static void a(GirlEntity em_class2582, SoundEvent soundEvent) {
-        GirlEntity.girlPlaySound(em_class2582, soundEvent, false);
+    public static void girlPlaySound(GirlEntity girl, SoundEvent sounds) {
+        GirlEntity.girlPlaySound(girl, sounds, false);
     }
 
-    public static void a(GirlEntity em_class2582, SoundEvent[] soundEventArray) {
-        GirlEntity.a(em_class2582, SoundsHandler.a(soundEventArray));
+    public static void playRandomSound(GirlEntity em_class2582, SoundEvent[] sounds) {
+        GirlEntity.girlPlaySound(em_class2582, SoundsHandler.getRandomSound(sounds));
     }
 
-    public static void a(GirlEntity em_class2582, SoundEvent[] soundEventArray, boolean bl) {
-        GirlEntity.girlPlaySound(em_class2582, SoundsHandler.a(soundEventArray), bl);
+    public static void playRandomSound(GirlEntity girl, SoundEvent[] sounds, boolean positional) {
+        GirlEntity.girlPlaySound(girl, SoundsHandler.getRandomSound(sounds), positional);
     }
 
     @SideOnly(value=Side.CLIENT)
-    public Vec3d net_minecraft_util_math_Vec3d_A() {
-        Vec3d vec3d = Minecraft.getMinecraft().player.getPositionVector();
-        Vec3d vec3d2 = this.getPositionVector();
-        Vec3d vec3d3 = vec3d2.subtract(vec3d).normalize();
-        return vec3d.add(vec3d3);
+    public Vec3d getVectorTowardPlayer() {
+        Vec3d playerPos = Minecraft.getMinecraft().player.getPositionVector();
+        Vec3d entityPos = this.getPositionVector();
+        Vec3d direction = entityPos.subtract(playerPos).normalize();
+        return playerPos.add(direction);
     }
 
     @Nullable
     public UUID getID() {
-        String string = this.entityDataManager.get(INTERACTION_PARTNER_UUID);
-        if (string.equals("null")) {
+        String uuidStr = this.entityDataManager.get(INTERACTION_PARTNER_UUID);
+        if (uuidStr.equals("null")) {
             return null;
         }
-        return UUID.fromString(string);
+        return UUID.fromString(uuidStr);
     }
 
-    public void void_e(UUID uUID) {
+    public void setInteractionPlayerUUID(UUID uuid) {
         if (this.world.isRemote) {
-            if (uUID == null) {
-                this.changeDataParameterFromClient("playerSheHasSexWith", (String)null);
-            } else {
-                this.changeDataParameterFromClient("playerSheHasSexWith", uUID.toString());
-            }
+            this.changeDataParameterFromClient("playerSheHasSexWith", uuid == null ? (String) null : uuid.toString());
             return;
         }
-        if (uUID == null) {
-            this.entityDataManager.set(INTERACTION_PARTNER_UUID, "null");
-        } else {
-            this.entityDataManager.set(INTERACTION_PARTNER_UUID, uUID.toString());
-        }
+        this.entityDataManager.set(INTERACTION_PARTNER_UUID, uuid == null ? "null" : uuid.toString());
     }
 
-    public void void_a(@Nonnull EntityPlayer entityPlayer) {
-        this.void_e(entityPlayer.getPersistentID());
+    public void setInteractionPlayer(@Nonnull EntityPlayer player) {
+        this.setInteractionPlayerUUID(player.getPersistentID());
     }
 
-    public Vec3d net_minecraft_util_math_Vec3d_o() {
-        String[] stringArray = this.entityDataManager.get(TARGET_POS).split("\\|");
-        return new Vec3d(Double.parseDouble(stringArray[0]), Double.parseDouble(stringArray[1]), Double.parseDouble(stringArray[2]));
+    public Vec3d getTargetPosition() {
+        String[] coords = this.entityDataManager.get(TARGET_POS).split("\\|");
+        return new Vec3d(Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), Double.parseDouble(coords[2]));
     }
 
-    public void c(Vec3d vec3d) {
+    public void setTargetPosition(Vec3d pos) {
         if (this.world.isRemote) {
-            String string = vec3d.x + "f" + vec3d.y + "f" + vec3d.z + "f";
-            this.changeDataParameterFromClient("targetPos", string);
+            String formatted = pos.x + "f" + pos.y + "f" + pos.z + "f";
+            this.changeDataParameterFromClient("targetPos", formatted);
             return;
         }
-        this.entityDataManager.set(TARGET_POS, vec3d.x + "|" + vec3d.y + "|" + vec3d.z);
+        this.entityDataManager.set(TARGET_POS, pos.x + "|" + pos.y + "|" + pos.z);
     }
+    //end of reversing #1
 
     public void a(Vec3d vec3d) {
         this.entityDataManager.set(TARGET_POS, vec3d.x + "|" + vec3d.y + "|" + vec3d.z);
@@ -511,7 +504,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public void updateAITasks() {
         if (this.entityDataManager.get(IS_ANCHORED).booleanValue()) {
             this.setRotationYawHead(this.java_lang_Float_I().floatValue());
-            this.setPositionAndRotation(this.net_minecraft_util_math_Vec3d_o().x, this.net_minecraft_util_math_Vec3d_o().y, this.net_minecraft_util_math_Vec3d_o().z, this.java_lang_Float_I().floatValue(), 0.0f);
+            this.setPositionAndRotation(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, this.java_lang_Float_I().floatValue(), 0.0f);
             this.setRotation(this.java_lang_Float_I().floatValue(), this.rotationPitch);
         }
         if (this.homeCoords.equals(Vec3d.ZERO)) {
@@ -1206,7 +1199,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             if (this.world.isRemote && Minecraft.getMinecraft().player.getPositionVector().distanceTo(this.getPositionVector()) < 10.0) {
                 this.void_a("whopa");
             }
-            return SoundsHandler.a(SoundsHandler.MISC_FART);
+            return SoundsHandler.getRandomSound(SoundsHandler.MISC_FART);
         }
         return null;
     }

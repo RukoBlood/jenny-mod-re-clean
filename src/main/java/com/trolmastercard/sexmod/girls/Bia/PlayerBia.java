@@ -64,12 +64,12 @@ extends PlayerGirl {
     public boolean boolean_a(String string) {
         if ("anal".equals(string)) {
             this.setCurrentAction(Action.ANAL_PREPARE);
-            this.f(0);
+            this.setOutfitIndex(0);
             return true;
         }
         if ("doggy".equals(string)) {
             this.setCurrentAction(Action.SITDOWN);
-            this.f(0);
+            this.setOutfitIndex(0);
             return true;
         }
         return false;
@@ -86,7 +86,7 @@ extends PlayerGirl {
         if ("action.names.headpat".equals(string)) {
             this.void_b(uUID);
             this.setCurrentAction(Action.HEAD_PAT);
-            this.a(this.int_ah(), Action.HEAD_PAT);
+            this.a(this.getOutfitIndex(), Action.HEAD_PAT);
         }
     }
 
@@ -192,7 +192,7 @@ extends PlayerGirl {
                 fh_class313.b();
                 HandlePlayerMovement.a(false);
             } else {
-                this.void_e(entityPlayer.getPersistentID());
+                this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             }
             this.ar = GirlEntity.maxAgeInTicks;
             return;
@@ -206,7 +206,7 @@ extends PlayerGirl {
         if (fp_class3242 == Action.ANAL_WAIT) {
             if (!this.world.isRemote) {
                 this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
+                Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.boolean_n()) {
                 SexUI.init();
@@ -216,11 +216,11 @@ extends PlayerGirl {
         entityPlayer.rotationYaw = f = this.java_lang_Float_I().floatValue();
         entityPlayer.rotationPitch = 60.0f;
         if (!this.world.isRemote) {
-            this.f(0);
+            this.setOutfitIndex(0);
             this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
-            Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o();
+            Vec3d vec3d = this.getTargetPosition();
             Vec3d vec3d2 = vec3d.add(VectorMath.RotateY(0.0, 0.0, 1.0, f));
-            this.c(vec3d2);
+            this.setTargetPosition(vec3d2);
             EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
             if (entityPlayer2 != null) {
                 entityPlayer2.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
@@ -411,7 +411,7 @@ extends PlayerGirl {
                 }
                 case "stripMSG1": {
                     this.h("Hihi~");
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_GIGGLE));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
                 case "sexUiOn": {
@@ -493,8 +493,8 @@ extends PlayerGirl {
                     if (this.boolean_n()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.5f);
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_AHH));
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_slowMSG1": 
@@ -502,8 +502,8 @@ extends PlayerGirl {
                     if (this.boolean_n()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.5f);
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_AHH));
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_fastDone": {
@@ -516,7 +516,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "anal_cumMSG2": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_AHH));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_cumBlackScreen": {
@@ -567,7 +567,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "slide": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_SLIDE));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SLIDE));
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.005);
                     break;

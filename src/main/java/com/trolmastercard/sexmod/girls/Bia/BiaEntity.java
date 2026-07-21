@@ -121,7 +121,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         }
         if (this.Y) {
             ++this.ag;
-            if (this.getPositionVector().equals(this.net_minecraft_util_math_Vec3d_o()) || this.ag > 40) {
+            if (this.getPositionVector().equals(this.getTargetPosition()) || this.ag > 40) {
                 this.Y = false;
                 this.ag = 0;
                 this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
@@ -133,15 +133,15 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 try {
                     TARGET_POS.equals(null);
                 } catch (NullPointerException nullPointerException) {
-                    this.c(this.net_minecraft_util_math_Vec3d_aa());
+                    this.setTargetPosition(this.net_minecraft_util_math_Vec3d_aa());
                 }
                 this.setNoGravity(false);
-                Vec3d vec3d = Reference.a(this.getPositionVector(), this.net_minecraft_util_math_Vec3d_o(), 40 - this.ag);
+                Vec3d vec3d = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
             }
         }
         if (this.af) {
-            if (this.getPositionVector().distanceTo(this.net_minecraft_util_math_Vec3d_o()) < 0.6 || this.Z > 200) {
+            if (this.getPositionVector().distanceTo(this.getTargetPosition()) < 0.6 || this.Z > 200) {
                 this.af = false;
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.Z = 0;
@@ -152,7 +152,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 this.motionZ = 0.0;
                 if ("anal".equals(this.entityDataManager.get(GIRL_HAND_STATES))) {
                     this.setCurrentAction(Action.ANAL_PREPARE);
-                    this.f(0);
+                    this.setOutfitIndex(0);
                 } else {
                     this.setCurrentAction(Action.SITDOWN);
                 }
@@ -160,7 +160,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 ++this.Z;
                 if (this.Z == 60 || this.Z == 120) {
                     this.getNavigator().clearPath();
-                    this.getNavigator().tryMoveToXYZ(this.net_minecraft_util_math_Vec3d_o().x, this.net_minecraft_util_math_Vec3d_o().y, this.net_minecraft_util_math_Vec3d_o().z, 0.35);
+                    this.getNavigator().tryMoveToXYZ(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, 0.35);
                 }
             }
         }
@@ -242,7 +242,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 fh_class313.b();
                 HandlePlayerMovement.a(false);
             } else {
-                this.void_e(entityPlayer.getPersistentID());
+                this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             }
             this.ac = maxAgeInTicks;
             return;
@@ -256,7 +256,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         if (fp_class3242 == Action.ANAL_WAIT) {
             if (!this.world.isRemote) {
                 this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
+                Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.java_lang_Float_I().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.boolean_n()) {
                 SexUI.init();
@@ -266,11 +266,11 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         entityPlayer.rotationYaw = f = this.java_lang_Float_I().floatValue();
         entityPlayer.rotationPitch = 60.0f;
         if (!this.world.isRemote) {
-            this.f(0);
+            this.setOutfitIndex(0);
             this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
-            Vec3d vec3d = this.net_minecraft_util_math_Vec3d_o();
+            Vec3d vec3d = this.getTargetPosition();
             Vec3d vec3d2 = vec3d.add(VectorMath.RotateY(0.0, 0.0, 1.0, f));
-            this.c(vec3d2);
+            this.setTargetPosition(vec3d2);
             Vec3d vec3d3 = vec3d.add(VectorMath.RotateY(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
             entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
             this.void_a(true);
@@ -303,14 +303,14 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         super.a(string, uUID);
         switch (string) {
             case "action.names.talk": {
-                this.void_e(Minecraft.getMinecraft().player.getPersistentID());
+                this.setInteractionPlayerUUID(Minecraft.getMinecraft().player.getPersistentID());
                 this.changeDataParameterFromClient("playerSheHasSexWith", Minecraft.getMinecraft().player.getPersistentID().toString());
                 this.changeDataParameterFromClient("animationFollowUp", "talkHorny");
                 this.void_a(uUID);
                 break;
             }
             case "action.names.headpat": {
-                this.void_e(Minecraft.getMinecraft().player.getPersistentID());
+                this.setInteractionPlayerUUID(Minecraft.getMinecraft().player.getPersistentID());
                 this.changeDataParameterFromClient("playerSheHasSexWith", Minecraft.getMinecraft().player.getPersistentID().toString());
                 this.changeDataParameterFromClient("animationFollowUp", "Headpat");
                 this.void_a(uUID);
@@ -447,7 +447,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         }
         Vec3d vec3d = new Vec3d(vector4d.getX(), vector4d.getY(), vector4d.getZ());
         this.void_b((float)vector4d.getW());
-        this.c(vec3d);
+        this.setTargetPosition(vec3d);
         this.cameraYaw = this.java_lang_Float_I().floatValue();
         this.getNavigator().clearPath();
         this.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 0.35);
@@ -540,7 +540,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 if (Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ) > 0.0) {
-                    switch (this.com_trolmastercard_sexmod_em_class258$a_inner259_q()) {
+                    switch (this.getWalkType()) {
                         case RUN: {
                             this.createAnimation("animation.bia.run", true, animationEvent);
                             break;
@@ -700,7 +700,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "stripMSG1": {
                     this.void_a(I18n.format("bia.dialogue.hihi", new Object[0]));
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_GIGGLE));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
                 case "sexUiOn": {
@@ -789,8 +789,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     if (this.boolean_n()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.a(SoundsHandler.a(SoundsHandler.MISC_POUNDING), 0.5f);
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_AHH));
+                    this.a(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_fastDone": {
@@ -803,7 +803,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "anal_cumMSG2": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.GIRLS_BIA_AHH));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "blackScreen": 
@@ -853,7 +853,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "slide": {
-                    this.PlaySound(SoundsHandler.a(SoundsHandler.MISC_SLIDE));
+                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SLIDE));
                     if (!this.boolean_n()) break;
                     SexUI.addCumPercentage(0.005);
                     break;

@@ -123,7 +123,7 @@ public enum h8_class399 {
         entityDataManager.set(GalathEntity.bN, true);
         entityDataManager.set(GalathEntity.b7, true);
         entityDataManager.set(GalathEntity.ay, f__class2972.getRNG().nextBoolean());
-        GirlEntity.a((GirlEntity)f__class2972, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
+        GirlEntity.playRandomSound((GirlEntity)f__class2972, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
     }, f__class2972 -> {
         EnergyBallEntity c4_class1132;
         Vec3d vec3d;
@@ -171,9 +171,9 @@ public enum h8_class399 {
         g8_class353 g8_class3532 = new g8_class353(vec3d2.x - vec3d.x, vec3d2.z - vec3d.z);
         double d = TrigMath.toDegrees(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
         f__class2972.void_a(true);
-        f__class2972.c(vec3d);
+        f__class2972.setTargetPosition(vec3d);
         f__class2972.void_b((float)d);
-        GirlEntity.a((GirlEntity)f__class2972, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
+        GirlEntity.playRandomSound((GirlEntity)f__class2972, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
     }, f__class2972 -> {
         EntityLivingBase entityLivingBase = f__class2972.net_minecraft_entity_EntityLivingBase_M();
         int n = f__class2972.az() + 1;
@@ -188,11 +188,11 @@ public enum h8_class399 {
             Vec3d vec3d4 = vec3d.add(vec3d2);
             float f = (float)(n - 24) / 8.0f;
             Vec3d vec3d5 = Reference.LerpVec3d(vec3d3, vec3d4, (double)f);
-            f__class2972.c(vec3d5);
+            f__class2972.setTargetPosition(vec3d5);
         } else if (Utils.isValueInBounds((double)n, 32.0, 54.0)) {
             Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.java_lang_Float_I().floatValue() + 180.0f);
             Vec3d vec3d6 = entityLivingBase.getPositionVector().add(vec3d);
-            f__class2972.c(vec3d6);
+            f__class2972.setTargetPosition(vec3d6);
             GalathDamageSource damageSource = new GalathDamageSource(f__class2972);
             entityLivingBase.hurtTime = 0;
             entityLivingBase.hurtResistantTime = 0;
@@ -262,8 +262,8 @@ public enum h8_class399 {
             }
             f__class2972.witherSkeletons.clear();
             EntityPlayerMP d3 = (EntityPlayerMP)object2;
-            f__class2972.c(object2.getPositionVector());
-            f__class2972.void_e(object2.getPersistentID());
+            f__class2972.setTargetPosition(object2.getPositionVector());
+            f__class2972.setInteractionPlayerUUID(object2.getPersistentID());
             f__class2972.void_a(true);
             f__class2972.setCurrentAction(Action.RAPE_INTRO);
             byte by = (byte)MathHelper.floor((f__class2972.java_lang_Float_I().floatValue() + 180.0f) * 256.0f / 360.0f);

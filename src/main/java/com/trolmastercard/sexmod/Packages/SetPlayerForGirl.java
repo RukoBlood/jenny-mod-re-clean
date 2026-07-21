@@ -76,7 +76,7 @@ implements IMessage {
                     if (em_class2582 instanceof JennyEntity) {
                         ((JennyEntity)em_class2582).af = true;
                     }
-                    em_class2582.void_e(b0_class582.b);
+                    em_class2582.setInteractionPlayerUUID(b0_class582.b);
                 }
             });
             return null;

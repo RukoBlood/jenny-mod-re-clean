@@ -108,12 +108,12 @@ extends Render<LunaHookEntity> {
         }
         eb_class2362.rotationYaw = eb_class2362.java_lang_Float_I().floatValue();
         eb_class2362.renderYawOffset = eb_class2362.java_lang_Float_I().floatValue();
-        eb_class2362.posX = eb_class2362.net_minecraft_util_math_Vec3d_o().x;
-        eb_class2362.posY = eb_class2362.net_minecraft_util_math_Vec3d_o().y;
-        eb_class2362.posZ = eb_class2362.net_minecraft_util_math_Vec3d_o().z;
-        eb_class2362.prevPosX = eb_class2362.net_minecraft_util_math_Vec3d_o().x;
-        eb_class2362.prevPosY = eb_class2362.net_minecraft_util_math_Vec3d_o().y;
-        eb_class2362.prevPosZ = eb_class2362.net_minecraft_util_math_Vec3d_o().z;
+        eb_class2362.posX = eb_class2362.getTargetPosition().x;
+        eb_class2362.posY = eb_class2362.getTargetPosition().y;
+        eb_class2362.posZ = eb_class2362.getTargetPosition().z;
+        eb_class2362.prevPosX = eb_class2362.getTargetPosition().x;
+        eb_class2362.prevPosY = eb_class2362.getTargetPosition().y;
+        eb_class2362.prevPosZ = eb_class2362.getTargetPosition().z;
         float f4 = (eb_class2362.prevRenderYawOffset + (eb_class2362.renderYawOffset - eb_class2362.prevRenderYawOffset) * f2) * ((float)Math.PI / 180);
         double d4 = MathHelper.sin(f4);
         double d5 = MathHelper.cos(f4);

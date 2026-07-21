@@ -133,7 +133,7 @@ public class q_class419 {
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
             ResetGirl.a_inner422.a(entityPlayerMP);
             entityPlayer.setInvisible(false);
-            girlEntity.void_e((UUID)null);
+            girlEntity.setInteractionPlayerUUID((UUID)null);
         }
     }
 

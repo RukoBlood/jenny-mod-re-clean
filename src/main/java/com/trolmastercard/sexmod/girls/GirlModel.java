@@ -84,9 +84,9 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
 
         if (girl.getDataManager().get(GirlEntity.IS_ANCHORED)) {
             girl.setPositionAndRotationDirect(
-                    girl.net_minecraft_util_math_Vec3d_o().x,
-                    girl.net_minecraft_util_math_Vec3d_o().y,
-                    girl.net_minecraft_util_math_Vec3d_o().z,
+                    girl.getTargetPosition().x,
+                    girl.getTargetPosition().y,
+                    girl.getTargetPosition().z,
                     girl.java_lang_Float_I(),
                     0.0f, 3, true
             );
@@ -97,7 +97,7 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
         }
 
         this.processHeadLookRotation(girl, processor, animationEvent);
-        if (!(girl instanceof Fighter) || girl.boolean_h() || girl.int_ah() == 0) {
+        if (!(girl instanceof Fighter) || girl.boolean_h() || girl.getOutfitIndex() == 0) {
             this.resetArmorPartVisibility(processor);
         } else {
             this.updateArmorPartVisibility(processor, girl.entityDataManager.get(Fighter.HELMET_SLOT), girl.entityDataManager.get(Fighter.CHEST_SLOT), girl.entityDataManager.get(Fighter.LEGS_SLOT), girl.entityDataManager.get(Fighter.BOOTS_SLOT));

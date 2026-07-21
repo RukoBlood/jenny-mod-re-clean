@@ -192,7 +192,7 @@ implements IAnimatable {
         if (f__class2972 == null) {
             return;
         }
-        Vec3d vec3d = f__class2972.net_minecraft_util_math_Vec3d_o().add(0.0, 1.5, 0.0);
+        Vec3d vec3d = f__class2972.getTargetPosition().add(0.0, 1.5, 0.0);
         Vec3d vec3d2 = entityPlayer.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0);
         Vec3d vec3d3 = vec3d2.add(VectorMath.RotateY((float) (entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double) (-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         float f = (float) (l - l2 - 1000L) / 2000.0f;
@@ -288,7 +288,7 @@ implements IAnimatable {
         f__class2972.setCurrentAction(Action.GALATH_DE_SUMMON);
         f__class2972.aC();
         f__class2972.void_a(true);
-        f__class2972.c(f__class2972.getPositionVector());
+        f__class2972.setTargetPosition(f__class2972.getPositionVector());
         f__class2972.void_b(f__class2972.rotationYaw);
     }
 
@@ -310,7 +310,7 @@ implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     public static void a(UUID uUID, GalathEntity f__class2972) {
         World world = f__class2972.world;
-        Vec3d vec3d = f__class2972.boolean_Q() ? f__class2972.net_minecraft_util_math_Vec3d_o() : f__class2972.getPositionVector();
+        Vec3d vec3d = f__class2972.boolean_Q() ? f__class2972.getTargetPosition() : f__class2972.getPositionVector();
         Vec3d vec3d2 = vec3d.add(0.0, 1.5, 0.0);
         Random random = f__class2972.getRNG();
         int n = 0;
