@@ -137,7 +137,7 @@ implements bh_class82 {
             EllieEntity.a(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
             return true;
         }
-        if ((Integer)this.entityDataManager.get(D) == 0) {
+        if ((Integer)this.entityDataManager.get(OUTFIT_INDEX) == 0) {
             EllieEntity.a(entityPlayer, this, new String[]{"action.names.dressup"}, true);
             return true;
         }
@@ -297,7 +297,7 @@ implements bh_class82 {
         UUID uUID;
         String string = (String)this.entityDataManager.get(h);
         if ("Missionary".equals(string)) {
-            this.entityDataManager.set(D, 0);
+            this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.MISSIONARY_START);
             uUID = this.getID();
             if (uUID == null) {
@@ -318,7 +318,7 @@ implements bh_class82 {
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         }
         if ("cowgirl".equals(string)) {
-            this.entityDataManager.set(D, 0);
+            this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.COWGIRLSTART);
             uUID = this.getID();
             if (uUID == null) {
@@ -381,7 +381,7 @@ implements bh_class82 {
             return;
         }
         this.ah = true;
-        this.entityDataManager.set(G, false);
+        this.entityDataManager.set(IS_ANCHORED, false);
         this.setCurrentAction(Action.NULL);
         this.noClip = false;
         this.setNoGravity(false);
@@ -410,7 +410,7 @@ implements bh_class82 {
         this.c(vec3d);
         this.void_b(n);
         this.setCurrentAction(Action.SITDOWN);
-        this.entityDataManager.set(G, true);
+        this.entityDataManager.set(IS_ANCHORED, true);
         this.al = 109;
         this.noClip = true;
         this.setNoGravity(true);
@@ -469,7 +469,7 @@ implements bh_class82 {
         float f = (float)(Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29577951308232);
         this.void_b(f);
         this.c(this.getPositionVector());
-        this.entityDataManager.set(G, true);
+        this.entityDataManager.set(IS_ANCHORED, true);
         this.setCurrentAction(Action.DASH);
         this.Z = 16;
         this.setNoGravity(true);
@@ -504,7 +504,7 @@ implements bh_class82 {
     }
 
     void void_f() {
-        this.entityDataManager.set(G, false);
+        this.entityDataManager.set(IS_ANCHORED, false);
         this.setCurrentAction(Action.NULL);
         this.void_e((UUID)null);
         this.noClip = false;
@@ -722,7 +722,7 @@ implements bh_class82 {
             switch (soundKeyframeEvent.sound) {
                 case "becomeNude": {
                     if (!this.boolean_e()) break;
-                    this.changeDataParameterFromClient("currentModel", (Integer)this.entityDataManager.get(D) == 1 ? "0" : "1");
+                    this.changeDataParameterFromClient("currentModel", (Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
                     break;
                 }
                 case "stripDone": {

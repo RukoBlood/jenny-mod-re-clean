@@ -127,11 +127,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     private boolean i = false;
     HashMap<String, Vec3d> x = new HashMap();
     final static public DataParameter<String> v = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(110);
-    final static public DataParameter<Boolean> G = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(109);
+    final static public DataParameter<Boolean> IS_ANCHORED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(109);
     final static public DataParameter<String> e = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(108);
     final static public DataParameter<Float> w = EntityDataManager.createKey(GirlEntity.class, DataSerializers.FLOAT).getSerializer().createKey(107);
     final static public DataParameter<String> GIRL_ID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(106);
-    final static public DataParameter<Integer> D = EntityDataManager.createKey(GirlEntity.class, DataSerializers.VARINT).getSerializer().createKey(105);
+    final static public DataParameter<Integer> OUTFIT_INDEX = EntityDataManager.createKey(GirlEntity.class, DataSerializers.VARINT).getSerializer().createKey(105);
     final static public DataParameter<String> J = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(104);
     final static public DataParameter<String> h = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(103);
     final static public DataParameter<String> y = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
@@ -193,14 +193,14 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public int int_ah() {
-        return this.entityDataManager.get(D);
+        return this.entityDataManager.get(OUTFIT_INDEX);
     }
 
     public void f(int n) {
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("currentModel", "0");
         } else {
-            this.entityDataManager.set(D, n);
+            this.entityDataManager.set(OUTFIT_INDEX, n);
         }
     }
 
@@ -318,11 +318,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             this.changeDataParameterFromClient("shouldbeattargetpos", String.valueOf(bl));
             return;
         }
-        this.entityDataManager.set(G, bl);
+        this.entityDataManager.set(IS_ANCHORED, bl);
     }
 
     public boolean boolean_Q() {
-        return this.entityDataManager.get(G);
+        return this.entityDataManager.get(IS_ANCHORED);
     }
 
     @Override
@@ -360,11 +360,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.f = this.getNavigator();
         this.entityDataManager = this.getDataManager();
         this.entityDataManager.register(GIRL_ID, UUID.randomUUID().toString());
-        this.entityDataManager.register(D, 1);
+        this.entityDataManager.register(OUTFIT_INDEX, 1);
         this.entityDataManager.register(J, Action.NULL.toString());
         this.entityDataManager.register(h, "");
         this.entityDataManager.register(y, "null");
-        this.entityDataManager.register(G, false);
+        this.entityDataManager.register(IS_ANCHORED, false);
         this.entityDataManager.register(w, Float.valueOf(0.0f));
         this.entityDataManager.register(e, "0|0|0");
         this.entityDataManager.register(v, "");
@@ -506,7 +506,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @Override
     public void updateAITasks() {
-        if (this.entityDataManager.get(G).booleanValue()) {
+        if (this.entityDataManager.get(IS_ANCHORED).booleanValue()) {
             this.setRotationYawHead(this.java_lang_Float_I().floatValue());
             this.setPositionAndRotation(this.net_minecraft_util_math_Vec3d_o().x, this.net_minecraft_util_math_Vec3d_o().y, this.net_minecraft_util_math_Vec3d_o().z, this.java_lang_Float_I().floatValue(), 0.0f);
             this.setRotation(this.java_lang_Float_I().floatValue(), this.rotationPitch);
@@ -1223,7 +1223,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             this.H = this.b();
         }
         if ((iBone = this.H.getBone(string)) == null) {
-            if (!GirlModel.e.contains(string)) {
+            if (!GirlModel.CAMERA_PLACEMENTS.contains(string)) {
                 Main.LOGGER.log(Level.WARN, String.format("The bone '%s' does not exist on %s. " +
                         "Bone model matrix couldn't be calculated", string, this.getGirlName()));
                 this.p.remove(string);

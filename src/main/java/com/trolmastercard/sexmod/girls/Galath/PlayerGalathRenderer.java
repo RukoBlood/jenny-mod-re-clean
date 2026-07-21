@@ -113,13 +113,13 @@ extends PlayerGirlRenderer {
             case "braBoobR": 
             case "armorNippleR": 
             case "armorNippleL": {
-                itemStack = this.renderEntity.getDataManager().get(Fighter.ITEM_SLOT_4);
+                itemStack = this.renderEntity.getDataManager().get(Fighter.CHEST_SLOT);
                 break;
             }
             case "turnable": 
             case "static": 
             case "slip": {
-                itemStack = this.renderEntity.getDataManager().get(Fighter.ITEM_SLOT_5);
+                itemStack = this.renderEntity.getDataManager().get(Fighter.LEGS_SLOT);
                 break;
             }
             case "shinL": 
@@ -128,7 +128,7 @@ extends PlayerGirlRenderer {
             case "sockR": 
             case "kneeL": 
             case "kneeR": {
-                itemStack = this.renderEntity.getDataManager().get(Fighter.ITEM_SLOT_6);
+                itemStack = this.renderEntity.getDataManager().get(Fighter.BOOTS_SLOT);
             }
         }
         if (!(itemStack.getItem() instanceof ItemArmor)) {
@@ -187,10 +187,6 @@ extends PlayerGirlRenderer {
         this.renderRecursively(buffer, geoBone3, r, g, b, this.renderEntity.float_v());
         Tessellator.getInstance().draw();
         MATRIX_STACK.pop();
-    }
-
-    private static Exception a(Exception exception) {
-        return exception;
     }
 }
 

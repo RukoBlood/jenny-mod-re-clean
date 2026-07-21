@@ -21,7 +21,7 @@ public class LunaModel extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/cat/cat.animation.json");
     }
 

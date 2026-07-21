@@ -97,7 +97,7 @@ extends PlayerGirlRenderer {
 
     @Override
     protected void onBoneRenderStart(String boneName, GeoBone geoBone) {
-        if (this.currentGirl.getDataManager().get(GirlEntity.G).booleanValue()) {
+        if (this.currentGirl.getDataManager().get(GirlEntity.IS_ANCHORED).booleanValue()) {
             return;
         }
         if ("tail".equals(boneName)) {

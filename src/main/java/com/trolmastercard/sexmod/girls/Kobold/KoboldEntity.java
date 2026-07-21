@@ -454,7 +454,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.getNavigator().clearPath();
             this.void_b((float)(Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29577951308232 + 90.0));
             this.c(new Vec3d(this.posX, Math.floor(this.posY), this.posZ));
-            this.entityDataManager.set(G, true);
+            this.entityDataManager.set(IS_ANCHORED, true);
             this.setCurrentAction(Action.NULL);
         }
         return true;
@@ -522,7 +522,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     @Override
     public void void_b() {
         this.a2 = true;
-        this.entityDataManager.set(G, false);
+        this.entityDataManager.set(IS_ANCHORED, false);
     }
 
     @Override
@@ -542,7 +542,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.aD = 0;
             EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
             this.void_b(entityPlayer.rotationYaw + 180.0f);
-            this.entityDataManager.set(G, true);
+            this.entityDataManager.set(IS_ANCHORED, true);
             entityPlayer.noClip = true;
             entityPlayer.setNoGravity(true);
             this.noClip = true;
@@ -630,7 +630,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         } else {
             this.a5 = 0;
         }
-        if (!((Boolean)this.entityDataManager.get(G)).booleanValue()) {
+        if (!((Boolean)this.entityDataManager.get(IS_ANCHORED)).booleanValue()) {
             this.setNoGravity(false);
         }
         if (!optional.isPresent()) {
@@ -660,7 +660,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             }
             if (84 <= this.U) {
                 this.setCurrentAction(Action.NULL);
-                this.entityDataManager.set(G, false);
+                this.entityDataManager.set(IS_ANCHORED, false);
                 this.U = 0;
             }
             return;
@@ -814,7 +814,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (uUID == null) {
             return;
         }
-        if (!((Boolean)this.entityDataManager.get(G)).booleanValue()) {
+        if (!((Boolean)this.entityDataManager.get(IS_ANCHORED)).booleanValue()) {
             return;
         }
         if (this.currentAction() != Action.NULL) {
@@ -869,7 +869,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 if (!bs_class972.b(this)) continue;
                 bs_class972.c(this);
                 this.setCurrentAction(Action.NULL);
-                this.entityDataManager.set(G, false);
+                this.entityDataManager.set(IS_ANCHORED, false);
             }
             this.noClip = false;
             this.setNoGravity(false);
@@ -970,7 +970,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             if (ff_class3082.getID() != null) continue;
             ff_class3082.noClip = false;
             ff_class3082.setNoGravity(false);
-            ff_class3082.getDataManager().set(G, false);
+            ff_class3082.getDataManager().set(IS_ANCHORED, false);
             ff_class3082.setCurrentAction(Action.NULL);
         }
     }
@@ -996,7 +996,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             Vec3d vec3d2 = new Vec3d((float)blockPosArray[1].getX() + 0.5f, (double)blockPosArray[1].getY() + 0.5625, (float)blockPosArray[1].getZ() + 0.5f);
             boolean bl = vec3d.subtract((Vec3d)vec3d2).x == 0.0;
             Vec3d vec3d3 = Reference.LerpVec3d(vec3d, vec3d2, 0.5);
-            this.entityDataManager.set(G, true);
+            this.entityDataManager.set(IS_ANCHORED, true);
             this.c(vec3d3);
             this.void_b(bl ? 0.0f : 90.0f);
             this.noClip = true;
@@ -1244,7 +1244,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return true;
         }
         if (this.currentAction() != Action.ATTACK) {
-            this.entityDataManager.set(G, false);
+            this.entityDataManager.set(IS_ANCHORED, false);
             this.setCurrentAction(Action.NULL);
         }
         BlockPos blockPos = this.c((object3).getPosition());
@@ -2170,7 +2170,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.aR = 24;
             this.W = 0;
             this.setCurrentAction(Action.NULL);
-            this.entityDataManager.set(G, false);
+            this.entityDataManager.set(IS_ANCHORED, false);
             EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_z();
             HashSet<BlockPos> hashSet = bs_class972.g();
             if (entityPlayer != null && !hashSet.isEmpty()) {
@@ -2393,7 +2393,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         this.c(new Vec3d((double)vec3i.getX() + 0.5, vec3i.getY(), (double)vec3i.getZ() + 0.5));
         this.void_b(f);
-        this.entityDataManager.set(G, true);
+        this.entityDataManager.set(IS_ANCHORED, true);
         this.entityDataManager.set(at, true);
         this.setCurrentAction(Action.MINE);
         this.world.destroyBlock(((BlockPos)vec3i).up(), false);
@@ -2663,7 +2663,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 double d = Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ);
-                if (!((Boolean)this.entityDataManager.get(G)).booleanValue() && d > 0.0) {
+                if (!((Boolean)this.entityDataManager.get(IS_ANCHORED)).booleanValue() && d > 0.0) {
                     if (this.onGround && Math.abs(Math.abs(this.prevPosY) - Math.abs(this.posY)) < (double)0.1f) {
                         this.rotationYaw = this.rotationYawHead;
                         double d2 = 1.0 + (double)(f * 2.0f);

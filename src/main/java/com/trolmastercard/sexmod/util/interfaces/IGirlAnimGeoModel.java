@@ -15,29 +15,28 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 // TODO
 //  if generic conflicts, then revert to: 'T extends IAnimatable'
-public abstract class IGirlAnimGeoModel<T extends GirlEntity>
-extends AnimatedGeoModel<T> {
+public abstract class IGirlAnimGeoModel<T extends GirlEntity> extends AnimatedGeoModel<T> {
     protected IGirlAnimGeoModel() {
         try {
             Field field = Class.forName("software.bernie.geckolib3.model.AnimatedGeoModel").getDeclaredField("animationProcessor");
             field.setAccessible(true);
             field.set(this, new CachedAnimationProcessor(this));
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public GeoModel getModel(ResourceLocation resourceLocation) {
-        GeoModel geoModel = super.getModel(resourceLocation);
-        if (geoModel == null) {
+        GeoModel model = super.getModel(resourceLocation);
+        if (model == null) {
             throw new GeoModelException(resourceLocation, "Could not find model.");
         }
         this.getAnimationProcessor().clearModelRendererList();
-        for (GeoBone geoBone : geoModel.topLevelBones) {
-            this.registerBone(geoBone);
+        for (GeoBone bone : model.topLevelBones) {
+            this.registerBone(bone);
         }
-        return geoModel;
+        return model;
     }
 }
 

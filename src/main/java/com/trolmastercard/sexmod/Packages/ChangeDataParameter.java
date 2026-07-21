@@ -76,7 +76,7 @@ implements IMessage {
                         break;
                     }
                     case "currentModel": {
-                        girlEntity.getDataManager().set(GirlEntity.D, Integer.valueOf(n_class4152.c));
+                        girlEntity.getDataManager().set(GirlEntity.OUTFIT_INDEX, Integer.valueOf(n_class4152.c));
                         break;
                     }
                     case "currentAction": {
@@ -111,7 +111,7 @@ implements IMessage {
                         break;
                     }
                     case "shouldbeattargetpos": {
-                        girlEntity.getDataManager().set(GirlEntity.G, Boolean.valueOf(n_class4152.c));
+                        girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, Boolean.valueOf(n_class4152.c));
                     }
                 }
             });

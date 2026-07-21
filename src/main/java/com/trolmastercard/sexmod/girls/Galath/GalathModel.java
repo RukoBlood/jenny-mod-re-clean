@@ -34,7 +34,7 @@ extends GirlModel<GirlEntity> {
     long i = -1L;
 
     public GalathModel() {
-        this.c = this.getAnimationResource();
+        this.modelLocations = this.getAnimationResource();
     }
 
     @Override
@@ -48,12 +48,12 @@ extends GirlModel<GirlEntity> {
     @Override
     public ResourceLocation getModelLocation(GirlEntity girlEntity) {
         if (girlEntity.world instanceof FakeWorld) {
-            return this.c[0];
+            return this.modelLocations[0];
         }
         if (((b7_class68)((Object) girlEntity)).boolean_b()) {
-            return this.c[2];
+            return this.modelLocations[2];
         }
-        return this.c[girlEntity.getDataManager().get(GirlEntity.D)];
+        return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
     }
 
     @Override
@@ -62,7 +62,7 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/galath/galath.animation.json");
     }
 
@@ -78,25 +78,25 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity em_class2582, Integer n, AnimationEvent animationEvent) {
-        this.k(em_class2582);
-        super.setLivingAnimations(em_class2582, n, animationEvent);
-        this.void_a(em_class2582);
-        this.h(em_class2582);
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
+        this.k(girl);
+        super.setLivingAnimations(girl, instanceID, animationEvent);
+        this.void_a(girl);
+        this.h(girl);
         //this.f(em_class2582); // TODO
         assert(false);
-        this.void_b(em_class2582);
-        this.void_e(em_class2582);
-        this.void_g(em_class2582);
-        this.j(em_class2582);
+        this.void_b(girl);
+        this.void_e(girl);
+        this.void_g(girl);
+        this.j(girl);
         this.ShowFutaCock();
-        this.void_c(em_class2582);
-        this.i(em_class2582);
-        this.void_d(em_class2582);
-        if (!(em_class2582 instanceof GalathEntity)) {
+        this.void_c(girl);
+        this.i(girl);
+        this.void_d(girl);
+        if (!(girl instanceof GalathEntity)) {
             return;
         }
-        GalathEntity f__class2972 = (GalathEntity)em_class2582;
+        GalathEntity f__class2972 = (GalathEntity) girl;
         f__class2972.aE = this.getAnimationProcessor().getBone("head").getRotationX();
         if (f__class2972.boolean_b()) {
             ManglelieModel.a(f__class2972, this.getAnimationProcessor(), animationEvent.getPartialTick());
@@ -110,12 +110,12 @@ extends GirlModel<GirlEntity> {
         if (!(em_class2582 instanceof GalathEntity)) {
             return;
         }
-        if (this.a.isGamePaused()) {
+        if (this.mc.isGamePaused()) {
             return;
         }
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
         IBone iBone = animationProcessor.getBone("head");
-        float f = this.a.getRenderPartialTicks() + (float)this.a.player.ticksExisted;
+        float f = this.mc.getRenderPartialTicks() + (float)this.mc.player.ticksExisted;
         Vector3f f7_class2922 = this.a((GalathEntity)em_class2582, f);
         iBone.setRotationX(iBone.getRotationX() + f7_class2922.x);
         iBone.setRotationY(iBone.getRotationY() + f7_class2922.y);
@@ -131,7 +131,7 @@ extends GirlModel<GirlEntity> {
     }
 
     Vector3f a(GalathEntity f__class2972, float f) {
-        return Reference.LerpVector3f(this.a(f), Vector3f.ZERO, (double)f__class2972.float_b(this.a.getRenderPartialTicks()));
+        return Reference.LerpVector3f(this.a(f), Vector3f.ZERO, (double)f__class2972.float_b(this.mc.getRenderPartialTicks()));
     }
 
     Vector3f a(float f) {
@@ -175,11 +175,11 @@ extends GirlModel<GirlEntity> {
         }
         EntityPlayer entityPlayer = em_class2582.net_minecraft_entity_player_EntityPlayer_z();
         if (entityPlayer == null) {
-            entityPlayer = this.a.player;
+            entityPlayer = this.mc.player;
         }
         MolangParser molangParser = GeckoLibCache.getInstance().parser;
-        Vec3d vec3d = ak_class32.b(em_class2582, entityPlayer, this.a.getRenderPartialTicks()).add(em_class2582.b("head"));
-        float f = (float) TrigMath.toDegrees(Math.atan2(vec3d.z, vec3d.x)) - em_class2582.java_lang_Float_I().floatValue();
+        Vec3d vec3d = ak_class32.b(em_class2582, entityPlayer, this.mc.getRenderPartialTicks()).add(em_class2582.b("head"));
+        float f = (float) TrigMath.toDegrees(Math.atan2(vec3d.z, vec3d.x)) - em_class2582.java_lang_Float_I();
         float f2 = (float) TrigMath.toDegrees(Math.atan2(vec3d.y, Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z)));
         double d = Math.abs(vec3d.x) + Math.abs(vec3d.y) + Math.abs(vec3d.z);
         double d2 = d * 7.0 + -20.0;
@@ -252,7 +252,7 @@ extends GirlModel<GirlEntity> {
             iBone.setPositionY(0.0f);
             iBone.setPositionZ(0.0f);
         } else {
-            Vec3d vec3d3 = GalathModel.net_minecraft_util_math_Vec3d_d(em_class2582);
+            Vec3d vec3d3 = GalathModel.calculateMovementDelta(em_class2582);
             iBone.setRotationX(-((float)vec3d3.x));
             iBone.setPositionY((float)vec3d3.y);
             iBone.setPositionZ((float)vec3d3.z);
@@ -266,7 +266,7 @@ extends GirlModel<GirlEntity> {
         if (em_class2582.currentAction() != Action.RAPE_CHARGE) {
             return;
         }
-        Vec3d vec3d = GalathModel.net_minecraft_util_math_Vec3d_d(em_class2582);
+        Vec3d vec3d = GalathModel.calculateMovementDelta(em_class2582);
         IBone iBone = this.getAnimationProcessor().getBone("body");
         IBone iBone2 = this.getAnimationProcessor().getBone("rotationTool");
         iBone2.setRotationX((float)vec3d.x);

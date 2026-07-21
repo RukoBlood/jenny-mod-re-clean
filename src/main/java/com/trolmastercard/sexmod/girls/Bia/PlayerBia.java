@@ -460,7 +460,7 @@ extends PlayerGirl {
                 }
                 case "talk_responseDone": {
                     this.s();
-                    if (this.entityDataManager.get(GirlEntity.D) != 0) {
+                    if (this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) != 0) {
                         this.setCurrentAction(Action.STRIP);
                         break;
                     }

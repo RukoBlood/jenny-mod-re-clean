@@ -48,12 +48,12 @@ extends GirlModel<GirlEntity> {
     @Override
     public ResourceLocation getModelLocation(GirlEntity girlEntity) {
         if (girlEntity.world instanceof FakeWorld) {
-            return this.c[0];
+            return this.modelLocations[0];
         }
         if (ManglelieModel.boolean_c(girlEntity)) {
-            return this.c[2];
+            return this.modelLocations[2];
         }
-        return this.c[girlEntity.getDataManager().get(GirlEntity.D)];
+        return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
     }
 
     public static boolean boolean_c(GirlEntity girl) {
@@ -66,17 +66,17 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/manglelie/manglelie.animation.json");
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity em_class2582, Integer n, AnimationEvent animationEvent) {
-        super.setLivingAnimations(em_class2582, n, animationEvent);
-        ManglelieModel.a(em_class2582, this.getAnimationProcessor(), animationEvent.getPartialTick());
-        this.void_b(em_class2582);
-        this.void_d(em_class2582);
-        this.void_a(em_class2582);
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
+        super.setLivingAnimations(girl, instanceID, animationEvent);
+        ManglelieModel.a(girl, this.getAnimationProcessor(), animationEvent.getPartialTick());
+        this.void_b(girl);
+        this.void_d(girl);
+        this.void_a(girl);
         //this.e(em_class2582); // TODO
         assert(false);
     }
@@ -118,14 +118,14 @@ extends GirlModel<GirlEntity> {
             return;
         }
         IBone iBone = this.getAnimationProcessor().getBone("body");
-        iBone.setRotationY(f__class2972.bw + (this.a.isGamePaused() ? 0.0f : iBone.getRotationY()));
+        iBone.setRotationY(f__class2972.bw + (this.mc.isGamePaused() ? 0.0f : iBone.getRotationY()));
         iBone.setScaleX(f__class2972.bm);
         iBone.setScaleY(f__class2972.bm);
         iBone.setScaleZ(f__class2972.bm);
     }
 
     Vec3d a(@Nonnull Entity entity) {
-        return ak_class32.a(entity, this.a.getRenderPartialTicks()).add(0.0, entity.getEyeHeight(), 0.0);
+        return ak_class32.a(entity, this.mc.getRenderPartialTicks()).add(0.0, entity.getEyeHeight(), 0.0);
     }
 
     void void_d(GirlEntity em_class2582) {
@@ -137,7 +137,7 @@ extends GirlModel<GirlEntity> {
         if (ManglelieModel.boolean_c(em_class2582)) {
             return;
         }
-        if (this.a.isGamePaused()) {
+        if (this.mc.isGamePaused()) {
             return;
         }
         ManglelieEntity f8_class2932 = (ManglelieEntity)em_class2582;
@@ -194,7 +194,7 @@ extends GirlModel<GirlEntity> {
         a_inner128.access$202(a_inner1282, new Vector3f(m, 0.0f, iBone.getRotationZ()));
         a_inner128.access$302(a_inner1282, new Vector3f(l, 0.0f, iBone2.getRotationZ()));
         float f2 = f__class2972.aE + animationProcessor.getBone("upperBody").getRotationX();
-        float f3 = this.a.getRenderPartialTicks();
+        float f3 = this.mc.getRenderPartialTicks();
         Vec3d vec3d = ManglelieRenderer.a(f__class2972, f3);
         Vec3d vec3d2 = f8_class2932.b("armR").add(vec3d);
         Vec3d vec3d3 = f8_class2932.b("armL").add(vec3d);
@@ -264,7 +264,7 @@ extends GirlModel<GirlEntity> {
         if (ClientProxy.IS_PRELOADING) {
             return;
         }
-        if (this.a.isGamePaused()) {
+        if (this.mc.isGamePaused()) {
             return;
         }
         ManglelieEntity f8_class2932 = (ManglelieEntity)em_class2582;

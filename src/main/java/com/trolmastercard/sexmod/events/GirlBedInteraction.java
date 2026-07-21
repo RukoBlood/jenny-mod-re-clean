@@ -36,7 +36,7 @@ public class GirlBedInteraction {
         List<GirlEntity> girlsNearby = breakEvent.getWorld().getEntitiesWithinAABB(GirlEntity.class, aabb);
         boolean isBedOccupied = false;
         for (GirlEntity girl : girlsNearby) {
-            if (girl.isDead || !girl.getDataManager().get(GirlEntity.G).booleanValue()) continue;
+            if (girl.isDead || !girl.getDataManager().get(GirlEntity.IS_ANCHORED)) continue;
             isBedOccupied = true;
             break;
         }

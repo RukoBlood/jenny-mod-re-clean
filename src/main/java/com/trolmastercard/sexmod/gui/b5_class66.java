@@ -135,9 +135,5 @@ public class b5_class66 extends GuiScreen {
         entityLivingBase.prevRotationYawHead = f4;
         entityLivingBase.rotationYawHead = f5;
     }
-
-    private static Exception a(Exception exception) {
-        return exception;
-    }
 }
 

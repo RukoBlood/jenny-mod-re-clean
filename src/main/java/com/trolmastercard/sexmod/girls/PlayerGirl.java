@@ -227,7 +227,7 @@ public abstract class PlayerGirl extends Fighter {
             entityPlayerSP.setInvisible(false);
             entityPlayerSP.setNoGravity(false);
             entityPlayerSP.noClip = false;
-            this.entityDataManager.set(G, false);
+            this.entityDataManager.set(IS_ANCHORED, false);
             PackageHandler.networkWrapper.sendToServer((IMessage)new ResetGirl(this.girlID()));
         }
     }
@@ -327,7 +327,7 @@ public abstract class PlayerGirl extends Fighter {
         entityPlayerMP.capabilities.isFlying = true;
         entityPlayerMP2.capabilities.isFlying = true;
         this.j(uUID);
-        this.entityDataManager.set(G, true);
+        this.entityDataManager.set(IS_ANCHORED, true);
         this.c(vec3d);
         this.void_b(0.0f);
     }
@@ -473,32 +473,32 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     void syncWithPlayerProperties(EntityPlayer entityPlayer) {
-        this.entityDataManager.set(ITEM_SLOT_3, ItemStack.EMPTY);
-        this.entityDataManager.set(ITEM_SLOT_4, ItemStack.EMPTY);
-        this.entityDataManager.set(ITEM_SLOT_5, ItemStack.EMPTY);
-        this.entityDataManager.set(ITEM_SLOT_6, ItemStack.EMPTY);
+        this.entityDataManager.set(HELMET_SLOT, ItemStack.EMPTY);
+        this.entityDataManager.set(CHEST_SLOT, ItemStack.EMPTY);
+        this.entityDataManager.set(LEGS_SLOT, ItemStack.EMPTY);
+        this.entityDataManager.set(BOOTS_SLOT, ItemStack.EMPTY);
         for (ItemStack itemStack : entityPlayer.getArmorInventoryList()) {
             if (itemStack.getItem() instanceof ItemElytra) {
-                this.entityDataManager.set(ITEM_SLOT_4, itemStack);
+                this.entityDataManager.set(CHEST_SLOT, itemStack);
                 continue;
             }
             if (!(itemStack.getItem() instanceof ItemArmor)) continue;
             ItemArmor itemArmor = (ItemArmor)itemStack.getItem();
             switch (itemArmor.getEquipmentSlot()) {
                 case HEAD: {
-                    this.entityDataManager.set(ITEM_SLOT_3, itemStack);
+                    this.entityDataManager.set(HELMET_SLOT, itemStack);
                     break;
                 }
                 case CHEST: {
-                    this.entityDataManager.set(ITEM_SLOT_4, itemStack);
+                    this.entityDataManager.set(CHEST_SLOT, itemStack);
                     break;
                 }
                 case LEGS: {
-                    this.entityDataManager.set(ITEM_SLOT_5, itemStack);
+                    this.entityDataManager.set(LEGS_SLOT, itemStack);
                     break;
                 }
                 case FEET: {
-                    this.entityDataManager.set(ITEM_SLOT_6, itemStack);
+                    this.entityDataManager.set(BOOTS_SLOT, itemStack);
                 }
             }
         }

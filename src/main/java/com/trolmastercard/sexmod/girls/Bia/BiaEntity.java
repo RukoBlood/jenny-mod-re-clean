@@ -125,7 +125,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 this.Y = false;
                 this.ag = 0;
                 this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
-                this.entityDataManager.set(G, true);
+                this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.U();
             } else {
@@ -143,7 +143,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         if (this.af) {
             if (this.getPositionVector().distanceTo(this.net_minecraft_util_math_Vec3d_o()) < 0.6 || this.Z > 200) {
                 this.af = false;
-                this.entityDataManager.set(G, true);
+                this.entityDataManager.set(IS_ANCHORED, true);
                 this.Z = 0;
                 this.noClip = true;
                 this.setNoGravity(true);
@@ -190,7 +190,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public boolean boolean_b(EntityPlayer entityPlayer) {
         if (this.getID() == null && (!this.boolean_J() || ((String)this.entityDataManager.get(v)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
-            String[] stringArray = new String[]{(Integer)this.entityDataManager.get(D) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
+            String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.a(entityPlayer, this, stringArray, true);
             return true;
         }
@@ -690,7 +690,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "becomeNude": {
                     if (!this.boolean_e()) break;
-                    this.changeDataParameterFromClient("currentModel", (Integer)this.entityDataManager.get(D) == 1 ? "0" : "1");
+                    this.changeDataParameterFromClient("currentModel", (Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
                     break;
                 }
                 case "stripDone": {

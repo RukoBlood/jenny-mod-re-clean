@@ -500,7 +500,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     }
 
     void updateModelMatrices(T entity) {
-        ArrayList<String> bonesToTrack = new ArrayList<String>(GirlModel.e);
+        ArrayList<String> bonesToTrack = new ArrayList<String>(GirlModel.CAMERA_PLACEMENTS);
         bonesToTrack.addAll(((GirlEntity)entity).p);
 
         for (String boneName : bonesToTrack) {
@@ -774,7 +774,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (!(this.renderEntity instanceof Fighter)) {
             return this.getBaseColorVector(r, g, b);
         }
-        if (((GirlEntity)this.renderEntity).entityDataManager.get(GirlEntity.D) == 0) {
+        if (((GirlEntity)this.renderEntity).entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 0) {
             return this.getBaseColorVector(r, g, b);
         }
         GeoModelProvider provider = this.getGeoModelProvider();
@@ -782,7 +782,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             return this.getBaseColorVector(r, g, b);
         }
         GirlModel girlModel = (GirlModel)provider;
-        ItemStack armorStack = girlModel.a((GirlEntity)this.renderEntity, boneName);
+        ItemStack armorStack = girlModel.getArmorStackForBone((GirlEntity)this.renderEntity, boneName);
         if (!(armorStack.getItem() instanceof ItemArmor)) {
             return this.getBaseColorVector(r, g, b);
         }

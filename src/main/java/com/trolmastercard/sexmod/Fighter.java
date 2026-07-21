@@ -51,10 +51,10 @@ public abstract class Fighter extends GirlEntity {
     public ItemStackHandler items = new ItemStackHandler(7);
     final static public DataParameter<ItemStack> ITEM_SLOT_1 = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(117);
     final static public DataParameter<ItemStack> ITEM_SLOT_2 = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(116);
-    final static public DataParameter<ItemStack> ITEM_SLOT_3 = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(115);
-    final static public DataParameter<ItemStack> ITEM_SLOT_4 = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(114);
-    final static public DataParameter<ItemStack> ITEM_SLOT_5 = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(113);
-    final static public DataParameter<ItemStack> ITEM_SLOT_6 = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(112);
+    final static public DataParameter<ItemStack> HELMET_SLOT = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(115);
+    final static public DataParameter<ItemStack> CHEST_SLOT = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(114);
+    final static public DataParameter<ItemStack> LEGS_SLOT = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(113);
+    final static public DataParameter<ItemStack> BOOTS_SLOT = EntityDataManager.createKey(Fighter.class, DataSerializers.ITEM_STACK).getSerializer().createKey(112);
     final static public DataParameter<Integer> M = EntityDataManager.createKey(Fighter.class, DataSerializers.VARINT).getSerializer().createKey(111);
 
     protected Fighter(World world) {
@@ -73,10 +73,10 @@ public abstract class Fighter extends GirlEntity {
         this.entityDataManager.register(M, 0);
         this.entityDataManager.register(ITEM_SLOT_1, ItemStack.EMPTY);
         this.entityDataManager.register(ITEM_SLOT_2, ItemStack.EMPTY);
-        this.entityDataManager.register(ITEM_SLOT_3, ItemStack.EMPTY);
-        this.entityDataManager.register(ITEM_SLOT_4, ItemStack.EMPTY);
-        this.entityDataManager.register(ITEM_SLOT_5, ItemStack.EMPTY);
-        this.entityDataManager.register(ITEM_SLOT_6, ItemStack.EMPTY);
+        this.entityDataManager.register(HELMET_SLOT, ItemStack.EMPTY);
+        this.entityDataManager.register(CHEST_SLOT, ItemStack.EMPTY);
+        this.entityDataManager.register(LEGS_SLOT, ItemStack.EMPTY);
+        this.entityDataManager.register(BOOTS_SLOT, ItemStack.EMPTY);
     }
 
     @Override
@@ -107,10 +107,10 @@ public abstract class Fighter extends GirlEntity {
         this.entityDataManager.set(HAND_STATES, Byte.valueOf("1"));
         this.entityDataManager.set(ITEM_SLOT_1, this.items.getStackInSlot(0));
         this.entityDataManager.set(ITEM_SLOT_2, this.items.getStackInSlot(1));
-        this.entityDataManager.set(ITEM_SLOT_3, this.items.getStackInSlot(2));
-        this.entityDataManager.set(ITEM_SLOT_4, this.items.getStackInSlot(3));
-        this.entityDataManager.set(ITEM_SLOT_5, this.items.getStackInSlot(4));
-        this.entityDataManager.set(ITEM_SLOT_6, this.items.getStackInSlot(5));
+        this.entityDataManager.set(HELMET_SLOT, this.items.getStackInSlot(2));
+        this.entityDataManager.set(CHEST_SLOT, this.items.getStackInSlot(3));
+        this.entityDataManager.set(LEGS_SLOT, this.items.getStackInSlot(4));
+        this.entityDataManager.set(BOOTS_SLOT, this.items.getStackInSlot(5));
     }
 
     @Override
@@ -150,10 +150,6 @@ public abstract class Fighter extends GirlEntity {
 
     public <T> T getCapability(Capability<T> capability, EnumFacing enumFacing) {
         return (T)(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? this.items : super.getCapability(capability, enumFacing));
-    }
-
-    private static RuntimeException b(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

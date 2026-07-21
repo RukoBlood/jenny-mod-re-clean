@@ -1091,7 +1091,7 @@ public class KoboldManager {
                     ff_class3082.setCurrentAction(Action.NULL);
                     ff_class3082.setNoGravity(false);
                     ff_class3082.noClip = false;
-                    ff_class3082.getDataManager().set(GirlEntity.G, false);
+                    ff_class3082.getDataManager().set(GirlEntity.IS_ANCHORED, false);
                 }
                 this.f.remove(bs_class972);
                 if (bs_class972.b.isEmpty() || this.e == null) {

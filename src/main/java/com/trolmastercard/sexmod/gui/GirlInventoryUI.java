@@ -143,10 +143,10 @@ public class GirlInventoryUI extends GuiScreen {
         int n3 = (int) Reference.LerpFloat(-30.0f, 120.0f, this.m);
         this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_1), n3 - 105, 68);
         this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_2), n3 - 105, 87);
-        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_3), n3 - 105, 109);
-        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_4), n3 - 105, 127);
-        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_5), n3 - 105, 146);
-        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_6), n3 - 105, 166);
+        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.HELMET_SLOT), n3 - 105, 109);
+        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.CHEST_SLOT), n3 - 105, 127);
+        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.LEGS_SLOT), n3 - 105, 146);
+        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.BOOTS_SLOT), n3 - 105, 166);
         if (this.n == 0.0f) {
             return;
         }

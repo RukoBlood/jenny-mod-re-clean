@@ -37,19 +37,19 @@ extends GirlModel<GirlEntity> {
     @Override
     public ResourceLocation getModelLocation(GirlEntity girlEntity) {
         if (girlEntity.world instanceof FakeWorld) {
-            return this.c[0];
+            return this.modelLocations[0];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.D) > this.c.length) {
-            System.out.println("Girl doesn't have an outfit Nr." + girlEntity.getDataManager().get(GirlEntity.D) + " so im just making her nude lol");
-            return this.c[0];
+        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) > this.modelLocations.length) {
+            System.out.println("Girl doesn't have an outfit Nr." + girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) + " so im just making her nude lol");
+            return this.modelLocations[0];
         }
         if (girlEntity instanceof PlayerSlime) {
-            return this.c[girlEntity.getDataManager().get(GirlEntity.D)];
+            return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.D) == 1) {
-            return this.c[2];
+        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) == 1) {
+            return this.modelLocations[2];
         }
-        return this.c[0];
+        return this.modelLocations[0];
     }
 
     @Override
@@ -58,19 +58,19 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/slime/slime.animation.json");
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity girlEntity, Integer n, AnimationEvent animationEvent) {
-        super.setLivingAnimations(girlEntity, n, animationEvent);
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
+        super.setLivingAnimations(girl, instanceID, animationEvent);
         AnimationProcessor<SlimeEntity> animationProcessor = this.getAnimationProcessor();
-        if (!(girlEntity.world instanceof FakeWorld) && animationProcessor.getBone("bedSlime") != null && animationProcessor.getBone("bedSlimeLayer") != null) {
-            animationProcessor.getBone("bedSlime").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object)girlEntity.currentAction()));
-            animationProcessor.getBone("bedSlimeLayer").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object)girlEntity.currentAction()));
+        if (!(girl.world instanceof FakeWorld) && animationProcessor.getBone("bedSlime") != null && animationProcessor.getBone("bedSlimeLayer") != null) {
+            animationProcessor.getBone("bedSlime").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.currentAction()));
+            animationProcessor.getBone("bedSlimeLayer").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.currentAction()));
         }
-        if (girlEntity instanceof PlayerGirl) {
+        if (girl instanceof PlayerGirl) {
             return;
         }
         this.a(new String[]{"head"}, "hat");

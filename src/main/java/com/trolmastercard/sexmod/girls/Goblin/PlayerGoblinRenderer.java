@@ -73,7 +73,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
     @Override
     protected Vector4f calculateBoneArmorColor(String boneName, float r, float g, float b) {
         if (boneName.startsWith("crown")) {
-            ItemStack itemStack = this.renderEntity.getDataManager().get(Fighter.ITEM_SLOT_3);
+            ItemStack itemStack = this.renderEntity.getDataManager().get(Fighter.HELMET_SLOT);
             if (itemStack.isEmpty()) {
                 return super.calculateBoneArmorColor(boneName, r, g, b);
             }
@@ -300,7 +300,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
         if (entityPlayer == null) {
             return null;
         }
-        ItemStack itemStack = eq_class2642.getDataManager().get(Fighter.ITEM_SLOT_4);
+        ItemStack itemStack = eq_class2642.getDataManager().get(Fighter.CHEST_SLOT);
         if (itemStack.isEmpty()) {
             return null;
         }

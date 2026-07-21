@@ -139,7 +139,7 @@ extends GirlEntity {
         this.entityDataManager.set(HornyLevel, nBTTagCompound.getInteger("hornyLevel"));
         this.entityDataManager.set(TicksUntilBirth, nBTTagCompound.getInteger("ticksUntilBirth"));
         if (this.entityDataManager.get(HornyLevel) != 0) {
-            this.entityDataManager.set(D, 0);
+            this.entityDataManager.set(OUTFIT_INDEX, 0);
         }
         this.noClip = false;
         this.setNoGravity(false);
@@ -153,7 +153,7 @@ extends GirlEntity {
     @Override
     public void void_g() {
         this.entityDataManager.set(HornyLevel, 0);
-        this.entityDataManager.set(D, 1);
+        this.entityDataManager.set(OUTFIT_INDEX, 1);
     }
 
     @Override
@@ -163,7 +163,7 @@ extends GirlEntity {
         this.SpawnFriendlySlime();
         if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.slimeActions == SlimeActions.IDLE && this.entityDataManager.get(TicksUntilBirth) == -1) {
             this.entityDataManager.set(HornyLevel, 2);
-            if ((Integer)this.entityDataManager.get(D) == 1) {
+            if ((Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1) {
                 this.setCurrentAction(Action.UNDRESS);
             }
             this.removePotionEffect(HornyPotion.HORNY_POTION);
@@ -235,7 +235,7 @@ extends GirlEntity {
         if (n >= 4 && this.onGround && this.currentAction() == Action.NULL) {
             this.c(this.getPositionVector());
             this.void_b(this.rotationYaw);
-            this.entityDataManager.set(G, true);
+            this.entityDataManager.set(IS_ANCHORED, true);
             this.setNoGravity(true);
             this.noClip = true;
             this.setCurrentAction(Action.STARTDOGGY);
@@ -247,7 +247,7 @@ extends GirlEntity {
         }
         this.c(this.getPositionVector());
         this.void_b(this.rotationYaw);
-        this.entityDataManager.set(G, true);
+        this.entityDataManager.set(IS_ANCHORED, true);
         this.setNoGravity(true);
         this.noClip = true;
         entityPlayer.setNoGravity(true);
@@ -432,13 +432,13 @@ extends GirlEntity {
                 }
                 case "dress": {
                     if (!this.boolean_e()) break;
-                    this.entityDataManager.set(D, 1);
+                    this.entityDataManager.set(OUTFIT_INDEX, 1);
                     this.setCurrentAction((Action)null);
                     this.void_r();
                     break;
                 }
                 case "becomeNude": {
-                    this.entityDataManager.set(D, 0);
+                    this.entityDataManager.set(OUTFIT_INDEX, 0);
                     break;
                 }
                 case "sexUiOn": {

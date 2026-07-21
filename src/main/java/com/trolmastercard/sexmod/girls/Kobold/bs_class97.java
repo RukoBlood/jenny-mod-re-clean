@@ -95,7 +95,7 @@ public class bs_class97 {
             ff_class3082.setNoGravity(false);
             ff_class3082.noClip = false;
             ff_class3082.setCurrentAction(Action.NULL);
-            ff_class3082.getDataManager().set(GirlEntity.G, false);
+            ff_class3082.getDataManager().set(GirlEntity.IS_ANCHORED, false);
         }
         this.f.clear();
     }

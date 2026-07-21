@@ -92,7 +92,7 @@ public class e__class234 {
     }
 
     static float a(PlayerGirl pg, EntityPlayer entityPlayer) {
-        if (pg.getDataManager().get(GirlEntity.G)) {
+        if (pg.getDataManager().get(GirlEntity.IS_ANCHORED)) {
             return 0.0f;
         }
         if ((entityPlayer.getHeldItemMainhand().getItem() instanceof ItemBow || entityPlayer.getHeldItemOffhand().getItem() instanceof ItemBow) && pg.ah) {

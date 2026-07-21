@@ -115,9 +115,5 @@ public class SexUI extends Gui {
         keepSpacePressed = false;
         h = true;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

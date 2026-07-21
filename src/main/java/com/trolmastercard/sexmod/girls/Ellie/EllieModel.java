@@ -28,7 +28,7 @@ extends GirlModel<GirlEntity> {
     };
 
     public EllieModel() {
-        this.c = this.getAnimationResource();
+        this.modelLocations = this.getAnimationResource();
     }
 
     @Override
@@ -44,31 +44,31 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/ellie/ellie.animation.json");
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity em_class2582, Integer n, AnimationEvent animationEvent) {
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
         float f;
         float f2;
-        super.setLivingAnimations(em_class2582, n, animationEvent);
-        if (em_class2582.world instanceof FakeWorld) {
+        super.setLivingAnimations(girl, instanceID, animationEvent);
+        if (girl.world instanceof FakeWorld) {
             return;
         }
-        if (em_class2582 instanceof PlayerGirl) {
+        if (girl instanceof PlayerGirl) {
             return;
         }
-        if (em_class2582.currentAction() != Action.SITDOWNIDLE) {
+        if (girl.currentAction() != Action.SITDOWNIDLE) {
             return;
         }
-        EntityPlayer entityPlayer = em_class2582.world.getClosestPlayerToEntity(em_class2582, 15.0);
+        EntityPlayer entityPlayer = girl.world.getClosestPlayerToEntity(girl, 15.0);
         if (entityPlayer == null) {
             return;
         }
         IBone iBone = this.getAnimationProcessor().getBone("head");
-        Vec3d vec3d = em_class2582.getPositionVector().subtract(entityPlayer.getPositionVector());
-        int n2 = Math.round(em_class2582.java_lang_Float_I().floatValue());
+        Vec3d vec3d = girl.getPositionVector().subtract(entityPlayer.getPositionVector());
+        int n2 = Math.round(girl.java_lang_Float_I().floatValue());
         if (n2 == 180) {
             f2 = (float)Math.atan2(vec3d.x, vec3d.z) * 1.2f;
             f2 = f2 > 0.0f ? Math.max(1.5f, Math.min(3.14f, f2)) : Math.max(-3.14f, Math.min(-1.5f, f2));
@@ -76,12 +76,12 @@ extends GirlModel<GirlEntity> {
         } else {
             f = this.f.get(n2)[1];
             float f3 = this.f.get(n2)[2];
-            f2 = ((float)(Math.atan2(vec3d.x, vec3d.z) + (double)this.f.get(n2)[0]) + em_class2582.java_lang_Float_I().floatValue()) * 0.8f;
+            f2 = ((float)(Math.atan2(vec3d.x, vec3d.z) + (double)this.f.get(n2)[0]) + girl.java_lang_Float_I().floatValue()) * 0.8f;
             if ((f2 = Utils.clamp(f2, f, f3)) == f || f2 == f3) {
                 f2 = 0.0f;
             }
         }
-        f = f2 == 0.0f ? 0.0f : Utils.clamp((float)((entityPlayer.posY - em_class2582.posY) * 0.5), -0.75f, 0.75f);
+        f = f2 == 0.0f ? 0.0f : Utils.clamp((float)((entityPlayer.posY - girl.posY) * 0.5), -0.75f, 0.75f);
         iBone.setRotationY(f2);
         iBone.setRotationX(f);
     }

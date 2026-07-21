@@ -31,7 +31,10 @@ extends GirlModel<GirlEntity> {
 
     @Override
     protected ResourceLocation[] getAnimationResource() {
-        return new ResourceLocation[]{new ResourceLocation("sexmod", "geo/goblin/goblin.geo.json"), new ResourceLocation("sexmod", "geo/goblin/armored.geo.json")};
+        return new ResourceLocation[]{
+                new ResourceLocation("sexmod", "geo/goblin/goblin.geo.json"),
+                new ResourceLocation("sexmod", "geo/goblin/armored.geo.json")
+        };
     }
 
     @Override
@@ -40,16 +43,16 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/goblin/goblin.animation.json");
     }
 
     @Override
-    protected boolean f(GirlEntity em_class2582) {
-        if (!(em_class2582 instanceof GoblinEntity)) {
-            return super.f(em_class2582);
+    protected boolean isSteveSkinType(GirlEntity girl) {
+        if (!(girl instanceof GoblinEntity)) {
+            return super.isSteveSkinType(girl);
         }
-        GoblinEntity e3_class2192 = (GoblinEntity)em_class2582;
+        GoblinEntity e3_class2192 = (GoblinEntity) girl;
         UUID uUID = e3_class2192.getID();
         if (uUID == null) {
             uUID = e3_class2192.java_util_UUID_e();
@@ -66,49 +69,49 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity em_class2582, Integer n, AnimationEvent animationEvent) {
-        super.setLivingAnimations(em_class2582, n, animationEvent);
-        if (em_class2582.world instanceof FakeWorld) {
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
+        super.setLivingAnimations(girl, instanceID, animationEvent);
+        if (girl.world instanceof FakeWorld) {
             return;
         }
         AnimationProcessor animationProcessor = this.getAnimationProcessor();
-        boolean bl = em_class2582 instanceof GoblinEntity;
+        boolean bl = girl instanceof GoblinEntity;
         IBone iBone = animationProcessor.getBone("preggy");
-        iBone.setHidden(em_class2582.getDataManager().get(GoblinEntity.aV) == false);
+        iBone.setHidden(girl.getDataManager().get(GoblinEntity.aV) == false);
         IBone iBone2 = animationProcessor.getBone("body");
         IBone iBone3 = animationProcessor.getBone("head");
-        Action fp_class3242 = em_class2582.currentAction();
+        Action fp_class3242 = girl.currentAction();
         if ((fp_class3242 == Action.BREEDING_SLOW_2 || fp_class3242 == Action.BREEDING_FAST_2 || fp_class3242 == Action.BREEDING_CUM_2) && this.f.gameSettings.thirdPersonView == 0) {
             iBone2.setPositionY(iBone2.getPositionY() + 1.5f);
         }
-        ai_class30 ai_class302 = (ai_class30)((Object)em_class2582);
+        ai_class30 ai_class302 = (ai_class30)((Object) girl);
         if (bl && fp_class3242 == Action.AWAIT_PICK_UP || fp_class3242 == Action.VANISH) {
-            this.a(em_class2582, iBone2, iBone3);
+            this.a(girl, iBone2, iBone3);
         }
         if (bl && fp_class3242 == Action.SIT) {
-            this.a(em_class2582, iBone3);
+            this.a(girl, iBone3);
         }
         if (fp_class3242 == Action.START_THROWING) {
             if (this.f.player.getPersistentID().equals(ai_class302.java_util_UUID_e())) {
-                this.a(iBone2, animationProcessor, em_class2582, ai_class302);
+                this.a(iBone2, animationProcessor, girl, ai_class302);
             } else {
-                this.a(iBone2, animationProcessor, em_class2582);
+                this.a(iBone2, animationProcessor, girl);
             }
         } else {
             iBone2.setHidden(false);
         }
         if (!iBone2.isHidden() && fp_class3242 == Action.START_THROWING || fp_class3242 == Action.THROWN) {
-            Vec3d vec3d = GoblinModel.net_minecraft_util_math_Vec3d_d(em_class2582);
+            Vec3d vec3d = GoblinModel.calculateMovementDelta(girl);
             iBone2.setRotationX((float)vec3d.x);
             iBone2.setPositionY((float)vec3d.y);
             iBone2.setPositionZ((float)vec3d.z);
         }
         if (fp_class3242 == Action.START_THROWING || fp_class3242 == Action.PICK_UP) {
-            this.a(animationProcessor, ai_class302, em_class2582);
+            this.a(animationProcessor, ai_class302, girl);
         }
         if (!bl) {
-            this.b(animationProcessor, em_class2582);
-            this.a(animationProcessor, em_class2582);
+            this.b(animationProcessor, girl);
+            this.a(animationProcessor, girl);
         }
     }
 

@@ -181,7 +181,7 @@ extends PlayerGirl {
                 return;
             }
             this.entityDataManager.set(GirlEntity.h, "");
-            this.entityDataManager.set(GirlEntity.D, 0);
+            this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
             this.void_e(entityPlayer.getPersistentID());
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)((Optional)this.entityDataManager.get(ai)).get());
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);

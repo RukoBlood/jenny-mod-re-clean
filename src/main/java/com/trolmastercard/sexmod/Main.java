@@ -158,7 +158,7 @@ public class Main {
             ((Writer)object2).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
             ((OutputStreamWriter)object2).close();
             WorldGeneration.i = true;
-            GirlModel.d = false;
+            GirlModel.enableModelCache = false;
             PlayerGirl.ag = true;
             return;
         }
@@ -166,7 +166,7 @@ public class Main {
         int n2 = ((String)object).indexOf("shouldLoadOtherSkins");
         int n3 = ((String)object).indexOf("allowFlying");
         WorldGeneration.i = 't' == ((String)object).charAt(n + 20);
-        GirlModel.d = 't' == ((String)object).charAt(n2 + 22);
+        GirlModel.enableModelCache = 't' == ((String)object).charAt(n2 + 22);
         PlayerGirl.ag = 't' == ((String)object).charAt(n3 + 13);
     }
 

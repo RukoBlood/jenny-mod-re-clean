@@ -48,7 +48,7 @@ extends PlayerGirlRenderer {
     }
 
     boolean boolean_b() {
-        return this.renderEntity.getDataManager().get(GirlEntity.G);
+        return this.renderEntity.getDataManager().get(GirlEntity.IS_ANCHORED);
     }
 
     @Override

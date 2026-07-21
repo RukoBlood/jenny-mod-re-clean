@@ -90,7 +90,7 @@ public class fu_class330 {
         if (!WorldUtils.checkBedBlock(world, blockPos, rightClickBlock.getHitVec(), rightClickBlock.getFace(), entityPlayer)) {
             return;
         }
-        if (ei_class2512.getDataManager().get(GirlEntity.G).booleanValue()) {
+        if (ei_class2512.getDataManager().get(GirlEntity.IS_ANCHORED).booleanValue()) {
             rightClickBlock.setCanceled(true);
             return;
         }
@@ -146,7 +146,7 @@ public class fu_class330 {
         }
         ei_class2512.c(new Vec3d((double)vec3i.getX() + 0.5, (float)vec3i.getY() + 0.0f, (double)vec3i.getZ() + 0.5));
         ei_class2512.void_b(entityPlayer.rotationYaw);
-        ei_class2512.getDataManager().set(GirlEntity.G, true);
+        ei_class2512.getDataManager().set(GirlEntity.IS_ANCHORED, true);
         ei_class2512.u_();
     }
 
@@ -247,7 +247,7 @@ public class fu_class330 {
         if (!entityPlayer.getHeldItemMainhand().equals(ItemStack.EMPTY)) {
             return;
         }
-        if (ei_class2512.getDataManager().get(GirlEntity.G).booleanValue()) {
+        if (ei_class2512.getDataManager().get(GirlEntity.IS_ANCHORED).booleanValue()) {
             return;
         }
         if (entityPlayer.rotationPitch < 20.0f) {
@@ -264,8 +264,8 @@ public class fu_class330 {
         entityPlayer.setPosition(vec3d2.x, Math.floor(vec3d.y), vec3d2.z);
         ei_class2512.c(vec3d2);
         ei_class2512.void_b(entityPlayer.rotationYaw);
-        ei_class2512.getDataManager().set(GirlEntity.G, true);
-        ei_class2512.getDataManager().set(GirlEntity.D, 0);
+        ei_class2512.getDataManager().set(GirlEntity.IS_ANCHORED, true);
+        ei_class2512.getDataManager().set(GirlEntity.OUTFIT_INDEX, 0);
         ei_class2512.setCurrentAction(Action.STARTDOGGY);
         if (rightClickBlock.getWorld().isRemote && Minecraft.getMinecraft().player.getPersistentID().equals(entityPlayer.getPersistentID())) {
             HandlePlayerMovement.a(false);

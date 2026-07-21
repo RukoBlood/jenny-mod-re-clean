@@ -36,25 +36,25 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/kobold/kobold.animation.json");
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity em_class2582, Integer n, AnimationEvent animationEvent) {
-        super.setLivingAnimations(em_class2582, n, animationEvent);
-        if (em_class2582.world instanceof FakeWorld) {
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
+        super.setLivingAnimations(girl, instanceID, animationEvent);
+        if (girl.world instanceof FakeWorld) {
             return;
         }
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
-        if (!em_class2582.boolean_h() && em_class2582 instanceof KoboldEntity) {
-            animationProcessor.getBone("crown").setHidden(em_class2582.getDataManager().get(KoboldEntity.aZ) == false);
-            animationProcessor.getBone("egg").setHidden(!((KoboldEntity)em_class2582).Q);
+        if (!girl.boolean_h() && girl instanceof KoboldEntity) {
+            animationProcessor.getBone("crown").setHidden(girl.getDataManager().get(KoboldEntity.aZ) == false);
+            animationProcessor.getBone("egg").setHidden(!((KoboldEntity) girl).Q);
         } else {
             animationProcessor.getBone("crown").setHidden(true);
             animationProcessor.getBone("egg").setHidden(true);
         }
-        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(em_class2582);
+        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(girl);
         this.b(animationProcessor, stringArray[0]);
         this.e(animationProcessor, stringArray[1]);
         this.a(animationProcessor, stringArray[2], 0.75f, 1.35f, "boobL", "boobR", "armorBoobs");
@@ -62,8 +62,8 @@ extends GirlModel<GirlEntity> {
         this.a(animationProcessor, stringArray[3], 1.0f, 1.2f);
         this.a(animationProcessor, stringArray[4]);
         this.d(animationProcessor, stringArray[5]);
-        this.a(em_class2582, animationProcessor, stringArray[6]);
-        switch (em_class2582.currentAction()) {
+        this.a(girl, animationProcessor, stringArray[6]);
+        switch (girl.currentAction()) {
             case STARTBLOWJOB: 
             case SUCKBLOWJOB_BLINK: 
             case THRUSTBLOWJOB: 
@@ -75,7 +75,7 @@ extends GirlModel<GirlEntity> {
                 animationProcessor.getBone("tounge").setHidden(true);
             }
         }
-        this.b(em_class2582, animationProcessor);
+        this.b(girl, animationProcessor);
     }
 
     void b(GirlEntity em_class2582, AnimationProcessor<GirlEntity> animationProcessor) {
@@ -233,23 +233,23 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    protected void a(GirlEntity em_class2582, AnimationProcessor<GirlEntity> animationProcessor, AnimationEvent<GirlEntity> animationEvent) {
-        if (em_class2582.world instanceof FakeWorld) {
+    protected void processHeadLookRotation(GirlEntity girl, AnimationProcessor<GirlEntity> processor, AnimationEvent<GirlEntity> event) {
+        if (girl.world instanceof FakeWorld) {
             return;
         }
-        switch (em_class2582.currentAction()) {
+        switch (girl.currentAction()) {
             case NULL: {
-                if (Math.abs(em_class2582.prevPosX - em_class2582.posX) + Math.abs(em_class2582.prevPosZ - em_class2582.posZ) < 0.0 || em_class2582.onGround && Math.abs(Math.abs(em_class2582.prevPosY) - Math.abs(em_class2582.posY)) > (double)0.1f || !((dr_class199)((Object)em_class2582)).boolean_a()) break;
+                if (Math.abs(girl.prevPosX - girl.posX) + Math.abs(girl.prevPosZ - girl.posZ) < 0.0 || girl.onGround && Math.abs(Math.abs(girl.prevPosY) - Math.abs(girl.posY)) > (double)0.1f || !((dr_class199)((Object) girl)).boolean_a()) break;
             }
             default: {
                 return;
             }
         }
-        EntityModelData entityModelData = animationEvent.getExtraDataOfType(EntityModelData.class).get(0);
-        IBone iBone = animationProcessor.getBone("head");
+        EntityModelData entityModelData = event.getExtraDataOfType(EntityModelData.class).get(0);
+        IBone iBone = processor.getBone("head");
         iBone.setRotationY(entityModelData.netHeadYaw * ((float)Math.PI / 180));
         iBone.setRotationX(entityModelData.headPitch * ((float)Math.PI / 180));
-        IBone iBone2 = animationProcessor.getBone("body") == null ? animationProcessor.getBone("dd") : animationProcessor.getBone("body");
+        IBone iBone2 = processor.getBone("body") == null ? processor.getBone("dd") : processor.getBone("body");
         iBone2.setRotationY(0.0f);
     }
 

@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class BiaModel extends GirlModel<GirlEntity> {
     public BiaModel() {
-        this.c = this.getAnimationResource();
+        this.modelLocations = this.getAnimationResource();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class BiaModel extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/bia/bia.animation.json");
     }
 

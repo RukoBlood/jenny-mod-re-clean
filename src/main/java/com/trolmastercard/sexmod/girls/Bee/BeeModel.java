@@ -26,14 +26,14 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/bee/bee.animation.json");
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity em_class2582, Integer n, AnimationEvent animationEvent) {
-        super.setLivingAnimations(em_class2582, n, animationEvent);
-        if (em_class2582.world instanceof FakeWorld) {
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
+        super.setLivingAnimations(girl, instanceID, animationEvent);
+        if (girl.world instanceof FakeWorld) {
             return;
         }
         AnimationProcessor animationProcessor = this.getAnimationProcessor();
@@ -41,19 +41,19 @@ extends GirlModel<GirlEntity> {
         if (iBone == null) {
             return;
         }
-        iBone.setHidden(em_class2582.movementController.getCurrentAnimation() == null || !em_class2582.movementController.getCurrentAnimation().animationName.contains("chest"));
+        iBone.setHidden(girl.movementController.getCurrentAnimation() == null || !girl.movementController.getCurrentAnimation().animationName.contains("chest"));
     }
 
     @Override
-    protected void a(GirlEntity em_class2582, AnimationProcessor<GirlEntity> animationProcessor, AnimationEvent<GirlEntity> animationEvent) {
-        if (!(em_class2582.world instanceof FakeWorld || em_class2582.currentAction() != Action.NULL && em_class2582.currentAction() != Action.ATTACK && em_class2582.currentAction() != Action.BOW)) {
-            EntityModelData entityModelData = animationEvent.getExtraDataOfType(EntityModelData.class).get(0);
-            IBone iBone = animationProcessor.getBone("neck");
+    protected void processHeadLookRotation(GirlEntity girl, AnimationProcessor<GirlEntity> processor, AnimationEvent<GirlEntity> event) {
+        if (!(girl.world instanceof FakeWorld || girl.currentAction() != Action.NULL && girl.currentAction() != Action.ATTACK && girl.currentAction() != Action.BOW)) {
+            EntityModelData entityModelData = event.getExtraDataOfType(EntityModelData.class).get(0);
+            IBone iBone = processor.getBone("neck");
             iBone.setRotationY(entityModelData.netHeadYaw * 0.5f * ((float)Math.PI / 180));
-            IBone iBone2 = animationProcessor.getBone("head");
+            IBone iBone2 = processor.getBone("head");
             iBone2.setRotationY(entityModelData.netHeadYaw * ((float)Math.PI / 180));
             iBone2.setRotationX(1.0f + entityModelData.headPitch * ((float)Math.PI / 180));
-            IBone iBone3 = animationProcessor.getBone("body") == null ? animationProcessor.getBone("dd") : animationProcessor.getBone("body");
+            IBone iBone3 = processor.getBone("body") == null ? processor.getBone("dd") : processor.getBone("body");
             iBone3.setRotationY(0.0f);
         }
     }

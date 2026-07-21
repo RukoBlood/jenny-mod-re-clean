@@ -73,7 +73,7 @@ public class PlayerJenny extends PlayerGirl {
     @Override
     public void u_() {
         this.setCurrentAction(Action.STARTDOGGY);
-        this.entityDataManager.set(GirlEntity.D, 0);
+        this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
         this.r = this.entityDataManager.get(GirlEntity.w);
     }
 
@@ -98,7 +98,7 @@ public class PlayerJenny extends PlayerGirl {
     @Override
     public void b(String string, UUID uUID) {
         if ("action.names.boobjob".equals(string)) {
-            this.entityDataManager.set(GirlEntity.D, 0);
+            this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.PAIZURI_START);
             this.a(0, Action.PAIZURI_START);
             this.void_b(uUID);

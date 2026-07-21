@@ -74,7 +74,7 @@ implements IMessage {
             em_class2582.void_g();
             if (em_class2582 instanceof PlayerGirl && em_class2582.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID()) != null) {
                 PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(em_class2582.dimension).getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID()));
-                em_class2582.getDataManager().set(GirlEntity.D, 1);
+                em_class2582.getDataManager().set(GirlEntity.OUTFIT_INDEX, 1);
                 object2 = em_class2582.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID());
                 ((EntityPlayer)object2).capabilities.isFlying = false;
                 ((Entity)object2).setNoGravity(false);

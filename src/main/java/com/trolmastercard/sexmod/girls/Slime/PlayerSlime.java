@@ -284,13 +284,13 @@ extends PlayerGirl {
                 }
                 case "undress": {
                     if (!this.boolean_e()) break;
-                    this.entityDataManager.set(D, 0);
+                    this.entityDataManager.set(OUTFIT_INDEX, 0);
                     this.void_r();
                     break;
                 }
                 case "dress": {
                     if (!this.boolean_e()) break;
-                    this.entityDataManager.set(D, 1);
+                    this.entityDataManager.set(OUTFIT_INDEX, 1);
                     this.setCurrentAction((Action)null);
                     this.void_r();
                     break;

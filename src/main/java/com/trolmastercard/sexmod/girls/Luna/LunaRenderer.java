@@ -57,7 +57,7 @@ public class LunaRenderer extends GirlRenderer {
     }
 
     boolean boolean_a() {
-        return this.renderEntity.getDataManager().get(GirlEntity.G);
+        return this.renderEntity.getDataManager().get(GirlEntity.IS_ANCHORED);
     }
 
     @Override

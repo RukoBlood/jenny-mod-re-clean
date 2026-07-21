@@ -61,7 +61,7 @@ public class SendCompanionHome implements IMessage {
                         girlEntity.setCurrentAction(Action.THROW_PEARL);
                         girlEntity.void_b((float)Math.atan2(girlEntity.posZ - girlEntity.homeCoords.z, girlEntity.posX - girlEntity.homeCoords.x) * 57.29578f + 90.0f);
                         girlEntity.c(girlEntity.getPositionVector());
-                        girlEntity.getDataManager().set(GirlEntity.G, true);
+                        girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, true);
                         girlEntity.q = null;
                         continue;
                     }
@@ -79,7 +79,7 @@ public class SendCompanionHome implements IMessage {
                     girlEntity.setPosition(girlEntity.homeCoords.x, girlEntity.homeCoords.y, girlEntity.homeCoords.z);
                     girlEntity.q = null;
                     girlEntity.setCurrentAction(Action.NULL);
-                    girlEntity.getDataManager().set(GirlEntity.G, false);
+                    girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, false);
                     girlEntity.goHome();
                 }
             });

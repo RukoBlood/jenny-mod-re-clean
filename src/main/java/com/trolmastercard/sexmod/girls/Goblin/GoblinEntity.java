@@ -1542,7 +1542,7 @@ implements ai_class30 {
                     break;
                 }
                 double d = Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ);
-                if (!((Boolean)this.entityDataManager.get(G)).booleanValue() && d > 0.0) {
+                if (!((Boolean)this.entityDataManager.get(IS_ANCHORED)).booleanValue() && d > 0.0) {
                     if (this.onGround && Math.abs(Math.abs(this.prevPosY) - Math.abs(this.posY)) < (double)0.1f) {
                         if (d > (double)0.2f) {
                             this.createAnimation("animation.goblin.walk", true, animationEvent);

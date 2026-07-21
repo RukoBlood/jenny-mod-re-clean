@@ -72,7 +72,7 @@ extends PlayerGirl {
         if ("action.names.touchboobs".equals(string)) {
             this.a(0, Action.TOUCH_BOOBS_INTRO);
             this.setCurrentAction(Action.TOUCH_BOOBS_INTRO);
-            this.entityDataManager.set(D, 0);
+            this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.void_b(uUID);
         }
         if ("action.names.headpat".equals(string)) {
@@ -138,7 +138,7 @@ extends PlayerGirl {
             entityPlayer.prevRotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             this.r = this.java_lang_Float_I().floatValue() + 180.0f;
             this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
-            this.entityDataManager.set(D, 0);
+            this.entityDataManager.set(OUTFIT_INDEX, 0);
         }
         ++this.ar;
     }

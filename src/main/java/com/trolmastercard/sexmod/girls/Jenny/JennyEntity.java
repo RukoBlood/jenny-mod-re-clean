@@ -138,7 +138,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (this.Z) {
             if (this.getPositionVector().distanceTo(this.net_minecraft_util_math_Vec3d_o()) < 0.6 || this.ad > 200) {
                 this.Z = false;
-                this.entityDataManager.set(GirlEntity.G, true);
+                this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
                 this.ad = 0;
                 this.noClip = true;
                 this.setNoGravity(true);
@@ -160,7 +160,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 this.ab = false;
                 this.ac = 0;
                 this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
-                this.entityDataManager.set(GirlEntity.G, true);
+                this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 if (this.entityDataManager.get(Y).booleanValue()) {
                     this.U();
@@ -199,12 +199,12 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     @Override
     public boolean boolean_b(EntityPlayer entityPlayer) {
         if (this.getID() == null && (!this.boolean_J() || this.entityDataManager.get(GirlEntity.v).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
-            String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.D) == 1 ? "action.names.strip" : "action.names.dressup"};
+            String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
                 GirlEntity.a(entityPlayer, this, stringArray, true);
                 return true;
             }
-            GirlEntity.a(entityPlayer, this, stringArray, new ItemStack[]{new ItemStack(Items.EMERALD, 3), new ItemStack(Items.ENDER_PEARL, 2), new ItemStack(Items.DIAMOND, 2), this.entityDataManager.get(GirlEntity.D) == 1 ? new ItemStack(Items.GOLD_INGOT, 1) : new ItemStack(Items.AIR, 0)}, true);
+            GirlEntity.a(entityPlayer, this, stringArray, new ItemStack[]{new ItemStack(Items.EMERALD, 3), new ItemStack(Items.ENDER_PEARL, 2), new ItemStack(Items.DIAMOND, 2), this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? new ItemStack(Items.GOLD_INGOT, 1) : new ItemStack(Items.AIR, 0)}, true);
             return true;
         }
         return false;
@@ -366,7 +366,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 break;
             }
             case "boobjob": {
-                if (this.entityDataManager.get(GirlEntity.D) != 0) {
+                if (this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) != 0) {
                     this.setCurrentAction(Action.STRIP);
                     return;
                 }
@@ -374,7 +374,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 break;
             }
             case "doggy": {
-                if (this.entityDataManager.get(GirlEntity.D) != 0) {
+                if (this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) != 0) {
                     this.setCurrentAction(Action.STRIP);
                     this.s();
                     return;
@@ -565,7 +565,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "becomeNude": {
                     if (!this.boolean_e()) break;
-                    this.changeDataParameterFromClient("currentModel", this.entityDataManager.get(GirlEntity.D) == 1 ? "0" : "1");
+                    this.changeDataParameterFromClient("currentModel", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "0" : "1");
                     break;
                 }
                 case "stripDone": {

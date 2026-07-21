@@ -82,7 +82,7 @@ public class ho_class404 extends EntityEnderPearl {
                 GirlEntity girl = (GirlEntity)enderTeleportEvent.getEntityLiving();
                 girl.q = null;
                 girl.setCurrentAction(Action.NULL);
-                girl.getDataManager().set(GirlEntity.G, false);
+                girl.getDataManager().set(GirlEntity.IS_ANCHORED, false);
                 girl.goHome();
             }
         }

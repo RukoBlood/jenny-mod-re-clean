@@ -230,7 +230,7 @@ implements bh_class82,
             if (d < 0.5 || this.ak > 200) {
                 this.ay = false;
                 this.ak = 0;
-                this.entityDataManager.set(G, true);
+                this.entityDataManager.set(IS_ANCHORED, true);
                 this.noClip = true;
                 this.setNoGravity(true);
                 this.motionX = 0.0;
@@ -248,7 +248,7 @@ implements bh_class82,
                 this.ac = false;
                 this.aw = 0;
                 this.void_b(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
-                this.entityDataManager.set(G, true);
+                this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.U();
             } else {
@@ -302,7 +302,7 @@ implements bh_class82,
             entityPlayer.prevRotationYaw = this.java_lang_Float_I().floatValue() + 180.0f;
             this.r = this.java_lang_Float_I().floatValue() + 180.0f;
             this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
-            this.entityDataManager.set(D, 0);
+            this.entityDataManager.set(OUTFIT_INDEX, 0);
         }
         ++this.ab;
     }
@@ -322,7 +322,7 @@ implements bh_class82,
 
     @Override
     public void goToSexBed() {
-        this.entityDataManager.set(G, false);
+        this.entityDataManager.set(IS_ANCHORED, false);
         this.setCurrentAction(Action.NULL);
         this.ar = true;
         BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
@@ -377,7 +377,7 @@ implements bh_class82,
         this.at = 0;
         this.as = 0;
         this.am = false;
-        this.entityDataManager.set(G, false);
+        this.entityDataManager.set(IS_ANCHORED, false);
         this.entityDataManager.set(ag, ItemStack.EMPTY);
         this.setSilent(false);
         this.setCurrentAction(Action.NULL);
@@ -447,7 +447,7 @@ implements bh_class82,
             if (this.currentAction() == Action.NULL) {
                 this.setCurrentAction(Action.FISHING_START);
                 this.c(this.getPositionVector());
-                this.entityDataManager.set(G, true);
+                this.entityDataManager.set(IS_ANCHORED, true);
                 this.void_b((float)Math.atan2(this.posZ - (double)this.ai.getZ(), this.posX - (double)this.ai.getX()) * 57.29578f + 90.0f);
             }
             return;

@@ -387,7 +387,7 @@ public class GoblinRenderer extends AbstractKoboldGoblinRenderer<GoblinEntity> {
             int n = Integer.parseInt(string);
             geoBone.setHidden(n == 0);
         } else if (em_class2582 instanceof PlayerGoblin) {
-            geoBone.setHidden(em_class2582.getDataManager().get(Fighter.ITEM_SLOT_3).isEmpty());
+            geoBone.setHidden(em_class2582.getDataManager().get(Fighter.HELMET_SLOT).isEmpty());
         }
     }
 

@@ -162,7 +162,7 @@ public class BeeEntity extends Supporter {
         if (entityPlayer.getDistance(this) < 1.5f) {
             this.N = 0.0f;
             this.void_e(entityPlayer.getPersistentID());
-            this.entityDataManager.set(G, true);
+            this.entityDataManager.set(IS_ANCHORED, true);
             this.c(this.net_minecraft_util_math_Vec3d_aa());
             this.void_b(entityPlayer.rotationYaw - 180.0f);
             this.f.clearPath();

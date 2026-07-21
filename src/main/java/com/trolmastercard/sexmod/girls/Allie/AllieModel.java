@@ -21,19 +21,19 @@ extends GirlModel<GirlEntity> {
     @Override
     public ResourceLocation getModelLocation(GirlEntity girlEntity) {
         if (girlEntity.world instanceof FakeWorld) {
-            return this.c[0];
+            return this.modelLocations[0];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.D) > this.c.length) {
-            System.out.println("Girl doesn't have an outfit Nr." + girlEntity.getDataManager().get(GirlEntity.D) + " so im just making her nude lol");
-            return this.c[0];
+        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) > this.modelLocations.length) {
+            System.out.println("Girl doesn't have an outfit Nr." + girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) + " so im just making her nude lol");
+            return this.modelLocations[0];
         }
         if (girlEntity instanceof PlayerAllie) {
-            return this.c[girlEntity.getDataManager().get(GirlEntity.D)];
+            return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.D) == 1) {
-            return this.c[2];
+        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) == 1) {
+            return this.modelLocations[2];
         }
-        return this.c[0];
+        return this.modelLocations[0];
     }
 
     @Override
@@ -42,7 +42,7 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GirlEntity girlEntity) {
+    public ResourceLocation getAnimationFileLocation(GirlEntity girl) {
         return new ResourceLocation("sexmod", "animations/allie/allie.animation.json");
     }
 
