@@ -224,12 +224,12 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     static void a(GirlEntity em_class2582, BufferBuilder bufferBuilder, int n, int n2) {
-        Vec3d vec3d = em_class2582.b("skirt_" + n + "_0");
-        Vec3d vec3d2 = em_class2582.b("skirt_" + n + "_1");
-        Vec3d vec3d3 = em_class2582.b("skirt_" + n + "_2");
-        Vec3d vec3d4 = em_class2582.b("skirt_" + n2 + "_0");
-        Vec3d vec3d5 = em_class2582.b("skirt_" + n2 + "_1");
-        Vec3d vec3d6 = em_class2582.b("skirt_" + n2 + "_2");
+        Vec3d vec3d = em_class2582.getCachedBoneOffset("skirt_" + n + "_0");
+        Vec3d vec3d2 = em_class2582.getCachedBoneOffset("skirt_" + n + "_1");
+        Vec3d vec3d3 = em_class2582.getCachedBoneOffset("skirt_" + n + "_2");
+        Vec3d vec3d4 = em_class2582.getCachedBoneOffset("skirt_" + n2 + "_0");
+        Vec3d vec3d5 = em_class2582.getCachedBoneOffset("skirt_" + n2 + "_1");
+        Vec3d vec3d6 = em_class2582.getCachedBoneOffset("skirt_" + n2 + "_2");
         ColorRGBA gv_class3882 = n % 2 == 0 ? x : r;
         bufferBuilder.pos(vec3d.x, vec3d.y, vec3d.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
         bufferBuilder.pos(vec3d2.x, vec3d2.y, vec3d2.z).color(gv_class3882.r, gv_class3882.g, gv_class3882.b, gv_class3882.a).endVertex();
@@ -450,11 +450,11 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     public static Vec3d b(GalathEntity f__class2972, float f) {
-        return ak_class32.a(f__class2972, ManglelieRenderer.mc.player, f).add(f__class2972.b("mangPos"));
+        return ak_class32.a(f__class2972, ManglelieRenderer.mc.player, f).add(f__class2972.getCachedBoneOffset("mangPos"));
     }
 
     public static Vec3d a(GalathEntity f__class2972, float f) {
-        return ak_class32.a(f__class2972, f).add(f__class2972.b("mangPos"));
+        return ak_class32.a(f__class2972, f).add(f__class2972.getCachedBoneOffset("mangPos"));
     }
 
     // gay synthetics

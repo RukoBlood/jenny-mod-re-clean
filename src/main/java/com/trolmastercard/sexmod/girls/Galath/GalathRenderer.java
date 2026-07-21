@@ -233,7 +233,7 @@ implements IModelBoneFilter {
             return;
         }
         GlStateManager.pushMatrix();
-        Vec3d vec3d = em_class2582.b("stars");
+        Vec3d vec3d = em_class2582.getCachedBoneOffset("stars");
         GlStateManager.translate(vec3d.x, vec3d.y, vec3d.z);
         float f2 = (float) GalathRenderer.mc.world.getTotalWorldTime() + f;
         float f3 = (float)(Math.sin((double)f2 * 0.2) * 5.0);
@@ -292,8 +292,8 @@ implements IModelBoneFilter {
         Vec3d[] vec3dArray = new Vec3d[14];
         Vec3d[] vec3dArray2 = new Vec3d[14];
         for (int i = 0; i < 14; ++i) {
-            vec3dArray[i] = em_class2582.b("wingRV" + i);
-            vec3dArray2[i] = em_class2582.b("wingLV" + i);
+            vec3dArray[i] = em_class2582.getCachedBoneOffset("wingRV" + i);
+            vec3dArray2[i] = em_class2582.getCachedBoneOffset("wingLV" + i);
         }
         GalathRenderer.a(bufferBuilder, tessellator, vec3dArray);
         GalathRenderer.a(bufferBuilder, tessellator, vec3dArray2);

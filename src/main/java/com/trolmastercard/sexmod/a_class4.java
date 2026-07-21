@@ -89,7 +89,7 @@ public class a_class4 extends GuiScreen {
             exception.printStackTrace();
         }
         this.e();
-        String object = girlEntity.java_lang_String_C();
+        String object = girlEntity.getCustomModelKey();
         this.c.getDataManager().set(GirlEntity.CUSTOM_MODEL_KEY, object);
         int n = 0;
         for (String string : this.c.getCustomPartsSet()) {

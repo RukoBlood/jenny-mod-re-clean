@@ -83,7 +83,7 @@ public class FutaCommand extends CommandBase implements IClientCommand {
         try {
             for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
                 if (girlEntity.isDead || !girlEntity.world.isRemote || !(girlEntity instanceof GalathEntity)) continue;
-                Vec3d vec3d = girlEntity.b("cockParticles").add(girlEntity.getPositionVector());
+                Vec3d vec3d = girlEntity.getCachedBoneOffset("cockParticles").add(girlEntity.getPositionVector());
                 Random random = girlEntity.getRNG();
                 for (int i = 0; i < 10; ++i) {
                     girlEntity.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), new int[0]);

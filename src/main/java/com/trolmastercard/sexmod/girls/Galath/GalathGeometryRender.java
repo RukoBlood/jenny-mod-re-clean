@@ -61,8 +61,8 @@ public class GalathGeometryRender {
                                         String startPointKey, String endPointKey,
                                         Vector3f so, Vector3f eo) {
         int i;
-        Vec3d startPos = entity.b(startPointKey);
-        Vec3d endPos = entity.b(endPointKey);
+        Vec3d startPos = entity.getCachedBoneOffset(startPointKey);
+        Vec3d endPos = entity.getCachedBoneOffset(endPointKey);
         Vec3d[] v = new Vec3d[8];
         if (so.x == 0.0f && eo.x == 0.0f) {
             v[0] = new Vec3d(0.0, so.y, so.z);
@@ -139,9 +139,9 @@ public class GalathGeometryRender {
         }
         float rotY = TrigMath.toDegrees(bone.getRotationY());
         float rotZ = TrigMath.toDegrees(bone.getRotationZ());
-        Vec3d firstPos = entity.b(firstPointKey);
-        Vec3d secondPos = entity.b(secondPointKey);
-        Vec3d thirdPos = entity.b(thirdPointKey);
+        Vec3d firstPos = entity.getCachedBoneOffset(firstPointKey);
+        Vec3d secondPos = entity.getCachedBoneOffset(secondPointKey);
+        Vec3d thirdPos = entity.getCachedBoneOffset(thirdPointKey);
 
         Vec3d[] v = new Vec3d[]{
                 new Vec3d(w1, 0.0, -h1), new Vec3d(-w1, 0.0, -h1),

@@ -441,7 +441,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             nbt.setString("sexmod:customname", customName);
         }
         if (this.supportsCustomModels()) {
-            nbt.setString("sexmod:customModel", this.java_lang_String_C());
+            nbt.setString("sexmod:customModel", this.getCustomModelKey());
         }
         super.writeEntityToNBT(nbt);
     }
@@ -1297,36 +1297,36 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     //end of deobfuscation part 5
 
     @SideOnly(value=Side.CLIENT)
-    public Vec3d b(String string) {
-        Vec3d vec3d = this.boneTransformCache.get(string);
-        if (vec3d != null) {
-            return vec3d;
+    public Vec3d getCachedBoneOffset(String boneName) {
+        Vec3d offset = this.boneTransformCache.get(boneName);
+        if (offset != null) {
+            return offset;
         }
-        if (!this.boneTrackingList.contains(string)) {
-            this.boneTrackingList.add(string);
+        if (!this.boneTrackingList.contains(boneName)) {
+            this.boneTrackingList.add(boneName);
         }
         return Vec3d.ZERO;
     }
 
     @SideOnly(value=Side.CLIENT)
-    public Vec3d d(String string) {
-        return this.b(string).add(this.getPositionVector());
+    public Vec3d getBoneWorldPosition(String boneName) {
+        return this.getCachedBoneOffset(boneName).add(this.getPositionVector());
     }
 
-    public void a(String string, Vec3d vec3d) {
+    public void setBoneWorldPosition(String string, Vec3d vec3d) {
         this.boneTransformCache.put(string, vec3d);
     }
 
     @SideOnly(value=Side.CLIENT)
-    public float float_R() {
-        AnimationProcessor<?> animationProcessor = this.getAnimationProcessor();
-        IBone iBone = animationProcessor.getBone("girlCam");
-        if (iBone == null) {
+    public float getCameraBoneHeight() {
+        AnimationProcessor<?> processor = this.getAnimationProcessor();
+        IBone bone = processor.getBone("girlCam");
+        if (bone == null) {
             return 0.0f;
         }
-        float f = iBone.getPivotY();
-        f = this.a(f);
-        return f / 16.0f;
+        float pivotY = bone.getPivotY();
+        pivotY = this.transformCameraPivotY(pivotY);
+        return pivotY / 16.0f;
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1335,34 +1335,34 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @CheckReturnValue
-    protected float a(float f) {
-        return f;
+    protected float transformCameraPivotY(float pivotY) {
+        return pivotY;
     }
 
     @CheckReturnValue
-    public AnimatedGeoModel<? extends GirlEntity> a() {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        Render render = minecraft.getRenderManager().getEntityRenderObject(this);
+    public AnimatedGeoModel getGeoModel() {
+        Minecraft mc = Minecraft.getMinecraft();
+        Render render = mc.getRenderManager().getEntityRenderObject(this);
         if (render == null) {
             return null;
         }
         if (!(render instanceof GirlRenderer)) {
             return null;
         }
-        GeoEntityRenderer geoEntityRenderer = (GeoEntityRenderer)render;
-        GeoModelProvider geoModelProvider = geoEntityRenderer.getGeoModelProvider();
-        if (geoModelProvider == null) {
+        GeoEntityRenderer renderer = (GeoEntityRenderer)render;
+        GeoModelProvider provider = renderer.getGeoModelProvider();
+        if (provider == null) {
             return null;
         }
-        if (!(geoModelProvider instanceof AnimatedGeoModel)) {
+        if (!(provider instanceof AnimatedGeoModel)) {
             return null;
         }
-        return (AnimatedGeoModel)geoModelProvider;
+        return (AnimatedGeoModel)provider;
     }
 
     @CheckReturnValue
     public AnimationProcessor<?> getAnimationProcessor() {
-        return this.a().getAnimationProcessor();
+        return this.getGeoModel().getAnimationProcessor();
     }
 
     @CheckReturnValue
@@ -1496,7 +1496,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.set(CUSTOM_MODEL_KEY, string);
     }
 
-    public String java_lang_String_C() {
+    public String getCustomModelKey() {
         return this.entityDataManager.get(CUSTOM_MODEL_KEY);
     }
 
@@ -1507,23 +1507,23 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (hashSet.isEmpty()) {
             return "";
         }
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (String string : hashSet) {
-            stringBuilder.append(string);
-            stringBuilder.append("#");
+            sb.append(string);
+            sb.append("#");
         }
-        return stringBuilder.toString();
+        return sb.toString();
     }
 
     public HashSet<String> getCustomPartsSet() {
-        String string = this.java_lang_String_C();
-        String[] stringArray = string.split("#");
-        HashSet<String> hashSet = new HashSet<String>();
-        for (String string2 : stringArray) {
+        String raw = this.getCustomModelKey();
+        String[] split = raw.split("#");
+        HashSet<String> set = new HashSet<String>();
+        for (String string2 : split) {
             if ("".equals(string2) || "cross".equals(string2)) continue;
-            hashSet.add(string2);
+            set.add(string2);
         }
-        return hashSet;
+        return set;
     }
 
     @SideOnly(value=Side.CLIENT)

@@ -595,7 +595,7 @@ extends GirlEntity {
             return;
         }
         Vec3d vec3d = entity.getPositionVector().add(0.0, entity.getEyeHeight(), 0.0);
-        Vec3d vec3d2 = f__class2972.getPositionVector().add(f__class2972.b("mangPos")).add(this.b("head"));
+        Vec3d vec3d2 = f__class2972.getPositionVector().add(f__class2972.getCachedBoneOffset("mangPos")).add(this.getCachedBoneOffset("head"));
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
         float f = (float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) + 90.0);
         Float f2 = GalathEntity.a(f__class2972, 0.0f);
@@ -874,10 +874,10 @@ extends GirlEntity {
                 }
                 case "doubleSemen": {
                     ga_class358.a(new DynamicTrailRenderer(10, em_class2582 -> {
-                        Vec3d vec3d = em_class2582.d("semenEmitter");
-                        Vec3d vec3d2 = em_class2582.d("semenDir");
+                        Vec3d vec3d = em_class2582.getBoneWorldPosition("semenEmitter");
+                        Vec3d vec3d2 = em_class2582.getBoneWorldPosition("semenDir");
                         return vec3d.subtract(vec3d2).normalize();
-                    }, em_class2582 -> em_class2582.b("semenEmitter").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
+                    }, em_class2582 -> em_class2582.getCachedBoneOffset("semenEmitter").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
                     break;
                 }
                 case "blackScreen": {

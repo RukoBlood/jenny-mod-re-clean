@@ -130,7 +130,7 @@ extends Item {
             return;
         }
         GirlEntity em_class2582 = (GirlEntity)entity;
-        String string = em_class2582.java_lang_String_C();
+        String string = em_class2582.getCustomModelKey();
         String string2 = GirlEntity.c(GirlEntity.h(em_class2582.girlID()));
         entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{em_class2582.getGirlName(), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
@@ -168,7 +168,7 @@ extends Item {
             entityPlayer.sendStatusMessage(new TextComponentString("you gotta turn into the girl, you want to copy the model-code off"), true);
             return true;
         }
-        String string = ei_class2512.java_lang_String_C();
+        String string = ei_class2512.getCustomModelKey();
         String string2 = GirlEntity.c(GirlEntity.h(ei_class2512.girlID()));
         entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{Utils.CapitalizeString(PlayerGirlEntity.fromGirl(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));

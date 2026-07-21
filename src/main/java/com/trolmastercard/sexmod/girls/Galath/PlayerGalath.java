@@ -360,9 +360,9 @@ implements b7_class68 {
                 case "setNude": {
                     this.ap = true;
                     Vec3d vec3d = this.getPositionVector();
-                    Vec3d vec3d2 = this.b("slipR").add(vec3d);
-                    Vec3d vec3d3 = this.b("slipL").add(vec3d);
-                    Vec3d vec3d4 = this.b("turnable").add(vec3d);
+                    Vec3d vec3d2 = this.getCachedBoneOffset("slipR").add(vec3d);
+                    Vec3d vec3d3 = this.getCachedBoneOffset("slipL").add(vec3d);
+                    Vec3d vec3d4 = this.getCachedBoneOffset("turnable").add(vec3d);
                     this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d2.x, vec3d2.y, vec3d2.z, 0.0, 0.0, 0.0, new int[0]);
                     this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d3.x, vec3d3.y, vec3d3.z, 0.0, 0.0, 0.0, new int[0]);
                     this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d4.x, vec3d4.y, vec3d4.z, 0.0, 0.0, 0.0, new int[0]);
@@ -448,11 +448,11 @@ implements b7_class68 {
                 }
                 case "creampie": {
                     ga_class358.a(new DynamicTrailRenderer(130, em_class2582 -> {
-                        Vec3d vec3d = em_class2582.d("futaCockTip");
-                        Vec3d vec3d2 = em_class2582.d("futaCockTipDirHelp");
+                        Vec3d vec3d = em_class2582.getBoneWorldPosition("futaCockTip");
+                        Vec3d vec3d2 = em_class2582.getBoneWorldPosition("futaCockTipDirHelp");
                         return vec3d.subtract(vec3d2).normalize();
-                    }, em_class2582 -> em_class2582.b("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
-                    ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.b("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
+                    }, em_class2582 -> em_class2582.getCachedBoneOffset("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
+                    ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }

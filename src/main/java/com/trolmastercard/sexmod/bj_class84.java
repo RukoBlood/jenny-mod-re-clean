@@ -67,12 +67,12 @@ public class bj_class84 extends WorldSavedData {
             if (uUID2 == null) {
                 uUID2 = uUID;
             }
-            c.put(uUID2, em_class2582.java_lang_String_C());
+            c.put(uUID2, em_class2582.getCustomModelKey());
             return;
         }
         if (em_class2582 instanceof ManglelieEntity) {
             UUID uUID = GalathMangTracker.f(((ManglelieEntity)em_class2582).java_util_UUID_v());
-            b.put(uUID == null ? em_class2582.girlID() : uUID, em_class2582.java_lang_String_C());
+            b.put(uUID == null ? em_class2582.girlID() : uUID, em_class2582.getCustomModelKey());
         }
     }
 

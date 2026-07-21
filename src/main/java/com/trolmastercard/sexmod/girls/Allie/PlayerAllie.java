@@ -149,7 +149,7 @@ extends PlayerGirl {
             return;
         }
         int n = this.getRNG().nextInt(8);
-        Vec3d vec3d = this.b("tail" + n).add(this.getPositionVector());
+        Vec3d vec3d = this.getCachedBoneOffset("tail" + n).add(this.getPositionVector());
         this.world.spawnParticle(EnumParticleTypes.PORTAL, vec3d.x, vec3d.y, vec3d.z, this.getRNG().nextGaussian() * (double)0.01f, this.getRNG().nextGaussian() * (double)0.01f, this.getRNG().nextGaussian() * (double)0.01f, new int[0]);
     }
 

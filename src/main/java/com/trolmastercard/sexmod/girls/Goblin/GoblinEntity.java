@@ -2029,7 +2029,7 @@ implements ai_class30 {
                 GoblinEntity e3_class2193;
                 if (em_class2582.world.isRemote || !(em_class2582 instanceof GoblinEntity) || !uUID.equals((e3_class2193 = (GoblinEntity) em_class2582).java_util_UUID_e()))
                     continue;
-                String string = e3_class2193.java_lang_String_C();
+                String string = e3_class2193.getCustomModelKey();
                 String string2 = e3_class2193.java_lang_String_F();
                 e3_class2192 = e3_class2193;
                 e3_class2192.void_a((UUID) null);

@@ -196,8 +196,8 @@ extends GirlModel<GirlEntity> {
         float f2 = f__class2972.aE + animationProcessor.getBone("upperBody").getRotationX();
         float f3 = this.mc.getRenderPartialTicks();
         Vec3d vec3d = ManglelieRenderer.a(f__class2972, f3);
-        Vec3d vec3d2 = f8_class2932.b("armR").add(vec3d);
-        Vec3d vec3d3 = f8_class2932.b("armL").add(vec3d);
+        Vec3d vec3d2 = f8_class2932.getCachedBoneOffset("armR").add(vec3d);
+        Vec3d vec3d3 = f8_class2932.getCachedBoneOffset("armL").add(vec3d);
         Vector2f bm_class882 = Utils.CalculateLookAngles(vec3d2, f8_class2932.R);
         Vector2f bm_class883 = Utils.CalculateLookAngles(vec3d3, f8_class2932.R);
         Float f4 = GalathEntity.a(f__class2972, f3);

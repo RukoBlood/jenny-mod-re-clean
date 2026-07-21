@@ -106,7 +106,7 @@ public class GirlRenderEvent {
         }
         this.origPos = mc.player.getPositionVector();
         this.origLastTickPos = new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ);
-        Vec3d targetCameraPos = girlEntity.isAnchored() ? girlEntity.b("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.b("boyCam").add(Reference.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
+        Vec3d targetCameraPos = girlEntity.isAnchored() ? girlEntity.getCachedBoneOffset("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.getCachedBoneOffset("boyCam").add(Reference.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
         mc.player.posX = targetCameraPos.x;
         mc.player.posY = targetCameraPos.y - (double)mc.player.getEyeHeight();
         mc.player.posZ = targetCameraPos.z;

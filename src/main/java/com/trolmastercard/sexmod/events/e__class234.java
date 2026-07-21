@@ -142,7 +142,7 @@ public class e__class234 {
         }
         this.b = minecraft.player.getPositionVector();
         this.d = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
-        Vec3d vec3d = ei_class2512.b("girlCam");
+        Vec3d vec3d = ei_class2512.getCachedBoneOffset("girlCam");
         vec3d = ei_class2512.b(vec3d, renderTickEvent.renderTickTime);
         vec3d = vec3d.add(Reference.LerpVec3d(this.d, this.b, (double)renderTickEvent.renderTickTime));
         minecraft.player.posX = vec3d.x;
@@ -251,7 +251,7 @@ public class e__class234 {
             e__class234.a(ei_class2512, minecraft.player, 0.0, 500.0, 0.0, renderTickEvent.renderTickTime);
             this.a = ei_class2512;
         }
-        minecraft.player.eyeHeight = ei_class2512.float_R();
+        minecraft.player.eyeHeight = ei_class2512.getCameraBoneHeight();
         this.e = true;
     }
 }

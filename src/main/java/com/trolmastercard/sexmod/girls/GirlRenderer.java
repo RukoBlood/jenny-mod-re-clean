@@ -507,7 +507,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             MatrixStack matrixStack = ((GirlEntity)entity).getBoneMatrixStack(boneName, !((GirlEntity)entity).isLocallyRegistered());
             Matrix4f m = matrixStack.getModelMatrix();
             Vec3d translatedVec = new Vec3d(-m.m03, m.m13, -m.m23);
-            ((GirlEntity)entity).a(boneName, translatedVec);
+            ((GirlEntity)entity).setBoneWorldPosition(boneName, translatedVec);
         }
     }
 
@@ -558,8 +558,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     protected static void drawLineBetweenBones(BufferBuilder buffer, Tessellator tessellator, GirlEntity girl, String startBone, String endBone, float r, float g, float b, float thickness) {
         buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_TEX_COLOR);
         GlStateManager.glLineWidth(thickness);
-        Vec3d posStart = girl.b(startBone);
-        Vec3d posEnd = girl.b(endBone);
+        Vec3d posStart = girl.getCachedBoneOffset(startBone);
+        Vec3d posEnd = girl.getCachedBoneOffset(endBone);
         buffer.pos(posStart.x, posStart.y, posStart.z).tex(0.0, 0.0).color(r, g, b, 1.0f).endVertex();
         buffer.pos(posEnd.x, posEnd.y, posEnd.z).tex(0.0, 0.0).color(r, g, b, 1.0f).endVertex();
         tessellator.draw();

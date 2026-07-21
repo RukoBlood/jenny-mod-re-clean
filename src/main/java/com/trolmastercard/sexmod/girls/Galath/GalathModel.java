@@ -178,7 +178,7 @@ extends GirlModel<GirlEntity> {
             entityPlayer = this.mc.player;
         }
         MolangParser molangParser = GeckoLibCache.getInstance().parser;
-        Vec3d vec3d = ak_class32.b(em_class2582, entityPlayer, this.mc.getRenderPartialTicks()).add(em_class2582.b("head"));
+        Vec3d vec3d = ak_class32.b(em_class2582, entityPlayer, this.mc.getRenderPartialTicks()).add(em_class2582.getCachedBoneOffset("head"));
         float f = (float) TrigMath.toDegrees(Math.atan2(vec3d.z, vec3d.x)) - em_class2582.getYawRotation();
         float f2 = (float) TrigMath.toDegrees(Math.atan2(vec3d.y, Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z)));
         double d = Math.abs(vec3d.x) + Math.abs(vec3d.y) + Math.abs(vec3d.z);

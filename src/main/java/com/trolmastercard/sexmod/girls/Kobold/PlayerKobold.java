@@ -207,9 +207,9 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    protected float a(float f) {
+    protected float transformCameraPivotY(float pivotY) {
         float f2 = 1.0f - (0.25f - this.entityDataManager.get(aA).floatValue());
-        return f * f2;
+        return pivotY * f2;
     }
 
     @Override
