@@ -453,7 +453,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (uUID == null) {
             return null;
         }
-        GirlEntity em_class2583 = girlEntity = bl ? GalathEntity.com_trolmastercard_sexmod_em_class258_a(uUID) : GalathEntity.getGirlEntity(uUID);
+        GirlEntity em_class2583 = girlEntity = bl ? GalathEntity.getServerGirlEntity(uUID) : GalathEntity.getClientGirlEntity(uUID);
         if (girlEntity instanceof ManglelieEntity) {
             return (ManglelieEntity)girlEntity;
         }
@@ -1186,7 +1186,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         }
         if (Math.sqrt(this.bG.distanceSq(this.getPosition())) > 2.0) {
             this.getNavigator().tryMoveToXYZ(this.bG.getX(), this.bG.getY(), this.bG.getZ(), 0.35f);
-            this.void_k();
+            this.applyCustomPathNodeVelocity();
         } else {
             ++this.aC;
         }
@@ -1516,7 +1516,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     public static void void_c(EntityPlayer entityPlayer) {
-        GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a(GalathMangTracker.b(entityPlayer));
+        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(GalathMangTracker.b(entityPlayer));
         if (em_class2582 == null) {
             return;
         }
@@ -1866,7 +1866,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.PlaySound(SoundsHandler.GIRLS_GALATH_HUH, new int[0]);
         String[] stringArray = !entityPlayer.onGround ? new String[]{"ride"} : (this.com_trolmastercard_sexmod_f8_class293_a(false) == null ? new String[]{"cowgirl", "anal", "ride"} : new String[]{"cowgirl", "anal", "threesome", "ride"});
         if (this.world.isRemote) {
-            GalathEntity.a(entityPlayer, this.com_trolmastercard_sexmod_em_class258_af(), stringArray, false);
+            GalathEntity.openInventoryGui(entityPlayer, this.com_trolmastercard_sexmod_em_class258_af(), stringArray, false);
         }
         return true;
     }
@@ -2954,7 +2954,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             Vec3d vec3d2 = new Vec3d((double)blockPos.getX() + 0.5, blockPos.getY(), (double)blockPos.getZ() + 0.5);
             UUID uUID = GalathMangTracker.b(entityPlayer);
             if (uUID != null) {
-                GalathMangTracker.a((GalathEntity) GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID));
+                GalathMangTracker.a((GalathEntity) GirlEntity.getServerGirlEntity(uUID));
             }
             GalathEntity f__class2972 = new GalathEntity(entityPlayer.world, entityPlayer, vec3d, true);
             f__class2972.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);

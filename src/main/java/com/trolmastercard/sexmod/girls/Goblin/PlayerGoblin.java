@@ -141,8 +141,8 @@ implements ai_class30 {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, entityPlayer, new String[]{"anal", "paizuri"}, null, false));
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "paizuri"}, null, false));
         return true;
     }
 
@@ -918,7 +918,7 @@ implements ai_class30 {
                     this.setCurrentAction(Action.CATCH_BJ_IDLE);
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    PlayerGoblin.a(entityPlayerSP, this, new String[]{"use her", "take ur stuff back"}, null, false);
+                    PlayerGoblin.openInventoryGui(entityPlayerSP, this, new String[]{"use her", "take ur stuff back"}, null, false);
                     break;
                 }
                 case "paizuriChoice": {

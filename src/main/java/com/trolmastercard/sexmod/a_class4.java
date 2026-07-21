@@ -354,7 +354,7 @@ public class a_class4 extends GuiScreen {
                 CustomModel.d = true;
                 return;
             }
-            GirlEntity em_class2582 = GirlEntity.getGirlEntity(this.ID);
+            GirlEntity em_class2582 = GirlEntity.getClientGirlEntity(this.ID);
             if (em_class2582 != null) {
                 a_class4.a(em_class2582);
             }

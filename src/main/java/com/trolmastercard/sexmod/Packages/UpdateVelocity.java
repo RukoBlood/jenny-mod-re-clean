@@ -58,7 +58,7 @@ implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                GirlEntity girlEntity = GirlEntity.com_trolmastercard_sexmod_em_class258_a(ct_class1442.a);
+                GirlEntity girlEntity = GirlEntity.getServerGirlEntity(ct_class1442.a);
                 if (!(girlEntity instanceof GalathEntity)) {
                     return;
                 }

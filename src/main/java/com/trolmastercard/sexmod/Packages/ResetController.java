@@ -55,7 +55,7 @@ implements IMessage {
                 return null;
             }
             if (messageContext.side.isServer()) {
-                GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a(a1_class72.a);
+                GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(a1_class72.a);
                 if (em_class2582 == null) {
                     return null;
                 }
@@ -67,7 +67,7 @@ implements IMessage {
                 }
                 return null;
             }
-            GirlEntity girlEntity = GirlEntity.getGirlEntity(a1_class72.a);
+            GirlEntity girlEntity = GirlEntity.getClientGirlEntity(a1_class72.a);
             if (girlEntity != null) {
                 girlEntity.ag();
             }

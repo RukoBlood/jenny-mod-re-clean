@@ -12,7 +12,7 @@ import com.trolmastercard.sexmod.Packages.*;
 import com.trolmastercard.sexmod.Packages.SendChatMessage;
 import com.trolmastercard.sexmod.Packages.SendGirlToSex;
 import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
-import com.trolmastercard.sexmod.Packages.dc_class174;
+import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -32,7 +32,7 @@ public class PackageHandler {
         networkWrapper.registerMessage(TeleportPlayer.Handler.class, TeleportPlayer.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SendGirlToSex.a_inner24.class, SendGirlToSex.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(SetPlayerForGirl.a_inner59.class, SetPlayerForGirl.class, PackageHandler.discriminator(), Side.SERVER);
-        networkWrapper.registerMessage(dc_class174.a_inner175.class, dc_class174.class, PackageHandler.discriminator(), Side.SERVER);
+        networkWrapper.registerMessage(SyncActionPacket.Handler.class, SyncActionPacket.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(ResetController.Handler.class, ResetController.class, PackageHandler.discriminator(), Side.CLIENT);
         networkWrapper.registerMessage(ResetController.Handler.class, ResetController.class, PackageHandler.discriminator(), Side.SERVER);
         networkWrapper.registerMessage(ResetGirl.a_inner422.class, ResetGirl.class, PackageHandler.discriminator(), Side.SERVER);

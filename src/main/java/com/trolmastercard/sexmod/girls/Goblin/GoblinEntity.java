@@ -613,7 +613,7 @@ implements ai_class30 {
         }
         if (Math.sqrt(this.R.distanceSq(this.getPosition())) > 2.0) {
             this.getNavigator().tryMoveToXYZ(this.R.getX(), this.R.getY(), this.R.getZ(), 0.3f);
-            this.void_k();
+            this.applyCustomPathNodeVelocity();
         } else {
             ++this.Y;
         }
@@ -1758,7 +1758,7 @@ implements ai_class30 {
                     this.setCurrentAction(Action.CATCH_BJ_IDLE);
                     if (!this.boolean_n()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    GoblinEntity.a(entityPlayerSP, this, new String[]{"use her", "take ur stuff back"}, null, false);
+                    GoblinEntity.openInventoryGui(entityPlayerSP, this, new String[]{"use her", "take ur stuff back"}, null, false);
                     break;
                 }
                 case "paizuriChoice": {

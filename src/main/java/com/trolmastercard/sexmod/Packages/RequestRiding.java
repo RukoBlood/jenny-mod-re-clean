@@ -41,7 +41,7 @@ implements IMessage {
             }
             EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
             UUID uUID = GalathMangTracker.b(entityPlayerMP);
-            GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID);
+            GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
             if (em_class2582 == null) {
                 return null;
             }

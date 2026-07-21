@@ -181,24 +181,24 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             itemStack.interactWithEntity(entityPlayer, this, enumHand);
             return true;
         }
-        if (this.world.isRemote && !this.boolean_b(entityPlayer)) {
+        if (this.world.isRemote && !this.openGuiForPlayer(entityPlayer)) {
             this.void_a(I18n.format("bia.dialogue.busy", new Object[0]));
         }
         return true;
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
+    public boolean openGuiForPlayer(EntityPlayer player) {
         if (this.getID() == null && (!this.boolean_J() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
-            BiaEntity.a(entityPlayer, this, stringArray, true);
+            BiaEntity.openInventoryGui(player, this, stringArray, true);
             return true;
         }
         return false;
     }
 
     void void_b(EntityPlayer entityPlayer) {
-        BiaEntity.a(entityPlayer, this, new String[]{"action.names.anal", "doggy"}, false);
+        BiaEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.anal", "doggy"}, false);
     }
 
     @Override
@@ -346,7 +346,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     void void_a(UUID uUID) {
-        this.a(true, true, uUID);
+        this.triggerActionSync(true, true, uUID);
         HandlePlayerMovement.a(false);
     }
 

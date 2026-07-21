@@ -157,7 +157,7 @@ extends GirlEntity {
         if (uUID == null) {
             return null;
         }
-        GirlEntity em_class2583 = em_class2582 = bl ? GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID) : GirlEntity.getGirlEntity(uUID);
+        GirlEntity em_class2583 = em_class2582 = bl ? GirlEntity.getServerGirlEntity(uUID) : GirlEntity.getClientGirlEntity(uUID);
         if (!(em_class2582 instanceof GalathEntity)) {
             return null;
         }
@@ -441,7 +441,7 @@ extends GirlEntity {
         if (this.Q == null) {
             return;
         }
-        GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a(this.Q);
+        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(this.Q);
         if (!(em_class2582 instanceof GalathEntity)) {
             return;
         }

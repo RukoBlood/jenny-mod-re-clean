@@ -92,8 +92,8 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        PlayerLuna.a(entityPlayer, this, new String[]{"action.names.touchboobs", "action.names.headpat"}, false);
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        PlayerLuna.openInventoryGui(player, this, new String[]{"action.names.touchboobs", "action.names.headpat"}, false);
         return true;
     }
 

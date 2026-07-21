@@ -35,7 +35,7 @@ import com.trolmastercard.sexmod.Packages.ResetController;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.TeleportPlayer;
 import com.trolmastercard.sexmod.Packages.SendChatMessage;
-import com.trolmastercard.sexmod.Packages.dc_class174;
+import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
@@ -550,77 +550,77 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     //end of deobfuscation #2
 
     protected void updateActionTicks() {
-        Action fp_class3242 = this.currentAction();
-        int n = this.world.isRemote ? 1 : 0;
-        fp_class3242.ticksPlaying[n] = fp_class3242.ticksPlaying[n] + 1;
-        if (fp_class3242.ticksPlaying[n] < fp_class3242.length) {
+        Action action = this.currentAction();
+        int sideIndex = this.world.isRemote ? 1 : 0;
+        action.ticksPlaying[sideIndex] = action.ticksPlaying[sideIndex] + 1;
+        if (action.ticksPlaying[sideIndex] < action.length) {
             return;
         }
-        if (fp_class3242.followUp == null) {
+        if (action.followUp == null) {
             return;
         }
         if (!this.world.isRemote) {
-            this.setCurrentAction(fp_class3242.followUp);
+            this.setCurrentAction(action.followUp);
         }
     }
 
-    protected void void_k() {
+    protected void applyCustomPathNodeVelocity() {
         Path path = this.getNavigator().getPath();
-        if (path == null) {
+        if (path == null || this.onGround || this.isInWater()) {
             return;
         }
-        if (this.onGround || this.isInWater()) {
+
+        int currentIndex = path.getCurrentPathIndex();
+        int totalLength = path.getCurrentPathLength();
+        if (totalLength == currentIndex || totalLength - 1 == currentIndex) {
             return;
         }
-        int n = path.getCurrentPathIndex();
-        int n2 = path.getCurrentPathLength();
-        if (n2 == n || n2 - 1 == n) {
-            return;
-        }
-        PathPoint pathPoint = path.getPathPointFromIndex(n);
-        PathPoint pathPoint2 = path.getPathPointFromIndex(n + 1);
-        Vec3d vec3d = new Vec3d(pathPoint2.x - pathPoint.x, pathPoint2.y - pathPoint.y, pathPoint2.z - pathPoint.z);
-        this.motionX = vec3d.x / 7.0;
-        this.motionZ = vec3d.z / 7.0;
+
+        PathPoint currentPoint = path.getPathPointFromIndex(currentIndex);
+        PathPoint nextPoint = path.getPathPointFromIndex(currentIndex + 1);
+        Vec3d delta = new Vec3d(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y, nextPoint.z - currentPoint.z);
+        this.motionX = delta.x / 7.0;
+        this.motionZ = delta.z / 7.0;
     }
 
+    //TODO: wth is void_g
     public void void_g() {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_b(EntityPlayer entityPlayer) {
+    public boolean openGuiForPlayer(EntityPlayer player) {
         return false;
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected static void a(EntityPlayer entityPlayer, GirlEntity em_class2582) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(em_class2582, entityPlayer));
+    protected static void openInventoryGui(EntityPlayer player, GirlEntity girl) {
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(girl, player));
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected static void a(EntityPlayer entityPlayer, GirlEntity em_class2582, String[] stringArray, ItemStack[] itemStackArray, boolean bl) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(em_class2582, entityPlayer, stringArray, itemStackArray, bl));
+    protected static void openInventoryGui(EntityPlayer player, GirlEntity girl, String[] slots, ItemStack[] items, boolean flag) {
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(girl, player, slots, items, flag));
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected static void a(EntityPlayer entityPlayer, GirlEntity em_class2582, String[] stringArray, boolean bl) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(em_class2582, entityPlayer, stringArray, null, bl));
+    protected static void openInventoryGui(EntityPlayer player, GirlEntity girl, String[] slots, boolean flag) {
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(girl, player, slots, null, flag));
     }
 
-    public void void_a(ItemStack itemStack) {
-        this.activeItemStack = itemStack;
+    public void setHeldItemOverride(ItemStack stack) {
+        this.activeItemStack = stack;
     }
 
-    public void d(int n) {
-        this.activeItemStackUseCount = n;
+    public void setItemUseCount(int count) {
+        this.activeItemStackUseCount = count;
     }
 
-    public Vec3d net_minecraft_util_math_Vec3d_M() {
+    public Vec3d getPreviousPosition() {
         return new Vec3d(this.prevPosX, this.prevPosY, this.prevPosZ);
     }
 
-    protected static Vec3d net_minecraft_util_math_Vec3d_a(GirlEntity em_class2582) {
-        return new Vec3d(em_class2582.prevPosX, em_class2582.prevPosY, em_class2582.prevPosZ);
+    protected static Vec3d getPreviousPosition(GirlEntity girl) {
+        return new Vec3d(girl.prevPosX, girl.prevPosY, girl.prevPosZ);
     }
 
     public GirlEntity com_trolmastercard_sexmod_em_class258_af() {
@@ -637,69 +637,70 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    protected void a(EntityPlayerMP entityPlayerMP, boolean bl) {
-        entityPlayerMP.motionX = 0.0;
-        entityPlayerMP.motionY = 0.0;
-        entityPlayerMP.motionZ = 0.0;
-        if (bl) {
-            Vec3d vec3d = this.a(0.35);
-            entityPlayerMP.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
+    protected void alignPlayerToGirl(EntityPlayerMP player, boolean teleport) {
+        player.motionX = 0.0;
+        player.motionY = 0.0;
+        player.motionZ = 0.0;
+        if (teleport) {
+            Vec3d pos = this.getFrontOffsetVector(0.35);
+            player.setPositionAndUpdate(pos.x, pos.y, pos.z);
         }
     }
 
-    public void j(UUID uUID) {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        entityPlayer.motionX = 0.0;
-        entityPlayer.motionY = 0.0;
-        entityPlayer.motionZ = 0.0;
-        Vec3d vec3d = this.a(0.35);
-        entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-        this.setYawRotation(entityPlayer.rotationYawHead + 180.0f);
+    public void snapPlayerToPosition(UUID playerUUID) {
+        EntityPlayer player = this.world.getPlayerEntityByUUID(playerUUID);
+        assert player != null;
+        player.motionX = 0.0;
+        player.motionY = 0.0;
+        player.motionZ = 0.0;
+        Vec3d pos = this.getFrontOffsetVector(0.35);
+        player.setPositionAndUpdate(pos.x, pos.y, pos.z);
+        this.setYawRotation(player.rotationYawHead + 180.0f);
     }
 
-    protected void a(boolean bl, boolean bl2, UUID uUID) {
+    protected void triggerActionSync(boolean param1, boolean param2, UUID playerUUID) {
         if (this.world.isRemote) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), uUID, bl, bl2));
+            PackageHandler.networkWrapper.sendToServer((IMessage)new SyncActionPacket(this.girlID(), playerUUID, param1, param2));
         } else {
-            dc_class174.a_inner175.a(this.girlID(), uUID, bl, bl2);
+            SyncActionPacket.Handler.execute(this.girlID(), playerUUID, param1, param2);
         }
     }
 
-    public static GirlEntity getGirlEntity(UUID uUID) {
+    public static GirlEntity getClientGirlEntity(UUID uUID) {
         if (uUID == null) {
             return null;
         }
-        for (GirlEntity girlEntity : GirlEntity.girlList(uUID)) {
-            if (!girlEntity.world.isRemote) continue;
-            return girlEntity;
+        for (GirlEntity girl : GirlEntity.girlList(uUID)) {
+            if (!girl.world.isRemote) continue;
+            return girl;
         }
         return null;
     }
 
-    public static GirlEntity com_trolmastercard_sexmod_em_class258_a(UUID uUID) {
+    public static GirlEntity getServerGirlEntity(UUID uUID) {
         if (uUID == null) {
             return null;
         }
-        for (GirlEntity girlEntity : GirlEntity.girlList(uUID)) {
-            if (girlEntity.world.isRemote) continue;
-            return girlEntity;
+        for (GirlEntity girl : GirlEntity.girlList(uUID)) {
+            if (girl.world.isRemote) continue;
+            return girl;
         }
         return null;
     }
 
     // TODO clashes with KoboldEntity 'void g(UUID)'
     public static ArrayList<GirlEntity> girlList(UUID uUID) {
-        ArrayList<GirlEntity> arrayList = new ArrayList<GirlEntity>();
+        ArrayList<GirlEntity> list = new ArrayList<GirlEntity>();
         try {
-            for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
-                if (girlEntity == null || !girlEntity.girlID().equals(uUID)) continue;
-                arrayList.add(girlEntity);
+            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+                if (girl == null || !girl.girlID().equals(uUID)) continue;
+                list.add(girl);
             }
-        } catch (ConcurrentModificationException concurrentModificationException) {
+        } catch (ConcurrentModificationException e) {
             System.out.println("had a ConcurrentModificationException while cycling through the girl list... hopefully nothin borke owo");
-            concurrentModificationException.printStackTrace();
+            e.printStackTrace();
         }
-        return arrayList;
+        return list;
     }
 
     protected BlockPos net_minecraft_util_math_BlockPos_a(BlockPos blockPos) {
@@ -707,7 +708,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public BlockPos a(BlockPos blockPos, int n) {
-        return this.a(blockPos, n, Blocks.BED, 22, 3, null);
+        return this.findNearestStructureBlock(blockPos, n, Blocks.BED, 22, 3, null);
     }
 
     public void W() {
@@ -718,35 +719,36 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.set(HAND_STATES, Byte.valueOf("0"));
     }
 
-    public BlockPos a(BlockPos blockPos, int n, Block block, int n2, int n3, @Nullable HashSet<Biome> hashSet) {
-        int n4 = 1;
-        int n5 = -1;
-        BlockPos blockPos2 = blockPos;
-        int n6 = 0;
-        while (n4 < n2) {
+    public BlockPos findNearestStructureBlock(BlockPos origin, int radius, Block targetBlock, int maxCount, int heightRange, @Nullable HashSet<Biome> allowedBiomes) {
+        int step = 1;
+        int direction = -1;
+        BlockPos current = origin;
+        int foundCount = 0;
+        while (step < maxCount) {
             for (int i = 0; i < 2; ++i) {
-                int n7;
-                int n8;
-                n5 *= -1;
-                for (n8 = 0; n8 < n4; ++n8) {
-                    blockPos2 = blockPos2.add(0, 0, n5);
-                    for (n7 = -n3; n7 < n3 + 1; ++n7) {
-                        if (this.world.getBlockState(blockPos2.add(0, n7, n5)).getBlock() != block || ++n6 < n || hashSet != null && !hashSet.contains(this.world.getBiome(blockPos2.add(n5, n7, 0)))) continue;
-                        return blockPos2.add(0, n7, n5);
+                int y;
+                int x;
+                direction *= -1;
+                for (x = 0; x < step; ++x) {
+                    current = current.add(0, 0, direction);
+                    for (y = -heightRange; y < heightRange + 1; ++y) {
+                        if (this.world.getBlockState(current.add(0, y, direction)).getBlock() != targetBlock || ++foundCount < radius || allowedBiomes != null && !allowedBiomes.contains(this.world.getBiome(current.add(direction, y, 0)))) continue;
+                        return current.add(0, y, direction);
                     }
                 }
-                for (n8 = 0; n8 < n4; ++n8) {
-                    blockPos2 = blockPos2.add(n5, 0, 0);
-                    for (n7 = -n3; n7 < n3 + 1; ++n7) {
-                        if (this.world.getBlockState(blockPos2.add(n5, n7, 0)).getBlock() != block || ++n6 < n || hashSet != null && !hashSet.contains(this.world.getBiome(blockPos2.add(n5, n7, 0)))) continue;
-                        return blockPos2.add(n5, n7, 0);
+                for (x = 0; x < step; ++x) {
+                    current = current.add(direction, 0, 0);
+                    for (y = -heightRange; y < heightRange + 1; ++y) {
+                        if (this.world.getBlockState(current.add(direction, y, 0)).getBlock() != targetBlock || ++foundCount < radius || allowedBiomes != null && !allowedBiomes.contains(this.world.getBiome(current.add(direction, y, 0)))) continue;
+                        return current.add(direction, y, 0);
                     }
                 }
-                ++n4;
+                ++step;
             }
         }
         return null;
     }
+    //end of deobfuscation step #3
 
     protected List<BlockPos> a(BlockPos blockPos, Class clazz, int n, int n2, @Nullable HashSet<Biome> hashSet) {
         int n3 = 1;
@@ -1158,10 +1160,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public Vec3d net_minecraft_util_math_Vec3d_aa() {
-        return this.a(1.0);
+        return this.getFrontOffsetVector(1.0);
     }
 
-    public Vec3d a(double d) {
+    public Vec3d getFrontOffsetVector(double d) {
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
         float yaw = entityPlayer.rotationYaw;
         return entityPlayer.getPositionVector().add(-Math.sin((double)yaw * (Math.PI / 180)) * d, 0.0, Math.cos((double)yaw * (Math.PI / 180)) * d);
@@ -1385,7 +1387,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     // TODO clash downstream
     public static List<Integer> h(UUID uUID) {
-        GirlEntity em_class2582 = Main.proxy instanceof ClientProxy ? GirlEntity.getGirlEntity(uUID) : GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID);
+        GirlEntity em_class2582 = Main.proxy instanceof ClientProxy ? GirlEntity.getClientGirlEntity(uUID) : GirlEntity.getServerGirlEntity(uUID);
         ArrayList<Integer> arrayList = new ArrayList<Integer>(em_class2582.L());
         if (em_class2582 instanceof AbstractGoblinKoboldEntity || em_class2582 instanceof ew_class277) {
             arrayList.addAll(GirlEntity.c(em_class2582.getDataManager().get(AbstractGoblinKoboldEntity.APPEARANCE_DNA)));

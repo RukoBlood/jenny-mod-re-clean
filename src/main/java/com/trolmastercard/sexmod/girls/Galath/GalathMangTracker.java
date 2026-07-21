@@ -195,7 +195,7 @@ extends WorldSavedData {
             UUID uUID = object.getKey();
             UUID uUID2 = object.getValue();
             EntityPlayer entityPlayer = world.getPlayerEntityByUUID(uUID);
-            if (entityPlayer == null || GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID2) != null) continue;
+            if (entityPlayer == null || GirlEntity.getServerGirlEntity(uUID2) != null) continue;
             arrayList.add(entityPlayer);
         }
         for (EntityPlayer entityPlayer : arrayList) {

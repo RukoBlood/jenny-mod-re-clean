@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.girls.Allie;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.Packages.dc_class174;
+import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
@@ -90,8 +90,8 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        PlayerAllie.a(entityPlayer, this, new String[]{"action.names.deepthroat", "Reverse cowgirl"}, false);
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        PlayerAllie.openInventoryGui(player, this, new String[]{"action.names.deepthroat", "Reverse cowgirl"}, false);
         return true;
     }
 
@@ -215,7 +215,7 @@ extends PlayerGirl {
                 case "deepthroat_prepareDone": {
                     this.setCurrentAction(Action.DEEPTHROAT_START);
                     if (!this.boolean_n()) break;
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), this.getID(), false, true));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();

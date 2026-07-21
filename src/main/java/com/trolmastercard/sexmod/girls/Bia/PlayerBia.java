@@ -78,7 +78,7 @@ extends PlayerGirl {
     @Override
     @SideOnly(value=Side.CLIENT)
     public void void_H() {
-        GirlEntity.a(Minecraft.getMinecraft().player, this, new String[]{"anal", "doggy"}, false);
+        GirlEntity.openInventoryGui(Minecraft.getMinecraft().player, this, new String[]{"anal", "doggy"}, false);
     }
 
     @Override
@@ -116,8 +116,8 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        GirlEntity.a(entityPlayer, this, new String[]{"action.names.headpat"}, false);
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        GirlEntity.openInventoryGui(player, this, new String[]{"action.names.headpat"}, false);
         return true;
     }
 

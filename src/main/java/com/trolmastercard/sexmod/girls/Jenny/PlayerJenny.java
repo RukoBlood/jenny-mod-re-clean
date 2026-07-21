@@ -121,7 +121,7 @@ public class PlayerJenny extends PlayerGirl {
             }
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.net_minecraft_util_math_Vec3d_w().y, this.getPositionVector().z);
-            this.a((EntityPlayerMP)entityPlayer, false);
+            this.alignPlayerToGirl((EntityPlayerMP)entityPlayer, false);
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayer.capabilities.isFlying = true;
             this.world.getPlayerEntityByUUID((UUID)this.getOwnerUserUUID()).capabilities.isFlying = true;
@@ -133,8 +133,8 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        GirlEntity.a(entityPlayer, this, new String[]{"action.names.blowjob", "action.names.boobjob"}, false);
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        GirlEntity.openInventoryGui(player, this, new String[]{"action.names.blowjob", "action.names.boobjob"}, false);
         return true;
     }
 

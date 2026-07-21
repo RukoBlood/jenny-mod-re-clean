@@ -68,23 +68,20 @@ implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
     }
 
-    private static IndexOutOfBoundsException a(IndexOutOfBoundsException indexOutOfBoundsException) {
-        return indexOutOfBoundsException;
-    }
 
     public static class Handler
     implements IMessageHandler<SendChatMessage, IMessage> {
-        public IMessage a(SendChatMessage gh_class3682, MessageContext messageContext) {
-            if (!gh_class3682.b) {
+        public IMessage a(SendChatMessage msg, MessageContext ctx) {
+            if (!msg.b) {
                 System.out.println("recieved an unvalid message @SendChatMessage :(");
                 return null;
             }
-            if (messageContext.side.isClient()) {
-                Minecraft.getMinecraft().player.sendMessage(new TextComponentString(gh_class3682.a));
+            if (ctx.side.isClient()) {
+                Minecraft.getMinecraft().player.sendMessage(new TextComponentString(msg.a));
             } else {
                 FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                    Vec3d vec3d = GirlEntity.girlList(gh_class3682.c).get(0).net_minecraft_util_math_Vec3d_M();
-                    PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(gh_class3682.a, gh_class3682.d, gh_class3682.c), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(gh_class3682.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
+                    Vec3d vec3d = GirlEntity.girlList(msg.c).get(0).getPreviousPosition();
+                    PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(msg.a, msg.d, msg.c), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(msg.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
                 });
             }
             return null;
@@ -93,10 +90,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(SendChatMessage iMessage, MessageContext messageContext) {
             return this.a((SendChatMessage)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

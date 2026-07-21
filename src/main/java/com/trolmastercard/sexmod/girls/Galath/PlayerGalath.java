@@ -140,8 +140,8 @@ implements b7_class68 {
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        PlayerGalath.a(entityPlayer, this, new String[]{"cowgirl", "mating press", "ride"}, false);
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        PlayerGalath.openInventoryGui(player, this, new String[]{"cowgirl", "mating press", "ride"}, false);
         return true;
     }
 

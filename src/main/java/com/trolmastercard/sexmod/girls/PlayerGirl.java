@@ -326,7 +326,7 @@ public abstract class PlayerGirl extends Fighter {
         entityPlayerMP.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z + 1.0);
         entityPlayerMP.capabilities.isFlying = true;
         entityPlayerMP2.capabilities.isFlying = true;
-        this.j(uUID);
+        this.snapPlayerToPosition(uUID);
         this.entityDataManager.set(IS_ANCHORED, true);
         this.setTargetPosition(vec3d);
         this.setYawRotation(0.0f);

@@ -134,14 +134,14 @@ implements bh_class82 {
 
     public boolean a(EntityPlayer entityPlayer, boolean bl) {
         if (bl) {
-            EllieEntity.a(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
+            EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
             return true;
         }
         if ((Integer)this.entityDataManager.get(OUTFIT_INDEX) == 0) {
-            EllieEntity.a(entityPlayer, this, new String[]{"action.names.dressup"}, true);
+            EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.dressup"}, true);
             return true;
         }
-        EllieEntity.a(entityPlayer, this, new String[]{"Face fuck"}, true);
+        EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"Face fuck"}, true);
         return true;
     }
 
@@ -174,14 +174,14 @@ implements bh_class82 {
                 break;
             }
             case "Face fuck": {
-                this.a(true, true, uUID);
+                this.triggerActionSync(true, true, uUID);
                 HandlePlayerMovement.a(false);
             }
         }
     }
 
     @Override
-    protected void a(EntityPlayerMP entityPlayerMP, boolean bl) {
+    protected void alignPlayerToGirl(EntityPlayerMP player, boolean teleport) {
     }
 
     @Override
@@ -404,7 +404,7 @@ implements bh_class82 {
         int n = (Integer)this.am[1];
         if (vec3d.distanceTo(this.getPositionVector()) > 1.0) {
             this.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 0.35f);
-            this.void_k();
+            this.applyCustomPathNodeVelocity();
             return;
         }
         this.setTargetPosition(vec3d);

@@ -168,7 +168,7 @@ public class BeeEntity extends Supporter {
             this.pathNavigator.clearPath();
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
             this.setCurrentAction(Action.CITIZEN_START);
-            Vec3d vec3d = this.a(0.2);
+            Vec3d vec3d = this.getFrontOffsetVector(0.2);
             entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
         } else {
             this.pathNavigator.clearPath();
@@ -254,7 +254,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
+    public boolean openGuiForPlayer(EntityPlayer player) {
         return false;
     }
 

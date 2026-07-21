@@ -991,8 +991,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         }
         if (weaponStack.getItem().equals(Items.BOW) && fighter.currentAction() == Action.BOW) {
             this.bowPullProgressNotPlayer += 0.015f;
-            fighter.d(Math.round(-this.bowPullProgressNotPlayer * 20.0f + (float)weaponStack.getMaxItemUseDuration()));
-            fighter.void_a(weaponStack);
+            fighter.setItemUseCount(Math.round(-this.bowPullProgressNotPlayer * 20.0f + (float)weaponStack.getMaxItemUseDuration()));
+            fighter.setHeldItemOverride(weaponStack);
         }
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();

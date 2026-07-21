@@ -64,7 +64,7 @@ public class SpawnEnergyBallParticles implements IMessage {
                 System.out.println("received an invalid message @SpawnEnergyBallParticles :(");
                 return null;
             }
-            GirlEntity em_class2582 = GirlEntity.getGirlEntity(ab_class212.a);
+            GirlEntity em_class2582 = GirlEntity.getClientGirlEntity(ab_class212.a);
             if (!(em_class2582 instanceof GalathEntity)) {
                 System.out.println("doesnt exit");
                 return null;

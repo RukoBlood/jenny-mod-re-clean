@@ -11,7 +11,7 @@ import java.util.UUID;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.MakeRichWish;
 import com.trolmastercard.sexmod.Packages.UploadInventoryToServerAlt;
-import com.trolmastercard.sexmod.Packages.dc_class174;
+import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
@@ -151,15 +151,15 @@ extends GirlEntity {
 
     @SideOnly(value=Side.CLIENT)
     void void_c() {
-        this.boolean_b(Minecraft.getMinecraft().player);
+        this.openGuiForPlayer(Minecraft.getMinecraft().player);
         this.P = false;
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
+    public boolean openGuiForPlayer(EntityPlayer player) {
         this.R = false;
         String[] stringArray = new String[]{"action.names.makemerichallie", "action.names.deepthroat", "Reverse cowgirl"};
-        AllieEntity.a(entityPlayer, this, stringArray, false);
+        AllieEntity.openInventoryGui(player, this, stringArray, false);
         return true;
     }
 
@@ -347,7 +347,7 @@ extends GirlEntity {
                     this.void_a(I18n.format("allie.dialogue.summon8", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_HUH, new int[0]);
                     if (!this.boolean_n()) break;
-                    this.boolean_b(this.world.getPlayerEntityByUUID(this.getID()));
+                    this.openGuiForPlayer(this.world.getPlayerEntityByUUID(this.getID()));
                     break;
                 }
                 case "summonDone": {
@@ -381,7 +381,7 @@ extends GirlEntity {
                         break;
                     }
                     this.setCurrentAction(Action.DEEPTHROAT_START);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new dc_class174(this.girlID(), this.getID(), false, true));
+                    PackageHandler.networkWrapper.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
@@ -457,7 +457,7 @@ extends GirlEntity {
                 case "summon_normalDone": {
                     this.setCurrentAction(Action.SUMMON_NORMAL_WAIT);
                     if (!this.boolean_n()) break;
-                    this.boolean_b(Minecraft.getMinecraft().player);
+                    this.openGuiForPlayer(Minecraft.getMinecraft().player);
                     break;
                 }
                 case "deepthroat_normal_prepareMSG1": {

@@ -84,8 +84,8 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        PlayerSlime.a(entityPlayer, this, new String[]{"action.names.blowjob"}, false);
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        PlayerSlime.openInventoryGui(player, this, new String[]{"action.names.blowjob"}, false);
         return true;
     }
 

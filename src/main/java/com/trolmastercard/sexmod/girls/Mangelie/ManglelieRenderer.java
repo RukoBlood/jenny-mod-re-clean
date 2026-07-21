@@ -276,12 +276,12 @@ extends GirlRenderer<ManglelieEntity> {
         float f = ((ManglelieEntity)this.renderEntity).float_b(mc.getRenderPartialTicks());
         if (f < 1.0f) {
             float f2 = (float) Reference.EaseOutQuart(f);
-            ((ManglelieEntity)this.renderEntity).d((int)(11.0f * (1.0f - f2) + 71980.0f));
-            ((ManglelieEntity)this.renderEntity).void_a(itemStack);
+            ((ManglelieEntity)this.renderEntity).setItemUseCount((int)(11.0f * (1.0f - f2) + 71980.0f));
+            ((ManglelieEntity)this.renderEntity).setHeldItemOverride(itemStack);
             ((ManglelieEntity)this.renderEntity).setActiveHand(EnumHand.MAIN_HAND);
             ((ManglelieEntity)this.renderEntity).W();
         } else {
-            ((ManglelieEntity)this.renderEntity).void_a(ItemStack.EMPTY);
+            ((ManglelieEntity)this.renderEntity).setHeldItemOverride(ItemStack.EMPTY);
             ((ManglelieEntity)this.renderEntity).K();
         }
         itemRenderer.renderItem(this.renderEntity, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);

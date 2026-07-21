@@ -87,7 +87,7 @@ extends Entity {
         if (!optional.isPresent()) {
             return null;
         }
-        GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a((UUID)optional.get());
+        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity((UUID)optional.get());
         if (em_class2582 == null) {
             return null;
         }
@@ -102,7 +102,7 @@ extends Entity {
         if (!optional.isPresent()) {
             return null;
         }
-        GirlEntity em_class2582 = GirlEntity.getGirlEntity((UUID)optional.get());
+        GirlEntity em_class2582 = GirlEntity.getClientGirlEntity((UUID)optional.get());
         if (!(em_class2582 instanceof LunaEntity)) {
             return null;
         }

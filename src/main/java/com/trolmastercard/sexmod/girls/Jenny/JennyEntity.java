@@ -128,7 +128,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.getID());
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, object.getPersistentID().toString());
             ((EntityPlayerMP)object).setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
-            this.a((EntityPlayerMP)object, false);
+            this.alignPlayerToGirl((EntityPlayerMP)object, false);
             ((Entity)object).moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.playerCameraOffsetPos = null;
@@ -182,7 +182,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (super.processInteract(entityPlayer, enumHand)) {
             return true;
         }
-        if (this.world.isRemote && !this.boolean_b(entityPlayer)) {
+        if (this.world.isRemote && !this.openGuiForPlayer(entityPlayer)) {
             this.void_a(I18n.format("jenny.dialogue.busy", new Object[0]));
         }
         return true;
@@ -197,14 +197,14 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
+    public boolean openGuiForPlayer(EntityPlayer player) {
         if (this.getID() == null && (!this.boolean_J() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
-                GirlEntity.a(entityPlayer, this, stringArray, true);
+                GirlEntity.openInventoryGui(player, this, stringArray, true);
                 return true;
             }
-            GirlEntity.a(entityPlayer, this, stringArray, new ItemStack[]{new ItemStack(Items.EMERALD, 3), new ItemStack(Items.ENDER_PEARL, 2), new ItemStack(Items.DIAMOND, 2), this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? new ItemStack(Items.GOLD_INGOT, 1) : new ItemStack(Items.AIR, 0)}, true);
+            GirlEntity.openInventoryGui(player, this, stringArray, new ItemStack[]{new ItemStack(Items.EMERALD, 3), new ItemStack(Items.ENDER_PEARL, 2), new ItemStack(Items.DIAMOND, 2), this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? new ItemStack(Items.GOLD_INGOT, 1) : new ItemStack(Items.AIR, 0)}, true);
             return true;
         }
         return false;
@@ -231,7 +231,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     protected void a(boolean bl, UUID uUID) {
-        super.a(bl, true, uUID);
+        super.triggerActionSync(bl, true, uUID);
         HandlePlayerMovement.a(false);
     }
 

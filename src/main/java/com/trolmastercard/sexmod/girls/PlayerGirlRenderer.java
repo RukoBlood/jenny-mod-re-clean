@@ -255,14 +255,14 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         }
         if (this.isUsingItem && !isLeftHand && stack.getItem() instanceof ItemBow) {
             this.bowPullProgress += 0.015f;
-            this.renderEntity.d(Math.round(-this.bowPullProgress * 20.0f + (float)stack.getMaxItemUseDuration()));
-            this.renderEntity.void_a(stack);
+            this.renderEntity.setItemUseCount(Math.round(-this.bowPullProgress * 20.0f + (float)stack.getMaxItemUseDuration()));
+            this.renderEntity.setHeldItemOverride(stack);
             this.renderEntity.setActiveHand(EnumHand.MAIN_HAND);
             this.renderEntity.W();
         } else {
             this.bowPullProgress = 0.0f;
-            this.renderEntity.d(0);
-            this.renderEntity.void_a(ItemStack.EMPTY);
+            this.renderEntity.setItemUseCount(0);
+            this.renderEntity.setHeldItemOverride(ItemStack.EMPTY);
             this.renderEntity.W();
         }
         this.applyItemPostRotation(isLeftHand, stack);

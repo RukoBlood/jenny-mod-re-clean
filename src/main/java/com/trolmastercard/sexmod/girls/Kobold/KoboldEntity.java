@@ -448,7 +448,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             if (this.boolean_J() && ((String)this.entityDataManager.get(MASTER_UUID)).equals(entityPlayer.getPersistentID().toString())) {
                 this.a(SoundsHandler.GIRLS_KOBOLD_MASTER);
             }
-            this.boolean_b(entityPlayer);
+            this.openGuiForPlayer(entityPlayer);
         } else {
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             this.getNavigator().clearPath();
@@ -467,16 +467,16 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        if (this.boolean_J() && entityPlayer.getPersistentID().toString().equals(this.entityDataManager.get(MASTER_UUID))) {
-            Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, entityPlayer, new String[]{"anal", "oral", "mating"}, null, false));
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        if (this.boolean_J() && player.getPersistentID().toString().equals(this.entityDataManager.get(MASTER_UUID))) {
+            Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral", "mating"}, null, false));
             return true;
         }
         if (this.getActivePotionEffect(HornyPotion.HORNY_POTION) != null) {
-            Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, entityPlayer, new String[]{"anal", "oral"}, null, false));
+            Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral"}, null, false));
             return true;
         }
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, entityPlayer, new String[]{"anal", "oral"}, new ItemStack[]{new ItemStack(Items.GOLD_INGOT, 3), new ItemStack(Items.IRON_PICKAXE)}, false));
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral"}, new ItemStack[]{new ItemStack(Items.GOLD_INGOT, 3), new ItemStack(Items.IRON_PICKAXE)}, false));
         return true;
     }
 
@@ -498,7 +498,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     protected void a(boolean bl, UUID uUID) {
-        super.a(bl, true, uUID);
+        super.triggerActionSync(bl, true, uUID);
         HandlePlayerMovement.a(false);
     }
 
@@ -877,7 +877,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             double d = this.getPositionVector().distanceTo(entityPlayer.getPositionVector());
             if (d > 2.0) {
                 pathNavigate.tryMoveToEntityLiving(entityPlayer, this.a(entityPlayer, d));
-                this.void_k();
+                this.applyCustomPathNodeVelocity();
                 if (d > 15.0) {
                     this.void_c(entityPlayer);
                 }
@@ -1060,7 +1060,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.aF = blockPos.add((this.getRNG().nextBoolean() ? 1 : -1) * (this.getRNG().nextInt(2) + 1), 0, (this.getRNG().nextBoolean() ? 1 : -1) * (this.getRNG().nextInt(2) + 1));
         }
         this.getNavigator().tryMoveToXYZ(this.aF.getX(), this.aF.getY(), this.aF.getZ(), 0.35f);
-        this.void_k();
+        this.applyCustomPathNodeVelocity();
     }
 
     void void_c(UUID uUID) {
@@ -1106,7 +1106,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.aM = this.t(uUID);
         }
         this.getNavigator().tryMoveToXYZ(this.aM.getX(), this.aM.getY(), this.aM.getZ(), 0.35f);
-        this.void_k();
+        this.applyCustomPathNodeVelocity();
         if (Math.sqrt(this.getPosition().distanceSq(blockPos)) > 5.0) {
             return;
         }
@@ -1249,7 +1249,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         BlockPos blockPos = this.c((object3).getPosition());
         this.getNavigator().tryMoveToXYZ(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0.7);
-        this.void_k();
+        this.applyCustomPathNodeVelocity();
         if (this.getDistance((Entity)object3) > 1.5f) {
             return true;
         }
@@ -1312,7 +1312,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.aM = this.t(uUID);
         }
         this.getNavigator().tryMoveToXYZ(this.aM.getX(), this.aM.getY(), this.aM.getZ(), 0.35f);
-        this.void_k();
+        this.applyCustomPathNodeVelocity();
     }
 
     // TODO clashes
@@ -1947,7 +1947,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         if (Math.sqrt(this.ap.distanceSq(this.getPosition())) > 2.0) {
             this.getNavigator().tryMoveToXYZ(this.ap.getX(), this.ap.getY(), this.ap.getZ(), 0.35f);
-            this.void_k();
+            this.applyCustomPathNodeVelocity();
         } else {
             ++this.ab;
         }
@@ -2375,7 +2375,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             }
             object = this.c((BlockPos)vec3i);
             this.getNavigator().tryMoveToXYZ((double)((Vec3i)object).getX() + 0.5, ((Vec3i)object).getY(), (double)((Vec3i)object).getZ() + 0.5, 0.35);
-            this.void_k();
+            this.applyCustomPathNodeVelocity();
             return;
         }
         float f = 0.0f;

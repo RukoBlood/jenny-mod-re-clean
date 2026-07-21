@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class dc_class174
+public class SyncActionPacket
 implements IMessage {
     boolean c;
     UUID a;
@@ -33,11 +33,11 @@ implements IMessage {
     boolean d;
     UUID e = null;
 
-    public dc_class174() {
+    public SyncActionPacket() {
         this.c = false;
     }
 
-    public dc_class174(UUID uUID, UUID uUID2, boolean bl, boolean bl2) {
+    public SyncActionPacket(UUID uUID, UUID uUID2, boolean bl, boolean bl2) {
         this.a = uUID;
         this.b = bl;
         this.e = uUID2;
@@ -65,47 +65,46 @@ implements IMessage {
         return runtimeException;
     }
 
-    public static class a_inner175
-    implements IMessageHandler<dc_class174, IMessage> {
-        public static void a(UUID uUID, UUID uUID2, boolean bl, boolean bl2) {
-            for (GirlEntity em_class2582 : GirlEntity.girlList(uUID)) {
-                if (em_class2582.world.isRemote) continue;
-                if (em_class2582 instanceof JennyEntity || em_class2582 instanceof EllieEntity || em_class2582 instanceof LunaEntity) {
-                    em_class2582.tasks.removeTask(em_class2582.followPlayerGoal);
-                    em_class2582.tasks.removeTask(em_class2582.avoidWaterGoal);
+    public static class Handler implements IMessageHandler<SyncActionPacket, IMessage> {
+        public static void execute(UUID uUID, UUID uUID2, boolean bl, boolean bl2) {
+            for (GirlEntity girl : GirlEntity.girlList(uUID)) {
+                if (girl.world.isRemote) continue;
+                if (girl instanceof JennyEntity || girl instanceof EllieEntity || girl instanceof LunaEntity) {
+                    girl.tasks.removeTask(girl.followPlayerGoal);
+                    girl.tasks.removeTask(girl.avoidWaterGoal);
                 }
-                em_class2582.getNavigator().clearPath();
-                em_class2582.motionX = 0.0;
-                em_class2582.motionY = 0.0;
-                em_class2582.motionZ = 0.0;
-                if (em_class2582.getID() == null) {
-                    em_class2582.setInteractionPlayerUUID(uUID2);
+                girl.getNavigator().clearPath();
+                girl.motionX = 0.0;
+                girl.motionY = 0.0;
+                girl.motionZ = 0.0;
+                if (girl.getID() == null) {
+                    girl.setInteractionPlayerUUID(uUID2);
                 }
                 if (bl2) {
-                    em_class2582.setTargetPosition(em_class2582.net_minecraft_util_math_Vec3d_aa());
+                    girl.setTargetPosition(girl.net_minecraft_util_math_Vec3d_aa());
                 }
-                em_class2582.j(em_class2582.getID());
+                girl.snapPlayerToPosition(girl.getID());
                 if (!bl) {
                     return;
                 }
-                if (!(em_class2582 instanceof bh_class82)) {
+                if (!(girl instanceof bh_class82)) {
                     return;
                 }
-                bh_class82 bh_class822 = (bh_class82) ((Object) em_class2582);
+                bh_class82 bh_class822 = (bh_class82) ((Object) girl);
                 bh_class822.void_b();
             }
         }
 
-        public IMessage a(dc_class174 dc_class1742, MessageContext messageContext) {
+        public IMessage a(SyncActionPacket dc_class1742, MessageContext messageContext) {
             if (dc_class1742.c && messageContext.side == Side.SERVER) {
-                FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> a_inner175.a(dc_class1742.a, dc_class1742.e, dc_class1742.b, dc_class1742.d));
+                FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> Handler.execute(dc_class1742.a, dc_class1742.e, dc_class1742.b, dc_class1742.d));
             }
             return null;
         }
 
                 @Override
-        public IMessage onMessage(dc_class174 iMessage, MessageContext messageContext) {
-            return this.a((dc_class174)iMessage, messageContext);
+        public IMessage onMessage(SyncActionPacket iMessage, MessageContext messageContext) {
+            return this.a((SyncActionPacket)iMessage, messageContext);
         }
 
         private static RuntimeException a(RuntimeException runtimeException) {

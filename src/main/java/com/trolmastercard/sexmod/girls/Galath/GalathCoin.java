@@ -230,7 +230,7 @@ implements IAnimatable {
             return;
         }
         UUID uUID = GalathMangTracker.b(entityPlayer);
-        GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID);
+        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
         if (em_class2582 == null) {
             return;
         }
@@ -278,7 +278,7 @@ implements IAnimatable {
 
     void c(EntityPlayer entityPlayer) {
         UUID uUID = GalathMangTracker.b(entityPlayer);
-        GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID);
+        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
         if (em_class2582 instanceof GalathEntity) {
             GalathCoin.a((GalathEntity)em_class2582);
         }
@@ -348,7 +348,7 @@ implements IAnimatable {
             return;
         }
         UUID uUID = GalathMangTracker.b(entityPlayer);
-        GirlEntity em_class2582 = GirlEntity.com_trolmastercard_sexmod_em_class258_a(uUID);
+        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
         if (!(em_class2582 instanceof GalathEntity)) {
             return;
         }

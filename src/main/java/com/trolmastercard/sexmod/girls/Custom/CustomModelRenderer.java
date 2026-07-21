@@ -99,7 +99,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
             return true;
         }
         UUID uUID = cy_class1532.b();
-        GirlEntity em_class2582 = GirlEntity.getGirlEntity(uUID);
+        GirlEntity em_class2582 = GirlEntity.getClientGirlEntity(uUID);
         if (em_class2582 == null) {
             return true;
         }
@@ -189,7 +189,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (uUID == null) {
             return;
         }
-        GirlEntity em_class2583 = GirlEntity.getGirlEntity(uUID);
+        GirlEntity em_class2583 = GirlEntity.getClientGirlEntity(uUID);
         if (em_class2583 == null) {
             return;
         }
@@ -306,7 +306,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (entity != null) {
             return entity;
         }
-        return GirlEntity.getGirlEntity(uUID);
+        return GirlEntity.getClientGirlEntity(uUID);
     }
 
     void a(CustomModelEntity cy_class1532, GeoBone geoBone, float f) {

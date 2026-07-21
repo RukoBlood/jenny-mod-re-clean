@@ -114,13 +114,13 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        PlayerEllie.a(entityPlayer, this, new String[]{"Face fuck"}, false);
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        PlayerEllie.openInventoryGui(player, this, new String[]{"Face fuck"}, false);
         return true;
     }
 
     void void_c(EntityPlayer entityPlayer) {
-        PlayerEllie.a(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
+        PlayerEllie.openInventoryGui(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
     }
 
     @Override

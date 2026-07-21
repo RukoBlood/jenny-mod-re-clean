@@ -76,13 +76,13 @@ public class PlayerBee extends PlayerGirl {
         if (entityPlayer == null) {
             return;
         }
-        Vec3d vec3d = this.a(-0.2);
+        Vec3d vec3d = this.getFrontOffsetVector(-0.2);
         entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        PlayerBee.a(entityPlayer, this, new String[]{"action.names.sex"}, false);
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        PlayerBee.openInventoryGui(player, this, new String[]{"action.names.sex"}, false);
         return true;
     }
 

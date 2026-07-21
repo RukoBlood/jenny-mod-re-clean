@@ -179,17 +179,17 @@ implements bh_class82,
             itemStack.interactWithEntity(entityPlayer, this, enumHand);
             return true;
         }
-        if (this.world.isRemote && !this.boolean_b(entityPlayer)) {
+        if (this.world.isRemote && !this.openGuiForPlayer(entityPlayer)) {
             this.void_a(I18n.format("bia.dialogue.busy", new Object[0]));
         }
         return true;
     }
 
     @Override
-    public boolean boolean_b(EntityPlayer entityPlayer) {
+    public boolean openGuiForPlayer(EntityPlayer player) {
         String[] LunaActions = new String[]{"action.names.sex", "action.names.touchboobs", "action.names.headpat"};
         ItemStack[] itemStackArray = new ItemStack[]{new ItemStack(Items.FISH, 3, 0), new ItemStack(Items.FISH, 2, 1), null};
-        LunaEntity.CreateGUI(entityPlayer, (GirlEntity)this, LunaActions, itemStackArray);
+        LunaEntity.CreateGUI(player, (GirlEntity)this, LunaActions, itemStackArray);
         return true;
     }
 
@@ -496,7 +496,7 @@ implements bh_class82,
         int n = 0;
         BlockPos blockPos2 = null;
         int n2 = 0;
-        while (++n < 50 && (blockPos = this.a(this.getPosition(), n + 1, Blocks.WATER, 60, 10, new HashSet<Biome>(Arrays.asList(Biomes.RIVER, Biomes.OCEAN, Biomes.DEEP_OCEAN, Biomes.BEACH, Biomes.STONE_BEACH, Biomes.SWAMPLAND, Biomes.MUTATED_SWAMPLAND)))) != null) {
+        while (++n < 50 && (blockPos = this.findNearestStructureBlock(this.getPosition(), n + 1, Blocks.WATER, 60, 10, new HashSet<Biome>(Arrays.asList(Biomes.RIVER, Biomes.OCEAN, Biomes.DEEP_OCEAN, Biomes.BEACH, Biomes.STONE_BEACH, Biomes.SWAMPLAND, Biomes.MUTATED_SWAMPLAND)))) != null) {
             while (this.world.getBlockState(blockPos.add(0, 1, 0)).getBlock() == Blocks.WATER) {
                 blockPos = blockPos.add(0, 1, 0);
             }
@@ -551,20 +551,20 @@ implements bh_class82,
         super.a(string, uUID);
         if ("action.names.touchboobs".equals(string)) {
             this.setInteractionPlayerUUID(uUID);
-            this.a(true, true, uUID);
+            this.triggerActionSync(true, true, uUID);
             this.changeDataParameterFromClient("animationFollowUp", "touch_boobs");
             this.changeDataParameterFromClient("currentModel", "0");
             HandlePlayerMovement.a(false);
         }
         if ("action.names.sex".equals(string)) {
             this.setInteractionPlayerUUID(uUID);
-            this.a(true, true, uUID);
+            this.triggerActionSync(true, true, uUID);
             this.changeDataParameterFromClient("animationFollowUp", "sex");
             HandlePlayerMovement.a(false);
         }
         if ("action.names.headpat".equals(string)) {
             this.setInteractionPlayerUUID(uUID);
-            this.a(true, true, uUID);
+            this.triggerActionSync(true, true, uUID);
             HandlePlayerMovement.a(false);
             this.changeDataParameterFromClient("animationFollowUp", "headpat");
         }

@@ -201,7 +201,7 @@ public class fu_class330 {
             return;
         }
         if (ei_class2513.boolean_p()) {
-            ei_class2513.boolean_b(Minecraft.getMinecraft().player);
+            ei_class2513.openGuiForPlayer(Minecraft.getMinecraft().player);
         }
     }
 
@@ -227,7 +227,7 @@ public class fu_class330 {
         }
         if (ei_class2512.boolean_p()) {
             ei_class2512.ab = false;
-            ei_class2512.boolean_b(entityPlayer);
+            ei_class2512.openGuiForPlayer(entityPlayer);
         }
     }
 

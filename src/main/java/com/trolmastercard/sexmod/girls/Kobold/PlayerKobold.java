@@ -188,8 +188,8 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_b(EntityPlayer entityPlayer) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, entityPlayer, new String[]{"anal", "oral", "mating"}, null, false));
+    public boolean openGuiForPlayer(EntityPlayer player) {
+        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral", "mating"}, null, false));
         return true;
     }
 
