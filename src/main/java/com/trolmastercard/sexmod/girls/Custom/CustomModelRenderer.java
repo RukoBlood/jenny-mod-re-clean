@@ -336,7 +336,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (b_inner962 == null) {
             return null;
         }
-        if (EnumCustomPartCategory.CUSTOM_BONE.equals((Object)b_inner962.j())) {
+        if (CustomPartCategory.CUSTOM_BONE.equals((Object)b_inner962.j())) {
             return b_inner962.b();
         }
         return b_inner962.j().boneName;

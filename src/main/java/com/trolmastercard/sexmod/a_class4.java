@@ -65,7 +65,7 @@ public class a_class4 extends GuiScreen {
     GirlEntity c;
     boolean p = false;
     gq_class381 q;
-    static public List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> m = new ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>>();
+    static public List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> m = new ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>>();
     final UUID ID;
     int i;
     int t;
@@ -93,15 +93,15 @@ public class a_class4 extends GuiScreen {
         this.c.getDataManager().set(GirlEntity.CUSTOM_MODEL_KEY, object);
         int n = 0;
         for (String string : this.c.getCustomPartsSet()) {
-            EnumCustomPartCategory gw_class3892 = CustomModel.e(string);
-            if (EnumCustomPartCategory.CUSTOM_BONE.equals((Object)gw_class3892)) {
+            CustomPartCategory gw_class3892 = CustomModel.e(string);
+            if (CustomPartCategory.CUSTOM_BONE.equals((Object)gw_class3892)) {
                 ++n;
             }
-            Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry = null;
-            if (EnumCustomPartCategory.CUSTOM_BONE.equals((Object)gw_class3892) && n > 1) {
+            Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry = null;
+            if (CustomPartCategory.CUSTOM_BONE.equals((Object)gw_class3892) && n > 1) {
                 entry = a_class4.b(this.c);
             } else {
-                for (Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry2 : m) {
+                for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry2 : m) {
                     if (!entry2.getKey().equals((Object)gw_class3892)) continue;
                     entry = entry2;
                 }
@@ -126,7 +126,7 @@ public class a_class4 extends GuiScreen {
     //somehow related to GirlRenderer
     public static HashSet<String> b() {
         HashSet<String> hashSet = new HashSet<String>();
-        for (Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry : m) {
+        for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry : m) {
             if (entry.getValue().getKey().size() == 1) continue;
             Map.Entry<List<String>, Integer> entry2 = entry.getValue();
             List<String> list = entry2.getKey();
@@ -136,28 +136,28 @@ public class a_class4 extends GuiScreen {
         return hashSet;
     }
 
-    public static Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> b(GirlEntity em_class2582) {
+    public static Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> b(GirlEntity em_class2582) {
         ArrayList<String> arrayList = new ArrayList<String>();
         arrayList.add("cross");
-        arrayList.addAll((Collection) CustomModel.a(em_class2582).get((Object) EnumCustomPartCategory.CUSTOM_BONE));
-        return new AbstractMap.SimpleEntry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>(EnumCustomPartCategory.CUSTOM_BONE, new AbstractMap.SimpleEntry(arrayList, 0));
+        arrayList.addAll((Collection) CustomModel.a(em_class2582).get((Object) CustomPartCategory.CUSTOM_BONE));
+        return new AbstractMap.SimpleEntry<CustomPartCategory, Map.Entry<List<String>, Integer>>(CustomPartCategory.CUSTOM_BONE, new AbstractMap.SimpleEntry(arrayList, 0));
     }
 
     void e() {
         m.clear();
-        List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> list = this.c.d(this.ID);
+        List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> list = this.c.d(this.ID);
         this.i = list.size();
         m.addAll(list);
-        for (EnumCustomPartCategory gw_class3892 : EnumCustomPartCategory.values()) {
-            if (gw_class3892 == EnumCustomPartCategory.GIRL_SPECIFIC) continue;
+        for (CustomPartCategory gw_class3892 : CustomPartCategory.values()) {
+            if (gw_class3892 == CustomPartCategory.GIRL_SPECIFIC) continue;
             ArrayList<String> object2 = new ArrayList<String>();
             object2.add("cross");
             m.add(new AbstractMap.SimpleEntry(gw_class3892, new AbstractMap.SimpleEntry(object2, 0)));
         }
         for (Map.Entry entry : CustomModel.a(this.c).entrySet()) {
-            Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> object = null;
-            for (Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry2 : m) {
-                if (!((EnumCustomPartCategory)((Object)entry.getKey())).equals((Object)entry2.getKey())) continue;
+            Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> object = null;
+            for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry2 : m) {
+                if (!((CustomPartCategory)((Object)entry.getKey())).equals((Object)entry2.getKey())) continue;
                 object = entry2;
             }
             if (object == null) continue;
@@ -238,8 +238,8 @@ public class a_class4 extends GuiScreen {
         this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
         HashSet<String> hashSet = new HashSet<String>();
         ArrayList<Integer> arrayList = new ArrayList<Integer>();
-        for (Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry : m) {
-            if (entry.getKey() == EnumCustomPartCategory.GIRL_SPECIFIC) {
+        for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry : m) {
+            if (entry.getKey() == CustomPartCategory.GIRL_SPECIFIC) {
                 arrayList.add(entry.getValue().getValue());
                 continue;
             }
@@ -253,14 +253,14 @@ public class a_class4 extends GuiScreen {
         this.mc.player.closeScreen();
     }
 
-    public void a(EnumCustomPartCategory gw_class3892, boolean bl, int n) {
+    public void a(CustomPartCategory gw_class3892, boolean bl, int n) {
         int n2;
         //Object object;
         this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
-        ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> arrayList = new ArrayList<>();
+        ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> arrayList = new ArrayList<>();
         ArrayList<Integer> arrayList2 = new ArrayList<>();
         int n3 = 0;
-        for (Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry : m) {
+        for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry : m) {
             if (entry.getKey().equals((Object)gw_class3892)) {
                 arrayList.add(entry);
                 arrayList2.add(n3);
@@ -270,12 +270,12 @@ public class a_class4 extends GuiScreen {
         if (arrayList.size() == 0) {
             return;
         }
-        Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> object;
+        Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> object;
         if (arrayList.size() == 1) {
             object = arrayList.get(0);
             n2 = (Integer)arrayList2.get(0);
         } else {
-            int n4 = this.i == 0 || n > this.i - 1 + EnumCustomPartCategory.a() ? n - (this.i + EnumCustomPartCategory.a()) : n;
+            int n4 = this.i == 0 || n > this.i - 1 + CustomPartCategory.a() ? n - (this.i + CustomPartCategory.a()) : n;
             object = arrayList.get(n4);
             n2 = (Integer)arrayList2.get(n4);
         }
@@ -293,9 +293,9 @@ public class a_class4 extends GuiScreen {
             n5 = n6 - 1;
         }
         m.set(n2, new AbstractMap.SimpleEntry<>(object.getKey(), new AbstractMap.SimpleEntry<>((object.getValue()).getKey(), n5)));
-        ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> arrayList3 = new ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>>();
-        for (Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry2 : m) {
-            if (entry2.getKey() != EnumCustomPartCategory.GIRL_SPECIFIC) continue;
+        ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> arrayList3 = new ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>>();
+        for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry2 : m) {
+            if (entry2.getKey() != CustomPartCategory.GIRL_SPECIFIC) continue;
             arrayList3.add(entry2);
         }
         this.c.b(arrayList3);

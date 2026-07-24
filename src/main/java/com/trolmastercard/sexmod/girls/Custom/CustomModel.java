@@ -423,13 +423,13 @@ public class CustomModel {
         return GeckoLibCache.getInstance().getGeoModels().get(CustomModel.k(string));
     }
 
-    public static EnumCustomPartCategory e(String string) {
+    public static CustomPartCategory e(String string) {
         b_inner96 b_inner962 = c.get(string);
         if (b_inner962 == null) {
             if (!string.equals("cross")) {
                 System.out.printf("The ClothingType for '%s', hasn't been registered, but gamers tried to use it anyways. Crash is imminent%n", string);
             }
-            return EnumCustomPartCategory.HEAD;
+            return CustomPartCategory.HEAD;
         }
         return b_inner962.d;
     }
@@ -472,16 +472,16 @@ public class CustomModel {
         return c.get(string);
     }
 
-    public static HashMap<EnumCustomPartCategory, List<String>> a(GirlEntity em_class2582) {
-        HashMap<EnumCustomPartCategory, List<String>> hashMap = new HashMap<EnumCustomPartCategory, List<String>>();
-        for (Object object : EnumCustomPartCategory.values()) {
-            hashMap.put((EnumCustomPartCategory)((Object)object), new ArrayList());
+    public static HashMap<CustomPartCategory, List<String>> a(GirlEntity em_class2582) {
+        HashMap<CustomPartCategory, List<String>> hashMap = new HashMap<CustomPartCategory, List<String>>();
+        for (Object object : CustomPartCategory.values()) {
+            hashMap.put((CustomPartCategory)((Object)object), new ArrayList());
         }
         for (Map.Entry entry : c.entrySet()) {
             Object object;
             String string = (String)entry.getKey();
             object = (b_inner96)entry.getValue();
-            EnumCustomPartCategory gw_class3892 = ((b_inner96)object).d;
+            CustomPartCategory gw_class3892 = ((b_inner96)object).d;
             List<String> list = hashMap.get((Object)gw_class3892);
             if (!((b_inner96)object).g.isEmpty() && !((b_inner96)object).g.contains((Object) PlayerGirlEntity.fromGirl(em_class2582))) continue;
             list.add(string);
@@ -503,7 +503,7 @@ public class CustomModel {
     }
 
     public static class b_inner96 {
-        EnumCustomPartCategory d;
+        CustomPartCategory d;
         HashSet<PlayerGirlEntity> g = new HashSet();
         HashSet<String> b = new HashSet();
         String k;
@@ -549,12 +549,12 @@ public class CustomModel {
             }
             try {
                 string32 = string32.replace(" ", "");
-                this.d = EnumCustomPartCategory.valueOf(string32);
+                this.d = CustomPartCategory.valueOf(string32);
             } catch (IllegalArgumentException illegalArgumentException) {
                 this.h = String.format("you entered '%s' into the 'wear_type' field of the %s's cfg file at '%s'. This is not a valid value. Check my examples on what valid values are to enter into the field 'wear_type", string32, string, file.getAbsolutePath());
                 return;
             }
-            if (EnumCustomPartCategory.CUSTOM_BONE.equals((Object)this.d)) {
+            if (CustomPartCategory.CUSTOM_BONE.equals((Object)this.d)) {
                 this.j = properties.getProperty("custom_bone");
                 if ("".equals(this.j)) {
                     this.h = String.format("You selected CUSTOM_BONE as the 'wear_type' in the cfg file for '%s' at '%s', yet you left the 'custom_bone' field right underneath it empty. If you want ur model to be parented to a specific bone, you have to enter the name of that bone at the field 'custom_bone'.", string, file.getAbsolutePath());
@@ -643,7 +643,7 @@ public class CustomModel {
             return this.m;
         }
 
-        public EnumCustomPartCategory j() {
+        public CustomPartCategory j() {
             return this.d;
         }
 

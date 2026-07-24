@@ -149,7 +149,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     HashMap<String, Pair<Integer, Integer>> animationVariantMap = new HashMap();
     AnimationProcessor<?> cachedAnimationProcessor = null;
     public List<String> boneTrackingList = new ArrayList<String>();
-    protected List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> customPartsData = null;
+    protected List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> customPartsData = null;
 
     public void setWalkType(WalkTypes walkTypes) {
         this.entityDataManager.set(WALK_TYPE, walkTypes.toString());
@@ -1429,16 +1429,16 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return new ArrayList<Integer>();
     }
 
-    public List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> d(UUID uUID) {
+    public List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> d(UUID uUID) {
         if (this.customPartsData != null) {
             return this.customPartsData;
         }
         ArrayList<Integer> arrayList = this.D();
         if (arrayList.isEmpty()) {
-            this.customPartsData = new ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>>();
+            this.customPartsData = new ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>>();
             return this.customPartsData;
         }
-        ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> arrayList2 = new ArrayList<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>>();
+        ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> arrayList2 = new ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>>();
         List<Integer> list = GirlEntity.h(uUID);
         for (int i = 0; i < arrayList.size(); ++i) {
             //arrayList2.add(new AbstractMap.SimpleEntry(
@@ -1447,13 +1447,13 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
             arrayList2.add(
                     new AbstractMap.SimpleEntry<>(
-                                    EnumCustomPartCategory.GIRL_SPECIFIC, new AbstractMap.SimpleEntry<>(this.e(arrayList.get(i)), list.get(i))));
+                                    CustomPartCategory.GIRL_SPECIFIC, new AbstractMap.SimpleEntry<>(this.e(arrayList.get(i)), list.get(i))));
         }
         this.customPartsData = arrayList2;
         return arrayList2;
     }
 
-    public void b(List<Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>>> list) {
+    public void b(List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> list) {
         this.customPartsData = list;
     }
 
@@ -1464,7 +1464,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (this.customPartsData.size() - 1 < n) {
             return;
         }
-        Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry = this.customPartsData.get(n);
+        Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry = this.customPartsData.get(n);
         entry.getValue().setValue(n2);
         this.customPartsData.set(n, entry);
     }

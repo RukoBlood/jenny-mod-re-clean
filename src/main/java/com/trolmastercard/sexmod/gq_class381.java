@@ -34,7 +34,7 @@ import org.lwjgl.input.Mouse;
 public class gq_class381
 extends GuiListExtended {
     final static int c = 3809871;
-    final static List<EnumCustomPartCategory> f = Arrays.asList(EnumCustomPartCategory.values());
+    final static List<CustomPartCategory> f = Arrays.asList(CustomPartCategory.values());
     final static String a = "MMMMMMMMMM";
     static protected int i = 5;
     static protected int e = 200;
@@ -98,15 +98,15 @@ extends GuiListExtended {
     public void drawScreen(int n, int n2, float flo) {
         this.b.clear();
         int n3 = 0;
-        for (Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry : a_class4.m) {
-            EnumCustomPartCategory gw_class3892 = entry.getKey();
+        for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry : a_class4.m) {
+            CustomPartCategory gw_class3892 = entry.getKey();
             Map.Entry<List<String>, Integer> entry2 = entry.getValue();
             this.b.add(new a_inner382(this, gw_class3892, entry2.getKey(), entry2.getValue()));
-            if (!EnumCustomPartCategory.CUSTOM_BONE.equals((Object)entry.getKey())) continue;
+            if (!CustomPartCategory.CUSTOM_BONE.equals((Object)entry.getKey())) continue;
             ++n3;
         }
         this.b.sort(Comparator.comparingInt(a_inner3822 -> f.indexOf(a_inner3822.d)));
-        List<String> list = CustomModel.a(this.d.c).get((Object) EnumCustomPartCategory.CUSTOM_BONE);
+        List<String> list = CustomModel.a(this.d.c).get((Object) CustomPartCategory.CUSTOM_BONE);
         list.add(0, "cross");
         this.b.add(new a_inner382(this, n3 > 1));
         this.a();
@@ -242,7 +242,7 @@ extends GuiListExtended {
     public class a_inner382
     implements GuiListExtended.IGuiListEntry {
         final static int g = 4;
-        public EnumCustomPartCategory d;
+        public CustomPartCategory d;
         public List<String> b;
         public int f;
         FontRenderer c;
@@ -250,7 +250,7 @@ extends GuiListExtended {
         boolean e = false;
         final gq_class381 this$0;
 
-        public a_inner382(gq_class381 gq_class3812, EnumCustomPartCategory gw_class3892, List<String> list, int n) {
+        public a_inner382(gq_class381 gq_class3812, CustomPartCategory gw_class3892, List<String> list, int n) {
             this.this$0 = gq_class3812;
             this.d = gw_class3892;
             this.b = list;
@@ -361,7 +361,7 @@ extends GuiListExtended {
         }
 
         float a(int n) {
-            Map.Entry<EnumCustomPartCategory, Map.Entry<List<String>, Integer>> entry = this.this$0.d.c.d(this.this$0.d.ID).get(n);
+            Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry = this.this$0.d.c.d(this.this$0.d.ID).get(n);
             return (float)entry.getValue().getValue().intValue() / 100.0f;
         }
 
@@ -387,7 +387,7 @@ extends GuiListExtended {
         public void drawEntry(int n, int n2, int n3, int n4, int n5, int n6, int n7, boolean bl, float f) {
             if (this.a) {
                 this.b(n3, n6, n7);
-            } else if (this.d == EnumCustomPartCategory.GIRL_SPECIFIC) {
+            } else if (this.d == CustomPartCategory.GIRL_SPECIFIC) {
                 this.b(n3, n6, n7, n);
             } else {
                 this.a(n3, n6, n7);
@@ -406,7 +406,7 @@ extends GuiListExtended {
                 gq_class381.access$600(this.this$0).getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                 ArrayList<String> arrayList = new ArrayList<String>();
                 arrayList.add("cross");
-                arrayList.addAll((Collection) CustomModel.a(this.this$0.d.c).get((Object) EnumCustomPartCategory.CUSTOM_BONE));
+                arrayList.addAll((Collection) CustomModel.a(this.this$0.d.c).get((Object) CustomPartCategory.CUSTOM_BONE));
                 a_class4.m.add(a_class4.b(this.this$0.d.c));
             }
             if (!this.e) {
@@ -445,7 +445,7 @@ extends GuiListExtended {
             }
             if (this.a) {
                 this.b(n, n2);
-            } else if (this.d == EnumCustomPartCategory.GIRL_SPECIFIC) {
+            } else if (this.d == CustomPartCategory.GIRL_SPECIFIC) {
                 this.c(n, n4);
             } else {
                 this.a(n, n4);
