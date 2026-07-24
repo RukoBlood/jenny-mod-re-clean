@@ -226,7 +226,7 @@ public class KoboldManager {
             }
         }
         for (KoboldTaskInfo task : tribe.tasks) {
-            task.c(kobold);
+            task.removeWorker(kobold);
         }
         if (!tribe.members.isEmpty()) {
             tribesMap.replace(uUID, tribe);
@@ -241,7 +241,7 @@ public class KoboldManager {
             tribeBlocks.addAll(tribe.chests);
             tribeBlocks.addAll(tribe.beds);
             for (KoboldTaskInfo task : tribe.tasks) {
-                tribeBlocks.addAll(task.b);
+                tribeBlocks.addAll(task.targetBlocks);
             }
             PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(tribeBlocks, false), (EntityPlayerMP) master);
             ((Entity) master).sendMessage(new TextComponentString(String.format("ur %stribe %shas been %seradicated %suwu", new Object[]{TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED, TextFormatting.WHITE})));
@@ -347,7 +347,7 @@ public class KoboldManager {
         }
         if (task != null) {
             tribe.removeTask(task);
-            return task.b;
+            return task.targetBlocks;
         }
         return new HashSet<BlockPos>();
     }
@@ -360,7 +360,7 @@ public class KoboldManager {
         }
         KoboldTaskInfo task = null;
         for (KoboldTaskInfo tasks : tribe.tasks) {
-            if (!tasks.b.contains(pos)) continue;
+            if (!tasks.targetBlocks.contains(pos)) continue;
             task = tasks;
             break;
         }
@@ -384,7 +384,7 @@ public class KoboldManager {
         }
         KoboldTaskInfo targetTask = null;
         for (KoboldTaskInfo task : tribe.tasks) {
-            if (!task.b(worker)) continue;
+            if (!task.hasWorker(worker)) continue;
             targetTask = task;
         }
         if (targetTask == null) {
@@ -559,7 +559,7 @@ public class KoboldManager {
             return allBlocks;
         }
         for (KoboldTaskInfo task : tribe.tasks) {
-            allBlocks.addAll(task.b);
+            allBlocks.addAll(task.targetBlocks);
         }
         allBlocks.addAll(tribe.chests);
         allBlocks.addAll(tribe.beds);
@@ -1077,12 +1077,12 @@ public class KoboldManager {
                 int taskIdx = 0;
 
                 for (KoboldTaskInfo task : tribe.tasks) {
-                    nbt.setString(tribeId.toString() + taskIdx + "taskKind", task.c.toString());
-                    nbt.setString(tribeId.toString() + taskIdx + "pos", task.a.getX() + "|" + task.a.getY() + "|" + task.a.getZ());
-                    nbt.setString(tribeId.toString() + taskIdx + "facing", task.e.getName());
+                    nbt.setString(tribeId.toString() + taskIdx + "taskKind", task.taskType.toString());
+                    nbt.setString(tribeId.toString() + taskIdx + "pos", task.originPos.getX() + "|" + task.originPos.getY() + "|" + task.originPos.getZ());
+                    nbt.setString(tribeId.toString() + taskIdx + "facing", task.facing.getName());
                     int blockIdx = 0;
 
-                    for (BlockPos blockPos : task.b) {
+                    for (BlockPos blockPos : task.targetBlocks) {
                         nbt.setString(tribeId.toString() + taskIdx + "block" + blockIdx, blockPos.getX() + "|" + blockPos.getY() + "|" + blockPos.getZ());
                         ++blockIdx;
                     }
@@ -1208,19 +1208,19 @@ public class KoboldManager {
                 if (!this.tasks.contains(task)) {
                     return;
                 }
-                for (KoboldEntity worker : task.f) {
+                for (KoboldEntity worker : task.assignedWorkers) {
                     worker.setCurrentAction(Action.NULL);
                     worker.setNoGravity(false);
                     worker.noClip = false;
                     worker.getDataManager().set(GirlEntity.IS_ANCHORED, false);
                 }
                 this.tasks.remove(task);
-                if (task.b.isEmpty() || this.masterUUID == null) {
+                if (task.targetBlocks.isEmpty() || this.masterUUID == null) {
                     return;
                 }
                 EntityPlayerMP masterPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(this.masterUUID);
                 if (masterPlayer != null) {
-                    PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(task.b, false), masterPlayer);
+                    PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(task.targetBlocks, false), masterPlayer);
                 }
             }
 

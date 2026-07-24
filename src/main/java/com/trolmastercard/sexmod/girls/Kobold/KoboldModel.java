@@ -20,8 +20,7 @@ import software.bernie.geckolib3.core.processor.AnimationProcessor;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-public class KoboldModel
-extends GirlModel<GirlEntity> {
+public class KoboldModel extends GirlModel<GirlEntity> {
     final static float g = 1.2f;
     final static float f = 1.0f;
 

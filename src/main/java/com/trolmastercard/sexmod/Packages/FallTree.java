@@ -75,7 +75,7 @@ implements IMessage {
                 }
                 World world = entityPlayerMP.world;
                 BlockPos blockPos = this.a(world, fc_class3022.a);
-                HashSet<BlockPos> hashSet = KoboldTaskInfo.a(world, blockPos, uUID);
+                HashSet<BlockPos> hashSet = KoboldTaskInfo.createTreeFellingTask(world, blockPos, uUID);
                 PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
             });
             return null;

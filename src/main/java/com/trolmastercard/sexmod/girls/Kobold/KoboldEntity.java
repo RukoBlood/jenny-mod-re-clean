@@ -151,7 +151,28 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     int a5 = 0;
     float S = Float.MAX_VALUE;
     static long aV = Long.MIN_VALUE;
-    String[] DialogueArray = new String[]{"What the fuck did you just fucking say about me, you little bitch? I'll have you know I graduated top of my class in the Navy Seals, and I've been involved in numerous secret raids on Al-Quaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I'm the top sniper in the entire US armed forces. You are nothing to me but just another target. I will wipe you the fuck out with precision the likes of which has never been seen before on this Earth, mark my fucking words. You think you can get away with saying that shit to me over the Internet? Think again, fucker. As we speak I am contacting my secret network of spies across the USA and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your life. You're fucking dead, kid. I can be anywhere, anytime, and I can kill you in over seven hundred ways, and that's just with my bare hands. Not only am I extensively trained in unarmed combat, but I have access to the entire arsenal of the United States Marine Corps and I will use it to its full extent to wipe your miserable ass off the face of the continent, you little shit. If only you could have known what unholy retribution your little \"clever\" comment was about to bring down upon you, maybe you would have held your fucking tongue. But you couldn't, you didn't, and now you're paying the price, you goddamn idiot. I will shit fury all over you and you will drown in it. You're fucking dead, kiddo.", "suck my iron cock you worthless piece of shit!", "you'll die a fucking virgin!", "not even Johnny sins would wanna stick his cock up ur ass", "fuck you with ur borderline illegal fetishes!", "ur cum tastes terrible!", "I've always faked my orgasms when having sex with you!", "Not even Jenny would fuck you for 6 diamonds!", "U look like u'd use a shovel to mine diamonds, fucking idiot!", "Why tf does ur cock smell like my asshole???", "do all of us a favor and hit [ALT]+[F4]!", "I'm about to say the N word!", "you are under attack retard", "Eat my ass!", "my tongue is longer than ur fucking dick bitch!", "Ligma titties!", "touch some grass bitch!"};
+
+    //What the fuck
+    String[] DialogueArray = new String[]{
+            "What the fuck did you just fucking say about me, you little bitch? I'll have you know I graduated top of my class in the Navy Seals, and I've been involved in numerous secret raids on Al-Quaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I'm the top sniper in the entire US armed forces. You are nothing to me but just another target. I will wipe you the fuck out with precision the likes of which has never been seen before on this Earth, mark my fucking words. You think you can get away with saying that shit to me over the Internet? Think again, fucker. As we speak I am contacting my secret network of spies across the USA and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your life. You're fucking dead, kid. I can be anywhere, anytime, and I can kill you in over seven hundred ways, and that's just with my bare hands. Not only am I extensively trained in unarmed combat, but I have access to the entire arsenal of the United States Marine Corps and I will use it to its full extent to wipe your miserable ass off the face of the continent, you little shit. If only you could have known what unholy retribution your little \"clever\" comment was about to bring down upon you, maybe you would have held your fucking tongue. But you couldn't, you didn't, and now you're paying the price, you goddamn idiot. I will shit fury all over you and you will drown in it. You're fucking dead, kiddo.",
+            "suck my iron cock you worthless piece of shit!",
+            "you'll die a fucking virgin!",
+            "not even Johnny sins would wanna stick his cock up ur ass",
+            "fuck you with ur borderline illegal fetishes!",
+            "ur cum tastes terrible!",
+            "I've always faked my orgasms when having sex with you!",
+            "Not even Jenny would fuck you for 6 diamonds!",
+            "U look like u'd use a shovel to mine diamonds, fucking idiot!",
+            "Why tf does ur cock smell like my asshole???",
+            "do all of us a favor and hit [ALT]+[F4]!",
+            "I'm about to say the N word!",
+            "you are under attack retard",
+            "Eat my ass!",
+            "my tongue is longer than ur fucking dick bitch!",
+            "Ligma titties!",
+            "touch some grass bitch!"
+    };
+
     IBlockState R = null;
     IBlockState aX = null;
     BlockPos aF = null;
@@ -565,7 +586,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return true;
         }
         for (KoboldTaskInfo bs_class972 : collection) {
-            bs_class972.c(this);
+            bs_class972.removeWorker(this);
         }
         return true;
     }
@@ -866,8 +887,8 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 return;
             }
             for (KoboldTaskInfo bs_class972 : KoboldManager.getTribeTasks(uUID)) {
-                if (!bs_class972.b(this)) continue;
-                bs_class972.c(this);
+                if (!bs_class972.hasWorker(this)) continue;
+                bs_class972.removeWorker(this);
                 this.setCurrentAction(Action.NULL);
                 this.entityDataManager.set(IS_ANCHORED, false);
             }
@@ -914,7 +935,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     void void_b(UUID uUID) {
         TribeState fm_class3192;
-        if (this.d_(uUID)) { // TODO clash below
+        if (this.d______JustUseAiToDeobfuscate(uUID)) { // TODO clash below
             return;
         }
         if (!this.isMasterAssigned() && KoboldManager.hasAssignedMaster(uUID)) {
@@ -956,7 +977,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return;
         }
         for (KoboldTaskInfo bs_class972 : collection) {
-            bs_class972.a();
+            bs_class972.resetAllWorkers();
         }
     }
 
@@ -979,7 +1000,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         Collection<KoboldTaskInfo> collection = KoboldManager.getTribeTasks(uUID);
         if (collection != null) {
             for (KoboldTaskInfo bs_class972 : collection) {
-                bs_class972.c(this);
+                bs_class972.removeWorker(this);
             }
         }
         if (this.isMasterAssigned()) {
@@ -1175,7 +1196,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             if (block instanceof BlockLog || block == Blocks.AIR) continue;
             boolean bl = false;
             for (KoboldTaskInfo bs_class972 : collection) {
-                if (!bs_class972.c(blockPos2)) continue;
+                if (!bs_class972.containsBlock(blockPos2)) continue;
                 bl = true;
                 break;
             }
@@ -1186,7 +1207,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (blockPos == null) {
             return;
         }
-        KoboldTaskInfo.a(this.world, blockPos, uUID);
+        KoboldTaskInfo.createTreeFellingTask(this.world, blockPos, uUID);
         this.broadcastChatMessage("Someone, go fall this tree!");
     }
 
@@ -1202,7 +1223,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     // TODO / dup clash with 'List<...> GirlEntity::d()'
     //  TODO rename to d___...
     @CheckReturnValue
-    boolean d_(UUID uUID) {
+    boolean d______JustUseAiToDeobfuscate(UUID uUID) {
         return this.c(uUID, true);
     }
 
@@ -1264,7 +1285,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     void n(UUID uUID) {
-        if (this.d_(uUID)) {
+        if (this.d______JustUseAiToDeobfuscate(uUID)) {
             return;
         }
         TribeState fm_class3192 = KoboldManager.getTribeState(uUID);
@@ -1326,7 +1347,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         KoboldTaskInfo bs_class972 = null;
         for (KoboldTaskInfo bs_class973 : collection) {
-            if (!bs_class973.b(this)) continue;
+            if (!bs_class973.hasWorker(this)) continue;
             bs_class972 = bs_class973;
             break;
         }
@@ -1337,7 +1358,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     this.ax = true;
                     continue;
                 }
-                if (!bs_class973.a(this)) continue;
+                if (!bs_class973.assignWorker(this)) continue;
                 bs_class972 = bs_class973;
                 this.aI = null;
                 if (bs_class973.getTaskType() == KoboldTaskInfo.KoboldTask.FALL_TREE) {
@@ -1345,8 +1366,8 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     break;
                 }
                 this.broadcastChatMessage("Ima go mine uwu");
-                this.b(bs_class973.b());
-                this.world.setBlockState(bs_class973.b(), Blocks.AIR.getDefaultState());
+                this.b(bs_class973.getOriginPos());
+                this.world.setBlockState(bs_class973.getOriginPos(), Blocks.AIR.getDefaultState());
                 break;
             }
         }
@@ -1355,7 +1376,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return;
         }
         if (bs_class972.getTaskType() == KoboldTaskInfo.KoboldTask.FALL_TREE) {
-            this.a(uUID, bs_class972.b(), bs_class972);
+            this.a(uUID, bs_class972.getOriginPos(), bs_class972);
         }
         if (bs_class972.getTaskType() == KoboldTaskInfo.KoboldTask.MINE) {
             this.b(uUID, bs_class972);
@@ -1379,7 +1400,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             //Object object;
             IBlockState iBlockState = this.world.getBlockState(this.aI.up());
             if (!(iBlockState.getBlock() instanceof BlockFalling)) {
-                bs_class972.a(this.aI);
+                bs_class972.removeBlocks(this.aI);
                 EntityPlayer object = this.getMasterPlayer();
                 if (object != null) {
                     PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(this.aI, false), (EntityPlayerMP)object);
@@ -1396,14 +1417,14 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
     }
 
-    void a(UUID uUID, KoboldTaskInfo bs_class972) {
+    void a(UUID uUID, KoboldTaskInfo task) {
         PathNavigate pathNavigate = this.getNavigator();
-        if (this.aI == null || !bs_class972.g().contains(this.aI)) {
+        if (this.aI == null || !task.getTargetBlocks().contains(this.aI)) {
             BlockPos blockPos;
-            this.aI = this.a(bs_class972, uUID);
+            this.aI = this.a(task, uUID);
             if (this.aI == null) {
-                boolean bl = bs_class972.g().isEmpty();
-                HashSet<BlockPos> hashSet = KoboldManager.removeTaskAndGetBlocks(uUID, bs_class972);
+                boolean bl = task.getTargetBlocks().isEmpty();
+                HashSet<BlockPos> hashSet = KoboldManager.removeTaskAndGetBlocks(uUID, task);
                 UUID uUID2 = KoboldManager.getTribeMasterUUID(uUID);
                 if (uUID2 == null) {
                     return;
@@ -1418,12 +1439,12 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), (EntityPlayerMP)entityPlayer);
                 return;
             }
-            if (Math.abs(this.getPosition().getY() - bs_class972.b().getY()) > 3) {
-                blockPos = bs_class972.b().add(bs_class972.f().getOpposite().getDirectionVec());
+            if (Math.abs(this.getPosition().getY() - task.getOriginPos().getY()) > 3) {
+                blockPos = task.getOriginPos().add(task.getFacing().getOpposite().getDirectionVec());
                 this.world.setBlockState(blockPos, Blocks.AIR.getDefaultState());
                 this.b(blockPos);
             }
-            blockPos = this.aI.add(bs_class972.f().getOpposite().getDirectionVec());
+            blockPos = this.aI.add(task.getFacing().getOpposite().getDirectionVec());
             pathNavigate.tryMoveToXYZ(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0.35f);
             return;
         }
@@ -1434,7 +1455,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return;
         }
         if (this.motionX != 0.0 || this.motionZ != 0.0 || !this.onGround || this.getDistance(this.aI.getX(), this.aI.getY(), this.aI.getZ()) > 3.0 || ++this.aK < 10) {
-            BlockPos blockPos = this.aI.add(bs_class972.f().getOpposite().getDirectionVec());
+            BlockPos blockPos = this.aI.add(task.getFacing().getOpposite().getDirectionVec());
             pathNavigate.tryMoveToXYZ(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0.35f);
             return;
         }
@@ -1628,8 +1649,8 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     // TODO rewrite/migrate
     BlockPos a(KoboldTaskInfo var1, UUID var2) {
-        HashSet<BlockPos> var3 = var1.g();
-        EnumFacing var4 = var1.f();
+        HashSet<BlockPos> var3 = var1.getTargetBlocks();
+        EnumFacing var4 = var1.getFacing();
         ArrayList<BlockPos> var5 = new ArrayList<>();
         Integer var6 = null;
         if (var3.isEmpty()) {
@@ -1679,8 +1700,8 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 return null;
             } else {
                 ArrayList<BlockPos> var19 = new ArrayList();
-                EnumFacing var20 = var1.f();
-                BlockPos var10 = var1.b();
+                EnumFacing var20 = var1.getFacing();
+                BlockPos var10 = var1.getOriginPos();
                 BlockPos var21;
                 if (var20.getAxis() == EnumFacing.Axis.Z) {
                     var21 = new BlockPos(var10.getX(), var10.getY(), ((BlockPos)var17.get(0)).getZ());
@@ -1754,7 +1775,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 }
 
                 if (!var12.isEmpty()) {
-                    var1.a(var12);
+                    var1.addAllBlocks(var12);
                     EntityPlayer var23 = this.getMasterPlayer(); // TODO???
                     if (var23 != null) {
                         PackageHandler.networkWrapper.sendTo(new SendBlocks(var12, true), (EntityPlayerMP)var23);
@@ -1788,7 +1809,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
                 if (!var25.isEmpty()) {
                     var17.removeAll(var25);
-                    var1.b(var25);
+                    var1.removeAllBlocks(var25);
                     UUID var28 = KoboldManager.getTribeMasterUUID(var2);
                     if (var28 != null) {
                         EntityPlayer var30 = this.world.getPlayerEntityByUUID(var28);
@@ -1802,39 +1823,39 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     return this.a(var1, var2);
                 } else {
                     BlockPos var29 = null;
-                    List<KoboldEntity> var31 = var1.c();
+                    List<KoboldEntity> var31 = var1.getAssignedWorkers();
 
                     for(int var32 = 0; var32 < var31.size(); ++var32) {
                         // TODO 308
                         if ((var31.get(var32)).getEntityId() == this.getEntityId()) {
                             if (var32 == 0) {
-                                var29 = this.a(var17, -1, var1.f(), var1.b());
+                                var29 = this.a(var17, -1, var1.getFacing(), var1.getOriginPos());
                                 if (var29 == null) {
-                                    var29 = this.a(var17, 0, var1.f(), var1.b());
+                                    var29 = this.a(var17, 0, var1.getFacing(), var1.getOriginPos());
                                     if (var29 == null) {
-                                        var29 = this.a(var17, 1, var1.f(), var1.b());
+                                        var29 = this.a(var17, 1, var1.getFacing(), var1.getOriginPos());
                                     }
                                 }
                                 break;
                             }
 
                             if (var32 == 1) {
-                                var29 = this.a(var17, 1, var1.f(), var1.b());
+                                var29 = this.a(var17, 1, var1.getFacing(), var1.getOriginPos());
                                 if (var29 == null) {
-                                    var29 = this.a(var17, 0, var1.f(), var1.b());
+                                    var29 = this.a(var17, 0, var1.getFacing(), var1.getOriginPos());
                                     if (var29 == null) {
-                                        var29 = this.a(var17, -1, var1.f(), var1.b());
+                                        var29 = this.a(var17, -1, var1.getFacing(), var1.getOriginPos());
                                     }
                                 }
                                 break;
                             }
 
                             if (var32 == 2) {
-                                var29 = this.a(var17, 0, var1.f(), var1.b());
+                                var29 = this.a(var17, 0, var1.getFacing(), var1.getOriginPos());
                                 if (var29 == null) {
-                                    var29 = this.a(var17, 1, var1.f(), var1.b());
+                                    var29 = this.a(var17, 1, var1.getFacing(), var1.getOriginPos());
                                     if (var29 == null) {
-                                        var29 = this.a(var17, -1, var1.f(), var1.b());
+                                        var29 = this.a(var17, -1, var1.getFacing(), var1.getOriginPos());
                                     }
                                 }
                                 break;
@@ -2146,11 +2167,11 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         List<KoboldEntity> list = KoboldManager.getTribeMembersList(uUID);
         Collection<KoboldTaskInfo> collection = KoboldManager.getTribeTasks(uUID);
         KoboldEntity ff_class3082 = null;
-        Vec3d vec3d = new Vec3d(bs_class972.b().getX(), bs_class972.b().getY(), bs_class972.b().getZ());
+        Vec3d vec3d = new Vec3d(bs_class972.getOriginPos().getX(), bs_class972.getOriginPos().getY(), bs_class972.getOriginPos().getZ());
         for (KoboldEntity ff_class3083 : list) {
             boolean bl = false;
             for (KoboldTaskInfo bs_class973 : collection) {
-                if (!bs_class973.b(ff_class3083)) continue;
+                if (!bs_class973.hasWorker(ff_class3083)) continue;
                 bl = true;
                 break;
             }
@@ -2172,7 +2193,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.setCurrentAction(Action.NULL);
             this.entityDataManager.set(IS_ANCHORED, false);
             EntityPlayer entityPlayer = this.getMasterPlayer();
-            HashSet<BlockPos> hashSet = bs_class972.g();
+            HashSet<BlockPos> hashSet = bs_class972.getTargetBlocks();
             if (entityPlayer != null && !hashSet.isEmpty()) {
                 PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), (EntityPlayerMP)entityPlayer);
             }
@@ -2198,7 +2219,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         this.setCurrentAction(Action.NULL);
         this.setAnchored(false);
         EntityPlayer entityPlayer = this.getMasterPlayer();
-        HashSet<BlockPos> hashSet = bs_class972.g();
+        HashSet<BlockPos> hashSet = bs_class972.getTargetBlocks();
         if (entityPlayer != null && !hashSet.isEmpty()) {
             PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), (EntityPlayerMP)entityPlayer);
         }
@@ -2229,7 +2250,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         this.W = 78;
         HashSet<BlockPos> hashSet = new HashSet<BlockPos>();
         EntityPlayer entityPlayer = this.getMasterPlayer();
-        for (BlockPos object2 : bs_class972.g()) {
+        for (BlockPos object2 : bs_class972.getTargetBlocks()) {
             if (this.world.getBlockState(object2).getBlock() == Blocks.AIR) {
                 hashSet.add(object2);
                 continue;
@@ -2247,8 +2268,8 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             }
             this.ad = this.net_minecraft_item_ItemStack_a(object2);
             this.world.destroyBlock(object2, false);
-            bs_class972.a(object2);
-            bs_class972.b(hashSet);
+            bs_class972.removeBlocks(object2);
+            bs_class972.removeAllBlocks(hashSet);
             hashSet.add(object2);
             if (entityPlayer != null) {
                 PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), (EntityPlayerMP)entityPlayer);
@@ -2268,7 +2289,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         this.ad = this.net_minecraft_item_ItemStack_a(blockPos);
         this.world.destroyBlock(blockPos, false);
         int n = 0;
-        for (BlockPos hashSet2 : bs_class972.g()) {
+        for (BlockPos hashSet2 : bs_class972.getTargetBlocks()) {
             if (!(this.world.getBlockState(hashSet2).getBlock() instanceof BlockLog)) continue;
             ++n;
         }
@@ -2277,7 +2298,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             hashSet2.add(blockPos.add(0, i, 0));
         }
         HashSet<BlockPos> hashSet3 = new HashSet<BlockPos>();
-        for (BlockPos blockPos2 : bs_class972.g()) {
+        for (BlockPos blockPos2 : bs_class972.getTargetBlocks()) {
             if (hashSet2.contains(blockPos2)) continue;
             hashSet3.add(blockPos2);
         }
@@ -2295,7 +2316,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 entityFallingBlock.fallTime = 1;
                 this.world.spawnEntity(entityFallingBlock);
             }
-            if (!bs_class972.g().contains(blockPos2)) break;
+            if (!bs_class972.getTargetBlocks().contains(blockPos2)) break;
             ++n2;
         }
     }
@@ -2549,7 +2570,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     boolean a(KoboldTaskInfo bs_class972) {
         ArrayList<ItemStack> arrayList = new ArrayList<ItemStack>();
-        for (BlockPos blockPos : bs_class972.g()) {
+        for (BlockPos blockPos : bs_class972.getTargetBlocks()) {
             IBlockState iBlockState = this.world.getBlockState(blockPos);
             ItemStack itemStack = iBlockState.getBlock().getItem(this.world, blockPos, iBlockState);
             arrayList.add(itemStack);

@@ -3,10 +3,7 @@
  */
 package com.trolmastercard.sexmod.girls.Kobold;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
@@ -19,227 +16,280 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class KoboldTaskInfo {
-    final static public int d = 30;
-    BlockPos a;
-    KoboldTask c;
-    HashSet<BlockPos> b;
-    List<KoboldEntity> f = new ArrayList<KoboldEntity>();
-    EnumFacing e = EnumFacing.NORTH;
+    final static public int MAX_WORLD_RADIUS = 30;
+    BlockPos originPos;
+    KoboldTask taskType;
+    HashSet<BlockPos> targetBlocks;
+    List<KoboldEntity> assignedWorkers = new ArrayList<KoboldEntity>();
+    EnumFacing facing = EnumFacing.NORTH;
 
-    public KoboldTaskInfo(BlockPos blockPos, KoboldTask a_inner982, HashSet<BlockPos> hashSet) {
-        this.a = blockPos;
-        this.c = a_inner982;
-        this.b = hashSet;
+    public KoboldTaskInfo(BlockPos originPos, KoboldTask taskType, HashSet<BlockPos> targetBlocks) {
+        this.originPos = originPos;
+        this.taskType = taskType;
+        this.targetBlocks = targetBlocks;
     }
 
-    public KoboldTaskInfo(BlockPos blockPos, KoboldTask a_inner982, HashSet<BlockPos> hashSet, EnumFacing enumFacing) {
-        this.a = blockPos;
-        this.c = a_inner982;
-        this.b = hashSet;
-        this.e = enumFacing;
+    public KoboldTaskInfo(BlockPos originPos, KoboldTask taskType, HashSet<BlockPos> targetBlocks, EnumFacing facing) {
+        this.originPos = originPos;
+        this.taskType = taskType;
+        this.targetBlocks = targetBlocks;
+        this.facing = facing;
     }
 
-    public EnumFacing f() {
-        return this.e;
+    public EnumFacing getFacing() {
+        return this.facing;
     }
 
-    public BlockPos b() {
-        return this.a;
+    public BlockPos getOriginPos() {
+        return this.originPos;
     }
 
     public KoboldTask getTaskType() {
-        return this.c;
+        return this.taskType;
     }
 
-    public HashSet<BlockPos> g() {
-        return this.b;
+    public HashSet<BlockPos> getTargetBlocks() {
+        return this.targetBlocks;
     }
 
-    public void b(BlockPos blockPos) {
-        this.b.add(blockPos);
+    public void addBlocks(BlockPos pos) {
+        this.targetBlocks.add(pos);
     }
 
-    public void a(HashSet<BlockPos> hashSet) {
-        this.b.addAll(hashSet);
+    public void addAllBlocks(HashSet<BlockPos> positions) {
+        this.targetBlocks.addAll(positions);
     }
 
-    public void a(BlockPos blockPos) {
-        this.b.remove(blockPos);
+    public void removeBlocks(BlockPos blockPos) {
+        this.targetBlocks.remove(blockPos);
     }
 
-    public void b(HashSet<BlockPos> hashSet) {
+    public void removeAllBlocks(HashSet<BlockPos> hashSet) {
         if (!hashSet.isEmpty()) {
-            this.b.removeAll(hashSet);
+            this.targetBlocks.removeAll(hashSet);
         }
     }
 
-    public boolean c(BlockPos blockPos) {
-        return this.b.contains(blockPos);
+    public boolean containsBlock(BlockPos pos) {
+        return this.targetBlocks.contains(pos);
     }
 
-    public boolean a(KoboldEntity ff_class3082) {
-        if (this.c.a <= this.f.size()) {
+    public boolean assignWorker(KoboldEntity kobold) {
+        if (this.taskType.getMaxWorkers() <= this.assignedWorkers.size()) {
             return false;
         }
-        this.f.add(ff_class3082);
+        this.assignedWorkers.add(kobold);
         return true;
     }
 
-    public List<KoboldEntity> c() {
-        return this.f;
+    public List<KoboldEntity> getAssignedWorkers() {
+        return this.assignedWorkers;
     }
 
-    public void a() {
-        for (KoboldEntity ff_class3082 : this.f) {
-            if (ff_class3082.getID() != null) continue;
-            ff_class3082.setNoGravity(false);
-            ff_class3082.noClip = false;
-            ff_class3082.setCurrentAction(Action.NULL);
-            ff_class3082.getDataManager().set(GirlEntity.IS_ANCHORED, false);
+    public void resetAllWorkers() {
+        for (KoboldEntity worker : this.assignedWorkers) {
+            if (worker.getID() != null) continue;
+            worker.setNoGravity(false);
+            worker.noClip = false;
+            worker.setCurrentAction(Action.NULL);
+            worker.getDataManager().set(GirlEntity.IS_ANCHORED, false);
         }
-        this.f.clear();
+        this.assignedWorkers.clear();
     }
 
-    public void c(KoboldEntity ff_class3082) {
-        this.f.remove(ff_class3082);
+    public void removeWorker(KoboldEntity kobold) {
+        this.assignedWorkers.remove(kobold);
     }
 
-    public boolean e() {
-        return this.c.a <= this.f.size();
+    public boolean isFull() {
+        return this.taskType.getMaxWorkers() <= this.assignedWorkers.size();
     }
 
-    public boolean b(KoboldEntity ff_class3082) {
-        return this.f.contains(ff_class3082);
+    public boolean hasWorker(KoboldEntity kobold) {
+        return this.assignedWorkers.contains(kobold);
     }
 
-    public static HashSet<BlockPos> a(World world, BlockPos blockPos, UUID uUID) {
-        BlockPos blockPos2 = blockPos;
-        while (!KoboldTaskInfo.c(world, blockPos2)) {
-            blockPos2 = blockPos.down();
+//    public static HashSet<BlockPos> createTreeFellingTask(World world, BlockPos startPos, UUID tribeId) {
+//        BlockPos basePos = startPos;
+//        while (!KoboldTaskInfo.isBaseLog(world, basePos)) {
+//            basePos = startPos.down();
+//        }
+//        BlockPos topPos = startPos;
+//        while (!KoboldTaskInfo.isTopLog(world, topPos)) {
+//            topPos = topPos.up();
+//        }
+//        HashSet<BlockPos> treeBlocks = new HashSet<BlockPos>();
+//        int height = topPos.getY() - basePos.getY();
+//        for (int i = 0; i <= height; ++i) {
+//            treeBlocks.add(basePos.add(0, i, 0));
+//        }
+//
+//        HashSet<BlockPos> connectedLogs = KoboldTaskInfo.findConnectedLogs(world, basePos);
+//        HashSet<BlockPos> logsToRemove = new HashSet<BlockPos>();
+//
+//        for (BlockPos pos : connectedLogs) {
+//            if (pos.getX() != basePos.getX() || pos.getZ() != basePos.getZ()) continue;
+//            logsToRemove.add(pos);
+//        }
+//        for (BlockPos logs : logsToRemove) {
+//            connectedLogs.remove(logs);
+//        }
+//
+//        treeBlocks.addAll(connectedLogs);
+//        HashSet hashSet4 = new HashSet();
+//        block5: for (BlockPos trees : treeBlocks) {
+//            for (KoboldTaskInfo task : KoboldManager.getTribeTasks(tribeId)) {
+//                HashSet<BlockPos> targers = task.getTargetBlocks();
+//                if (!targers.contains(trees)) continue;
+//                hashSet4.add(trees);
+//                continue block5;
+//            }
+//        }
+//        treeBlocks.removeAll(hashSet4);
+//        KoboldTaskInfo bs_class973 = new KoboldTaskInfo(basePos, KoboldTask.FALL_TREE, treeBlocks);
+//        KoboldManager.addTaskToTribe(tribeId, bs_class973);
+//        return treeBlocks;
+//    }
+
+    public static HashSet<BlockPos> createTreeFellingTask(World world, BlockPos startPos, UUID tribeUUID) {
+        // Поиск самого нижнего блока ствола
+        BlockPos basePos = startPos;
+        while (!isBaseLog(world, basePos)) {
+            basePos = basePos.down();
         }
-        BlockPos blockPos3 = blockPos;
-        while (!KoboldTaskInfo.b(world, blockPos3)) {
-            blockPos3 = blockPos3.up();
+
+        // Поиск вершины ствола
+        BlockPos topPos = startPos;
+        while (!isTopLog(world, topPos)) {
+            topPos = topPos.up();
         }
-        HashSet<BlockPos> hashSet = new HashSet<BlockPos>();
-        int n = blockPos3.getY() - blockPos2.getY();
-        for (int i = 0; i <= n; ++i) {
-            hashSet.add(blockPos2.add(0, i, 0));
+
+        HashSet<BlockPos> treeBlocks = new HashSet<>();
+        int height = topPos.getY() - basePos.getY();
+        for (int i = 0; i <= height; ++i) {
+            treeBlocks.add(basePos.add(0, i, 0));
         }
-        HashSet<BlockPos> hashSet2 = KoboldTaskInfo.a(world, blockPos2);
-        HashSet<BlockPos> hashSet3 = new HashSet<BlockPos>();
-        for (BlockPos object2 : hashSet2) {
-            if (object2.getX() != blockPos2.getX() || object2.getZ() != blockPos2.getZ()) continue;
-            hashSet3.add(object2);
+
+        // Сканирование прилегающих ветвей/блоков древесины
+        HashSet<BlockPos> connectedLogs = findConnectedLogs(world, basePos);
+        HashSet<BlockPos> logsToRemove = new HashSet<>();
+        for (BlockPos pos : connectedLogs) {
+            if (pos.getX() != basePos.getX() || pos.getZ() != basePos.getZ()) {
+                continue;
+            }
+            logsToRemove.add(pos);
         }
-        for (BlockPos blockPos4 : hashSet3) {
-            hashSet2.remove(blockPos4);
-        }
-        hashSet.addAll(hashSet2);
-        HashSet hashSet4 = new HashSet();
-        block5: for (BlockPos blockPos5 : hashSet) {
-            for (KoboldTaskInfo bs_class972 : KoboldManager.getTribeTasks(uUID)) {
-                HashSet<BlockPos> hashSet5 = bs_class972.g();
-                if (!hashSet5.contains(blockPos5)) continue;
-                hashSet4.add(blockPos5);
-                continue block5;
+        connectedLogs.removeAll(logsToRemove);
+        treeBlocks.addAll(connectedLogs);
+
+        // Фильтрация блоков, которые уже задействованы в других задачах племени
+        HashSet<BlockPos> alreadyClaimedBlocks = new HashSet<>();
+        Collection<KoboldTaskInfo> existingTasks = KoboldManager.getTribeTasks(tribeUUID);
+
+        if (existingTasks != null) {
+            for (BlockPos pos : treeBlocks) {
+                for (KoboldTaskInfo task : existingTasks) {
+                    if (task.getTargetBlocks().contains(pos)) {
+                        alreadyClaimedBlocks.add(pos);
+                        break;
+                    }
+                }
             }
         }
-        hashSet.removeAll(hashSet4);
-        KoboldTaskInfo bs_class973 = new KoboldTaskInfo(blockPos2, KoboldTask.FALL_TREE, hashSet);
-        KoboldManager.addTaskToTribe(uUID, bs_class973);
-        return hashSet;
+        treeBlocks.removeAll(alreadyClaimedBlocks);
+
+        // Регистрируем новую задачу в менеджер племени
+        KoboldTaskInfo newTask = new KoboldTaskInfo(basePos, KoboldTask.FALL_TREE, treeBlocks);
+        KoboldManager.addTaskToTribe(tribeUUID, newTask);
+
+        return treeBlocks;
     }
 
-    static boolean b(World world, BlockPos blockPos) {
-        Block block = world.getBlockState(blockPos.up()).getBlock();
-        return !(block instanceof BlockLog);
+    static boolean isTopLog(World world, BlockPos blockPos) {
+        Block blockAbove = world.getBlockState(blockPos.up()).getBlock();
+        return !(blockAbove instanceof BlockLog);
     }
 
-    static boolean c(World world, BlockPos blockPos) {
-        IBlockState iBlockState = world.getBlockState(blockPos.down());
-        return !(iBlockState instanceof BlockLog) && iBlockState.getMaterial() != Material.AIR;
+    static boolean isBaseLog(World world, BlockPos blockPos) {
+        IBlockState stateBelow = world.getBlockState(blockPos.down());
+        return !(stateBelow instanceof BlockLog) && stateBelow.getMaterial() != Material.AIR;
     }
 
-    static HashSet<BlockPos> a(World world, BlockPos blockPos) {
-        return KoboldTaskInfo.a(world, blockPos, new HashSet<BlockPos>());
+    static HashSet<BlockPos> findConnectedLogs(World world, BlockPos blockPos) {
+        return KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos, new HashSet<BlockPos>());
     }
 
-    static HashSet<BlockPos> a(World world, BlockPos blockPos, HashSet<BlockPos> hashSet) {
-        if (hashSet.contains(blockPos)) {
+    static HashSet<BlockPos> findConnectedLogsRecursive(World world, BlockPos blockPos, HashSet<BlockPos> visited) {
+        if (visited.contains(blockPos)) {
             return new HashSet<BlockPos>();
         }
-        hashSet.add(blockPos);
+        visited.add(blockPos);
         if (world.getBlockState(blockPos.add(1, 0, 0)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(1, 0, 0), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 0, 0), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, 0)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(-1, 0, 0), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 0), visited));
         }
         if (world.getBlockState(blockPos.add(0, 0, 1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(0, 0, 1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 0, -1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(0, 0, -1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 0, 1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(1, 0, 1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, -1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(-1, 0, -1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, 1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(-1, 0, 1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 0, -1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(1, 0, -1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, 0)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(0, 1, 0), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, 0)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(1, 1, 0), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, 0)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(-1, 1, 0), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, 1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(0, 1, 1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, -1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(0, 1, -1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 1, -1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, 1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(1, 1, 1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, -1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(-1, 1, -1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 1, -1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, 1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(-1, 1, 1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, -1)).getBlock() instanceof BlockLog) {
-            hashSet.addAll(KoboldTaskInfo.a(world, blockPos.add(1, 1, -1), hashSet));
+            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 1, -1), visited));
         }
-        return hashSet;
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
+        return visited;
     }
 
     public static enum KoboldTask {
         FALL_TREE(1),
         MINE(3);
 
-        final int a;
+        final int maxWorkers;
 
-        private KoboldTask(int n2) {
-            this.a = n2;
+        private KoboldTask(int value) {
+            this.maxWorkers = value;
         }
 
-        int a() {
-            return this.a;
+        int getMaxWorkers() {
+            return this.maxWorkers;
         }
     }
 }
