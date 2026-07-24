@@ -28,6 +28,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -127,90 +128,173 @@ public class DebugMode {
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void onLivingHurtDebug(LivingHurtEvent event) {
-        // TODO this class is useless
-        //if (true)
-        //    return;
+//    public void onLivingHurtDebug(LivingHurtEvent event) {
+//        // TODO this class is useless
+//        //if (true)
+//        //    return;
+//
+//        if (!DebugMode.GetEnv()) {
+//            return;
+//        }
+//        EntityPlayerSP player = Minecraft.getMinecraft().player;
+//        EntityLivingBase target = event.getEntityLiving();
+//        if (!(target instanceof KoboldEntity)) {
+//            return;
+//        }
+//        KoboldEntity kobold = (KoboldEntity)target;
+//        // TODO something is broken in kobold,
+//        //  because some kind of tribe identification with PLAYER ID results in null
+////        UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
+////        {
+////            Collection<KoboldTaskInfo> tribeTasks = KoboldManager.getTribeTasks(tribeID);
+////            if (tribeTasks != null) {
+////                for (KoboldTaskInfo task : tribeTasks) {
+////                    this.sayMessage("task: " + task.getTaskType().name());
+////                    this.sayMessage("workers involved: ");
+////                    for (KoboldEntity worker : task.getAssignedWorkers()) {
+////                        this.sayMessage(worker.getGirlName() + " " + worker.girlID());
+////                    }
+////                }
+////            }
+////        }
+//
+//        /*
+//        * I'm starting debugging
+//        * This is a debug code
+//        */
+//
+//        UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
+//        if (tribeID != null) {
+//            Collection<KoboldTaskInfo> tribeTasks = KoboldManager.getTribeTasks(tribeID);
+//            if (tribeTasks != null && !tribeTasks.isEmpty()) {
+//                for (KoboldTaskInfo task : tribeTasks) {
+//                    if (task == null) {
+//                        this.sayMessage("task: [NULL TASK OBJECT]");
+//                        continue;
+//                    }
+//                    String taskName = (task.getTaskType() != null) ? task.getTaskType().name() : "UNKNOWN_TYPE";
+//                    this.sayMessage("task: " + taskName);
+//                    this.sayMessage("workers involved: ");
+//                    List<KoboldEntity> workers = task.getAssignedWorkers();
+//                    if (workers == null || workers.isEmpty()) {
+//                        this.sayMessage("  (none)");
+//                        continue;
+//                    }
+//                    for (KoboldEntity worker : workers) {
+//                        if (worker == null) {
+//                            this.sayMessage("  [NULL WORKER - Unloaded or Dead]");
+//                        } else {
+//                            this.sayMessage("  " + worker.getGirlName() + " (UUID: " + worker.girlID() + ")");
+//                        }
+//                    }
+//                }
+//            } else {
+//                this.sayMessage("No tasks found for tribe: " + tribeID);
+//            }
+//        } else {
+//            this.sayMessage("Tribe not found for player: " + player.getName());
+//        }
+//        //End of debug code
+//
+//
+//        this.sayMessage("tribe contains my exact reference: " + KoboldManager.getTribeMembersList(tribeID).contains(kobold));
+//        this.sayMessage("tribe contains my ID: ");
+//        boolean containsRef = false;
+//        for (KoboldEntity member : KoboldManager.getTribeMembersList(tribeID)) {
+//            if (!member.girlID().equals(kobold.girlID())) continue;
+//            containsRef = true;
+//        }
+//        boolean containsSavedPos = false;
+////        boolean bl3 = false;
+//        for (Map.Entry<UUID, BlockPos> entry : KoboldManager.getUnloadedMembersMap(tribeID, player.world).entrySet()) {
+//            if (!entry.getKey().equals(kobold.girlID())) continue;
+//            containsSavedPos = true;
+//        }
+//        this.sayMessage("loaded : " + containsRef);
+//        this.sayMessage("saved : " + containsSavedPos);
+//    }
 
+    public void onLivingHurtDebug(LivingHurtEvent event) {
         if (!DebugMode.GetEnv()) {
             return;
         }
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+
         EntityLivingBase target = event.getEntityLiving();
         if (!(target instanceof KoboldEntity)) {
             return;
         }
-        KoboldEntity kobold = (KoboldEntity)target;
-        // TODO something is broken in kobold,
-        //  because some kind of tribe identification with PLAYER ID results in null
-//        UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
-//        {
-//            Collection<KoboldTaskInfo> tribeTasks = KoboldManager.getTribeTasks(tribeID);
-//            if (tribeTasks != null) {
-//                for (KoboldTaskInfo task : tribeTasks) {
-//                    this.sayMessage("task: " + task.getTaskType().name());
-//                    this.sayMessage("workers involved: ");
-//                    for (KoboldEntity worker : task.getAssignedWorkers()) {
-//                        this.sayMessage(worker.getGirlName() + " " + worker.girlID());
-//                    }
-//                }
-//            }
-//        }
+        KoboldEntity kobold = (KoboldEntity) target;
 
-        /*
-        * I'm starting debugging
-        * This is a debug code
-        */
+        // Безопасный поиск ближайшего игрока в том же мире
+        EntityPlayer player = kobold.world.getClosestPlayerToEntity(kobold, 50.0D);
+        if (player == null) {
+            System.out.println("[DebugMode] Kobold hurt, but no player nearby.");
+            return;
+        }
 
         UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
+
         if (tribeID != null) {
             Collection<KoboldTaskInfo> tribeTasks = KoboldManager.getTribeTasks(tribeID);
             if (tribeTasks != null && !tribeTasks.isEmpty()) {
                 for (KoboldTaskInfo task : tribeTasks) {
                     if (task == null) {
-                        this.sayMessage("task: [NULL TASK OBJECT]");
+                        System.out.println("[DebugMode] task: [NULL TASK OBJECT]");
                         continue;
                     }
                     String taskName = (task.getTaskType() != null) ? task.getTaskType().name() : "UNKNOWN_TYPE";
-                    this.sayMessage("task: " + taskName);
-                    this.sayMessage("workers involved: ");
+                    System.out.println("[DebugMode] task: " + taskName);
+                    System.out.println("[DebugMode] workers involved: ");
+
                     List<KoboldEntity> workers = task.getAssignedWorkers();
                     if (workers == null || workers.isEmpty()) {
-                        this.sayMessage("  (none)");
+                        System.out.println("[DebugMode]   (none)");
                         continue;
                     }
                     for (KoboldEntity worker : workers) {
                         if (worker == null) {
-                            this.sayMessage("  [NULL WORKER - Unloaded or Dead]");
+                            System.out.println("[DebugMode]   [NULL WORKER - Unloaded or Dead]");
                         } else {
-                            this.sayMessage("  " + worker.getGirlName() + " (UUID: " + worker.girlID() + ")");
+                            System.out.println("[DebugMode]   " + worker.getGirlName() + " (UUID: " + worker.girlID() + ")");
                         }
                     }
                 }
             } else {
-                this.sayMessage("No tasks found for tribe: " + tribeID);
+                System.out.println("[DebugMode] No tasks found for tribe: " + tribeID);
             }
+
+            // Блок проверки членов племени
+            List<KoboldEntity> membersList = KoboldManager.getTribeMembersList(tribeID);
+            boolean containsExactRef = membersList != null && membersList.contains(kobold);
+            System.out.println("[DebugMode] tribe contains my exact reference: " + containsExactRef);
+
+            boolean containsRef = false;
+            if (membersList != null) {
+                for (KoboldEntity member : membersList) {
+                    if (member != null && member.girlID() != null && member.girlID().equals(kobold.girlID())) {
+                        containsRef = true;
+                        break;
+                    }
+                }
+            }
+
+            boolean containsSavedPos = false;
+            Map<UUID, BlockPos> unloadedMap = KoboldManager.getUnloadedMembersMap(tribeID, kobold.world);
+            if (unloadedMap != null) {
+                for (Map.Entry<UUID, BlockPos> entry : unloadedMap.entrySet()) {
+                    if (entry.getKey() != null && entry.getKey().equals(kobold.girlID())) {
+                        containsSavedPos = true;
+                        break;
+                    }
+                }
+            }
+
+            System.out.println("[DebugMode] loaded : " + containsRef);
+            System.out.println("[DebugMode] saved : " + containsSavedPos);
+
         } else {
-            this.sayMessage("Tribe not found for player: " + player.getName());
+            System.out.println("[DebugMode] Tribe not found for player: " + player.getName());
         }
-        //End of debug code
-
-
-        this.sayMessage("tribe contains my exact reference: " + KoboldManager.getTribeMembersList(tribeID).contains(kobold));
-        this.sayMessage("tribe contains my ID: ");
-        boolean containsRef = false;
-        for (KoboldEntity member : KoboldManager.getTribeMembersList(tribeID)) {
-            if (!member.girlID().equals(kobold.girlID())) continue;
-            containsRef = true;
-        }
-        boolean containsSavedPos = false;
-//        boolean bl3 = false;
-        for (Map.Entry<UUID, BlockPos> entry : KoboldManager.getUnloadedMembersMap(tribeID, player.world).entrySet()) {
-            if (!entry.getKey().equals(kobold.girlID())) continue;
-            containsSavedPos = true;
-        }
-        this.sayMessage("loaded : " + containsRef);
-        this.sayMessage("saved : " + containsSavedPos);
     }
 
     // TODO this is a very weird way of handling a command
