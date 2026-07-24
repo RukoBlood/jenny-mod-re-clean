@@ -1204,25 +1204,24 @@ public class KoboldManager {
                 return this.masterUUID;
             }
 
-            public void removeTask(KoboldTaskInfo bs_class972) {
-                if (!this.tasks.contains(bs_class972)) {
+            public void removeTask(KoboldTaskInfo task) {
+                if (!this.tasks.contains(task)) {
                     return;
                 }
-                for (KoboldEntity ff_class3082 : bs_class972.f) {
-                    ff_class3082.setCurrentAction(Action.NULL);
-                    ff_class3082.setNoGravity(false);
-                    ff_class3082.noClip = false;
-                    ff_class3082.getDataManager().set(GirlEntity.IS_ANCHORED, false);
+                for (KoboldEntity worker : task.f) {
+                    worker.setCurrentAction(Action.NULL);
+                    worker.setNoGravity(false);
+                    worker.noClip = false;
+                    worker.getDataManager().set(GirlEntity.IS_ANCHORED, false);
                 }
-                this.tasks.remove(bs_class972);
-                if (bs_class972.b.isEmpty() || this.masterUUID == null) {
+                this.tasks.remove(task);
+                if (task.b.isEmpty() || this.masterUUID == null) {
                     return;
                 }
-                EntityPlayerMP entityPlayerMP = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(this.masterUUID);
-                if (entityPlayerMP == null) {
-                    return;
+                EntityPlayerMP masterPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(this.masterUUID);
+                if (masterPlayer != null) {
+                    PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(task.b, false), masterPlayer);
                 }
-                PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(bs_class972.b, false), entityPlayerMP);
             }
 
             public HashMap<UUID, BlockPos> getUnloadedMemberPositions() {
@@ -1268,53 +1267,53 @@ public class KoboldManager {
                 this.homePos = blockPos;
             }
 
-            public void addTask(KoboldTaskInfo bs_class972) {
-                this.tasks.add(bs_class972);
+            public void addTask(KoboldTaskInfo task) {
+                this.tasks.add(task);
             }
 
             public TribeState getState() {
                 return this.state;
             }
 
-            public void setState(TribeState fm_class3192) {
-                this.state = fm_class3192;
+            public void setState(TribeState state) {
+                this.state = state;
             }
 
-            public void addMember(KoboldEntity ff_class3082) {
-                if (this.members.contains(ff_class3082)) {
+            public void addMember(KoboldEntity kobold) {
+                if (this.members.contains(kobold)) {
                     return;
                 }
-                UUID uUID = ff_class3082.girlID();
-                ArrayList<KoboldEntity> arrayList = new ArrayList<KoboldEntity>();
-                for (KoboldEntity ff_class3083 : this.members) {
-                    if (!ff_class3083.girlID().equals(uUID)) continue;
-                    arrayList.add(ff_class3083);
+                UUID uUID = kobold.girlID();
+                ArrayList<KoboldEntity> oldDuplicates = new ArrayList<KoboldEntity>();
+                for (KoboldEntity existing : this.members) {
+                    if (!existing.girlID().equals(uUID)) continue;
+                    oldDuplicates.add(existing);
                 }
-                for (KoboldEntity ff_class3083 : arrayList) {
-                    Main.LOGGER.warn(String.format("Removed old entry of kobold called %s with UUID %s owned by %s", ff_class3083.getGirlName(), ff_class3083.girlID(), this.masterUUID));
-                    this.removeMember(ff_class3083);
+                for (KoboldEntity dupe : oldDuplicates) {
+                    Main.LOGGER.warn("Removed old entry of kobold called {} with UUID {} owned by {}", dupe.getGirlName(), dupe.girlID(), this.masterUUID);
+                    this.removeMember(dupe);
                 }
-                this.members.add(ff_class3082);
+                this.members.add(kobold);
             }
 
-            public void removeMember(KoboldEntity ff_class3082) {
-                this.members.remove(ff_class3082);
+            public void removeMember(KoboldEntity kobold) {
+                this.members.remove(kobold);
             }
 
-            KoboldEntity findNewLeader() {
-                KoboldEntity kobold = null;
-                for (KoboldEntity ff_class3083 : this.members) {
-                    if (ff_class3083.isDead) continue;
-                    if (kobold == null) {
-                        kobold = ff_class3083;
+            public KoboldEntity findNewLeader() {
+                KoboldEntity candidate = null;
+                for (KoboldEntity member : this.members) {
+                    if (member.isDead) continue;
+                    if (candidate == null) {
+                        candidate = member;
                         continue;
                     }
-                    float f = kobold.getDataManager().get(KoboldEntity.aE).floatValue();
-                    float f2 = ff_class3083.getDataManager().get(KoboldEntity.aE).floatValue();
-                    if (!(f2 < f)) continue;
-                    kobold = ff_class3083;
+                    float scale1 = candidate.getDataManager().get(KoboldEntity.aE);
+                    float scale2 = member.getDataManager().get(KoboldEntity.aE);
+                    if (!(scale2 < scale1)) continue;
+                    candidate = member;
                 }
-                return kobold;
+                return candidate;
             }
         }
     }
