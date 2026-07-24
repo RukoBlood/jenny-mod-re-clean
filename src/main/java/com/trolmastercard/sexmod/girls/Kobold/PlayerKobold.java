@@ -165,23 +165,23 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("anal".equals(string)) {
-            this.void_b(uUID);
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("anal".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.KOBOLD_ANAL_START);
-            this.a(this.getOutfitIndex(), Action.KOBOLD_ANAL_START);
+            this.initActionState(this.getOutfitIndex(), Action.KOBOLD_ANAL_START);
             this.setOutfitIndex(0);
         }
-        if ("oral".equals(string)) {
-            this.void_b(uUID);
+        if ("oral".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.STARTBLOWJOB);
-            this.a(this.getOutfitIndex(), Action.STARTBLOWJOB);
+            this.initActionState(this.getOutfitIndex(), Action.STARTBLOWJOB);
             this.setOutfitIndex(0);
         }
-        if ("mating".equals(string)) {
-            this.void_b(uUID);
+        if ("mating".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.MATING_PRESS_START);
-            this.a(this.getOutfitIndex(), Action.MATING_PRESS_START);
+            this.initActionState(this.getOutfitIndex(), Action.MATING_PRESS_START);
             this.setOutfitIndex(0);
         }
     }

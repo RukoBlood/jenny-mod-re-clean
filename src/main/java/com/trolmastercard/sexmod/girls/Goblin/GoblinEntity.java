@@ -181,8 +181,8 @@ implements ai_class30 {
     }
 
     @Override
-    public void void_g() {
-        super.void_g();
+    public void ResetNPCTasks() {
+        super.ResetNPCTasks();
         this.void_a((UUID)null);
         this.noClip = false;
         this.setNoGravity(false);

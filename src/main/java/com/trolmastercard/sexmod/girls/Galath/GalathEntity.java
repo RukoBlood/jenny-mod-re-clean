@@ -2056,7 +2056,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     @Override
-    public void void_g() {
+    public void ResetNPCTasks() {
         this.a((EntityLivingBase)null);
         this.aH();
     }

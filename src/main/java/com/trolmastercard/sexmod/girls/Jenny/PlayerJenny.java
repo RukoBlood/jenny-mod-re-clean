@@ -78,7 +78,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_A() {
+    public boolean useVanillaItemHolding() {
         return false;
     }
 
@@ -96,17 +96,17 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("action.names.boobjob".equals(string)) {
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("action.names.boobjob".equals(actionName)) {
             this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.PAIZURI_START);
-            this.a(0, Action.PAIZURI_START);
-            this.void_b(uUID);
+            this.initActionState(0, Action.PAIZURI_START);
+            this.bindPlayerPartner(partnerUUID);
         }
-        if ("action.names.blowjob".equals(string)) {
+        if ("action.names.blowjob".equals(actionName)) {
             this.setCurrentAction(Action.STARTBLOWJOB);
-            this.a(this.getOutfitIndex(), Action.PAIZURI_START);
-            this.void_b(uUID);
+            this.initActionState(this.getOutfitIndex(), Action.PAIZURI_START);
+            this.bindPlayerPartner(partnerUUID);
         }
     }
 
@@ -114,13 +114,13 @@ public class PlayerJenny extends PlayerGirl {
     public void updateAITasks() {
         EntityPlayer entityPlayer;
         super.updateAITasks();
-        if (this.currentAction() == Action.WAITDOGGY && (entityPlayer = this.net_minecraft_entity_player_EntityPlayer_j()) != null && entityPlayer.getDistance(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z) < 1.0) {
+        if (this.currentAction() == Action.WAITDOGGY && (entityPlayer = this.getPlayerPartner()) != null && entityPlayer.getDistance(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z) < 1.0) {
             if (this.boolean_c(entityPlayer.getPersistentID())) {
                 entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.DARK_PURPLE) + "sowy no lesbo action yet uwu"));
                 return;
             }
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-            entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.net_minecraft_util_math_Vec3d_w().y, this.getPositionVector().z);
+            entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.getTargetScenePosition().y, this.getPositionVector().z);
             this.alignPlayerToGirl((EntityPlayerMP)entityPlayer, false);
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayer.capabilities.isFlying = true;

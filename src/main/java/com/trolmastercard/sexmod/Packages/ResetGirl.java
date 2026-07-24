@@ -71,7 +71,7 @@ implements IMessage {
         public static void a(GirlEntity em_class2582) {
             Object object;
             Object object2;
-            em_class2582.void_g();
+            em_class2582.ResetNPCTasks();
             if (em_class2582 instanceof PlayerGirl && em_class2582.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID()) != null) {
                 PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(em_class2582.dimension).getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID()));
                 em_class2582.getDataManager().set(GirlEntity.OUTFIT_INDEX, 1);

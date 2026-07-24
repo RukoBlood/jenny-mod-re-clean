@@ -419,8 +419,8 @@ implements bh_class82 {
     }
 
     @Override
-    public void void_g() {
-        super.void_g();
+    public void ResetNPCTasks() {
+        super.ResetNPCTasks();
         this.Y = -1;
     }
 
@@ -721,7 +721,7 @@ implements bh_class82 {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "becomeNude": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.changeDataParameterFromClient("currentModel", (Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
                     break;
                 }
@@ -770,7 +770,7 @@ implements bh_class82 {
                 }
                 case "sitdownMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_COMETOMOMMY, 0.5f);
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.broadcastChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
                     break;
                 }
@@ -779,7 +779,7 @@ implements bh_class82 {
                     break;
                 }
                 case "cowgirlStartMSG1": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.sendLocalClientMessage(I18n.format("ellie.dialogue.like", new Object[0]));
                     SexUI.resetCumPercentage();
                     break;
@@ -874,7 +874,7 @@ implements bh_class82 {
                     break;
                 }
                 case "openSexUi": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     SexUI.init();
                     break;
                 }

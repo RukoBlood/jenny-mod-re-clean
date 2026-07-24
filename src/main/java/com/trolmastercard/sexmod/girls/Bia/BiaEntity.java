@@ -291,7 +291,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     @Override
-    public void void_g() {
+    public void ResetNPCTasks() {
         this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
         this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.followPlayerGoal);
@@ -689,7 +689,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "becomeNude": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.changeDataParameterFromClient("currentModel", (Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
                     break;
                 }

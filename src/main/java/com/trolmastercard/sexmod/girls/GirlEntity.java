@@ -585,7 +585,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     //TODO: wth is void_g
-    public void void_g() {
+    //DOTO: DefaultStuff
+    public void ResetNPCTasks() {
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1177,7 +1178,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_e() {
+    public boolean getClosestPlayerID() {
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 50.0);
         if (entityPlayer == null) {
             return false;

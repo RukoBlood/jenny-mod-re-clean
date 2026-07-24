@@ -68,16 +68,16 @@ extends PlayerGirl {
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("action.names.touchboobs".equals(string)) {
-            this.a(0, Action.TOUCH_BOOBS_INTRO);
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("action.names.touchboobs".equals(actionName)) {
+            this.initActionState(0, Action.TOUCH_BOOBS_INTRO);
             this.setCurrentAction(Action.TOUCH_BOOBS_INTRO);
             this.entityDataManager.set(OUTFIT_INDEX, 0);
-            this.void_b(uUID);
+            this.bindPlayerPartner(partnerUUID);
         }
-        if ("action.names.headpat".equals(string)) {
+        if ("action.names.headpat".equals(actionName)) {
             this.setCurrentAction(Action.HEAD_PAT);
-            this.void_b(uUID);
+            this.bindPlayerPartner(partnerUUID);
         }
     }
 
@@ -87,7 +87,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_v() {
+    public boolean shouldRenderArmor() {
         return true;
     }
 
@@ -119,11 +119,11 @@ extends PlayerGirl {
     }
 
     void a_() {
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_j();
+        EntityPlayer entityPlayer = this.getPlayerPartner();
         if (entityPlayer == null) {
             return;
         }
-        if (entityPlayer.getDistance(this.posX, this.net_minecraft_util_math_Vec3d_w().y, this.posZ) > 1.25) {
+        if (entityPlayer.getDistance(this.posX, this.getTargetScenePosition().y, this.posZ) > 1.25) {
             return;
         }
         if (this.world.isRemote) {
@@ -131,7 +131,7 @@ extends PlayerGirl {
         } else if (this.ar == 25) {
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
-            entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.net_minecraft_util_math_Vec3d_w().y, this.getPositionVector().z);
+            entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.getTargetScenePosition().y, this.getPositionVector().z);
             this.setCurrentAction(Action.COWGIRL_SITTING_INTRO);
             entityPlayer.setRotationYawHead(this.getYawRotation().floatValue() + 180.0f);
             entityPlayer.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
@@ -362,7 +362,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "paymentDone": {
-                    if (this.boolean_e()) {
+                    if (this.getClosestPlayerID()) {
                         this.U();
                     }
                     this.scaleFactor = 1.0f;

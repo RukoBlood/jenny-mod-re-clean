@@ -74,7 +74,7 @@ public abstract class PlayerGirl extends Fighter {
     static public Hashtable<UUID, PlayerGirl> playerGirlUUIDHashtable = new Hashtable();
     static public List<PlayerGirl> Z = new ArrayList<PlayerGirl>();
     int an = -1;
-    public boolean ab = true;
+    public boolean guiPending = true;
 
     protected PlayerGirl(World world) {
         super(world);
@@ -99,7 +99,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Nullable
-    public static PlayerGirl com_trolmastercard_sexmod_ei_class251_a(UUID uUID) {
+    public static PlayerGirl getByPlayerUUID(UUID uUID) {
         for (GirlEntity girl : PlayerGirl.GirlEntityList()) {
             PlayerGirl playerGirl;
             if (girl.world.isRemote || !(girl instanceof PlayerGirl) || !uUID.equals((playerGirl = (PlayerGirl)girl).getOwnerUserUUID())) continue;
@@ -113,7 +113,7 @@ public abstract class PlayerGirl extends Fighter {
         return new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY - 0.0, this.posZ, 50.0);
     }
 
-    public void a(int n, Action action) {
+    public void initActionState(int n, Action action) {
         PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.getTargetNetworkPoint());
     }
 
@@ -134,7 +134,7 @@ public abstract class PlayerGirl extends Fighter {
         return false;
     }
 
-    public boolean boolean_v() {
+    public boolean shouldRenderArmor() {
         return true;
     }
 
@@ -143,10 +143,10 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public void void_H() {
+    public void beeOpenGUI() {
     }
 
-    public boolean boolean_p() {
+    public boolean canOpenGUI() {
         return true;
     }
 
@@ -154,7 +154,7 @@ public abstract class PlayerGirl extends Fighter {
         return false;
     }
 
-    public boolean boolean_A() {
+    public boolean useVanillaItemHolding() {
         return true;
     }
 
@@ -171,7 +171,7 @@ public abstract class PlayerGirl extends Fighter {
     public void u_() {
     }
 
-    public abstract void b(String var1, UUID var2);
+    public abstract void onGuiActionSelected(String actionName, UUID partnerUUID);
 
     public abstract IRenderer getLimbRenderer(int var1);
 
@@ -280,7 +280,7 @@ public abstract class PlayerGirl extends Fighter {
         return super.getEntityBoundingBox().offset(0.0, 0.5, 0.0);
     }
 
-    protected EntityPlayer net_minecraft_entity_player_EntityPlayer_j() {
+    protected EntityPlayer getPlayerPartner() {
         List<EntityPlayer> list = this.world.playerEntities;
         EntityPlayer entityPlayer = null;
         for (EntityPlayer entityPlayer2 : list) {
@@ -289,8 +289,8 @@ public abstract class PlayerGirl extends Fighter {
                 entityPlayer = entityPlayer2;
                 continue;
             }
-            double d = entityPlayer.getDistanceSq(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z);
-            double d2 = entityPlayer2.getDistanceSq(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z);
+            double d = entityPlayer.getDistanceSq(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z);
+            double d2 = entityPlayer2.getDistanceSq(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z);
             if (!(d2 < d)) continue;
             entityPlayer = entityPlayer2;
         }
@@ -299,19 +299,19 @@ public abstract class PlayerGirl extends Fighter {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_e() {
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_j();
+    public boolean getClosestPlayerID() {
+        EntityPlayer entityPlayer = this.getPlayerPartner();
         if (entityPlayer == null) {
             return false;
         }
         return entityPlayer.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID());
     }
 
-    public Vec3d net_minecraft_util_math_Vec3d_w() {
+    public Vec3d getTargetScenePosition() {
         return new Vec3d(this.posX, this.posY - 0.0, this.posZ);
     }
 
-    protected void void_b(UUID uUID) {
+    protected void bindPlayerPartner(UUID uUID) {
         EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID(uUID);
         EntityPlayerMP entityPlayerMP2 = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(ai).get());
         PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
@@ -319,6 +319,7 @@ public abstract class PlayerGirl extends Fighter {
         this.setInteractionPlayerUUID(uUID);
         this.rotationYaw = 0.0f;
         this.rotationYawHead = 0.0f;
+        assert entityPlayerMP != null;
         entityPlayerMP.rotationYaw = 180.0f;
         entityPlayerMP.rotationYawHead = 180.0f;
         entityPlayerMP.setNoGravity(true);
@@ -326,6 +327,7 @@ public abstract class PlayerGirl extends Fighter {
         Vec3d vec3d = this.getPositionVector();
         entityPlayerMP.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z + 1.0);
         entityPlayerMP.capabilities.isFlying = true;
+        assert entityPlayerMP2 != null;
         entityPlayerMP2.capabilities.isFlying = true;
         this.snapPlayerToPosition(uUID);
         this.entityDataManager.set(IS_ANCHORED, true);
@@ -454,7 +456,7 @@ public abstract class PlayerGirl extends Fighter {
         return false;
     }
 
-    public boolean boolean_l() {
+    public boolean canInteract() {
         return true;
     }
 
@@ -571,8 +573,8 @@ public abstract class PlayerGirl extends Fighter {
         if (!this.entityDataManager.get(ai).isPresent()) {
             return;
         }
-        PackageHandler.networkWrapper.sendToServer((IMessage)new SexPrompt(string, uUID, (UUID)this.entityDataManager.get(ai).get(), this.ab));
-        this.ab = true;
+        PackageHandler.networkWrapper.sendToServer((IMessage)new SexPrompt(string, uUID, (UUID)this.entityDataManager.get(ai).get(), this.guiPending));
+        this.guiPending = true;
     }
 
     @Override
@@ -590,7 +592,7 @@ public abstract class PlayerGirl extends Fighter {
 
     @Override
     public void PlaySoundAtPosition(SoundEvent sound, float volume, float pitch) {
-        Vec3d vec3d = this.net_minecraft_util_math_Vec3d_w();
+        Vec3d vec3d = this.getTargetScenePosition();
         if (this.world.isRemote) {
             this.world.playSound(vec3d.x, vec3d.y, vec3d.z, sound, SoundCategory.NEUTRAL, volume, pitch, false);
         } else {

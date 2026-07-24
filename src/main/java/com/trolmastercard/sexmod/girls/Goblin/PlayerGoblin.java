@@ -124,17 +124,17 @@ implements ai_class30 {
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("anal".equals(string)) {
-            this.void_b(uUID);
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("anal".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.NELSON_INTRO);
-            this.a(this.getOutfitIndex(), Action.NELSON_INTRO);
+            this.initActionState(this.getOutfitIndex(), Action.NELSON_INTRO);
             this.setOutfitIndex(0);
         }
-        if ("paizuri".equals(string)) {
-            this.void_b(uUID);
+        if ("paizuri".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.PAIZURI_START);
-            this.a(this.getOutfitIndex(), Action.PAIZURI_START);
+            this.initActionState(this.getOutfitIndex(), Action.PAIZURI_START);
             this.setOutfitIndex(0);
         }
     }
@@ -525,8 +525,8 @@ implements ai_class30 {
     }
 
     @Override
-    public void void_g() {
-        super.void_g();
+    public void ResetNPCTasks() {
+        super.ResetNPCTasks();
         this.entityDataManager.set(aA, false);
         if (this.java_util_UUID_e() == null) {
             return;
@@ -652,7 +652,7 @@ implements ai_class30 {
     }
 
     @Override
-    public boolean boolean_l() {
+    public boolean canInteract() {
         return this.java_util_UUID_e() == null;
     }
 

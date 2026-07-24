@@ -61,7 +61,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_v() {
+    public boolean shouldRenderArmor() {
         return false;
     }
 
@@ -76,16 +76,16 @@ extends PlayerGirl {
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("action.names.deepthroat".equals(string)) {
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("action.names.deepthroat".equals(actionName)) {
             this.setCurrentAction(Action.DEEPTHROAT_START);
-            this.a(this.getOutfitIndex(), Action.DEEPTHROAT_START);
-            this.void_b(uUID);
+            this.initActionState(this.getOutfitIndex(), Action.DEEPTHROAT_START);
+            this.bindPlayerPartner(partnerUUID);
         }
-        if ("Reverse cowgirl".equals(string)) {
+        if ("Reverse cowgirl".equals(actionName)) {
             this.setCurrentAction(Action.REVERSE_COWGIRL_START);
-            this.a(0, Action.REVERSE_COWGIRL_START);
-            this.void_b(uUID);
+            this.initActionState(0, Action.REVERSE_COWGIRL_START);
+            this.bindPlayerPartner(partnerUUID);
         }
     }
 

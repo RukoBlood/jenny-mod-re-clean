@@ -350,7 +350,7 @@ public class BeeEntity extends Supporter {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "pearl": {
-                    if (!this.boolean_e() || this.currentAction() != Action.THROW_PEARL) break;
+                    if (!this.getClosestPlayerID() || this.currentAction() != Action.THROW_PEARL) break;
                     PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }

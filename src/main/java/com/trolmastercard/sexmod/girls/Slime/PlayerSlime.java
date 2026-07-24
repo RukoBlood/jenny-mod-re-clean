@@ -31,10 +31,9 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlayerSlime
-extends PlayerGirl {
-    boolean ap = false;
-    int aq = 0;
+public class PlayerSlime extends PlayerGirl {
+    boolean isFlyAlternateAnim = false;
+    int thrustSoundCounter = 0;
 
     protected PlayerSlime(World world) {
         super(world);
@@ -55,31 +54,31 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_v() {
+    public boolean shouldRenderArmor() {
         return false;
     }
 
     @Override
-    public boolean boolean_A() {
+    public boolean useVanillaItemHolding() {
         return false;
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
+    public IRenderer getLimbRenderer(int limbIndex) {
         return new SlimeLimb();
     }
 
     @Override
-    public String HandTexture(int n) {
+    public String HandTexture(int handIndex) {
         return "textures/entity/slime/hand.png";
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("action.names.blowjob".equals(string)) {
-            this.a(0, Action.SUCKBLOWJOB);
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("action.names.blowjob".equals(actionName)) {
+            this.initActionState(0, Action.SUCKBLOWJOB);
             this.setCurrentAction(Action.SUCKBLOWJOB);
-            this.void_b(uUID);
+            this.bindPlayerPartner(partnerUUID);
         }
     }
 
@@ -128,27 +127,28 @@ extends PlayerGirl {
         if (this.currentAction() != Action.WAITDOGGY) {
             return;
         }
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_j();
-        if (entityPlayer == null) {
+        EntityPlayer partner = this.getPlayerPartner();
+        if (partner == null) {
             return;
         }
-        if (entityPlayer.getPositionVector().distanceTo(this.net_minecraft_util_math_Vec3d_w()) > 1.0) {
+        if (partner.getPositionVector().distanceTo(this.getTargetScenePosition()) > 1.0) {
             return;
         }
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-        entityPlayer.rotationYaw = this.getYawRotation().floatValue();
-        this.cameraYaw = this.getYawRotation().floatValue();
-        entityPlayer.setPosition(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z);
-        entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
+        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)partner);
+        this.setInteractionPlayerUUID(partner.getPersistentID());
+        partner.rotationYaw = this.getYawRotation();
+        this.cameraYaw = this.getYawRotation();
+        partner.setPosition(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z);
+        partner.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
         this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
         this.setCurrentAction(Action.DOGGYSTART);
-        entityPlayer.setNoGravity(true);
-        entityPlayer.noClip = true;
+        partner.setNoGravity(true);
+        partner.noClip = true;
         EntityPlayer entityPlayer2 = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
+        assert entityPlayer2 != null;
         entityPlayer2.setNoGravity(true);
-        entityPlayer.noClip = true;
-        entityPlayer.capabilities.isFlying = true;
+        partner.noClip = true;
+        partner.capabilities.isFlying = true;
         entityPlayer2.capabilities.isFlying = true;
     }
 
@@ -173,10 +173,10 @@ extends PlayerGirl {
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
-                    boolean bl = this.ap = !this.ap;
+                    boolean bl = this.isFlyAlternateAnim = !this.isFlyAlternateAnim;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.slime.fly" + (this.ap ? "2" : ""), true, event);
+                    this.createAnimation("animation.slime.fly" + (this.isFlyAlternateAnim ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
@@ -274,7 +274,7 @@ extends PlayerGirl {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
-        AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
+        AnimationController.ISoundListener soundListener = soundKeyframeEvent -> {
             String string;
             switch (string = soundKeyframeEvent.sound) {
                 case "attackDone": {
@@ -283,13 +283,13 @@ extends PlayerGirl {
                     break;
                 }
                 case "undress": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 0);
                     this.resetCameraAndPhysics();
                     break;
                 }
                 case "dress": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 1);
                     this.setCurrentAction((Action)null);
                     this.resetCameraAndPhysics();
@@ -434,8 +434,8 @@ extends PlayerGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    ++this.aq;
-                    if (this.aq % 2 == 0) {
+                    ++this.thrustSoundCounter;
+                    if (this.thrustSoundCounter % 2 == 0) {
                         int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
@@ -458,14 +458,10 @@ extends PlayerGirl {
                 }
             }
         };
-        this.actionController.registerSoundListener(iSoundListener);
+        this.actionController.registerSoundListener(soundListener);
         data.addAnimationController(this.actionController);
         data.addAnimationController(this.eyesController);
         data.addAnimationController(this.movementController);
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

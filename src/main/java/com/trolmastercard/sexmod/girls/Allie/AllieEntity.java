@@ -482,7 +482,7 @@ extends GirlEntity {
                     break;
                 }
                 case "summon_sandMSG2": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.b(I18n.format("allie.dialogue.phobia", new Object[0]), true);
                     break;
                 }

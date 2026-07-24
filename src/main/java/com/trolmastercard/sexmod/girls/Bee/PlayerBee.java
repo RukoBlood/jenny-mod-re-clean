@@ -67,12 +67,12 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        this.a(0, Action.CITIZEN_START);
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        this.initActionState(0, Action.CITIZEN_START);
         this.setOutfitIndex(0);
         this.setCurrentAction(Action.CITIZEN_START);
-        this.void_b(uUID);
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
+        this.bindPlayerPartner(partnerUUID);
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(partnerUUID);
         if (entityPlayer == null) {
             return;
         }
@@ -100,7 +100,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_v() {
+    public boolean shouldRenderArmor() {
         return false;
     }
 
@@ -121,8 +121,8 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public void void_g() {
-        super.void_g();
+    public void ResetNPCTasks() {
+        super.ResetNPCTasks();
         this.setOutfitIndex(1);
     }
 
@@ -193,7 +193,7 @@ public class PlayerBee extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    if (!this.boolean_e() || this.currentAction() != Action.THROW_PEARL) break;
+                    if (!this.getClosestPlayerID() || this.currentAction() != Action.THROW_PEARL) break;
                     PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }

@@ -40,21 +40,20 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class SlimeEntity
-extends GirlEntity {
+public class SlimeEntity extends GirlEntity {
     final static double Q = (double)0.7f;
     final static float W = 0.9f;
     final static double M = 100.0;
     final static float L = 0.1f;
     final static int O = 2400;
-    SlimeActions slimeActions = SlimeActions.IDLE;
+    SlimeActions slimeMovementState = SlimeActions.IDLE;
     static public DataParameter<Integer> TicksUntilBirth = EntityDataManager.createKey(SlimeEntity.class, DataSerializers.VARINT).getSerializer().createKey(113);
-    static public DataParameter<Float> R = EntityDataManager.createKey(SlimeEntity.class, DataSerializers.FLOAT).getSerializer().createKey(112);
+    static public DataParameter<Float> TARGET_YAW = EntityDataManager.createKey(SlimeEntity.class, DataSerializers.FLOAT).getSerializer().createKey(112);
     static public DataParameter<Integer> HornyLevel = EntityDataManager.createKey(SlimeEntity.class, DataSerializers.VARINT).getSerializer().createKey(111);
-    int N = 0;
-    boolean K = true;
-    boolean V = false;
-    int P = 0;
+    int jumpTicks = 0;
+    boolean wasOnGroundLastTick = true;
+    boolean shouldIncreaseHorny = false;
+    int performJump = 0;
 
     public SlimeEntity(World world) {
         super(world);
@@ -95,7 +94,7 @@ extends GirlEntity {
     protected void entityInit() {
         super.entityInit();
         this.getDataManager().register(HornyLevel, 0);
-        this.getDataManager().register(R, Float.valueOf(0.0f));
+        this.getDataManager().register(TARGET_YAW, 0.0f);
         this.getDataManager().register(TicksUntilBirth, -1);
     }
 
@@ -151,7 +150,7 @@ extends GirlEntity {
     }
 
     @Override
-    public void void_g() {
+    public void ResetNPCTasks() {
         this.entityDataManager.set(HornyLevel, 0);
         this.entityDataManager.set(OUTFIT_INDEX, 1);
     }
@@ -159,9 +158,9 @@ extends GirlEntity {
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        this.a_19();
+        this.checkInteractionTrigger();
         this.SpawnFriendlySlime();
-        if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.slimeActions == SlimeActions.IDLE && this.entityDataManager.get(TicksUntilBirth) == -1) {
+        if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.slimeMovementState == SlimeActions.IDLE && this.entityDataManager.get(TicksUntilBirth) == -1) {
             this.entityDataManager.set(HornyLevel, 2);
             if ((Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1) {
                 this.setCurrentAction(Action.UNDRESS);
@@ -174,34 +173,34 @@ extends GirlEntity {
     public void onUpdate() {
         super.onUpdate();
         if (this.currentAction() == Action.NULL) {
-            this.b_42();
+            this.updateSlimeMovementAndState();
         }
         if (this.entityDataManager.get(HornyLevel) >= 2 && this.ticksExisted % 10 == 0) {
             SlimeEntity.spawnParticlesAround(EnumParticleTypes.HEART, (GirlEntity)this);
         }
         if (this.world.isRemote) {
-            this.void_d();
-            this.void_i();
+            this.spawnBirthParticlesClient();
+            this.updateClientPlayerPosition();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_i() {
+    void updateClientPlayerPosition() {
         if (this.getID() == null) {
             return;
         }
-        EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-        if (!this.getID().equals(entityPlayerSP.getPersistentID())) {
+        EntityPlayerSP clientPlayer = Minecraft.getMinecraft().player;
+        if (!this.getID().equals(clientPlayer.getPersistentID())) {
             return;
         }
-        Vec3d vec3d = this.getPositionVector();
-        Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation().floatValue());
-        vec3d = vec3d.add(vec3d2);
-        entityPlayerSP.setPosition(vec3d.x, vec3d.y, vec3d.z);
-        entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
+        Vec3d offset = this.getPositionVector();
+        Vec3d targetPos = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation());
+        offset = offset.add(targetPos);
+        clientPlayer.setPosition(offset.x, offset.y, offset.z);
+        clientPlayer.setVelocity(0.0, 0.0, 0.0);
     }
 
-    void void_d() {
+    void spawnBirthParticlesClient() {
         int ticks_birth = this.entityDataManager.get(TicksUntilBirth);
         if (ticks_birth == -1) {
             return;
@@ -213,26 +212,26 @@ extends GirlEntity {
     }
 
     void SpawnFriendlySlime() {
-        int n = this.entityDataManager.get(TicksUntilBirth);
-        if (n == -1) {
+        int ticks = this.entityDataManager.get(TicksUntilBirth);
+        if (ticks == -1) {
             return;
         }
-        this.entityDataManager.set(TicksUntilBirth, n - 1);
-        if (--n >= 0) {
+        this.entityDataManager.set(TicksUntilBirth, ticks - 1);
+        if (--ticks >= 0) {
             return;
         }
-        FriendlySlimeEntity friendlySlimeEntity = new FriendlySlimeEntity(this.world);
-        friendlySlimeEntity.setPosition(this.posX, this.posY, this.posZ);
-        this.world.spawnEntity(friendlySlimeEntity);
+        FriendlySlimeEntity friendlySlime = new FriendlySlimeEntity(this.world);
+        friendlySlime.setPosition(this.posX, this.posY, this.posZ);
+        this.world.spawnEntity(friendlySlime);
         this.entityDataManager.set(TicksUntilBirth, -1);
     }
 
-    void a_19() {
-        int n = this.entityDataManager.get(HornyLevel);
-        if (n < 2) {
+    void checkInteractionTrigger() {
+        int hornyLevel = this.entityDataManager.get(HornyLevel);
+        if (hornyLevel < 2) {
             return;
         }
-        if (n >= 4 && this.onGround && this.currentAction() == Action.NULL) {
+        if (hornyLevel >= 4 && this.onGround && this.currentAction() == Action.NULL) {
             this.setTargetPosition(this.getPositionVector());
             this.setYawRotation(this.rotationYaw);
             this.entityDataManager.set(IS_ANCHORED, true);
@@ -241,8 +240,8 @@ extends GirlEntity {
             this.setCurrentAction(Action.STARTDOGGY);
             return;
         }
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 1.0);
-        if (entityPlayer == null || !entityPlayer.onGround || SlimeEntity.getActiveSceneInfo(entityPlayer) != null) {
+        EntityPlayer player = this.world.getClosestPlayerToEntity(this, 1.0);
+        if (player == null || !player.onGround || SlimeEntity.getActiveSceneInfo(player) != null) {
             return;
         }
         this.setTargetPosition(this.getPositionVector());
@@ -250,13 +249,14 @@ extends GirlEntity {
         this.entityDataManager.set(IS_ANCHORED, true);
         this.setNoGravity(true);
         this.noClip = true;
-        entityPlayer.setNoGravity(true);
-        entityPlayer.noClip = true;
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-        entityPlayer.rotationYaw = this.getYawRotation().floatValue();
-        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation().floatValue());
-        entityPlayer.setPosition(this.posX + vec3d.x, this.posY, this.posZ + vec3d.z);
+        player.setNoGravity(true);
+        player.noClip = true;
+        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
+        this.setInteractionPlayerUUID(player.getPersistentID());
+        player.rotationYaw = this.getYawRotation();
+
+        Vec3d offset = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation());
+        player.setPosition(this.posX + offset.x, this.posY, this.posZ + offset.z);
         if (this.currentAction() == Action.WAITDOGGY) {
             this.setCurrentAction(Action.DOGGYSTART);
         } else {
@@ -264,83 +264,83 @@ extends GirlEntity {
         }
     }
 
-    void b_42() {
+    void updateSlimeMovementAndState() {
         if (this.world.isRemote) {
-            float f;
-            if ((double)this.N == 90.0) {
-                this.slimeActions = SlimeActions.JUMP_START;
+            float yaw;
+            if ((double)this.jumpTicks == 90.0) {
+                this.slimeMovementState = SlimeActions.JUMP_START;
             }
-            if (!this.K && this.onGround) {
-                this.slimeActions = SlimeActions.JUMP_END;
-                this.N = 0;
+            if (!this.wasOnGroundLastTick && this.onGround) {
+                this.slimeMovementState = SlimeActions.JUMP_END;
+                this.jumpTicks = 0;
             }
-            this.rotationYaw = f = this.entityDataManager.get(R).floatValue();
-            this.rotationYawHead = f;
-            this.renderYawOffset = f;
+            this.rotationYaw = yaw = this.entityDataManager.get(TARGET_YAW);
+            this.rotationYawHead = yaw;
+            this.renderYawOffset = yaw;
         } else {
-            if ((double)this.N == 85.0) {
-                this.entityDataManager.set(R, Float.valueOf(this.float_e()));
+            if ((double)this.jumpTicks == 85.0) {
+                this.entityDataManager.set(TARGET_YAW, this.calculateTargetYaw());
             }
-            if ((double)this.N == 100.0) {
-                this.void_h();
+            if ((double)this.jumpTicks == 100.0) {
+                this.performJump();
             }
-            if (!this.K && this.onGround) {
-                boolean bl = this.V = this.entityDataManager.get(TicksUntilBirth) == -1 && this.getRNG().nextFloat() < 0.1f;
+            if (!this.wasOnGroundLastTick && this.onGround) {
+                boolean bl = this.shouldIncreaseHorny = this.entityDataManager.get(TicksUntilBirth) == -1 && this.getRNG().nextFloat() < 0.1f;
             }
-            if (this.V && this.N == 50) {
-                int n = this.entityDataManager.get(HornyLevel);
-                int n2 = n + 1;
-                this.entityDataManager.set(HornyLevel, n2);
-                if (n2 == 1) {
+            if (this.shouldIncreaseHorny && this.jumpTicks == 50) {
+                int curHorny = this.entityDataManager.get(HornyLevel);
+                int newHorny = curHorny + 1;
+                this.entityDataManager.set(HornyLevel, newHorny);
+                if (newHorny == 1) {
                     this.setCurrentAction(Action.UNDRESS);
                 }
             }
         }
         if (this.onGround) {
-            ++this.N;
+            ++this.jumpTicks;
         }
-        this.K = this.onGround;
+        this.wasOnGroundLastTick = this.onGround;
     }
 
-    void void_h() {
-        float f;
+    void performJump() {
+        float targetYaw;
         this.motionX = 0.0;
         this.motionY = 0.0;
         this.motionZ = 0.0;
         this.jump();
-        this.rotationYaw = f = this.entityDataManager.get(R).floatValue();
-        this.prevRotationYaw = f;
-        Vec3d vec3d = new Vec3d(0.0, 0.0, 0.7f);
-        vec3d = VectorMath.rotate(vec3d, f);
-        this.motionX = vec3d.x;
-        this.motionZ = vec3d.z;
-        this.N = 0;
+        this.rotationYaw = targetYaw = this.entityDataManager.get(TARGET_YAW);
+        this.prevRotationYaw = targetYaw;
+        Vec3d jumpVelocity = new Vec3d(0.0, 0.0, 0.7f);
+        jumpVelocity = VectorMath.rotate(jumpVelocity, targetYaw);
+        this.motionX = jumpVelocity.x;
+        this.motionZ = jumpVelocity.z;
+        this.jumpTicks = 0;
     }
 
-    float float_e() {
-        int n = this.entityDataManager.get(HornyLevel);
+    float calculateTargetYaw() {
+        int hornyLevel = this.entityDataManager.get(HornyLevel);
         if (this.entityDataManager.get(TicksUntilBirth) != -1) {
-            return this.float_f();
+            return this.getRandomYaw();
         }
-        if (n < 2) {
-            return this.float_f();
+        if (hornyLevel < 2) {
+            return this.getRandomYaw();
         }
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 30.0);
-        if (entityPlayer == null) {
-            return this.float_f();
+        EntityPlayer player = this.world.getClosestPlayerToEntity(this, 30.0);
+        if (player == null) {
+            return this.getRandomYaw();
         }
-        if (SlimeEntity.getActiveSceneInfo(entityPlayer) != null) {
-            return this.float_f();
+        if (SlimeEntity.getActiveSceneInfo(player) != null) {
+            return this.getRandomYaw();
         }
-        return (float)Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29578f + 90.0f;
+        return (float)Math.atan2(this.posZ - player.posZ, this.posX - player.posX) * 57.29578f + 90.0f;
     }
 
-    float float_f() {
+    float getRandomYaw() {
         return Reference.RANDOM.nextFloat() * 360.0f;
     }
 
     @Override
-    public void fall(float f, float f2) {
+    public void fall(float distance, float damageMultiplier) {
     }
 
     @Override
@@ -359,7 +359,7 @@ extends GirlEntity {
             }
             case "action": {
                 if (this.currentAction() == Action.NULL) {
-                    this.createAnimation(this.slimeActions.a, true, event);
+                    this.createAnimation(this.slimeMovementState.animationPath, true, event);
                     break;
                 }
                 switch (this.currentAction()) {
@@ -422,16 +422,16 @@ extends GirlEntity {
 
     @Override
     public void registerControllers(AnimationData data) {
-        AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
+        AnimationController.ISoundListener soundListener  = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "undress": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.changeDataParameterFromClient("currentModel", "0");
                     this.setCurrentAction(Action.NULL);
                     break;
                 }
                 case "dress": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 1);
                     this.setCurrentAction((Action)null);
                     this.resetCameraAndPhysics();
@@ -574,8 +574,8 @@ extends GirlEntity {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04);
                     }
-                    ++this.P;
-                    if (this.P % 2 == 0) {
+                    ++this.performJump;
+                    if (this.performJump % 2 == 0) {
                         int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
@@ -602,7 +602,7 @@ extends GirlEntity {
                     break;
                 }
                 case "jumpStartDone": {
-                    this.slimeActions = SlimeActions.JUMP_AIR;
+                    this.slimeMovementState = SlimeActions.JUMP_AIR;
                     break;
                 }
                 case "jumpEndSound": {
@@ -610,17 +610,13 @@ extends GirlEntity {
                     break;
                 }
                 case "jumpEndDone": {
-                    this.slimeActions = SlimeActions.IDLE;
+                    this.slimeMovementState = SlimeActions.IDLE;
                 }
             }
         };
-        this.actionController.registerSoundListener(iSoundListener);
+        this.actionController.registerSoundListener(soundListener);
         data.addAnimationController(this.actionController);
         data.addAnimationController(this.eyesController);
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 
     static enum SlimeActions {
@@ -629,14 +625,14 @@ extends GirlEntity {
         JUMP_AIR("animation.slime.jumpair"),
         JUMP_END("animation.slime.jumpend");
 
-        String a;
+        final String animationPath;
 
-        public String a() {
-            return this.a;
+        public String getAnimationPath() {
+            return this.animationPath;
         }
 
-        private SlimeActions(String string2) {
-            this.a = string2;
+        private SlimeActions(String animationPath) {
+            this.animationPath = animationPath;
         }
     }
 }

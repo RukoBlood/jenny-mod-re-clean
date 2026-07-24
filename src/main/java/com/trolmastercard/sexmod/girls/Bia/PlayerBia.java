@@ -77,16 +77,16 @@ extends PlayerGirl {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void void_H() {
+    public void beeOpenGUI() {
         GirlEntity.openInventoryGui(Minecraft.getMinecraft().player, this, new String[]{"anal", "doggy"}, false);
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("action.names.headpat".equals(string)) {
-            this.void_b(uUID);
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("action.names.headpat".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.HEAD_PAT);
-            this.a(this.getOutfitIndex(), Action.HEAD_PAT);
+            this.initActionState(this.getOutfitIndex(), Action.HEAD_PAT);
         }
     }
 
@@ -111,7 +111,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_A() {
+    public boolean useVanillaItemHolding() {
         return false;
     }
 
@@ -177,7 +177,7 @@ extends PlayerGirl {
         if (fp_class3242 != Action.ANAL_WAIT && fp_class3242 != Action.SITDOWNIDLE) {
             return;
         }
-        EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_j();
+        EntityPlayer entityPlayer = this.getPlayerPartner();
         if (entityPlayer == null) {
             return;
         }
@@ -553,7 +553,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "headpatDone": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.resetCameraAndPhysics();
                     break;
                 }

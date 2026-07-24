@@ -70,11 +70,11 @@ extends PlayerGirl {
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("Face fuck".equals(string)) {
-            this.void_b(uUID);
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("Face fuck".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.CARRY_INTRO);
-            this.a(this.getOutfitIndex(), Action.CARRY_INTRO);
+            this.initActionState(this.getOutfitIndex(), Action.CARRY_INTRO);
         }
     }
 
@@ -92,7 +92,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_p() {
+    public boolean canOpenGUI() {
         return true;
     }
 
@@ -109,8 +109,8 @@ extends PlayerGirl {
         if (!((Optional)this.entityDataManager.get(ai)).isPresent()) {
             return;
         }
-        PackageHandler.networkWrapper.sendToServer((IMessage)new SexPrompt(string, uUID, (UUID)((Optional)this.entityDataManager.get(ai)).get(), this.ab));
-        this.ab = true;
+        PackageHandler.networkWrapper.sendToServer((IMessage)new SexPrompt(string, uUID, (UUID)((Optional)this.entityDataManager.get(ai)).get(), this.guiPending));
+        this.guiPending = true;
     }
 
     @Override
@@ -124,7 +124,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_A() {
+    public boolean useVanillaItemHolding() {
         return false;
     }
 
@@ -176,8 +176,8 @@ extends PlayerGirl {
             if (!"Missionary".equals(string) && !"Cowgirl".equals(string)) {
                 return;
             }
-            EntityPlayer entityPlayer = this.net_minecraft_entity_player_EntityPlayer_j();
-            if (entityPlayer == null || entityPlayer.getDistance(this.net_minecraft_util_math_Vec3d_w().x, this.net_minecraft_util_math_Vec3d_w().y, this.net_minecraft_util_math_Vec3d_w().z) > 1.0) {
+            EntityPlayer entityPlayer = this.getPlayerPartner();
+            if (entityPlayer == null || entityPlayer.getDistance(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z) > 1.0) {
                 return;
             }
             this.entityDataManager.set(GirlEntity.GIRL_HAND_STATES, "");
@@ -195,12 +195,12 @@ extends PlayerGirl {
             entityPlayer.setNoGravity(true);
             if ("Missionary".equals(string)) {
                 this.setCurrentAction(Action.MISSIONARY_START);
-                Vec3d vec3d = this.net_minecraft_util_math_Vec3d_w().subtract(0.0, 0.1, 0.0);
+                Vec3d vec3d = this.getTargetScenePosition().subtract(0.0, 0.1, 0.0);
                 entityPlayer.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, this.getYawRotation().floatValue(), 60.0f);
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else {
                 this.setCurrentAction(Action.COWGIRLSTART);
-                Vec3d vec3d = this.net_minecraft_util_math_Vec3d_w().add(new Vec3d(-Math.sin((double)this.getYawRotation().floatValue() * (Math.PI / 180)) * 1.8, -0.65, Math.cos((double)this.getYawRotation().floatValue() * (Math.PI / 180)) * 1.8));
+                Vec3d vec3d = this.getTargetScenePosition().add(new Vec3d(-Math.sin((double)this.getYawRotation().floatValue() * (Math.PI / 180)) * 1.8, -0.65, Math.cos((double)this.getYawRotation().floatValue() * (Math.PI / 180)) * 1.8));
                 entityPlayer.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, 180.0f + this.getYawRotation().floatValue(), -30.0f);
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             }
@@ -390,7 +390,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "dashReady": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     break;
                 }
                 case "dashDone": {
@@ -447,7 +447,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "hugselectedDone": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     Vec3d vec3d = this.getPositionVector();
                     vec3d = vec3d.add(-Math.sin((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279, 0.0, Math.cos((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279);
                     vec3d = vec3d.add(-Math.sin((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579, 0.0, Math.cos((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579);
@@ -460,7 +460,7 @@ extends PlayerGirl {
                 }
                 case "sitdownMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.broadcastChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
                     break;
                 }
@@ -481,7 +481,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "cowgirlStartMSG1": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.sendLocalClientMessage(I18n.format("ellie.dialogue.like", new Object[0]));
                     SexUI.resetCumPercentage();
                     break;

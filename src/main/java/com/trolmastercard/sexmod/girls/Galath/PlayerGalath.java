@@ -91,17 +91,17 @@ implements b7_class68 {
     }
 
     @Override
-    public void b(String string, UUID uUID) {
-        if ("cowgirl".equals(string)) {
-            this.void_b(uUID);
+    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+        if ("cowgirl".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.RAPE_INTRO);
-            this.a(this.getOutfitIndex(), Action.RAPE_INTRO);
+            this.initActionState(this.getOutfitIndex(), Action.RAPE_INTRO);
             return;
         }
-        if ("mating press".equals(string)) {
-            this.void_b(uUID);
+        if ("mating press".equals(actionName)) {
+            this.bindPlayerPartner(partnerUUID);
             this.setCurrentAction(Action.CORRUPT_SLOW);
-            this.a(this.getOutfitIndex(), Action.CORRUPT_SLOW);
+            this.initActionState(this.getOutfitIndex(), Action.CORRUPT_SLOW);
             this.void_a();
             return;
         }
@@ -146,12 +146,12 @@ implements b7_class68 {
     }
 
     @Override
-    public boolean boolean_v() {
+    public boolean shouldRenderArmor() {
         return false;
     }
 
     @Override
-    public boolean boolean_A() {
+    public boolean useVanillaItemHolding() {
         return false;
     }
 

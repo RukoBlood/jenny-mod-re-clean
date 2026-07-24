@@ -203,7 +203,7 @@ implements bh_class82,
     }
 
     @Override
-    public void void_g() {
+    public void ResetNPCTasks() {
         this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
         this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.followPlayerGoal);
@@ -805,12 +805,12 @@ implements bh_class82,
                     break;
                 }
                 case "start_fishingDone": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.setCurrentAction(Action.FISHING_IDLE);
                     break;
                 }
                 case "rod_shoot": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     PackageHandler.networkWrapper.sendToServer((IMessage)new CatActivateFishing(this.girlID()));
                     break;
                 }
@@ -829,7 +829,7 @@ implements bh_class82,
                     break;
                 }
                 case "eatingDone": {
-                    if (this.boolean_e()) {
+                    if (this.getClosestPlayerID()) {
                         PackageHandler.networkWrapper.sendToServer((IMessage)new CatEatingDone(this.girlID()));
                         this.setCurrentAction(Action.NULL);
                     }
@@ -838,7 +838,7 @@ implements bh_class82,
                     break;
                 }
                 case "throw_away": {
-                    if (this.boolean_e()) {
+                    if (this.getClosestPlayerID()) {
                         PackageHandler.networkWrapper.sendToServer((IMessage)new CatThrowAwayItem(this.girlID()));
                     }
                     this.aa = 1.0f;
@@ -872,7 +872,7 @@ implements bh_class82,
                     break;
                 }
                 case "paymentDone": {
-                    if (this.boolean_e()) {
+                    if (this.getClosestPlayerID()) {
                         this.U();
                     }
                     this.scaleFactor = 1.0f;
@@ -991,7 +991,7 @@ implements bh_class82,
                     break;
                 }
                 case "resetGirl": {
-                    if (!this.boolean_e()) break;
+                    if (!this.getClosestPlayerID()) break;
                     this.resetCameraAndPhysics();
                     break;
                 }

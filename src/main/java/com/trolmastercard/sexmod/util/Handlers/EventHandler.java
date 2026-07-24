@@ -52,7 +52,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object) DragonStaffItem.DRAGON_STAFF);
         MinecraftForge.EVENT_BUS.register((Object) EditorWand.EDITOR_WAND);
         MinecraftForge.EVENT_BUS.register((Object)new LunaRod());
-        MinecraftForge.EVENT_BUS.register((Object)new fu_class330());
+        MinecraftForge.EVENT_BUS.register((Object)new PlayerGirlEvents());
         MinecraftForge.EVENT_BUS.register((Object)new LunaEntity.CreeperLogic());
         MinecraftForge.EVENT_BUS.register((Object)new GirlBedInteraction());
         MinecraftForge.EVENT_BUS.register((Object) Fire.FIRE);

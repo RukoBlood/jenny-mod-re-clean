@@ -692,7 +692,7 @@ extends GirlEntity {
     }
 
     @Override
-    public void void_g() {
+    public void ResetNPCTasks() {
         if (this.boolean_r()) {
             this.setCurrentAction(Action.RIDE_MOMMY_HEAD);
             this.setYawRotation(0.0f);
