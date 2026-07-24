@@ -57,7 +57,7 @@ extends Item {
             heldItem.shrink(1);
         }
         if (!world.isRemote) {
-            KoboldManager.a(world, rayTraceResult.hitVec);
+            KoboldManager.spawnTribe(world, rayTraceResult.hitVec);
         }
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, entityPlayer.getHeldItem(enumHand));
     }

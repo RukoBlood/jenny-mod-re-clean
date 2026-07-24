@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod;
 
-public enum fm_class319 {
+public enum TribeState {
     ACTIVE,
     REST;
 

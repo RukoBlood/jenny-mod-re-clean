@@ -93,9 +93,5 @@ public abstract class ew_class277 extends PlayerGirl {
     }
 
     protected abstract void void_a();
-
-    private static RuntimeException d(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

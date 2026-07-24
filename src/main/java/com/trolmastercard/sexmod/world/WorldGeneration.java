@@ -219,7 +219,7 @@ public class WorldGeneration extends WorldSavedData implements IWorldGenerator {
         if (world.getBlockState(new BlockPos(n3, n5, n4)).getMaterial().isLiquid()) {
             return;
         }
-        KoboldManager.a(world, new Vec3d(n3, n5, n4));
+        KoboldManager.spawnTribe(world, new Vec3d(n3, n5, n4));
     }
 
     /*

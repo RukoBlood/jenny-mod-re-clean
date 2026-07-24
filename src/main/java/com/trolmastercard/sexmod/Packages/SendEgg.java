@@ -47,7 +47,7 @@ public class SendEgg implements IMessage {
                 if (uUID == null) {
                     return;
                 }
-                EyeAndKoboldColor eyeAndKoboldColor_ = KoboldManager.l(uUID);
+                EyeAndKoboldColor eyeAndKoboldColor_ = KoboldManager.getTribeColor(uUID);
                 ItemStack itemStack = new ItemStack(KoboldEggItem.KOBOLD_EGG, 1, eyeAndKoboldColor_.getWoolMeta());
                 NBTTagCompound nBTTagCompound = itemStack.getTagCompound();
                 if (nBTTagCompound == null) {

@@ -154,7 +154,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public void void_B() {
+    public void spawnHitboxHelper() {
         this.c(true);
     }
 

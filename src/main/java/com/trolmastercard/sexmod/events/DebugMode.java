@@ -21,7 +21,7 @@ import com.trolmastercard.sexmod.girls.Goblin.GoblinRenderer;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldRenderer;
-import com.trolmastercard.sexmod.girls.Kobold.bs_class97;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldTaskInfo;
 import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblinRenderer;
 import com.trolmastercard.sexmod.girls.Kobold.PlayerKoboldRenderer;
 import net.minecraft.client.Minecraft;
@@ -145,9 +145,9 @@ public class DebugMode {
         //  because some kind of tribe identification with PLAYER ID results in null
         UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
         {
-            Collection<bs_class97> tribeTasks = KoboldManager.getTribeMembers(tribeID);
+            Collection<KoboldTaskInfo> tribeTasks = KoboldManager.getTribeTasks(tribeID);
             if (tribeTasks != null) {
-                for (bs_class97 task : tribeTasks) {
+                for (KoboldTaskInfo task : tribeTasks) {
                     this.sayMessage("task: " + task.getTaskType().name());
                     this.sayMessage("workers involved: ");
                     for (KoboldEntity worker : task.c()) {

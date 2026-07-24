@@ -43,7 +43,7 @@ public class EventHandler {
     public static void Register(boolean bl) throws IOException {
         MinecraftForge.EVENT_BUS.register((Object)new GirlCombatProtection());
         MinecraftForge.EVENT_BUS.register((Object)new eo_class262());
-        MinecraftForge.EVENT_BUS.register((Object)new q_class419());
+        MinecraftForge.EVENT_BUS.register((Object)new PlayerConnectionEvents());
         MinecraftForge.EVENT_BUS.register((Object)new HornyPotion());
         MinecraftForge.EVENT_BUS.register((Object)new ArmorHandler());
         MinecraftForge.EVENT_BUS.register((Object)new ho_class404.a_inner405());
@@ -58,7 +58,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object) Fire.FIRE);
         MinecraftForge.EVENT_BUS.register((Object)new KoboldEntity.c_inner311());
         MinecraftForge.EVENT_BUS.register((Object)new DragonStaffItem.a_inner408());
-        MinecraftForge.EVENT_BUS.register((Object)new KoboldManager.b_inner50("tribes"));
+        MinecraftForge.EVENT_BUS.register((Object)new KoboldManager.KoboldSavedData("tribes"));
         MinecraftForge.EVENT_BUS.register((Object)new KoboldEggItem());
         MinecraftForge.EVENT_BUS.register((Object)new am_class34());
         MinecraftForge.EVENT_BUS.register((Object)new GoblinEntity.c_inner222());

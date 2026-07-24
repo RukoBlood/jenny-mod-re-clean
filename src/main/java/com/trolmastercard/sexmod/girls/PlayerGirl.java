@@ -259,7 +259,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     public static boolean boolean_e(UUID uUID) {
-        PlayerGirl.void_C();
+        PlayerGirl.cleanupGlobalRegistry();
         for (Map.Entry<UUID, PlayerGirl> entry : playerGirlUUIDHashtable.entrySet()) {
             UUID uUID2 = entry.getKey();
             if (!uUID.equals(uUID2)) continue;
@@ -384,7 +384,7 @@ public abstract class PlayerGirl extends Fighter {
     @Override
     public void updateAITasks() {
         //Object object;
-        PlayerGirl.void_C();
+        PlayerGirl.cleanupGlobalRegistry();
         this.updateActionTicks();
         this.updateCustomModelParts();
         UUID uUID = this.getOwnerUserUUID();
@@ -460,7 +460,7 @@ public abstract class PlayerGirl extends Fighter {
         return true;
     }
 
-    public void void_b(EntityPlayer entityPlayer) {
+    public void detachPartner(EntityPlayer entityPlayer) {
     }
 
     @Override
@@ -530,10 +530,10 @@ public abstract class PlayerGirl extends Fighter {
     public void void_y() {
     }
 
-    public void void_B() {
+    public void spawnHitboxHelper() {
     }
 
-    public static void void_C() {
+    public static void cleanupGlobalRegistry() {
         ArrayList<PlayerGirl> arrayList = new ArrayList<PlayerGirl>();
         for (PlayerGirl ei_class2512 : Z) {
             if (ei_class2512.getOwnerUserUUID() == null) continue;

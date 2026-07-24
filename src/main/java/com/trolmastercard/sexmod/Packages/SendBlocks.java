@@ -121,18 +121,18 @@ implements IMessage {
                     }
                     if (h6_class3972.a) {
                         if (iBlockState.getBlock() instanceof BlockBed) {
-                            KoboldManager.a(uUID2, blockPos);
-                            KoboldManager.a(uUID2, blockPos2);
+                            KoboldManager.registerBed(uUID2, blockPos);
+                            KoboldManager.registerBed(uUID2, blockPos2);
                         } else {
-                            KoboldManager.f(uUID2, blockPos);
-                            KoboldManager.f(uUID2, blockPos2);
+                            KoboldManager.registerChest(uUID2, blockPos);
+                            KoboldManager.registerChest(uUID2, blockPos2);
                         }
                     } else if (iBlockState.getBlock() instanceof BlockBed) {
-                        KoboldManager.e(uUID2, blockPos);
-                        KoboldManager.e(uUID2, blockPos2);
+                        KoboldManager.unregisterBed(uUID2, blockPos);
+                        KoboldManager.unregisterBed(uUID2, blockPos2);
                     } else {
-                        KoboldManager.d(uUID2, blockPos);
-                        KoboldManager.d(uUID2, blockPos2);
+                        KoboldManager.unregisterChest(uUID2, blockPos);
+                        KoboldManager.unregisterChest(uUID2, blockPos2);
                     }
                     object = new HashSet();
                     ((HashSet)object).add(blockPos);

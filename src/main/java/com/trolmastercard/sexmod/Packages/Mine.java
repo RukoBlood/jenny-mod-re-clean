@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.girls.Kobold.bs_class97;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldTaskInfo;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
@@ -34,8 +34,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class Mine
-implements IMessage {
+public class Mine implements IMessage {
     boolean c = false;
     BlockPos a;
     EnumFacing b;
@@ -61,8 +60,7 @@ implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.getName());
     }
 
-    public static class a_inner227
-    implements IMessageHandler<Mine, IMessage> {
+    public static class a_inner227 implements IMessageHandler<Mine, IMessage> {
         public IMessage a(Mine e6_class2262, MessageContext messageContext) {
             if (!e6_class2262.c || !messageContext.side.equals((Object)Side.SERVER)) {
                 System.out.println("received an invalid Message @Mine :(");
@@ -76,7 +74,7 @@ implements IMessage {
                     return;
                 }
                 int n2 = KoboldManager.h(uUID);
-                if (n2 > (n = (int)Math.floor((double) KoboldManager.j(uUID).size() / 2.0))) {
+                if (n2 > (n = (int)Math.floor((double) KoboldManager.getTribeBeds(uUID).size() / 2.0))) {
                     ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("sUr Tribe will only work for you, if %severyone%s of them has a %sbed", new Object[]{TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED})));
                     ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("%s%d/%d Beds", new Object[]{TextFormatting.YELLOW, n, n2})));
                     return;
@@ -89,8 +87,8 @@ implements IMessage {
                     ((EntityPlayer)entityPlayerMP).sendStatusMessage(new TextComponentString("This area contains Bedrock and cannot be mined"), true);
                     return;
                 }
-                bs_class97 bs_class972 = new bs_class97(e6_class2262.a, bs_class97.KoboldTask.MINE, hashSet, e6_class2262.b);
-                KoboldManager.b(uUID, bs_class972);
+                KoboldTaskInfo bs_class972 = new KoboldTaskInfo(e6_class2262.a, KoboldTaskInfo.KoboldTask.MINE, hashSet, e6_class2262.b);
+                KoboldManager.addTaskToTribe(uUID, bs_class972);
                 PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
             });
             return null;
@@ -122,10 +120,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(Mine iMessage, MessageContext messageContext) {
             return this.a((Mine)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

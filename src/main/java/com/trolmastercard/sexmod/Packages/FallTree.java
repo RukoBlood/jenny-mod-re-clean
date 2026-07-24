@@ -10,7 +10,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.girls.Kobold.bs_class97;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldTaskInfo;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
@@ -68,14 +68,14 @@ implements IMessage {
                     return;
                 }
                 int n2 = KoboldManager.h(uUID);
-                if (n2 > (n = (int)Math.floor((double) KoboldManager.j(uUID).size() / 2.0))) {
+                if (n2 > (n = (int)Math.floor((double) KoboldManager.getTribeBeds(uUID).size() / 2.0))) {
                     ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("Ur Tribe will only work for you, if %severyone%s of them has a %sbed", new Object[]{TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED})));
                     ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("%s%d/%d Beds", new Object[]{TextFormatting.YELLOW, n, n2})));
                     return;
                 }
                 World world = entityPlayerMP.world;
                 BlockPos blockPos = this.a(world, fc_class3022.a);
-                HashSet<BlockPos> hashSet = bs_class97.a(world, blockPos, uUID);
+                HashSet<BlockPos> hashSet = KoboldTaskInfo.a(world, blockPos, uUID);
                 PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
             });
             return null;

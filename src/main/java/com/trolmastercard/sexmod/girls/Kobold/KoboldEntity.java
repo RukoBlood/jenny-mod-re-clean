@@ -184,7 +184,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     KoboldEntity(World world, UUID uUID, float f) {
         this(world);
         this.entityDataManager.set(aL, Optional.of(uUID));
-        this.entityDataManager.set(aE, Float.valueOf(f));
+        this.entityDataManager.set(aE, f);
     }
 
     public static KoboldEntity a(World world, UUID uUID) {
@@ -560,11 +560,11 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (!optional.isPresent()) {
             return true;
         }
-        Collection<bs_class97> collection = KoboldManager.getTribeMembers((UUID)optional.get());
+        Collection<KoboldTaskInfo> collection = KoboldManager.getTribeTasks((UUID)optional.get());
         if (collection == null) {
             return true;
         }
-        for (bs_class97 bs_class972 : collection) {
+        for (KoboldTaskInfo bs_class972 : collection) {
             bs_class972.c(this);
         }
         return true;
@@ -589,7 +589,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (entityPlayer == null) {
             return;
         }
-        EyeAndKoboldColor eyeAndKoboldColor_ = KoboldManager.l(uUID);
+        EyeAndKoboldColor eyeAndKoboldColor_ = KoboldManager.getTribeColor(uUID);
         ItemStack itemStack = new ItemStack(KoboldEggItem.KOBOLD_EGG, 1, eyeAndKoboldColor_.getWoolMeta());
         NBTTagCompound nBTTagCompound = itemStack.getTagCompound();
         if (nBTTagCompound == null) {
@@ -609,10 +609,10 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         Optional<UUID> optional = this.entityDataManager.get(aL);
         if (optional.isPresent()) {
             this.o((UUID)optional.get());
-            KoboldManager.k((UUID)optional.get());
+            KoboldManager.updateLeaderIfDead((UUID)optional.get());
             EntityPlayer object = this.getMasterPlayer();
             if (object != null) {
-                KoboldManager.a((UUID)optional.get(), object.getPersistentID());
+                KoboldManager.setTribeMaster((UUID)optional.get(), object.getPersistentID());
             }
         }
         if (this.boolean_g()) {
@@ -666,7 +666,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return;
         }
         this.entityDataManager.set(aC, this.c((UUID)optional.get(), false));
-        this.entityDataManager.set(aZ, KoboldManager.e((UUID)optional.get(), this));
+        this.entityDataManager.set(aZ, KoboldManager.isTribeLeader((UUID)optional.get(), this));
         this.entityDataManager.set(ak, KoboldManager.c((UUID)optional.get()));
         this.void_d();
         this.void_h();
@@ -865,7 +865,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             if (entityPlayer == null) {
                 return;
             }
-            for (bs_class97 bs_class972 : KoboldManager.getTribeMembers(uUID)) {
+            for (KoboldTaskInfo bs_class972 : KoboldManager.getTribeTasks(uUID)) {
                 if (!bs_class972.b(this)) continue;
                 bs_class972.c(this);
                 this.setCurrentAction(Action.NULL);
@@ -882,7 +882,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                     this.void_c(entityPlayer);
                 }
             }
-        } else if (KoboldManager.e(uUID, this)) {
+        } else if (KoboldManager.isTribeLeader(uUID, this)) {
             this.void_b(uUID);
         } else {
             this.n(uUID);
@@ -913,7 +913,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     void void_b(UUID uUID) {
-        fm_class319 fm_class3192;
+        TribeState fm_class3192;
         if (this.d_(uUID)) { // TODO clash below
             return;
         }
@@ -922,9 +922,9 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.aM = null;
             return;
         }
-        fm_class319 fm_class3193 = KoboldManager.i(uUID);
+        TribeState fm_class3193 = KoboldManager.getTribeState(uUID);
         if (fm_class3193 != (fm_class3192 = this.com_trolmastercard_sexmod_fm_class319_p())) {
-            KoboldManager.a(uUID, fm_class3192);
+            KoboldManager.setTribeState(uUID, fm_class3192);
             switch (fm_class3192) {
                 case REST: {
                     this.p(uUID);
@@ -951,11 +951,11 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     void p(UUID uUID) {
-        Collection<bs_class97> collection = KoboldManager.getTribeMembers(uUID);
+        Collection<KoboldTaskInfo> collection = KoboldManager.getTribeTasks(uUID);
         if (collection == null) {
             return;
         }
-        for (bs_class97 bs_class972 : collection) {
+        for (KoboldTaskInfo bs_class972 : collection) {
             bs_class972.a();
         }
     }
@@ -966,7 +966,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
         List<KoboldEntity> list = KoboldManager.n(uUID);
         for (KoboldEntity ff_class3082 : list) {
-            KoboldManager.b(ff_class3082);
+            KoboldManager.removeBedForKobold(ff_class3082);
             if (ff_class3082.getID() != null) continue;
             ff_class3082.noClip = false;
             ff_class3082.setNoGravity(false);
@@ -976,9 +976,9 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     void l(UUID uUID) {
-        Collection<bs_class97> collection = KoboldManager.getTribeMembers(uUID);
+        Collection<KoboldTaskInfo> collection = KoboldManager.getTribeTasks(uUID);
         if (collection != null) {
-            for (bs_class97 bs_class972 : collection) {
+            for (KoboldTaskInfo bs_class972 : collection) {
                 bs_class972.c(this);
             }
         }
@@ -990,7 +990,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     void void_i(UUID uUID) {
-        BlockPos[] blockPosArray = KoboldManager.a(this);
+        BlockPos[] blockPosArray = KoboldManager.getBedForKobold(this);
         if (blockPosArray != null) {
             Vec3d vec3d = new Vec3d((float)blockPosArray[0].getX() + 0.5f, (double)blockPosArray[0].getY() + 0.5625, (float)blockPosArray[0].getZ() + 0.5f);
             Vec3d vec3d2 = new Vec3d((float)blockPosArray[1].getX() + 0.5f, (double)blockPosArray[1].getY() + 0.5625, (float)blockPosArray[1].getZ() + 0.5f);
@@ -1003,7 +1003,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.setNoGravity(true);
             return;
         }
-        HashSet<BlockPos> hashSet = KoboldManager.j(uUID);
+        HashSet<BlockPos> hashSet = KoboldManager.getTribeBeds(uUID);
         Vec3i vec3i = null;
         if (hashSet == null) {
             return;
@@ -1016,7 +1016,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 bl = (Boolean)entry.getValue();
                 break;
             }
-            if (bl || KoboldManager.a(blockPos)) continue;
+            if (bl || KoboldManager.isBedAssigned(blockPos)) continue;
             if (vec3i == null) {
                 vec3i = blockPos;
                 continue;
@@ -1039,13 +1039,13 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             }
             return;
         }
-        KoboldManager.a(this, (BlockPos)vec3i);
+        KoboldManager.assignBedToKobold(this, (BlockPos)vec3i);
         this.setCurrentAction(Action.SLEEP);
     }
 
     void void_a(UUID uUID) {
         BlockPos blockPos = KoboldManager.m(uUID);
-        if (blockPos == null && KoboldManager.e(uUID, this)) {
+        if (blockPos == null && KoboldManager.isTribeLeader(uUID, this)) {
             BlockPos blockPos2 = this.getPosition().add(1, 0, 0);
             this.R = this.world.getBlockState(blockPos2.add(0, -1, 0));
             this.aX = this.world.getBlockState(blockPos2);
@@ -1069,7 +1069,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.g_(uUID);
             return;
         }
-        Collection<bs_class97> collection = KoboldManager.getTribeMembers(uUID);
+        Collection<KoboldTaskInfo> collection = KoboldManager.getTribeTasks(uUID);
         if (collection == null) {
             return;
         }
@@ -1081,7 +1081,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
     }
 
-    void b(UUID uUID, Collection<bs_class97> collection) {
+    void b(UUID uUID, Collection<KoboldTaskInfo> collection) {
         if (collection.isEmpty()) {
             this.ao = false;
             this.r(uUID);
@@ -1089,7 +1089,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
     }
 
-    void a(UUID uUID, Collection<bs_class97> collection) {
+    void a(UUID uUID, Collection<KoboldTaskInfo> collection) {
         BlockPos blockPos = KoboldManager.m(uUID);
         if (blockPos == null) {
             this.r(uUID);
@@ -1167,14 +1167,14 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         KoboldManager.b(uUID, blockPos);
     }
 
-    void c(UUID uUID, Collection<bs_class97> collection) {
+    void c(UUID uUID, Collection<KoboldTaskInfo> collection) {
         List<BlockPos> list = this.a(this.getPosition(), BlockLog.class, 30, 4, null);
         BlockPos blockPos = null;
         for (BlockPos blockPos2 : list) {
             Block block = this.world.getBlockState(blockPos2.down()).getBlock();
             if (block instanceof BlockLog || block == Blocks.AIR) continue;
             boolean bl = false;
-            for (bs_class97 bs_class972 : collection) {
+            for (KoboldTaskInfo bs_class972 : collection) {
                 if (!bs_class972.c(blockPos2)) continue;
                 bl = true;
                 break;
@@ -1186,17 +1186,17 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (blockPos == null) {
             return;
         }
-        bs_class97.a(this.world, blockPos, uUID);
+        KoboldTaskInfo.a(this.world, blockPos, uUID);
         this.broadcastChatMessage("Someone, go fall this tree!");
     }
 
     @CheckReturnValue
-    fm_class319 com_trolmastercard_sexmod_fm_class319_p() {
+    TribeState com_trolmastercard_sexmod_fm_class319_p() {
         long l = this.world.getWorldTime();
         if (l < 12000L) {
-            return fm_class319.ACTIVE;
+            return TribeState.ACTIVE;
         }
-        return fm_class319.REST;
+        return TribeState.REST;
     }
 
     // TODO / dup clash with 'List<...> GirlEntity::d()'
@@ -1210,7 +1210,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     boolean c(UUID uUID, boolean bl) {
         //Optional<UUID> optional;
         HashSet<EntityLivingBase> hashSet = KoboldManager.e(uUID);
-        KoboldEntity ff_class3082 = KoboldManager.f(uUID);
+        KoboldEntity ff_class3082 = KoboldManager.getTribeLeader(uUID);
         if (ff_class3082 == null) {
             return false;
         }
@@ -1267,7 +1267,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (this.d_(uUID)) {
             return;
         }
-        fm_class319 fm_class3192 = KoboldManager.i(uUID);
+        TribeState fm_class3192 = KoboldManager.getTribeState(uUID);
         switch (fm_class3192) {
             case REST: {
                 this.l(uUID);
@@ -1288,7 +1288,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.g_(uUID);
             return;
         }
-        KoboldEntity ff_class3082 = KoboldManager.f(uUID);
+        KoboldEntity ff_class3082 = KoboldManager.getTribeLeader(uUID);
         if (KoboldManager.g(uUID)) {
             this.getNavigator().clearPath();
             this.aM = null;
@@ -1320,18 +1320,18 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (this.getID() != null) {
             return;
         }
-        Collection<bs_class97> collection = KoboldManager.getTribeMembers(uUID);
+        Collection<KoboldTaskInfo> collection = KoboldManager.getTribeTasks(uUID);
         if (collection == null) {
             return;
         }
-        bs_class97 bs_class972 = null;
-        for (bs_class97 bs_class973 : collection) {
+        KoboldTaskInfo bs_class972 = null;
+        for (KoboldTaskInfo bs_class973 : collection) {
             if (!bs_class973.b(this)) continue;
             bs_class972 = bs_class973;
             break;
         }
         if (bs_class972 == null) {
-            for (bs_class97 bs_class973 : collection) {
+            for (KoboldTaskInfo bs_class973 : collection) {
                 if (this.isMasterAssigned() && !this.c(uUID, bs_class973)) continue;
                 if (!this.a(bs_class973)) {
                     this.ax = true;
@@ -1340,7 +1340,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 if (!bs_class973.a(this)) continue;
                 bs_class972 = bs_class973;
                 this.aI = null;
-                if (bs_class973.getTaskType() == bs_class97.KoboldTask.FALL_TREE) {
+                if (bs_class973.getTaskType() == KoboldTaskInfo.KoboldTask.FALL_TREE) {
                     this.broadcastChatMessage("Ima fall this tree owo");
                     break;
                 }
@@ -1354,10 +1354,10 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             this.u(uUID);
             return;
         }
-        if (bs_class972.getTaskType() == bs_class97.KoboldTask.FALL_TREE) {
+        if (bs_class972.getTaskType() == KoboldTaskInfo.KoboldTask.FALL_TREE) {
             this.a(uUID, bs_class972.b(), bs_class972);
         }
-        if (bs_class972.getTaskType() == bs_class97.KoboldTask.MINE) {
+        if (bs_class972.getTaskType() == KoboldTaskInfo.KoboldTask.MINE) {
             this.b(uUID, bs_class972);
         }
     }
@@ -1368,7 +1368,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnParticle(this.girlID(), EnumParticleTypes.PORTAL.getParticleName(), 30), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 30.0));
     }
 
-    void b(UUID uUID, bs_class97 bs_class972) {
+    void b(UUID uUID, KoboldTaskInfo bs_class972) {
         if (this.currentAction() != Action.MINE) {
             this.a(uUID, bs_class972);
             return;
@@ -1396,14 +1396,14 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         }
     }
 
-    void a(UUID uUID, bs_class97 bs_class972) {
+    void a(UUID uUID, KoboldTaskInfo bs_class972) {
         PathNavigate pathNavigate = this.getNavigator();
         if (this.aI == null || !bs_class972.g().contains(this.aI)) {
             BlockPos blockPos;
             this.aI = this.a(bs_class972, uUID);
             if (this.aI == null) {
                 boolean bl = bs_class972.g().isEmpty();
-                HashSet<BlockPos> hashSet = KoboldManager.a(uUID, bs_class972);
+                HashSet<BlockPos> hashSet = KoboldManager.removeTaskAndGetBlocks(uUID, bs_class972);
                 UUID uUID2 = KoboldManager.b(uUID);
                 if (uUID2 == null) {
                     return;
@@ -1627,7 +1627,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }*/
 
     // TODO rewrite/migrate
-    BlockPos a(bs_class97 var1, UUID var2) {
+    BlockPos a(KoboldTaskInfo var1, UUID var2) {
         HashSet<BlockPos> var3 = var1.g();
         EnumFacing var4 = var1.f();
         ArrayList<BlockPos> var5 = new ArrayList<>();
@@ -2055,7 +2055,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
 
     @CheckReturnValue
     boolean a(UUID var1, boolean var2) {
-        HashSet<BlockPos> var3 = KoboldManager.q(var1);
+        HashSet<BlockPos> var3 = KoboldManager.getTribeChests(var1);
         if (var3 == null) {
             return false;
         } else {
@@ -2142,14 +2142,14 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     }
 
     @CheckReturnValue
-    boolean c(UUID uUID, bs_class97 bs_class972) {
+    boolean c(UUID uUID, KoboldTaskInfo bs_class972) {
         List<KoboldEntity> list = KoboldManager.n(uUID);
-        Collection<bs_class97> collection = KoboldManager.getTribeMembers(uUID);
+        Collection<KoboldTaskInfo> collection = KoboldManager.getTribeTasks(uUID);
         KoboldEntity ff_class3082 = null;
         Vec3d vec3d = new Vec3d(bs_class972.b().getX(), bs_class972.b().getY(), bs_class972.b().getZ());
         for (KoboldEntity ff_class3083 : list) {
             boolean bl = false;
-            for (bs_class97 bs_class973 : collection) {
+            for (KoboldTaskInfo bs_class973 : collection) {
                 if (!bs_class973.b(ff_class3083)) continue;
                 bl = true;
                 break;
@@ -2165,7 +2165,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         return this.equals(ff_class3082);
     }
 
-    void a(UUID uUID, bs_class97 bs_class972, BlockPos blockPos) {
+    void a(UUID uUID, KoboldTaskInfo bs_class972, BlockPos blockPos) {
         if (this.ad == null) {
             this.aR = 24;
             this.W = 0;
@@ -2176,7 +2176,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             if (entityPlayer != null && !hashSet.isEmpty()) {
                 PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), (EntityPlayerMP)entityPlayer);
             }
-            KoboldManager.b(uUID, this);
+            KoboldManager.removeWorkerTask(uUID, this);
             return;
         }
         switch (this.ad.getMetadata()) {
@@ -2202,10 +2202,10 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (entityPlayer != null && !hashSet.isEmpty()) {
             PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), (EntityPlayerMP)entityPlayer);
         }
-        KoboldManager.b(uUID, this);
+        KoboldManager.removeWorkerTask(uUID, this);
     }
 
-    void a(UUID uUID, BlockPos blockPos, bs_class97 bs_class972) {
+    void a(UUID uUID, BlockPos blockPos, KoboldTaskInfo bs_class972) {
         if (this.currentAction() != Action.MINE) {
             this.a(blockPos, uUID);
             return;
@@ -2360,7 +2360,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             vec3i = blockPos2;
         }
         if (vec3i == null) {
-            KoboldManager.b(uUID, this);
+            KoboldManager.removeWorkerTask(uUID, this);
             object = this.getMasterPlayer();
             if (object == null) {
                 return;
@@ -2407,7 +2407,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (!optional.isPresent()) {
             return;
         }
-        this.entityDataManager.set(CURRENT_ACTION, KoboldManager.l((UUID)optional.get()).toString());
+        this.entityDataManager.set(CURRENT_ACTION, KoboldManager.getTribeColor((UUID)optional.get()).toString());
     }
 
     @Override
@@ -2439,7 +2439,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             return;
         }
         UUID uUID = (UUID)optional.get();
-        KoboldManager.a(uUID, this);
+        KoboldManager.removeMemberFromTribe(uUID, this);
         if (this.isMasterAssigned() && (player = this.world.getPlayerEntityByUUID(UUID.fromString((String)this.getDataManager().get(MASTER_UUID)))) != null) {
             player.sendMessage(new TextComponentString(String.format("%s%s%s has perished %suwu", new Object[]{TextFormatting.RED, this.getGirlName(), TextFormatting.WHITE, TextFormatting.RED})));
         }
@@ -2486,7 +2486,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         Optional<UUID> optional = this.entityDataManager.get(aL);
         if (optional.isPresent()) {
             nbt.setUniqueId("tribeId", (UUID)optional.get());
-            nbt.setBoolean("isLeader", KoboldManager.e((UUID)optional.get(), this));
+            nbt.setBoolean("isLeader", KoboldManager.isTribeLeader((UUID)optional.get(), this));
             nbt.setString("tribeName", this.entityDataManager.get(aU));
         }
     }
@@ -2502,7 +2502,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         if (!BlockPos.ORIGIN.equals(blockPos = new BlockPos(nbt.getInteger("eyeColorX"), nbt.getInteger("eyeColorY"), nbt.getInteger("eyeColorZ")))) {
             this.entityDataManager.set(ACTION_TARGET_POS, blockPos);
         }
-        this.entityDataManager.set(aE, Float.valueOf(nbt.getFloat("body_size")));
+        this.entityDataManager.set(aE, nbt.getFloat("body_size"));
         this.entityDataManager.set(T, nbt.getString("name"));
         this.entityDataManager.set(MASTER_UUID, nbt.getString("master"));
         this.X.deserializeNBT(nbt.getCompoundTag("inventory"));
@@ -2519,12 +2519,12 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 return;
             }
             this.entityDataManager.set(aL, Optional.of(tribeId));
-            if (!KoboldManager.o(tribeId)) {
-                KoboldManager.a(tribeId, EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(CURRENT_ACTION)));
+            if (!KoboldManager.doesTribeExist(tribeId)) {
+                KoboldManager.createTribe(tribeId, EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(CURRENT_ACTION)));
             }
-            KoboldManager.c(tribeId, this);
+            KoboldManager.addMemberToTribe(tribeId, this);
             if (nbt.getBoolean("isLeader")) {
-                KoboldManager.d(tribeId, this);
+                KoboldManager.setTribeLeader(tribeId, this);
             }
             this.entityDataManager.set(aU, nbt.getString("tribeName"));
         }
@@ -2547,7 +2547,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
         return true;
     }
 
-    boolean a(bs_class97 bs_class972) {
+    boolean a(KoboldTaskInfo bs_class972) {
         ArrayList<ItemStack> arrayList = new ArrayList<ItemStack>();
         for (BlockPos blockPos : bs_class972.g()) {
             IBlockState iBlockState = this.world.getBlockState(blockPos);
@@ -3177,7 +3177,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
             for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
                 KoboldEntity ff_class3082;
                 Optional<UUID> optional;
-                if (!(em_class2582 instanceof KoboldEntity) || !(optional = (ff_class3082 = (KoboldEntity) em_class2582).getDataManager().get(aL)).isPresent() || !KoboldManager.e((UUID) optional.get(), ff_class3082))
+                if (!(em_class2582 instanceof KoboldEntity) || !(optional = (ff_class3082 = (KoboldEntity) em_class2582).getDataManager().get(aL)).isPresent() || !KoboldManager.isTribeLeader((UUID) optional.get(), ff_class3082))
                     continue;
                 ff_class3082.s((UUID) optional.get());
             }

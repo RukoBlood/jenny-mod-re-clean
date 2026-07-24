@@ -101,7 +101,7 @@ implements IAnimatable {
             this.f = UUID.randomUUID();
         }
         KoboldEntity ff_class3082 = KoboldEntity.a(this.world, this.f);
-        KoboldManager.c(this.f, ff_class3082);
+        KoboldManager.addMemberToTribe(this.f, ff_class3082);
         UUID uUID = KoboldManager.b(this.f);
         if (uUID != null) {
             ff_class3082.getDataManager().set(GirlEntity.MASTER_UUID, uUID.toString());
@@ -130,7 +130,7 @@ implements IAnimatable {
             return;
         }
         EntityPlayerMP entityPlayerMP = (EntityPlayerMP)entityPlayer;
-        EyeAndKoboldColor eyeAndKoboldColor_ = KoboldManager.l(this.f);
+        EyeAndKoboldColor eyeAndKoboldColor_ = KoboldManager.getTribeColor(this.f);
         entityPlayer.sendMessage(new TextComponentString(String.format("%s%s %shas become a %snew tribe member%s!", new Object[]{eyeAndKoboldColor_.getTextColor(), ff_class3082.getGirlName(), TextFormatting.WHITE, TextFormatting.RED, TextFormatting.WHITE})));
         entityPlayerMP.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.NEUTRAL, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, 1.0f, 1.0f));
         entityPlayerMP.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_FIREWORK_TWINKLE_FAR, SoundCategory.NEUTRAL, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, 1.0f, 1.0f));

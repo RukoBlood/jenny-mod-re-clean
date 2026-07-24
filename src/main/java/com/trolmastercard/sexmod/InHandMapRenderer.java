@@ -46,7 +46,7 @@ public class InHandMapRenderer {
     @SubscribeEvent
     public void onRenderingSpecificHandEvent(RenderSpecificHandEvent event) {
         //Object object;
-        PlayerGirl.void_C();
+        PlayerGirl.cleanupGlobalRegistry();
         PlayerGirl state = PlayerGirl.getUUIDHashtable(Minecraft.getMinecraft().player.getPersistentID());
         if (state == null) {
             return;

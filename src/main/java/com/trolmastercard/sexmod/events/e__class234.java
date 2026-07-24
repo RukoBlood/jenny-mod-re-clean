@@ -47,7 +47,7 @@ public class e__class234 {
         if (pre.getPartialRenderTick() == 1.2345679f) {
             return;
         }
-        PlayerGirl.void_C();
+        PlayerGirl.cleanupGlobalRegistry();
         PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(pre.getEntityPlayer().getPersistentID());
         if (playerGirl == null) {
             return;

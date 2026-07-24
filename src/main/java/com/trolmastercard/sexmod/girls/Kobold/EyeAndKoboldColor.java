@@ -45,7 +45,7 @@ public enum EyeAndKoboldColor {
     public static EyeAndKoboldColor safeValueOf(String string) {
         try {
             return EyeAndKoboldColor.valueOf(string);
-        } catch (IllegalArgumentException illegalArgumentException) {
+        } catch (IllegalArgumentException e) {
             return KoboldEntity.COLOR;
         }
     }
@@ -80,10 +80,6 @@ public enum EyeAndKoboldColor {
 
     public TextFormatting getTextColor() {
         return this.textColor;
-    }
-
-    private static IllegalArgumentException a(IllegalArgumentException illegalArgumentException) {
-        return illegalArgumentException;
     }
 }
 

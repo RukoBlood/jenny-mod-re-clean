@@ -57,7 +57,7 @@ implements IMessage {
                 if (uUID == null) {
                     return;
                 }
-                HashSet<BlockPos> hashSet = KoboldManager.c(uUID, au_class442.b);
+                HashSet<BlockPos> hashSet = KoboldManager.removeTaskByBlockPos(uUID, au_class442.b);
                 if (hashSet.isEmpty()) {
                     return;
                 }

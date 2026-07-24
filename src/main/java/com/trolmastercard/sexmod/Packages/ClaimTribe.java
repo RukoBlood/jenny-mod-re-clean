@@ -85,7 +85,7 @@ implements IMessage {
                     entityPlayer.sendMessage(new TextComponentString(String.format("%s formed the " + (Object)((Object) eyeAndKoboldColor_.getTextColor()) + "%s " + (Object)((Object)TextFormatting.WHITE) + "Tribe", string, g9_class3542.b)));
                 }
                 KoboldManager.a(g9_class3542.d, true);
-                KoboldManager.a(g9_class3542.d, messageContext.getServerHandler().player.getPersistentID());
+                KoboldManager.setTribeMaster(g9_class3542.d, messageContext.getServerHandler().player.getPersistentID());
             });
             return null;
         }

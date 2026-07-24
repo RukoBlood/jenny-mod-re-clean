@@ -96,7 +96,7 @@ public class GetTribeUIValues implements IMessage {
                 HashMap<UUID, BlockPos> hashMap = KoboldManager.a(uUID, entityPlayerMP.world);
                 List<KoboldEntity> list = KoboldManager.n(uUID);
                 ArrayList<Vector4d> arrayList = new ArrayList<Vector4d>();
-                int koboldColor = KoboldManager.l(uUID).getWoolMeta();
+                int koboldColor = KoboldManager.getTribeColor(uUID).getWoolMeta();
                 HashSet<Object> hashSet = new HashSet<Object>();
                 for (KoboldEntity koboldEntity : list) {
                     if (koboldEntity.isDead || hashSet.contains(object = koboldEntity.girlID())) continue;

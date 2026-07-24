@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Ellie;
 
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.client.model.ModelBase;

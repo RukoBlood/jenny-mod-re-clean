@@ -657,7 +657,7 @@ implements ai_class30 {
     }
 
     @Override
-    public void void_b(EntityPlayer entityPlayer) {
+    public void detachPartner(EntityPlayer entityPlayer) {
         if (!entityPlayer.getPersistentID().equals(this.java_util_UUID_e())) {
             return;
         }

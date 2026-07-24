@@ -100,7 +100,7 @@ implements IMessage {
                 ei_class2512.motionZ = 0.0;
                 ei_class2512.setPosition(entityPlayerMP.posX, entityPlayerMP.posY + 69.0, entityPlayerMP.posZ);
                 world.spawnEntity(ei_class2512);
-                ei_class2512.void_B();
+                ei_class2512.spawnHitboxHelper();
             });
             return null;
         }
