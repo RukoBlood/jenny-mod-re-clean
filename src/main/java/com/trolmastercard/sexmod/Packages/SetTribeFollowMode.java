@@ -51,7 +51,7 @@ implements IMessage {
                 if (uUID == null) {
                     return;
                 }
-                KoboldManager.a(uUID, fj_class3152.b);
+                KoboldManager.setTribeAlerted(uUID, fj_class3152.b);
             });
             return null;
         }

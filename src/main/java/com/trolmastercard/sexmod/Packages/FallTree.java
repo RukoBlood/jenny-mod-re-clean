@@ -67,7 +67,7 @@ implements IMessage {
                     System.out.println("not tribe for player");
                     return;
                 }
-                int n2 = KoboldManager.h(uUID);
+                int n2 = KoboldManager.getTribeMemberCount(uUID);
                 if (n2 > (n = (int)Math.floor((double) KoboldManager.getTribeBeds(uUID).size() / 2.0))) {
                     ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("Ur Tribe will only work for you, if %severyone%s of them has a %sbed", new Object[]{TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED})));
                     ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("%s%d/%d Beds", new Object[]{TextFormatting.YELLOW, n, n2})));

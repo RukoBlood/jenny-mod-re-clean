@@ -66,7 +66,7 @@ public class PlayerConnectionEvents {
 
         UUID tribeID = KoboldManager.findTribeIdWith(playerMP.getPersistentID());
         if (tribeID != null) {
-            HashSet<BlockPos> tribeBlocks = KoboldManager.d(tribeID);
+            HashSet<BlockPos> tribeBlocks = KoboldManager.getAllTribeBlocks(tribeID);
             PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(tribeBlocks, true), playerMP);
         }
 

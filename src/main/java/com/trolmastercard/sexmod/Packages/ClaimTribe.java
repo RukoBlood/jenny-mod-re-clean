@@ -32,7 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class ClaimTribe
 implements IMessage {
-    boolean c = false;
+    boolean valid = false;
     UUID d;
     UUID a;
     String b;
@@ -50,7 +50,7 @@ implements IMessage {
         this.d = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
         this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
         this.b = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
-        this.c = true;
+        this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -61,31 +61,31 @@ implements IMessage {
 
     public static class a_inner355
     implements IMessageHandler<ClaimTribe, IMessage> {
-        public IMessage a(ClaimTribe g9_class3542, MessageContext messageContext) {
-            if (!g9_class3542.c || messageContext.side != Side.SERVER) {
+        public IMessage a(ClaimTribe msg, MessageContext ctx) {
+            if (!msg.valid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @ClaimTribe :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                List<KoboldEntity> list = KoboldManager.n(g9_class3542.d);
+                List<KoboldEntity> list = KoboldManager.getTribeMembersList(msg.d);
                 EyeAndKoboldColor eyeAndKoboldColor_ = null;
                 for (KoboldEntity object2 : list) {
                     if (object2.isMasterAssigned()) continue;
                     EntityDataManager entityDataManager = object2.getDataManager();
-                    entityDataManager.set(GirlEntity.MASTER_UUID, g9_class3542.a.toString());
-                    entityDataManager.set(KoboldEntity.aU, g9_class3542.b);
+                    entityDataManager.set(GirlEntity.MASTER_UUID, msg.a.toString());
+                    entityDataManager.set(KoboldEntity.aU, msg.b);
                     eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
                 }
                 if (eyeAndKoboldColor_ == null) {
                     return;
                 }
                 PlayerList playerList = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
-                String string = messageContext.getServerHandler().player.getName();
+                String string = ctx.getServerHandler().player.getName();
                 for (EntityPlayer entityPlayer : playerList.getPlayers()) {
-                    entityPlayer.sendMessage(new TextComponentString(String.format("%s formed the " + (Object)((Object) eyeAndKoboldColor_.getTextColor()) + "%s " + (Object)((Object)TextFormatting.WHITE) + "Tribe", string, g9_class3542.b)));
+                    entityPlayer.sendMessage(new TextComponentString(String.format("%s formed the " + (Object)((Object) eyeAndKoboldColor_.getTextColor()) + "%s " + (Object)((Object)TextFormatting.WHITE) + "Tribe", string, msg.b)));
                 }
-                KoboldManager.a(g9_class3542.d, true);
-                KoboldManager.setTribeMaster(g9_class3542.d, messageContext.getServerHandler().player.getPersistentID());
+                KoboldManager.setTribeAlerted(msg.d, true);
+                KoboldManager.setTribeMaster(msg.d, ctx.getServerHandler().player.getPersistentID());
             });
             return null;
         }

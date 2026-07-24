@@ -102,11 +102,11 @@ implements IAnimatable {
         }
         KoboldEntity ff_class3082 = KoboldEntity.a(this.world, this.f);
         KoboldManager.addMemberToTribe(this.f, ff_class3082);
-        UUID uUID = KoboldManager.b(this.f);
+        UUID uUID = KoboldManager.getTribeMasterUUID(this.f);
         if (uUID != null) {
             ff_class3082.getDataManager().set(GirlEntity.MASTER_UUID, uUID.toString());
         }
-        List<KoboldEntity> list = KoboldManager.n(this.f);
+        List<KoboldEntity> list = KoboldManager.getTribeMembersList(this.f);
         String string = null;
         for (KoboldEntity ff_class3083 : list) {
             String string2 = ff_class3083.getDataManager().get(KoboldEntity.aU);

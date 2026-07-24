@@ -156,16 +156,16 @@ public class DebugMode {
                 }
             }
         }
-        this.sayMessage("tribe contains my exact reference: " + KoboldManager.n(tribeID).contains(kobold));
+        this.sayMessage("tribe contains my exact reference: " + KoboldManager.getTribeMembersList(tribeID).contains(kobold));
         this.sayMessage("tribe contains my ID: ");
         boolean containsRef = false;
-        for (KoboldEntity member : KoboldManager.n(tribeID)) {
+        for (KoboldEntity member : KoboldManager.getTribeMembersList(tribeID)) {
             if (!member.girlID().equals(kobold.girlID())) continue;
             containsRef = true;
         }
         boolean containsSavedPos = false;
 //        boolean bl3 = false;
-        for (Map.Entry<UUID, BlockPos> entry : KoboldManager.a(tribeID, player.world).entrySet()) {
+        for (Map.Entry<UUID, BlockPos> entry : KoboldManager.getUnloadedMembersMap(tribeID, player.world).entrySet()) {
             if (!entry.getKey().equals(kobold.girlID())) continue;
             containsSavedPos = true;
         }
@@ -199,15 +199,15 @@ public class DebugMode {
 
         if ("kobs".equals(message)) {
             UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
-            int totalMembersCount = KoboldManager.h((UUID)tribeID);
-            List<KoboldEntity> aliveMembers = KoboldManager.n((UUID)tribeID);
+            int totalMembersCount = KoboldManager.getTribeMemberCount((UUID)tribeID);
+            List<KoboldEntity> aliveMembers = KoboldManager.getTribeMembersList((UUID)tribeID);
 
             for (Object members : aliveMembers) {
                 this.sayMessage(String.format("alive member %s at %s world.isremote? %s isdead %s girlID %s entityID %s", ((KoboldEntity)members).getGirlName(), ((Entity)members).getPosition(), ((KoboldEntity)members).world.isRemote, ((KoboldEntity)members).isDead, ((GirlEntity)members).girlID(), ((Entity)members).getEntityId()));
                 this.sayMessage(player.world.getEntitiesWithinAABB(KoboldEntity.class, new AxisAlignedBB(((Entity)members).getPosition())).isEmpty() ? "couldn't be located" : "appears to actually exist");
             }
 
-            HashMap<UUID, BlockPos> savedPositions = KoboldManager.a((UUID)tribeID, player.world);
+            HashMap<UUID, BlockPos> savedPositions = KoboldManager.getUnloadedMembersMap((UUID)tribeID, player.world);
             for (Map.Entry entry : savedPositions.entrySet()) {
                 this.sayMessage(String.format("saved pos of %s at %s", ((UUID)entry.getKey()).toString(), ((BlockPos)entry.getValue()).toString()));
             }

@@ -91,10 +91,10 @@ public class GetTribeUIValues implements IMessage {
                     PackageHandler.networkWrapper.sendTo((IMessage) GetTribeUIValues.a(), ctx.getServerHandler().player);
                     return;
                 }
-                boolean bl = KoboldManager.c(uUID);
+                boolean bl = KoboldManager.isTribeAlerted(uUID);
                 EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
-                HashMap<UUID, BlockPos> hashMap = KoboldManager.a(uUID, entityPlayerMP.world);
-                List<KoboldEntity> list = KoboldManager.n(uUID);
+                HashMap<UUID, BlockPos> hashMap = KoboldManager.getUnloadedMembersMap(uUID, entityPlayerMP.world);
+                List<KoboldEntity> list = KoboldManager.getTribeMembersList(uUID);
                 ArrayList<Vector4d> arrayList = new ArrayList<Vector4d>();
                 int koboldColor = KoboldManager.getTribeColor(uUID).getWoolMeta();
                 HashSet<Object> hashSet = new HashSet<Object>();
