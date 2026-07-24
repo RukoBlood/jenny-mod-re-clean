@@ -13,10 +13,12 @@
 - PlayerSlime culling works incorrectly
 - Slime girl only does sloppy toppy
 - When selecting kobold in horny potion, it crashes
-  `if (a_inner492 == null) {
+  ```
+  if (a_inner492 == null) {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
             return new HashMap<UUID, BlockPos>();
-        }`
+        }
+  ```
 
   
 now it's:
@@ -55,5 +57,8 @@ public static HashMap<UUID, BlockPos> getUnloadedMembersMap(UUID uUID, World wor
 ```
 
 This is a known bug found by palkaline, where kobold UUIDs are messed up
+P.S: Caused by minecraft in IDE generating random names and uuid, meaning that tribes crashing the game while take damage
+
+-BiaRenderer crashes game
 
 - other stuff
