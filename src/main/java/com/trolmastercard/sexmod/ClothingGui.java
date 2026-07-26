@@ -568,7 +568,7 @@ public class ClothingGui extends GuiScreen {
             return;
         }
 
-        boolean canOpen = CustomModel.getGlobalModelOverride() == null || CustomModel.b();;
+        boolean canOpen = CustomModel.getGlobalModelOverride() == null || CustomModel.b();
 
         if (!canOpen) {
             mc.player.sendStatusMessage(new TextComponentString("You have to whitelist the server to use its custom models. " + (Object)((Object)TextFormatting.YELLOW) + "/whitelistserver"), true);
