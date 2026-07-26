@@ -177,7 +177,7 @@ implements IModelBoneFilter {
             f__class2972.aH = -1L;
             return null;
         }
-        EntityLivingBase entityLivingBase = f__class2972.net_minecraft_entity_EntityLivingBase_M();
+        EntityLivingBase entityLivingBase = f__class2972.getAttackTarget();
         if (entityLivingBase == null) {
             return null;
         }
@@ -406,7 +406,7 @@ implements IModelBoneFilter {
                 EntityLivingBase entityLivingBase;
                 this.c(bone);
                 Action fp_class3242 = ((GalathEntity)this.renderEntity).currentAction();
-                if (fp_class3242 != Action.FLY && fp_class3242 != Action.ATTACK_SWORD || (entityLivingBase = ((GalathEntity)this.renderEntity).net_minecraft_entity_EntityLivingBase_M()) == null) break;
+                if (fp_class3242 != Action.FLY && fp_class3242 != Action.ATTACK_SWORD || (entityLivingBase = ((GalathEntity)this.renderEntity).getAttackTarget()) == null) break;
                 float f = mc.getRenderPartialTicks();
                 Vec3d vec3d = Reference.LerpVec3d(new Vec3d(((GalathEntity)this.renderEntity).lastTickPosX, ((GalathEntity)this.renderEntity).lastTickPosY, ((GalathEntity)this.renderEntity).lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)f);
                 Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)f);
@@ -456,7 +456,7 @@ implements IModelBoneFilter {
             case "armL": 
             case "armR": {
                 EntityLivingBase entityLivingBase;
-                if (((GalathEntity)this.renderEntity).currentAction() != Action.RAPE_CHARGE || (entityLivingBase = ((GalathEntity)this.renderEntity).net_minecraft_entity_EntityLivingBase_M()) == null) break;
+                if (((GalathEntity)this.renderEntity).currentAction() != Action.RAPE_CHARGE || (entityLivingBase = ((GalathEntity)this.renderEntity).getAttackTarget()) == null) break;
                 float f = ((GalathEntity)this.renderEntity).renderYawOffset;
                 Vec3d vec3d = entityLivingBase.getPositionVector().subtract(((GalathEntity)this.renderEntity).getPositionVector());
                 vec3d = VectorMath.rotate(vec3d, f);

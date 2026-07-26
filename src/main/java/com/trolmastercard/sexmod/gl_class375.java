@@ -53,9 +53,5 @@ public class gl_class375<K, V> {
         this.a.clear();
         this.b.clear();
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

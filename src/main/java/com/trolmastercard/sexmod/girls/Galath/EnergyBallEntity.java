@@ -55,10 +55,10 @@ extends EntityLiving {
         this.setSize(0.5f, 0.5f);
     }
 
-    public EnergyBallEntity(World world, GalathEntity f__class2972) {
+    public EnergyBallEntity(World world, GalathEntity galath) {
         super(world);
         this.setSize(0.5f, 0.5f);
-        this.f = f__class2972;
+        this.f = galath;
     }
 
     public EnergyBallEntity(World world, GalathEntity f__class2972, Vec3d vec3d) {
@@ -158,7 +158,7 @@ extends EntityLiving {
         if (this.f == null) {
             return true;
         }
-        EntityLivingBase entityLivingBase = this.f.net_minecraft_entity_EntityLivingBase_M();
+        EntityLivingBase entityLivingBase = this.f.getAttackTarget();
         if (entityLivingBase == null) {
             return true;
         }

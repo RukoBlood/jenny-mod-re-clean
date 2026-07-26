@@ -220,9 +220,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     BossInfoServer aO = new BossInfoServer(new TextComponentString(this.getGirlName()), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
     MultiPartHitbox b2 = new MultiPartHitbox(this, "energyBallHitBox", 0.75f, 0.75f);
     MultiPartHitbox V = new MultiPartHitbox(this, "energyBallHitBox", 0.75f, 0.75f);
-    public h8_class399 bZ = null;
-    public Vec3d O = null;
-    public Vec3d bL = null;
+    public GalathAttackAction bZ = null;
+    public Vec3d targetFlyPos = null;
+    public Vec3d previousPos = null;
     public int aF = 0;
     public Vec3d bd = null;
     public List<EntityWitherSkeleton> witherSkeletons = new ArrayList<EntityWitherSkeleton>();
@@ -383,7 +383,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.entityDataManager.register(b8, "null");
         this.entityDataManager.register(bH, -1);
         this.entityDataManager.register(bP, false);
-        this.entityDataManager.register(bO, Float.valueOf(0.0f));
+        this.entityDataManager.register(bO, 0.0f);
         this.entityDataManager.register(L, false);
         this.entityDataManager.register(a4, "");
         this.entityDataManager.register(bT, false);
@@ -485,8 +485,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (fp_class3242 != Action.RAPE_ON_GOING) {
             return;
         }
-        this.bZ = h8_class399.CHANGE_POSITION;
-        this.bZ.b(this);
+        this.bZ = GalathAttackAction.CHANGE_POSITION;
+        this.bZ.executeStart(this);
         this.setAnchored(false);
         this.setCurrentAction(Action.FLY);
         EntityPlayer entityPlayer = this.getPlayerEntity();
@@ -602,7 +602,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.void_C();
         this.Y_();
         this.void_o();
-        if (this.net_minecraft_entity_EntityLivingBase_M() == null) {
+        if (this.getAttackTarget() == null) {
             this.ap = false;
         }
     }
@@ -782,7 +782,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (this.entityDataManager.get(bP).booleanValue()) {
             return;
         }
-        this.setNoGravity(this.net_minecraft_entity_EntityLivingBase_M() != null);
+        this.setNoGravity(this.getAttackTarget() != null);
     }
 
     void L_() {
@@ -891,7 +891,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         }
         this.entityDataManager.set(bP, true);
         if (this.bZ != null) {
-            this.bZ.e(this);
+            this.bZ.executeStop(this);
         }
         this.bZ = null;
         Vec3d vec3d2 = this.getPositionVector();
@@ -1020,7 +1020,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             return false;
         }
         if (this.bZ != null) {
-            this.bZ.e(this);
+            this.bZ.executeStop(this);
             this.bZ = null;
         }
         float f = this.getDistance(entityPlayer);
@@ -1099,7 +1099,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.bG = null;
         this.aC = 0;
         if (this.bZ != null) {
-            this.bZ.e(this);
+            this.bZ.executeStop(this);
             this.bZ = null;
         }
     }
@@ -1292,7 +1292,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (!this.maybeMountedByMangFn()) {
             return;
         }
-        if (this.net_minecraft_entity_EntityLivingBase_M() != null) {
+        if (this.getAttackTarget() != null) {
             return;
         }
         int n = this.entityDataManager.get(bq);
@@ -1300,14 +1300,14 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             return;
         }
         if (this.bZ != null) {
-            this.bZ.e(this);
+            this.bZ.executeStop(this);
         }
         this.bZ = null;
         this.setCurrentAction(Action.NULL);
     }
 
     void as() {
-        if (this.net_minecraft_entity_EntityLivingBase_M() != null) {
+        if (this.getAttackTarget() != null) {
             this.bG = null;
             this.aC = 0;
             return;
@@ -1490,7 +1490,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     void void_O() {
-        EntityLivingBase entityLivingBase = this.net_minecraft_entity_EntityLivingBase_M();
+        EntityLivingBase entityLivingBase = this.getAttackTarget();
         if (entityLivingBase == null) {
             return;
         }
@@ -1641,10 +1641,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     void void_J() {
-        if (this.bZ != h8_class399.CHANGE_POSITION) {
+        if (this.bZ != GalathAttackAction.CHANGE_POSITION) {
             return;
         }
-        int n = this.ar();
+        int n = this.getFlyTicks();
         boolean bl = this.noClip = n == 0;
         if (!this.world.isAirBlock(this.getPosition())) {
             this.noClip = true;
@@ -1655,11 +1655,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (this.bZ == null) {
             return;
         }
-        this.bZ.a(this);
+        this.bZ.checkFinished(this);
     }
 
     void D_() {
-        if (this.net_minecraft_entity_EntityLivingBase_M() == null) {
+        if (this.getAttackTarget() == null) {
             this.aH();
             return;
         }
@@ -1667,45 +1667,45 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             this.void_z();
             return;
         }
-        if (this.bZ.c(this)) {
+        if (this.bZ.executeStart(this)) {
             this.void_z();
         }
     }
 
     void void_z() {
-        h8_class399 h8_class3992;
+        GalathAttackAction h8_class3992;
         if (this.entityDataManager.get(bP).booleanValue()) {
             return;
         }
-        h8_class399 h8_class3993 = this.bZ;
+        GalathAttackAction h8_class3993 = this.bZ;
         if (this.getID() != null) {
             if (h8_class3993 != null) {
-                h8_class3993.e(this);
+                h8_class3993.executeStop(this);
             }
             this.bZ = null;
             return;
         }
         if (h8_class3993 != null && h8_class3993.applyAttackCoolDown) {
-            h8_class3993.e(this);
-            this.bZ = h8_class399.CHANGE_POSITION;
-            this.bZ.b(this);
+            h8_class3993.executeStop(this);
+            this.bZ = GalathAttackAction.CHANGE_POSITION;
+            this.bZ.executeStart(this);
             return;
         }
-        h8_class399[] h8_class399Array = h8_class399.values();
-        while (!this.a(h8_class3992 = h8_class399Array[this.getRNG().nextInt(h8_class399Array.length)])) {
+        GalathAttackAction[] galathAttackActionArray = GalathAttackAction.values();
+        while (!this.a(h8_class3992 = galathAttackActionArray[this.getRNG().nextInt(galathAttackActionArray.length)])) {
         }
         this.bZ = h8_class3992;
         if (h8_class3993 != null) {
-            h8_class3993.e(this);
+            h8_class3993.executeStop(this);
         }
-        this.bZ.b(this);
+        this.bZ.executeStart(this);
     }
 
-    boolean a(h8_class399 h8_class3992) {
-        if (h8_class3992.onlyDoThisOnPlayers && !(this.net_minecraft_entity_EntityLivingBase_M() instanceof EntityPlayer)) {
+    boolean a(GalathAttackAction h8_class3992) {
+        if (h8_class3992.onlyDoThisOnPlayers && !(this.getAttackTarget() instanceof EntityPlayer)) {
             return false;
         }
-        return h8_class3992.d(this);
+        return h8_class3992.canExecute(this);
     }
 
     void aH() {
@@ -1739,10 +1739,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.a(ent);
         GirlEntity.girlPlaySound((GirlEntity)this, SoundsHandler.GIRLS_GALATH_DIALOG[1], true);
         if (this.bZ != null) {
-            this.bZ.e(this);
+            this.bZ.executeStop(this);
         }
-        this.bZ = h8_class399.CHANGE_POSITION;
-        this.bZ.b(this);
+        this.bZ = GalathAttackAction.CHANGE_POSITION;
+        this.bZ.executeStart(this);
     }
 
     /*
@@ -1786,12 +1786,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
     }
 
     void aI() {
-        if (this.net_minecraft_entity_EntityLivingBase_M() == null) {
+        if (this.getAttackTarget() == null) {
             return;
         }
         this.a((EntityLivingBase)null);
         if (this.bZ != null) {
-            this.bZ.e(this);
+            this.bZ.executeStop(this);
         }
         this.bZ = null;
         if (this.entityDataManager.get(bP).booleanValue()) {
@@ -1802,7 +1802,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
 
     boolean boolean_f() {
         float f;
-        EntityLivingBase entityLivingBase = this.net_minecraft_entity_EntityLivingBase_M();
+        EntityLivingBase entityLivingBase = this.getAttackTarget();
         if (entityLivingBase == null) {
             return false;
         }
@@ -1966,15 +1966,15 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         this.entityDataManager.set(bq, entityLivingBase.getEntityId());
     }
 
-    public int ar() {
+    public int getFlyTicks() {
         return this.entityDataManager.get(aP);
     }
 
-    public void b(int n) {
+    public void setFlyTicks(int n) {
         this.entityDataManager.set(aP, n);
     }
 
-    public EntityLivingBase net_minecraft_entity_EntityLivingBase_M() {
+    public EntityLivingBase getAttackTarget() {
         int n = this.entityDataManager.get(bq);
         if (-1 == n) {
             return null;
@@ -1988,7 +1988,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
         if (galathAction != Action.FLY && galathAction != Action.SUMMON_SKELETON && galathAction != Action.RAPE_PREPARE) {
             return null;
         }
-        EntityLivingBase entityLivingBase = galath.net_minecraft_entity_EntityLivingBase_M();
+        EntityLivingBase entityLivingBase = galath.getAttackTarget();
         if (entityLivingBase == null) {
             return null;
         }
@@ -2811,7 +2811,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             if (f__class2972.bZ == null) {
                 return;
             }
-            f__class2972.bZ.e(f__class2972);
+            f__class2972.bZ.executeStop(f__class2972);
             f__class2972.bZ = null;
         }
 

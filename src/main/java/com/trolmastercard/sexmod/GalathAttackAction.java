@@ -26,6 +26,9 @@ import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.VectorMath;
+import com.trolmastercard.sexmod.util.interfaces.IGalathExecute;
+import com.trolmastercard.sexmod.util.interfaces.IGalathUpdate;
+import com.trolmastercard.sexmod.util.interfaces.IGalathStop;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.Entity;
@@ -45,77 +48,100 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public enum h8_class399 {
+public enum GalathAttackAction {
     CHANGE_POSITION(galath -> {
         World world = galath.world;
-        BlockPos blockPos = galath.getPosition();
-        BlockPos blockPos2 = galath.net_minecraft_entity_EntityLivingBase_M().getPosition();
-        ArrayList<BlockPos> arrayList = new ArrayList<BlockPos>();
-        HashMap<BlockPos, Integer> hashMap = new HashMap<BlockPos, Integer>();
-        int n = 0;
-        boolean bl = !world.isAirBlock(blockPos.down());
-        for (int i = -10; i < 10; ++i) {
-            for (int j = -10; j < 10; ++j) {
-                for (int k = -10; k < 10; ++k) {
-                    RayTraceResult result;
-                    if (i == 0 && j == 0 && k == 0) continue;
-                    BlockPos blockPos3 = blockPos2.add(new BlockPos(i, j, k));
-                    if (bl && blockPos.getY() >= blockPos3.getY() || !world.isAirBlock(blockPos3) || !world.isAirBlock(blockPos3.up()) || !world.isAirBlock(blockPos3.up().up()) || (result = world.rayTraceBlocks(new Vec3d(blockPos), new Vec3d(blockPos3), true, true, true)) != null) continue;
-                    int n2 = blockPos3.getY();
-                    while (--n2 >= 0 && world.getBlockState(new BlockPos(blockPos3.getX(), n2, blockPos3.getZ())).getBlock() instanceof BlockAir) {
+        BlockPos currentPos = galath.getPosition();
+        BlockPos targetPos = galath.getAttackTarget().getPosition();
+        ArrayList<BlockPos> candidatePositions = new ArrayList<BlockPos>();
+        HashMap<BlockPos, Integer> positionScores = new HashMap<BlockPos, Integer>();
+        int maxScore = 0;
+        boolean isOnGround = !world.isAirBlock(currentPos.down());
+
+        for (int x = -10; x < 10; ++x) {
+            for (int y = -10; y < 10; ++y) {
+                for (int z = -10; z < 10; ++z) {
+                    RayTraceResult rayTrace;
+                    if (x == 0 && y == 0 && z == 0) continue;
+
+                    BlockPos testPos = targetPos.add(new BlockPos(x, y, z));
+
+                    if (isOnGround && currentPos.getY() >= testPos.getY()
+                            || !world.isAirBlock(testPos)
+                            || !world.isAirBlock(testPos.up())
+                            || !world.isAirBlock(testPos.up().up())
+                            || (rayTrace = world.rayTraceBlocks(new Vec3d(currentPos), new Vec3d(testPos), true, true, true)) != null) continue;
+                    int groundY = testPos.getY();
+                    while (--groundY >= 0 && world.getBlockState(new BlockPos(testPos.getX(), groundY, testPos.getZ())).getBlock() instanceof BlockAir) {
                     }
-                    if (world.getBlockState(new BlockPos(blockPos3.getX(), n2, blockPos3.getZ())).getBlock() instanceof BlockLiquid) continue;
-                    arrayList.add(blockPos3);
-                    if (!world.isAirBlock(blockPos3.down()) || !world.isAirBlock(blockPos3.down().down()) || blockPos2.getDistance(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ()) < 5.0 || blockPos.getDistance(blockPos3.getX(), blockPos3.getY(), blockPos3.getZ()) < 3.0) continue;
-                    int n3 = 0;
-                    for (int i2 = -1; i2 < 2; ++i2) {
-                        for (int i3 = -1; i3 < 2; ++i3) {
-                            for (int i4 = -1; i4 < 4; ++i4) {
-                                if (!world.isAirBlock(blockPos3.add(i2, i4, i3))) continue;
-                                ++n3;
+
+                    if (world.getBlockState(new BlockPos(testPos.getX(), groundY, testPos.getZ())).getBlock() instanceof BlockLiquid) continue;
+                    candidatePositions.add(testPos);
+
+                    if (!world.isAirBlock(testPos.down())
+                            || !world.isAirBlock(testPos.down().down())
+                            || targetPos.getDistance(testPos.getX(), testPos.getY(), testPos.getZ()) < 5.0
+                            || currentPos.getDistance(testPos.getX(), testPos.getY(), testPos.getZ()) < 3.0)
+                        continue;
+
+                    int openAirCount = 0;
+                    for (int dx = -1; dx < 2; ++dx) {
+                        for (int dz = -1; dz < 2; ++dz) {
+                            for (int dy = -1; dy < 4; ++dy) {
+                                if (!world.isAirBlock(testPos.add(dx, dy, dz))) continue;
+                                ++openAirCount;
                             }
                         }
                     }
-                    if (n3 < 25) continue;
-                    hashMap.put(blockPos3, n3);
-                    if (n3 <= n) continue;
-                    n = n3;
+
+                    if (openAirCount < 25) continue;
+                    positionScores.put(testPos, openAirCount);
+                    if (openAirCount <= maxScore) continue;
+                    maxScore = openAirCount;
                 }
             }
         }
-        if (!hashMap.isEmpty()) {
-            ArrayList<Map.Entry<BlockPos, Integer>> arrayList2 = new ArrayList<>(hashMap.entrySet());
-            arrayList2.sort((entry, entry2) -> ((Integer)entry2.getValue()).compareTo((Integer)entry.getValue()));
-            galath.O = new Vec3d((Vec3i)(arrayList2.get(Utils.getWeightedRandomInt(arrayList2.size() - 1))).getKey());
+
+        if (!positionScores.isEmpty()) {
+            ArrayList<Map.Entry<BlockPos, Integer>> sortedPositions = new ArrayList<>(positionScores.entrySet());
+            sortedPositions.sort((e1, e2) -> ((Integer)e2.getValue()).compareTo((Integer)e1.getValue()));
+            galath.targetFlyPos = new Vec3d((Vec3i)(sortedPositions.get(Utils.getWeightedRandomInt(sortedPositions.size() - 1))).getKey());
         } else {
-            galath.O = arrayList.isEmpty() ? new Vec3d(blockPos2.add(Utils.getRandomFloat(10.0f, true), Utils.getRandomFloat(10.0f, false), Utils.getRandomFloat(10.0f, true))) : new Vec3d((Vec3i)arrayList.get(Reference.RANDOM.nextInt(arrayList.size())));
+            galath.targetFlyPos = candidatePositions.isEmpty()
+                    ? new Vec3d(targetPos.add(Utils.getRandomFloat(10.0f, true), Utils.getRandomFloat(10.0f, false), Utils.getRandomFloat(10.0f, true)))
+                    : new Vec3d((Vec3i)candidatePositions.get(Reference.RANDOM.nextInt(candidatePositions.size())));
         }
-        galath.bL = null;
-        galath.b(0);
+
+        galath.previousPos = null;
+        galath.setFlyTicks(0);
         galath.setCurrentAction(Action.FLY);
         PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ResetController(galath.girlID()), (Entity)galath);
-    }, f__class2972 -> {
-        Vec3d vec3d = f__class2972.getPositionVector();
-        Vec3d vec3d2 = f__class2972.O;
-        if (vec3d2 == null) {
+    },
+            galath -> {
+        Vec3d currentVec = galath.getPositionVector();
+        Vec3d targetVec = galath.targetFlyPos;
+        if (targetVec == null) {
             return;
         }
-        f__class2972.bL = vec3d;
-        int n = f__class2972.ar();
-        f__class2972.b(n + 1);
-        if (n != 0) {
+
+        galath.previousPos = currentVec;
+        int ticks = galath.getFlyTicks();
+        galath.setFlyTicks(ticks + 1);
+        if (ticks != 0) {
             return;
         }
-        Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        Vec3d vec3d4 = vec3d3.normalize();
-        f__class2972.motionX = vec3d4.x * (double)0.6f;
-        f__class2972.motionZ = vec3d4.z * (double)0.6f;
-        f__class2972.motionY = Utils.clamp(vec3d3.y * (double)0.6f, (double)-0.6f, (double)0.6f);
-    }, f__class2972 -> f__class2972.ar() > 23, f__class2972 -> {
-        f__class2972.setMotionVector(Vec3d.ZERO);
-        f__class2972.b(0);
-        f__class2972.bL = null;
-    }, false, f__class2972 -> true, false),
+
+        Vec3d direction = targetVec.subtract(currentVec);
+        Vec3d normalizedDir = direction.normalize();
+        galath.motionX = normalizedDir.x * (double)0.6f;
+        galath.motionZ = normalizedDir.z * (double)0.6f;
+        galath.motionY = Utils.clamp(direction.y * (double)0.6f, (double)-0.6f, (double)0.6f);
+    }, galath -> galath.getFlyTicks() > 23, galath -> {
+        galath.setMotionVector(Vec3d.ZERO);
+        galath.setFlyTicks(0);
+        galath.previousPos = null;
+    }, false, galath -> true, false),
+
     SUMMON_SKELETON(f__class2972 -> {
         f__class2972.setCurrentAction(Action.SUMMON_SKELETON);
         f__class2972.ad = 0;
@@ -135,7 +161,7 @@ public enum h8_class399 {
         }
         GalathEntity.a(f__class2972, 0.0f);
         Vec3d vec3d4 = f__class2972.getPositionVector();
-        Vec3d vec3d5 = f__class2972.net_minecraft_entity_EntityLivingBase_M().getPositionVector();
+        Vec3d vec3d5 = f__class2972.getAttackTarget().getPositionVector();
         Random random = f__class2972.getRNG();
         boolean bl = f__class2972.getDataManager().get(GalathEntity.ay);
         if (f__class2972.getDataManager().get(GalathEntity.bN).booleanValue()) {
@@ -161,13 +187,14 @@ public enum h8_class399 {
     }, f__class2972 -> f__class2972.ad >= 45, f__class2972 -> {
         f__class2972.ad = 0;
     }, true, f__class2972 -> f__class2972.witherSkeletons.size() < 2, true),
+
     ATTACK_SWORD(f__class2972 -> {
         f__class2972.a(0);
         f__class2972.setCurrentAction(Action.ATTACK_SWORD);
         f__class2972.setMotionVector(Vec3d.ZERO);
         Vec3d vec3d = f__class2972.getPositionVector();
         f__class2972.e(vec3d);
-        Vec3d vec3d2 = f__class2972.net_minecraft_entity_EntityLivingBase_M().getPositionVector();
+        Vec3d vec3d2 = f__class2972.getAttackTarget().getPositionVector();
         g8_class353 g8_class3532 = new g8_class353(vec3d2.x - vec3d.x, vec3d2.z - vec3d.z);
         double d = TrigMath.toDegrees(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
         f__class2972.setAnchored(true);
@@ -175,7 +202,7 @@ public enum h8_class399 {
         f__class2972.setYawRotation((float)d);
         GirlEntity.playRandomSound((GirlEntity)f__class2972, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
     }, f__class2972 -> {
-        EntityLivingBase entityLivingBase = f__class2972.net_minecraft_entity_EntityLivingBase_M();
+        EntityLivingBase entityLivingBase = f__class2972.getAttackTarget();
         int n = f__class2972.az() + 1;
         f__class2972.a(n);
         if (Utils.isValueInBounds((double)n, 24.0, 32.0)) {
@@ -209,21 +236,22 @@ public enum h8_class399 {
             f__class2972.motionX = vec3d.x * (double)0.6f;
             f__class2972.motionY = vec3d.y * (double)0.6f;
             f__class2972.motionZ = vec3d.z * (double)0.6f;
-            f__class2972.b(1);
+            f__class2972.setFlyTicks(1);
         } else {
-            f__class2972.b(f__class2972.ar() + 1);
+            f__class2972.setFlyTicks(f__class2972.getFlyTicks() + 1);
         }
-    }, f__class2972 -> f__class2972.ar() > 23, f__class2972 -> {
-        f__class2972.b(0);
+    }, f__class2972 -> f__class2972.getFlyTicks() > 23, f__class2972 -> {
+        f__class2972.setFlyTicks(0);
         f__class2972.setMotionVector(Vec3d.ZERO);
         f__class2972.a(-1);
         f__class2972.setAnchored(false);
     }, true, f__class2972 -> true, false),
+
     RAPE(f__class2972 -> {
         f__class2972.setCurrentAction(Action.RAPE_PREPARE);
         f__class2972.aF = 0;
         f__class2972.bd = null;
-        f__class2972.O = null;
+        f__class2972.targetFlyPos = null;
         f__class2972.getDataManager().set(GalathEntity.bO, Float.valueOf(0.0f));
     }, f__class2972 -> {
         double d;
@@ -236,9 +264,9 @@ public enum h8_class399 {
             return;
         }
         f__class2972.setCurrentAction(Action.RAPE_CHARGE);
-        EntityLivingBase entityLivingBase = f__class2972.net_minecraft_entity_EntityLivingBase_M();
+        EntityLivingBase entityLivingBase = f__class2972.getAttackTarget();
         if (f__class2972.bd == null) {
-            f__class2972.O = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
+            f__class2972.targetFlyPos = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
             f__class2972.bd = f__class2972.getPositionVector();
             vec3d3 = entityLivingBase.getPositionVector().subtract(f__class2972.getPositionVector()).normalize();
             f__class2972.setYawRotation((float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0));
@@ -273,7 +301,7 @@ public enum h8_class399 {
             return;
         }
         Vec3d vec3d8 = f__class2972.bd;
-        Vec3d vec3d6 = f__class2972.O;
+        Vec3d vec3d6 = f__class2972.targetFlyPos;
         vec3d2 = vec3d6.subtract(vec3d8);
         vec3d = vec3d6.add(vec3d2);
         vec3d = new Vec3d(vec3d.x, vec3d8.y, vec3d.z);
@@ -289,69 +317,70 @@ public enum h8_class399 {
         double d5 = 1.0 / d4 * 20.0;
         d2 += d5;
         if (!bl && d2 < (double)0.9f) {
-            f__class2972.O = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
+            f__class2972.targetFlyPos = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
         }
         vec3d3 = bl ? new Vec3d(Reference.LerpDouble(vec3d6.x, vec3d.x, Math.min(1.0, d2)), Reference.LerpDouble(vec3d6.y, vec3d.y, Math.min(1.0, Reference.EaseInCubic(d2))), Reference.LerpDouble(vec3d6.z, vec3d.z, Math.min(1.0, d2))) : new Vec3d(Reference.LerpDouble(vec3d8.x, vec3d6.x, d2), Reference.LerpDouble(vec3d8.y, vec3d6.y, Reference.EaseOutCubic(d2)), Reference.LerpDouble(vec3d8.z, vec3d6.z, d2));
         f__class2972.setPosition(vec3d3.x, vec3d3.y, vec3d3.z);
         if (bl) {
             f__class2972.getDataManager().set(GalathEntity.bO, (float) d2);
         }
-    }, f__class2972 -> {
-        if (f__class2972.currentAction() == Action.RAPE_INTRO) {
+    }, galath -> {
+        if (galath.currentAction() == Action.RAPE_INTRO) {
             return true;
         }
-        Vec3d vec3d = f__class2972.bd;
-        Vec3d vec3d2 = f__class2972.O;
+        Vec3d vec3d = galath.bd;
+        Vec3d vec3d2 = galath.targetFlyPos;
         if (vec3d == null) {
             return false;
         }
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
         Vec3d vec3d4 = vec3d2.add(vec3d3);
         vec3d4 = new Vec3d(vec3d4.x, vec3d.y, vec3d4.z);
-        return f__class2972.getDistance(vec3d4.x, vec3d4.y, vec3d4.z) < (double)0.1f;
-    }, f__class2972 -> {
-        f__class2972.O = null;
-        f__class2972.bd = null;
-        f__class2972.aF = 0;
-        f__class2972.getDataManager().set(GalathEntity.bO, 0.0f);
-    }, true, f__class2972 -> true, true);
+        return galath.getDistance(vec3d4.x, vec3d4.y, vec3d4.z) < (double)0.1f;
+    }, galath -> {
+        galath.targetFlyPos = null;
+        galath.bd = null;
+        galath.aF = 0;
+        galath.getDataManager().set(GalathEntity.bO, 0.0f);
+    }, true, galath -> true, true);
 
-    final h__class400 a;
-    final b2_class62 f;
-    final ao_class36 c;
-    final u_class425 b;
-    final g1_class342 d;
+    final IGalathUpdate onUpdateAction;
+    final IGalathStart onStartAction;
+    final IGalathFinish isFinishedCondition;
+    final IGalathStop onStopAction;
+    final IGalathExecute canExecuteCondition;
     final public boolean applyAttackCoolDown;
     final public boolean onlyDoThisOnPlayers;
 
-    private h8_class399(b2_class62 b2_class622, ao_class36 ao_class362, h__class400 h__class4002, u_class425 u_class4252, boolean applyAttackCoolDown, g1_class342 g1_class3422, boolean onlyDoThisOnPlayers) {
-        this.a = h__class4002;
-        this.f = b2_class622;
-        this.c = ao_class362;
-        this.b = u_class4252;
+    private GalathAttackAction(IGalathStart onStartAction, IGalathFinish isFinishedCondition, IGalathUpdate onUpdateAction, IGalathStop onStopAction, boolean applyAttackCoolDown, IGalathExecute canExecuteAction, boolean onlyDoThisOnPlayers) {
+        this.onUpdateAction = onUpdateAction;
+        this.onStartAction = onStartAction;
+        this.isFinishedCondition = isFinishedCondition;
+        this.onStopAction = onStopAction;
         this.applyAttackCoolDown = applyAttackCoolDown;
-        this.d = g1_class3422;
+        this.canExecuteCondition = canExecuteAction;
         this.onlyDoThisOnPlayers = onlyDoThisOnPlayers;
     }
 
-    public void b(GalathEntity f__class2972) {
-        this.f.a(f__class2972);
+    public boolean executeStart(GalathEntity galath) {
+        this.onStartAction.execute(galath);
+        return true;
     }
 
-    public boolean c(GalathEntity f__class2972) {
-        return this.a.a(f__class2972);
+    public boolean executeUpdate(GalathEntity galath) {
+        return this.onUpdateAction.execute(galath);
     }
 
-    public void a(GalathEntity f__class2972) {
-        this.c.a(f__class2972);
+    public void checkFinished(GalathEntity galath) {
+        this.isFinishedCondition.test(galath);
     }
 
-    public void e(GalathEntity f__class2972) {
-        this.b.a(f__class2972);
+    public void executeStop(GalathEntity galath) {
+        this.onStopAction.execute(galath);
     }
 
-    public boolean d(GalathEntity f__class2972) {
-        return this.d.a(f__class2972);
+    public boolean canExecute(GalathEntity galath) {
+        return this.canExecuteCondition.test(galath);
     }
 }
 

@@ -120,7 +120,7 @@ public class bj_class84 extends WorldSavedData {
     void a(NBTTagCompound nBTTagCompound, HashMap<UUID, String> hashMap) {
         int n = 0;
         String string;
-        while (!"".equals(string = nBTTagCompound.getString("UUID" + n))) {
+        while (!(string = nBTTagCompound.getString("UUID" + n)).isEmpty()) {
             hashMap.put(UUID.fromString(string), nBTTagCompound.getString("MODEL" + n));
             ++n;
         }

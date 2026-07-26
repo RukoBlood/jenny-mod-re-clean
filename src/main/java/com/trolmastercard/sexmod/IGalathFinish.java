@@ -6,7 +6,7 @@ package com.trolmastercard.sexmod;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 
 @FunctionalInterface
-public interface h__class400 {
-    public boolean a(GalathEntity var1);
+public interface IGalathFinish {
+    public void test(GalathEntity var1);
 }
 

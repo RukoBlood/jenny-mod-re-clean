@@ -74,7 +74,7 @@ extends GirlModel<GirlEntity> {
         if (f__class2972.maybeMountedByMangFn()) {
             return true;
         }
-        return f__class2972.net_minecraft_entity_EntityLivingBase_M() == null;
+        return f__class2972.getAttackTarget() == null;
     }
 
     @Override
