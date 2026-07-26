@@ -27,6 +27,7 @@ import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.interfaces.IBoneRotationSupplier;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -335,7 +336,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
             return;
         }
         entity.matrixStack.scale(0.5f, 0.5f, 0.5f);
-        entity.matrixStack.rotateY((float)Math.toRadians(-a_class4.MODEL_Y_ROTATION));
+        entity.matrixStack.rotateY((float)Math.toRadians(-ClothingGui.MODEL_Y_ROTATION));
     }
 
     String getTargetBoneName(CustomModelEntity entity) {

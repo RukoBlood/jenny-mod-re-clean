@@ -76,13 +76,13 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new ManglelieEntity.ArrowLogic());
         MinecraftForge.EVENT_BUS.register((Object)new f4_class289());
         if (bl) {
-            EventHandler.RegisterIfAllowed();
+            com.trolmastercard.sexmod.util.Handlers.EventHandler.RegisterIfAllowed();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
     static void RegisterIfAllowed() {
-        if (EventHandler.checkIfAsked()) {
+        if (com.trolmastercard.sexmod.util.Handlers.EventHandler.checkIfAsked()) {
             MinecraftForge.EVENT_BUS.register((Object)new ShowWarning());
         } else {
             AdultContentWarning.isAdult = false;
@@ -98,7 +98,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new PlayerAllieRenderer.a_inner205());
         MinecraftForge.EVENT_BUS.register((Object)new gm_class376());
         MinecraftForge.EVENT_BUS.register((Object)new DeprecatedCheckForUpdates());
-        MinecraftForge.EVENT_BUS.register((Object)new a_class4.b_inner5());
+        MinecraftForge.EVENT_BUS.register((Object)new ClothingGui.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new CustomModel.a_inner95());
         MinecraftForge.EVENT_BUS.register((Object)new EscapeMinigameUI());
         MinecraftForge.EVENT_BUS.register((Object)new ga_class358());

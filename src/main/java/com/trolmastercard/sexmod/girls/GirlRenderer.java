@@ -225,7 +225,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (ClientProxy.IS_PRELOADING) {
             return new HashSet<String>();
         }
-        HashSet<String> rawParts = isSpecialState != false ? a_class4.b() : ((GirlEntity)this.renderEntity).getCustomPartsSet();
+        HashSet<String> rawParts = isSpecialState != false ? ClothingGui.getSelectedPartsSet() : ((GirlEntity)this.renderEntity).getCustomPartsSet();
         HashSet<String> validatedBones = new HashSet<String>();
         for (String partKey : rawParts) {
             CustomModel.ModelData modelPart = CustomModel.getModelData(partKey);

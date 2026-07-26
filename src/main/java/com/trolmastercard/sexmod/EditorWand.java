@@ -102,7 +102,7 @@ extends Item {
                 return;
             }
         }
-        a_class4.a(((GirlEntity)entity).com_trolmastercard_sexmod_em_class258_E());
+        ClothingGui.openGuiForGirl(((GirlEntity)entity).com_trolmastercard_sexmod_em_class258_E());
     }
 
     @SubscribeEvent
