@@ -37,9 +37,9 @@ implements IAnimatable {
     final static public DataParameter<String> a = EntityDataManager.createKey(CustomModelEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
     final static public DataParameter<String> b = EntityDataManager.createKey(CustomModelEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
     AnimationFactory g = new AnimationFactory(this);
-    public boolean f = false;
-    public MatrixStack c = new MatrixStack();
-    CustomPartCategory d = null;
+    public boolean isItemModel = false;
+    public MatrixStack matrixStack = new MatrixStack();
+    CustomPartCategory itemModelData = null;
 
     public CustomModelEntity(World world) {
         super(world);
@@ -56,8 +56,8 @@ implements IAnimatable {
     public static CustomModelEntity a(World world, UUID uUID, CustomPartCategory gw_class3892) {
         CustomModelEntity cy_class1532 = new CustomModelEntity(world);
         cy_class1532.getDataManager().set(a, uUID.toString());
-        cy_class1532.f = true;
-        cy_class1532.d = gw_class3892;
+        cy_class1532.isItemModel = true;
+        cy_class1532.itemModelData = gw_class3892;
         return cy_class1532;
     }
 
@@ -92,9 +92,9 @@ implements IAnimatable {
     }
 
     @Nullable
-    public UUID b() {
+    public UUID getGirlUUID() {
         String string = this.dataManager.get(a);
-        if ("".equals(string)) {
+        if (string.isEmpty()) {
             return null;
         }
         return UUID.fromString(string);
@@ -109,9 +109,9 @@ implements IAnimatable {
     }
 
     @Nullable
-    public String a() {
+    public String getModelName() {
         String string = this.dataManager.get(b);
-        if ("".equals(string)) {
+        if (string.isEmpty()) {
             return null;
         }
         return string;

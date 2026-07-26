@@ -228,8 +228,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         HashSet<String> rawParts = isSpecialState != false ? a_class4.b() : ((GirlEntity)this.renderEntity).getCustomPartsSet();
         HashSet<String> validatedBones = new HashSet<String>();
         for (String partKey : rawParts) {
-            CustomModel.b_inner96 modelPart = CustomModel.b(partKey);
-            if (modelPart == null || !modelPart.a() && isDressed) continue;
+            CustomModel.ModelData modelPart = CustomModel.getModelData(partKey);
+            if (modelPart == null || !modelPart.isAlwaysVisible() && isDressed) continue;
             validatedBones.addAll(modelPart.h());
         }
         return validatedBones;
@@ -491,7 +491,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GlStateManager.popMatrix();
 
         this.updateModelMatrices(entity);
-        CustomModelRenderer.a(entity, partialTicks);
+        CustomModelRenderer.renderGirlCustomParts(entity, partialTicks);
 
         Vector3f additionalOverlayColor = this.getAdditionalOverlayColor(entity);
         if (additionalOverlayColor != null) {

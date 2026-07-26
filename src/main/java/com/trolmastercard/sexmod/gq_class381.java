@@ -293,10 +293,10 @@ extends GuiListExtended {
             n4 = this.c(n4, n, n2, n3);
             GirlEntity em_class2582 = this.this$0.d.d();
             CustomModelEntity cy_class1532 = this.f == 0 ? CustomModelEntity.a(gq_class381.access$300((gq_class381)this.this$0).world, em_class2582.girlID(), this.d) : new CustomModelEntity(em_class2582.world, em_class2582.girlID(), this.b.get(this.f));
-            CustomModel.b_inner96 b_inner962 = CustomModel.b(cy_class1532.a());
-            float f = cy_class1532.f || b_inner962 == null ? 1.0f : b_inner962.d();
+            CustomModel.ModelData b_inner962 = CustomModel.getModelData(cy_class1532.getModelName());
+            float f = cy_class1532.isItemModel || b_inner962 == null ? 1.0f : b_inner962.d();
             int n5 = b_inner962 == null ? 0 : (int)(-b_inner962.g());
-            this.this$0.d.a(n4, n + 10 + (cy_class1532.f ? 0 : 6) + n5, 30.0f * f, cy_class1532);
+            this.this$0.d.a(n4, n + 10 + (cy_class1532.isItemModel ? 0 : 6) + n5, 30.0f * f, cy_class1532);
             if (this.f != 0) {
                 this.this$0.d.a(cy_class1532);
             }

@@ -6,7 +6,7 @@ package com.trolmastercard.sexmod;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 
 @FunctionalInterface
-public interface gt_class385 {
-    public float a(GirlEntity var1);
+public interface IBoneRotationSupplier {
+    public float getRotation(GirlEntity girl);
 }
 

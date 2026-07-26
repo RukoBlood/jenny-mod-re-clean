@@ -101,12 +101,12 @@ extends PlayerGirl {
     }
 
     @Override
-    public float float_T() {
+    public float getLeftArmRotation() {
         return 35.0f;
     }
 
     @Override
-    public float float_ai() {
+    public float getRightArmRotation() {
         return 140.0f;
     }
 

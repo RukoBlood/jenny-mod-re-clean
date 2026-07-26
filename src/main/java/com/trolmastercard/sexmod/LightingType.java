@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod;
 
-public enum c8_class117 {
+public enum LightingType {
     DEFAULT,
     SEXMOD,
     NONE;

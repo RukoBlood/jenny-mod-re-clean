@@ -55,343 +55,356 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.MatrixStack;
 
 public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
-    final static public float e = 1.876945f;
-    final static public float i = 2.876945f;
-    Minecraft a;
-    CustomModelEntity c = null;
-    CustomModel.b_inner96 b = null;
-    HashMap<String, String> h = new HashMap();
-    HashMap<String, String> f = new HashMap();
-    HashMap<String, gt_class385> g = new HashMap();
-    static public boolean k = false;
-    Vec3d d = new Vec3d(1.0, 1.0, 1.0);
-    Vec3d j;
+    final static public float RENDER_FLAG_GUI = 1.876945f;
+    final static public float RENDER_FLAG_SPECIAL = 2.876945f;
+    Minecraft mc;
+    CustomModelEntity currentEntity = null;
+    CustomModel.ModelData currentModelData = null;
+    HashMap<String, String> legBonesMap = new HashMap();
+    HashMap<String, String> armBonesMap = new HashMap();
+    HashMap<String, IBoneRotationSupplier> boneRotationSuppliers = new HashMap();
+    static public boolean forceRenderNextTick = false;
+    Vec3d colorMultiplier = new Vec3d(1.0, 1.0, 1.0);
+    Vec3d lightDirection;
 
     public CustomModelRenderer(RenderManager renderManager, AnimatedGeoModel<CustomModelEntity> animatedGeoModel) {
         super(renderManager, animatedGeoModel);
-        this.a = Minecraft.getMinecraft();
-        this.a();
+        this.mc = Minecraft.getMinecraft();
+        this.initBoneMappings();
     }
 
-    void a() {
-        this.h.put("customLegL", "legL");
-        this.h.put("customShinL", "shinL");
-        this.h.put("customLegR", "legR");
-        this.h.put("customShinR", "shinR");
-        this.f.put("top", "upperBody");
-        this.f.put("customArmL", "armL");
-        this.f.put("customLowerArmL", "lowerArmL");
-        this.f.put("customArmR", "armR");
-        this.f.put("customLowerArmR", "lowerArmR");
-        this.g.put("lowerArmR", em_class2582 -> TrigMath.toRadians(em_class2582.float_ai()));
-        this.g.put("lowerArmL", em_class2582 -> TrigMath.toRadians(em_class2582.float_T()));
+    void initBoneMappings() {
+        this.legBonesMap.put("customLegL", "legL");
+        this.legBonesMap.put("customShinL", "shinL");
+        this.legBonesMap.put("customLegR", "legR");
+        this.legBonesMap.put("customShinR", "shinR");
+        this.armBonesMap.put("top", "upperBody");
+        this.armBonesMap.put("customArmL", "armL");
+        this.armBonesMap.put("customLowerArmL", "lowerArmL");
+        this.armBonesMap.put("customArmR", "armR");
+        this.armBonesMap.put("customLowerArmR", "lowerArmR");
+        this.boneRotationSuppliers.put("lowerArmR", girl -> TrigMath.toRadians(girl.getRightArmRotation()));
+        this.boneRotationSuppliers.put("lowerArmL", girl -> TrigMath.toRadians(girl.getLeftArmRotation()));
     }
 
-    boolean d(CustomModelEntity cy_class1532) {
-        String string = cy_class1532.a();
-        if (cy_class1532.f) {
+    boolean validateAndCleanModel(CustomModelEntity entity) {
+        String modelName = entity.getModelName();
+        if (entity.isItemModel) {
             return false;
         }
-        if (CustomModel.f(string)) {
+        if (CustomModel.isModelDisabled(modelName)) {
             return false;
         }
-        if (CustomModel.g() != null) {
+        if (CustomModel.getGlobalModelOverride() != null) {
             return true;
         }
-        UUID uUID = cy_class1532.b();
-        GirlEntity em_class2582 = GirlEntity.getClientGirlEntity(uUID);
-        if (em_class2582 == null) {
+        UUID girlUUID = entity.getGirlUUID();
+        GirlEntity girl = GirlEntity.getClientGirlEntity(girlUUID);
+        if (girl == null) {
             return true;
         }
-        HashSet<String> hashSet = em_class2582.getCustomPartsSet();
-        hashSet.remove(string);
-        String string2 = GirlEntity.serializePartsSet(hashSet);
-        PackageHandler.networkWrapper.sendToServer((IMessage)new UploadModelString(string2, cy_class1532.b()));
+
+        HashSet<String> customParts = girl.getCustomPartsSet();
+        customParts.remove(modelName);
+        String serializedParts = GirlEntity.serializePartsSet(customParts);
+
+        PackageHandler.networkWrapper.sendToServer((IMessage)new UploadModelString(serializedParts, entity.getGirlUUID()));
         return true;
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static void a(GirlEntity em_class2582, float f) {
-        if (em_class2582.isDead) {
+    public static void renderGirlCustomParts(GirlEntity girl, float partialTicks) {
+        if (girl.isDead) {
             return;
         }
-        if (!em_class2582.world.isRemote) {
+        if (!girl.world.isRemote) {
             return;
         }
-        if (!em_class2582.boolean_H()) {
+        if (!girl.hasCustomParts()) {
             return;
         }
         RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
-        for (String string : em_class2582.getCustomPartsSet()) {
-            CustomModelEntity cy_class1532 = new CustomModelEntity(em_class2582.world, em_class2582.girlID(), string);
-            k = true;
-            renderManager.renderEntity(cy_class1532, 0.0, 0.0, 0.0, 0.0f, f, false);
+        for (String partName : girl.getCustomPartsSet()) {
+            CustomModelEntity entity = new CustomModelEntity(girl.world, girl.girlID(), partName);
+            forceRenderNextTick = true;
+            renderManager.renderEntity(entity, 0.0, 0.0, 0.0, 0.0f, partialTicks, false);
         }
     }
 
     //a
     @Override
-    public boolean shouldRender(CustomModelEntity cy_class1532, ICamera iCamera, double d, double d2, double d3) {
-        return super.shouldRender(cy_class1532, iCamera, d, d2, d3);
+    public boolean shouldRender(CustomModelEntity entity, ICamera camera, double camX, double camY, double camZ) {
+        return super.shouldRender(entity, camera, camX, camY, camZ);
     }
 
-    boolean a(float f) {
-        if (f == 2.876945f) {
+    boolean shouldProcessRender(float partialTicks) {
+        if (partialTicks == RENDER_FLAG_SPECIAL) {
             return true;
         }
-        if (f == 1.876945f) {
+        if (partialTicks == RENDER_FLAG_GUI) {
             return true;
         }
-        if (k) {
-            k = false;
+        if (forceRenderNextTick) {
+            forceRenderNextTick = false;
             return true;
         }
         return false;
     }
 
-    void a(CustomModel.b_inner96 b_inner962, CustomModelEntity cy_class1532, float f) {
-        if (b_inner962 == null || b_inner962.i() == c8_class117.DEFAULT) {
-            this.j = null;
+    void updateLighting(CustomModel.ModelData modelData, CustomModelEntity entity, float partialTicks) {
+        if (modelData == null || modelData.getLightingType() == LightingType.DEFAULT) {
+            this.lightDirection = null;
             return;
         }
-        GL11.glDisable(2896);
-        this.j = b_inner962.i() == c8_class117.SEXMOD ? WorldUtils.getLightDirectionVector(cy_class1532, f) : null;
+        GL11.glDisable(GL11.GL_LIGHTING);
+        this.lightDirection = modelData.getLightingType() == LightingType.SEXMOD ? WorldUtils.getLightDirectionVector(entity, partialTicks) : null;
     }
 
     // a
     @Override
-    public void doRender(CustomModelEntity cy_class1532, double d, double d2, double d3, float f, float f2) {
+    public void doRender(CustomModelEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         //Object object;
-        Object object2;
+        Object offset;
         //GirlEntity em_class2582;
-        EntityLivingBase em_class2582;
-        if (!this.a(f2)) {
+        EntityLivingBase targetEntity;
+        if (!this.shouldProcessRender(partialTicks)) {
             return;
         }
-        if (CustomModel.d) {
+        if (CustomModel.isGlobalRenderingDisabled) {
             return;
         }
-        if (this.d(cy_class1532)) {
+        if (this.validateAndCleanModel(entity)) {
             return;
         }
-        cy_class1532.c = new MatrixStack();
-        CustomModel.b_inner96 b_inner962 = CustomModel.b(cy_class1532.a());
-        this.c = cy_class1532;
-        this.b = b_inner962;
-        this.a(b_inner962, cy_class1532, f2);
-        if (f2 == 1.876945f || f2 == 2.876945f) {
-            this.d = new Vec3d(1.0, 1.0, 1.0);
-            super.doRender(cy_class1532, d, d2, d3, f, f2);
-            GL11.glEnable(2896);
+        entity.matrixStack = new MatrixStack();
+        CustomModel.ModelData modelData = CustomModel.getModelData(entity.getModelName());
+        this.currentEntity = entity;
+        this.currentModelData = modelData;
+        this.updateLighting(modelData, entity, partialTicks);
+        if (partialTicks == RENDER_FLAG_GUI || partialTicks == RENDER_FLAG_SPECIAL) {
+            this.colorMultiplier = new Vec3d(1.0, 1.0, 1.0);
+            super.doRender(entity, x, y, z, entityYaw, partialTicks);
+            GL11.glEnable(GL11.GL_LIGHTING);
             return;
         }
-        UUID uUID = cy_class1532.b();
+
+        UUID uUID = entity.getGirlUUID();
         if (uUID == null) {
             return;
         }
-        GirlEntity em_class2583 = GirlEntity.getClientGirlEntity(uUID);
-        if (em_class2583 == null) {
+        GirlEntity girl = GirlEntity.getClientGirlEntity(uUID);
+        if (girl == null) {
             return;
         }
-        if (b_inner962 != null && !b_inner962.a() && em_class2583.getOutfitIndex() == 0) {
+        if (modelData != null && !modelData.isAlwaysVisible() && girl.getOutfitIndex() == 0) {
             return;
         }
-        if (!(em_class2583 instanceof PlayerGirl)) {
-            em_class2582 = em_class2583;
+
+        if (!(girl instanceof PlayerGirl)) {
+            targetEntity = girl;
         } else {
-            object2 = ((PlayerGirl)em_class2583).getOwnerUserUUID();
-            if (object2 == null) {
+            offset = ((PlayerGirl)girl).getOwnerUserUUID();
+            if (offset == null) {
                 return;
             }
-            EntityPlayer object = cy_class1532.world.getPlayerEntityByUUID((UUID)object2);
-            em_class2582 = object == null ? em_class2583 : object;
+            EntityPlayer object = entity.world.getPlayerEntityByUUID((UUID)offset);
+            targetEntity = object == null ? girl : object;
         }
-        object2 = em_class2583.renderCustomModelTransform(this.a, cy_class1532, em_class2582, f2);
-        BlockPos object = new BlockPos(Math.floor(em_class2582.posX), Math.floor(em_class2582.posY), Math.floor(em_class2582.posZ));
-        int n = em_class2582.world.getLight((BlockPos)object, true);
+
+        offset = girl.renderCustomModelTransform(this.mc, entity, targetEntity, partialTicks);
+        BlockPos entityBlockPos = new BlockPos(Math.floor(targetEntity.posX), Math.floor(targetEntity.posY), Math.floor(targetEntity.posZ));
+        int blockLight = targetEntity.world.getLight((BlockPos)entityBlockPos, true);
+
         Vec3d vec3d = new Vec3d(1.0, 1.0, 1.0);
-        float f3 = Utils.clamp(n, 10.0f, 15.0f) / 15.0f;
-        this.d = new Vec3d(vec3d.x * (double)f3, vec3d.y * (double)f3, vec3d.z * (double)f3);
+        float lightFactor = Utils.clamp(blockLight, 10.0f, 15.0f) / 15.0f;
+        this.colorMultiplier = new Vec3d(vec3d.x * (double)lightFactor, vec3d.y * (double)lightFactor, vec3d.z * (double)lightFactor);
+
         GlStateManager.pushMatrix();
-        GlStateManager.translate(((Vec3d)object2).x, ((Vec3d)object2).y, ((Vec3d)object2).z);
-        if (em_class2583.isAnchored()) {
-            GlStateManager.rotate(em_class2583.getYawRotation().floatValue(), 0.0f, 1.0f, 0.0f);
+        GlStateManager.translate(((Vec3d)offset).x, ((Vec3d)offset).y, ((Vec3d)offset).z);
+        if (girl.isAnchored()) {
+            GlStateManager.rotate(girl.getYawRotation(), 0.0f, 1.0f, 0.0f);
         }
-        super.doRender(cy_class1532, 0.0, 0.0, 0.0, f, f2);
+        super.doRender(entity, 0.0, 0.0, 0.0, entityYaw, partialTicks);
         GlStateManager.popMatrix();
-        GL11.glEnable(2896);
+        GL11.glEnable(GL11.GL_LIGHTING);
     }
 
-    public static Vec3d renderTransformedModel(Minecraft minecraft, CustomModelEntity cy_class1532, EntityLivingBase entityLivingBase, GirlEntity em_class2582, float f) {
-        Vec3d vec3d;
+    public static Vec3d renderTransformedModel(Minecraft mc, CustomModelEntity entity, EntityLivingBase targetEntity, GirlEntity girl, float partialTicks) {
+        Vec3d targetPos;
         //Object object;
-        if (em_class2582.isAnchored()) {
-            Vec3d object = em_class2582.getTargetPosition();
-            float f2 = em_class2582.getYawRotation();
-            cy_class1532.prevPosX = ((Vec3d)object).x;
-            cy_class1532.prevPosY = ((Vec3d)object).y;
-            cy_class1532.prevPosZ = ((Vec3d)object).z;
-            cy_class1532.lastTickPosX = ((Vec3d)object).x;
-            cy_class1532.lastTickPosY = ((Vec3d)object).y;
-            cy_class1532.lastTickPosZ = ((Vec3d)object).z;
-            cy_class1532.posX = ((Vec3d)object).x;
-            cy_class1532.posY = ((Vec3d)object).y;
-            cy_class1532.posZ = ((Vec3d)object).z;
-            cy_class1532.rotationYaw = f2;
-            cy_class1532.prevRotationYaw = f2;
-            cy_class1532.rotationYawHead = f2;
-            cy_class1532.prevRotationYawHead = f2;
-            cy_class1532.renderYawOffset = f2;
-            cy_class1532.prevRenderYawOffset = f2;
-            cy_class1532.rotationPitch = f2;
-            cy_class1532.prevRotationPitch = f2;
-            vec3d = object;
+        if (girl.isAnchored()) {
+            Vec3d anchorPos = girl.getTargetPosition();
+            float yaw = girl.getYawRotation();
+            entity.prevPosX = ((Vec3d)anchorPos).x;
+            entity.prevPosY = ((Vec3d)anchorPos).y;
+            entity.prevPosZ = ((Vec3d)anchorPos).z;
+            entity.lastTickPosX = ((Vec3d)anchorPos).x;
+            entity.lastTickPosY = ((Vec3d)anchorPos).y;
+            entity.lastTickPosZ = ((Vec3d)anchorPos).z;
+            entity.posX = ((Vec3d)anchorPos).x;
+            entity.posY = ((Vec3d)anchorPos).y;
+            entity.posZ = ((Vec3d)anchorPos).z;
+            entity.rotationYaw = yaw;
+            entity.prevRotationYaw = yaw;
+            entity.rotationYawHead = yaw;
+            entity.prevRotationYawHead = yaw;
+            entity.renderYawOffset = yaw;
+            entity.prevRenderYawOffset = yaw;
+            entity.rotationPitch = yaw;
+            entity.prevRotationPitch = yaw;
+            targetPos = anchorPos;
         } else {
-            cy_class1532.rotationYaw = entityLivingBase.rotationYaw;
-            cy_class1532.prevRotationYaw = entityLivingBase.prevRotationYaw;
-            cy_class1532.rotationYawHead = entityLivingBase.rotationYawHead;
-            cy_class1532.prevRotationYawHead = entityLivingBase.prevRotationYawHead;
-            cy_class1532.renderYawOffset = entityLivingBase.renderYawOffset;
-            cy_class1532.prevRenderYawOffset = entityLivingBase.prevRenderYawOffset;
-            cy_class1532.rotationPitch = entityLivingBase.rotationPitch;
-            cy_class1532.prevRotationPitch = entityLivingBase.prevRotationPitch;
-            cy_class1532.prevPosX = entityLivingBase.prevPosX;
-            cy_class1532.prevPosY = entityLivingBase.prevPosY;
-            cy_class1532.prevPosZ = entityLivingBase.prevPosZ;
-            cy_class1532.lastTickPosX = entityLivingBase.lastTickPosX;
-            cy_class1532.lastTickPosY = entityLivingBase.lastTickPosY;
-            cy_class1532.lastTickPosZ = entityLivingBase.lastTickPosZ;
-            cy_class1532.posX = entityLivingBase.posX;
-            cy_class1532.posY = entityLivingBase.posY;
-            cy_class1532.posZ = entityLivingBase.posZ;
-            vec3d = Reference.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), entityLivingBase.getPositionVector(), (double)f);
+            entity.rotationYaw = targetEntity.rotationYaw;
+            entity.prevRotationYaw = targetEntity.prevRotationYaw;
+            entity.rotationYawHead = targetEntity.rotationYawHead;
+            entity.prevRotationYawHead = targetEntity.prevRotationYawHead;
+            entity.renderYawOffset = targetEntity.renderYawOffset;
+            entity.prevRenderYawOffset = targetEntity.prevRenderYawOffset;
+            entity.rotationPitch = targetEntity.rotationPitch;
+            entity.prevRotationPitch = targetEntity.prevRotationPitch;
+            entity.prevPosX = targetEntity.prevPosX;
+            entity.prevPosY = targetEntity.prevPosY;
+            entity.prevPosZ = targetEntity.prevPosZ;
+            entity.lastTickPosX = targetEntity.lastTickPosX;
+            entity.lastTickPosY = targetEntity.lastTickPosY;
+            entity.lastTickPosZ = targetEntity.lastTickPosZ;
+            entity.posX = targetEntity.posX;
+            entity.posY = targetEntity.posY;
+            entity.posZ = targetEntity.posZ;
+            targetPos = Reference.LerpVec3d(new Vec3d(targetEntity.lastTickPosX, targetEntity.lastTickPosY, targetEntity.lastTickPosZ), targetEntity.getPositionVector(), (double)partialTicks);
         }
-        EntityPlayerSP object = minecraft.player;
-        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)f);
-        return vec3d.subtract(vec3d2);
+        EntityPlayerSP object = mc.player;
+        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)partialTicks);
+        return targetPos.subtract(vec3d2);
     }
 
     //a
     @Override
-    public void render(GeoModel geoModel, CustomModelEntity cy_class1532, float f, float f2, float f3, float f4, float f5) {
+    public void render(GeoModel model, CustomModelEntity animatable, float partialTicks, float red, float green, float blue, float alpha) {
         GlStateManager.disableCull();
         GlStateManager.enableRescaleNormal();
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        for (GeoBone geoBone : geoModel.topLevelBones) {
-            if (f != 1.876945f) {
-                this.a(cy_class1532, geoBone, f);
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+
+        for (GeoBone topBone : model.topLevelBones) {
+            if (partialTicks != RENDER_FLAG_GUI) {
+                this.attachBoneTransformation(animatable, topBone, partialTicks);
             }
-            cy_class1532.c.translate(-geoBone.getPivotX() / 16.0f, -geoBone.getPivotY() / 16.0f, -geoBone.getPivotZ() / 16.0f);
-            this.renderRecursively(bufferBuilder, geoBone, f2, f3, f4, f5);
+            animatable.matrixStack.translate(-topBone.getPivotX() / 16.0f, -topBone.getPivotY() / 16.0f, -topBone.getPivotZ() / 16.0f);
+            this.renderRecursively(bufferBuilder, topBone, red, green, blue, alpha);
         }
         Tessellator.getInstance().draw();
         GlStateManager.disableRescaleNormal();
         GlStateManager.enableCull();
     }
 
-    EntityLivingBase c(CustomModelEntity cy_class1532) {
-        EntityPlayer entityPlayer;
-        GirlEntity em_class2582 = this.b(cy_class1532);
-        if (em_class2582 == null) {
+    EntityLivingBase getTargetLivingEntity(CustomModelEntity entity) {
+        EntityPlayer owner;
+        GirlEntity girl = this.getGirlEntity(entity);
+        if (girl == null) {
             return null;
         }
-        EntityLivingBase entityLivingBase = !(em_class2582 instanceof PlayerGirl) ? em_class2582 : ((entityPlayer = cy_class1532.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID())) == null ? em_class2582 : entityPlayer);
+        EntityLivingBase entityLivingBase = !(girl instanceof PlayerGirl)
+                ? girl
+                : ((owner = entity.world.getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID())) == null ? girl : owner);
         return entityLivingBase;
     }
 
-    GirlEntity b(CustomModelEntity cy_class1532) {
-        UUID uUID = cy_class1532.b();
-        GirlEntity entity = GirlID.GetGirlID(uUID);
-        if (entity != null) {
-            return entity;
+    GirlEntity getGirlEntity(CustomModelEntity entity) {
+        UUID girtId = entity.getGirlUUID();
+        GirlEntity girl = GirlID.GetGirlID(girtId);
+        if (girl != null) {
+            return girl;
         }
-        return GirlEntity.getClientGirlEntity(uUID);
+        return GirlEntity.getClientGirlEntity(girtId);
     }
 
-    void a(CustomModelEntity cy_class1532, GeoBone geoBone, float f) {
-        String string = this.a(cy_class1532);
-        if (string == null) {
+    void attachBoneTransformation(CustomModelEntity entity, GeoBone geoBone, float partialTicks) {
+        String targetBoneName = this.getTargetBoneName(entity);
+        if (targetBoneName == null) {
             return;
         }
-        this.a(cy_class1532, geoBone, f, string);
+        this.applyBoneMatrix(entity, geoBone, partialTicks, targetBoneName);
     }
 
-    void a(CustomModelEntity cy_class1532, GeoBone geoBone, float f, String string) {
-        GirlEntity em_class2582 = this.b(cy_class1532);
-        EntityLivingBase entityLivingBase = this.c(cy_class1532);
-        cy_class1532.c = em_class2582.getBoneMatrixStack(string, false);
-        if (!cy_class1532.f || f != 2.876945f) {
+    void applyBoneMatrix(CustomModelEntity entity, GeoBone geoBone, float partialTicks, String boneName) {
+        GirlEntity girl = this.getGirlEntity(entity);
+        EntityLivingBase entityLivingBase = this.getTargetLivingEntity(entity);
+        entity.matrixStack = girl.getBoneMatrixStack(boneName, false);
+        if (!entity.isItemModel || partialTicks != RENDER_FLAG_SPECIAL) {
             return;
         }
-        cy_class1532.c.scale(0.5f, 0.5f, 0.5f);
-        cy_class1532.c.rotateY((float)Math.toRadians(-a_class4.b));
+        entity.matrixStack.scale(0.5f, 0.5f, 0.5f);
+        entity.matrixStack.rotateY((float)Math.toRadians(-a_class4.MODEL_Y_ROTATION));
     }
 
-    String a(CustomModelEntity cy_class1532) {
-        if (cy_class1532.f) {
-            return cy_class1532.d.boneName;
+    String getTargetBoneName(CustomModelEntity entity) {
+        if (entity.isItemModel) {
+            return entity.itemModelData.boneName;
         }
-        CustomModel.b_inner96 b_inner962 = CustomModel.b(cy_class1532.a());
-        if (b_inner962 == null) {
+        CustomModel.ModelData modelData = CustomModel.getModelData(entity.getModelName());
+        if (modelData == null) {
             return null;
         }
-        if (CustomPartCategory.CUSTOM_BONE.equals((Object)b_inner962.j())) {
-            return b_inner962.b();
+        if (CustomPartCategory.CUSTOM_BONE.equals((Object)modelData.getCategory())) {
+            return modelData.getCustomBoneName();
         }
-        return b_inner962.j().boneName;
+        return modelData.getCategory().boneName;
     }
 
     @Override
-    public void renderRecursively(BufferBuilder bufferBuilder, GeoBone geoBone, float f, float f2, float f3, float f4) {
-        this.c.c.push();
-        this.c.c.translate(geoBone);
-        this.c.c.moveToPivot(geoBone);
-        this.c.c.rotate(geoBone);
-        this.c.c.scale(geoBone);
-        this.c.c.moveBackFromPivot(geoBone);
-        if (!geoBone.isHidden()) {
-            for (GeoCube object : geoBone.childCubes) {
-                this.c.c.push();
+    public void renderRecursively(BufferBuilder buffer, GeoBone bone, float red, float green, float blue, float alpha) {
+        this.currentEntity.matrixStack.push();
+        this.currentEntity.matrixStack.translate(bone);
+        this.currentEntity.matrixStack.moveToPivot(bone);
+        this.currentEntity.matrixStack.rotate(bone);
+        this.currentEntity.matrixStack.scale(bone);
+        this.currentEntity.matrixStack.moveBackFromPivot(bone);
+        if (!bone.isHidden()) {
+            for (GeoCube cube : bone.childCubes) {
+                this.currentEntity.matrixStack.push();
                 GlStateManager.pushMatrix();
-                this.renderCube(bufferBuilder, object, f, f2, f3, f4);
+                this.renderCube(buffer, cube, red, green, blue, alpha);
                 GlStateManager.popMatrix();
-                this.c.c.pop();
+                this.currentEntity.matrixStack.pop();
             }
         }
-        if (!geoBone.childBonesAreHiddenToo()) {
-            for (GeoBone geoBone2 : geoBone.childBones) {
-                this.renderRecursively(bufferBuilder, geoBone2, f, f2, f3, f4);
+        if (!bone.childBonesAreHiddenToo()) {
+            for (GeoBone childBone : bone.childBones) {
+                this.renderRecursively(buffer, childBone, red, green, blue, alpha);
             }
         }
-        this.c.c.pop();
+        this.currentEntity.matrixStack.pop();
     }
 
     @Override
-    public void renderCube(BufferBuilder bufferBuilder, GeoCube geoCube, float f, float f2, float f3, float f4) {
-        this.c.c.moveToPivot(geoCube);
-        this.c.c.rotate(geoCube);
-        this.c.c.moveBackFromPivot(geoCube);
-        for (GeoQuad geoQuad : geoCube.quads) {
-            if (geoQuad == null) continue;
-            Vector3f vector3f = new Vector3f((float)geoQuad.normal.getX(), (float)geoQuad.normal.getY(), (float)geoQuad.normal.getZ());
-            this.c.c.getNormalMatrix().transform((Tuple3f)vector3f);
-            if ((geoCube.size.y == 0.0f || geoCube.size.z == 0.0f) && vector3f.getX() < 0.0f) {
-                vector3f.x *= -1.0f;
+    public void renderCube(BufferBuilder buffer, GeoCube cube, float red, float green, float blue, float alpha) {
+        this.currentEntity.matrixStack.moveToPivot(cube);
+        this.currentEntity.matrixStack.rotate(cube);
+        this.currentEntity.matrixStack.moveBackFromPivot(cube);
+        for (GeoQuad quad : cube.quads) {
+            if (quad == null) continue;
+            Vector3f normal = new Vector3f((float)quad.normal.getX(), (float)quad.normal.getY(), (float)quad.normal.getZ());
+            this.currentEntity.matrixStack.getNormalMatrix().transform((Tuple3f)normal);
+
+            if ((cube.size.y == 0.0f || cube.size.z == 0.0f) && normal.getX() < 0.0f) {
+                normal.x *= -1.0f;
             }
-            if ((geoCube.size.x == 0.0f || geoCube.size.z == 0.0f) && vector3f.getY() < 0.0f) {
-                vector3f.y *= -1.0f;
+            if ((cube.size.x == 0.0f || cube.size.z == 0.0f) && normal.getY() < 0.0f) {
+                normal.y *= -1.0f;
             }
-            if ((geoCube.size.x == 0.0f || geoCube.size.y == 0.0f) && vector3f.getZ() < 0.0f) {
-                vector3f.z *= -1.0f;
+            if ((cube.size.x == 0.0f || cube.size.y == 0.0f) && normal.getZ() < 0.0f) {
+                normal.z *= -1.0f;
             }
-            if (this.j != null) {
-                this.d = BoneDeformProcessor.calculatePhysicsVector(this.d, vector3f, this.j);
+
+            if (this.lightDirection != null) {
+                this.colorMultiplier = BoneDeformProcessor.calculatePhysicsVector(this.colorMultiplier, normal, this.lightDirection);
             }
-            for (GeoVertex geoVertex : geoQuad.vertices) {
-                Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
-                this.c.c.getModelMatrix().transform((Tuple4f)vector4f);
-                bufferBuilder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex(geoVertex.textureU, geoVertex.textureV).color((float)this.d.x, (float)this.d.y, (float)this.d.z, f4).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
+
+            for (GeoVertex vertex : quad.vertices) {
+                Vector4f vertexPos = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0f);
+                this.currentEntity.matrixStack.getModelMatrix().transform((Tuple4f)vertexPos);
+                buffer.pos(vertexPos.getX(), vertexPos.getY(), vertexPos.getZ()).tex(vertex.textureU, vertex.textureV).color((float)this.colorMultiplier.x, (float)this.colorMultiplier.y, (float)this.colorMultiplier.z, alpha).normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
             }
         }
     }

@@ -21,8 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class d4_class162
-extends Container {
+public class d4_class162 extends Container {
     GirlEntity b;
     public Slot[] d;
     public UUID a;
@@ -99,8 +98,5 @@ extends Container {
         super.onContainerClosed(entityPlayer);
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

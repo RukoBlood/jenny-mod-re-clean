@@ -17,18 +17,18 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class CrossModel extends AnimatedGeoModel<CustomModelEntity> {
     @Override
     public ResourceLocation getModelLocation(CustomModelEntity entity) {
-        if (entity.f) {
+        if (entity.isItemModel) {
             return new ResourceLocation("sexmod", "geo/cross.geo.json");
         }
-        return CustomModel.k(entity.a());
+        return CustomModel.k(entity.getModelName());
     }
 
     @Override
     public ResourceLocation getTextureLocation(CustomModelEntity cy_class1532) {
-        if (cy_class1532.f) {
+        if (cy_class1532.isItemModel) {
             return new ResourceLocation("sexmod", "textures/cross.png");
         }
-        return CustomModel.c(cy_class1532.a());
+        return CustomModel.c(cy_class1532.getModelName());
     }
 
     @Override

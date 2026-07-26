@@ -96,9 +96,9 @@ extends Item {
         if (!entityInteract.getWorld().isRemote) {
             return;
         }
-        if (CustomModel.d) {
-            boolean bl = CustomModel.d = 0 != CustomModel.b(true);
-            if (CustomModel.d) {
+        if (CustomModel.isGlobalRenderingDisabled) {
+            boolean bl = CustomModel.isGlobalRenderingDisabled = 0 != CustomModel.b(true);
+            if (CustomModel.isGlobalRenderingDisabled) {
                 return;
             }
         }

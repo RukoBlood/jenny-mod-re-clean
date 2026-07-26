@@ -235,7 +235,7 @@ public abstract class PlayerGirl extends Fighter {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_H() {
+    public boolean hasCustomParts() {
         Minecraft minecraft = Minecraft.getMinecraft();
         return !this.boolean_f() || minecraft.gameSettings.thirdPersonView != 0;
     }

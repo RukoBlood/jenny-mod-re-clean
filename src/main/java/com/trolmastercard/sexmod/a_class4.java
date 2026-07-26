@@ -58,7 +58,7 @@ public class a_class4 extends GuiScreen {
     int n = 0;
     int l = 0;
     float o = 0.0f;
-    static public float b = 0.0f;
+    static public float MODEL_Y_ROTATION = 0.0f;
     static protected List<Integer> a = new ArrayList<Integer>();
     static protected int s = 0;
     static protected int h = 0;
@@ -198,14 +198,14 @@ public class a_class4 extends GuiScreen {
     public void drawScreen(int n, int n2, float f) {
         super.drawScreen(n, n2, f);
         if (this.p) {
-            b += Reference.LerpFloat((float)h, (float)s, f);
+            MODEL_Y_ROTATION += Reference.LerpFloat((float)h, (float)s, f);
         }
         this.a();
         this.mc.renderEngine.bindTexture(k);
         int n3 = this.n - this.a(15.0f);
         int n4 = this.l - 20;
         this.drawTexturedModalRect(n3, n4, 100, this.a(n, n2, n3, n4, n3 + 20, n4 + 20) ? 40 : 20, 20, 20);
-        if (CustomModel.g() == null) {
+        if (CustomModel.getGlobalModelOverride() == null) {
             this.b(n3, n, n2);
         }
         this.a(this.n, this.l, this.o, this.c, 1.2345679f);
@@ -306,7 +306,7 @@ public class a_class4 extends GuiScreen {
     }
 
     public void a(CustomModelEntity cy_class1532) {
-        this.a(this.n, this.l, this.o, cy_class1532, 2.876945f, cy_class1532.f ? 1 : 0);
+        this.a(this.n, this.l, this.o, cy_class1532, 2.876945f, cy_class1532.isItemModel ? 1 : 0);
     }
 
     public void a(String string, int n, int n2) {
@@ -342,7 +342,7 @@ public class a_class4 extends GuiScreen {
         if (this.a(n, n2, n5, n4 = this.l - 20, n5 + 20, n4 + 20)) {
             this.c();
         }
-        if (CustomModel.g() != null) {
+        if (CustomModel.getGlobalModelOverride() != null) {
             return;
         }
         n4 = this.l - 40;
@@ -351,7 +351,7 @@ public class a_class4 extends GuiScreen {
             this.mc.player.closeScreen();
             int n6 = CustomModel.b(true);
             if (n6 != 0) {
-                CustomModel.d = true;
+                CustomModel.isGlobalRenderingDisabled = true;
                 return;
             }
             GirlEntity em_class2582 = GirlEntity.getClientGirlEntity(this.ID);
@@ -440,7 +440,7 @@ public class a_class4 extends GuiScreen {
         RenderHelper.enableStandardItemLighting();
         GlStateManager.rotate(-135.0f, 0.0f, 1.0f, 0.0f);
         GlStateManager.translate(0.0f, 0.0f, n3);
-        GlStateManager.rotate(b, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(MODEL_Y_ROTATION, 0.0f, 1.0f, 0.0f);
         GlStateManager.rotate(0.25f, 1.0f, 0.0f, 0.0f);
         GlStateManager.translate(0.0f, 0.0f, 0.0f);
         RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
@@ -470,10 +470,10 @@ public class a_class4 extends GuiScreen {
             f = 0.1f;
         }
         if (this.d == 0) {
-            b += (float)(this.e * 10) / f;
+            MODEL_Y_ROTATION += (float)(this.e * 10) / f;
             return;
         }
-        b += (float)this.d / f;
+        MODEL_Y_ROTATION += (float)this.d / f;
         this.d = (int)((float)this.d * (1.0f - 0.25f / f));
         if (Math.abs(this.d) > 10) {
             return;
@@ -489,7 +489,7 @@ public class a_class4 extends GuiScreen {
         if (minecraft.currentScreen instanceof a_class4) {
             return;
         }
-        boolean bl2 = bl = CustomModel.g() == null || CustomModel.b();
+        boolean bl2 = bl = CustomModel.getGlobalModelOverride() == null || CustomModel.b();
         if (!bl) {
             minecraft.player.sendStatusMessage(new TextComponentString("You have to whitelist the server to use its custom models. " + (Object)((Object)TextFormatting.YELLOW) + "/whitelistserver"), true);
             return;
@@ -509,9 +509,9 @@ public class a_class4 extends GuiScreen {
             if (!ClientProxy.keyBindings[1].isPressed()) {
                 return;
             }
-            if (CustomModel.d) {
-                boolean bl = CustomModel.d = 0 != CustomModel.b(true);
-                if (CustomModel.d) {
+            if (CustomModel.isGlobalRenderingDisabled) {
+                boolean bl = CustomModel.isGlobalRenderingDisabled = 0 != CustomModel.b(true);
+                if (CustomModel.isGlobalRenderingDisabled) {
                     return;
                 }
             }

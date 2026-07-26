@@ -87,7 +87,7 @@ implements IMessage {
                 ArrayList<String> arrayList = new ArrayList<String>();
                 for (Map.Entry<String, Float> entry : g6_class3502.b.entrySet()) {
                     String string = entry.getKey();
-                    if (!CustomModel.f(string)) {
+                    if (!CustomModel.isModelDisabled(string)) {
                         arrayList.add(string);
                         continue;
                     }

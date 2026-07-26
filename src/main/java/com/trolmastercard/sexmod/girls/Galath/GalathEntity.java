@@ -1034,7 +1034,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, b7_cla
             this.void_b(entityPlayer);
             return true;
         }
-        if (fl_class318.a(this.aq).distanceSq(blockPos) > 16.0) {
+        if (PathUtils.getFinalPathPosition(this.aq).distanceSq(blockPos) > 16.0) {
             if (!this.onGround) {
                 return true;
             }

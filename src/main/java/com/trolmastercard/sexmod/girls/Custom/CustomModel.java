@@ -65,15 +65,15 @@ public class CustomModel {
     final static public String a = "sexmod/custom_models";
     final static String b = "sexmod/custom_models/whitelisted_servers.txt";
     final static public String f = "sexmod_custom_models";
-    static Map<String, b_inner96> c = new HashMap<String, b_inner96>();
-    static public boolean d = false;
+    static Map<String, ModelData> c = new HashMap<String, ModelData>();
+    static public boolean isGlobalRenderingDisabled = false;
     static public boolean isLoaded = false;
 
-    public static Map<String, b_inner96> i() {
+    public static Map<String, ModelData> i() {
         return c;
     }
 
-    public static boolean f(String string) {
+    public static boolean isModelDisabled(String string) {
         return c.get(string) != null;
     }
 
@@ -103,7 +103,7 @@ public class CustomModel {
 
     @SideOnly(value=Side.CLIENT)
     public static boolean b() {
-        String string = CustomModel.g();
+        String string = CustomModel.getGlobalModelOverride();
         if (string == null) {
             return false;
         }
@@ -190,7 +190,7 @@ public class CustomModel {
     }
 
     public static float i(String string) {
-        b_inner96 b_inner962 = c.get(string);
+        ModelData b_inner962 = c.get(string);
         if (b_inner962 == null) {
             return 0.0f;
         }
@@ -199,8 +199,8 @@ public class CustomModel {
 
     @SideOnly(value=Side.CLIENT)
     static void c() {
-        for (Map.Entry<String, b_inner96> entry : c.entrySet()) {
-            b_inner96 b_inner962 = entry.getValue();
+        for (Map.Entry<String, ModelData> entry : c.entrySet()) {
+            ModelData b_inner962 = entry.getValue();
             if (b_inner962 == null) continue;
             ResourceLocation resourceLocation = b_inner962.c();
             ResourceLocation resourceLocation2 = b_inner962.k();
@@ -232,7 +232,7 @@ public class CustomModel {
 
     @SideOnly(value=Side.CLIENT)
     public static String d() {
-        String string = CustomModel.g();
+        String string = CustomModel.getGlobalModelOverride();
         if (string == null) {
             return "sexmod/custom_models/singleplayer";
         }
@@ -241,18 +241,18 @@ public class CustomModel {
 
     @SideOnly(value=Side.CLIENT)
     @Nullable
-    public static String g() {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        ServerData serverData = minecraft.getCurrentServerData();
+    public static String getGlobalModelOverride() {
+        Minecraft mc = Minecraft.getMinecraft();
+        ServerData serverData = mc.getCurrentServerData();
         if (serverData == null) {
             return null;
         }
-        String string = serverData.serverIP;
-        int n = string.indexOf(":");
+        String ip = serverData.serverIP;
+        int n = ip.indexOf(":");
         if (n != -1) {
-            string = string.substring(0, n);
+            ip = ip.substring(0, n);
         }
-        return string;
+        return ip;
     }
 
     public static int LoadModels(boolean bl) {
@@ -348,7 +348,7 @@ public class CustomModel {
         if (!file.exists()) {
             return String.format("couldn't find cfg File for '%s'. It should have been at '%s'. Are you sure it exists?", string, string4);
         }
-        b_inner96 b_inner962 = new b_inner96(file, string);
+        ModelData b_inner962 = new ModelData(file, string);
         if (b_inner962.h != null) {
             return b_inner962.h;
         }
@@ -398,7 +398,7 @@ public class CustomModel {
     }
 
     public static ResourceLocation k(String string) {
-        b_inner96 b_inner962 = c.get(string);
+        ModelData b_inner962 = c.get(string);
         if (b_inner962 == null) {
             if (!string.equals("cross")) {
                 System.out.printf("The custom model for '%s', hasn't been registered, but gamers tried to use it anyways. Crash is imminent%n", string);
@@ -409,7 +409,7 @@ public class CustomModel {
     }
 
     public static ResourceLocation c(String string) {
-        b_inner96 b_inner962 = c.get(string);
+        ModelData b_inner962 = c.get(string);
         if (b_inner962 == null) {
             if (!string.equals("cross")) {
                 System.out.printf("The custom texture for '%s', hasn't been registered, but gamers tried to use it anyways. Crash is imminent%n", string);
@@ -424,18 +424,18 @@ public class CustomModel {
     }
 
     public static CustomPartCategory e(String string) {
-        b_inner96 b_inner962 = c.get(string);
+        ModelData b_inner962 = c.get(string);
         if (b_inner962 == null) {
             if (!string.equals("cross")) {
                 System.out.printf("The ClothingType for '%s', hasn't been registered, but gamers tried to use it anyways. Crash is imminent%n", string);
             }
             return CustomPartCategory.HEAD;
         }
-        return b_inner962.d;
+        return b_inner962.category;
     }
 
     public static HashSet<PlayerGirlEntity> getAllowedEntities(String string) {
-        b_inner96 b_inner962 = c.get(string);
+        ModelData b_inner962 = c.get(string);
         if (b_inner962 == null) {
             if (!string.equals("cross")) {
                 System.out.printf("The HashSet<GirlType> for '%s', hasn't been registered, but gamers tried to use it anyways. Crash is imminent%n", string);
@@ -446,7 +446,7 @@ public class CustomModel {
     }
 
     public static HashSet<String> g(String string) {
-        b_inner96 b_inner962 = c.get(string);
+        ModelData b_inner962 = c.get(string);
         if (b_inner962 == null) {
             if (!string.equals("cross")) {
                 System.out.printf("The HashSet<String> for '%s', hasn't been registered, but gamers tried to use it anyways. Crash is imminent%n", string);
@@ -457,7 +457,7 @@ public class CustomModel {
     }
 
     public static String d(String string) {
-        b_inner96 b_inner962 = c.get(string);
+        ModelData b_inner962 = c.get(string);
         if (b_inner962 == null) {
             if (!string.equals("cross")) {
                 System.out.printf("The author for '%s', hasn't been registered, but gamers tried to use it anyways. Crash is imminent%n", string);
@@ -468,7 +468,7 @@ public class CustomModel {
     }
 
     @Nullable
-    public static b_inner96 b(String string) {
+    public static ModelData getModelData(String string) {
         return c.get(string);
     }
 
@@ -480,10 +480,10 @@ public class CustomModel {
         for (Map.Entry entry : c.entrySet()) {
             Object object;
             String string = (String)entry.getKey();
-            object = (b_inner96)entry.getValue();
-            CustomPartCategory gw_class3892 = ((b_inner96)object).d;
+            object = (ModelData)entry.getValue();
+            CustomPartCategory gw_class3892 = ((ModelData)object).category;
             List<String> list = hashMap.get((Object)gw_class3892);
-            if (!((b_inner96)object).g.isEmpty() && !((b_inner96)object).g.contains((Object) PlayerGirlEntity.fromGirl(em_class2582))) continue;
+            if (!((ModelData)object).g.isEmpty() && !((ModelData)object).g.contains((Object) PlayerGirlEntity.fromGirl(em_class2582))) continue;
             list.add(string);
             hashMap.put(gw_class3892, list);
         }
@@ -492,24 +492,20 @@ public class CustomModel {
 
     public static HashMap<String, Float> e() {
         HashMap<String, Float> hashMap = new HashMap<String, Float>();
-        for (Map.Entry<String, b_inner96> entry : CustomModel.i().entrySet()) {
+        for (Map.Entry<String, ModelData> entry : CustomModel.i().entrySet()) {
             hashMap.put(entry.getKey(), Float.valueOf(entry.getValue().f()));
         }
         return hashMap;
     }
 
-    private static Throwable a(Throwable throwable) {
-        return throwable;
-    }
-
-    public static class b_inner96 {
-        CustomPartCategory d;
+    public static class ModelData {
+        CustomPartCategory category;
         HashSet<PlayerGirlEntity> g = new HashSet();
         HashSet<String> b = new HashSet();
         String k;
         String j;
         boolean c;
-        c8_class117 e;
+        LightingType e;
         float m = 1.0f;
         float a = 0.0f;
         ResourceLocation i;
@@ -517,7 +513,7 @@ public class CustomModel {
         public String h = null;
         float l;
 
-        public b_inner96(File file, String string) {
+        public ModelData(File file, String string) {
             String string2;
             String string3;
             FileInputStream fileInputStream;
@@ -549,12 +545,12 @@ public class CustomModel {
             }
             try {
                 string32 = string32.replace(" ", "");
-                this.d = CustomPartCategory.valueOf(string32);
+                this.category = CustomPartCategory.valueOf(string32);
             } catch (IllegalArgumentException illegalArgumentException) {
                 this.h = String.format("you entered '%s' into the 'wear_type' field of the %s's cfg file at '%s'. This is not a valid value. Check my examples on what valid values are to enter into the field 'wear_type", string32, string, file.getAbsolutePath());
                 return;
             }
-            if (CustomPartCategory.CUSTOM_BONE.equals((Object)this.d)) {
+            if (CustomPartCategory.CUSTOM_BONE.equals((Object)this.category)) {
                 this.j = properties.getProperty("custom_bone");
                 if ("".equals(this.j)) {
                     this.h = String.format("You selected CUSTOM_BONE as the 'wear_type' in the cfg file for '%s' at '%s', yet you left the 'custom_bone' field right underneath it empty. If you want ur model to be parented to a specific bone, you have to enter the name of that bone at the field 'custom_bone'.", string, file.getAbsolutePath());
@@ -580,7 +576,7 @@ public class CustomModel {
             }
             object = ((String)object).replace(" ", "");
             try {
-                this.e = c8_class117.valueOf((String)object);
+                this.e = LightingType.valueOf((String)object);
             } catch (IllegalArgumentException illegalArgumentException) {
                 this.h = String.format("you entered '%s' into the 'which_lighting' field of the %s's cfg file at '%s'. This is not a valid value. Check my examples on what valid values are to enter into the field 'which_lighting'.", object, string, file.getAbsolutePath());
             }
@@ -627,11 +623,11 @@ public class CustomModel {
             }
         }
 
-        public String b() {
+        public String getCustomBoneName() {
             return this.j;
         }
 
-        public c8_class117 i() {
+        public LightingType getLightingType() {
             return this.e;
         }
 
@@ -643,8 +639,8 @@ public class CustomModel {
             return this.m;
         }
 
-        public CustomPartCategory j() {
-            return this.d;
+        public CustomPartCategory getCategory() {
+            return this.category;
         }
 
         public HashSet<PlayerGirlEntity> l() {
@@ -655,7 +651,7 @@ public class CustomModel {
             return this.k;
         }
 
-        public boolean a() {
+        public boolean isAlwaysVisible() {
             return this.c;
         }
 

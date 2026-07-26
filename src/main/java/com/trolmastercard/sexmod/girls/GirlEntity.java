@@ -1236,11 +1236,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return null;
     }
 
-    public float float_T() {
+    public float getLeftArmRotation() {
         return 0.0f;
     }
 
-    public float float_ai() {
+    public float getRightArmRotation() {
         return 0.0f;
     }
 
@@ -1528,7 +1528,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_H() {
+    public boolean hasCustomParts() {
         return true;
     }
 
