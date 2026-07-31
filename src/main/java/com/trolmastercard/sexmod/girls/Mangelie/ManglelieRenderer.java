@@ -42,9 +42,9 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 public class ManglelieRenderer
 extends GirlRenderer<ManglelieEntity> {
     final static ColorRGBA C = new ColorRGBA(115, 108, 188, 255);
-    final static Vector3fColor D = new Vector3fColor(0.05f, 0.04f, 0.0f);
-    final static Vector3fColor v = new Vector3fColor(0.0f, 0.065f, 0.0f);
-    final static Vector3fColor z = new Vector3fColor(0.0f, 0.03f, 0.03f);
+    final static Vector3fSexmodSpecial D = new Vector3fSexmodSpecial(0.05f, 0.04f, 0.0f);
+    final static Vector3fSexmodSpecial v = new Vector3fSexmodSpecial(0.0f, 0.065f, 0.0f);
+    final static Vector3fSexmodSpecial z = new Vector3fSexmodSpecial(0.0f, 0.03f, 0.03f);
     final static ColorRGBA r = new ColorRGBA(63, 59, 150, 255);
     final static ColorRGBA x = new ColorRGBA(79, 74, 188, 255);
     final static float A = 0.5f;
@@ -152,7 +152,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (f__class2972 == null) {
             return false;
         }
-        return f__class2972.bm < f;
+        return f__class2972.bodyScaleY < f;
     }
 
     public static void a_9(GirlEntity em_class2582, float f) {

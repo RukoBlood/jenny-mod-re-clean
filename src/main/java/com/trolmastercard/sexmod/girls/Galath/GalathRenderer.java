@@ -60,7 +60,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         }
     };
 
-    final static public Vector3fColor OVERLAY_COLOR_NONE = new Vector3fColor(0.0f, 0.0f, 0.0f);
+    final static public Vector3fSexmodSpecial OVERLAY_COLOR_NONE = new Vector3fSexmodSpecial(0.0f, 0.0f, 0.0f);
     final static ColorRGBA RIBBON_COLOR_PRIMARY = new ColorRGBA(152, 45, 62, 255);
     final static ColorRGBA RIBBON_COLOR_SECONDARY = new ColorRGBA(84, 66, 88, 255);
     final static Vector2f WING_UV_OFFSET_1 = new Vector2f(0.25f, 0.125f);
@@ -94,7 +94,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
     //formerly a
     @Override
     @Nullable
-    protected Vector3fColor getAdditionalOverlayColor(GalathEntity entity) {
+    protected Vector3fSexmodSpecial getAdditionalOverlayColor(GalathEntity entity) {
         if (entity.world instanceof FakeWorld) {
             return null;
         }
@@ -115,7 +115,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
     }
 
     @Override
-    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fColor rgb, float thickness) {
+    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fSexmodSpecial rgb, float thickness) {
         GalathRenderer.drawCustomOverlayBundle(tessellator, buffer, girl, rgb, thickness);
     }
 
@@ -269,7 +269,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
 
         float angleStep = TrigMath.toRadians(9.0);
 
-        Vector3fColor color = GalathEntity.STAR_PARTICLE_COLOR;
+        Vector3fSexmodSpecial color = GalathEntity.STAR_PARTICLE_COLOR;
         mc.getTextureManager().bindTexture(LINE);
         buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_TEX_COLOR);
         GlStateManager.glLineWidth(GalathRenderer.calculateLineThickness(girl, partialTicks, 1.0f, 3.0f));
@@ -693,7 +693,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         float progress = (currentTick - 105.0f) / 20.0f;
         float lightmapCoords = Reference.LerpFloat(120.0f, 240.0f, progress);
 
-        Vector3fColor coinColor = Reference.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, (double)progress);
+        Vector3fSexmodSpecial coinColor = Reference.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, (double)progress);
 
         float lastLightX = OpenGlHelper.lastBrightnessX;
         float lastLightY = OpenGlHelper.lastBrightnessY;

@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
-import com.trolmastercard.sexmod.util.Vector3fColor;
+import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -40,7 +40,7 @@ extends PlayerGirlRenderer {
     }
 
     @Nullable
-    protected Vector3fColor getAdditionalOverlayColor(GirlEntity entity) {
+    protected Vector3fSexmodSpecial getAdditionalOverlayColor(GirlEntity entity) {
         if (entity.world instanceof FakeWorld) {
             return null;
         }
@@ -58,7 +58,7 @@ extends PlayerGirlRenderer {
     }
 
     @Override
-    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fColor rgb, float thickness) {
+    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fSexmodSpecial rgb, float thickness) {
         PlayerGalathRenderer.drawCustomOverlayBundle(tessellator, buffer, girl, rgb, thickness);
     }
 

@@ -9,11 +9,8 @@ import com.trolmastercard.sexmod.girls.GirlModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.Vector3fColor;
-import com.trolmastercard.sexmod.util.AnimationStateHolder;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,12 +23,11 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 import software.bernie.shadowed.eliotlash.molang.MolangParser;
 
-public class GalathModel
-extends GirlModel<GirlEntity> {
+public class GalathModel extends GirlModel<GirlEntity> {
     static public ResourceLocation GALATH_TEXTURE = new ResourceLocation("sexmod", "textures/entity/galath/galath.png");
-    float g = 0.0f;
-    long f = -1L;
-    long i = -1L;
+    float lastPussyLickingWav = 0.0f;
+    long swordDashStartTime = -1L;
+    long swordDashEndTime = -1L;
 
     public GalathModel() {
         this.modelLocations = this.getAnimationResource();
@@ -46,14 +42,14 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(GirlEntity girlEntity) {
-        if (girlEntity.world instanceof FakeWorld) {
+    public ResourceLocation getModelLocation(GirlEntity girl) {
+        if (girl.world instanceof FakeWorld) {
             return this.modelLocations[0];
         }
-        if (((IWingsOwner)((Object) girlEntity)).isWingsAnimated()) {
+        if (((IWingsOwner)((Object) girl)).isWingsAnimated()) {
             return this.modelLocations[2];
         }
-        return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
+        return this.modelLocations[girl.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
     }
 
     @Override
@@ -66,131 +62,140 @@ extends GirlModel<GirlEntity> {
         return new ResourceLocation("sexmod", "animations/galath/galath.animation.json");
     }
 
-    protected boolean boolean_e(GirlEntity em_class2582) {
-        if (!(em_class2582 instanceof GalathEntity)) {
+    protected boolean shouldCancelHeadTracking(GirlEntity girl) {
+        if (!(girl instanceof GalathEntity)) {
             return true;
         }
-        GalathEntity f__class2972 = (GalathEntity)em_class2582;
-        if (f__class2972.maybeMountedByMangFn()) {
+        GalathEntity galath = (GalathEntity)girl;
+        if (galath.maybeMountedByMangFn()) {
             return true;
         }
-        return f__class2972.getAttackTarget() == null;
+        return galath.getAttackTarget() == null;
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
-        this.k(girl);
-        super.setLivingAnimations(girl, instanceID, animationEvent);
-        this.void_a(girl);
-        this.h(girl);
-        //this.f(em_class2582); // TODO
-        assert(false);
-        this.void_b(girl);
-        this.void_e(girl);
-        this.void_g(girl);
-        this.j(girl);
-        this.ShowFutaCock();
-        this.void_c(girl);
-        this.i(girl);
-        this.void_d(girl);
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent event) {
+        this.updateMasturbationHeadLook(girl);
+        super.setLivingAnimations(girl, instanceID, event);
+
+        this.updateFlightRotation(girl);
+        this.updateRapeChargeBodyRotation(girl);
+        //this.f(em_class2582); // TODO fix
+        //assert(false);
+        this.updateSwordAttackBodyOffset(girl);
+        this.updateKnockoutFlightPose(girl);
+        this.updateOutfitBonesVisibility(girl);
+        this.updateWingsVisibility(girl);
+        this.updatePlayerGirlBones(girl);
+        this.updateFutaBonesVisibility();
+        this.updateBodyRotationData(girl);
+        this.updatePussyLickingHeadAnimation(girl);
+        this.updateManglelieHugOffset(girl);
+
         if (!(girl instanceof GalathEntity)) {
             return;
         }
-        GalathEntity f__class2972 = (GalathEntity) girl;
-        f__class2972.aE = this.getAnimationProcessor().getBone("head").getRotationX();
-        if (f__class2972.isWingsAnimated()) {
-            ManglelieModel.a(f__class2972, this.getAnimationProcessor(), animationEvent.getPartialTick());
+        GalathEntity galath = (GalathEntity) girl;
+        galath.cachedHeadRotationX = this.getAnimationProcessor().getBone("head").getRotationX();
+        if (galath.isWingsAnimated()) {
+            ManglelieModel.a(galath, this.getAnimationProcessor(), event.getPartialTick());
         }
     }
 
-    void i(GirlEntity em_class2582) {
-        if (!Action.a(em_class2582, Action.PUSSY_LICKING)) {
+    void updatePussyLickingHeadAnimation(GirlEntity girl) {
+        if (!Action.a(girl, Action.PUSSY_LICKING)) {
             return;
         }
-        if (!(em_class2582 instanceof GalathEntity)) {
+        if (!(girl instanceof GalathEntity)) {
             return;
         }
         if (this.mc.isGamePaused()) {
             return;
         }
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
-        IBone iBone = animationProcessor.getBone("head");
-        float f = this.mc.getRenderPartialTicks() + (float)this.mc.player.ticksExisted;
-        Vector3fColor f7_class2922 = this.a((GalathEntity)em_class2582, f);
-        iBone.setRotationX(iBone.getRotationX() + f7_class2922.x);
-        iBone.setRotationY(iBone.getRotationY() + f7_class2922.y);
-        iBone.setRotationZ(iBone.getRotationZ() + f7_class2922.z);
-        if (em_class2582.currentAction() != Action.PUSSY_LICKING || ((GalathEntity)em_class2582).a5) {
+        IBone headBone = animationProcessor.getBone("head");
+        float partialTicks = this.mc.getRenderPartialTicks() + (float)this.mc.player.ticksExisted;
+        Vector3fSexmodSpecial f7_class2922 = this.calculatePussyLickingRotationOffset((GalathEntity)girl, partialTicks);
+        headBone.setRotationX(headBone.getRotationX() + f7_class2922.x);
+        headBone.setRotationY(headBone.getRotationY() + f7_class2922.y);
+        headBone.setRotationZ(headBone.getRotationZ() + f7_class2922.z);
+        if (girl.currentAction() != Action.PUSSY_LICKING || ((GalathEntity)girl).a5) {
             return;
         }
-        float f2 = (float)(Math.sin(f * 0.3f) * 10.0);
-        if (f2 > 0.0f && this.g < 0.0f || f2 < 0.0f && this.g > 0.0f) {
-            em_class2582.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+        float currentWave = (float)(Math.sin(partialTicks * 0.3f) * 10.0);
+        if (currentWave > 0.0f && this.lastPussyLickingWav < 0.0f || currentWave < 0.0f && this.lastPussyLickingWav > 0.0f) {
+            girl.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
         }
-        this.g = f2;
+        this.lastPussyLickingWav = currentWave;
     }
 
-    Vector3fColor a(GalathEntity f__class2972, float f) {
-        return Reference.LerpVector3f(this.a(f), Vector3fColor.ZERO, (double)f__class2972.getTransitionProgress(this.mc.getRenderPartialTicks()));
+    Vector3fSexmodSpecial calculatePussyLickingRotationOffset(GalathEntity galath, float renderTicks) {
+        return Reference.LerpVector3f(this.getPussyLickingWaveAngles(renderTicks), Vector3fSexmodSpecial.ZERO, (double)galath.getTransitionProgress(this.mc.getRenderPartialTicks()));
     }
 
-    Vector3fColor a(float f) {
-        return new Vector3fColor((float)Math.sin(f * 0.3f) * TrigMath.toRadians(10.0f), (float)Math.sin(f * 0.15f) * TrigMath.toRadians(7.0f), (float)Math.sin((double)f * -0.15) * TrigMath.toRadians(7.0f));
+    Vector3fSexmodSpecial getPussyLickingWaveAngles(float renderTicks) {
+        return new Vector3fSexmodSpecial(
+                (float)Math.sin(renderTicks * 0.3f) * TrigMath.toRadians(10.0f),
+                (float)Math.sin(renderTicks * 0.15f) * TrigMath.toRadians(7.0f),
+                (float)Math.sin((double)renderTicks * -0.15) * TrigMath.toRadians(7.0f)
+        );
     }
 
-    void void_c(GirlEntity em_class2582) {
-        if (!(em_class2582 instanceof GalathEntity)) {
+    void updateBodyRotationData(GirlEntity girl) {
+        if (!(girl instanceof GalathEntity)) {
             return;
         }
-        GalathEntity f__class2972 = (GalathEntity)em_class2582;
+        GalathEntity galath = (GalathEntity)girl;
         AnimationProcessor animationProcessor = this.getAnimationProcessor();
-        IBone iBone = animationProcessor.getBone("body");
-        f__class2972.bw = iBone.getRotationY();
-        f__class2972.bm = iBone.getScaleY();
+        IBone bodyBone = animationProcessor.getBone("body");
+        galath.bodyRotationY = bodyBone.getRotationY();
+        galath.bodyScaleY = bodyBone.getScaleY();
     }
 
-    void void_d(GirlEntity em_class2582) {
-        if (em_class2582.actionController.getAnimationState() != AnimationState.Transitioning) {
+    void updateManglelieHugOffset(GirlEntity girl) {
+        if (girl.actionController.getAnimationState() != AnimationState.Transitioning) {
             return;
         }
         AnimationProcessor animationProcessor = this.getAnimationProcessor();
-        Action fp_class3242 = em_class2582.currentAction();
-        if (fp_class3242 == Action.HUG_MANG) {
-            IBone iBone = animationProcessor.getBone("body2");
-            if (iBone == null) {
+        Action currentAction = girl.currentAction();
+        if (currentAction == Action.HUG_MANG) {
+            IBone body2Bone = animationProcessor.getBone("body2");
+            if (body2Bone == null) {
                 return;
             }
-            iBone.setPositionX(0.0f);
-            iBone.setPositionY(-0.53f);
-            iBone.setPositionZ(-40.05f);
+            body2Bone.setPositionX(0.0f);
+            body2Bone.setPositionY(-0.53f);
+            body2Bone.setPositionZ(-40.05f);
         }
     }
 
-    void k(GirlEntity em_class2582) {
+    void updateMasturbationHeadLook(GirlEntity girl) {
         if (ClientProxy.IS_PRELOADING) {
             return;
         }
-        if (em_class2582.currentAction() != Action.MASTERBATE) {
+        if (girl.currentAction() != Action.MASTERBATE) {
             return;
         }
-        EntityPlayer entityPlayer = em_class2582.getMasterPlayer();
-        if (entityPlayer == null) {
-            entityPlayer = this.mc.player;
+        EntityPlayer masterPlayer = girl.getMasterPlayer();
+        if (masterPlayer == null) {
+            masterPlayer = this.mc.player;
         }
-        MolangParser molangParser = GeckoLibCache.getInstance().parser;
-        Vec3d vec3d = ak_class32.b(em_class2582, entityPlayer, this.mc.getRenderPartialTicks()).add(em_class2582.getCachedBoneOffset("head"));
-        float f = (float) TrigMath.toDegrees(Math.atan2(vec3d.z, vec3d.x)) - em_class2582.getYawRotation();
-        float f2 = (float) TrigMath.toDegrees(Math.atan2(vec3d.y, Math.sqrt(vec3d.x * vec3d.x + vec3d.z * vec3d.z)));
-        double d = Math.abs(vec3d.x) + Math.abs(vec3d.y) + Math.abs(vec3d.z);
-        double d2 = d * 7.0 + -20.0;
-        double d3 = d * 5.0 + -20.0;
-        molangParser.setValue("pitch", d2 + (double)f2 - 80.0);
-        molangParser.setValue("armpitch", d3 + (double)f2 + -110.0);
-        molangParser.setValue("armyaw", f + 80.0f);
-        molangParser.setValue("yaw", f + 90.0f);
+        MolangParser parser = GeckoLibCache.getInstance().parser;
+        Vec3d targetOffset = ak_class32.getVectorToPlayer(girl, masterPlayer, this.mc.getRenderPartialTicks()).add(girl.getCachedBoneOffset("head"));
+        float relativeYaw = (float) TrigMath.toDegrees(Math.atan2(targetOffset.z, targetOffset.x)) - girl.getYawRotation();
+        float pitchAngle = (float) TrigMath.toDegrees(Math.atan2(targetOffset.y, Math.sqrt(targetOffset.x * targetOffset.x + targetOffset.z * targetOffset.z)));
+
+        double totalDistance = Math.abs(targetOffset.x) + Math.abs(targetOffset.y) + Math.abs(targetOffset.z);
+        double calculatedPitch = totalDistance * 7.0 + -20.0;
+        double calculatedArmPitch = totalDistance * 5.0 + -20.0;
+
+        parser.setValue("pitch", calculatedPitch + (double)pitchAngle - 80.0);
+        parser.setValue("armpitch", calculatedArmPitch + (double)pitchAngle + -110.0);
+        parser.setValue("armyaw", relativeYaw + 80.0f);
+        parser.setValue("yaw", relativeYaw + 90.0f);
     }
 
-    void ShowFutaCock() {
+    void updateFutaBonesVisibility() {
         if (ClientProxy.IS_PRELOADING) {
             return;
         }
@@ -199,81 +204,85 @@ extends GirlModel<GirlEntity> {
         this.getAnimationProcessor().getBone("futaBallLR").setHidden(!FutaCommand.enabled);
     }
 
-    void j(GirlEntity girlEntity) {
-        if (!(girlEntity instanceof PlayerGirl)) {
+    void updatePlayerGirlBones(GirlEntity girl) {
+        if (!(girl instanceof PlayerGirl)) {
             return;
         }
         this.getAnimationProcessor().getBone("coin").setHidden(true);
     }
 
-    void void_g(GirlEntity em_class2582) {
-        this.getAnimationProcessor().getBone("wings").setHidden(!((IWingsOwner)((Object)em_class2582)).isWingsVisible());
+    void updateWingsVisibility(GirlEntity girl) {
+        this.getAnimationProcessor().getBone("wings").setHidden(!((IWingsOwner)((Object)girl)).isWingsVisible());
     }
 
-    void void_e(GirlEntity em_class2582) {
+    void updateOutfitBonesVisibility(GirlEntity girl) {
         AnimationProcessor animationProcessor = this.getAnimationProcessor();
-        IBone iBone = animationProcessor.getBone("nippleR");
-        IBone iBone2 = animationProcessor.getBone("nippleL");
-        IBone iBone3 = animationProcessor.getBone("braBoobL");
-        IBone iBone4 = animationProcessor.getBone("braBoobR");
-        IBone iBone5 = animationProcessor.getBone("slip");
-        boolean bl = ((IWingsOwner)((Object)em_class2582)).hasWingState();
-        boolean bl2 = Action.a(em_class2582, Action.PUSSY_LICKING, Action.MASTERBATE_SITTING, Action.MASTERBATE_SITTING_CUM);
-        if (iBone == null) {
+        IBone nippleR = animationProcessor.getBone("nippleR");
+        IBone nippleL = animationProcessor.getBone("nippleL");
+        IBone braBoobL = animationProcessor.getBone("braBoobL");
+        IBone braBoobR = animationProcessor.getBone("braBoobR");
+        IBone slip = animationProcessor.getBone("slip");
+
+        boolean hasWings = ((IWingsOwner)((Object)girl)).hasWingState();
+        boolean isLickingOrSitting = Action.a(girl, Action.PUSSY_LICKING, Action.MASTERBATE_SITTING, Action.MASTERBATE_SITTING_CUM);
+        if (nippleR == null) {
             return;
         }
-        if (iBone3 == null) {
+        if (braBoobL == null) {
             return;
         }
-        iBone.setHidden(!bl);
-        iBone2.setHidden(!bl);
-        iBone3.setHidden(bl);
-        iBone4.setHidden(bl);
-        iBone5.setHidden(bl || bl2);
+
+        nippleR.setHidden(!hasWings);
+        nippleL.setHidden(!hasWings);
+        braBoobL.setHidden(hasWings);
+        braBoobR.setHidden(hasWings);
+        slip.setHidden(hasWings || isLickingOrSitting);
     }
 
-    void void_b(GirlEntity em_class2582) {
-        boolean bl;
-        if (!(em_class2582 instanceof GalathEntity)) {
+    void updateKnockoutFlightPose(GirlEntity girl) {
+        //boolean isStationary;
+        if (!(girl instanceof GalathEntity)) {
             return;
         }
-        if (!em_class2582.getDataManager().get(GalathEntity.IS_FLYING_FLAG).booleanValue()) {
+        if (!girl.getDataManager().get(GalathEntity.IS_FLYING_FLAG)) {
             return;
         }
-        if (em_class2582.currentAction() != Action.KNOCK_OUT_FLY) {
+        if (girl.currentAction() != Action.KNOCK_OUT_FLY) {
             return;
         }
-        IBone iBone = this.getAnimationProcessor().getBone("body");
-        Vec3d vec3d = new Vec3d(em_class2582.lastTickPosX, em_class2582.lastTickPosY, em_class2582.lastTickPosZ);
-        Vec3d vec3d2 = em_class2582.getPositionVector().subtract(vec3d);
-        boolean bl2 = bl = Math.abs(vec3d2.x) + Math.abs(vec3d2.z) < (double)0.01f;
-        if (bl) {
-            iBone.setRotationX(TrigMath.toRadians(-90.0f));
-            iBone.setPositionY(0.0f);
-            iBone.setPositionZ(0.0f);
+
+        IBone bodyBone = this.getAnimationProcessor().getBone("body");
+        Vec3d prevPos = new Vec3d(girl.lastTickPosX, girl.lastTickPosY, girl.lastTickPosZ);
+        Vec3d motionVec = girl.getPositionVector().subtract(prevPos);
+        boolean isStationary = Math.abs(motionVec.x) + Math.abs(motionVec.z) < (double)0.01f;
+        if (isStationary) {
+            bodyBone.setRotationX(TrigMath.toRadians(-90.0f));
+            bodyBone.setPositionY(0.0f);
+            bodyBone.setPositionZ(0.0f);
         } else {
-            Vec3d vec3d3 = GalathModel.calculateMovementDelta(em_class2582);
-            iBone.setRotationX(-((float)vec3d3.x));
-            iBone.setPositionY((float)vec3d3.y);
-            iBone.setPositionZ((float)vec3d3.z);
+            Vec3d motionDelta = GalathModel.calculateMovementDelta(girl);
+            bodyBone.setRotationX(-((float)motionDelta.x));
+            bodyBone.setPositionY((float)motionDelta.y);
+            bodyBone.setPositionZ((float)motionDelta.z);
         }
     }
 
-    void h(GirlEntity em_class2582) {
-        if (!(em_class2582 instanceof GalathEntity)) {
+    void updateRapeChargeBodyRotation(GirlEntity girl) {
+        if (!(girl instanceof GalathEntity)) {
             return;
         }
-        if (em_class2582.currentAction() != Action.RAPE_CHARGE) {
+        if (girl.currentAction() != Action.RAPE_CHARGE) {
             return;
         }
-        Vec3d vec3d = GalathModel.calculateMovementDelta(em_class2582);
-        IBone iBone = this.getAnimationProcessor().getBone("body");
-        IBone iBone2 = this.getAnimationProcessor().getBone("rotationTool");
-        iBone2.setRotationX((float)vec3d.x);
-        iBone.setPositionY((float)vec3d.y);
-        iBone.setPositionZ((float)vec3d.z);
-        float f = em_class2582.getDataManager().get(GalathEntity.bO);
-        iBone.setRotationY(TrigMath.toRadians(f * 180.0f));
+
+        Vec3d motionDelta = GalathModel.calculateMovementDelta(girl);
+        IBone bodyBone = this.getAnimationProcessor().getBone("body");
+        IBone rotationToolBone = this.getAnimationProcessor().getBone("rotationTool");
+        rotationToolBone.setRotationX((float)motionDelta.x);
+        bodyBone.setPositionY((float)motionDelta.y);
+        bodyBone.setPositionZ((float)motionDelta.z);
+        float spinYawFactor = girl.getDataManager().get(GalathEntity.SPIN_YAW_FACTOR);
+        bodyBone.setRotationY(TrigMath.toRadians(spinYawFactor * 180.0f));
     }
 
     /*
@@ -304,12 +313,46 @@ extends GirlModel<GirlEntity> {
         iBone.setPositionZ((float)vec3d.z);
     }*/
 
-    void void_a(GirlEntity em_class2582) {
-        float f = 0.0f;
-        switch (em_class2582.currentAction()) {
+    void updateSwordAttackBodyOffset(GirlEntity girl) {
+        if (!(girl instanceof GalathEntity)) {
+            return;
+        }
+        GalathEntity galath = (GalathEntity) girl;
+        if (galath.currentAction() != Action.ATTACK_SWORD) {
+            this.swordDashStartTime = -1L;
+            this.swordDashEndTime = -1L;
+            return;
+        }
+
+        int attackProgress = (int) galath.getSwordAttackProgress();
+        if (attackProgress == 24 && this.swordDashStartTime == -1L) {
+            this.swordDashStartTime = Minecraft.getMinecraft().world.getTotalWorldTime();
+            this.swordDashEndTime = this.swordDashStartTime + 8L;
+        }
+
+        if (!Utils.isValueInBounds((double) attackProgress, 24.0D, 32.0D)) {
+            return;
+        }
+
+        IBone bodyBone = this.getAnimationProcessor().getBone("body");
+        Vec3d movementOffset = GalathModel.calculateMovementDelta(galath);
+
+        float progress = ((float) Minecraft.getMinecraft().world.getTotalWorldTime() + Minecraft.getMinecraft().getRenderPartialTicks() - (float) this.swordDashStartTime)
+                / (float) (this.swordDashEndTime - this.swordDashStartTime);
+
+        movementOffset = Reference.LerpVec3d(movementOffset, Vec3d.ZERO, (double) progress);
+
+        bodyBone.setRotationX((float) movementOffset.x);
+        bodyBone.setPositionY((float) movementOffset.y);
+        bodyBone.setPositionZ((float) movementOffset.z);
+    }
+
+    void updateFlightRotation(GirlEntity girl) {
+        float extraPitch = 0.0f;
+        switch (girl.currentAction()) {
             case BOOST: {
                 if (Action.BOOST.ticksPlaying[1] > 13 && Action.BOOST.ticksPlaying[1] < 40) {
-                    f = 45.0f;
+                    extraPitch = 45.0f;
                 }
             }
             case FLY: 
@@ -320,20 +363,16 @@ extends GirlModel<GirlEntity> {
                 return;
             }
         }
-        float f2 = Minecraft.getMinecraft().getRenderPartialTicks();
+        float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
         IBone iBone = this.getAnimationProcessor().getBone("rotationTool");
-        AnimationStateHolder f2_class2862 = ((IWingsOwner)((Object)em_class2582)).getWingAnimationState();
-        iBone.setRotationX((float) Reference.LerpDouble(f2_class2862.c + (double)f, f2_class2862.d + (double)f, (double)f2));
-        iBone.setRotationZ((float) Reference.LerpDouble(f2_class2862.b, f2_class2862.a, (double)f2));
+        AnimationStateHolder stateHolder = ((IWingsOwner)((Object)girl)).getWingAnimationState();
+        iBone.setRotationX((float) Reference.LerpDouble(stateHolder.prevPitch + (double)extraPitch, stateHolder.pitch + (double)extraPitch, (double)partialTicks));
+        iBone.setRotationZ((float) Reference.LerpDouble(stateHolder.prevRoll, stateHolder.roll, (double)partialTicks));
     }
 
     @Override
     public String[] HeadArmor() {
         return new String[]{"armorHelmet"};
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

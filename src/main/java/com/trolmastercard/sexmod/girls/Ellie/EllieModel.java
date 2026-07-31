@@ -49,10 +49,10 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent event) {
         float f;
         float f2;
-        super.setLivingAnimations(girl, instanceID, animationEvent);
+        super.setLivingAnimations(girl, instanceID, event);
         if (girl.world instanceof FakeWorld) {
             return;
         }

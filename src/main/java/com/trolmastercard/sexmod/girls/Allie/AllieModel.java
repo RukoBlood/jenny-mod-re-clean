@@ -19,18 +19,18 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(GirlEntity girlEntity) {
-        if (girlEntity.world instanceof FakeWorld) {
+    public ResourceLocation getModelLocation(GirlEntity girl) {
+        if (girl.world instanceof FakeWorld) {
             return this.modelLocations[0];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) > this.modelLocations.length) {
-            System.out.println("Girl doesn't have an outfit Nr." + girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) + " so im just making her nude lol");
+        if (girl.getDataManager().get(GirlEntity.OUTFIT_INDEX) > this.modelLocations.length) {
+            System.out.println("Girl doesn't have an outfit Nr." + girl.getDataManager().get(GirlEntity.OUTFIT_INDEX) + " so im just making her nude lol");
             return this.modelLocations[0];
         }
-        if (girlEntity instanceof PlayerAllie) {
-            return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
+        if (girl instanceof PlayerAllie) {
+            return this.modelLocations[girl.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) == 1) {
+        if (girl.getDataManager().get(GirlEntity.OUTFIT_INDEX) == 1) {
             return this.modelLocations[2];
         }
         return this.modelLocations[0];

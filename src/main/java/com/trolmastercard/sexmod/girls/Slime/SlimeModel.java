@@ -35,18 +35,18 @@ extends GirlModel<GirlEntity> {
     //net_minecraft_util_ResourceLocation_a
     // getModelLocation
     @Override
-    public ResourceLocation getModelLocation(GirlEntity girlEntity) {
-        if (girlEntity.world instanceof FakeWorld) {
+    public ResourceLocation getModelLocation(GirlEntity girl) {
+        if (girl.world instanceof FakeWorld) {
             return this.modelLocations[0];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) > this.modelLocations.length) {
-            System.out.println("Girl doesn't have an outfit Nr." + girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) + " so im just making her nude lol");
+        if (girl.getDataManager().get(GirlEntity.OUTFIT_INDEX) > this.modelLocations.length) {
+            System.out.println("Girl doesn't have an outfit Nr." + girl.getDataManager().get(GirlEntity.OUTFIT_INDEX) + " so im just making her nude lol");
             return this.modelLocations[0];
         }
-        if (girlEntity instanceof PlayerSlime) {
-            return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
+        if (girl instanceof PlayerSlime) {
+            return this.modelLocations[girl.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) == 1) {
+        if (girl.getDataManager().get(GirlEntity.OUTFIT_INDEX) == 1) {
             return this.modelLocations[2];
         }
         return this.modelLocations[0];
@@ -63,8 +63,8 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
-        super.setLivingAnimations(girl, instanceID, animationEvent);
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent event) {
+        super.setLivingAnimations(girl, instanceID, event);
         AnimationProcessor<SlimeEntity> animationProcessor = this.getAnimationProcessor();
         if (!(girl.world instanceof FakeWorld) && animationProcessor.getBone("bedSlime") != null && animationProcessor.getBone("bedSlimeLayer") != null) {
             animationProcessor.getBone("bedSlime").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.currentAction()));

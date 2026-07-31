@@ -46,15 +46,15 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
     public abstract ResourceLocation getAnimationFileLocation(GirlEntity girl);
 
     @Override
-    public ResourceLocation getModelLocation(GirlEntity girlEntity) {
-        if (girlEntity.world instanceof FakeWorld) {
+    public ResourceLocation getModelLocation(GirlEntity girl) {
+        if (girl.world instanceof FakeWorld) {
             return this.modelLocations[0];
         }
-        if (girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) > this.modelLocations.length) {
-            System.out.println("Girl doesn't have an outfit Nr." + girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX) + " so im just making her nude lol");
+        if (girl.getDataManager().get(GirlEntity.OUTFIT_INDEX) > this.modelLocations.length) {
+            System.out.println("Girl doesn't have an outfit Nr." + girl.getDataManager().get(GirlEntity.OUTFIT_INDEX) + " so im just making her nude lol");
             return this.modelLocations[0];
         }
-        return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
+        return this.modelLocations[girl.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
     }
 
     //net_minecraft_util_ResourceLocation_g
@@ -72,8 +72,8 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
 
     //a
     @Override
-    public void setLivingAnimations(T girl, Integer instanceID, AnimationEvent animationEvent) {
-        super.setLivingAnimations(girl, instanceID, animationEvent);
+    public void setLivingAnimations(T girl, Integer instanceID, AnimationEvent event) {
+        super.setLivingAnimations(girl, instanceID, event);
         AnimationProcessor<T> processor = this.getAnimationProcessor();
 
         this.updateArmModelType(girl, processor);
@@ -96,7 +96,7 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
             ((GirlEntity)girl).actionController.transitionLengthTicks = girl.world instanceof FakeWorld || girl.currentAction() == null ? 5.0 : (double) girl.currentAction().transitionTick;
         }
 
-        this.processHeadLookRotation(girl, processor, animationEvent);
+        this.processHeadLookRotation(girl, processor, event);
         if (!(girl instanceof Fighter) || girl.isLocallyRegistered() || girl.getOutfitIndex() == 0) {
             this.resetArmorPartVisibility(processor);
         } else {

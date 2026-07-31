@@ -247,61 +247,61 @@ public enum GalathAttackAction {
         f__class2972.setAnchored(false);
     }, true, f__class2972 -> true, false),
 
-    RAPE(f__class2972 -> {
-        f__class2972.setCurrentAction(Action.RAPE_PREPARE);
-        f__class2972.aF = 0;
-        f__class2972.bd = null;
-        f__class2972.targetFlyPos = null;
-        f__class2972.getDataManager().set(GalathEntity.bO, Float.valueOf(0.0f));
-    }, f__class2972 -> {
+    RAPE(galath -> {
+        galath.setCurrentAction(Action.RAPE_PREPARE);
+        galath.aF = 0;
+        galath.bd = null;
+        galath.targetFlyPos = null;
+        galath.getDataManager().set(GalathEntity.SPIN_YAW_FACTOR, 0.0f);
+    }, galath -> {
         double d;
         boolean bl;
         double d2;
         Vec3d vec3d;
         Vec3d vec3d2;
         Vec3d vec3d3;
-        if (++f__class2972.aF < 48) {
+        if (++galath.aF < 48) {
             return;
         }
-        f__class2972.setCurrentAction(Action.RAPE_CHARGE);
-        EntityLivingBase entityLivingBase = f__class2972.getAttackTarget();
-        if (f__class2972.bd == null) {
-            f__class2972.targetFlyPos = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
-            f__class2972.bd = f__class2972.getPositionVector();
-            vec3d3 = entityLivingBase.getPositionVector().subtract(f__class2972.getPositionVector()).normalize();
-            f__class2972.setYawRotation((float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0));
+        galath.setCurrentAction(Action.RAPE_CHARGE);
+        EntityLivingBase entityLivingBase = galath.getAttackTarget();
+        if (galath.bd == null) {
+            galath.targetFlyPos = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
+            galath.bd = galath.getPositionVector();
+            vec3d3 = entityLivingBase.getPositionVector().subtract(galath.getPositionVector()).normalize();
+            galath.setYawRotation((float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0));
         }
-        vec3d3 = f__class2972.getPositionVector();
+        vec3d3 = galath.getPositionVector();
         Vec3d vec3d4 = vec3d3.subtract(0.65f, 0.65f, 0.65f);
         Vec3d vec3d5 = vec3d3.add(0.65f, 0.65f, 0.65f);
         AxisAlignedBB axisAlignedBB = new AxisAlignedBB(vec3d4.x, vec3d4.y, vec3d4.z, vec3d5.x, vec3d5.y, vec3d5.z);
-        List<EntityPlayer> list = f__class2972.world.getEntitiesWithinAABB(EntityPlayer.class, axisAlignedBB);
+        List<EntityPlayer> list = galath.world.getEntitiesWithinAABB(EntityPlayer.class, axisAlignedBB);
         for (EntityPlayer object2 : list) {
             if (object2.isDead || !object2.onGround || GirlEntity.getGirlByUUID(object2.getPersistentID(), true) != null) continue;
             vec3d2 = object2.getPositionVector();
             vec3d = vec3d3.subtract(vec3d2);
-            Vec3d bl2 = VectorMath.rotate(vec3d, f__class2972.getYawRotation().floatValue());
+            Vec3d bl2 = VectorMath.rotate(vec3d, galath.getYawRotation().floatValue());
             d2 = Math.abs(bl2.x);
             if (d2 > (double)0.65f) continue;
-            for (EntityWitherSkeleton by : f__class2972.witherSkeletons) {
+            for (EntityWitherSkeleton by : galath.witherSkeletons) {
                 Vec3d d3 = by.getPositionVector();
                 by.world.removeEntity(by);
                 PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(d3, true), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(by.dimension, d3.x, d3.y, d3.z, 50.0));
             }
-            f__class2972.witherSkeletons.clear();
+            galath.witherSkeletons.clear();
             EntityPlayerMP d3 = (EntityPlayerMP)object2;
-            f__class2972.setTargetPosition(object2.getPositionVector());
-            f__class2972.setInteractionPlayerUUID(object2.getPersistentID());
-            f__class2972.setAnchored(true);
-            f__class2972.setCurrentAction(Action.RAPE_INTRO);
-            byte by = (byte)MathHelper.floor((f__class2972.getYawRotation().floatValue() + 180.0f) * 256.0f / 360.0f);
+            galath.setTargetPosition(object2.getPositionVector());
+            galath.setInteractionPlayerUUID(object2.getPersistentID());
+            galath.setAnchored(true);
+            galath.setCurrentAction(Action.RAPE_INTRO);
+            byte by = (byte)MathHelper.floor((galath.getYawRotation().floatValue() + 180.0f) * 256.0f / 360.0f);
             PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), d3);
             d3.connection.sendPacket(new SPacketEntityVelocity(d3.getEntityId(), 0.0, 0.0, 0.0));
             d3.connection.sendPacket(new SPacketEntity.S16PacketEntityLook(d3.getEntityId(), (byte)by, (byte)-14, true));
             return;
         }
-        Vec3d vec3d8 = f__class2972.bd;
-        Vec3d vec3d6 = f__class2972.targetFlyPos;
+        Vec3d vec3d8 = galath.bd;
+        Vec3d vec3d6 = galath.targetFlyPos;
         vec3d2 = vec3d6.subtract(vec3d8);
         vec3d = vec3d6.add(vec3d2);
         vec3d = new Vec3d(vec3d.x, vec3d8.y, vec3d.z);
@@ -317,12 +317,12 @@ public enum GalathAttackAction {
         double d5 = 1.0 / d4 * 20.0;
         d2 += d5;
         if (!bl && d2 < (double)0.9f) {
-            f__class2972.targetFlyPos = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
+            galath.targetFlyPos = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight() / 2.0f, 0.0);
         }
         vec3d3 = bl ? new Vec3d(Reference.LerpDouble(vec3d6.x, vec3d.x, Math.min(1.0, d2)), Reference.LerpDouble(vec3d6.y, vec3d.y, Math.min(1.0, Reference.EaseInCubic(d2))), Reference.LerpDouble(vec3d6.z, vec3d.z, Math.min(1.0, d2))) : new Vec3d(Reference.LerpDouble(vec3d8.x, vec3d6.x, d2), Reference.LerpDouble(vec3d8.y, vec3d6.y, Reference.EaseOutCubic(d2)), Reference.LerpDouble(vec3d8.z, vec3d6.z, d2));
-        f__class2972.setPosition(vec3d3.x, vec3d3.y, vec3d3.z);
+        galath.setPosition(vec3d3.x, vec3d3.y, vec3d3.z);
         if (bl) {
-            f__class2972.getDataManager().set(GalathEntity.bO, (float) d2);
+            galath.getDataManager().set(GalathEntity.SPIN_YAW_FACTOR, (float) d2);
         }
     }, galath -> {
         if (galath.currentAction() == Action.RAPE_INTRO) {
@@ -341,7 +341,7 @@ public enum GalathAttackAction {
         galath.targetFlyPos = null;
         galath.bd = null;
         galath.aF = 0;
-        galath.getDataManager().set(GalathEntity.bO, 0.0f);
+        galath.getDataManager().set(GalathEntity.SPIN_YAW_FACTOR, 0.0f);
     }, true, galath -> true, true);
 
     final IGalathUpdate onUpdateAction;

@@ -40,8 +40,8 @@ public class KoboldModel extends GirlModel<GirlEntity> {
     }
 
     @Override
-    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent animationEvent) {
-        super.setLivingAnimations(girl, instanceID, animationEvent);
+    public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent event) {
+        super.setLivingAnimations(girl, instanceID, event);
         if (girl.world instanceof FakeWorld) {
             return;
         }

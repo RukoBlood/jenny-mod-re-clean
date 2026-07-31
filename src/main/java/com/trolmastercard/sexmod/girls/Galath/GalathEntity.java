@@ -161,7 +161,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     final static public double aZ = 2.0;
     final static public double Q = 1.0;
     final static public float aJ = 0.5f;
-    final static public Vector3fColor STAR_PARTICLE_COLOR = new Vector3fColor(0.83137256f, 0.6862745f, 0.21568628f);
+    final static public Vector3fSexmodSpecial STAR_PARTICLE_COLOR = new Vector3fSexmodSpecial(0.83137256f, 0.6862745f, 0.21568628f);
     final static public Vec3d bz = new Vec3d(-1.049342f, 2.0547213554382324, -0.05048239231109619);
     final static public Vec3d bC = new Vec3d(1.2522261142730713, 1.435773253440857, 0.23570987582206726);
     final static public int aN = 10;
@@ -210,7 +210,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     final static public DataParameter<Integer> bH = EntityDataManager.createKey(GalathEntity.class, DataSerializers.VARINT).getSerializer().createKey(116);
     final static public DataParameter<String> b8 = EntityDataManager.createKey(GalathEntity.class, DataSerializers.STRING).getSerializer().createKey(117);
     final static public DataParameter<Boolean> IS_FLYING_FLAG = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(118);
-    final static public DataParameter<Float> bO = EntityDataManager.createKey(GalathEntity.class, DataSerializers.FLOAT).getSerializer().createKey(119);
+    final static public DataParameter<Float> SPIN_YAW_FACTOR = EntityDataManager.createKey(GalathEntity.class, DataSerializers.FLOAT).getSerializer().createKey(119);
     final static public DataParameter<Boolean> HIDE_EFFECTS_FLAG = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(120);
     final static public DataParameter<String> a4 = EntityDataManager.createKey(GalathEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
     final static public DataParameter<Boolean> bT = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(122);
@@ -226,11 +226,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     public int aF = 0;
     public Vec3d bd = null;
     public List<EntityWitherSkeleton> witherSkeletons = new ArrayList<EntityWitherSkeleton>();
-    public float aE = 0.0f;
+    public float cachedHeadRotationX = 0.0f;
     public long dashStartWorldTime = -1L;
     public long dashEndWorldTime = -1L;
-    public float bw = 0.0f;
-    public float bm = 0.0f;
+    public float bodyRotationY = 0.0f;
+    public float bodyScaleY = 0.0f;
     boolean bU = false;
     public Vec3d targetDashPosition = null;
     boolean bA = false;
@@ -383,7 +383,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         this.entityDataManager.register(b8, "null");
         this.entityDataManager.register(bH, -1);
         this.entityDataManager.register(IS_FLYING_FLAG, false);
-        this.entityDataManager.register(bO, 0.0f);
+        this.entityDataManager.register(SPIN_YAW_FACTOR, 0.0f);
         this.entityDataManager.register(HIDE_EFFECTS_FLAG, false);
         this.entityDataManager.register(a4, "");
         this.entityDataManager.register(bT, false);
