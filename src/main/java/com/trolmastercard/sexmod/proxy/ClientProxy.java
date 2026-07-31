@@ -40,17 +40,17 @@ extends CommonProxy {
     static public KeyBinding[] keyBindings;
 
     @Override
-    public void postInit(FMLPostInitializationEvent fMLPostInitializationEvent) throws IOException {
+    public void postInit(FMLPostInitializationEvent event) throws IOException {
     }
 
     @Override
-    public void preInitRegistries(FMLPreInitializationEvent fMLPreInitializationEvent) {
-        super.preInitRegistries(fMLPreInitializationEvent);
+    public void preInitRegistries(FMLPreInitializationEvent event) {
+        super.preInitRegistries(event);
         RenderHandler.Register();
     }
 
     @Override
-    public void initRegistries(FMLInitializationEvent fMLInitializationEvent) throws IOException {
+    public void initRegistries(FMLInitializationEvent event) throws IOException {
         keyBindings = new KeyBinding[2];
         ClientProxy.keyBindings[0] = new KeyBinding("Interact with your goblin", 34, "Sex mod");
         ClientProxy.keyBindings[1] = new KeyBinding("open character customisation menu", 76, "Sex mod");
@@ -70,9 +70,9 @@ extends CommonProxy {
             for (PlayerGirlEntity entity : PlayerGirlEntity.values()) {
                 renderManager.renderEntity(entity.npcClass.getDeclaredConstructor(World.class).newInstance(fakeWorld), 0.0, 0.0, 0.0, 0.0f, 0.0f, false);
             }
-        } catch (Exception exception) {
+        } catch (Exception e) {
             System.out.println("error while preloading:");
-            exception.printStackTrace();
+            e.printStackTrace();
         }
         IS_PRELOADING = false;
         InteractionPrompt.instance = new InteractionPrompt();

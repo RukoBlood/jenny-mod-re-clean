@@ -22,7 +22,7 @@ import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
-import com.trolmastercard.sexmod.util.f2_class286;
+import com.trolmastercard.sexmod.util.AnimationStateHolder;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
@@ -44,7 +44,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlayerGalath
 extends PlayerGirl
-implements b7_class68 {
+implements IWingsOwner {
     boolean ap = false;
     int ar = 0;
     boolean as = false;
@@ -135,7 +135,7 @@ implements b7_class68 {
     }
 
     @Override
-    public boolean boolean_b() {
+    public boolean isWingsAnimated() {
         return false;
     }
 
@@ -156,17 +156,17 @@ implements b7_class68 {
     }
 
     @Override
-    public f2_class286 com_trolmastercard_sexmod_f2_class286_d() {
-        return new f2_class286(0.0, 0.0, 0.0, 0.0);
+    public AnimationStateHolder getWingAnimationState() {
+        return new AnimationStateHolder(0.0, 0.0, 0.0, 0.0);
     }
 
     @Override
-    public boolean boolean_c() {
+    public boolean hasWingState() {
         return this.getOutfitIndex() == 0 || this.ap;
     }
 
     @Override
-    public boolean boolean_a() {
+    public boolean isWingsVisible() {
         switch (this.currentAction()) {
             case CORRUPT_CUM:
             case CORRUPT_FAST:
@@ -500,10 +500,6 @@ implements b7_class68 {
         data.addAnimationController(this.actionController);
         data.addAnimationController(this.eyesController);
         data.addAnimationController(this.movementController);
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

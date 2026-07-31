@@ -60,8 +60,8 @@ public class Reference {
         return start.add(new Vec3d(delta.x * step, delta.y * step, delta.z * step));
     }
 
-    public static Vector3f LerpVector3f(Vector3f start, Vector3f end, double step) {
-        Vector3f delta = end.subtract(start);
+    public static Vector3fColor LerpVector3f(Vector3fColor start, Vector3fColor end, double step) {
+        Vector3fColor delta = end.subtract(start);
         return start.add(delta.scale((float)step));
     }
 

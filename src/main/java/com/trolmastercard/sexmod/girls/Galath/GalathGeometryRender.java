@@ -51,7 +51,7 @@ public class GalathGeometryRender {
             GirlEntity entity,
             float partialTicks,
             String startPointKey, String endPointKey,
-            Vector3f startOffset, Vector3f endOffset
+            Vector3fColor startOffset, Vector3fColor endOffset
     ) {
         Vec3d[] verts = GalathGeometryRender.CalculateBoxVertices(entity, partialTicks, startPointKey, endPointKey, startOffset, endOffset);
         return GalathGeometryRender.constructCubeFaces(verts);
@@ -59,7 +59,7 @@ public class GalathGeometryRender {
 
     static Vec3d[] CalculateBoxVertices(GirlEntity entity, float partialTicks,
                                         String startPointKey, String endPointKey,
-                                        Vector3f so, Vector3f eo) {
+                                        Vector3fColor so, Vector3fColor eo) {
         int i;
         Vec3d startPos = entity.getCachedBoneOffset(startPointKey);
         Vec3d endPos = entity.getCachedBoneOffset(endPointKey);

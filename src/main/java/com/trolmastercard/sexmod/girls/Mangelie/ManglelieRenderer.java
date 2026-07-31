@@ -42,9 +42,9 @@ import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 public class ManglelieRenderer
 extends GirlRenderer<ManglelieEntity> {
     final static ColorRGBA C = new ColorRGBA(115, 108, 188, 255);
-    final static Vector3f D = new Vector3f(0.05f, 0.04f, 0.0f);
-    final static Vector3f v = new Vector3f(0.0f, 0.065f, 0.0f);
-    final static Vector3f z = new Vector3f(0.0f, 0.03f, 0.03f);
+    final static Vector3fColor D = new Vector3fColor(0.05f, 0.04f, 0.0f);
+    final static Vector3fColor v = new Vector3fColor(0.0f, 0.065f, 0.0f);
+    final static Vector3fColor z = new Vector3fColor(0.0f, 0.03f, 0.03f);
     final static ColorRGBA r = new ColorRGBA(63, 59, 150, 255);
     final static ColorRGBA x = new ColorRGBA(79, 74, 188, 255);
     final static float A = 0.5f;
@@ -125,7 +125,7 @@ extends GirlRenderer<ManglelieEntity> {
             f8_class2932.void_a((UUID)null);
             return false;
         }
-        return f__class2972.boolean_b();
+        return f__class2972.isWingsAnimated();
     }
 
     @Override
@@ -433,7 +433,7 @@ extends GirlRenderer<ManglelieEntity> {
         boolean bl = f__class2972.isAnchored();
         float f2 = bl ? f__class2972.getYawRotation().floatValue() : f__class2972.rotationYawHead;
         float f3 = bl ? f__class2972.getYawRotation().floatValue() : f__class2972.prevRotationYawHead;
-        Float f4 = GalathEntity.a(f__class2972, f);
+        Float f4 = GalathEntity.updateRenderPositions(f__class2972, f);
         if (f4 != null) {
             f2 = f4.floatValue();
             f3 = f4.floatValue();

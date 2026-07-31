@@ -12,8 +12,8 @@ import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.Vector3f;
-import com.trolmastercard.sexmod.util.f2_class286;
+import com.trolmastercard.sexmod.util.Vector3fColor;
+import com.trolmastercard.sexmod.util.AnimationStateHolder;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +28,7 @@ import software.bernie.shadowed.eliotlash.molang.MolangParser;
 
 public class GalathModel
 extends GirlModel<GirlEntity> {
-    static public ResourceLocation h = new ResourceLocation("sexmod", "textures/entity/galath/galath.png");
+    static public ResourceLocation GALATH_TEXTURE = new ResourceLocation("sexmod", "textures/entity/galath/galath.png");
     float g = 0.0f;
     long f = -1L;
     long i = -1L;
@@ -50,7 +50,7 @@ extends GirlModel<GirlEntity> {
         if (girlEntity.world instanceof FakeWorld) {
             return this.modelLocations[0];
         }
-        if (((b7_class68)((Object) girlEntity)).boolean_b()) {
+        if (((IWingsOwner)((Object) girlEntity)).isWingsAnimated()) {
             return this.modelLocations[2];
         }
         return this.modelLocations[girlEntity.getDataManager().get(GirlEntity.OUTFIT_INDEX)];
@@ -58,7 +58,7 @@ extends GirlModel<GirlEntity> {
 
     @Override
     public ResourceLocation getSkinLocation() {
-        return h;
+        return GALATH_TEXTURE;
     }
 
     @Override
@@ -98,7 +98,7 @@ extends GirlModel<GirlEntity> {
         }
         GalathEntity f__class2972 = (GalathEntity) girl;
         f__class2972.aE = this.getAnimationProcessor().getBone("head").getRotationX();
-        if (f__class2972.boolean_b()) {
+        if (f__class2972.isWingsAnimated()) {
             ManglelieModel.a(f__class2972, this.getAnimationProcessor(), animationEvent.getPartialTick());
         }
     }
@@ -116,7 +116,7 @@ extends GirlModel<GirlEntity> {
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
         IBone iBone = animationProcessor.getBone("head");
         float f = this.mc.getRenderPartialTicks() + (float)this.mc.player.ticksExisted;
-        Vector3f f7_class2922 = this.a((GalathEntity)em_class2582, f);
+        Vector3fColor f7_class2922 = this.a((GalathEntity)em_class2582, f);
         iBone.setRotationX(iBone.getRotationX() + f7_class2922.x);
         iBone.setRotationY(iBone.getRotationY() + f7_class2922.y);
         iBone.setRotationZ(iBone.getRotationZ() + f7_class2922.z);
@@ -130,12 +130,12 @@ extends GirlModel<GirlEntity> {
         this.g = f2;
     }
 
-    Vector3f a(GalathEntity f__class2972, float f) {
-        return Reference.LerpVector3f(this.a(f), Vector3f.ZERO, (double)f__class2972.float_b(this.mc.getRenderPartialTicks()));
+    Vector3fColor a(GalathEntity f__class2972, float f) {
+        return Reference.LerpVector3f(this.a(f), Vector3fColor.ZERO, (double)f__class2972.getTransitionProgress(this.mc.getRenderPartialTicks()));
     }
 
-    Vector3f a(float f) {
-        return new Vector3f((float)Math.sin(f * 0.3f) * TrigMath.toRadians(10.0f), (float)Math.sin(f * 0.15f) * TrigMath.toRadians(7.0f), (float)Math.sin((double)f * -0.15) * TrigMath.toRadians(7.0f));
+    Vector3fColor a(float f) {
+        return new Vector3fColor((float)Math.sin(f * 0.3f) * TrigMath.toRadians(10.0f), (float)Math.sin(f * 0.15f) * TrigMath.toRadians(7.0f), (float)Math.sin((double)f * -0.15) * TrigMath.toRadians(7.0f));
     }
 
     void void_c(GirlEntity em_class2582) {
@@ -207,7 +207,7 @@ extends GirlModel<GirlEntity> {
     }
 
     void void_g(GirlEntity em_class2582) {
-        this.getAnimationProcessor().getBone("wings").setHidden(!((b7_class68)((Object)em_class2582)).boolean_a());
+        this.getAnimationProcessor().getBone("wings").setHidden(!((IWingsOwner)((Object)em_class2582)).isWingsVisible());
     }
 
     void void_e(GirlEntity em_class2582) {
@@ -217,7 +217,7 @@ extends GirlModel<GirlEntity> {
         IBone iBone3 = animationProcessor.getBone("braBoobL");
         IBone iBone4 = animationProcessor.getBone("braBoobR");
         IBone iBone5 = animationProcessor.getBone("slip");
-        boolean bl = ((b7_class68)((Object)em_class2582)).boolean_c();
+        boolean bl = ((IWingsOwner)((Object)em_class2582)).hasWingState();
         boolean bl2 = Action.a(em_class2582, Action.PUSSY_LICKING, Action.MASTERBATE_SITTING, Action.MASTERBATE_SITTING_CUM);
         if (iBone == null) {
             return;
@@ -237,7 +237,7 @@ extends GirlModel<GirlEntity> {
         if (!(em_class2582 instanceof GalathEntity)) {
             return;
         }
-        if (!em_class2582.getDataManager().get(GalathEntity.bP).booleanValue()) {
+        if (!em_class2582.getDataManager().get(GalathEntity.IS_FLYING_FLAG).booleanValue()) {
             return;
         }
         if (em_class2582.currentAction() != Action.KNOCK_OUT_FLY) {
@@ -322,7 +322,7 @@ extends GirlModel<GirlEntity> {
         }
         float f2 = Minecraft.getMinecraft().getRenderPartialTicks();
         IBone iBone = this.getAnimationProcessor().getBone("rotationTool");
-        f2_class286 f2_class2862 = ((b7_class68)((Object)em_class2582)).com_trolmastercard_sexmod_f2_class286_d();
+        AnimationStateHolder f2_class2862 = ((IWingsOwner)((Object)em_class2582)).getWingAnimationState();
         iBone.setRotationX((float) Reference.LerpDouble(f2_class2862.c + (double)f, f2_class2862.d + (double)f, (double)f2));
         iBone.setRotationZ((float) Reference.LerpDouble(f2_class2862.b, f2_class2862.a, (double)f2));
     }

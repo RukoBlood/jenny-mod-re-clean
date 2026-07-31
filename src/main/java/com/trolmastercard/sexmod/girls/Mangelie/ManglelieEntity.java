@@ -382,7 +382,7 @@ extends GirlEntity {
         if (vec3d.x * vec3d.x + vec3d.z * vec3d.z > 225.0) {
             return true;
         }
-        Float f = GalathEntity.a(galath, 0.0f);
+        Float f = GalathEntity.updateRenderPositions(galath, 0.0f);
         float f2 = f == null ? galath.rotationYawHead : f.floatValue();
         Vec3d vec3d2 = VectorMath.rotate(vec3d, f2);
         return vec3d2.z < 0.0;
@@ -598,7 +598,7 @@ extends GirlEntity {
         Vec3d vec3d2 = f__class2972.getPositionVector().add(f__class2972.getCachedBoneOffset("mangPos")).add(this.getCachedBoneOffset("head"));
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
         float f = (float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) + 90.0);
-        Float f2 = GalathEntity.a(f__class2972, 0.0f);
+        Float f2 = GalathEntity.updateRenderPositions(f__class2972, 0.0f);
         f -= f__class2972.rotationYawHead;
         if (f2 != null) {
             f -= f2.floatValue();

@@ -15,7 +15,7 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.Vector3fColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,14 +32,14 @@ import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
-    final static public Vector3f e = new Vector3f(0.84705883f, 0.11764706f, 0.35686275f);
-    final static public Vector3f f = new Vector3f(0.44705883f, 0.44705883f, 0.44705883f);
+    final static public Vector3fColor e = new Vector3fColor(0.84705883f, 0.11764706f, 0.35686275f);
+    final static public Vector3fColor f = new Vector3fColor(0.44705883f, 0.44705883f, 0.44705883f);
     final static public float b = 240.0f;
     final static public float g = 120.0f;
     final static float h = 0.05f;
     final static Minecraft a = Minecraft.getMinecraft();
     boolean c = false;
-    Vector3f d;
+    Vector3fColor d;
 
     public GalathCoinRenderer() {
         super(new GalathCoinModel());
@@ -128,7 +128,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
         return 120.0f;
     }
 
-    Vector3f a() {
+    Vector3fColor a() {
         if (GalathCoinRenderer.a.player.getHeldItemMainhand() != this.currentItemStack && GalathCoinRenderer.a.player.getHeldItemOffhand() != this.currentItemStack) {
             return e;
         }
@@ -148,7 +148,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
         return e;
     }
 
-    Vector3f a(long l, long l2) {
+    Vector3fColor a(long l, long l2) {
         float f = l2 - l;
         if (f < 1000.0f) {
             return GalathCoinRenderer.f;
@@ -159,7 +159,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
         return e;
     }
 
-    Vector3f b(long l, long l2) {
+    Vector3fColor b(long l, long l2) {
         float f = l2 - l;
         if (f < 1000.0f) {
             return e;

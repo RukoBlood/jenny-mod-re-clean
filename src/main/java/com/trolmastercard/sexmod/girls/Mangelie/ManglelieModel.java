@@ -16,7 +16,7 @@ import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Utils;
-import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.Vector3fColor;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -191,8 +191,8 @@ extends GirlModel<GirlEntity> {
         float f;
         //a_inner128 a_inner1282 = new a_inner128(null); // TODO weird synthetic inners...
         a_inner128 a_inner1282 = new a_inner128();
-        a_inner128.access$202(a_inner1282, new Vector3f(m, 0.0f, iBone.getRotationZ()));
-        a_inner128.access$302(a_inner1282, new Vector3f(l, 0.0f, iBone2.getRotationZ()));
+        a_inner128.access$202(a_inner1282, new Vector3fColor(m, 0.0f, iBone.getRotationZ()));
+        a_inner128.access$302(a_inner1282, new Vector3fColor(l, 0.0f, iBone2.getRotationZ()));
         float f2 = f__class2972.aE + animationProcessor.getBone("upperBody").getRotationX();
         float f3 = this.mc.getRenderPartialTicks();
         Vec3d vec3d = ManglelieRenderer.a(f__class2972, f3);
@@ -200,7 +200,7 @@ extends GirlModel<GirlEntity> {
         Vec3d vec3d3 = f8_class2932.getCachedBoneOffset("armL").add(vec3d);
         Vector2f bm_class882 = Utils.CalculateLookAngles(vec3d2, f8_class2932.R);
         Vector2f bm_class883 = Utils.CalculateLookAngles(vec3d3, f8_class2932.R);
-        Float f4 = GalathEntity.a(f__class2972, f3);
+        Float f4 = GalathEntity.updateRenderPositions(f__class2972, f3);
         float f5 = f4 == null ? Reference.LerpAngleDegrees(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f3) : f4.floatValue();
         float f6 = TrigMath.toRadians(f5);
         float f7 = f8_class2932.float_b(f3);
@@ -215,8 +215,8 @@ extends GirlModel<GirlEntity> {
         float f10 = TrigMath.toRadians(Reference.LerpFloat(0.0f, 90.0f, f8));
         boolean bl = f8_class2932.boolean_a(f8_class2932.R, f3);
         if (bl) {
-            a_inner128.access$002(a_inner1282, new Vector3f(-f2 + bm_class882.yaw + TrigMath.toRadians(90.0f), bm_class882.pitch, 0.0f));
-            a_inner128.access$102(a_inner1282, new Vector3f(-f2 + bm_class883.yaw + TrigMath.toRadians(90.0f), (float)((double)bm_class883.pitch + (double) TrigMath.toRadians(-20.0f) * Math.cos(bm_class882.pitch + f6 * 1.0f) + (double) Reference.LerpFloat(f10 / 2.0f, 0.0f, f9)), 0.0f));
+            a_inner128.access$002(a_inner1282, new Vector3fColor(-f2 + bm_class882.yaw + TrigMath.toRadians(90.0f), bm_class882.pitch, 0.0f));
+            a_inner128.access$102(a_inner1282, new Vector3fColor(-f2 + bm_class883.yaw + TrigMath.toRadians(90.0f), (float)((double)bm_class883.pitch + (double) TrigMath.toRadians(-20.0f) * Math.cos(bm_class882.pitch + f6 * 1.0f) + (double) Reference.LerpFloat(f10 / 2.0f, 0.0f, f9)), 0.0f));
             a_inner128.access$402(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class882.pitch) - Math.abs(f6)) * 0.1909f);
             a_inner128.access$702(a_inner1282, TrigMath.toRadians(90.0f));
             a_inner128.access$200((a_inner128)a_inner1282).z = Reference.LerpFloat(f10, 0.0f, f9);
@@ -226,8 +226,8 @@ extends GirlModel<GirlEntity> {
                 a_inner128.access$200((a_inner128)a_inner1282).x = m + (float) Reference.LerpDouble(0.0, (double)g, Reference.h(f * 2.0f));
             }
         } else {
-            a_inner128.access$102(a_inner1282, new Vector3f(-f2 + bm_class883.yaw + TrigMath.toRadians(90.0f), bm_class883.pitch, 0.0f));
-            a_inner128.access$002(a_inner1282, new Vector3f(-f2 + bm_class882.yaw + TrigMath.toRadians(90.0f), (float)((double)bm_class882.pitch + (double) TrigMath.toRadians(20.0f) * Math.cos(bm_class883.pitch + f6 * 1.0f)) - Reference.LerpFloat(f10 / 2.0f, 0.0f, f9), 0.0f));
+            a_inner128.access$102(a_inner1282, new Vector3fColor(-f2 + bm_class883.yaw + TrigMath.toRadians(90.0f), bm_class883.pitch, 0.0f));
+            a_inner128.access$002(a_inner1282, new Vector3fColor(-f2 + bm_class882.yaw + TrigMath.toRadians(90.0f), (float)((double)bm_class882.pitch + (double) TrigMath.toRadians(20.0f) * Math.cos(bm_class883.pitch + f6 * 1.0f)) - Reference.LerpFloat(f10 / 2.0f, 0.0f, f9), 0.0f));
             a_inner128.access$502(a_inner1282, 1.0f + Math.abs(Math.abs(bm_class883.pitch) - Math.abs(f6)) * 0.1909f);
             a_inner128.access$602(a_inner1282, TrigMath.toRadians(90.0f));
             a_inner128.access$300((a_inner128)a_inner1282).z = -Reference.LerpFloat(f10, 0.0f, f9);
@@ -247,16 +247,16 @@ extends GirlModel<GirlEntity> {
         //a_inner128 a_inner1282 = new a_inner128(null);
         a_inner128 a_inner1282 = new a_inner128(); // TODO weird synthetic inners...
         if (f > 0.0f) {
-            a_inner128.access$002(a_inner1282, new Vector3f(iBone.getRotationX() - f, iBone.getRotationY() - f * -25.0f / 45.0f, iBone.getRotationZ() + f * 12.5f / 45.0f));
-            a_inner128.access$102(a_inner1282, new Vector3f(iBone2.getRotationX() - f, iBone2.getRotationY() + f * 15.0f / 45.0f, iBone2.getRotationZ()));
-            a_inner128.access$202(a_inner1282, new Vector3f(iBone3.getRotationX(), iBone3.getRotationY(), iBone3.getRotationZ()));
-            a_inner128.access$302(a_inner1282, new Vector3f(iBone4.getRotationX(), iBone4.getRotationY(), iBone4.getRotationZ()));
+            a_inner128.access$002(a_inner1282, new Vector3fColor(iBone.getRotationX() - f, iBone.getRotationY() - f * -25.0f / 45.0f, iBone.getRotationZ() + f * 12.5f / 45.0f));
+            a_inner128.access$102(a_inner1282, new Vector3fColor(iBone2.getRotationX() - f, iBone2.getRotationY() + f * 15.0f / 45.0f, iBone2.getRotationZ()));
+            a_inner128.access$202(a_inner1282, new Vector3fColor(iBone3.getRotationX(), iBone3.getRotationY(), iBone3.getRotationZ()));
+            a_inner128.access$302(a_inner1282, new Vector3fColor(iBone4.getRotationX(), iBone4.getRotationY(), iBone4.getRotationZ()));
             return a_inner1282;
         }
-        a_inner128.access$302(a_inner1282, new Vector3f(iBone4.getRotationX() + 2.0f * f, iBone4.getRotationY(), iBone4.getRotationZ()));
-        a_inner128.access$202(a_inner1282, new Vector3f(iBone3.getRotationX() + 2.2222223f * f, iBone3.getRotationY(), iBone3.getRotationZ()));
-        a_inner128.access$002(a_inner1282, new Vector3f(iBone.getRotationX() - f, iBone.getRotationY(), iBone.getRotationZ() + f * 5.0f / 45.0f));
-        a_inner128.access$102(a_inner1282, new Vector3f(iBone2.getRotationX() - f, iBone2.getRotationY(), iBone2.getRotationZ() - f * 5.0f / 45.0f));
+        a_inner128.access$302(a_inner1282, new Vector3fColor(iBone4.getRotationX() + 2.0f * f, iBone4.getRotationY(), iBone4.getRotationZ()));
+        a_inner128.access$202(a_inner1282, new Vector3fColor(iBone3.getRotationX() + 2.2222223f * f, iBone3.getRotationY(), iBone3.getRotationZ()));
+        a_inner128.access$002(a_inner1282, new Vector3fColor(iBone.getRotationX() - f, iBone.getRotationY(), iBone.getRotationZ() + f * 5.0f / 45.0f));
+        a_inner128.access$102(a_inner1282, new Vector3fColor(iBone2.getRotationX() - f, iBone2.getRotationY(), iBone2.getRotationZ() - f * 5.0f / 45.0f));
         return a_inner1282;
     }
 
@@ -344,10 +344,10 @@ extends GirlModel<GirlEntity> {
     }
 
     private static class a_inner128 {
-        private Vector3f c;
-        private Vector3f g;
-        private Vector3f h;
-        private Vector3f b;
+        private Vector3fColor c;
+        private Vector3fColor g;
+        private Vector3fColor h;
+        private Vector3fColor b;
         private float f = 1.0f;
         private float a = 1.0f;
         private float e = 0.0f;
@@ -369,19 +369,19 @@ extends GirlModel<GirlEntity> {
             return a_inner1284;
         }
 
-        static Vector3f access$000(a_inner128 a_inner1282) {
+        static Vector3fColor access$000(a_inner128 a_inner1282) {
             return a_inner1282.c;
         }
 
-        static Vector3f access$100(a_inner128 a_inner1282) {
+        static Vector3fColor access$100(a_inner128 a_inner1282) {
             return a_inner1282.g;
         }
 
-        static Vector3f access$200(a_inner128 a_inner1282) {
+        static Vector3fColor access$200(a_inner128 a_inner1282) {
             return a_inner1282.b;
         }
 
-        static Vector3f access$300(a_inner128 a_inner1282) {
+        static Vector3fColor access$300(a_inner128 a_inner1282) {
             return a_inner1282.h;
         }
 
@@ -405,22 +405,22 @@ extends GirlModel<GirlEntity> {
         //    this();
         //}
 
-        static Vector3f access$202(a_inner128 a_inner1282, Vector3f f7_class2922) {
+        static Vector3fColor access$202(a_inner128 a_inner1282, Vector3fColor f7_class2922) {
             a_inner1282.b = f7_class2922;
             return a_inner1282.b;
         }
 
-        static Vector3f access$302(a_inner128 a_inner1282, Vector3f f7_class2922) {
+        static Vector3fColor access$302(a_inner128 a_inner1282, Vector3fColor f7_class2922) {
             a_inner1282.h = f7_class2922;
             return a_inner1282.h;
         }
 
-        static Vector3f access$002(a_inner128 a_inner1282, Vector3f f7_class2922) {
+        static Vector3fColor access$002(a_inner128 a_inner1282, Vector3fColor f7_class2922) {
             a_inner1282.c = f7_class2922;
             return a_inner1282.c;
         }
 
-        static Vector3f access$102(a_inner128 a_inner1282, Vector3f f7_class2922) {
+        static Vector3fColor access$102(a_inner128 a_inner1282, Vector3fColor f7_class2922) {
             a_inner1282.g = f7_class2922;
             return a_inner1282.g;
         }

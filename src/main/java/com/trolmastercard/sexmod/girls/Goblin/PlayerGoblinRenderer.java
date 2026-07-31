@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.AbstractPlayerKoblinGoboldRenderer;
 import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.Vector3fColor;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -278,12 +278,12 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
     }
 
     @Override
-    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3f rgb, float thickness) {
+    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fColor rgb, float thickness) {
         PlayerGoblinRenderer.drawCustomOverlayBundle(tessellator, buffer, girl, rgb, thickness);
     }
 
     @Nullable
-    protected Vector3f getAdditionalOverlayColor(GirlEntity entity) {
+    protected Vector3fColor getAdditionalOverlayColor(GirlEntity entity) {
         if (!this.D) {
             return null;
         }
@@ -310,14 +310,14 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
         ItemArmor itemArmor = (ItemArmor)itemStack.getItem();
         switch (itemArmor.getArmorMaterial()) {
             default: {
-                return new Vector3f(23.0f, 100.0f, 93.0f);
+                return new Vector3fColor(23.0f, 100.0f, 93.0f);
             }
             case GOLD: {
-                return new Vector3f(99.0f, 98.0f, 14.0f);
+                return new Vector3fColor(99.0f, 98.0f, 14.0f);
             }
             case CHAIN: 
             case IRON: {
-                return new Vector3f(85.0f, 85.0f, 85.0f);
+                return new Vector3fColor(85.0f, 85.0f, 85.0f);
             }
             case LEATHER: 
         }
@@ -325,7 +325,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
         float f = n >> 16 & 0xFF;
         float f2 = n >> 8 & 0xFF;
         float f3 = n & 0xFF;
-        return new Vector3f(f, f2, f3);
+        return new Vector3fColor(f, f2, f3);
     }
 
     @Override

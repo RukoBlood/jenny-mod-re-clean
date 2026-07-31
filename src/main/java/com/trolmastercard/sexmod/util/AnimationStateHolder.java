@@ -3,13 +3,13 @@
  */
 package com.trolmastercard.sexmod.util;
 
-public class f2_class286 {
+public class AnimationStateHolder {
     public double d;
     public double a;
     public double c;
     public double b;
 
-    public f2_class286(double d, double d2, double d3, double d4) {
+    public AnimationStateHolder(double d, double d2, double d3, double d4) {
         this.d = d;
         this.a = d2;
         this.c = d3;

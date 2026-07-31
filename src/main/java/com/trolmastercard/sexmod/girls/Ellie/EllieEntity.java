@@ -43,8 +43,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class EllieEntity
-extends Fighter
+public class EllieEntity extends Fighter
 implements bh_class82 {
     final static float ad = 10.0f;
     final static int ao = 16;

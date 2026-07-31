@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
-import com.trolmastercard.sexmod.util.Vector3f;
+import com.trolmastercard.sexmod.util.Vector3fColor;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -40,25 +40,25 @@ extends PlayerGirlRenderer {
     }
 
     @Nullable
-    protected Vector3f getAdditionalOverlayColor(GirlEntity entity) {
+    protected Vector3fColor getAdditionalOverlayColor(GirlEntity entity) {
         if (entity.world instanceof FakeWorld) {
             return null;
         }
-        if (((b7_class68)((Object) entity)).boolean_c()) {
+        if (((IWingsOwner)((Object) entity)).hasWingState()) {
             return null;
         }
-        return GalathRenderer.y;
+        return GalathRenderer.OVERLAY_COLOR_NONE;
     }
 
     @Override
     public HashSet<String> getBlacklistedBoneNames() {
-        HashSet<String> hashSet = GalathRenderer.E;
-        GalathRenderer.E.addAll(BoneDeformProcessor.EXCLUDED_MESH_BONES);
-        return GalathRenderer.E;
+        HashSet<String> hashSet = GalathRenderer.BLACKLISTED_BONES;
+        GalathRenderer.BLACKLISTED_BONES.addAll(BoneDeformProcessor.EXCLUDED_MESH_BONES);
+        return GalathRenderer.BLACKLISTED_BONES;
     }
 
     @Override
-    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3f rgb, float thickness) {
+    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fColor rgb, float thickness) {
         PlayerGalathRenderer.drawCustomOverlayBundle(tessellator, buffer, girl, rgb, thickness);
     }
 
@@ -68,7 +68,7 @@ extends PlayerGirlRenderer {
         if (PlayerGalathRenderer.mc.gameSettings.thirdPersonView == 0 && PlayerGalathRenderer.mc.player.getPersistentID().equals(((PlayerGirl) entity).getOwnerUserUUID()) && !entity.isAnchored()) {
             return;
         }
-        GalathRenderer.a_27(entity, partialTicks);
+        GalathRenderer.renderCustomEffects(entity, partialTicks);
     }
 
     @Override
@@ -159,14 +159,14 @@ extends PlayerGirlRenderer {
         GeoBone geoBone = model.topLevelBones.get(0);
         GeoBone geoBone2 = null;
         GeoBone geoBone3 = null;
-        for (GeoBone geoBone4 : geoBone.childBones) {
-            switch (geoBone4.getName()) {
+        for (GeoBone child : geoBone.childBones) {
+            switch (child.getName()) {
                 case "steve": {
-                    geoBone3 = geoBone4;
+                    geoBone3 = child;
                     break;
                 }
                 case "body": {
-                    geoBone2 = geoBone4;
+                    geoBone2 = child;
                 }
             }
         }

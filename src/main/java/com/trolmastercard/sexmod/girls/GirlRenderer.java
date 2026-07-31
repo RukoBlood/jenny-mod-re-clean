@@ -493,7 +493,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         this.updateModelMatrices(entity);
         CustomModelRenderer.renderGirlCustomParts(entity, partialTicks);
 
-        Vector3f additionalOverlayColor = this.getAdditionalOverlayColor(entity);
+        Vector3fColor additionalOverlayColor = this.getAdditionalOverlayColor(entity);
         if (additionalOverlayColor != null) {
             this.renderAdditionalOverlays((GirlEntity)entity, partialTicks, additionalOverlayColor);
         }
@@ -512,7 +512,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     }
 
     @Nullable
-    protected Vector3f getAdditionalOverlayColor(T entity) {
+    protected Vector3fColor getAdditionalOverlayColor(T entity) {
         return null;
     }
 
@@ -520,9 +520,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         return girl;
     }
 
-    void renderAdditionalOverlays(GirlEntity girl, float partialTicks, Vector3f rgbColor) {
+    void renderAdditionalOverlays(GirlEntity girl, float partialTicks, Vector3fColor rgbColor) {
         EntityPlayerSP entityPlayerSP = GirlRenderer.mc.player;
-        rgbColor = new Vector3f(rgbColor.x / 255.0f, rgbColor.y / 255.0f, rgbColor.z / 255.0f);
+        rgbColor = new Vector3fColor(rgbColor.x / 255.0f, rgbColor.y / 255.0f, rgbColor.z / 255.0f);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
@@ -552,7 +552,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         return Reference.LerpFloat(max, min, Utils.clamp(ratio, 0.0f, 1.0f));
     }
 
-    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3f rgb, float thickness) {
+    protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fColor rgb, float thickness) {
     }
 
     protected static void drawLineBetweenBones(BufferBuilder buffer, Tessellator tessellator, GirlEntity girl, String startBone, String endBone, float r, float g, float b, float thickness) {
@@ -565,7 +565,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         tessellator.draw();
     }
 
-    protected static void drawCustomOverlayBundle(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3f rgb, float th) {
+    protected static void drawCustomOverlayBundle(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fColor rgb, float th) {
         GirlRenderer.drawLineBetweenBones(buffer, tessellator, girl, "braStringMidStartR", "braStringMidMid1R", rgb.x, rgb.y, rgb.z, th);
         GirlRenderer.drawLineBetweenBones(buffer, tessellator, girl, "braStringMidMid1R", "braStringMidMid2R", rgb.x, rgb.y, rgb.z, th);
         GirlRenderer.drawLineBetweenBones(buffer, tessellator, girl, "braStringMidMid2R", "braStringMidMid3R", rgb.x, rgb.y, rgb.z, th);

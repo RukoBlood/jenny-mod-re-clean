@@ -142,47 +142,47 @@ public enum GalathAttackAction {
         galath.previousPos = null;
     }, false, galath -> true, false),
 
-    SUMMON_SKELETON(f__class2972 -> {
-        f__class2972.setCurrentAction(Action.SUMMON_SKELETON);
-        f__class2972.ad = 0;
-        EntityDataManager entityDataManager = f__class2972.getDataManager();
+    SUMMON_SKELETON(galath -> {
+        galath.setCurrentAction(Action.SUMMON_SKELETON);
+        galath.ad = 0;
+        EntityDataManager entityDataManager = galath.getDataManager();
         entityDataManager.set(GalathEntity.bN, true);
         entityDataManager.set(GalathEntity.b7, true);
-        entityDataManager.set(GalathEntity.ay, f__class2972.getRNG().nextBoolean());
-        GirlEntity.playRandomSound((GirlEntity)f__class2972, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
-    }, f__class2972 -> {
+        entityDataManager.set(GalathEntity.ay, galath.getRNG().nextBoolean());
+        GirlEntity.playRandomSound((GirlEntity)galath, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
+    }, galath -> {
         EnergyBallEntity c4_class1132;
         Vec3d vec3d;
         Vec3d vec3d2;
         Vec3d vec3d3;
-        f__class2972.setMotionVector(Vec3d.ZERO);
-        if ((float)f__class2972.ad != 30.0f) {
+        galath.setMotionVector(Vec3d.ZERO);
+        if ((float)galath.ad != 30.0f) {
             return;
         }
-        GalathEntity.a(f__class2972, 0.0f);
-        Vec3d vec3d4 = f__class2972.getPositionVector();
-        Vec3d vec3d5 = f__class2972.getAttackTarget().getPositionVector();
-        Random random = f__class2972.getRNG();
-        boolean bl = f__class2972.getDataManager().get(GalathEntity.ay);
-        if (f__class2972.getDataManager().get(GalathEntity.bN).booleanValue()) {
-            vec3d3 = vec3d4.add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(GalathEntity.bz) : GalathEntity.bz, 180.0f + f__class2972.renderYawOffset));
+        GalathEntity.updateRenderPositions(galath, 0.0f);
+        Vec3d vec3d4 = galath.getPositionVector();
+        Vec3d vec3d5 = galath.getAttackTarget().getPositionVector();
+        Random random = galath.getRNG();
+        boolean bl = galath.getDataManager().get(GalathEntity.ay);
+        if (galath.getDataManager().get(GalathEntity.bN)) {
+            vec3d3 = vec3d4.add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(GalathEntity.bz) : GalathEntity.bz, 180.0f + galath.renderYawOffset));
             vec3d2 = vec3d5.subtract(vec3d3).normalize();
             vec3d2 = new Vec3d(vec3d2.x + random.nextDouble() * (double)0.3f, vec3d2.y + random.nextDouble() * (double)0.3f, vec3d2.z + random.nextDouble() * (double)0.3f);
             vec3d2 = vec3d2.normalize();
             vec3d = new Vec3d(vec3d2.x * (double)0.4f, vec3d2.y * (double)0.4f, vec3d2.z * (double)0.4f);
-            c4_class1132 = new EnergyBallEntity(f__class2972.world, f__class2972, vec3d);
+            c4_class1132 = new EnergyBallEntity(galath.world, galath, vec3d);
             c4_class1132.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
-            f__class2972.world.spawnEntity(c4_class1132);
+            galath.world.spawnEntity(c4_class1132);
         }
-        if (f__class2972.getDataManager().get(GalathEntity.b7).booleanValue()) {
-            vec3d3 = vec3d4.add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(GalathEntity.bC) : GalathEntity.bC, 180.0f + f__class2972.renderYawOffset));
+        if (galath.getDataManager().get(GalathEntity.b7)) {
+            vec3d3 = vec3d4.add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(GalathEntity.bC) : GalathEntity.bC, 180.0f + galath.renderYawOffset));
             vec3d2 = vec3d5.subtract(vec3d3).normalize();
             vec3d2 = new Vec3d(vec3d2.x + random.nextDouble() * (double)0.3f, vec3d2.y + random.nextDouble() * (double)0.3f, vec3d2.z + random.nextDouble() * (double)0.3f);
             vec3d2 = vec3d2.normalize();
             vec3d = new Vec3d(vec3d2.x * (double)0.4f, vec3d2.y * (double)0.4f, vec3d2.z * (double)0.4f);
-            c4_class1132 = new EnergyBallEntity(f__class2972.world, f__class2972, vec3d);
+            c4_class1132 = new EnergyBallEntity(galath.world, galath, vec3d);
             c4_class1132.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
-            f__class2972.world.spawnEntity(c4_class1132);
+            galath.world.spawnEntity(c4_class1132);
         }
     }, f__class2972 -> f__class2972.ad >= 45, f__class2972 -> {
         f__class2972.ad = 0;
@@ -201,26 +201,26 @@ public enum GalathAttackAction {
         f__class2972.setTargetPosition(vec3d);
         f__class2972.setYawRotation((float)d);
         GirlEntity.playRandomSound((GirlEntity)f__class2972, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
-    }, f__class2972 -> {
-        EntityLivingBase entityLivingBase = f__class2972.getAttackTarget();
-        int n = f__class2972.az() + 1;
-        f__class2972.a(n);
+    }, galath -> {
+        EntityLivingBase entityLivingBase = galath.getAttackTarget();
+        int n = galath.getSwordAttackProgress() + 1;
+        galath.a(n);
         if (Utils.isValueInBounds((double)n, 24.0, 32.0)) {
             Vec3d vec3d = entityLivingBase.getPositionVector().add(0.0, entityLivingBase.getEyeHeight(), 0.0);
-            g8_class353 g8_class3532 = new g8_class353(vec3d.x - f__class2972.posX, vec3d.z - f__class2972.posZ);
+            g8_class353 g8_class3532 = new g8_class353(vec3d.x - galath.posX, vec3d.z - galath.posZ);
             double d = TrigMath.toDegrees(Math.atan2(g8_class3532.a, g8_class3532.b)) - 90.0;
-            f__class2972.setYawRotation((float)d);
+            galath.setYawRotation((float)d);
             Vec3d vec3d2 = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), (float)(d + 180.0));
-            Vec3d vec3d3 = f__class2972.net_minecraft_util_math_Vec3d_B();
+            Vec3d vec3d3 = galath.getAnchorTargetPosition();
             Vec3d vec3d4 = vec3d.add(vec3d2);
             float f = (float)(n - 24) / 8.0f;
             Vec3d vec3d5 = Reference.LerpVec3d(vec3d3, vec3d4, (double)f);
-            f__class2972.setTargetPosition(vec3d5);
+            galath.setTargetPosition(vec3d5);
         } else if (Utils.isValueInBounds((double)n, 32.0, 54.0)) {
-            Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), f__class2972.getYawRotation().floatValue() + 180.0f);
+            Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), galath.getYawRotation().floatValue() + 180.0f);
             Vec3d vec3d6 = entityLivingBase.getPositionVector().add(vec3d);
-            f__class2972.setTargetPosition(vec3d6);
-            GalathDamageSource damageSource = new GalathDamageSource(f__class2972);
+            galath.setTargetPosition(vec3d6);
+            GalathDamageSource damageSource = new GalathDamageSource(galath);
             entityLivingBase.hurtTime = 0;
             entityLivingBase.hurtResistantTime = 0;
             if (n == 36) {
@@ -230,15 +230,15 @@ public enum GalathAttackAction {
                 entityLivingBase.attackEntityFrom(damageSource, 5.0f);
             }
         } else if (n == 54) {
-            f__class2972.setAnchored(false);
-            f__class2972.setCurrentAction(Action.FLY);
-            Vec3d vec3d = f__class2972.net_minecraft_util_math_Vec3d_B().subtract(f__class2972.getPositionVector()).normalize();
-            f__class2972.motionX = vec3d.x * (double)0.6f;
-            f__class2972.motionY = vec3d.y * (double)0.6f;
-            f__class2972.motionZ = vec3d.z * (double)0.6f;
-            f__class2972.setFlyTicks(1);
+            galath.setAnchored(false);
+            galath.setCurrentAction(Action.FLY);
+            Vec3d vec3d = galath.getAnchorTargetPosition().subtract(galath.getPositionVector()).normalize();
+            galath.motionX = vec3d.x * (double)0.6f;
+            galath.motionY = vec3d.y * (double)0.6f;
+            galath.motionZ = vec3d.z * (double)0.6f;
+            galath.setFlyTicks(1);
         } else {
-            f__class2972.setFlyTicks(f__class2972.getFlyTicks() + 1);
+            galath.setFlyTicks(galath.getFlyTicks() + 1);
         }
     }, f__class2972 -> f__class2972.getFlyTicks() > 23, f__class2972 -> {
         f__class2972.setFlyTicks(0);
