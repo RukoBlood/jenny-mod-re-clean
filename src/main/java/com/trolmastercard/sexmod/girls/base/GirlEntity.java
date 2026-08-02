@@ -133,9 +133,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     private boolean isRegisteredLocally = false;
 
     HashMap<String, Vec3d> boneTransformCache = new HashMap();
-    final static public DataParameter<String> MASTER_UUID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(110);
-    final static public DataParameter<Boolean> IS_ANCHORED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(109);
-    final static public DataParameter<String> TARGET_POS = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(108);
+    final static public DataParameter<String> MASTER;
+    final static public DataParameter<Boolean> IS_ANCHORED;
+    final static public DataParameter<String> TARGET_POS;
     final static public DataParameter<Float> YAW_ROTATION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.FLOAT).getSerializer().createKey(107);
     final static public DataParameter<String> GIRL_ID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(106);
     final static public DataParameter<Integer> OUTFIT_INDEX = EntityDataManager.createKey(GirlEntity.class, DataSerializers.VARINT).getSerializer().createKey(105);
@@ -155,6 +155,13 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     AnimationProcessor<?> cachedAnimationProcessor = null;
     public List<String> boneTrackingList = new ArrayList<String>();
     protected List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> customPartsData = null;
+
+    static {
+        MASTER = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(110);
+        IS_ANCHORED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(109);
+        TARGET_POS = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(108);
+
+    }
 
     public void setWalkSpeed(WalkSpeed walkSpeed) {
         this.entityDataManager.set(WALK_SPEED, walkSpeed.toString());
@@ -252,11 +259,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public static void playRandomSound(GirlEntity em_class2582, SoundEvent[] sounds) {
-        GirlEntity.girlPlaySound(em_class2582, SoundsHandler.getRandomSound(sounds));
+        GirlEntity.girlPlaySound(em_class2582, SoundsHandler.random(sounds));
     }
 
     public static void playRandomSound(GirlEntity girl, SoundEvent[] sounds, boolean positional) {
-        GirlEntity.girlPlaySound(girl, SoundsHandler.getRandomSound(sounds), positional);
+        GirlEntity.girlPlaySound(girl, SoundsHandler.random(sounds), positional);
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -369,7 +376,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.register(IS_ANCHORED, false);
         this.entityDataManager.register(YAW_ROTATION, 0.0f);
         this.entityDataManager.register(TARGET_POS, "0|0|0");
-        this.entityDataManager.register(MASTER_UUID, "");
+        this.entityDataManager.register(MASTER, "");
         this.entityDataManager.register(WALK_SPEED, WalkSpeed.WALK.toString());
         this.entityDataManager.register(CUSTOM_MODEL_KEY, "");
         this.entityDataManager.register(CUSTOM_NAME, "");
@@ -639,7 +646,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             this.changeDataParameterFromClient("master", "");
             this.changeDataParameterFromClient("walk speed", WalkSpeed.WALK.toString());
         } else {
-            this.entityDataManager.set(MASTER_UUID, "");
+            this.entityDataManager.set(MASTER, "");
             this.entityDataManager.set(WALK_SPEED, WalkSpeed.WALK.toString());
         }
     }
@@ -788,12 +795,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public boolean hasMaster() {
-        return !this.entityDataManager.get(MASTER_UUID).isEmpty();
+        return !this.entityDataManager.get(MASTER).isEmpty();
     }
 
     @Nullable
     public UUID getMasterUUID() {
-        String string = this.entityDataManager.get(MASTER_UUID);
+        String string = this.entityDataManager.get(MASTER);
         if (string.isEmpty()) {
             return null;
         }
@@ -1237,7 +1244,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             if (this.world.isRemote && Minecraft.getMinecraft().player.getPositionVector().distanceTo(this.getPositionVector()) < 10.0) {
                 this.sendLocalClientMessage("whopa");
             }
-            return SoundsHandler.getRandomSound(SoundsHandler.MISC_FART); //Why fart?
+            return SoundsHandler.random(SoundsHandler.MISC_FART); //Why fart?
         }
         return null;
     }

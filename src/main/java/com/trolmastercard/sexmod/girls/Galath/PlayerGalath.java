@@ -18,8 +18,8 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.GalathFlightUI;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -455,13 +455,13 @@ implements IWingsOwner {
                         return vec3d.subtract(vec3d2).normalize();
                     }, em_class2582 -> em_class2582.getCachedBoneOffset("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
                     ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": 
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "flapControlled": {

@@ -99,7 +99,7 @@ implements IMessage {
                         break;
                     }
                     case "master": {
-                        girlEntity.getDataManager().set(GirlEntity.MASTER_UUID, n_class4152.c);
+                        girlEntity.getDataManager().set(GirlEntity.MASTER, n_class4152.c);
                         break;
                     }
                     case "walk speed": {

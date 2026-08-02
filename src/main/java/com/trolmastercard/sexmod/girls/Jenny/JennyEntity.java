@@ -18,8 +18,8 @@ import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
@@ -112,7 +112,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_SIGH);
+        return SoundsHandler.random(SoundsHandler.GIRLS_JENNY_SIGH);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.playerSheHasSexWith() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.playerSheHasSexWith() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
                 GirlEntity.openInventoryGui(player, this, stringArray, true);
@@ -580,7 +580,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "stripMSG1": {
                     this.broadcastChatMessage(I18n.format("jenny.dialogue.hihi", new Object[0]));
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_GIGGLE));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "paymentMSG1": {
@@ -614,7 +614,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "paymentMSG3": {
                     this.broadcastChatMessage(I18n.format("jenny.dialogue.hehe", new Object[0]));
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_GIGGLE));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "sexUiOn": {
@@ -688,23 +688,23 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     if (this.isControlledByLocalPlayer() && HandlePlayerMovement.isThrusting) {
                         this.resetAnimationControllerOffset();
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_LIPSOUND));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjiMSG12": {
                     if (Reference.RANDOM.nextInt(5) == 0) {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_BJMOAN));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_BJMOAN));
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_LIPSOUND));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjtMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MMM));
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIPSOUND));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MMM));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_LIPSOUND));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
@@ -763,7 +763,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "bjcBlackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "bjcDone": 
@@ -811,15 +811,15 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[1]);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MOAN));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
                     break;
                 }
                 case "doggystartDone": {
@@ -857,28 +857,28 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 //                }
                 case "doggyslowMSG1": {
                     this.aa = false;
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
-                            this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MMM));
+                            this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MMM));
                         } else {
-                            this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MOAN));
+                            this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
                         }
                     } else {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING));
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.00666);
                     break;
                 }
                 case "doggyslowMSG2": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING), 0.5f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING), 0.5f);
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
@@ -886,13 +886,13 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     if (this.ag % 2 == 0) {
                         int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
-                            this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MOAN));
+                            this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
                             break;
                         }
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_HEAVYBREATHING));
                         break;
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_AHH));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_AHH));
                     break;
                 }
                 case "doggyfastDone": {
@@ -902,8 +902,8 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "doggycumMSG1": {
                     this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 2.0f);
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MOAN));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
                     break;
                 }
                 case "doggycumMSG2": {
@@ -944,11 +944,11 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "paizuriFastMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_MMM));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MMM));
                     } else {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_JENNY_AHH));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_AHH));
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
@@ -956,7 +956,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "paizuriSlowMSG1": 
                 case "paizuriStartMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;

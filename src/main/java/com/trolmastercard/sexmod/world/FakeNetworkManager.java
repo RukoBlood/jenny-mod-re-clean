@@ -35,9 +35,9 @@ import java.net.SocketAddress;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetworkManager;
 
-public class FakeNetwork extends NetworkManager {
-    public FakeNetwork(EnumPacketDirection enumPacketDirection) {
-        super(enumPacketDirection);
+public class FakeNetworkManager extends NetworkManager {
+    public FakeNetworkManager(EnumPacketDirection packetDirection) {
+        super(packetDirection);
     }
 
     public Channel channel() {

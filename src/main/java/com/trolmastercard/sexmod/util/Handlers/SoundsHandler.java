@@ -145,32 +145,28 @@ public class SoundsHandler {
             String[] stringArray = string.split("\\.");
             String string2 = stringArray.length > 2 ? stringArray[2] : stringArray[1];
             for (int i = 0; i < soundEventArray.length; ++i) {
-                soundEventArray[i] = SoundsHandler.a(String.format("%s.%s%s", string, string2, i));
+                soundEventArray[i] = SoundsHandler.registerSound(String.format("%s.%s%s", string, string2, i));
             }
         }
     }
 
-    public static SoundEvent a(String string) {
-        ResourceLocation resourceLocation = new ResourceLocation("sexmod", string);
+    public static SoundEvent registerSound(String path) {
+        ResourceLocation resourceLocation = new ResourceLocation("sexmod", path);
         SoundEvent soundEvent = new SoundEvent(resourceLocation);
-        soundEvent.setRegistryName(string);
+        soundEvent.setRegistryName(path);
         ForgeRegistries.SOUND_EVENTS.register(soundEvent);
         return soundEvent;
     }
 
-    public static SoundEvent getRandomSound(SoundEvent[] soundEventArray) {
-        int n;
-        lastRandomSound.putIfAbsent(soundEventArray[0], -69);
-        int n2 = 0;
+    public static SoundEvent random(SoundEvent[] soundArray) {
+        int random;
+        lastRandomSound.putIfAbsent(soundArray[0], -69);
+        int trys = 0;
         do {
-            n = Reference.RANDOM.nextInt(soundEventArray.length); //TODO: replece ModInfo.f to Reference.somevalue (Done. This is RANDOM, dumbass)
-        } while (++n2 < 10 && n == lastRandomSound.get(soundEventArray[0]));
-        lastRandomSound.replace(soundEventArray[0], n);
-        return soundEventArray[n];
-    }
-
-    private static Exception a(Exception exception) {
-        return exception;
+            random = Reference.RANDOM.nextInt(soundArray.length);
+        } while (++trys < 10 && random == lastRandomSound.get(soundArray[0]));
+        lastRandomSound.replace(soundArray[0], random);
+        return soundArray[random];
     }
 }
 

@@ -15,7 +15,7 @@ import com.trolmastercard.sexmod.bu_class100;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlRenderer;
-import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
+import com.trolmastercard.sexmod.util.MatrixHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -82,7 +82,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         }
         this.mainHandItem = owner.getHeldItemMainhand();
         this.offHandItem = owner.getHeldItemOffhand();
-        this.isUsingItem = playerGirl.ah;
+        this.isUsingItem = playerGirl.isUsingItem;
         this.isSneaking = playerGirl.isPlayerSneaking;
         this.currentGirl = (PlayerGirl) entity;
         this.partialTicks = partialTicks;
@@ -222,7 +222,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
     void renderOverlay(BufferBuilder buffer, GeoBone bone, Color color) {
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
+        MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
         GL11.glEnable(GL11.GL_LIGHTING);
         this.preRenderCallback();
         new bu_class100((IGeoRenderer)this).render(this.renderEntity, this.renderEntity.limbSwing, this.renderEntity.limbSwingAmount, this.partialTicks, 0.0f, 0.0f, 0.0f, color);
@@ -241,7 +241,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         ItemRenderer itemRenderer = Minecraft.getMinecraft().getItemRenderer();
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
+        MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
         GL11.glEnable(GL11.GL_LIGHTING);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

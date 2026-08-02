@@ -27,7 +27,7 @@ import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packages.SexPrompt;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.events.InteractionPrompt;
+import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -70,7 +70,7 @@ public abstract class PlayerGirl extends Fighter {
     public boolean isPlayerSprinting = false;
     public boolean isPlayerRiding = false;
     public boolean isPlayerOnGround = true;
-    public boolean ah = false;
+    public boolean isUsingItem = false;
     final static protected DataParameter<Optional<UUID>> OWNER;
 
     static {
@@ -265,7 +265,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     public static boolean boolean_e(UUID uUID) {
-        PlayerGirl.cleanupGlobalRegistry();
+        PlayerGirl.tryPuttingGirlsInTable();
         for (Map.Entry<UUID, PlayerGirl> entry : playerGirlUUIDHashtable.entrySet()) {
             UUID uUID2 = entry.getKey();
             if (!uUID.equals(uUID2)) continue;
@@ -360,7 +360,7 @@ public abstract class PlayerGirl extends Fighter {
             return;
         }
         if (this.boolean_f()) {
-            InteractionPrompt.instance.onTickUpdate();
+            SexPromptManager.INSTANCE.tick();
         }
     }
 
@@ -390,7 +390,7 @@ public abstract class PlayerGirl extends Fighter {
     @Override
     public void updateAITasks() {
         //Object object;
-        PlayerGirl.cleanupGlobalRegistry();
+        PlayerGirl.tryPuttingGirlsInTable();
         this.updateActionTicks();
         this.updateCustomModelParts();
         UUID uUID = this.getOwnerUserUUID();
@@ -539,7 +539,7 @@ public abstract class PlayerGirl extends Fighter {
     public void spawnHitboxHelper() {
     }
 
-    public static void cleanupGlobalRegistry() {
+    public static void tryPuttingGirlsInTable() {
         ArrayList<PlayerGirl> arrayList = new ArrayList<PlayerGirl>();
         for (PlayerGirl ei_class2512 : Z) {
             if (ei_class2512.getOwnerUserUUID() == null) continue;

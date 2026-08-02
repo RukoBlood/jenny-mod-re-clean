@@ -10,7 +10,7 @@
 package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

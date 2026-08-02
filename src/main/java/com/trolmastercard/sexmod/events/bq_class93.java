@@ -15,8 +15,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class bq_class93 {
     @SubscribeEvent
-    public void a(GuiOpenEvent guiOpenEvent) {
-        if (guiOpenEvent.getGui() instanceof GuiMainMenu || guiOpenEvent.getGui() instanceof GuiMultiplayer) {
+    public void a(GuiOpenEvent event) {
+        if (event.getGui() instanceof GuiMainMenu || event.getGui() instanceof GuiMultiplayer) {
             PlayerGirl.Z.clear();
             PlayerGirl.playerGirlUUIDHashtable.clear();
         }

@@ -16,8 +16,8 @@ import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
@@ -192,7 +192,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.playerSheHasSexWith() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.playerSheHasSexWith() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.openInventoryGui(player, this, stringArray, true);
             return true;
@@ -215,7 +215,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.world.isRemote && this.isControlledByLocalPlayer() && this.currentAction() == Action.PRONE_DOGGY_INTRO && !fh_class313.a()) {
+        if (this.world.isRemote && this.isControlledByLocalPlayer() && this.currentAction() == Action.PRONE_DOGGY_INTRO && !BlackScreenUI.a()) {
             SexUI.init();
         }
         this.void_d();
@@ -242,7 +242,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         }
         if (this.ac == -1) {
             if (this.world.isRemote) {
-                fh_class313.b();
+                BlackScreenUI.b();
                 HandlePlayerMovement.setMovementLock(false);
             } else {
                 this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
@@ -703,7 +703,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "stripMSG1": {
                     this.sendLocalClientMessage(I18n.format("bia.dialogue.hihi", new Object[0]));
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_GIGGLE));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
                 case "sexUiOn": {
@@ -792,8 +792,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_fastDone": {
@@ -806,13 +806,13 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "anal_cumMSG2": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "blackScreen": 
                 case "anal_cumBlackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "doggy_cumDone": 
@@ -856,7 +856,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "slide": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SLIDE));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SLIDE));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.005);
                     break;

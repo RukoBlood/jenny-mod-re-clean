@@ -104,7 +104,7 @@ implements IAnimatable {
         KoboldManager.addMemberToTribe(this.f, ff_class3082);
         UUID uUID = KoboldManager.getTribeMasterUUID(this.f);
         if (uUID != null) {
-            ff_class3082.getDataManager().set(GirlEntity.MASTER_UUID, uUID.toString());
+            ff_class3082.getDataManager().set(GirlEntity.MASTER, uUID.toString());
         }
         List<KoboldEntity> list = KoboldManager.getTribeMembersList(this.f);
         String string = null;

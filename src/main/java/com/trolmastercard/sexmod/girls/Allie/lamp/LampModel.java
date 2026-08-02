@@ -8,7 +8,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import com.trolmastercard.sexmod.PlayerSkin;
+import com.trolmastercard.sexmod.util.SkinHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +29,7 @@ public class LampModel extends AnimatedGeoModel<LampItem> {
         }
         try {
             Minecraft minecraft = Minecraft.getMinecraft();
-            BufferedImage skin = PlayerSkin.GetPlayerSkin(minecraft.player.getPersistentID());
+            BufferedImage skin = SkinHelper.GetPlayerSkin(minecraft.player.getPersistentID());
             Graphics graphics = skin.getGraphics();
             graphics.setColor(new Color(185, 254, 255));
             graphics.fillRect(0, 0, 2, 2);

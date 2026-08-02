@@ -39,8 +39,8 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
 import com.trolmastercard.sexmod.gui.GalathFlightUI;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
@@ -278,7 +278,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     public GalathEntity(World world, @Nonnull EntityPlayer entityPlayer, Vec3d vec3d, boolean bl) {
         this(world);
         UUID uUID = entityPlayer.getPersistentID();
-        this.entityDataManager.set(MASTER_UUID, uUID.toString());
+        this.entityDataManager.set(MASTER, uUID.toString());
         this.aO.setVisible(false);
         this.bG = new BlockPos(this.getPositionVector());
         String string = NameStorage.getCustomName(uUID, PlayerGirlEntity.GALATH);
@@ -1884,7 +1884,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         if ("anal".equals(string)) {
-            fh_class313.b();
+            BlackScreenUI.b();
             HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
@@ -1897,7 +1897,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         if ("cowgirl".equals(string)) {
-            fh_class313.b();
+            BlackScreenUI.b();
             HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
@@ -1914,7 +1914,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             if (f8_class2932 == null) {
                 return;
             }
-            fh_class313.b();
+            BlackScreenUI.b();
             HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 Minecraft minecraft = Minecraft.getMinecraft();
@@ -2140,7 +2140,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        nbt.setString("sexmod:master", (String)this.entityDataManager.get(MASTER_UUID));
+        nbt.setString("sexmod:master", (String)this.entityDataManager.get(MASTER));
         if (this.bA) {
             nbt.setBoolean("sexmod:despawned", true);
         }
@@ -2151,7 +2151,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         String string;
         UUID uUID;
         super.readEntityFromNBT(nbt);
-        this.entityDataManager.set(MASTER_UUID, nbt.getString("sexmod:master"));
+        this.entityDataManager.set(MASTER, nbt.getString("sexmod:master"));
         if (nbt.getBoolean("sexmod:despawned")) {
             this.P = true;
         }
@@ -2419,7 +2419,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 }
                 case "giggle": {
                     Vec3d vec3d = this.getVectorTowardPlayer();
-                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.getRandomSound(SoundsHandler.GIRLS_GALATH_GIGGLE), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
+                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.random(SoundsHandler.GIRLS_GALATH_GIGGLE), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
                     break;
                 }
                 case "dialog1": {
@@ -2449,7 +2449,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 }
                 case "lightcharge": {
                     Vec3d vec3d = this.getVectorTowardPlayer();
-                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.getRandomSound(SoundsHandler.GIRLS_GALATH_LIGHTCHARGE), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
+                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.random(SoundsHandler.GIRLS_GALATH_LIGHTCHARGE), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
                     break;
                 }
                 case "strongcharge": {
@@ -2478,7 +2478,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 }
                 case "flap": {
                     Vec3d vec3d = this.getVectorTowardPlayer();
-                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.getRandomSound(SoundsHandler.MISC_FLAP), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
+                    this.world.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.random(SoundsHandler.MISC_FLAP), SoundCategory.HOSTILE, 1.0f, 1.0f, false);
                     break;
                 }
                 case "startRenderSword": {
@@ -2626,7 +2626,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                             return vec3d.subtract(vec3d2).normalize();
                         }, em_class2582 -> em_class2582.getCachedBoneOffset("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": {
@@ -2634,12 +2634,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "blackScreenMaster": {
                     if (!Minecraft.getMinecraft().player.getPersistentID().equals(this.getMasterUUID())) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     HandlePlayerMovement.setMovementLock(false);
                     break;
                 }
@@ -2673,7 +2673,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                     break;
                 }
                 case "lick": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
                     break;
                 }
                 case "setCoinLook": {
@@ -2692,8 +2692,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                     break;
                 }
                 case "boostSound": {
-                    Minecraft.getMinecraft().player.playSound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_GALATH_LIGHTCHARGE), 1.0f, 1.0f);
-                    Minecraft.getMinecraft().player.playSound(SoundsHandler.getRandomSound(SoundsHandler.MISC_FLAP), 1.0f, 1.0f);
+                    Minecraft.getMinecraft().player.playSound(SoundsHandler.random(SoundsHandler.GIRLS_GALATH_LIGHTCHARGE), 1.0f, 1.0f);
+                    Minecraft.getMinecraft().player.playSound(SoundsHandler.random(SoundsHandler.MISC_FLAP), 1.0f, 1.0f);
                 }
             }
         });
@@ -2702,11 +2702,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         data.addAnimationController(this.movementController);
     }
 
-    private static Exception a(Exception exception) {
-        return exception;
-    }
-
-    public static class a_inner298 {
+    public static class EventHandLer {
         boolean a(GalathEntity galath) {
             return galath.player() != null;
         }

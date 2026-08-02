@@ -34,6 +34,7 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.util.SkinHelper;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
@@ -144,7 +145,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     protected ResourceLocation generateSkinTexture(UUID uUID, World world) throws IOException {
         BufferedImage skin;
         try {
-            skin = PlayerSkin.GetPlayerSkin(uUID);
+            skin = SkinHelper.GetPlayerSkin(uUID);
             Graphics graphics = skin.getGraphics();
             graphics.setColor(this.baseSkinColor);
             graphics.fillRect(0, 0, 4, 3);
@@ -937,7 +938,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         for (int i = 0; i < paymentStack.getCount(); ++i) {
             GlStateManager.pushMatrix();
             Tessellator.getInstance().draw();
-            GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
+            MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glRotated((double)((double)bone.getRotationX() + 2.5), 0.0, 0.0, 1.0);
             GL11.glRotated((double)bone.getRotationY(), 0.0, 1.0, 0.0);
@@ -997,7 +998,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         }
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, bone);
+        MatrixHelper.bindOpenGLToBone(MATRIX_STACK, bone);
         GL11.glEnable(2896);
         if (weaponStack.getItem() instanceof ItemBow) {
             GL11.glRotatef((float)fighter.holdBowRot, 1.0f, 0.0f, 0.0f);

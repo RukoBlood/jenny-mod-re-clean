@@ -10,7 +10,7 @@
  *  net.minecraftforge.fml.common.gameevent.TickEvent$Phase
  *  net.minecraftforge.fml.common.gameevent.TickEvent$RenderTickEvent
  */
-package com.trolmastercard.sexmod.events;
+package com.trolmastercard.sexmod.gender_change;
 
 import javax.vecmath.Vector2f;
 
@@ -33,9 +33,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-public class e__class234 {
-    final static public float c = 1.2345679f;
+//e_ -> RenderPlayerGirl
+public class RenderPlayerGirl {
+    final static public float DONT_RENDER_WITH_THIS_PARTIALTICK = 1.2345679f;
     Vec3d b = null;
     Vec3d d = null;
     PlayerGirl a = null;
@@ -43,21 +43,21 @@ public class e__class234 {
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(RenderPlayerEvent.Pre pre) {
-        if (pre.getPartialRenderTick() == 1.2345679f) {
+    public void renderPlayerGirl(RenderPlayerEvent.Pre event) {
+        if (event.getPartialRenderTick() == DONT_RENDER_WITH_THIS_PARTIALTICK) {
             return;
         }
-        PlayerGirl.cleanupGlobalRegistry();
-        PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(pre.getEntityPlayer().getPersistentID());
-        if (playerGirl == null) {
+        PlayerGirl.tryPuttingGirlsInTable();
+        PlayerGirl girl = PlayerGirl.getUUIDHashtable(event.getEntityPlayer().getPersistentID());
+        if (girl == null) {
             return;
         }
-        pre.setCanceled(true);
-        e__class234.a(playerGirl, pre.getEntityPlayer(), pre.getX(), pre.getY(), pre.getZ(), pre.getPartialRenderTick());
+        event.setCanceled(true);
+        RenderPlayerGirl.calculate(girl, event.getEntityPlayer(), event.getX(), event.getY(), event.getZ(), event.getPartialRenderTick());
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static void a(PlayerGirl playerGirl, EntityPlayer player, double d, double d2, double d3, float f) {
+    public static void calculate(PlayerGirl playerGirl, EntityPlayer player, double d, double d2, double d3, float f) {
         Minecraft mc = Minecraft.getMinecraft();
         if ((player = playerGirl.getPlayerEntity(player)).isInvisibleToPlayer(mc.player) && !playerGirl.boolean_E()) {
             return;
@@ -81,45 +81,45 @@ public class e__class234 {
         playerGirl.isPlayerSprinting = player.isSprinting();
         playerGirl.isPlayerRiding = player.isRiding();
         playerGirl.isPlayerOnGround = player.onGround;
-        playerGirl.ah = player.getItemInUseCount() != 0;
+        playerGirl.isUsingItem = player.getItemInUseCount() != 0;
         double d4 = player.lastTickPosX - player.posX;
         double d5 = player.posZ - player.lastTickPosZ;
         double d6 = Math.PI / 180 * (double)player.rotationYaw;
         playerGirl.ao = new Vector2f((float)(d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float)(d4 * Math.sin(d6) + d5 * Math.cos(d6)));
-        float f2 = playerGirl.boolean_z() ? e__class234.a(playerGirl, player) : 0.0f;
+        float f2 = playerGirl.boolean_z() ? RenderPlayerGirl.manageActions(playerGirl, player) : 0.0f;
         PlayerGirlRenderer.forceRenderNextFrame = true;
         renderManager.renderEntity(playerGirl, d, d2 + (double)f2, d3, 90.0f, f, false);
     }
 
-    static float a(PlayerGirl pg, EntityPlayer entityPlayer) {
-        if (pg.getDataManager().get(GirlEntity.IS_ANCHORED)) {
+    static float manageActions(PlayerGirl girl, EntityPlayer player) {
+        if (girl.getDataManager().get(GirlEntity.IS_ANCHORED)) {
             return 0.0f;
         }
-        if ((entityPlayer.getHeldItemMainhand().getItem() instanceof ItemBow || entityPlayer.getHeldItemOffhand().getItem() instanceof ItemBow) && pg.ah) {
-            pg.setCurrentAction(Action.BOW);
+        if ((player.getHeldItemMainhand().getItem() instanceof ItemBow || player.getHeldItemOffhand().getItem() instanceof ItemBow) && girl.isUsingItem) {
+            girl.setCurrentAction(Action.BOW);
         }
-        if (pg.currentAction() == Action.BOW && !pg.ah) {
-            pg.setCurrentAction(Action.NULL);
+        if (girl.currentAction() == Action.BOW && !girl.isUsingItem) {
+            girl.setCurrentAction(Action.NULL);
         }
-        if (pg.currentAction() == Action.BOW) {
-            pg.rotationYaw = pg.rotationYawHead;
-            pg.renderYawOffset = pg.rotationYawHead;
-            pg.prevRenderYawOffset = pg.prevRotationYawHead;
+        if (girl.currentAction() == Action.BOW) {
+            girl.rotationYaw = girl.rotationYawHead;
+            girl.renderYawOffset = girl.rotationYawHead;
+            girl.prevRenderYawOffset = girl.prevRotationYawHead;
         }
-        if (pg.isPlayerRiding) {
-            return entityPlayer.getRidingEntity() instanceof EntityBoat ? 0.4f : 0.2f;
+        if (girl.isPlayerRiding) {
+            return player.getRidingEntity() instanceof EntityBoat ? 0.4f : 0.2f;
         }
         return 0.0f;
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(TickEvent.RenderTickEvent renderTickEvent) {
+    public void a(TickEvent.RenderTickEvent event) {
         Minecraft minecraft = Minecraft.getMinecraft();
         if (minecraft.player == null) {
             return;
         }
-        if (renderTickEvent.phase == TickEvent.Phase.END) {
+        if (event.phase == TickEvent.Phase.END) {
             if (this.b != null) {
                 minecraft.player.setPosition(this.b.x, this.b.y, this.b.z);
                 minecraft.player.lastTickPosX = this.d.x;
@@ -143,8 +143,8 @@ public class e__class234 {
         this.b = minecraft.player.getPositionVector();
         this.d = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
         Vec3d vec3d = ei_class2512.getCachedBoneOffset("girlCam");
-        vec3d = ei_class2512.b(vec3d, renderTickEvent.renderTickTime);
-        vec3d = vec3d.add(Reference.LerpVec3d(this.d, this.b, (double)renderTickEvent.renderTickTime));
+        vec3d = ei_class2512.b(vec3d, event.renderTickTime);
+        vec3d = vec3d.add(Reference.LerpVec3d(this.d, this.b, (double)event.renderTickTime));
         minecraft.player.posX = vec3d.x;
         minecraft.player.posY = vec3d.y - (double)minecraft.player.getEyeHeight();
         minecraft.player.posZ = vec3d.z;
@@ -152,7 +152,7 @@ public class e__class234 {
         minecraft.player.lastTickPosY = vec3d.y - (double)minecraft.player.getEyeHeight();
         minecraft.player.lastTickPosZ = vec3d.z;
         Action fp_class3242 = ei_class2512.currentAction();
-        float f = ei_class2512.getYawRotation().floatValue();
+        float f = ei_class2512.getYawRotation();
         if (ei_class2512.a(fp_class3242, minecraft.player)) {
             return;
         }
@@ -216,7 +216,7 @@ public class e__class234 {
         Vec3d vec3d = minecraft.player.getPositionVector();
         Vec3d vec3d2 = Reference.LerpVec3d(this.d, this.b, (double)event.getPartialTicks());
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        e__class234.a(ei_class2512, minecraft.player, vec3d3.x, vec3d3.y, vec3d3.z, event.getPartialTicks());
+        RenderPlayerGirl.calculate(ei_class2512, minecraft.player, vec3d3.x, vec3d3.y, vec3d3.z, event.getPartialTicks());
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
@@ -248,7 +248,7 @@ public class e__class234 {
             return;
         }
         if (this.a != ei_class2512) {
-            e__class234.a(ei_class2512, minecraft.player, 0.0, 500.0, 0.0, renderTickEvent.renderTickTime);
+            RenderPlayerGirl.calculate(ei_class2512, minecraft.player, 0.0, 500.0, 0.0, renderTickEvent.renderTickTime);
             this.a = ei_class2512;
         }
         minecraft.player.eyeHeight = ei_class2512.getCameraBoneHeight();

@@ -13,8 +13,8 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -189,7 +189,7 @@ extends PlayerGirl {
         }
         if (this.ar == -1) {
             if (this.world.isRemote) {
-                fh_class313.b();
+                BlackScreenUI.b();
                 HandlePlayerMovement.setMovementLock(false);
             } else {
                 this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
@@ -411,7 +411,7 @@ extends PlayerGirl {
                 }
                 case "stripMSG1": {
                     this.broadcastChatMessage("Hihi~");
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_GIGGLE));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
                 case "sexUiOn": {
@@ -493,8 +493,8 @@ extends PlayerGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_slowMSG1": 
@@ -502,8 +502,8 @@ extends PlayerGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.5f);
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_fastDone": {
@@ -516,12 +516,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "anal_cumMSG2": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_BIA_AHH));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
                 case "anal_cumBlackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "doggy_cumDone": 
@@ -567,7 +567,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "slide": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SLIDE));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SLIDE));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.005);
                     break;

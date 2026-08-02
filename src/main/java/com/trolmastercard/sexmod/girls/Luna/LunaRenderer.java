@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlRenderer;
-import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
+import com.trolmastercard.sexmod.util.MatrixHelper;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -99,7 +99,7 @@ public class LunaRenderer extends GirlRenderer {
                 if (itemStack.equals(ItemStack.EMPTY) || eb_class2362.throwBackPercentage != 1.0f) break;
                 GlStateManager.pushMatrix();
                 Tessellator.getInstance().draw();
-                GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
+                MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
                 GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
                 GlStateManager.scale(eb_class2362.fishSizePercentage, eb_class2362.fishSizePercentage, eb_class2362.fishSizePercentage);
                 Minecraft.getMinecraft().getItemRenderer().renderItem(this.renderEntity, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);

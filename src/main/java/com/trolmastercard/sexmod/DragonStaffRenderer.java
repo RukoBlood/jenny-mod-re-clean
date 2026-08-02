@@ -19,7 +19,7 @@ import javax.vecmath.Vector4d;
 
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldStaffModel;
-import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
+import com.trolmastercard.sexmod.util.MatrixHelper;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
@@ -50,7 +50,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
     final static float a = 1.3f;
     final static Vector2f[] l = new Vector2f[]{new Vector2f(1.0f, 0.0f), new Vector2f(0.0f, 1.0f), new Vector2f(0.0f, 0.0f), new Vector2f(0.5f, 0.5f), new Vector2f(0.75f, 0.25f), new Vector2f(0.25f, 0.75f), new Vector2f(0.25f, 0.75f)};
     static boolean o = false;
-    Minecraft e = Minecraft.getMinecraft();
+    Minecraft mc = Minecraft.getMinecraft();
     Vector2f j;
     double b = 0.0;
     EntityPlayer k;
@@ -74,7 +74,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
     @Override
     public void render(DragonStaffItem staff, ItemStack itemStack) {
         EntityPlayer entityPlayer = null;
-        for (EntityPlayer entityPlayer2 : this.e.world.playerEntities) {
+        for (EntityPlayer entityPlayer2 : this.mc.world.playerEntities) {
             if (entityPlayer2.inventory.mainInventory.contains(itemStack)) {
                 entityPlayer = entityPlayer2;
                 break;
@@ -92,7 +92,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
             this.j = new Vector2f(0.0f, 0.0f);
         }
         if (!Minecraft.getMinecraft().isGamePaused()) {
-            this.b = (float)Minecraft.getMinecraft().player.ticksExisted + this.e.getRenderPartialTicks();
+            this.b = (float)Minecraft.getMinecraft().player.ticksExisted + this.mc.getRenderPartialTicks();
         }
         this.h = itemStack;
         this.k = entityPlayer;
@@ -104,7 +104,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
         if ("staff".equals(geoBone.getName())) {
             GlStateManager.pushMatrix();
             Tessellator.getInstance().draw();
-            GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
+            MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
             GlStateManager.translate(0.0, 1.5 + 0.001 * Math.sin(0.005 * this.b) + 0.001, 0.0);
             Vector3f vector3f = n.get(this.h);
             GlStateManager.scale(this.d(), this.d(), this.d());
@@ -117,14 +117,14 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
             GlStateManager.rotate(-vector3f.y * 10.0f, 0.0f, 0.0f, 1.0f);
             GlStateManager.rotate((float)(this.b * (double)0.1f), 1.0f, 1.0f, 1.0f);
             n.put(this.h, vector3f);
-            this.e.getTextureManager().bindTexture(c);
+            this.mc.getTextureManager().bindTexture(c);
             this.q.render(Minecraft.getMinecraft().player, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
             GlStateManager.popMatrix();
             if (this.k != null) {
                 this.c();
             }
             // was 'KoboldStaffModel().a'
-            this.e.getTextureManager().bindTexture(new KoboldStaffModel().getTextureLocation(null));
+            this.mc.getTextureManager().bindTexture(new KoboldStaffModel().getTextureLocation(null));
             bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         }
         super.renderRecursively(bufferBuilder, geoBone, f, f2, f3, f4);
@@ -149,9 +149,9 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
 
     void a(List<Integer> list, List<Vec3d> list2) {
         for (int i = 0; i < list.size(); ++i) {
-            float f = Reference.LerpFloat(this.k.prevRotationYawHead, this.k.rotationYawHead, this.e.getRenderPartialTicks());
-            float f2 = Reference.LerpFloat(this.k.prevRotationPitch, this.k.rotationPitch, this.e.getRenderPartialTicks());
-            Vec3d vec3d = Reference.LerpVec3d(new Vec3d(this.k.prevPosX, this.k.prevPosY + (double)this.k.getEyeHeight(), this.k.prevPosZ), this.k.getPositionVector().add(0.0, this.k.getEyeHeight(), 0.0), (double)this.e.getRenderPartialTicks());
+            float f = Reference.LerpFloat(this.k.prevRotationYawHead, this.k.rotationYawHead, this.mc.getRenderPartialTicks());
+            float f2 = Reference.LerpFloat(this.k.prevRotationPitch, this.k.rotationPitch, this.mc.getRenderPartialTicks());
+            Vec3d vec3d = Reference.LerpVec3d(new Vec3d(this.k.prevPosX, this.k.prevPosY + (double)this.k.getEyeHeight(), this.k.prevPosZ), this.k.getPositionVector().add(0.0, this.k.getEyeHeight(), 0.0), (double)this.mc.getRenderPartialTicks());
             Vec3d vec3d2 = vec3d.subtract(list2.get(i));
             vec3d2 = VectorMath.rotate(vec3d2, -f2, f);
             double d = Math.abs(vec3d2.x) + Math.abs(vec3d2.z) + Math.abs(vec3d2.y);
@@ -194,7 +194,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
         GlStateManager.translate(0.0, 1.5 + 0.001 * Math.sin(0.005 * this.b) + 0.001, 0.0);
         GlStateManager.scale(0.04f, 0.04f, 0.04f);
         GlStateManager.translate(f * 6.0f, f2 * 6.0f, f3 * 6.0f);
-        this.e.getItemRenderer().renderItem(Minecraft.getMinecraft().player, itemStack, ItemCameraTransforms.TransformType.NONE);
+        this.mc.getItemRenderer().renderItem(Minecraft.getMinecraft().player, itemStack, ItemCameraTransforms.TransformType.NONE);
         GlStateManager.popMatrix();
     }
 
@@ -204,7 +204,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
         GlStateManager.scale(0.04f, 0.04f, 0.04f);
         GlStateManager.rotate((float)(this.b * 8.0 * (double)f3), 0.0f, f, f2);
         GlStateManager.translate(6.0f, 0.0f, 0.0f);
-        this.e.getItemRenderer().renderItem(Minecraft.getMinecraft().player, itemStack, ItemCameraTransforms.TransformType.NONE);
+        this.mc.getItemRenderer().renderItem(Minecraft.getMinecraft().player, itemStack, ItemCameraTransforms.TransformType.NONE);
         GlStateManager.popMatrix();
     }
 

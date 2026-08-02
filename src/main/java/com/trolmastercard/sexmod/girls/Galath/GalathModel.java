@@ -126,7 +126,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
         }
         float currentWave = (float)(Math.sin(partialTicks * 0.3f) * 10.0);
         if (currentWave > 0.0f && this.lastPussyLickingWav < 0.0f || currentWave < 0.0f && this.lastPussyLickingWav > 0.0f) {
-            girl.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+            girl.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
         }
         this.lastPussyLickingWav = currentWave;
     }

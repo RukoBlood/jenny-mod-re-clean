@@ -18,8 +18,8 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.Supporter;
 import com.trolmastercard.sexmod.gui.BeeInventoryUI;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.world.FakeWorld;
@@ -368,13 +368,13 @@ public class BeeEntity extends Supporter {
                     break;
                 }
                 case "sex_fastMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
                 case "sex_startMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -389,13 +389,13 @@ public class BeeEntity extends Supporter {
                     break;
                 }
                 case "sex_cumMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 2.0f);
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 2.0f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "blackscreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "sex_cumDone": {

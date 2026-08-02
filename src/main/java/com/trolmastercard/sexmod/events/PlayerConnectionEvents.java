@@ -70,7 +70,7 @@ public class PlayerConnectionEvents {
             PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(tribeBlocks, true), playerMP);
         }
 
-        PlayerGirl.cleanupGlobalRegistry();
+        PlayerGirl.tryPuttingGirlsInTable();
         PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(event.player.getPersistentID());
 
         World serverWorld = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();

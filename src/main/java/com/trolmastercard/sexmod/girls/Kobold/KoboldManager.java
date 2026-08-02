@@ -547,7 +547,7 @@ public class KoboldManager {
         if (!member.hasMaster()) {
             return null;
         }
-        String masterUUIDStr = memberList.get(0).getDataManager().get(GirlEntity.MASTER_UUID);
+        String masterUUIDStr = memberList.get(0).getDataManager().get(GirlEntity.MASTER);
         return UUID.fromString(masterUUIDStr);
     }
 

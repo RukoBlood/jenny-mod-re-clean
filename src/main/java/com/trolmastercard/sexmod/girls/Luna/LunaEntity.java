@@ -24,8 +24,8 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
@@ -321,7 +321,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
     void a(EntityPlayer entityPlayer, int n) {
         EntityPlayerSP entityPlayerSP;
         if (n == 0 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
-            fh_class313.b();
+            BlackScreenUI.b();
             entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
             HandlePlayerMovement.setMovementLock(false);
         }
@@ -825,12 +825,12 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                     break;
                 }
                 case "eat": {
-                    this.PlaySoundAtPosition(SoundsHandler.getRandomSound(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
+                    this.PlaySoundAtPosition(SoundsHandler.random(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
                     this.fishSizePercentage -= 0.33333334f;
                     break;
                 }
                 case "eatPay": {
-                    this.PlaySoundAtPosition(SoundsHandler.getRandomSound(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
+                    this.PlaySoundAtPosition(SoundsHandler.random(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
                     this.scaleFactor -= 0.33333334f;
                     break;
                 }
@@ -947,7 +947,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                     break;
                 }
                 case "moan": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_MOAN));
                     break;
                 }
                 case "touch_boobs_introDone": {
@@ -983,15 +983,15 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 }
                 case "moanOrNya": {
                     if (Math.random() > 0.5) {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_MOAN));
                         break;
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     break;
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "touch_boobs_cumDone": {
@@ -1019,7 +1019,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                     break;
                 }
                 case "pounding": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "sitting_introMSG1": {
@@ -1037,12 +1037,12 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 case "sitting_slowMSG1": {
                     if (this.getRNG().nextBoolean()) {
                         if (this.getRNG().nextBoolean()) {
-                            this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                            this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_HORNINYA));
                             break;
                         }
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_MOAN));
                     } else {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING));
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
@@ -1050,9 +1050,9 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 }
                 case "sitting_fastMSG1": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     } else {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_MOAN));
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);

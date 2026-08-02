@@ -12,7 +12,7 @@
 package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.events.InteractionPrompt;
+import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,7 +64,7 @@ public class SexPrompt implements IMessage {
                 return null;
             }
             if (messageContext.side.equals((Object)Side.CLIENT)) {
-                InteractionPrompt.instance.openInteractivePrompt(new InteractionPrompt.ActiveRequest(g4_class3472.c, g4_class3472.b, g4_class3472.a, g4_class3472.d));
+                SexPromptManager.INSTANCE.setNewActivePrompt(new SexPromptManager.SexPrompt(g4_class3472.c, g4_class3472.b, g4_class3472.a, g4_class3472.d));
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {

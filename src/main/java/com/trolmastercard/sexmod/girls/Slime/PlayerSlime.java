@@ -14,8 +14,8 @@ import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
@@ -364,7 +364,7 @@ public class PlayerSlime extends PlayerGirl {
                 }
                 case "bjcBlackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "bjcDone": 
@@ -397,13 +397,13 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     break;
                 }
@@ -414,7 +414,7 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
@@ -431,7 +431,7 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
@@ -454,7 +454,7 @@ public class PlayerSlime extends PlayerGirl {
                 }
                 case "doggycumMSG1": {
                     this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                 }
             }

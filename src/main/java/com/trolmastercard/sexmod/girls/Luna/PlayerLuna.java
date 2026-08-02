@@ -12,8 +12,8 @@ import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -59,7 +59,7 @@ extends PlayerGirl {
 
     @Override
     public IRenderer getHandRenderer(int n) {
-        return new LunaLimb();
+        return new LunaHand();
     }
 
     @Override
@@ -147,7 +147,7 @@ extends PlayerGirl {
     void a(EntityPlayer entityPlayer, int n) {
         EntityPlayerSP entityPlayerSP;
         if (n == 0 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
-            fh_class313.b();
+            BlackScreenUI.b();
             entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
             HandlePlayerMovement.setMovementLock(false);
         }
@@ -427,7 +427,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "moan": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_MOAN));
                     break;
                 }
                 case "touch_boobs_introDone": {
@@ -463,15 +463,15 @@ extends PlayerGirl {
                 }
                 case "moanOrNya": {
                     if (Math.random() > 0.5) {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_MOAN));
                         break;
                     }
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     break;
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "touch_boobs_cumDone": {
@@ -499,7 +499,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "pounding": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_POUNDING));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     break;
                 }
                 case "sitting_introMSG1": {
@@ -517,12 +517,12 @@ extends PlayerGirl {
                 case "sitting_slowMSG1": {
                     if (this.getRNG().nextBoolean()) {
                         if (this.getRNG().nextBoolean()) {
-                            this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                            this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_HORNINYA));
                             break;
                         }
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_MOAN));
                     } else {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING));
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
@@ -530,9 +530,9 @@ extends PlayerGirl {
                 }
                 case "sitting_fastMSG1": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_HORNINYA));
                     } else {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_LUNA_MOAN));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_LUNA_MOAN));
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);

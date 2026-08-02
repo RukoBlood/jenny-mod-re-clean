@@ -5,7 +5,7 @@
  *  net.minecraftforge.items.IItemHandler
  *  net.minecraftforge.items.SlotItemHandler
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.companion.fighter;
 
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -18,20 +18,20 @@ import net.minecraft.item.ItemTool;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class GirlInventorySlot extends SlotItemHandler {
+public class EquipmentSlot extends SlotItemHandler {
     GirlEquipmentType slotType;
 
-    public GirlInventorySlot(GirlEquipmentType type, IItemHandler itemHandler, int index, int xPos, int yPos) {
+    public EquipmentSlot(GirlEquipmentType type, IItemHandler itemHandler, int index, int xPos, int yPos) {
         super(itemHandler, index, xPos, yPos);
         this.slotType = type;
     }
 
     public static boolean isSlotValidForItems(ItemStack itemStack, int n) {
-        return GirlInventorySlot.isItemValidForSlot(itemStack, GirlEquipmentType.a(n));
+        return EquipmentSlot.isItemValidForSlot(itemStack, GirlEquipmentType.a(n));
     }
 
     public boolean isItemValid(ItemStack itemStack) {
-        return GirlInventorySlot.isItemValidForSlot(itemStack, this.slotType);
+        return EquipmentSlot.isItemValidForSlot(itemStack, this.slotType);
     }
 
     static boolean isItemValidForSlot(ItemStack stack, GirlEquipmentType type) {

@@ -479,7 +479,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
                 if (!((GalathEntity)this.renderEntity).hasSwordEquipped) break;
                 GlStateManager.pushMatrix();
                 Tessellator.getInstance().draw();
-                GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, bone);
+                MatrixHelper.bindOpenGLToBone(MATRIX_STACK, bone);
                 GL11.glEnable(GL11.GL_LIGHTING);
                 GlStateManager.scale(1.5, 1.0, 2.0);
                 GlStateManager.translate(0.0, 0.0, 0.05);
@@ -651,7 +651,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
     void renderRibbonAtBone(BufferBuilder buffer, GeoBone bone, ProceduralRibbonGenerator.RibbonSettings settings) {
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, bone);
+        MatrixHelper.bindOpenGLToBone(MATRIX_STACK, bone);
         GlStateManager.disableCull();
         this.bindTexture(LINE);
         ProceduralRibbonGenerator.renderRibbon(buffer, Tessellator.getInstance(), mc, settings);

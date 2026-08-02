@@ -15,7 +15,7 @@ package com.trolmastercard.sexmod.proxy;
 import java.io.IOException;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.events.InteractionPrompt;
+import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.RenderHandler;
@@ -75,7 +75,7 @@ extends CommonProxy {
             e.printStackTrace();
         }
         IS_PRELOADING = false;
-        InteractionPrompt.instance = new InteractionPrompt();
+        SexPromptManager.INSTANCE = new SexPromptManager();
         ClientCommandHandler.instance.registerCommand((ICommand) WhitelistServerModelsCommand.a);
         ClientCommandHandler.instance.registerCommand((ICommand) SetModelCodeCommand.a);
         ClientCommandHandler.instance.registerCommand((ICommand) FutaCommand.b);

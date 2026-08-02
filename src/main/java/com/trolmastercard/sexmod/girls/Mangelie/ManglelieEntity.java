@@ -20,8 +20,8 @@ import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.Galath.GalathMobTarget;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
@@ -883,18 +883,14 @@ extends GirlEntity {
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                 }
             }
         });
         data.addAnimationController(this.actionController);
     }
 
-    private static Exception a(Exception exception) {
-        return exception;
-    }
-
-    public static class ArrowLogic {
+    public static class EventHandler {
         @SubscribeEvent
         public void CancelArrows(ProjectileImpactEvent.Arrow arrow) {
             RayTraceResult rayTraceResult = arrow.getRayTraceResult();
@@ -905,10 +901,6 @@ extends GirlEntity {
             if (rayTraceResult.entityHit instanceof GirlEntity) {
                 arrow.setCanceled(true);
             }
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

@@ -7,7 +7,7 @@
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.events;
+package com.trolmastercard.sexmod.gender_change;
 
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -25,81 +25,81 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 //w.class
-public class InteractionPrompt {
-    static public InteractionPrompt instance;
-    private ActiveRequest pendingRequest;
+public class SexPromptManager {
+    static public SexPromptManager INSTANCE;
+    private SexPrompt activePrompt;
 
-    public void onTickUpdate() {
-        if (InteractionPrompt.instance.pendingRequest == null) {
+    public void tick() {
+        if (SexPromptManager.INSTANCE.activePrompt == null) {
             return;
         }
-        InteractionPrompt.instance.pendingRequest.ticksLeft -= 1.0f;
-        if (InteractionPrompt.instance.pendingRequest.ticksLeft <= 0.0f) {
+        SexPromptManager.INSTANCE.activePrompt.timer -= 1.0f;
+        if (SexPromptManager.INSTANCE.activePrompt.timer <= 0.0f) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentString((TextFormatting.DARK_PURPLE) + I18n.format("genderswap.sexpromt.timeout", new Object[0])));
-            this.clearPendingRequest();
+            this.deletePrompt();
         }
     }
 
-    public ActiveRequest getPendingRequest() {
-        return InteractionPrompt.instance.pendingRequest;
+    public SexPrompt getActivePrompt() {
+        return SexPromptManager.INSTANCE.activePrompt;
     }
 
-    void clearPendingRequest() {
-        InteractionPrompt.instance.pendingRequest = null;
+    void deletePrompt() {
+        SexPromptManager.INSTANCE.activePrompt = null;
     }
 
-    public void openInteractivePrompt(@Nonnull ActiveRequest request) {
+    public void setNewActivePrompt(@Nonnull SexPrompt activePrompt) {
         World world = Minecraft.getMinecraft().player.world;
-        EntityPlayer receiver = world.getPlayerEntityByUUID(request.receiverUUID);
-        EntityPlayer sender = world.getPlayerEntityByUUID(request.senderUUID);
-        if (sender == null || receiver == null) {
+        EntityPlayer girl = world.getPlayerEntityByUUID(activePrompt.female);
+        EntityPlayer boy = world.getPlayerEntityByUUID(activePrompt.male);
+        if (boy == null || girl == null) {
             return;
         }
-        TextComponentString mainPromptMessage = new TextComponentString((Object)((Object)TextFormatting.LIGHT_PURPLE) + (request.isSenderInitiator ? sender.getName() : receiver.getName()) + " " + (Object)((Object)TextFormatting.DARK_PURPLE) + I18n.format("genderswap.sexpromt.playerxaskedfory", new Object[0]) + " " + (Object)((Object)TextFormatting.LIGHT_PURPLE) + I18n.format(request.animationId, new Object[0]));
+        TextComponentString mainPromptMessage = new TextComponentString((Object)((Object)TextFormatting.LIGHT_PURPLE) + (activePrompt.senderIsMale ? boy.getName() : girl.getName()) + " " + (Object)((Object)TextFormatting.DARK_PURPLE) + I18n.format("genderswap.sexpromt.playerxaskedfory", new Object[0]) + " " + (Object)((Object)TextFormatting.LIGHT_PURPLE) + I18n.format(activePrompt.action, new Object[0]));
         TextComponentString timeoutWarningMessage = new TextComponentString((Object)((Object)TextFormatting.DARK_PURPLE) + I18n.format("genderswap.sexpromt.autodeletion", new Object[0]));
         TextComponentString actionButtonsMessage = new TextComponentString((Object)((Object)TextFormatting.DARK_PURPLE) + "[ " + (Object)((Object)TextFormatting.LIGHT_PURPLE) + I18n.format("genderswap.sexpromt.accept", new Object[0]) + (Object)((Object)TextFormatting.DARK_PURPLE) + " | " + (Object)((Object)TextFormatting.LIGHT_PURPLE) + I18n.format("genderswap.sexpromt.decline", new Object[0]) + (Object)((Object)TextFormatting.DARK_PURPLE) + " ]");
-        receiver.sendMessage(mainPromptMessage);
-        receiver.sendMessage(timeoutWarningMessage);
-        receiver.sendMessage(actionButtonsMessage);
-        this.pendingRequest = request;
+        girl.sendMessage(mainPromptMessage);
+        girl.sendMessage(timeoutWarningMessage);
+        girl.sendMessage(actionButtonsMessage);
+        this.activePrompt = activePrompt;
     }
 
     @SubscribeEvent
-    public void onClientChat(ClientChatEvent event) {
-        if (instance.getPendingRequest() == null) {
+    public void answer(ClientChatEvent event) {
+        if (INSTANCE.getActivePrompt() == null) {
             return;
         }
         String inputMsg = event.getMessage().toLowerCase();
         if (inputMsg.equals(I18n.format("genderswap.sexpromt.accept", new Object[0]).toLowerCase())) {
-            ActiveRequest currentRequest = instance.getPendingRequest();
-            this.sendStartAnimationPacket(currentRequest.animationId, currentRequest.receiverUUID, currentRequest.senderUUID);
-            this.clearPendingRequest();
+            SexPrompt currentRequest = INSTANCE.getActivePrompt();
+            this.startSex(currentRequest.action, currentRequest.female, currentRequest.male);
+            this.deletePrompt();
             event.setCanceled(true);
         }
         if (inputMsg.equals(I18n.format("genderswap.sexpromt.decline", new Object[0]).toLowerCase())) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentString((Object)((Object)TextFormatting.DARK_PURPLE) + I18n.format("genderswap.sexpromt.declineconformation", new Object[0])));
-            this.clearPendingRequest();
+            this.deletePrompt();
             event.setCanceled(true);
         }
     }
 
-    void sendStartAnimationPacket(String animationID, UUID receiver, UUID sender) {
+    void startSex(String animationID, UUID receiver, UUID sender) {
         PackageHandler.INSTANCE.sendToServer((IMessage)new StartStandingSexAnimation(receiver, sender, animationID));
     }
 
-    public static class ActiveRequest {
-        public String animationId;
-        public UUID senderUUID;
-        public UUID receiverUUID;
-        public float ticksLeft;
-        boolean isSenderInitiator;
+    public static class SexPrompt {
+        public String action;
+        public UUID male;
+        public UUID female;
+        public float timer;
+        boolean senderIsMale;
 
-        public ActiveRequest(String animID, UUID sender, UUID receiver, boolean isSenderInit) {
-            this.animationId = animID;
-            this.senderUUID = sender;
-            this.receiverUUID = receiver;
-            this.ticksLeft = 1200.0f;
-            this.isSenderInitiator = isSenderInit;
+        public SexPrompt(String action, UUID male, UUID female, boolean senderIsMale) {
+            this.action = action;
+            this.male = male;
+            this.female = female;
+            this.timer = 1200.0f;
+            this.senderIsMale = senderIsMale;
         }
     }
 }

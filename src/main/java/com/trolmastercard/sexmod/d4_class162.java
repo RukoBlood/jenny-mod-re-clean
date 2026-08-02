@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.trolmastercard.sexmod.companion.fighter.EquipmentSlot;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -36,12 +37,12 @@ public class d4_class162 extends Container {
             this.b = em_class2582;
 
             this.d = new Slot[]{
-                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.WEAPON, iItemHandler, GirlInventorySlot.GirlEquipmentType.WEAPON.id, 31, 60),
-                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.BOW, iItemHandler, GirlInventorySlot.GirlEquipmentType.BOW.id, 50, 60),
-                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.HELMET, iItemHandler, GirlInventorySlot.GirlEquipmentType.HELMET.id, 72, 60),
-                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.CHEST_PLATE, iItemHandler, GirlInventorySlot.GirlEquipmentType.CHEST_PLATE.id, 91, 60),
-                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.PANTS, iItemHandler, GirlInventorySlot.GirlEquipmentType.PANTS.id, 110, 60),
-                    new GirlInventorySlot(GirlInventorySlot.GirlEquipmentType.SHOES, iItemHandler, GirlInventorySlot.GirlEquipmentType.SHOES.id, 129, 60)
+                    new EquipmentSlot(EquipmentSlot.GirlEquipmentType.WEAPON, iItemHandler, EquipmentSlot.GirlEquipmentType.WEAPON.id, 31, 60),
+                    new EquipmentSlot(EquipmentSlot.GirlEquipmentType.BOW, iItemHandler, EquipmentSlot.GirlEquipmentType.BOW.id, 50, 60),
+                    new EquipmentSlot(EquipmentSlot.GirlEquipmentType.HELMET, iItemHandler, EquipmentSlot.GirlEquipmentType.HELMET.id, 72, 60),
+                    new EquipmentSlot(EquipmentSlot.GirlEquipmentType.CHEST_PLATE, iItemHandler, EquipmentSlot.GirlEquipmentType.CHEST_PLATE.id, 91, 60),
+                    new EquipmentSlot(EquipmentSlot.GirlEquipmentType.PANTS, iItemHandler, EquipmentSlot.GirlEquipmentType.PANTS.id, 110, 60),
+                    new EquipmentSlot(EquipmentSlot.GirlEquipmentType.SHOES, iItemHandler, EquipmentSlot.GirlEquipmentType.SHOES.id, 129, 60)
             };
 
             ArrayList<Slot> arrayList = new ArrayList<Slot>();

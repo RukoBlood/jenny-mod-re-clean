@@ -30,7 +30,7 @@ public class LampRenderer extends GeoItemRenderer<LampItem> {
         super(new LampModel());
     }
 
-    ResourceLocation a() {
+    ResourceLocation getSkin() {
         if (b == null) {
             try {
                 URL uRL = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + Minecraft.getMinecraft().player.getPersistentID().toString().replace("-", ""));
@@ -96,7 +96,7 @@ public class LampRenderer extends GeoItemRenderer<LampItem> {
         MATRIX_STACK.rotate(geoBone);
         MATRIX_STACK.scale(geoBone);
         MATRIX_STACK.moveBackFromPivot(geoBone);
-        this.a.renderEngine.bindTexture(this.a());
+        this.a.renderEngine.bindTexture(this.getSkin());
         if (this.a(geoBone.getName())) {
             this.b(bufferBuilder, ap_class372, geoBone, f, f2, f3, f4);
         }

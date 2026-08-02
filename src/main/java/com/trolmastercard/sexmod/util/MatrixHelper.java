@@ -14,7 +14,7 @@ import org.lwjgl.BufferUtils;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.util.MatrixStack;
 
-public class GeckoMatrixBridge {
+public class MatrixHelper {
     final static public float[] MATRIX_ARRAY = new float[16];
     final static public FloatBuffer GL_MATRIX_BUFFER = BufferUtils.createFloatBuffer(16);
     final static private Matrix4f TEMP_MATRIX = new Matrix4f();
@@ -22,7 +22,7 @@ public class GeckoMatrixBridge {
     public static void bindOpenGLToBone(MatrixStack matrixStack, GeoBone geoBone) {
         TEMP_MATRIX.set(matrixStack.getModelMatrix());
         TEMP_MATRIX.transpose();
-        GeckoMatrixBridge.serializeMatrix(MATRIX_ARRAY, TEMP_MATRIX);
+        MatrixHelper.matrixToFloat(MATRIX_ARRAY, TEMP_MATRIX);
         GL_MATRIX_BUFFER.clear();
         GL_MATRIX_BUFFER.put(MATRIX_ARRAY);
         GL_MATRIX_BUFFER.flip();
@@ -34,7 +34,7 @@ public class GeckoMatrixBridge {
         );
     }
 
-    public static void serializeMatrix(float[] targetArray, Matrix4f matrix) {
+    public static void matrixToFloat(float[] targetArray, Matrix4f matrix) {
         targetArray[0] = matrix.m00;
         targetArray[1] = matrix.m01;
         targetArray[2] = matrix.m02;

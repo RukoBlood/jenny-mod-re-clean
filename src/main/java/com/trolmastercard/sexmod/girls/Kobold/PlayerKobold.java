@@ -18,8 +18,8 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -456,7 +456,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "paymentDone": {
@@ -618,7 +618,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "bjmoan": {
-                    this.b(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
+                    this.b(SoundsHandler.random(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
                     break;
                 }
                 case "blowjobStartbreath": {

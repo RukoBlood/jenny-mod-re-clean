@@ -7,7 +7,7 @@
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod.gui;
+package com.trolmastercard.sexmod.gui.Sex;
 
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.util.Reference;

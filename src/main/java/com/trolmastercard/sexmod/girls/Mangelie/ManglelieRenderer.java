@@ -261,7 +261,7 @@ extends GirlRenderer<ManglelieEntity> {
         ItemRenderer itemRenderer = Minecraft.getMinecraft().getItemRenderer();
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
+        MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
         GL11.glEnable(2896);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

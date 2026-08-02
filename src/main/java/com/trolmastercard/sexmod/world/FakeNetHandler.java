@@ -9,7 +9,7 @@ import net.minecraft.network.EnumPacketDirection;
 
 public class FakeNetHandler extends NetHandlerPlayClient {
     public FakeNetHandler(Minecraft mc) {
-        super(mc, mc.currentScreen, new FakeNetwork(EnumPacketDirection.CLIENTBOUND), mc.getSession().getProfile());
+        super(mc, mc.currentScreen, new FakeNetworkManager(EnumPacketDirection.CLIENTBOUND), mc.getSession().getProfile());
     }
 }
 

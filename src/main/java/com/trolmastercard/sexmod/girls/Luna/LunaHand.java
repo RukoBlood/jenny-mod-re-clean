@@ -9,10 +9,10 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class LunaLimb extends ModelBase implements IRenderer {
+public class LunaHand extends ModelBase implements IRenderer {
     final private ModelRenderer renderer;
 
-    public LunaLimb() {
+    public LunaHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.renderer = new ModelRenderer(this);

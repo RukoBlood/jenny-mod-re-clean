@@ -227,9 +227,5 @@ extends EntityLiving {
     public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
         this.world.removeEntity(this);
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

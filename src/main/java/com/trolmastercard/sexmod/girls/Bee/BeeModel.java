@@ -13,8 +13,7 @@ import software.bernie.geckolib3.core.processor.AnimationProcessor;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-public class BeeModel
-extends GirlModel<GirlEntity> {
+public class BeeModel extends GirlModel<GirlEntity> {
     @Override
     protected ResourceLocation[] getAnimationResource() {
         return new ResourceLocation[]{new ResourceLocation("sexmod", "geo/bee/bee.geo.json"), new ResourceLocation("sexmod", "geo/bee/armored.geo.json")};

@@ -365,7 +365,7 @@ public class FighterCompanion extends CompanionBase {
                 Fighter girl = (Fighter)event.getEntityLiving();
                 if (girl.downed) {
                     event.setCanceled(true);
-                } else if (girl.getHealth() - event.getAmount() < 0.0f && !((String) girl.getDataManager().get(Fighter.MASTER_UUID)).isEmpty()) {
+                } else if (girl.getHealth() - event.getAmount() < 0.0f && !((String) girl.getDataManager().get(Fighter.MASTER)).isEmpty()) {
                     girl.downed = true;
                     girl.setCurrentAction(Action.DOWNED);
                     event.setAmount(girl.getHealth() - 1.0f);

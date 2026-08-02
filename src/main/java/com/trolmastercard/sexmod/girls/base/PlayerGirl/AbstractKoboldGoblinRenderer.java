@@ -22,7 +22,7 @@ import javax.vecmath.Vector4f;
 import com.trolmastercard.sexmod.BoneDeformProcessor;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlRenderer;
-import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
+import com.trolmastercard.sexmod.util.MatrixHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -88,7 +88,7 @@ public abstract class AbstractKoboldGoblinRenderer<G extends AbstractGoblinKobol
         }
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
-        GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
+        MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
         GL11.glEnable(2896);
         GlStateManager.scale(scale, scale, scale);
         GlStateManager.rotate((float)rotation.x, 1.0f, 0.0f, 0.0f);

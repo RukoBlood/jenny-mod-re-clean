@@ -18,7 +18,7 @@ import java.io.IOException;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.util.Handlers.*;
-import com.trolmastercard.sexmod.world.WorldGeneration;
+import com.trolmastercard.sexmod.world.WorldGenStructure;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -29,8 +29,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy {
     public void preInitRegistries(FMLPreInitializationEvent fMLPreInitializationEvent) {
-        GameRegistry.registerWorldGenerator((IWorldGenerator) WorldGeneration.Generate(), 0);
-        EntityHandler.Register();
+        GameRegistry.registerWorldGenerator((IWorldGenerator) WorldGenStructure.Generate(), 0);
+        EntityInnit.Register();
         ItemHandler.RegisterItems();
     }
 

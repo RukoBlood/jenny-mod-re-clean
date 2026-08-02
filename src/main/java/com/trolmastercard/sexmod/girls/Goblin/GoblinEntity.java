@@ -19,7 +19,6 @@ package com.trolmastercard.sexmod.girls.Goblin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +37,9 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntit
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.gui.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.ea_class235;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
@@ -236,14 +235,14 @@ implements ai_class30 {
 
     public void void_c(UUID uUID) {
         this.aY = 0;
-        fh_class313.b();
+        BlackScreenUI.b();
         HandlePlayerMovement.setMovementLock(false);
         this.setInteractionPlayerUUID(uUID);
     }
 
     public void void_b(UUID uUID) {
         this.az = 0;
-        fh_class313.b();
+        BlackScreenUI.b();
         HandlePlayerMovement.setMovementLock(false);
         this.setInteractionPlayerUUID(uUID);
     }
@@ -1829,7 +1828,7 @@ implements ai_class30 {
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "paizuriCumDone": {
@@ -1988,21 +1987,17 @@ implements ai_class30 {
         data.addAnimationController(this.eyesController);
     }
 
-    static EntityDataManager access$000(GoblinEntity e3_class2192) {
-        return e3_class2192.entityDataManager;
+    static EntityDataManager access$000(GoblinEntity goblinEntity) {
+        return goblinEntity.entityDataManager;
     }
 
-    private static Exception a(Exception exception) {
-        return exception;
-    }
-
-    public static class c_inner222 {
+    public static class EventHandler {
         static Minecraft a = null;
 
         @SideOnly(value=Side.CLIENT)
         @SubscribeEvent
-        public void a(TickEvent.ClientTickEvent clientTickEvent) {
-            if (clientTickEvent.phase == TickEvent.Phase.START) {
+        public void a(TickEvent.ClientTickEvent event) {
+            if (event.phase == TickEvent.Phase.START) {
                 return;
             }
             ArrayList<GoblinEntity> arrayList = new ArrayList<GoblinEntity>();
@@ -2022,10 +2017,10 @@ implements ai_class30 {
         }
 
         @SubscribeEvent
-        public void a(PlayerEvent.PlayerChangedDimensionEvent playerChangedDimensionEvent) {
-            EntityPlayer entityPlayer = playerChangedDimensionEvent.player;
+        public void a(PlayerEvent.PlayerChangedDimensionEvent event) {
+            EntityPlayer entityPlayer = event.player;
             UUID uUID = entityPlayer.getPersistentID();
-            int n = playerChangedDimensionEvent.toDim;
+            int n = event.toDim;
             World world = entityPlayer.world;
             GoblinEntity e3_class2192 = null;
             for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
@@ -2078,7 +2073,7 @@ implements ai_class30 {
             if (a == null) {
                 a = Minecraft.getMinecraft();
             }
-            if (c_inner222.a.currentScreen instanceof ea_class235) {
+            if (EventHandler.a.currentScreen instanceof ea_class235) {
                 return;
             }
             if (!ClientProxy.keyBindings[0].isPressed()) {
@@ -2100,10 +2095,6 @@ implements ai_class30 {
                 return;
             }
             Minecraft.getMinecraft().displayGuiScreen(new ea_class235(em_class2582));
-        }
-
-        private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-            return concurrentModificationException;
         }
     }
 }

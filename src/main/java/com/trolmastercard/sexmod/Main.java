@@ -34,7 +34,7 @@ import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.CommonProxy;
-import com.trolmastercard.sexmod.world.WorldGeneration;
+import com.trolmastercard.sexmod.world.WorldGenStructure;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -87,7 +87,7 @@ public class Main {
         KoboldManager.clear();
         KoboldEntity.aY.clear();
         GalathMangTracker.clear();
-        WorldGeneration.Generate().clear();
+        WorldGenStructure.Generate().clear();
         GirlID.ClearGirlList();
         CustomModel.isLoaded = false;
         bj_class84.a();
@@ -157,7 +157,7 @@ public class Main {
             object2 = new FileWriter(config);
             ((Writer)object2).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
             ((OutputStreamWriter)object2).close();
-            WorldGeneration.i = true;
+            WorldGenStructure.i = true;
             GirlModel.enableModelCache = false;
             PlayerGirl.ag = true;
             return;
@@ -165,7 +165,7 @@ public class Main {
         int n = ((String)object).indexOf("shouldGenBuildings");
         int n2 = ((String)object).indexOf("shouldLoadOtherSkins");
         int n3 = ((String)object).indexOf("allowFlying");
-        WorldGeneration.i = 't' == ((String)object).charAt(n + 20);
+        WorldGenStructure.i = 't' == ((String)object).charAt(n + 20);
         GirlModel.enableModelCache = 't' == ((String)object).charAt(n2 + 22);
         PlayerGirl.ag = 't' == ((String)object).charAt(n3 + 13);
     }

@@ -12,8 +12,8 @@ import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.gui.SexUI;
-import com.trolmastercard.sexmod.gui.fh_class313;
+import com.trolmastercard.sexmod.gui.Sex.SexUI;
+import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
@@ -209,7 +209,7 @@ extends PlayerGirl {
                 }
                 case "blackscreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    fh_class313.b();
+                    BlackScreenUI.b();
                     break;
                 }
                 case "deepthroat_prepareDone": {
@@ -222,7 +222,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_fastMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_BJMOAN));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_BJMOAN));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     SexUI.addCumPercentage(0.04f);
@@ -238,15 +238,15 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_slowMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.init();
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "deepthroat_cumMSG1": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_CUMINFLATION), 1.5f);
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 1.5f);
                     break;
                 }
                 case "cowgirl_cumDone": 
@@ -257,7 +257,7 @@ extends PlayerGirl {
                 }
                 case "deepthroat_normal_prepareMSG1": {
                     this.sendLocalClientMessage(I18n.format("allie.dialogue.alright", new Object[0]));
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_PLOB));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_PLOB));
                     break;
                 }
                 case "giggle": {
@@ -273,7 +273,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "mmm": {
-                    this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_MMM));
+                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_MMM));
                     break;
                 }
                 case "slide": {
@@ -282,7 +282,7 @@ extends PlayerGirl {
                 }
                 case "slowMoan": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_AHH));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_AHH));
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
@@ -300,7 +300,7 @@ extends PlayerGirl {
                         SexUI.addCumPercentage(0.04f);
                     }
                     if (!this.ap) {
-                        this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.GIRLS_ALLIE_MOAN));
+                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_MOAN));
                         this.ap = true;
                         break;
                     }

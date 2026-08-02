@@ -79,7 +79,7 @@ public abstract class CompanionBase extends EntityAIBase {
         this.navigator.clearPath();
         this.CurState = Mode.IDLE;
         this.entity.setCurrentAction(Action.NULL);
-        this.dataManager.set(GirlEntity.MASTER_UUID, "");
+        this.dataManager.set(GirlEntity.MASTER, "");
         this.navigator = null;
         this.dataManager = null;
         this.master = null;
@@ -87,12 +87,12 @@ public abstract class CompanionBase extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        return !this.entity.getDataManager().get(GirlEntity.MASTER_UUID).isEmpty();
+        return !this.entity.getDataManager().get(GirlEntity.MASTER).isEmpty();
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        String string = this.dataManager.get(GirlEntity.MASTER_UUID);
+        String string = this.dataManager.get(GirlEntity.MASTER);
         return !string.isEmpty() && this.entity.world.getPlayerEntityByUUID(UUID.fromString(string)) != null;
     }
 
@@ -100,7 +100,7 @@ public abstract class CompanionBase extends EntityAIBase {
     public void startExecuting() {
         this.navigator = this.entity.getNavigator();
         this.dataManager = this.entity.getDataManager();
-        this.master = this.entity.world.getPlayerEntityByUUID(UUID.fromString(this.dataManager.get(GirlEntity.MASTER_UUID)));
+        this.master = this.entity.world.getPlayerEntityByUUID(UUID.fromString(this.dataManager.get(GirlEntity.MASTER)));
     }
 
     @Override
@@ -119,7 +119,7 @@ public abstract class CompanionBase extends EntityAIBase {
     @SubscribeEvent
     public void onGirlDeath(LivingDeathEvent event) {
         GirlEntity girl;
-        if (event.getEntityLiving() instanceof GirlEntity && !(girl = (GirlEntity) event.getEntityLiving()).getDataManager().get(GirlEntity.MASTER_UUID).isEmpty()) {
+        if (event.getEntityLiving() instanceof GirlEntity && !(girl = (GirlEntity) event.getEntityLiving()).getDataManager().get(GirlEntity.MASTER).isEmpty()) {
             event.setCanceled(true);
         }
     }
