@@ -9,10 +9,10 @@ package com.trolmastercard.sexmod.girls.Mangelie;
 import javax.annotation.Nonnull;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlModel;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;

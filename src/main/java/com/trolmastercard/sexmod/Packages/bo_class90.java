@@ -12,7 +12,7 @@
 package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.Main;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayerMP;

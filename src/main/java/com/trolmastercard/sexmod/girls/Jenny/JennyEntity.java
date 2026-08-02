@@ -14,8 +14,9 @@ import com.trolmastercard.sexmod.Packages.SendGirlToSex;
 import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -71,8 +72,8 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         this.setSize(0.49f, 1.95f);
         this.P = 140;
         this.O = 50;
-        this.K = 140;
-        this.V = new Vec3d(0.0, -0.029999997854232782, -0.2);
+        this.holdBowRot = 140;
+        this.swordOffsetStab = new Vec3d(0.0, -0.029999997854232782, -0.2);
     }
 
     public static JennyEntity a(World world) {
@@ -134,7 +135,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.playerCameraOffsetPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)object);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)object);
         }
         if (this.Z) {
             if (this.getPositionVector().distanceTo(this.getTargetPosition()) < 0.6 || this.ad > 200) {
@@ -199,7 +200,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.getID() == null && (!this.isMasterAssigned() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.getID() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
                 GirlEntity.openInventoryGui(player, this, stringArray, true);
@@ -212,20 +213,20 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    public void a(String string, UUID uUID) {
-        super.a(string, uUID);
+    public void doAction(String string, UUID player) {
+        super.doAction(string, player);
         if ("action.names.blowjob".equals(string)) {
             this.changeDataParameterFromClient("animationFollowUp", "blowjob");
-            this.a(true, uUID);
+            this.a(true, player);
         } else if ("action.names.boobjob".equals(string)) {
             this.changeDataParameterFromClient("animationFollowUp", "boobjob");
-            this.a(true, uUID);
+            this.a(true, player);
         } else if ("action.names.doggy".equals(string)) {
             this.changeDataParameterFromClient("animationFollowUp", "doggy");
-            this.a(true, uUID);
+            this.a(true, player);
         } else if ("action.names.strip".equals(string)) {
             this.changeDataParameterFromClient("animationFollowUp", "strip");
-            this.a(true, uUID);
+            this.a(true, player);
         } else if ("action.names.dressup".equals(string)) {
             this.setCurrentAction(Action.STRIP);
         }
@@ -243,8 +244,8 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[2]);
             this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
         } else {
-            this.tasks.removeTask(this.avoidWaterGoal);
-            this.tasks.removeTask(this.followPlayerGoal);
+            this.tasks.removeTask(this.aiWander);
+            this.tasks.removeTask(this.aiLookAtPlayer);
             Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
             Vec3d[][] vec3dArrayArray = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.5), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(0.5, 0.0, 1.5), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(-0.5, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0)}, {new Vec3d(1.5, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0)}};
@@ -348,10 +349,10 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public void ResetNPCTasks() {
-        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.followPlayerGoal);
-        this.tasks.addTask(5, this.avoidWaterGoal);
+        this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
+        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.tasks.addTask(5, this.aiWander);
     }
 
     @Override
@@ -382,7 +383,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 this.resetCameraAndPhysics();
                 if (this.world.isRemote) {
-                    PackageHandler.networkWrapper.sendToServer(new SendGirlToSex(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
                     break;
                 }
                 this.resetGirlState();
@@ -397,7 +398,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return null;
         }
@@ -494,7 +495,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.jenny.attack" + this.S, false, event);
+                        this.createAnimation("animation.jenny.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {
@@ -560,8 +561,8 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "attackDone": {
                     this.setCurrentAction(Action.NULL);
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "becomeNude": {
@@ -792,7 +793,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "doggyGoOnBedDone": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
                     this.setCurrentAction(Action.WAITDOGGY);
                     break;
                 }
@@ -921,7 +922,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "boobjob_camera": {

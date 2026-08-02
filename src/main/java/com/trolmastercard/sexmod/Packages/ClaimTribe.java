@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
@@ -70,7 +70,7 @@ implements IMessage {
                 List<KoboldEntity> list = KoboldManager.getTribeMembersList(msg.d);
                 EyeAndKoboldColor eyeAndKoboldColor_ = null;
                 for (KoboldEntity object2 : list) {
-                    if (object2.isMasterAssigned()) continue;
+                    if (object2.hasMaster()) continue;
                     EntityDataManager entityDataManager = object2.getDataManager();
                     entityDataManager.set(GirlEntity.MASTER_UUID, msg.a.toString());
                     entityDataManager.set(KoboldEntity.aU, msg.b);

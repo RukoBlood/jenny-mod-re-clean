@@ -11,7 +11,7 @@ package com.trolmastercard.sexmod;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -52,7 +52,7 @@ public class InHandMapRenderer {
             return;
         }
         int activeHandIndex = state.getOutfitIndex();
-        this.handModelRenderer = state.getLimbRenderer(activeHandIndex);
+        this.handModelRenderer = state.getHandRenderer(activeHandIndex);
         this.texture = new ResourceLocation("sexmod", state.HandTexture(activeHandIndex));
         this.handColor = state.net_minecraft_util_math_Vec3i_b(activeHandIndex);
         if (this.handModelRenderer == null) {

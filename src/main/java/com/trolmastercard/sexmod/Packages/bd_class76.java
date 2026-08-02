@@ -11,7 +11,7 @@
 package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.gui.b5_class66;
-import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
 import java.util.Map;

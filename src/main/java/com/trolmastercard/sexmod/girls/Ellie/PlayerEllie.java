@@ -14,9 +14,9 @@ import java.util.UUID;
 import com.trolmastercard.sexmod.Packages.*;
 import com.trolmastercard.sexmod.Packages.SendGirlToSex;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -79,7 +79,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
+    public IRenderer getHandRenderer(int n) {
         return new EllieLimb();
     }
 
@@ -97,19 +97,19 @@ extends PlayerGirl {
     }
 
     @Override
-    public void a(String string, UUID uUID) {
-        if ("action.names.cowgirl".equals(string)) {
+    public void doAction(String actionName, UUID player) {
+        if ("action.names.cowgirl".equals(actionName)) {
             this.changeDataParameterFromClient("animationFollowUp", "Cowgirl");
             return;
         }
-        if ("action.names.missionary".equals(string)) {
+        if ("action.names.missionary".equals(actionName)) {
             this.changeDataParameterFromClient("animationFollowUp", "Missionary");
             return;
         }
-        if (!((Optional)this.entityDataManager.get(ai)).isPresent()) {
+        if (!((Optional)this.entityDataManager.get(OWNER)).isPresent()) {
             return;
         }
-        PackageHandler.networkWrapper.sendToServer((IMessage)new SexPrompt(string, uUID, (UUID)((Optional)this.entityDataManager.get(ai)).get(), this.guiPending));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new SexPrompt(actionName, player, (UUID)((Optional)this.entityDataManager.get(OWNER)).get(), this.guiPending));
         this.guiPending = true;
     }
 
@@ -183,9 +183,9 @@ extends PlayerGirl {
             this.entityDataManager.set(GirlEntity.GIRL_HAND_STATES, "");
             this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)((Optional)this.entityDataManager.get(ai)).get());
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
+            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)((Optional)this.entityDataManager.get(OWNER)).get());
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayerMP.capabilities.isFlying = true;
             entityPlayer.capabilities.isFlying = true;
@@ -216,7 +216,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
@@ -311,7 +311,7 @@ extends PlayerGirl {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.ellie.attack" + this.S, false, event);
+                        this.createAnimation("animation.ellie.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {
@@ -406,7 +406,7 @@ extends PlayerGirl {
                 case "hugMSG1": {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     if (!entityPlayerSP.getPersistentID().equals(this.getID()) && !entityPlayerSP.getUniqueID().equals(this.getID())) break;
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getUniqueID().toString(), entityPlayerSP.getPositionVector(), entityPlayerSP.rotationYaw - 80.0f, entityPlayerSP.rotationPitch));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getUniqueID().toString(), entityPlayerSP.getPositionVector(), entityPlayerSP.rotationYaw - 80.0f, entityPlayerSP.rotationPitch));
                     break;
                 }
                 case "hugMSG2": {
@@ -452,9 +452,9 @@ extends PlayerGirl {
                     vec3d = vec3d.add(-Math.sin((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279, 0.0, Math.cos((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279);
                     vec3d = vec3d.add(-Math.sin((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579, 0.0, Math.cos((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579);
                     String string = vec3d.x + "f" + vec3d.y + "f" + vec3d.z + "f";
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new ChangeDataParameter(this.girlID(), "targetPos", string));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girlID(), "targetPos", string));
                     this.resetCameraAndPhysics();
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
                     this.setCurrentAction(Action.NULL);
                     break;
                 }
@@ -566,12 +566,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "openSexUi": {
@@ -634,18 +634,18 @@ extends PlayerGirl {
                     break;
                 }
                 case "lipsound": {
-                    this.a(SoundsHandler.GIRLS_ALLIE_LIPSOUND);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_ALLIE_LIPSOUND);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "cum": {
                     this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
-                    this.a(SoundsHandler.MISC_POUNDING);
+                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "pound": {
-                    this.a(SoundsHandler.MISC_POUNDING);
+                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;

@@ -18,8 +18,9 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.*;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
@@ -112,13 +113,13 @@ implements bh_class82,
         super(world);
         this.P = 230;
         this.O = 150;
-        this.K = 320;
-        this.V = new Vec3d(0.0, -0.05999999718368053, 0.10000001192092894);
-        if (this.items.getStackInSlot(0) == ItemStack.EMPTY) {
-            this.items.setStackInSlot(0, new ItemStack(Items.IRON_AXE));
+        this.holdBowRot = 320;
+        this.swordOffsetStab = new Vec3d(0.0, -0.05999999718368053, 0.10000001192092894);
+        if (this.inventory.getStackInSlot(0) == ItemStack.EMPTY) {
+            this.inventory.setStackInSlot(0, new ItemStack(Items.IRON_AXE));
         }
-        if (this.items.getStackInSlot(6) == ItemStack.EMPTY) {
-            this.items.setStackInSlot(6, new ItemStack(Items.FISHING_ROD));
+        if (this.inventory.getStackInSlot(6) == ItemStack.EMPTY) {
+            this.inventory.setStackInSlot(6, new ItemStack(Items.FISHING_ROD));
         }
     }
 
@@ -205,16 +206,16 @@ implements bh_class82,
 
     @Override
     public void ResetNPCTasks() {
-        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.followPlayerGoal);
-        this.tasks.addTask(5, this.avoidWaterGoal);
+        this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
+        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.tasks.addTask(5, this.aiWander);
     }
 
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        if (!this.isMasterAssigned()) {
+        if (!this.hasMaster()) {
             this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1.0);
         } else {
             this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5);
@@ -260,7 +261,7 @@ implements bh_class82,
             }
         }
         this.void_d();
-        this.entityDataManager.set(az, this.items.getStackInSlot(6));
+        this.entityDataManager.set(az, this.inventory.getStackInSlot(6));
     }
 
     void void_d() {
@@ -329,7 +330,7 @@ implements bh_class82,
         BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
         if (blockPos == null) {
             this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
-            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
+            PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
         } else {
             Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
@@ -389,13 +390,13 @@ implements bh_class82,
         if (this.getID() != null) {
             return;
         }
-        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.followPlayerGoal);
-        if (this.isMasterAssigned()) {
+        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.aiLookAtPlayer);
+        if (this.hasMaster()) {
             return;
         }
-        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.tasks.addTask(5, this.avoidWaterGoal);
+        this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
+        this.tasks.addTask(5, this.aiWander);
     }
 
     public void void_h() {
@@ -408,7 +409,7 @@ implements bh_class82,
 
     void void_i() {
         Object object;
-        if (this.isMasterAssigned() || this.getID() != null || this.ar) {
+        if (this.hasMaster() || this.getID() != null || this.ar) {
             if (this.entityDataManager.get(af).booleanValue()) {
                 this.void_q();
             }
@@ -437,13 +438,13 @@ implements bh_class82,
         if (this.ai != null && this.au == null && this.getNavigator().getPath() == null && !this.inWater && this.onGround) {
             object = this.world.rayTraceBlocks(this.getPositionVector().add(0.0, this.getEyeHeight(), 0.0), new Vec3d(this.ai.getX(), this.ai.getY(), this.ai.getZ()), true);
             this.setSilent(true);
-            if (this.avoidWaterGoal != null) {
-                this.tasks.removeTask(this.avoidWaterGoal);
-                this.avoidWaterGoal = null;
+            if (this.aiWander != null) {
+                this.tasks.removeTask(this.aiWander);
+                this.aiWander = null;
             }
-            if (this.followPlayerGoal != null) {
-                this.tasks.removeTask(this.followPlayerGoal);
-                this.followPlayerGoal = null;
+            if (this.aiLookAtPlayer != null) {
+                this.tasks.removeTask(this.aiLookAtPlayer);
+                this.aiLookAtPlayer = null;
             }
             if (this.currentAction() == Action.NULL) {
                 this.setCurrentAction(Action.FISHING_START);
@@ -548,24 +549,24 @@ implements bh_class82,
     }
 
     @Override
-    public void a(String string, UUID uUID) {
-        super.a(string, uUID);
+    public void doAction(String string, UUID player) {
+        super.doAction(string, player);
         if ("action.names.touchboobs".equals(string)) {
-            this.setInteractionPlayerUUID(uUID);
-            this.triggerActionSync(true, true, uUID);
+            this.setInteractionPlayerUUID(player);
+            this.triggerActionSync(true, true, player);
             this.changeDataParameterFromClient("animationFollowUp", "touch_boobs");
             this.changeDataParameterFromClient("currentModel", "0");
             HandlePlayerMovement.setMovementLock(false);
         }
         if ("action.names.sex".equals(string)) {
-            this.setInteractionPlayerUUID(uUID);
-            this.triggerActionSync(true, true, uUID);
+            this.setInteractionPlayerUUID(player);
+            this.triggerActionSync(true, true, player);
             this.changeDataParameterFromClient("animationFollowUp", "sex");
             HandlePlayerMovement.setMovementLock(false);
         }
         if ("action.names.headpat".equals(string)) {
-            this.setInteractionPlayerUUID(uUID);
-            this.triggerActionSync(true, true, uUID);
+            this.setInteractionPlayerUUID(player);
+            this.triggerActionSync(true, true, player);
             HandlePlayerMovement.setMovementLock(false);
             this.changeDataParameterFromClient("animationFollowUp", "headpat");
         }
@@ -608,8 +609,8 @@ implements bh_class82,
                 if (this.currentAction() != Action.PAYMENT) {
                     this.setCurrentAction(Action.PAYMENT);
                 } else {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new ResetGirl(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new ResetGirl(this.girlID()));
                 }
                 return;
             }
@@ -650,7 +651,7 @@ implements bh_class82,
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
@@ -691,7 +692,7 @@ implements bh_class82,
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.cat.attack" + this.S, false, event);
+                        this.createAnimation("animation.cat.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case RIDE: 
@@ -789,8 +790,8 @@ implements bh_class82,
                 }
                 case "attackDone": {
                     this.setCurrentAction(Action.NULL);
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "idleDone": {
@@ -802,7 +803,7 @@ implements bh_class82,
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "start_fishingDone": {
@@ -812,7 +813,7 @@ implements bh_class82,
                 }
                 case "rod_shoot": {
                     if (!this.getClosestPlayerID()) break;
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new CatActivateFishing(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new CatActivateFishing(this.girlID()));
                     break;
                 }
                 case "eat": {
@@ -831,7 +832,7 @@ implements bh_class82,
                 }
                 case "eatingDone": {
                     if (this.getClosestPlayerID()) {
-                        PackageHandler.networkWrapper.sendToServer((IMessage)new CatEatingDone(this.girlID()));
+                        PackageHandler.INSTANCE.sendToServer((IMessage)new CatEatingDone(this.girlID()));
                         this.setCurrentAction(Action.NULL);
                     }
                     this.aa = 1.0f;
@@ -840,7 +841,7 @@ implements bh_class82,
                 }
                 case "throw_away": {
                     if (this.getClosestPlayerID()) {
-                        PackageHandler.networkWrapper.sendToServer((IMessage)new CatThrowAwayItem(this.girlID()));
+                        PackageHandler.INSTANCE.sendToServer((IMessage)new CatThrowAwayItem(this.girlID()));
                     }
                     this.aa = 1.0f;
                     this.Z = 0.0f;

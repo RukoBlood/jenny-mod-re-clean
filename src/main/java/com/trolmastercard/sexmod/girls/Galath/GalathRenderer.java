@@ -13,9 +13,9 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieRenderer;
 import com.trolmastercard.sexmod.util.*;

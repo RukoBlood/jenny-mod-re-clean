@@ -25,9 +25,9 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
@@ -96,7 +96,7 @@ implements ai_class30 {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
+    public IRenderer getHandRenderer(int n) {
         return new KoboldLimb();
     }
 
@@ -209,7 +209,7 @@ implements ai_class30 {
         if (this.world.isRemote) {
             return;
         }
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer2);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer2);
     }
 
     @Override
@@ -537,7 +537,7 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return;
         }
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -692,7 +692,7 @@ implements ai_class30 {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
@@ -772,7 +772,7 @@ implements ai_class30 {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.goblin.attack" + this.S, false, event);
+                        this.createAnimation("animation.goblin.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {
@@ -881,33 +881,33 @@ implements ai_class30 {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "catchEh": {
                     this.sendLocalClientMessage("ehh..");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchAkward": {
                     this.sendLocalClientMessage("awkward..");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchWell": {
                     this.sendLocalClientMessage("well...");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchRather": {
                     this.sendLocalClientMessage("would you rather have this stupid... thing?");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchMe": {
                     this.sendLocalClientMessage("...or use me?~");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchDone": {
@@ -924,17 +924,17 @@ implements ai_class30 {
                 }
                 case "paizuriChoice": {
                     this.sendLocalClientMessage("good choice!~");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriBoth": {
                     this.sendLocalClientMessage("...for both of us!");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizruiUse": {
                     this.sendLocalClientMessage("now use me like a fuck toy!~");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriSwitch": {
@@ -947,7 +947,7 @@ implements ai_class30 {
                     break;
                 }
                 case "pound": {
-                    this.a(SoundsHandler.MISC_POUNDING);
+                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
@@ -1013,17 +1013,17 @@ implements ai_class30 {
                         minecraft.gameSettings.thirdPersonView = 0;
                     }
                     this.sendLocalClientMessage("hmm...");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingFound": {
                     this.sendLocalClientMessage("guess we found a worthy breeding partner!");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingEnough": {
                     this.sendLocalClientMessage("Eh.. go pin him down, before he runs off!");
-                    this.a(SoundsHandler.MISC_PLOB);
+                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingCam2": {

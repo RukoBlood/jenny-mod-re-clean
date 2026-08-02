@@ -9,8 +9,8 @@ package com.trolmastercard.sexmod.girls.Slime;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
@@ -253,7 +253,7 @@ public class SlimeEntity extends GirlEntity {
         this.noClip = true;
         player.setNoGravity(true);
         player.noClip = true;
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
         this.setInteractionPlayerUUID(player.getPersistentID());
         player.rotationYaw = this.getYawRotation();
 
@@ -346,7 +346,7 @@ public class SlimeEntity extends GirlEntity {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return null;
         }

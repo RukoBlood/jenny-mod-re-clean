@@ -6,7 +6,7 @@ package com.trolmastercard.sexmod;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.interfaces.IPositionProvider;
 import com.trolmastercard.sexmod.util.interfaces.ITargetProvider;

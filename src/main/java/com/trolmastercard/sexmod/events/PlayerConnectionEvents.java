@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.Packages.InformOfOwnership;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SendBlocks;
@@ -23,11 +23,11 @@ import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.girls.Allie.LampItem;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.Bia.PlayerBia;
 import com.trolmastercard.sexmod.girls.Ellie.PlayerEllie;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -56,8 +56,8 @@ public class PlayerConnectionEvents {
             playerMP.capabilities.isFlying = false;
         }
 
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), playerMP);
-        PackageHandler.networkWrapper.sendTo((IMessage)new InformOfOwnership(GalathMangTracker.c(playerMP.getPersistentID())), playerMP);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), playerMP);
+        PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(GalathMangTracker.c(playerMP.getPersistentID())), playerMP);
 
         for (ItemStack stack : playerMP.inventory.mainInventory) {
             if (stack.getItem() != LampItem.LAMP_ITEM || !stack.hasTagCompound()) continue;
@@ -67,7 +67,7 @@ public class PlayerConnectionEvents {
         UUID tribeID = KoboldManager.findTribeIdWith(playerMP.getPersistentID());
         if (tribeID != null) {
             HashSet<BlockPos> tribeBlocks = KoboldManager.getAllTribeBlocks(tribeID);
-            PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(tribeBlocks, true), playerMP);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(tribeBlocks, true), playerMP);
         }
 
         PlayerGirl.cleanupGlobalRegistry();
@@ -138,7 +138,7 @@ public class PlayerConnectionEvents {
             }
             if (!(girl instanceof PlayerGirl) || !((PlayerGirl)girl).getOwnerUserUUID().equals(player.getPersistentID()) || girl.getID() == null) continue;
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP)event.player.world.getPlayerEntityByUUID(girl.getID());
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
             ResetGirl.a_inner422.a(entityPlayerMP);
             player.setInvisible(false);
             girl.setInteractionPlayerUUID((UUID)null);

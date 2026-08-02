@@ -19,12 +19,12 @@ package com.trolmastercard.sexmod.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.world.WorldUtils;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Allie.PlayerAllie;
 import com.trolmastercard.sexmod.girls.Bee.PlayerBee;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.Slime.PlayerSlime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.InformOfOwnership;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -109,7 +109,7 @@ extends WorldSavedData {
         f__class2972.world.removeEntity(f__class2972);
         h.a(uUID);
         if (entityPlayer != null) {
-            PackageHandler.networkWrapper.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
         }
     }
 
@@ -200,7 +200,7 @@ extends WorldSavedData {
         }
         for (EntityPlayer entityPlayer : arrayList) {
             h.a(entityPlayer.getPersistentID());
-            PackageHandler.networkWrapper.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
         }
     }
 

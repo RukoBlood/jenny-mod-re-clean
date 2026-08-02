@@ -9,9 +9,9 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 import net.minecraft.entity.Entity;

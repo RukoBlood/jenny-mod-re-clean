@@ -61,7 +61,7 @@ implements IMessage {
                 if (hashSet.isEmpty()) {
                     return;
                 }
-                PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, false), messageContext.getServerHandler().player);
+                PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, false), messageContext.getServerHandler().player);
             });
             return null;
         }

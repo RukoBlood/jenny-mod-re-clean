@@ -13,7 +13,7 @@ package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.girls.Bee.BeeEntity;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -61,7 +61,7 @@ implements IMessage {
                 for (GirlEntity em_class2582 : arrayList) {
                     EntityPlayerMP entityPlayerMP;
                     BeeEntity fz_class3362;
-                    if (em_class2582.world.isRemote || !(em_class2582 instanceof BeeEntity) || !(fz_class3362 = (BeeEntity)em_class2582).getDataManager().get(BeeEntity.M).booleanValue() || (entityPlayerMP = (EntityPlayerMP)fz_class3362.world.getPlayerEntityByUUID(f3_class2872.c)) == null) continue;
+                    if (em_class2582.world.isRemote || !(em_class2582 instanceof BeeEntity) || !(fz_class3362 = (BeeEntity)em_class2582).getDataManager().get(BeeEntity.IS_TAMED).booleanValue() || (entityPlayerMP = (EntityPlayerMP)fz_class3362.world.getPlayerEntityByUUID(f3_class2872.c)) == null) continue;
                     entityPlayerMP.openGui(Main.instance, 1, em_class2582.world, em_class2582.getPosition().getX(), em_class2582.getPosition().getY(), em_class2582.getPosition().getZ());
                     return;
                 }

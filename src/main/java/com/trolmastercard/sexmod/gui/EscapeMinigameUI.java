@@ -97,7 +97,7 @@ public class EscapeMinigameUI extends Gui {
             return;
         }
         hasSentReleasePacket = true;
-        PackageHandler.networkWrapper.sendToServer((IMessage)new GalathBackOffRape());
+        PackageHandler.INSTANCE.sendToServer((IMessage)new GalathBackOffRape());
         EscapeMinigameUI.StartClosingAnimation();
     }
 

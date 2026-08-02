@@ -89,7 +89,7 @@ public class Mine implements IMessage {
                 }
                 KoboldTaskInfo bs_class972 = new KoboldTaskInfo(e6_class2262.a, KoboldTaskInfo.KoboldTask.MINE, hashSet, e6_class2262.b);
                 KoboldManager.addTaskToTribe(uUID, bs_class972);
-                PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
+                PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
             });
             return null;
         }

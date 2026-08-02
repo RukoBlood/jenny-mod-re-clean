@@ -5,7 +5,7 @@
  *  net.minecraftforge.fml.common.FMLCommonHandler
  *  org.apache.commons.io.FileUtils
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -23,15 +23,15 @@ import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import net.minecraft.client.resources.I18n;
 
-public class AdultContentWarning extends JFrame {
+public class PornWarningWindow extends JFrame {
     private final JPanel panel;
-    static AdultContentWarning window;
+    static PornWarningWindow window;
     static public boolean isAdult;
 
-    public static void ShowWarning() {
+    public static void Launch() {
         EventQueue.invokeLater(() -> {
             try {
-                window = new AdultContentWarning();
+                window = new PornWarningWindow();
                 window.setVisible(true);
                 window.requestFocus();
             } catch (Exception exception) {
@@ -40,7 +40,7 @@ public class AdultContentWarning extends JFrame {
         });
     }
 
-    public AdultContentWarning() {
+    public PornWarningWindow() {
         this.setResizable(false);
         this.setBounds(100, 100, 600, 260);
         this.panel = new JPanel();

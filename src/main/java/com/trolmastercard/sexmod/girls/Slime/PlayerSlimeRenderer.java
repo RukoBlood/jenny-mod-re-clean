@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.girls.Slime;
 import java.util.HashSet;
 import javax.vecmath.Vector3f;
 
-import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;

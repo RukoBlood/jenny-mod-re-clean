@@ -10,7 +10,7 @@
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  *  org.apache.logging.log4j.Level
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base;
 
 import com.mojang.realmsclient.util.Pair;
 
@@ -37,9 +37,12 @@ import com.trolmastercard.sexmod.Packages.TeleportPlayer;
 import com.trolmastercard.sexmod.Packages.SendChatMessage;
 import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.ClientServerCheck;
@@ -114,8 +117,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     static public int maxAgeInTicks = 22;
     final static protected long TICK_RATE = 20L;
     final private AnimationFactory factory = new AnimationFactory(this);
-    public EntityAIWanderAvoidWater avoidWaterGoal;
-    public FollowPlayer followPlayerGoal;
+    public EntityAIWanderAvoidWater aiWander;
+    public lookAtNearbyEntity aiLookAtPlayer;
     static public HashSet<GirlEntity> GLOBAL_GIRL_CACHE = new HashSet();
     public Vec3d playerCameraOffsetPos;
     protected float cameraYaw;
@@ -137,7 +140,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     final static public DataParameter<String> CUR_ACTION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(104);
     final static public DataParameter<String> GIRL_HAND_STATES = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(103);
     final static public DataParameter<String> INTERACTION_PARTNER_UUID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
-    final static public DataParameter<String> WALK_TYPE = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
+    final static public DataParameter<String> WALK_SPEED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
     final static public DataParameter<String> CUSTOM_MODEL_KEY = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(100);
     final static public DataParameter<String> CUSTOM_NAME = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(99);
 
@@ -151,17 +154,17 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public List<String> boneTrackingList = new ArrayList<String>();
     protected List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> customPartsData = null;
 
-    public void setWalkType(WalkTypes walkTypes) {
-        this.entityDataManager.set(WALK_TYPE, walkTypes.toString());
+    public void setWalkSpeed(WalkSpeed walkSpeed) {
+        this.entityDataManager.set(WALK_SPEED, walkSpeed.toString());
     }
 
-    public WalkTypes getWalkType() {
-        return WalkTypes.valueOf(this.entityDataManager.get(WALK_TYPE));
+    public WalkSpeed getWalkType() {
+        return WalkSpeed.valueOf(this.entityDataManager.get(WALK_SPEED));
     }
 
     @SideOnly(value=Side.CLIENT)
     protected void changeDataParameterFromClient(String paramKey, String paramValue) {
-        PackageHandler.networkWrapper.sendToServer(new ChangeDataParameter(this.girlID(), paramKey, paramValue));
+        PackageHandler.INSTANCE.sendToServer(new ChangeDataParameter(this.girlID(), paramKey, paramValue));
     }
 
     //f
@@ -343,9 +346,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected void initAnimationControllers() {
-        this.actionController = new AnimationController<GirlEntity>(this, "action", 0.0f, this::animationPredicate);
-        this.movementController = new AnimationController<GirlEntity>(this, "movement", 5.0f, this::animationPredicate);
-        this.eyesController = new AnimationController<GirlEntity>(this, "eyes", 10.0f, this::animationPredicate);
+        this.actionController = new AnimationController<GirlEntity>(this, "action", 0.0f, this::predicate);
+        this.movementController = new AnimationController<GirlEntity>(this, "movement", 5.0f, this::predicate);
+        this.eyesController = new AnimationController<GirlEntity>(this, "eyes", 10.0f, this::predicate);
 
         // TODO not sure where to insert sound keyframe inserter, or how to even add custom insertions in Java for geckolib
 
@@ -365,7 +368,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.register(YAW_ROTATION, 0.0f);
         this.entityDataManager.register(TARGET_POS, "0|0|0");
         this.entityDataManager.register(MASTER_UUID, "");
-        this.entityDataManager.register(WALK_TYPE, WalkTypes.WALK.toString());
+        this.entityDataManager.register(WALK_SPEED, WalkSpeed.WALK.toString());
         this.entityDataManager.register(CUSTOM_MODEL_KEY, "");
         this.entityDataManager.register(CUSTOM_NAME, "");
     }
@@ -421,13 +424,13 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @Override
     protected void initEntityAI() {
-        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
+        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new AutoCloseDoorGoal(this));
-        this.tasks.addTask(5, this.followPlayerGoal);
-        this.tasks.addTask(5, this.avoidWaterGoal);
+        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.tasks.addTask(5, this.aiWander);
     }
 
     @Override
@@ -632,10 +635,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public void goHome() {
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("master", "");
-            this.changeDataParameterFromClient("walk speed", WalkTypes.WALK.toString());
+            this.changeDataParameterFromClient("walk speed", WalkSpeed.WALK.toString());
         } else {
             this.entityDataManager.set(MASTER_UUID, "");
-            this.entityDataManager.set(WALK_TYPE, WalkTypes.WALK.toString());
+            this.entityDataManager.set(WALK_SPEED, WalkSpeed.WALK.toString());
         }
     }
 
@@ -662,7 +665,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     protected void triggerActionSync(boolean param1, boolean param2, UUID playerUUID) {
         if (this.world.isRemote) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new SyncActionPacket(this.girlID(), playerUUID, param1, param2));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), playerUUID, param1, param2));
         } else {
             SyncActionPacket.Handler.execute(this.girlID(), playerUUID, param1, param2);
         }
@@ -782,7 +785,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return arrayList;
     }
 
-    public boolean isMasterAssigned() {
+    public boolean hasMaster() {
         return !this.entityDataManager.get(MASTER_UUID).isEmpty();
     }
 
@@ -815,12 +818,13 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public void a(String string, UUID uUID) {
+    public void doAction(String string, UUID uUID) {
     }
 
     // TODO rename animationPredicateHandler or whatever
+    // DOTO it's called predicate
     @SideOnly(value=Side.CLIENT)
-    protected abstract <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event);
+    protected abstract <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event);
 
     @SideOnly(value=Side.CLIENT)
     protected boolean handleActionAnimationOverrides(Action action, String animName, boolean flag, AnimationEvent event) {
@@ -910,7 +914,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     protected void resetGirlState() {
         if (this.world.isRemote && this.isControlledByLocalPlayer()) {
             this.playerCameraOffsetPos = null;
-            PackageHandler.networkWrapper.sendToServer(new ResetGirl(this.girlID(), true));
+            PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID(), true));
         } else if (!this.world.isRemote) {
             ResetGirl.a_inner422.a((EntityPlayerMP)this.world.getPlayerEntityByUUID(this.getID()));
         }
@@ -982,7 +986,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (this.isControlledByLocalPlayer()) {
             HandlePlayerMovement.setMovementLock(true);
             Minecraft.getMinecraft().player.setInvisible(false);
-            PackageHandler.networkWrapper.sendToServer((IMessage)new ResetGirl(this.girlID()));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new ResetGirl(this.girlID()));
         }
     }
 
@@ -1014,7 +1018,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public void resetAnimationControllerOffset() {
         this.resetAnimationControllerTicks();
-        PackageHandler.networkWrapper.sendToServer((IMessage)new ResetController(this.girlID()));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new ResetController(this.girlID()));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1051,7 +1055,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         newPos = newPos.add(-Math.sin((double)this.cameraYaw * (Math.PI / 180)) * z, 0.0, Math.cos((double)this.cameraYaw * (Math.PI / 180)) * z);
         if (this.world.isRemote) {
             assert player != null;
-            PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(player.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(player.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
             return;
         }
 
@@ -1102,9 +1106,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public void broadcastChatMessage(String text) {
         if (!this.world.isRemote) {
-            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
         } else if (this.isControlledByLocalPlayer()) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()));
         }
     }
 
@@ -1113,11 +1117,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             this.broadcastChatMessage(string);
         }
         if (!this.world.isRemote) {
-            PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(string, this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage(string, this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
             return;
         }
         if (this.isControlledByLocalPlayer()) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new SendChatMessage(string, this.dimension, this.girlID()));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new SendChatMessage(string, this.dimension, this.girlID()));
         }
     }
 
@@ -1532,7 +1536,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return true;
     }
 
-    public static enum WalkTypes {
+    public static enum WalkSpeed {
         WALK,
         FAST_WALK,
         RUN;

@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.RemoveItems;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
@@ -89,7 +89,7 @@ public class GirlInventoryUI extends GuiScreen {
         }
         for (ItemStack itemStack : this.entityPlayer.inventory.mainInventory) {
             if (!itemStack.getItem().equals(this.f[guiButton.id - 5].getItem()) || itemStack.getCount() < this.f[guiButton.id - 5].getCount() || itemStack.getMetadata() != this.f[guiButton.id - 5].getMetadata()) continue;
-            PackageHandler.networkWrapper.sendToServer((IMessage)new RemoveItems(this.entityPlayer.getPersistentID(), this.f[guiButton.id - 5]));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new RemoveItems(this.entityPlayer.getPersistentID(), this.f[guiButton.id - 5]));
             this.a(guiButton);
             return;
         }
@@ -99,7 +99,7 @@ public class GirlInventoryUI extends GuiScreen {
 
     void a(GuiButton guiButton) {
         String string = guiButton.id < 5 ? this.girlActions[guiButton.id] : this.h[guiButton.id - 5];
-        this.girlEntity.a(string, this.entityPlayer.getPersistentID());
+        this.girlEntity.doAction(string, this.entityPlayer.getPersistentID());
         Minecraft.getMinecraft().player.closeScreen();
     }
 
@@ -141,8 +141,8 @@ public class GirlInventoryUI extends GuiScreen {
 
     void a(int n, int n2) {
         int n3 = (int) Reference.LerpFloat(-30.0f, 120.0f, this.m);
-        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_1), n3 - 105, 68);
-        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.ITEM_SLOT_2), n3 - 105, 87);
+        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.WEAPON), n3 - 105, 68);
+        this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.BOW), n3 - 105, 87);
         this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.HELMET_SLOT), n3 - 105, 109);
         this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.CHEST_SLOT), n3 - 105, 127);
         this.itemRender.renderItemIntoGUI(this.entityDataManager.get(Fighter.LEGS_SLOT), n3 - 105, 146);

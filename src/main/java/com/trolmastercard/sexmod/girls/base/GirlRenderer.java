@@ -11,7 +11,7 @@
  *  org.lwjgl.opengl.GL11
  *  org.lwjgl.opengl.GL20
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -36,6 +36,7 @@ import javax.vecmath.Vector4f;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.interfaces.IModelBoneFilter;
@@ -975,15 +976,15 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         }
         EntityDataManager manager = ((Entity)this.renderEntity).getDataManager();
         Fighter fighter = (Fighter)this.renderEntity;
-        int activeSlot = manager.get(Fighter.M);
+        int activeSlot = manager.get(Fighter.ATTACK_MODE);
         if (fighter.currentAction() != Action.BOW) {
             this.bowPullProgressNotPlayer = 0.0f;
         }
         ItemStack weaponStack = null;
         if (activeSlot == 1) {
-            weaponStack = manager.get(Fighter.ITEM_SLOT_1);
+            weaponStack = manager.get(Fighter.WEAPON);
         } else if (activeSlot == 2) {
-            weaponStack = manager.get(Fighter.ITEM_SLOT_2);
+            weaponStack = manager.get(Fighter.BOW);
         }
         weaponStack = this.getHeldItem(weaponStack);
         if (weaponStack == null) {
@@ -999,9 +1000,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GeckoMatrixBridge.bindOpenGLToBone(MATRIX_STACK, bone);
         GL11.glEnable(2896);
         if (weaponStack.getItem() instanceof ItemBow) {
-            GL11.glRotatef((float)fighter.K, 1.0f, 0.0f, 0.0f);
-        } else if (fighter.currentAction() == Action.ATTACK && fighter.S == 0) {
-            GlStateManager.translate(fighter.V.x, fighter.V.y, fighter.V.z);
+            GL11.glRotatef((float)fighter.holdBowRot, 1.0f, 0.0f, 0.0f);
+        } else if (fighter.currentAction() == Action.ATTACK && fighter.nextAttack == 0) {
+            GlStateManager.translate(fighter.swordOffsetStab.x, fighter.swordOffsetStab.y, fighter.swordOffsetStab.z);
             GL11.glRotatef((float)fighter.O, 1.0f, 0.0f, 0.0f);
         } else {
             GL11.glRotatef((float)fighter.P, 1.0f, 0.0f, 0.0f);

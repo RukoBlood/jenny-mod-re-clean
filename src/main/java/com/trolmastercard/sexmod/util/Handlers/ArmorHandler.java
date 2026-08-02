@@ -10,7 +10,7 @@ package com.trolmastercard.sexmod.util.Handlers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.trolmastercard.sexmod.Fighter;
+import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
@@ -55,10 +55,10 @@ public class ArmorHandler {
         Fighter fighter = (Fighter)event.getEntity();
         //In jenny mod, slots 2-5 is reserved for armor
         ItemStack[] armorInventory = new ItemStack[]{
-                fighter.items.getStackInSlot(2),
-                fighter.items.getStackInSlot(3),
-                fighter.items.getStackInSlot(4),
-                fighter.items.getStackInSlot(5)
+                fighter.inventory.getStackInSlot(2),
+                fighter.inventory.getStackInSlot(3),
+                fighter.inventory.getStackInSlot(4),
+                fighter.inventory.getStackInSlot(5)
         };
 
         ArrayList<ItemArmor> armorItems = new ArrayList<ItemArmor>();

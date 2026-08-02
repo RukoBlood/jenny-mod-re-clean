@@ -5,12 +5,12 @@ package com.trolmastercard.sexmod.girls.Ellie;
 
 import java.util.HashMap;
 
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.world.FakeWorld;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.util.Utils;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlModel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;

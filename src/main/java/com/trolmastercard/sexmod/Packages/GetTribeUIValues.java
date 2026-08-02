@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
@@ -88,7 +88,7 @@ public class GetTribeUIValues implements IMessage {
                 Object object;
                 UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
                 if (uUID == null) {
-                    PackageHandler.networkWrapper.sendTo((IMessage) GetTribeUIValues.a(), ctx.getServerHandler().player);
+                    PackageHandler.INSTANCE.sendTo((IMessage) GetTribeUIValues.a(), ctx.getServerHandler().player);
                     return;
                 }
                 boolean bl = KoboldManager.isTribeAlerted(uUID);
@@ -111,7 +111,7 @@ public class GetTribeUIValues implements IMessage {
                     object = (BlockPos)entry.getValue();
                     arrayList.add(new Vector4d((double)((Vec3i)object).getX(), (double)((Vec3i)object).getY(), (double)((Vec3i)object).getZ(), (double)koboldColor));
                 }
-                PackageHandler.networkWrapper.sendTo((IMessage)new GetTribeUIValues(bl, arrayList), entityPlayerMP);
+                PackageHandler.INSTANCE.sendTo((IMessage)new GetTribeUIValues(bl, arrayList), entityPlayerMP);
             });
             return null;
         }

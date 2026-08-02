@@ -10,8 +10,8 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -57,7 +57,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
+    public IRenderer getHandRenderer(int n) {
         return new BeeLimb();
     }
 
@@ -127,7 +127,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block4 : switch (event.getController().getName()) {
             case "movement": {
                 if (this.currentAction() != Action.NULL) {
@@ -164,7 +164,7 @@ public class PlayerBee extends PlayerGirl {
                         break block4;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.bee.attack" + this.S, false, event);
+                        this.createAnimation("animation.bee.attack" + this.nextAttack, false, event);
                         break block4;
                     }
                     case BOW: {
@@ -188,13 +188,13 @@ public class PlayerBee extends PlayerGirl {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "pearl": {
                     if (!this.getClosestPlayerID() || this.currentAction() != Action.THROW_PEARL) break;
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "resetCumPercentage": {

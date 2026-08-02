@@ -11,9 +11,9 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.Fighter;
-import com.trolmastercard.sexmod.Supporter;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.Supporter;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
@@ -89,21 +89,21 @@ implements IMessage {
                     }
                     if (em_class2582 instanceof LunaEntity) {
                         Fighter fighter = (Fighter)em_class2582;
-                        fighter.items.setStackInSlot(0, b1_class602.d[36]);
-                        fighter.items.setStackInSlot(1, b1_class602.d[37]);
-                        fighter.items.setStackInSlot(2, b1_class602.d[38]);
-                        fighter.items.setStackInSlot(3, b1_class602.d[39]);
-                        fighter.items.setStackInSlot(4, b1_class602.d[40]);
-                        fighter.items.setStackInSlot(5, b1_class602.d[41]);
-                        fighter.items.setStackInSlot(6, b1_class602.d[42]);
+                        fighter.inventory.setStackInSlot(0, b1_class602.d[36]);
+                        fighter.inventory.setStackInSlot(1, b1_class602.d[37]);
+                        fighter.inventory.setStackInSlot(2, b1_class602.d[38]);
+                        fighter.inventory.setStackInSlot(3, b1_class602.d[39]);
+                        fighter.inventory.setStackInSlot(4, b1_class602.d[40]);
+                        fighter.inventory.setStackInSlot(5, b1_class602.d[41]);
+                        fighter.inventory.setStackInSlot(6, b1_class602.d[42]);
                     } else if (em_class2582 instanceof Fighter) {
                         Fighter e2_class2183 = (Fighter)em_class2582;
-                        e2_class2183.items.setStackInSlot(0, b1_class602.d[36]);
-                        e2_class2183.items.setStackInSlot(1, b1_class602.d[37]);
-                        e2_class2183.items.setStackInSlot(2, b1_class602.d[38]);
-                        e2_class2183.items.setStackInSlot(3, b1_class602.d[39]);
-                        e2_class2183.items.setStackInSlot(4, b1_class602.d[40]);
-                        e2_class2183.items.setStackInSlot(5, b1_class602.d[41]);
+                        e2_class2183.inventory.setStackInSlot(0, b1_class602.d[36]);
+                        e2_class2183.inventory.setStackInSlot(1, b1_class602.d[37]);
+                        e2_class2183.inventory.setStackInSlot(2, b1_class602.d[38]);
+                        e2_class2183.inventory.setStackInSlot(3, b1_class602.d[39]);
+                        e2_class2183.inventory.setStackInSlot(4, b1_class602.d[40]);
+                        e2_class2183.inventory.setStackInSlot(5, b1_class602.d[41]);
                     }
                     if (!(em_class2582 instanceof Supporter)) continue;
                     Supporter fo_class3232 = (Supporter)em_class2582;

@@ -9,9 +9,9 @@ package com.trolmastercard.sexmod.gui;
 
 import java.io.IOException;
 
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.util.Utils;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;

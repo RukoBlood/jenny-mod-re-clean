@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base.PlayerGirl;
 
 import com.trolmastercard.sexmod.girls.Allie.AllieEntity;
 import com.trolmastercard.sexmod.girls.Allie.PlayerAllie;
@@ -24,6 +24,7 @@ import com.trolmastercard.sexmod.girls.Luna.PlayerLuna;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.girls.Slime.PlayerSlime;
 import com.trolmastercard.sexmod.girls.Slime.SlimeEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.Entity;
 

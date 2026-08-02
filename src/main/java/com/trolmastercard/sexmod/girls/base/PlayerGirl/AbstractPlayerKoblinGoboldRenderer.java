@@ -7,7 +7,7 @@
  *  javax.vecmath.Vector3f
  *  javax.vecmath.Vector4f
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base.PlayerGirl;
 
 import java.util.Comparator;
 import java.util.HashMap;

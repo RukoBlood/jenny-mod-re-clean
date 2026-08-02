@@ -14,12 +14,12 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.Galath.GalathMobTarget;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
@@ -780,7 +780,7 @@ extends GirlEntity {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         AnimationController animationController = event.getController();
         if (this.eyesController == animationController) {
             if (this.getAnimationProcessor() == null) {

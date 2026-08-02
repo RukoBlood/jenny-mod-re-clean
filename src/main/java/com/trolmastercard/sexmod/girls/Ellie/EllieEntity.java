@@ -12,7 +12,8 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
@@ -72,8 +73,8 @@ implements bh_class82 {
         super(world);
         this.P = -85;
         this.O = -175;
-        this.K = -85;
-        this.V = new Vec3d(-0.1, 0.05, 0.0);
+        this.holdBowRot = -85;
+        this.swordOffsetStab = new Vec3d(-0.1, 0.05, 0.0);
     }
 
     @Override
@@ -153,8 +154,8 @@ implements bh_class82 {
     }
 
     @Override
-    public void a(String string, UUID uUID) {
-        super.a(string, uUID);
+    public void doAction(String string, UUID player) {
+        super.doAction(string, player);
         this.aq = true;
         switch (string) {
             case "action.names.missionary": {
@@ -174,7 +175,7 @@ implements bh_class82 {
                 break;
             }
             case "Face fuck": {
-                this.triggerActionSync(true, true, uUID);
+                this.triggerActionSync(true, true, player);
                 HandlePlayerMovement.setMovementLock(false);
             }
         }
@@ -315,7 +316,7 @@ implements bh_class82 {
             vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.1), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
             entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         }
         if ("cowgirl".equals(string)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
@@ -336,7 +337,7 @@ implements bh_class82 {
             vec3d = VectorMath.rotate(new Vec3d(0.0, 1.0 - (double)entityPlayer.eyeHeight, -1.8125), entityPlayer.rotationYaw);
             vec3d2 = vec3d2.add(vec3d);
             entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         }
     }
 
@@ -474,9 +475,9 @@ implements bh_class82 {
         this.Z = 16;
         this.setNoGravity(true);
         this.noClip = true;
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-        this.tasks.removeTask(this.avoidWaterGoal);
-        this.tasks.removeTask(this.followPlayerGoal);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+        this.tasks.removeTask(this.aiWander);
+        this.tasks.removeTask(this.aiLookAtPlayer);
     }
 
     void void_n() {
@@ -559,7 +560,7 @@ implements bh_class82 {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return null;
         }
@@ -652,7 +653,7 @@ implements bh_class82 {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.ellie.attack" + this.S, false, event);
+                        this.createAnimation("animation.ellie.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {
@@ -865,12 +866,12 @@ implements bh_class82 {
                 }
                 case "attackDone": {
                     this.setCurrentAction(Action.NULL);
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "openSexUi": {

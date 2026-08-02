@@ -108,7 +108,7 @@ implements IAnimatable {
         @SideOnly(value=Side.CLIENT)
         void a() {
             Minecraft.getMinecraft().displayGuiScreen(new DragonStaffGUI());
-            PackageHandler.networkWrapper.sendToServer((IMessage)new GetTribeUIValues());
+            PackageHandler.INSTANCE.sendToServer((IMessage)new GetTribeUIValues());
         }
 
         @SubscribeEvent

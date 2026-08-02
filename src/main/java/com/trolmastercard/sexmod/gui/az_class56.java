@@ -54,7 +54,7 @@ public class az_class56 extends GuiContainer {
             itemStackArray[40] = ca_class1212.getSlot(4).getStack();
             itemStackArray[41] = ca_class1212.getSlot(5).getStack();
             itemStackArray[42] = ca_class1212.getSlot(6).getStack();
-            PackageHandler.networkWrapper.sendToServer((IMessage)new UploadInventoryToServer(this.d.girlID(), this.a, itemStackArray));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.d.girlID(), this.a, itemStackArray));
         }
     }
 

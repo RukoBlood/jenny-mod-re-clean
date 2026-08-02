@@ -10,10 +10,10 @@ package com.trolmastercard.sexmod.girls.Allie;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.util.Utils;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;

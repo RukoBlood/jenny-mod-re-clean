@@ -98,7 +98,7 @@ implements IMessage {
                 }
                 return new DownloadServerModel(arrayList);
             }
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PackageHandler.networkWrapper.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.e()), messageContext.getServerHandler().player));
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PackageHandler.INSTANCE.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.e()), messageContext.getServerHandler().player));
             return null;
         }
 

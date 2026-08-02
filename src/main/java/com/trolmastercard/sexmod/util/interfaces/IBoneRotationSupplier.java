@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod.util.interfaces;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 
 @FunctionalInterface
 public interface IBoneRotationSupplier {

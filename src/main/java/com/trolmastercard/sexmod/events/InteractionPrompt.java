@@ -84,7 +84,7 @@ public class InteractionPrompt {
     }
 
     void sendStartAnimationPacket(String animationID, UUID receiver, UUID sender) {
-        PackageHandler.networkWrapper.sendToServer((IMessage)new StartStandingSexAnimation(receiver, sender, animationID));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new StartStandingSexAnimation(receiver, sender, animationID));
     }
 
     public static class ActiveRequest {

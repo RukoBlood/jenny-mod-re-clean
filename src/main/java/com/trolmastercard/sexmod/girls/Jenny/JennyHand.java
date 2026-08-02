@@ -12,10 +12,10 @@ import net.minecraft.entity.Entity;
 /*
 * Related to PlayerJenny
 * */
-public class JennyLimb extends ModelBase implements IRenderer {
+public class JennyHand extends ModelBase implements IRenderer {
     final private ModelRenderer renderer;
 
-    public JennyLimb() {
+    public JennyHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.renderer = new ModelRenderer(this);

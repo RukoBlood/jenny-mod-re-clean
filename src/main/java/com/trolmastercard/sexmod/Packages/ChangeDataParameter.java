@@ -11,8 +11,8 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Slime.SlimeEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
@@ -103,7 +103,7 @@ implements IMessage {
                         break;
                     }
                     case "walk speed": {
-                        girlEntity.getDataManager().set(GirlEntity.WALK_TYPE, n_class4152.c);
+                        girlEntity.getDataManager().set(GirlEntity.WALK_SPEED, n_class4152.c);
                         break;
                     }
                     case "shouldbeattargetpos": {

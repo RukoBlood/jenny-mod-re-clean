@@ -8,12 +8,12 @@ package com.trolmastercard.sexmod.gui;
 
 import java.io.IOException;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.BeeOpenChest;
 import com.trolmastercard.sexmod.Packages.ChangeDataParameter;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SetNewHome;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Supporter;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -63,7 +63,7 @@ public class BeeInventoryUI extends GuiScreen {
         ScaledResolution scaledResolution = new ScaledResolution(this.mc);
         int n4 = scaledResolution.getScaledWidth();
         if (this.supporter.getDataManager().get(Supporter.HAS_CHEST).booleanValue() && n >= n4 / 2 - 20 && n <= n4 / 2 + 20 && n2 >= 20 && n2 <= 60) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new BeeOpenChest(this.supporter.girlID(), this.player.getPersistentID()));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new BeeOpenChest(this.supporter.girlID(), this.player.getPersistentID()));
             this.onGuiClosed();
         }
         super.mouseClicked(n, n2, n3);
@@ -74,21 +74,21 @@ public class BeeInventoryUI extends GuiScreen {
         super.actionPerformed(guiButton);
         if (guiButton.id == 0) {
             if (this.e) {
-                PackageHandler.networkWrapper.sendToServer((IMessage)new ChangeDataParameter(this.supporter.girlID(), "master", ""));
+                PackageHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.supporter.girlID(), "master", ""));
                 this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.sad", new Object[0])));
             } else {
-                PackageHandler.networkWrapper.sendToServer((IMessage)new ChangeDataParameter(this.supporter.girlID(), "master", this.player.getPersistentID().toString()));
+                PackageHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.supporter.girlID(), "master", this.player.getPersistentID().toString()));
                 this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.exited", new Object[0])));
             }
             this.e = !this.e;
             this.player.closeScreen();
         }
         if (guiButton.id == 1) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.supporter.girlID()));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.supporter.girlID()));
             this.player.closeScreen();
         }
         if (guiButton.id == 2) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new SetNewHome(this.supporter.girlID(), new Vec3d(this.supporter.posX, this.supporter.posY, this.supporter.posZ)));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new SetNewHome(this.supporter.girlID(), new Vec3d(this.supporter.posX, this.supporter.posY, this.supporter.posZ)));
             this.player.closeScreen();
             this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.home", new Object[0])));
         }

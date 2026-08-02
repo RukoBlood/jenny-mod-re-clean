@@ -39,7 +39,7 @@ extends CommandBase {
     public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] stringArray) throws CommandException {
         CustomModel.b(false);
         for (EntityPlayerMP entityPlayerMP : minecraftServer.getPlayerList().getPlayers()) {
-            minecraftServer.addScheduledTask(() -> PackageHandler.networkWrapper.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.e()), entityPlayerMP));
+            minecraftServer.addScheduledTask(() -> PackageHandler.INSTANCE.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.e()), entityPlayerMP));
         }
     }
 }

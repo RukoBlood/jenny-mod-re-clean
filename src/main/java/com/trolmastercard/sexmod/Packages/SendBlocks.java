@@ -139,7 +139,7 @@ implements IMessage {
                     if (blockPos2 != null) {
                         ((HashSet)object).add(blockPos2);
                     }
-                    PackageHandler.networkWrapper.sendTo((IMessage)new SendBlocks((HashSet<BlockPos>)object, h6_class3972.a), messageContext.getServerHandler().player);
+                    PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks((HashSet<BlockPos>)object, h6_class3972.a), messageContext.getServerHandler().player);
                 }
             });
             return null;

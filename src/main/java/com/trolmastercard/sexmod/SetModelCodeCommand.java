@@ -8,9 +8,9 @@
 package com.trolmastercard.sexmod;
 
 import com.trolmastercard.sexmod.Packages.UploadModelString;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
-import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -75,11 +75,11 @@ implements IClientCommand {
             }
         }
         if ("".equals(string2)) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new UploadModelString(string, em_class2582.girlID()));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, em_class2582.girlID()));
             ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.a(em_class2582)), true);
             return;
         }
-        PackageHandler.networkWrapper.sendToServer((IMessage)new UploadModelString(string, em_class2582.girlID(), GirlEntity.c(string2)));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, em_class2582.girlID(), GirlEntity.c(string2)));
         ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.a(em_class2582)), true);
     }
 

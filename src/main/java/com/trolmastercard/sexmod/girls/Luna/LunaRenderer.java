@@ -11,8 +11,8 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;

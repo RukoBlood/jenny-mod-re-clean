@@ -6,12 +6,12 @@ package com.trolmastercard.sexmod.girls.Kobold;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.dr_class199;
-import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.AnimationState;

@@ -13,7 +13,7 @@ package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.util.interfaces.bh_class82;
 import com.trolmastercard.sexmod.girls.Ellie.EllieEntity;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import io.netty.buffer.ByteBuf;
@@ -70,8 +70,8 @@ implements IMessage {
             for (GirlEntity girl : GirlEntity.girlList(uUID)) {
                 if (girl.world.isRemote) continue;
                 if (girl instanceof JennyEntity || girl instanceof EllieEntity || girl instanceof LunaEntity) {
-                    girl.tasks.removeTask(girl.followPlayerGoal);
-                    girl.tasks.removeTask(girl.avoidWaterGoal);
+                    girl.tasks.removeTask(girl.aiLookAtPlayer);
+                    girl.tasks.removeTask(girl.aiWander);
                 }
                 girl.getNavigator().clearPath();
                 girl.motionX = 0.0;

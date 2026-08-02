@@ -5,7 +5,8 @@ package com.trolmastercard.sexmod;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelElytra;
 import net.minecraft.client.renderer.GlStateManager;

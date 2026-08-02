@@ -8,7 +8,7 @@
  *  javax.vecmath.Vector4f
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base.PlayerGirl;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -20,6 +20,8 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.BoneDeformProcessor;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;

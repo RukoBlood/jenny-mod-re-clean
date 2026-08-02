@@ -9,8 +9,8 @@ package com.trolmastercard.sexmod.girls.Luna;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

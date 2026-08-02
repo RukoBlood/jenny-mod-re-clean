@@ -6,7 +6,7 @@ package com.trolmastercard.sexmod.util.interfaces;
 import java.lang.reflect.Field;
 
 import com.trolmastercard.sexmod.CachedAnimationProcessor;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.geo.exception.GeoModelException;
 import software.bernie.geckolib3.geo.render.built.GeoBone;

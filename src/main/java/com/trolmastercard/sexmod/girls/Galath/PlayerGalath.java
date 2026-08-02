@@ -15,8 +15,8 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.TeleportPlayer;
 import com.trolmastercard.sexmod.Packages.UpdateVelocity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.GalathFlightUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
@@ -61,7 +61,7 @@ implements IWingsOwner {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
+    public IRenderer getHandRenderer(int n) {
         return new GalathLimb();
     }
 
@@ -231,7 +231,7 @@ implements IWingsOwner {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
@@ -283,7 +283,7 @@ implements IWingsOwner {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.galath.attack" + this.S, true, event);
+                        this.createAnimation("animation.galath.attack" + this.nextAttack, true, event);
                         break block5;
                     }
                     case BOW: {
@@ -343,8 +343,8 @@ implements IWingsOwner {
         this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "cum": {
@@ -352,11 +352,11 @@ implements IWingsOwner {
                     break;
                 }
                 case "pound": {
-                    this.a(SoundsHandler.MISC_POUNDING);
+                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "flap": {
-                    this.a(SoundsHandler.MISC_FLAP);
+                    this.playSoundAroundHer(SoundsHandler.MISC_FLAP);
                     break;
                 }
                 case "setNude": {
@@ -384,7 +384,7 @@ implements IWingsOwner {
                     break;
                 }
                 case "poundRape": {
-                    this.a(SoundsHandler.MISC_POUNDING);
+                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.03f);
                     break;
@@ -439,7 +439,7 @@ implements IWingsOwner {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     float f = this.getYawRotation().floatValue() + 220.0f;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.getYawRotation().floatValue()).add(this.getTargetPosition());
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
                     SexUI.init();
                     break;
                 }
@@ -467,18 +467,18 @@ implements IWingsOwner {
                 case "flapControlled": {
                     if (!this.isControlledByLocalPlayer()) break;
                     GalathFlightUI.showUI();
-                    this.a(SoundsHandler.MISC_FLAP);
+                    this.playSoundAroundHer(SoundsHandler.MISC_FLAP);
                     Minecraft minecraft = Minecraft.getMinecraft();
                     EntityPlayerSP entityPlayerSP = minecraft.player;
                     MovementInput movementInput = entityPlayerSP.movementInput;
                     Vec2f vec2f = movementInput.getMoveVector();
                     if (vec2f.x == 0.0f && vec2f.y == 0.0f) break;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(-vec2f.x, 0.0, vec2f.y), Reference.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), Reference.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new UpdateVelocity(vec3d, this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new UpdateVelocity(vec3d, this.girlID()));
                     break;
                 }
                 case "clap": {
-                    this.a(SoundsHandler.MISC_CLAP);
+                    this.playSoundAroundHer(SoundsHandler.MISC_CLAP);
                     break;
                 }
                 case "energysound": {

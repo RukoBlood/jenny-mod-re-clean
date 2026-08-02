@@ -12,9 +12,9 @@ import java.util.HashSet;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 
-import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
-import com.trolmastercard.sexmod.girls.AbstractKoboldGoblinRenderer;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractKoboldGoblinRenderer;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;

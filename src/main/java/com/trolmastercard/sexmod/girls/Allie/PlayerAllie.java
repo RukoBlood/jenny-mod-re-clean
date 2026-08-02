@@ -10,8 +10,8 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -66,7 +66,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
+    public IRenderer getHandRenderer(int n) {
         return new AllieLimb();
     }
 
@@ -193,8 +193,8 @@ extends PlayerGirl {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "deepthroat_prepareMSG1": {
@@ -215,7 +215,7 @@ extends PlayerGirl {
                 case "deepthroat_prepareDone": {
                     this.setCurrentAction(Action.DEEPTHROAT_START);
                     if (!this.isControlledByLocalPlayer()) break;
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
@@ -261,15 +261,15 @@ extends PlayerGirl {
                     break;
                 }
                 case "giggle": {
-                    this.a(SoundsHandler.GIRLS_ALLIE_GIGGLE);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_ALLIE_GIGGLE);
                     break;
                 }
                 case "pounding": {
-                    this.a(SoundsHandler.MISC_POUNDING);
+                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "moan": {
-                    this.a(SoundsHandler.GIRLS_ALLIE_MOAN);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_ALLIE_MOAN);
                     break;
                 }
                 case "mmm": {
@@ -331,7 +331,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "aftermoan": {
-                    this.a(SoundsHandler.GIRLS_ALLIE_AFTERSESSIONMOAN);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_ALLIE_AFTERSESSIONMOAN);
                 }
             }
         };
@@ -341,7 +341,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
@@ -420,7 +420,7 @@ extends PlayerGirl {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.allie.attack" + this.S, false, event);
+                        this.createAnimation("animation.allie.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {

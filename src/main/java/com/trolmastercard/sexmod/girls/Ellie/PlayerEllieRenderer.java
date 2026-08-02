@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod.girls.Ellie;
 
-import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;

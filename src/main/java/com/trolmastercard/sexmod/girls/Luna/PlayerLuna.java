@@ -10,8 +10,8 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -58,7 +58,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
+    public IRenderer getHandRenderer(int n) {
         return new LunaLimb();
     }
 
@@ -179,7 +179,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
@@ -230,7 +230,7 @@ extends PlayerGirl {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.cat.attack" + this.S, false, event);
+                        this.createAnimation("animation.cat.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case RIDE: 
@@ -323,8 +323,8 @@ extends PlayerGirl {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "idleDone": {
@@ -336,7 +336,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "paymentMSG1": {
@@ -346,7 +346,7 @@ extends PlayerGirl {
                 }
                 case "paymentMSG2": {
                     this.sendLocalClientMessage("huh~?");
-                    this.a(SoundsHandler.GIRLS_LUNA_HUH);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "paymentMSG3": {
@@ -358,7 +358,7 @@ extends PlayerGirl {
                 }
                 case "paymentMSG4": {
                     this.sendLocalClientMessage("tankuuuu owowowo");
-                    this.a(SoundsHandler.GIRLS_LUNA_OWO);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_OWO);
                     break;
                 }
                 case "paymentDone": {
@@ -370,11 +370,11 @@ extends PlayerGirl {
                 }
                 case "breath": 
                 case "rod_breath": {
-                    this.a(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING);
                     break;
                 }
                 case "happyOh": {
-                    this.a(SoundsHandler.GIRLS_LUNA_HAPPYOH);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HAPPYOH);
                     break;
                 }
                 case "cutenya3": {
@@ -386,29 +386,29 @@ extends PlayerGirl {
                     break;
                 }
                 case "huh": {
-                    this.a(SoundsHandler.GIRLS_LUNA_HUH);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "hmph": {
-                    this.a(SoundsHandler.GIRLS_LUNA_HMPH);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HMPH);
                     break;
                 }
                 case "hehe": 
                 case "giggle": {
-                    this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
                 case "singing": {
-                    this.a(SoundsHandler.GIRLS_LUNA_SINGING);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_SINGING);
                     break;
                 }
                 case "touch_boobsMSG1": {
                     this.sendLocalClientMessage("comon~ touch me hihi~");
-                    this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
                 case "touch": {
-                    this.a(SoundsHandler.MISC_TOUCH);
+                    this.playSoundAroundHer(SoundsHandler.MISC_TOUCH);
                     break;
                 }
                 case "jump": {
@@ -416,7 +416,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "horninya": {
-                    this.a(SoundsHandler.GIRLS_LUNA_HORNINYA);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HORNINYA);
                     break;
                 }
                 case "horninya2": 
@@ -494,7 +494,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "call_playerMSG1": {
-                    this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     this.sendLocalClientMessage("come here - big guy hehe~");
                     break;
                 }
@@ -503,7 +503,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "sitting_introMSG1": {
-                    this.a(SoundsHandler.GIRLS_LUNA_GIGGLE);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     this.sendLocalClientMessage("hehe~");
                     break;
                 }
@@ -555,11 +555,11 @@ extends PlayerGirl {
                 }
                 case "headpatMSG1": {
                     this.sendLocalClientMessage("huh?~");
-                    this.a(SoundsHandler.GIRLS_LUNA_HUH);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.a(SoundsHandler.GIRLS_LUNA_MMM);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_MMM);
                     break;
                 }
                 case "headpatMSG3": {

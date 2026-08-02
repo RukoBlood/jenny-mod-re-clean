@@ -30,7 +30,7 @@ import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import com.trolmastercard.sexmod.girls.Luna.LunaHookEntity;
 import com.trolmastercard.sexmod.girls.Luna.PlayerLuna;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.girls.Pyrocynical.PyrocynicalEntity;
 import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeEntity;
 import com.trolmastercard.sexmod.girls.Slime.PlayerSlime;

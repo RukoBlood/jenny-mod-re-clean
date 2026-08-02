@@ -17,8 +17,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class g7_class352
-extends GuiScreen {
+public class g7_class352 extends GuiScreen {
     final static int b = 15;
     final static int a = 100;
     final static int c = 20;
@@ -72,12 +71,9 @@ extends GuiScreen {
         if (string.length() == 0) {
             return;
         }
-        PackageHandler.networkWrapper.sendToServer((IMessage)new ClaimTribe(this.e, Minecraft.getMinecraft().player.getPersistentID(), string));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new ClaimTribe(this.e, Minecraft.getMinecraft().player.getPersistentID(), string));
         Minecraft.getMinecraft().player.closeScreen();
     }
 
-    private static IOException a(IOException iOException) {
-        return iOException;
-    }
 }
 

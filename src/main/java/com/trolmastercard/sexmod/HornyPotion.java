@@ -68,7 +68,7 @@ public class HornyPotion extends Potion {
             return;
         }
         entityPlayer.removePotionEffect(HORNY_POTION);
-        PackageHandler.networkWrapper.sendTo((IMessage)new bd_class76(entityPlayer), (EntityPlayerMP)entityPlayer);
+        PackageHandler.INSTANCE.sendTo((IMessage)new bd_class76(entityPlayer), (EntityPlayerMP)entityPlayer);
     }
 
     @SubscribeEvent

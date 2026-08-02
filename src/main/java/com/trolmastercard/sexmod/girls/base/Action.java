@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base;
 
 import com.trolmastercard.sexmod.util.Utils;
 import net.minecraftforge.fml.relauncher.Side;
@@ -10,6 +10,10 @@ import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.core.controller.AnimationController;
 
 //fp_class324
+/*
+* Originally it was GirlEntity$Action
+* I'm gonna keep it as separate class.
+* */
 public enum Action {
     NULL(0, false, true),
     STARTBLOWJOB(2, true, false),

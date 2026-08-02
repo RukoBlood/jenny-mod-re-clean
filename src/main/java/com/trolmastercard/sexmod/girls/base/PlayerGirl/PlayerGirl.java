@@ -9,7 +9,7 @@
  *  net.minecraftforge.fml.common.network.NetworkRegistry$TargetPoint
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base.PlayerGirl;
 
 import com.google.common.base.Optional;
 
@@ -22,13 +22,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.ForcePlayerGirlUpdate;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packages.SexPrompt;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.events.InteractionPrompt;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.block.Block;
@@ -69,7 +71,7 @@ public abstract class PlayerGirl extends Fighter {
     public boolean isPlayerRiding = false;
     public boolean isPlayerOnGround = true;
     public boolean ah = false;
-    final static protected DataParameter<Optional<UUID>> ai = EntityDataManager.createKey(GirlEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID).getSerializer().createKey(118);
+    final static protected DataParameter<Optional<UUID>> OWNER = EntityDataManager.createKey(GirlEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID).getSerializer().createKey(118);
 
     static public Hashtable<UUID, PlayerGirl> playerGirlUUIDHashtable = new Hashtable();
     static public List<PlayerGirl> Z = new ArrayList<PlayerGirl>();
@@ -82,9 +84,9 @@ public abstract class PlayerGirl extends Fighter {
         Z.add(this);
     }
 
-    protected PlayerGirl(World world, UUID uUID) {
-        this(world);
-        this.entityDataManager.set(ai, Optional.of(uUID));
+    protected PlayerGirl(World worldIn, UUID player) {
+        this(worldIn);
+        this.entityDataManager.set(OWNER, Optional.of(player));
     }
 
     // TODO clash
@@ -114,7 +116,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     public void initActionState(int n, Action action) {
-        PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.getTargetNetworkPoint());
+        PackageHandler.INSTANCE.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.getTargetNetworkPoint());
     }
 
     public EntityPlayer getPlayerEntity(EntityPlayer player) {
@@ -160,9 +162,9 @@ public abstract class PlayerGirl extends Fighter {
 
     @Override
     public String getGirlName() {
-        EntityPlayer entityPlayer;
-        if (this.entityDataManager.get(ai).isPresent() && (entityPlayer = this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(ai).get())) != null) {
-            return entityPlayer.getName();
+        EntityPlayer player;
+        if (this.entityDataManager.get(OWNER).isPresent() && (player = this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(OWNER).get())) != null) {
+            return player.getName();
         }
         return "anonymous horny girl";
     }
@@ -173,7 +175,7 @@ public abstract class PlayerGirl extends Fighter {
 
     public abstract void onGuiActionSelected(String actionName, UUID partnerUUID);
 
-    public abstract IRenderer getLimbRenderer(int var1);
+    public abstract IRenderer getHandRenderer(int var1);
 
     public abstract String HandTexture(int var1);
 
@@ -198,7 +200,7 @@ public abstract class PlayerGirl extends Fighter {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.entityDataManager.register(ai, Optional.absent());
+        this.entityDataManager.register(OWNER, Optional.absent());
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -229,7 +231,7 @@ public abstract class PlayerGirl extends Fighter {
             entityPlayerSP.setNoGravity(false);
             entityPlayerSP.noClip = false;
             this.entityDataManager.set(IS_ANCHORED, false);
-            PackageHandler.networkWrapper.sendToServer((IMessage)new ResetGirl(this.girlID()));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new ResetGirl(this.girlID()));
         }
     }
 
@@ -284,7 +286,7 @@ public abstract class PlayerGirl extends Fighter {
         List<EntityPlayer> list = this.world.playerEntities;
         EntityPlayer entityPlayer = null;
         for (EntityPlayer entityPlayer2 : list) {
-            if (entityPlayer2.getPersistentID().equals(this.entityDataManager.get(ai).get())) continue;
+            if (entityPlayer2.getPersistentID().equals(this.entityDataManager.get(OWNER).get())) continue;
             if (entityPlayer == null) {
                 entityPlayer = entityPlayer2;
                 continue;
@@ -313,9 +315,9 @@ public abstract class PlayerGirl extends Fighter {
 
     protected void bindPlayerPartner(UUID uUID) {
         EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID(uUID);
-        EntityPlayerMP entityPlayerMP2 = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(ai).get());
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP2);
+        EntityPlayerMP entityPlayerMP2 = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(OWNER).get());
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP2);
         this.setInteractionPlayerUUID(uUID);
         this.rotationYaw = 0.0f;
         this.rotationYawHead = 0.0f;
@@ -365,10 +367,10 @@ public abstract class PlayerGirl extends Fighter {
 
     @SideOnly(value=Side.CLIENT)
     public boolean boolean_f() {
-        if (!this.entityDataManager.get(ai).isPresent()) {
+        if (!this.entityDataManager.get(OWNER).isPresent()) {
             return false;
         }
-        return ((UUID)this.entityDataManager.get(ai).get()).equals(Minecraft.getMinecraft().player.getPersistentID());
+        return ((UUID)this.entityDataManager.get(OWNER).get()).equals(Minecraft.getMinecraft().player.getPersistentID());
     }
 
     public boolean boolean_E() {
@@ -508,8 +510,8 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     public UUID getOwnerUserUUID() {
-        if (this.entityDataManager.get(ai).isPresent()) {
-            return (UUID)this.entityDataManager.get(ai).get();
+        if (this.entityDataManager.get(OWNER).isPresent()) {
+            return (UUID)this.entityDataManager.get(OWNER).get();
         }
         return null;
     }
@@ -524,7 +526,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     public void a(Optional<UUID> optional) {
-        this.entityDataManager.set(ai, optional);
+        this.entityDataManager.set(OWNER, optional);
     }
 
     public void void_y() {
@@ -566,27 +568,27 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Override
-    public void a(String string, UUID uUID) {
-        if (this.boolean_a(string)) {
+    public void doAction(String actionName, UUID player) {
+        if (this.boolean_a(actionName)) {
             return;
         }
-        if (!this.entityDataManager.get(ai).isPresent()) {
+        if (!this.entityDataManager.get(OWNER).isPresent()) {
             return;
         }
-        PackageHandler.networkWrapper.sendToServer((IMessage)new SexPrompt(string, uUID, (UUID)this.entityDataManager.get(ai).get(), this.guiPending));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new SexPrompt(actionName, player, (UUID)this.entityDataManager.get(OWNER).get(), this.guiPending));
         this.guiPending = true;
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        nbt.setString("owner", ((UUID)this.entityDataManager.get(ai).get()).toString());
+        nbt.setString("owner", ((UUID)this.entityDataManager.get(OWNER).get()).toString());
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
-        this.entityDataManager.set(ai, Optional.of(UUID.fromString(nbt.getString("owner"))));
+        this.entityDataManager.set(OWNER, Optional.of(UUID.fromString(nbt.getString("owner"))));
         Z.add(this);
     }
 
@@ -605,7 +607,7 @@ public abstract class PlayerGirl extends Fighter {
         this.PlaySoundAtPosition(sound, 1.0f, 1.0f);
     }
 
-    public void a(SoundEvent[] soundEventArray) {
+    public void playSoundAroundHer(SoundEvent[] soundEventArray) {
         this.PlaySoundAtPosition(soundEventArray[this.getRNG().nextInt(soundEventArray.length)], 1.0f, 1.0f);
     }
 

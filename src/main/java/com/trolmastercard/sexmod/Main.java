@@ -25,14 +25,14 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import com.trolmastercard.sexmod.girls.AbstractKoboldGoblinRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractKoboldGoblinRenderer;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlModel;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.CommonProxy;
 import com.trolmastercard.sexmod.world.WorldGeneration;
 import net.minecraft.command.ICommand;
@@ -66,19 +66,19 @@ public class Main {
     final static public Logger LOGGER;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent fMLPreInitializationEvent) {
+    public void preInit(FMLPreInitializationEvent event) {
         GeckoLib.initialize();
-        proxy.preInitRegistries(fMLPreInitializationEvent);
+        proxy.preInitRegistries(event);
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent fMLInitializationEvent) throws IOException {
-        proxy.initRegistries(fMLInitializationEvent);
+    public void init(FMLInitializationEvent event) throws IOException {
+        proxy.initRegistries(event);
     }
 
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent fMLPostInitializationEvent) throws IOException {
-        proxy.postInit(fMLPostInitializationEvent);
+    public void postInit(FMLPostInitializationEvent event) throws IOException {
+        proxy.postInit(event);
     }
 
     @Mod.EventHandler

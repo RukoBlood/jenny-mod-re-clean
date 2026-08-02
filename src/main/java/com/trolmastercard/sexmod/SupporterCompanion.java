@@ -1,12 +1,12 @@
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 
-public class FollowPlayerGoal extends BaseCompanionGoal {
+public class SupporterCompanion extends BaseCompanionGoal {
     int LoseTargetTicks = 0;
     int PathfindCooldown = 0;
 
-    public FollowPlayerGoal(GirlEntity girl) {
+    public SupporterCompanion(GirlEntity girl) {
         super(girl);
     }
 
@@ -24,7 +24,6 @@ public class FollowPlayerGoal extends BaseCompanionGoal {
 
         if (this.entity.getID() == null && !shoudFollow && this.CurState == States.FOLLOW) {
             if (++this.LoseTargetTicks > 60) {
-                shoudFollow = false;
                 this.LoseTargetTicks = 0;
             } else {
                 shoudFollow = true;

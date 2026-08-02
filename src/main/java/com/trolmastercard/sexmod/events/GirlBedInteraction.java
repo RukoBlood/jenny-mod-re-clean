@@ -10,7 +10,7 @@ package com.trolmastercard.sexmod.events;
 
 import java.util.List;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;

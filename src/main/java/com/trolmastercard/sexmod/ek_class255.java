@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.UploadInventoryToServer;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -75,7 +75,7 @@ extends GuiContainer {
             for (int i = 0; i < 27; ++i) {
                 itemStackArray[i + 36] = d4_class1622.getSlot(i).getStack();
             }
-            PackageHandler.networkWrapper.sendToServer((IMessage)new UploadInventoryToServer(this.b.girlID(), this.a, itemStackArray));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.b.girlID(), this.a, itemStackArray));
         }
     }
 

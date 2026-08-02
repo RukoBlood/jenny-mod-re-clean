@@ -4,9 +4,8 @@
  * Could not load the following classes:
  *  net.minecraftforge.items.ItemStackHandler
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.base;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -18,8 +17,12 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public abstract class Supporter extends GirlEntity implements IInventory {
 
-    final static public DataParameter<Boolean> HAS_CHEST = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(111);
+    final static public DataParameter<Boolean> HAS_CHEST;
     public ItemStackHandler invHandler = new ItemStackHandler(27);
+
+    static {
+        HAS_CHEST = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(111);
+    }
 
     protected Supporter(World world) {
         super(world);

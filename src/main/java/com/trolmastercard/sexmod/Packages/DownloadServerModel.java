@@ -218,7 +218,7 @@ implements IMessage {
                 int n = arrayList.size();
                 for (DownloadServerModel cu_class1463 : arrayList) {
                     cu_class1463.a(n);
-                    minecraftServer.addScheduledTask(() -> PackageHandler.networkWrapper.sendTo((IMessage)cu_class1463, messageContext.getServerHandler().player));
+                    minecraftServer.addScheduledTask(() -> PackageHandler.INSTANCE.sendTo((IMessage)cu_class1463, messageContext.getServerHandler().player));
                 }
             });
             return null;

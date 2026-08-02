@@ -25,9 +25,9 @@ import javax.annotation.Nonnull;
 import com.trolmastercard.sexmod.Packages.UploadModelString;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
-import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
@@ -66,7 +66,7 @@ public class ClothingGui extends GuiScreen {
     boolean isMouseDragging = false;
     CustomPartListScrollList scrollList;
     static public List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> activeCategories = new ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>>();
-    final UUID ID;
+    public final UUID ID;
     int customCategoryCount;
     int lastMouseX;
     public boolean isClickHeld = false;
@@ -276,7 +276,7 @@ public class ClothingGui extends GuiScreen {
             selectedParts.add(modelName);
         }
 
-        PackageHandler.networkWrapper.sendToServer(
+        PackageHandler.INSTANCE.sendToServer(
                 (IMessage)new UploadModelString(GirlEntity.serializePartsSet(selectedParts), this.ID, girlSpecificIndices)
         );
 

@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.Random;
 
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;

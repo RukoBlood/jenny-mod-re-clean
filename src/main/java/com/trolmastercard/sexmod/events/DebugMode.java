@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinRenderer;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;

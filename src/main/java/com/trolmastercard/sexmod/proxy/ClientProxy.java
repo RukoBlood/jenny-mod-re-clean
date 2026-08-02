@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.events.InteractionPrompt;
-import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.RenderHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;

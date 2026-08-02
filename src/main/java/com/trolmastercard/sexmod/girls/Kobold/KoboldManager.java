@@ -29,8 +29,8 @@ import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SendBlocks;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.world.WorldUtils;
@@ -233,7 +233,7 @@ public class KoboldManager {
             tribesMap.replace(uUID, tribe);
             return;
         }
-        if (!kobold.isMasterAssigned()) {
+        if (!kobold.hasMaster()) {
             return;
         }
         EntityPlayer master = kobold.getMasterPlayer();
@@ -244,7 +244,7 @@ public class KoboldManager {
             for (KoboldTaskInfo task : tribe.tasks) {
                 tribeBlocks.addAll(task.targetBlocks);
             }
-            PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(tribeBlocks, false), (EntityPlayerMP) master);
+            PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(tribeBlocks, false), (EntityPlayerMP) master);
             ((Entity) master).sendMessage(new TextComponentString(String.format("ur %stribe %shas been %seradicated %suwu", new Object[]{TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED, TextFormatting.WHITE})));
         }
     }
@@ -544,7 +544,7 @@ public class KoboldManager {
             return null;
         }
         KoboldEntity member = memberList.get(0);
-        if (!member.isMasterAssigned()) {
+        if (!member.hasMaster()) {
             return null;
         }
         String masterUUIDStr = memberList.get(0).getDataManager().get(GirlEntity.MASTER_UUID);
@@ -674,7 +674,7 @@ public class KoboldManager {
                 UUID masterUUID = KoboldManager.getTribeMasterUUID((UUID) entry.getKey());
                 if (masterUUID == null || (masterPlayer = (EntityPlayerMP) world.getPlayerEntityByUUID(masterUUID)) == null)
                     continue;
-                PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(pos, true), masterPlayer);
+                PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(pos, true), masterPlayer);
             }
         }
 
@@ -722,7 +722,7 @@ public class KoboldManager {
 
                     if (masterUUID == null || (masterPlayer = (EntityPlayerMP) world.getPlayerEntityByUUID((UUID) masterUUID)) == null)
                         continue;
-                    PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(pos, false), (EntityPlayerMP) masterPlayer);
+                    PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(pos, false), (EntityPlayerMP) masterPlayer);
                 }
             }
 
@@ -744,7 +744,7 @@ public class KoboldManager {
                     HashSet<BlockPos> removedBeds = new HashSet<BlockPos>();
                     removedBeds.add(pos);
                     removedBeds.add((BlockPos) masterUUID);
-                    PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(removedBeds, false), masterPlayerMessed);
+                    PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(removedBeds, false), masterPlayerMessed);
                 }
             }
         }
@@ -1221,7 +1221,7 @@ public class KoboldManager {
                 }
                 EntityPlayerMP masterPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(this.masterUUID);
                 if (masterPlayer != null) {
-                    PackageHandler.networkWrapper.sendTo((IMessage) new SendBlocks(task.targetBlocks, false), masterPlayer);
+                    PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(task.targetBlocks, false), masterPlayer);
                 }
             }
 

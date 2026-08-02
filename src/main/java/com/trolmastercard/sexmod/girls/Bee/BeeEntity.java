@@ -12,8 +12,9 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Supporter;
 import com.trolmastercard.sexmod.gui.BeeInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
@@ -53,11 +54,15 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class BeeEntity extends Supporter {
-    public float N = 3200.0f;
-    int P = 0;
-    final static float O = 4800.0f;
-    final static float Q = 10.0f;
-    final static public DataParameter<Boolean> M = EntityDataManager.createKey(BeeEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(112);
+    public float hornyLevel = 3200.0f;
+    int particleTicks = 0;
+    final static float HORNY_SEX_LEVEL = 4800.0f;
+    final static float HORNY_RANGE = 10.0f;
+    final static public DataParameter<Boolean> IS_TAMED;
+
+    static {
+        IS_TAMED = EntityDataManager.createKey(BeeEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(112);
+    }
 
     public BeeEntity(World world) {
         super(world);
@@ -78,7 +83,7 @@ public class BeeEntity extends Supporter {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.entityDataManager.register(M, false);
+        this.entityDataManager.register(IS_TAMED, false);
     }
 
     @Override
@@ -108,26 +113,26 @@ public class BeeEntity extends Supporter {
 
     @Override
     protected void initEntityAI() {
-        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(0, new FollowPlayerGoal(this));
+        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(0, new SupporterCompanion(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.25));
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, this.followPlayerGoal);
+        this.tasks.addTask(2, this.aiLookAtPlayer);
         this.tasks.addTask(3, new EntityAIWanderAvoidWaterFlying(this, 1.0));
     }
 
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.N < 4800.0f && this.getID() == null) {
+        if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.hornyLevel < 4800.0f && this.getID() == null) {
             this.removePotionEffect(HornyPotion.HORNY_POTION);
-            this.N = 6.9420184E7f;
+            this.hornyLevel = 6.9420184E7f;
         }
-        this.void_c();
+        this.sexLogic();
         if (this.currentAction().equals((Object) Action.CITIZEN_CUM)) {
-            this.P = Math.max(1, this.P);
+            this.particleTicks = Math.max(1, this.particleTicks);
         }
-        this.a_();
+        this.doParticleStuff();
         this.b_15();
     }
 
@@ -139,41 +144,41 @@ public class BeeEntity extends Supporter {
         super.setCurrentAction(action);
     }
 
-    void void_c() {
+    void sexLogic() {
         if (this.getID() != null) {
             return;
         }
-        if (this.isMasterAssigned()) {
+        if (this.hasMaster()) {
             return;
         }
-        this.N += 1.0f;
-        if (this.N < 4800.0f) {
+        this.hornyLevel += 1.0f;
+        if (this.hornyLevel < 4800.0f) {
             return;
         }
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
-        if (entityPlayer == null) {
+        EntityPlayer closestPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
+        if (closestPlayer == null) {
             return;
         }
-        if (BeeEntity.getActiveSceneInfo(entityPlayer) != null) {
+        if (BeeEntity.getActiveSceneInfo(closestPlayer) != null) {
             return;
         }
-        if (PlayerGirl.e(entityPlayer)) {
+        if (PlayerGirl.e(closestPlayer)) {
             return;
         }
-        if (entityPlayer.getDistance(this) < 1.5f) {
-            this.N = 0.0f;
-            this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
+        if (closestPlayer.getDistance(this) < 1.5f) {
+            this.hornyLevel = 0.0f;
+            this.setInteractionPlayerUUID(closestPlayer.getPersistentID());
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setTargetPosition(this.getFrontOffsetVector());
-            this.setYawRotation(entityPlayer.rotationYaw - 180.0f);
+            this.setYawRotation(closestPlayer.rotationYaw - 180.0f);
             this.pathNavigator.clearPath();
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)closestPlayer);
             this.setCurrentAction(Action.CITIZEN_START);
-            Vec3d vec3d = this.getFrontOffsetVector(0.2);
-            entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
+            Vec3d forward = this.getFrontOffsetVector(0.2);
+            closestPlayer.setPositionAndUpdate(forward.x, forward.y, forward.z);
         } else {
             this.pathNavigator.clearPath();
-            this.pathNavigator.tryMoveToEntityLiving(entityPlayer, 1.0);
+            this.pathNavigator.tryMoveToEntityLiving(closestPlayer, 1.0);
         }
     }
 
@@ -189,34 +194,34 @@ public class BeeEntity extends Supporter {
         }
     }
 
-    void a_() {
-        if (this.P == 0) {
+    void doParticleStuff() {
+        if (this.particleTicks == 0) {
             return;
         }
-        ++this.P;
-        if (this.entityDataManager.get(M).booleanValue()) {
-            if (this.P < 40) {
+        ++this.particleTicks;
+        if (this.entityDataManager.get(IS_TAMED)) {
+            if (this.particleTicks < 40) {
                 for (EntityPlayer entityPlayer : this.world.playerEntities) {
                     if (!(entityPlayer.getDistance(this) < 15.0f)) continue;
                     ((EntityPlayerMP)entityPlayer).connection.sendPacket(new SPacketParticles(EnumParticleTypes.HEART, true, (float)this.posX, (float)this.posY + 0.3f, (float)this.posZ, 0.2f, 0.3f, 0.2f, 0.25f, 1, new int[0]));
                 }
             } else {
-                this.P = 0;
+                this.particleTicks = 0;
             }
-        } else if (this.P < 200) {
+        } else if (this.particleTicks < 200) {
             for (EntityPlayer entityPlayer : this.world.playerEntities) {
                 if (!(entityPlayer.getDistance(this) < 15.0f)) continue;
                 ((EntityPlayerMP)entityPlayer).connection.sendPacket(new SPacketParticles(EnumParticleTypes.SPELL, true, (float)this.posX, (float)this.posY + 0.3f, (float)this.posZ, 0.2f, 0.3f, 0.2f, 0.25f, 1, new int[0]));
             }
-        } else if (this.P == 200) {
-            this.entityDataManager.set(M, this.getRNG().nextBoolean());
-        } else if (this.P < 250) {
+        } else if (this.particleTicks == 200) {
+            this.entityDataManager.set(IS_TAMED, this.getRNG().nextBoolean());
+        } else if (this.particleTicks < 250) {
             for (EntityPlayer entityPlayer : this.world.playerEntities) {
                 if (!(entityPlayer.getDistance(this) < 15.0f)) continue;
-                ((EntityPlayerMP)entityPlayer).connection.sendPacket(new SPacketParticles(this.entityDataManager.get(M) != false ? EnumParticleTypes.HEART : EnumParticleTypes.VILLAGER_ANGRY, true, (float)this.posX, (float)this.posY + 0.3f, (float)this.posZ, 0.2f, 0.3f, 0.2f, 0.25f, 3, new int[0]));
+                ((EntityPlayerMP)entityPlayer).connection.sendPacket(new SPacketParticles(this.entityDataManager.get(IS_TAMED) ? EnumParticleTypes.HEART : EnumParticleTypes.VILLAGER_ANGRY, true, (float)this.posX, (float)this.posY + 0.3f, (float)this.posZ, 0.2f, 0.3f, 0.2f, 0.25f, 3, new int[0]));
             }
         } else {
-            this.P = 0;
+            this.particleTicks = 0;
         }
         for (EntityPlayer entityPlayer : this.world.playerEntities) {
             if (!(entityPlayer.getDistance(this) < 15.0f)) continue;
@@ -227,7 +232,7 @@ public class BeeEntity extends Supporter {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.N < 4800.0f && !this.onGround && this.motionY < 0.0) {
+        if (this.hornyLevel < HORNY_SEX_LEVEL && !this.onGround && this.motionY < 0.0) {
             this.motionY *= 0.4;
         }
     }
@@ -238,12 +243,12 @@ public class BeeEntity extends Supporter {
 
     @Override
     protected boolean processInteract(EntityPlayer entityPlayer, EnumHand enumHand) {
-        if (this.entityDataManager.get(M).booleanValue() && !((Boolean)this.entityDataManager.get(HAS_CHEST)).booleanValue() && entityPlayer.getHeldItem(enumHand).getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
+        if (this.entityDataManager.get(IS_TAMED) && !(Boolean) this.entityDataManager.get(HAS_CHEST) && entityPlayer.getHeldItem(enumHand).getItem() == Item.getItemFromBlock(Blocks.CHEST)) {
             this.entityDataManager.set(HAS_CHEST, true);
             entityPlayer.getHeldItem(enumHand).shrink(1);
             return super.processInteract(entityPlayer, enumHand);
         }
-        if (this.world.isRemote && this.entityDataManager.get(M).booleanValue()) {
+        if (this.world.isRemote && this.entityDataManager.get(IS_TAMED)) {
             this.DisplayBeeUI(entityPlayer);
         }
         return super.processInteract(entityPlayer, enumHand);
@@ -260,7 +265,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    public void a(String string, UUID uUID) {
+    public void doAction(String string, UUID uUID) {
     }
 
     @Override
@@ -286,7 +291,7 @@ public class BeeEntity extends Supporter {
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        nbt.setBoolean("isTamed", this.entityDataManager.get(M));
+        nbt.setBoolean("isTamed", this.entityDataManager.get(IS_TAMED));
         nbt.setBoolean("hasChest", (Boolean)this.entityDataManager.get(HAS_CHEST));
         nbt.setTag("inventory", this.invHandler.serializeNBT());
     }
@@ -295,7 +300,7 @@ public class BeeEntity extends Supporter {
     public void readFromNBT(NBTTagCompound nBTTagCompound) {
         super.readFromNBT(nBTTagCompound);
         if (nBTTagCompound.hasKey("isTamed")) {
-            this.entityDataManager.set(M, nBTTagCompound.getBoolean("isTamed"));
+            this.entityDataManager.set(IS_TAMED, nBTTagCompound.getBoolean("isTamed"));
         }
         this.entityDataManager.set(HAS_CHEST, nBTTagCompound.getBoolean("hasChest"));
         this.invHandler.deserializeNBT(nBTTagCompound.getCompoundTag("inventory"));
@@ -303,7 +308,7 @@ public class BeeEntity extends Supporter {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
@@ -352,7 +357,7 @@ public class BeeEntity extends Supporter {
             switch (soundKeyframeEvent.sound) {
                 case "pearl": {
                     if (!this.getClosestPlayerID() || this.currentAction() != Action.THROW_PEARL) break;
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "resetCumPercentage": {

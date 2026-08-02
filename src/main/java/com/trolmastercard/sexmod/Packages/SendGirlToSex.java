@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;

@@ -16,11 +16,11 @@ import java.util.Random;
 import com.trolmastercard.sexmod.Packages.ResetController;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packages.SpawnEnergyBallParticlesAlt;
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.EnergyBallEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathDamageSource;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
@@ -114,7 +114,7 @@ public enum GalathAttackAction {
         galath.previousPos = null;
         galath.setFlyTicks(0);
         galath.setCurrentAction(Action.FLY);
-        PackageHandler.networkWrapper.sendToAllTracking((IMessage)new ResetController(galath.girlID()), (Entity)galath);
+        PackageHandler.INSTANCE.sendToAllTracking((IMessage)new ResetController(galath.girlID()), (Entity)galath);
     },
             galath -> {
         Vec3d currentVec = galath.getPositionVector();
@@ -285,7 +285,7 @@ public enum GalathAttackAction {
             for (EntityWitherSkeleton by : galath.witherSkeletons) {
                 Vec3d d3 = by.getPositionVector();
                 by.world.removeEntity(by);
-                PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(d3, true), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(by.dimension, d3.x, d3.y, d3.z, 50.0));
+                PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(d3, true), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(by.dimension, d3.x, d3.y, d3.z, 50.0));
             }
             galath.witherSkeletons.clear();
             EntityPlayerMP d3 = (EntityPlayerMP)object2;
@@ -294,7 +294,7 @@ public enum GalathAttackAction {
             galath.setAnchored(true);
             galath.setCurrentAction(Action.RAPE_INTRO);
             byte by = (byte)MathHelper.floor((galath.getYawRotation().floatValue() + 180.0f) * 256.0f / 360.0f);
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), d3);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), d3);
             d3.connection.sendPacket(new SPacketEntityVelocity(d3.getEntityId(), 0.0, 0.0, 0.0));
             d3.connection.sendPacket(new SPacketEntity.S16PacketEntityLook(d3.getEntityId(), (byte)by, (byte)-14, true));
             return;

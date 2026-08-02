@@ -32,10 +32,10 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.ea_class235;
 import com.trolmastercard.sexmod.gui.fh_class313;
@@ -223,7 +223,7 @@ implements ai_class30 {
     }
 
     @Override
-    public void a(String string, UUID uUID) {
+    public void doAction(String string, UUID uUID) {
         if ("take ur stuff back".equals(string)) {
             this.setCurrentAction(Action.START_THROWING);
         }
@@ -534,10 +534,10 @@ implements ai_class30 {
 
     @Override
     protected void initEntityAI() {
-        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 2.0f, 1.0f);
+        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 2.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(3, new AutoCloseDoorGoal(this));
-        this.tasks.addTask(5, this.followPlayerGoal);
+        this.tasks.addTask(5, this.aiLookAtPlayer);
     }
 
     @Override
@@ -746,7 +746,7 @@ implements ai_class30 {
         entityPlayer.rotationYaw = f;
         entityPlayer.rotationPitch = 30.0f;
         entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
         this.broadcastChatMessage("Thanks to you, my clan is soon going to get a few new members! In return I will bear of one of my guards to serve as your personal Onahole. Choose wisely~");
     }
 
@@ -903,7 +903,7 @@ implements ai_class30 {
         UUID uUID = entityPlayer.getPersistentID();
         Vec3d vec3d3 = entityPlayer.getPositionVector();
         float f = entityPlayer.rotationYaw + 180.0f;
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         this.setInteractionPlayerUUID(uUID);
         this.setCurrentAction(Action.JUMP_0);
         this.setTargetPosition(vec3d3);
@@ -1521,7 +1521,7 @@ implements ai_class30 {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }

@@ -6,8 +6,8 @@ package com.trolmastercard.sexmod.girls.Galath;
 import java.util.Arrays;
 import java.util.Objects;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.GirlRenderer;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

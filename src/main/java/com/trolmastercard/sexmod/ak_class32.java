@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;

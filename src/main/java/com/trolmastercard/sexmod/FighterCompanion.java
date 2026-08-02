@@ -14,8 +14,9 @@ import com.google.common.collect.Multimap;
 
 import java.util.List;
 
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -44,7 +45,7 @@ import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class FighterAI extends BaseCompanionGoal {
+public class FighterCompanion extends BaseCompanionGoal {
     Fighter fighter;
     EntityLivingBase target;
     Entity o;
@@ -56,7 +57,7 @@ public class FighterAI extends BaseCompanionGoal {
     int p = 0;
     int m = 0;
 
-    public FighterAI(Fighter fighter) {
+    public FighterCompanion(Fighter fighter) {
         super(fighter);
         this.fighter = fighter;
     }
@@ -87,8 +88,8 @@ public class FighterAI extends BaseCompanionGoal {
                     this.d();
                     break;
                 }
-                if (this.fighter.items.getStackInSlot(1).getItem() instanceof ItemBow && this.fighter.getEntitySenses().canSee(this.target) && ++this.p > 0 && distance > 6.0) {
-                    this.dataManager.set(Fighter.M, 2);
+                if (this.fighter.inventory.getStackInSlot(1).getItem() instanceof ItemBow && this.fighter.getEntitySenses().canSee(this.target) && ++this.p > 0 && distance > 6.0) {
+                    this.dataManager.set(Fighter.ATTACK_MODE, 2);
                     this.fighter.setCurrentAction(Action.BOW);
                     if (++this.p >= 32) {
                         this.p = -20;
@@ -100,22 +101,22 @@ public class FighterAI extends BaseCompanionGoal {
                     return;
                 }
                 if (distance < 2.0) {
-                    this.dataManager.set(Fighter.M, 1);
+                    this.dataManager.set(Fighter.ATTACK_MODE, 1);
                     this.pathNavigate.tryMoveToEntityLiving(this.target, 0.5);
-                    this.fighter.setWalkType(GirlEntity.WalkTypes.WALK);
+                    this.fighter.setWalkSpeed(GirlEntity.WalkSpeed.WALK);
                     break;
                 }
-                this.dataManager.set(Fighter.M, 1);
+                this.dataManager.set(Fighter.ATTACK_MODE, 1);
                 this.pathNavigate.tryMoveToEntityLiving(this.target, 0.7);
-                this.fighter.setWalkType(GirlEntity.WalkTypes.RUN);
+                this.fighter.setWalkSpeed(GirlEntity.WalkSpeed.RUN);
                 break;
             }
             case FOLLOW: {
-                this.dataManager.set(Fighter.M, 0);
+                this.dataManager.set(Fighter.ATTACK_MODE, 0);
                 double d = this.fighter.getDistance(this.player);
                 if ((double)this.pathNavigate.getPathSearchRange() > d) {
                     this.pathNavigate.clearPath();
-                    if (!this.fighter.N) {
+                    if (!this.fighter.downed) {
                         this.pathNavigate.tryMoveToEntityLiving(this.player, 0.5);
                         this.void_a();
                     }
@@ -127,8 +128,8 @@ public class FighterAI extends BaseCompanionGoal {
                 break;
             }
             case IDLE: {
-                this.dataManager.set(Fighter.M, 0);
-                if (!this.fighter.N) {
+                this.dataManager.set(Fighter.ATTACK_MODE, 0);
+                if (!this.fighter.downed) {
                     if (++this.j > 200 + Reference.RANDOM.nextInt(100)) {
                         this.j = 0;
                         Vec3d vec3d = this.player.getPositionVector();
@@ -170,7 +171,7 @@ public class FighterAI extends BaseCompanionGoal {
         boolean bl;
         //Entity entity;
         --this.n;
-        if (this.fighter.N || this.fighter.getID() != null) {
+        if (this.fighter.downed || this.fighter.getID() != null) {
             return States.DOWNED;
         }
         if (this.player.isRiding()) {
@@ -256,7 +257,7 @@ public class FighterAI extends BaseCompanionGoal {
 
     protected EntityArrow Arrow() {
         EntityTippedArrow entityTippedArrow = new EntityTippedArrow(this.fighter.world, this.fighter);
-        ItemStack itemStack = this.fighter.items.getStackInSlot(1);
+        ItemStack itemStack = this.fighter.inventory.getStackInSlot(1);
         double d = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, itemStack);
         int n = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, itemStack);
         int n2 = EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, itemStack);
@@ -274,8 +275,8 @@ public class FighterAI extends BaseCompanionGoal {
 
     void d() {
         this.fighter.setCurrentAction(Action.ATTACK);
-        this.dataManager.set(Fighter.M, 1);
-        ItemStack itemStack = this.fighter.items.getStackInSlot(0);
+        this.dataManager.set(Fighter.ATTACK_MODE, 1);
+        ItemStack itemStack = this.fighter.inventory.getStackInSlot(0);
         Multimap<String, AttributeModifier> multimap = itemStack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND);
         float f = 0.0f;
         float f2 = 0.0f;
@@ -312,18 +313,18 @@ public class FighterAI extends BaseCompanionGoal {
     @Override
     protected double setGirlSpeed() {
         double d = super.setGirlSpeed();
-        if (this.fighter.N) {
+        if (this.fighter.downed) {
             d = 0.0;
         }
         this.pathNavigate.setSpeed(d);
-        this.fighter.setWalkType(this.fighter.getWalkType());
+        this.fighter.setWalkSpeed(this.fighter.getWalkType());
         return d;
     }
 
     @Override
     public void resetTask() {
         super.resetTask();
-        this.fighter.getDataManager().set(Fighter.M, 0);
+        this.fighter.getDataManager().set(Fighter.ATTACK_MODE, 0);
     }
 
     void void_a() {
@@ -345,10 +346,10 @@ public class FighterAI extends BaseCompanionGoal {
         public void a(LivingHurtEvent livingHurtEvent) {
             if (livingHurtEvent.getEntityLiving() instanceof Fighter) {
                 Fighter e2_class2182 = (Fighter)livingHurtEvent.getEntityLiving();
-                if (e2_class2182.N) {
+                if (e2_class2182.downed) {
                     livingHurtEvent.setCanceled(true);
                 } else if (e2_class2182.getHealth() - livingHurtEvent.getAmount() < 0.0f && !((String)e2_class2182.getDataManager().get(Fighter.MASTER_UUID)).equals("")) {
-                    e2_class2182.N = true;
+                    e2_class2182.downed = true;
                     e2_class2182.setCurrentAction(Action.DOWNED);
                     livingHurtEvent.setAmount(e2_class2182.getHealth() - 1.0f);
                     e2_class2182.getNavigator().clearPath();
@@ -360,8 +361,8 @@ public class FighterAI extends BaseCompanionGoal {
         public void a(LivingHealEvent livingHealEvent) {
             if (livingHealEvent.getEntityLiving() instanceof Fighter) {
                 Fighter currentFighter = (Fighter)livingHealEvent.getEntityLiving();
-                if (currentFighter.N && currentFighter.getHealth() + livingHealEvent.getAmount() >= currentFighter.getMaxHealth()) {
-                    currentFighter.N = false;
+                if (currentFighter.downed && currentFighter.getHealth() + livingHealEvent.getAmount() >= currentFighter.getMaxHealth()) {
+                    currentFighter.downed = false;
                     currentFighter.setCurrentAction(Action.NULL);
                 }
             }
@@ -375,7 +376,7 @@ public class FighterAI extends BaseCompanionGoal {
                     return;
                 }
                 for (int i = 0; i < 6; ++i) {
-                    Item item = thisfighter.items.getStackInSlot(i).getItem();
+                    Item item = thisfighter.inventory.getStackInSlot(i).getItem();
                     if (item == Items.AIR) continue;
                     thisfighter.dropItem(item, 1);
                 }

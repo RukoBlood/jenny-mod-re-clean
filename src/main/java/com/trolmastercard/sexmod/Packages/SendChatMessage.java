@@ -12,7 +12,7 @@
  */
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
@@ -81,7 +81,7 @@ implements IMessage {
             } else {
                 FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                     Vec3d vec3d = GirlEntity.girlList(msg.c).get(0).getPreviousPosition();
-                    PackageHandler.networkWrapper.sendToAllAround((IMessage)new SendChatMessage(msg.a, msg.d, msg.c), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(msg.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
+                    PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage(msg.a, msg.d, msg.c), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(msg.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
                 });
             }
             return null;

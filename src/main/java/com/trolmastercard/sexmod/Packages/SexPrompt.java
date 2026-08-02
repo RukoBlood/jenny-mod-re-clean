@@ -80,7 +80,7 @@ public class SexPrompt implements IMessage {
                     System.out.println("Sex prompt invalid -> male player not found");
                     return;
                 }
-                PackageHandler.networkWrapper.sendTo((IMessage)new SexPrompt(g4_class3472.c, g4_class3472.b, g4_class3472.a, g4_class3472.d), (EntityPlayerMP)(g4_class3472.d ? entityPlayer : entityPlayer2));
+                PackageHandler.INSTANCE.sendTo((IMessage)new SexPrompt(g4_class3472.c, g4_class3472.b, g4_class3472.a, g4_class3472.d), (EntityPlayerMP)(g4_class3472.d ? entityPlayer : entityPlayer2));
             });
             return null;
         }

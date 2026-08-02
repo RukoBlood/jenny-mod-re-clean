@@ -12,11 +12,11 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.AbstractPlayerKoblinGoboldRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractPlayerKoblinGoboldRenderer;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
 import net.minecraft.client.entity.EntityPlayerSP;

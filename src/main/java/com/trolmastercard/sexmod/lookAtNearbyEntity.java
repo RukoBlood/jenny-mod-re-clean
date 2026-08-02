@@ -8,10 +8,10 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
 
 //df.class
-public class FollowPlayer extends EntityAIWatchClosest2 {
+public class lookAtNearbyEntity extends EntityAIWatchClosest2 {
     public boolean a = true;
 
-    public FollowPlayer(EntityLiving entityLiving, Class<? extends Entity> watchTargetClass, float maxDistance, float chanceIn) {
+    public lookAtNearbyEntity(EntityLiving entityLiving, Class<? extends Entity> watchTargetClass, float maxDistance, float chanceIn) {
         super(entityLiving, watchTargetClass, maxDistance, chanceIn);
     }
 

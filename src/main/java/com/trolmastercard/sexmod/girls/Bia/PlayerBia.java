@@ -10,9 +10,9 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -91,7 +91,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
+    public IRenderer getHandRenderer(int n) {
         return new BiaLimb();
     }
 
@@ -245,7 +245,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
@@ -300,7 +300,7 @@ extends PlayerGirl {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.bia.attack" + this.S, false, event);
+                        this.createAnimation("animation.bia.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {
@@ -405,8 +405,8 @@ extends PlayerGirl {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "stripMSG1": {
@@ -420,7 +420,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "talk_hornyMSG1": {
@@ -559,7 +559,7 @@ extends PlayerGirl {
                 }
                 case "sitdownMSG1": {
                     this.sendLocalClientMessage("come here big boy~");
-                    this.a(SoundsHandler.GIRLS_BIA_BREATH);
+                    this.playSoundAroundHer(SoundsHandler.GIRLS_BIA_BREATH);
                     break;
                 }
                 case "sitdownDone": {
@@ -573,11 +573,11 @@ extends PlayerGirl {
                     break;
                 }
                 case "pound": {
-                    this.a(SoundsHandler.MISC_POUNDING);
+                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "doggyMoan": {
-                    this.a(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_BIA_AHH : SoundsHandler.GIRLS_BIA_MMM);
+                    this.playSoundAroundHer(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_BIA_AHH : SoundsHandler.GIRLS_BIA_MMM);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;

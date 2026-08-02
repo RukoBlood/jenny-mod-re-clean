@@ -12,8 +12,8 @@ import com.trolmastercard.sexmod.Packages.MakeRichWish;
 import com.trolmastercard.sexmod.Packages.UploadInventoryToServerAlt;
 import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -117,7 +117,7 @@ extends GirlEntity {
         super.onUpdate();
         if (this.U != 1.0f && this.U != -69.0f && this.U <= 0.0f) {
             if (this.isControlledByLocalPlayer()) {
-                PackageHandler.networkWrapper.sendToServer((IMessage)new UploadInventoryToServerAlt(this.girlID()));
+                PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServerAlt(this.girlID()));
                 HandlePlayerMovement.setMovementLock(true);
             }
             this.U = -69.0f;
@@ -209,7 +209,7 @@ extends GirlEntity {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
@@ -381,7 +381,7 @@ extends GirlEntity {
                         break;
                     }
                     this.setCurrentAction(Action.DEEPTHROAT_START);
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
@@ -424,7 +424,7 @@ extends GirlEntity {
                 case "deepthroat_cumDone": {
                     if (!this.isControlledByLocalPlayer()) break;
                     this.resetCameraAndPhysics();
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new UploadInventoryToServerAlt(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServerAlt(this.girlID()));
                     break;
                 }
                 case "summon_normalMSG1": {
@@ -469,7 +469,7 @@ extends GirlEntity {
                     this.sendLocalClientMessage(I18n.format("allie.dialogue.wishgranted", new Object[0]));
                     this.PlaySound(SoundsHandler.getRandomSound(SoundsHandler.MISC_PLOB));
                     if (!this.isControlledByLocalPlayer()) break;
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new MakeRichWish(this.getPositionVector()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new MakeRichWish(this.getPositionVector()));
                     break;
                 }
                 case "disappear": {
@@ -568,7 +568,7 @@ extends GirlEntity {
     }
 
     @Override
-    public void a(String string, UUID uUID) {
+    public void doAction(String string, UUID uUID) {
         this.R = true;
         if ("action.names.makemerichallie".equals(string)) {
             this.setCurrentAction(this.boolean_f() ? Action.RICH_FIRST_TIME : Action.RICH_NORMAL);

@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import com.trolmastercard.sexmod.gui.az_class56;
 import net.minecraft.client.Minecraft;

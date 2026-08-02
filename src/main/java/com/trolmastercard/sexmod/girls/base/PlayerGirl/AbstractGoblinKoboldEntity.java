@@ -1,8 +1,9 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base.PlayerGirl;
 
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.network.datasync.DataParameter;

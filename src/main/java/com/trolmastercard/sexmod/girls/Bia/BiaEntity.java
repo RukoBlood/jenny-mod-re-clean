@@ -13,7 +13,8 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SendGirlToSex;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
@@ -67,8 +68,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         this.setSize(0.49f, 1.65f);
         this.P = 140;
         this.O = 50;
-        this.K = 140;
-        this.V = new Vec3d(0.0, -0.029999997854232782, -0.2);
+        this.holdBowRot = 140;
+        this.swordOffsetStab = new Vec3d(0.0, -0.029999997854232782, -0.2);
     }
 
     @Override
@@ -190,7 +191,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.getID() == null && (!this.isMasterAssigned() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.getID() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.openInventoryGui(player, this, stringArray, true);
             return true;
@@ -293,28 +294,28 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public void ResetNPCTasks() {
-        this.avoidWaterGoal = new EntityAIWanderAvoidWater(this, 0.35);
-        this.followPlayerGoal = new FollowPlayer(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.followPlayerGoal);
-        this.tasks.addTask(5, this.avoidWaterGoal);
+        this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
+        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.tasks.addTask(5, this.aiWander);
     }
 
     @Override
-    public void a(String string, UUID uUID) {
-        super.a(string, uUID);
+    public void doAction(String string, UUID player) {
+        super.doAction(string, player);
         switch (string) {
             case "action.names.talk": {
                 this.setInteractionPlayerUUID(Minecraft.getMinecraft().player.getPersistentID());
                 this.changeDataParameterFromClient("playerSheHasSexWith", Minecraft.getMinecraft().player.getPersistentID().toString());
                 this.changeDataParameterFromClient("animationFollowUp", "talkHorny");
-                this.void_a(uUID);
+                this.void_a(player);
                 break;
             }
             case "action.names.headpat": {
                 this.setInteractionPlayerUUID(Minecraft.getMinecraft().player.getPersistentID());
                 this.changeDataParameterFromClient("playerSheHasSexWith", Minecraft.getMinecraft().player.getPersistentID().toString());
                 this.changeDataParameterFromClient("animationFollowUp", "Headpat");
-                this.void_a(uUID);
+                this.void_a(player);
                 break;
             }
             case "action.names.anal": {
@@ -363,8 +364,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
             return null;
         }
-        this.tasks.removeTask(this.avoidWaterGoal);
-        this.tasks.removeTask(this.followPlayerGoal);
+        this.tasks.removeTask(this.aiWander);
+        this.tasks.removeTask(this.aiLookAtPlayer);
         Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         int n2 = -1;
         for (int i = 0; i < this.ad.length; ++i) {
@@ -413,8 +414,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
             return null;
         }
-        this.tasks.removeTask(this.avoidWaterGoal);
-        this.tasks.removeTask(this.followPlayerGoal);
+        this.tasks.removeTask(this.aiWander);
+        this.tasks.removeTask(this.aiLookAtPlayer);
         Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         int n = -1;
         for (int i = 0; i < this.ad.length; ++i) {
@@ -491,12 +492,12 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             }
             case "doggy": {
                 this.resetCameraAndPhysics();
-                PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
+                PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
                 return;
             }//И где собственно код??? TODO: Код запилить
             case "anal": {
                 this.resetCameraAndPhysics();
-                PackageHandler.networkWrapper.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
+                PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
                 return;
             }
         }
@@ -518,7 +519,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.world instanceof FakeWorld) {
             return null;
         }
@@ -571,7 +572,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.bia.attack" + this.S, false, event);
+                        this.createAnimation("animation.bia.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {
@@ -685,8 +686,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
                     this.setCurrentAction(Action.NULL);
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "becomeNude": {
@@ -710,7 +711,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "talk_hornyMSG1": {

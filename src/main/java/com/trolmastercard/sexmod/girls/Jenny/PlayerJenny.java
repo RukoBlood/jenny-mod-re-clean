@@ -12,9 +12,9 @@ import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -83,8 +83,8 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int n) {
-        return new JennyLimb();
+    public IRenderer getHandRenderer(int n) {
+        return new JennyHand();
     }
 
     @Override
@@ -128,7 +128,7 @@ public class PlayerJenny extends PlayerGirl {
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.playerCameraOffsetPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
-            PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         }
     }
 
@@ -189,7 +189,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
@@ -288,7 +288,7 @@ public class PlayerJenny extends PlayerGirl {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.jenny.attack" + this.S, false, event);
+                        this.createAnimation("animation.jenny.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {
@@ -340,8 +340,8 @@ public class PlayerJenny extends PlayerGirl {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             block68 : switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "stripMSG1": {
@@ -557,7 +557,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggyGoOnBedDone": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
                     this.setCurrentAction(Action.WAITDOGGY);
                     break;
                 }
@@ -659,7 +659,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "boobjob_camera": {

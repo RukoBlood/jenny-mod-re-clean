@@ -3,8 +3,8 @@
  */
 package com.trolmastercard.sexmod.girls.Jenny;
 
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.GirlModel;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlModel;
 import net.minecraft.util.ResourceLocation;
 
 public class JennyModel

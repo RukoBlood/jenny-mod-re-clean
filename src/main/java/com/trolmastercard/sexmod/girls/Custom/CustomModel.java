@@ -33,8 +33,8 @@ import javax.imageio.ImageIO;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.RequestServerModelAvailability;
-import com.trolmastercard.sexmod.girls.GirlEntity;
-import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
@@ -98,7 +98,7 @@ public class CustomModel {
     }
 
     public static void a() {
-        PackageHandler.networkWrapper.sendToServer((IMessage)new RequestServerModelAvailability());
+        PackageHandler.INSTANCE.sendToServer((IMessage)new RequestServerModelAvailability());
     }
 
     @SideOnly(value=Side.CLIENT)

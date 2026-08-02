@@ -9,10 +9,10 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class SlimeLimb extends ModelBase implements IRenderer {
+public class SlimeHand extends ModelBase implements IRenderer {
     final private ModelRenderer mdl;
 
-    public SlimeLimb() {
+    public SlimeHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.mdl = new ModelRenderer(this);

@@ -91,12 +91,12 @@ public class DragonStaffGUI extends GuiScreen {
     void executeBaseObjectInteraction() {
         IBlockState block = this.mc.world.getBlockState(this.targetPos);
         if (block.getBlock() instanceof BlockBed || block.getBlock() instanceof BlockChest) {
-            PackageHandler.networkWrapper.sendToServer((IMessage)new SendBlocks(this.targetPos, !gm_class376.a(this.targetPos)));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new SendBlocks(this.targetPos, !gm_class376.a(this.targetPos)));
         }
     }
 
     void toggleTribeFollowMode() {
-        PackageHandler.networkWrapper.sendToServer((IMessage)new SetTribeFollowMode(!isTribeFollowing));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new SetTribeFollowMode(!isTribeFollowing));
     }
 
     void triggerAreaRender() {
@@ -108,17 +108,17 @@ public class DragonStaffGUI extends GuiScreen {
         Block block = this.targetBlockState.getBlock();
         if (block instanceof BlockLog) {
             if (gm_class376.a(this.targetPos)) {
-                PackageHandler.networkWrapper.sendToServer((IMessage)new CancelTask(this.targetPos));
+                PackageHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
                 return;
             }
-            PackageHandler.networkWrapper.sendToServer((IMessage)new FallTree(this.targetPos));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new FallTree(this.targetPos));
         }
         if ((mineParams = this.validateAndCalculateMiningZone()) != null) {
             if (gm_class376.a(this.targetPos)) {
-                PackageHandler.networkWrapper.sendToServer((IMessage)new CancelTask(this.targetPos));
+                PackageHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
                 return;
             }
-            PackageHandler.networkWrapper.sendToServer((IMessage)new Mine((BlockPos)mineParams[0], (EnumFacing)mineParams[1]));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new Mine((BlockPos)mineParams[0], (EnumFacing)mineParams[1]));
         }
     }
 

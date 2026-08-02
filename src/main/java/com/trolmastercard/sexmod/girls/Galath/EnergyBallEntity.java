@@ -150,7 +150,7 @@ extends EntityLiving {
         entityWitherSkeleton.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.STONE_SWORD));
         entityWitherSkeleton.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
         this.world.spawnEntity(entityWitherSkeleton);
-        PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(vec3d, true), (Entity)this);
+        PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(vec3d, true), (Entity)this);
         this.f.witherSkeletons.add(entityWitherSkeleton);
     }
 
@@ -206,7 +206,7 @@ extends EntityLiving {
         if (!this.world.isRemote && "arrow".equals(damageSource.damageType)) {
             this.setHealth(0.0f);
             this.i = false;
-            PackageHandler.networkWrapper.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(this.getPositionVector(), false), (Entity)this);
+            PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(this.getPositionVector(), false), (Entity)this);
             Entity entity = damageSource.getImmediateSource();
             if (entity != null) {
                 this.world.removeEntity(entity);

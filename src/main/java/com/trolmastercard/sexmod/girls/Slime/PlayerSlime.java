@@ -12,8 +12,8 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -33,7 +33,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlayerSlime extends PlayerGirl {
-    boolean isFlyAlternateAnim = false;
+    boolean flySwitch = false;
     int thrustSoundCounter = 0;
 
     protected PlayerSlime(World world) {
@@ -65,8 +65,8 @@ public class PlayerSlime extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getLimbRenderer(int limbIndex) {
-        return new SlimeLimb();
+    public IRenderer getHandRenderer(int limbIndex) {
+        return new SlimeHand();
     }
 
     @Override
@@ -135,7 +135,7 @@ public class PlayerSlime extends PlayerGirl {
         if (partner.getPositionVector().distanceTo(this.getTargetScenePosition()) > 1.0) {
             return;
         }
-        PackageHandler.networkWrapper.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)partner);
+        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)partner);
         this.setInteractionPlayerUUID(partner.getPersistentID());
         partner.rotationYaw = this.getYawRotation();
         this.cameraYaw = this.getYawRotation();
@@ -154,7 +154,7 @@ public class PlayerSlime extends PlayerGirl {
     }
 
     @Override
-    protected <E extends IAnimatable> PlayState animationPredicate(AnimationEvent<E> event) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
                 if (this.currentAction() == Action.NULL || !this.currentAction().autoBlink) {
@@ -174,10 +174,10 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
-                    boolean bl = this.isFlyAlternateAnim = !this.isFlyAlternateAnim;
+                    boolean bl = this.flySwitch = !this.flySwitch;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.slime.fly" + (this.isFlyAlternateAnim ? "2" : ""), true, event);
+                    this.createAnimation("animation.slime.fly" + (this.flySwitch ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
@@ -250,7 +250,7 @@ public class PlayerSlime extends PlayerGirl {
                         break block5;
                     }
                     case ATTACK: {
-                        this.createAnimation("animation.slime.attack" + this.S, false, event);
+                        this.createAnimation("animation.slime.attack" + this.nextAttack, false, event);
                         break block5;
                     }
                     case BOW: {
@@ -279,8 +279,8 @@ public class PlayerSlime extends PlayerGirl {
             String string;
             switch (string = soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.S != 3) break;
-                    this.S = 0;
+                    if (++this.nextAttack != 3) break;
+                    this.nextAttack = 0;
                     break;
                 }
                 case "undress": {
@@ -380,7 +380,7 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggyGoOnBedDone": {
-                    PackageHandler.networkWrapper.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
                     this.setCurrentAction(Action.WAITDOGGY);
                     break;
                 }

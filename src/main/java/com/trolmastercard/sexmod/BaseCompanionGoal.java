@@ -9,8 +9,8 @@ package com.trolmastercard.sexmod;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,17 +55,17 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
     }
 
     protected double setGirlSpeed() {
-        GirlEntity.WalkTypes walkTypes;
+        GirlEntity.WalkSpeed walkSpeed;
         double speed;
         float distance = this.entity.getDistance(this.player);
 
         if (this.player.isSprinting()) {
             speed = BASE_RUN_SPEED;
-            walkTypes = GirlEntity.WalkTypes.RUN;
+            walkSpeed = GirlEntity.WalkSpeed.RUN;
         }
         else {
             speed = BASE_WALK_SPEED;
-            walkTypes = GirlEntity.WalkTypes.WALK;
+            walkSpeed = GirlEntity.WalkSpeed.WALK;
         }
 
         double distBonus = Math.floor(distance / 5.0f) * 0.2;
@@ -73,11 +73,11 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
 
         if (this.entity.isInWater()) {
             speed *= 60.0;
-            walkTypes = GirlEntity.WalkTypes.WALK;
+            walkSpeed = GirlEntity.WalkSpeed.WALK;
         }
 
         this.pathNavigate.setSpeed(speed);
-        this.entity.setWalkType(walkTypes);
+        this.entity.setWalkSpeed(walkSpeed);
         return speed;
     }
 
@@ -113,8 +113,8 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
     @Override
     public void updateTask() {
         this.CurState = this.getNewState();
-        if (this.entity.followPlayerGoal != null) {
-            this.entity.followPlayerGoal.a = this.CurState == States.IDLE;
+        if (this.entity.aiLookAtPlayer != null) {
+            this.entity.aiLookAtPlayer.a = this.CurState == States.IDLE;
         }
         this.CompanionStates(this.CurState);
     }

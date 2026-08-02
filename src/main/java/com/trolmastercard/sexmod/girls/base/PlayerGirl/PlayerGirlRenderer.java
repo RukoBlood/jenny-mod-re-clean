@@ -5,13 +5,16 @@
  *  javax.vecmath.Vector4f
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod.girls;
+package com.trolmastercard.sexmod.girls.base.PlayerGirl;
 
 import java.util.Objects;
 import javax.annotation.CheckReturnValue;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.bu_class100;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;

@@ -20,8 +20,8 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.InformOfOwnership;
-import com.trolmastercard.sexmod.girls.Action;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
@@ -236,7 +236,7 @@ implements IAnimatable {
             return;
         }
         GalathMangTracker.a((GalathEntity)em_class2582);
-        PackageHandler.networkWrapper.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
+        PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
     }
 
     void b(EntityPlayer entityPlayer, NBTTagCompound nBTTagCompound, long l, long l2) {

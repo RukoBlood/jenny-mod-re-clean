@@ -1,7 +1,7 @@
 package com.trolmastercard.sexmod.Packages;
 
-import com.trolmastercard.sexmod.Fighter;
-import com.trolmastercard.sexmod.girls.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.Fighter;
+import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -46,7 +46,7 @@ public class UpdateEquipment implements IMessage {
                 ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.c);
                 for (GirlEntity em_class2582 : arrayList) {
                     if (!(em_class2582 instanceof Fighter)) continue;
-                    ((Fighter)em_class2582).items.deserializeNBT(msg.b);
+                    ((Fighter)em_class2582).inventory.deserializeNBT(msg.b);
                 }
             });
             return null;

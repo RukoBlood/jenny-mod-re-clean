@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod.girls.Bia;
 
 import java.util.HashSet;
 
-import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
