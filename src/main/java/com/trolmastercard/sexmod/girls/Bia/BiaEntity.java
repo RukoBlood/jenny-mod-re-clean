@@ -9,9 +9,10 @@ package com.trolmastercard.sexmod.girls.Bia;
 
 import java.util.UUID;
 import javax.vecmath.Vector4d;
-import com.trolmastercard.sexmod.*;
+
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SendGirlToSex;
+import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
@@ -66,8 +67,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     public BiaEntity(World world) {
         super(world);
         this.setSize(0.49f, 1.65f);
-        this.P = 140;
-        this.O = 50;
+        this.slashSwordRot = 140;
+        this.stabSwordRot = 50;
         this.holdBowRot = 140;
         this.swordOffsetStab = new Vec3d(0.0, -0.029999997854232782, -0.2);
     }
@@ -126,7 +127,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             if (this.getPositionVector().equals(this.getTargetPosition()) || this.ag > 40) {
                 this.Y = false;
                 this.ag = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.playerSheHasSexWith()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.U();
@@ -191,7 +192,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.getID() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.playerSheHasSexWith() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER_UUID)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.openInventoryGui(player, this, stringArray, true);
             return true;
@@ -295,7 +296,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.aiLookAtPlayer);
         this.tasks.addTask(5, this.aiWander);
     }

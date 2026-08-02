@@ -43,7 +43,7 @@ public class LunaRenderer extends GirlRenderer {
             case FISHING_IDLE: 
             case FISHING_START: {
                 ItemStack itemStack2 = ((LunaEntity)this.renderEntity).ao;
-                ItemStack itemStack3 = this.renderEntity.getDataManager().get(LunaEntity.az);
+                ItemStack itemStack3 = this.renderEntity.getDataManager().get(LunaEntity.FISHING_ROD);
                 if (itemStack3.equals(ItemStack.EMPTY)) {
                     return itemStack2;
                 }
@@ -95,13 +95,13 @@ public class LunaRenderer extends GirlRenderer {
             }
             case "offhand": {
                 LunaEntity eb_class2362 = (LunaEntity)this.renderEntity;
-                ItemStack itemStack = this.renderEntity.getDataManager().get(LunaEntity.ag);
-                if (itemStack.equals(ItemStack.EMPTY) || eb_class2362.Z != 1.0f) break;
+                ItemStack itemStack = this.renderEntity.getDataManager().get(LunaEntity.CAUGHT_ITEM);
+                if (itemStack.equals(ItemStack.EMPTY) || eb_class2362.throwBackPercentage != 1.0f) break;
                 GlStateManager.pushMatrix();
                 Tessellator.getInstance().draw();
                 GeckoMatrixBridge.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
                 GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
-                GlStateManager.scale(eb_class2362.aa, eb_class2362.aa, eb_class2362.aa);
+                GlStateManager.scale(eb_class2362.fishSizePercentage, eb_class2362.fishSizePercentage, eb_class2362.fishSizePercentage);
                 Minecraft.getMinecraft().getItemRenderer().renderItem(this.renderEntity, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
                 GirlRenderer.tempBuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
                 this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));

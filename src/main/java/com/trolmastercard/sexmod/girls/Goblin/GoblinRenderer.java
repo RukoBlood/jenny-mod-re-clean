@@ -78,7 +78,7 @@ public class GoblinRenderer extends AbstractKoboldGoblinRenderer<GoblinEntity> {
     @Override
     protected ResourceLocation getOrCreateDynamicSkin(GoblinEntity entity) throws IOException {
         ResourceLocation resourceLocation;
-        UUID uUID = entity.getID();
+        UUID uUID = entity.playerSheHasSexWith();
         if (uUID == null) {
             uUID = entity.java_util_UUID_e();
         }

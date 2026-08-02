@@ -62,7 +62,7 @@ implements IWingsOwner {
 
     @Override
     public IRenderer getHandRenderer(int n) {
-        return new GalathLimb();
+        return new GalathHand();
     }
 
     @Override

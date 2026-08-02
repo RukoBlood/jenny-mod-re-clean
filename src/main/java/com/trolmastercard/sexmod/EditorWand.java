@@ -41,8 +41,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EditorWand
-extends Item {
+public class EditorWand extends Item {
     final static public EditorWand EDITOR_WAND = new EditorWand();
 
     public EditorWand() {

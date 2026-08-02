@@ -4,7 +4,7 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -68,7 +68,7 @@ public class g7_class352 extends GuiScreen {
     protected void actionPerformed(GuiButton guiButton) throws IOException {
         super.actionPerformed(guiButton);
         String string = this.d.getText().trim();
-        if (string.length() == 0) {
+        if (string.isEmpty()) {
             return;
         }
         PackageHandler.INSTANCE.sendToServer((IMessage)new ClaimTribe(this.e, Minecraft.getMinecraft().player.getPersistentID(), string));

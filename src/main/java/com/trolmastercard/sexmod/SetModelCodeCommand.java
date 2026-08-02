@@ -28,9 +28,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SetModelCodeCommand
-extends CommandBase
-implements IClientCommand {
+public class SetModelCodeCommand extends CommandBase implements IClientCommand {
     final static public SetModelCodeCommand a = new SetModelCodeCommand();
 
     public boolean allowUsageWithoutPrefix(ICommandSender iCommandSender, String string) {

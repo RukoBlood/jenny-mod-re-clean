@@ -97,7 +97,7 @@ implements ai_class30 {
 
     @Override
     public IRenderer getHandRenderer(int n) {
-        return new KoboldLimb();
+        return new KoboldHand();
     }
 
     @Override
@@ -550,7 +550,7 @@ implements ai_class30 {
     @SideOnly(value=Side.CLIENT)
     void d(Action fp_class3242) {
         Minecraft minecraft = Minecraft.getMinecraft();
-        if (!minecraft.player.getPersistentID().equals(this.getID())) {
+        if (!minecraft.player.getPersistentID().equals(this.playerSheHasSexWith())) {
             return;
         }
         if (minecraft.gameSettings.thirdPersonView != 0) {
@@ -625,7 +625,7 @@ implements ai_class30 {
     }
 
     void void_q() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
         if (entityPlayer == null) {
             return;
         }
@@ -638,7 +638,7 @@ implements ai_class30 {
     }
 
     void void_m() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
         if (entityPlayer == null) {
             return;
         }

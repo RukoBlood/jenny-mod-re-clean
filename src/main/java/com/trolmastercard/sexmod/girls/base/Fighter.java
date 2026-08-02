@@ -12,7 +12,7 @@ package com.trolmastercard.sexmod.girls.base;
 import java.util.List;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.FighterCompanion;
+import com.trolmastercard.sexmod.companion.fighter.FighterCompanion;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SetNewHome;
 import com.trolmastercard.sexmod.Packages.bo_class90;
@@ -43,8 +43,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public abstract class Fighter extends GirlEntity {
     public int nextAttack = 1;
-    public int P;
-    public int O = 0;
+    public int slashSwordRot;
+    public int stabSwordRot = 0;
     public int holdBowRot;
     public Vec3d swordOffsetStab = Vec3d.ZERO;
     public boolean downed;

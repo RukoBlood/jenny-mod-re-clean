@@ -54,7 +54,7 @@ extends GirlModel<GirlEntity> {
             return super.isSteveSkinType(girl);
         }
         GoblinEntity e3_class2192 = (GoblinEntity) girl;
-        UUID uUID = e3_class2192.getID();
+        UUID uUID = e3_class2192.playerSheHasSexWith();
         if (uUID == null) {
             uUID = e3_class2192.java_util_UUID_e();
         }
@@ -152,7 +152,7 @@ extends GirlModel<GirlEntity> {
     void a(AnimationProcessor animationProcessor, ai_class30 ai_class302, GirlEntity em_class2582) {
         UUID uUID = ai_class302.java_util_UUID_e();
         if (uUID == null) {
-            em_class2582.getID();
+            em_class2582.playerSheHasSexWith();
         }
         if (uUID == null) {
             return;

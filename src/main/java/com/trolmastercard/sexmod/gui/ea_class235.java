@@ -73,7 +73,7 @@ public class ea_class235 extends GuiScreen {
     }
 
     void c() {
-        if (this.f.getID() != null) {
+        if (this.f.playerSheHasSexWith() != null) {
             return;
         }
         this.f.setCurrentAction(Action.START_THROWING);

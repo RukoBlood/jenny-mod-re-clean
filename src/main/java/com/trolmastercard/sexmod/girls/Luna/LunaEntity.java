@@ -15,9 +15,11 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaHookEntity;
+import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaRod;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -75,29 +77,28 @@ import software.bernie.geckolib3.core.controller.AnimationController.ISoundListe
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class LunaEntity
-extends Fighter
-implements bh_class82,
-        IBeddableSexGirl {
+public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     static public double ap = 0.01;
     public ItemStack ao = new ItemStack(LunaRod.LUNA_ROD);
-    final static public DataParameter<Float> Y = EntityDataManager.createKey(LunaEntity.class, DataSerializers.FLOAT).getSerializer().createKey(121);
-    final static public DataParameter<ItemStack> az = EntityDataManager.createKey(LunaEntity.class, DataSerializers.ITEM_STACK).getSerializer().createKey(120);
-    final static public DataParameter<Boolean> af = EntityDataManager.createKey(LunaEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(119);
-    final static public DataParameter<ItemStack> ag = EntityDataManager.createKey(LunaEntity.class, DataSerializers.ITEM_STACK).getSerializer().createKey(118);
-    final static float ah = 3.0f;
-    final static float ax = 1200.0f;
+    final static public DataParameter<Float> TARGET_DISTANCE;
+    final static public DataParameter<ItemStack> FISHING_ROD;
+    final static public DataParameter<Boolean> IS_FISHING;
+    final static public DataParameter<ItemStack> CAUGHT_ITEM;
+
+    final static float LUNA_WALK_SPEED = 3.0f;
+    final static float HUNGER_START_EATING_TICK = 1200.0f;
+
     @Nullable
-    public LunaHookEntity lunaHookEntity;
-    public float aa = 1.0f;
-    public float Z = 0.0f;
-    int aj = 8000;
-    public boolean ac = false;
+    public LunaHookEntity fishEntity;
+    public float fishSizePercentage = 1.0f;
+    public float throwBackPercentage = 0.0f;
+    int hunger = 8000;
+    public boolean isPreparingTalk = false;
     int aw = 0;
     boolean ay = false;
     int ak = 0;
     int ab = 0;
-    public BlockPos ai;
+    public BlockPos chosenFishingSpot;
     int at = 0;
     int as = 0;
     boolean am;
@@ -109,10 +110,17 @@ implements bh_class82,
     boolean ae = false;
     boolean ad = false;
 
+    static {
+        TARGET_DISTANCE = EntityDataManager.createKey(LunaEntity.class, DataSerializers.FLOAT).getSerializer().createKey(121);
+        FISHING_ROD = EntityDataManager.createKey(LunaEntity.class, DataSerializers.ITEM_STACK).getSerializer().createKey(120);
+        IS_FISHING = EntityDataManager.createKey(LunaEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(119);
+        CAUGHT_ITEM = EntityDataManager.createKey(LunaEntity.class, DataSerializers.ITEM_STACK).getSerializer().createKey(118);
+    }
+
     public LunaEntity(World world) {
         super(world);
-        this.P = 230;
-        this.O = 150;
+        this.slashSwordRot = 230;
+        this.stabSwordRot = 150;
         this.holdBowRot = 320;
         this.swordOffsetStab = new Vec3d(0.0, -0.05999999718368053, 0.10000001192092894);
         if (this.inventory.getStackInSlot(0) == ItemStack.EMPTY) {
@@ -136,10 +144,10 @@ implements bh_class82,
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.entityDataManager.register(Y, Float.valueOf(0.0f));
-        this.entityDataManager.register(az, ItemStack.EMPTY);
-        this.entityDataManager.register(af, false);
-        this.entityDataManager.register(ag, ItemStack.EMPTY);
+        this.entityDataManager.register(TARGET_DISTANCE, 0.0f);
+        this.entityDataManager.register(FISHING_ROD, ItemStack.EMPTY);
+        this.entityDataManager.register(IS_FISHING, false);
+        this.entityDataManager.register(CAUGHT_ITEM, ItemStack.EMPTY);
     }
 
     @Override
@@ -161,7 +169,7 @@ implements bh_class82,
 
     @Override
     public void void_b() {
-        this.ac = true;
+        this.isPreparingTalk = true;
     }
 
     @Override
@@ -201,13 +209,13 @@ implements bh_class82,
     }
 
     public void b(ItemStack itemStack) {
-        this.entityDataManager.set(ag, itemStack);
+        this.entityDataManager.set(CAUGHT_ITEM, itemStack);
     }
 
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.aiLookAtPlayer);
         this.tasks.addTask(5, this.aiWander);
     }
@@ -222,10 +230,10 @@ implements bh_class82,
         }
         this.void_m();
         this.void_i();
-        this.entityDataManager.set(af, this.lunaHookEntity != null && this.entityDataManager.get(ag) == ItemStack.EMPTY);
-        if (this.al == this.world.getTotalWorldTime() && this.lunaHookEntity != null) {
-            this.world.removeEntity(this.lunaHookEntity);
-            this.lunaHookEntity = null;
+        this.entityDataManager.set(IS_FISHING, this.fishEntity != null && this.entityDataManager.get(CAUGHT_ITEM) == ItemStack.EMPTY);
+        if (this.al == this.world.getTotalWorldTime() && this.fishEntity != null) {
+            this.world.removeEntity(this.fishEntity);
+            this.fishEntity = null;
         }
         if (this.ay) {
             double d = this.getTargetPosition().distanceTo(this.getPositionVector());
@@ -244,12 +252,12 @@ implements bh_class82,
                 this.getNavigator().tryMoveToXYZ(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, 0.2);
             }
         }
-        if (this.ac) {
+        if (this.isPreparingTalk) {
             ++this.aw;
             if (this.getPositionVector().equals(this.getTargetPosition()) || this.aw > 40) {
-                this.ac = false;
+                this.isPreparingTalk = false;
                 this.aw = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.playerSheHasSexWith()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.U();
@@ -261,12 +269,12 @@ implements bh_class82,
             }
         }
         this.void_d();
-        this.entityDataManager.set(az, this.inventory.getStackInSlot(6));
+        this.entityDataManager.set(FISHING_ROD, this.inventory.getStackInSlot(6));
     }
 
     void void_d() {
         ItemStack itemStack = this.ao;
-        ItemStack itemStack2 = this.entityDataManager.get(az);
+        ItemStack itemStack2 = this.entityDataManager.get(FISHING_ROD);
         if (itemStack2.equals(ItemStack.EMPTY)) {
             return;
         }
@@ -365,32 +373,32 @@ implements bh_class82,
     }
 
     public void void_j() {
-        EntityItem entityItem = new EntityItem(this.world, this.posX, this.posY, this.posZ, this.entityDataManager.get(ag));
+        EntityItem entityItem = new EntityItem(this.world, this.posX, this.posY, this.posZ, this.entityDataManager.get(CAUGHT_ITEM));
         Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, (double)0.2f + Math.random() * (double)0.1f, (double)-0.2f + Math.random() * (double)-0.1f), this.rotationYaw);
         entityItem.motionX = vec3d.x;
         entityItem.motionY = vec3d.y;
         entityItem.motionZ = vec3d.z;
         this.world.spawnEntity(entityItem);
-        this.entityDataManager.set(ag, ItemStack.EMPTY);
+        this.entityDataManager.set(CAUGHT_ITEM, ItemStack.EMPTY);
     }
 
     public void void_q() {
-        this.ai = null;
+        this.chosenFishingSpot = null;
         this.at = 0;
         this.as = 0;
         this.am = false;
         this.entityDataManager.set(IS_ANCHORED, false);
-        this.entityDataManager.set(ag, ItemStack.EMPTY);
+        this.entityDataManager.set(CAUGHT_ITEM, ItemStack.EMPTY);
         this.setSilent(false);
         this.setCurrentAction(Action.NULL);
-        if (this.lunaHookEntity != null) {
-            this.world.removeEntity(this.lunaHookEntity);
-            this.lunaHookEntity = null;
+        if (this.fishEntity != null) {
+            this.world.removeEntity(this.fishEntity);
+            this.fishEntity = null;
         }
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             return;
         }
-        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.aiLookAtPlayer);
         if (this.hasMaster()) {
             return;
@@ -403,26 +411,26 @@ implements bh_class82,
         this.void_q();
         if (++this.aq >= 3) {
             this.aq = 0;
-            this.aj = 0;
+            this.hunger = 0;
         }
     }
 
     void void_i() {
         Object object;
-        if (this.hasMaster() || this.getID() != null || this.ar) {
-            if (this.entityDataManager.get(af).booleanValue()) {
+        if (this.hasMaster() || this.playerSheHasSexWith() != null || this.ar) {
+            if (this.entityDataManager.get(IS_FISHING).booleanValue()) {
                 this.void_q();
             }
             return;
         }
-        ++this.aj;
-        if ((float)this.aj < 1200.0f) {
+        ++this.hunger;
+        if ((float)this.hunger < 1200.0f) {
             return;
         }
-        if (this.lunaHookEntity != null && this.lunaHookEntity.d == 15) {
-            ((LunaRod)this.ao.getItem()).a(this.world, this, EnumHand.MAIN_HAND);
+        if (this.fishEntity != null && this.fishEntity.d == 15) {
+            ((LunaRod)this.ao.getItem()).onItemRightClick(this.world, this, EnumHand.MAIN_HAND);
             this.al = this.world.getTotalWorldTime() + 20L;
-            object = this.entityDataManager.get(ag);
+            object = this.entityDataManager.get(CAUGHT_ITEM);
             if (object != ItemStack.EMPTY) {
                 if (((ItemStack)object).getItem() instanceof ItemFood) {
                     this.setCurrentAction(Action.FISHING_EAT);
@@ -435,8 +443,8 @@ implements bh_class82,
             this.void_n();
             this.void_e();
         }
-        if (this.ai != null && this.au == null && this.getNavigator().getPath() == null && !this.inWater && this.onGround) {
-            object = this.world.rayTraceBlocks(this.getPositionVector().add(0.0, this.getEyeHeight(), 0.0), new Vec3d(this.ai.getX(), this.ai.getY(), this.ai.getZ()), true);
+        if (this.chosenFishingSpot != null && this.au == null && this.getNavigator().getPath() == null && !this.inWater && this.onGround) {
+            object = this.world.rayTraceBlocks(this.getPositionVector().add(0.0, this.getEyeHeight(), 0.0), new Vec3d(this.chosenFishingSpot.getX(), this.chosenFishingSpot.getY(), this.chosenFishingSpot.getZ()), true);
             this.setSilent(true);
             if (this.aiWander != null) {
                 this.tasks.removeTask(this.aiWander);
@@ -450,7 +458,7 @@ implements bh_class82,
                 this.setCurrentAction(Action.FISHING_START);
                 this.setTargetPosition(this.getPositionVector());
                 this.entityDataManager.set(IS_ANCHORED, true);
-                this.setYawRotation((float)Math.atan2(this.posZ - (double)this.ai.getZ(), this.posX - (double)this.ai.getX()) * 57.29578f + 90.0f);
+                this.setYawRotation((float)Math.atan2(this.posZ - (double)this.chosenFishingSpot.getZ(), this.posX - (double)this.chosenFishingSpot.getX()) * 57.29578f + 90.0f);
             }
             return;
         }
@@ -458,16 +466,16 @@ implements bh_class82,
     }
 
     public void void_o() {
-        this.an.add(this.ai);
+        this.an.add(this.chosenFishingSpot);
         this.void_q();
     }
 
     void void_e() {
-        if (this.ai == null) {
+        if (this.chosenFishingSpot == null) {
             return;
         }
         PathNavigate pathNavigate = this.getNavigator();
-        pathNavigate.tryMoveToXYZ(this.ai.getX(), this.ai.getY(), this.ai.getZ(), 0.35f);
+        pathNavigate.tryMoveToXYZ(this.chosenFishingSpot.getX(), this.chosenFishingSpot.getY(), this.chosenFishingSpot.getZ(), 0.35f);
         Path path = pathNavigate.getPath();
         if (path == null) {
             return;
@@ -523,14 +531,14 @@ implements bh_class82,
         if (blockPos2 == null) {
             return;
         }
-        if (this.ai == null || this.at < n2) {
-            this.ai = blockPos2;
+        if (this.chosenFishingSpot == null || this.at < n2) {
+            this.chosenFishingSpot = blockPos2;
             this.at = n2;
         }
-        if (this.ai.equals(blockPos2)) {
+        if (this.chosenFishingSpot.equals(blockPos2)) {
             this.as = 0;
         } else if (++this.as > 20) {
-            this.ai = blockPos2;
+            this.chosenFishingSpot = blockPos2;
             this.at = n2;
         }
     }
@@ -545,7 +553,7 @@ implements bh_class82,
         if (pathPoint == null) {
             return;
         }
-        this.entityDataManager.set(Y, Float.valueOf(pathPoint.distanceTo(pathPoint2)));
+        this.entityDataManager.set(TARGET_DISTANCE, Float.valueOf(pathPoint.distanceTo(pathPoint2)));
     }
 
     @Override
@@ -675,7 +683,7 @@ implements bh_class82,
                 }
                 if (Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ) > 0.0) {
                     if (this.onGround && Math.abs(Math.abs(this.prevPosY) - Math.abs(this.posY)) < (double)0.1f) {
-                        this.createAnimation(this.entityDataManager.get(Y).floatValue() < 3.0f ? "animation.cat.walk" : "animation.cat.run", true, event);
+                        this.createAnimation(this.entityDataManager.get(TARGET_DISTANCE).floatValue() < 3.0f ? "animation.cat.walk" : "animation.cat.run", true, event);
                     } else {
                         this.createAnimation("animation.cat.fly", true, event);
                     }
@@ -818,7 +826,7 @@ implements bh_class82,
                 }
                 case "eat": {
                     this.PlaySoundAtPosition(SoundsHandler.getRandomSound(SoundsHandler.MISC_EAT), 0.5f + 0.5f * (float)this.rand.nextInt(2), (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 1.0f);
-                    this.aa -= 0.33333334f;
+                    this.fishSizePercentage -= 0.33333334f;
                     break;
                 }
                 case "eatPay": {
@@ -835,24 +843,24 @@ implements bh_class82,
                         PackageHandler.INSTANCE.sendToServer((IMessage)new CatEatingDone(this.girlID()));
                         this.setCurrentAction(Action.NULL);
                     }
-                    this.aa = 1.0f;
-                    this.Z = 0.0f;
+                    this.fishSizePercentage = 1.0f;
+                    this.throwBackPercentage = 0.0f;
                     break;
                 }
                 case "throw_away": {
                     if (this.getClosestPlayerID()) {
                         PackageHandler.INSTANCE.sendToServer((IMessage)new CatThrowAwayItem(this.girlID()));
                     }
-                    this.aa = 1.0f;
-                    this.Z = 0.0f;
+                    this.fishSizePercentage = 1.0f;
+                    this.throwBackPercentage = 0.0f;
                     break;
                 }
                 case "renderItem": {
-                    this.Z = 1.0f;
+                    this.throwBackPercentage = 1.0f;
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.getID(), "Here, I know u like fish and yea.. these are for you");
+                    this.a(this.playerSheHasSexWith(), "Here, I know u like fish and yea.. these are for you");
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
@@ -1054,7 +1062,7 @@ implements bh_class82,
                     if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     Vec3d vec3d = new Vec3d(0.0, -0.075f, -0.7109375);
-                    Vec3d vec3d2 = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
+                    Vec3d vec3d2 = VectorMath.rotate(vec3d, this.getYawRotation() + 180.0f);
                     Minecraft.getMinecraft().player.setPosition(this.getTargetPosition().x + vec3d2.x, this.getTargetPosition().y + vec3d2.y, this.getTargetPosition().z + vec3d2.z);
                     break;
                 }
@@ -1093,14 +1101,10 @@ implements bh_class82,
         this.setNoGravity(false);
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
-    public static class CreeperLogic {
+    public static class EventHandler {
         @SubscribeEvent
-        public void ScareCreepers(EntityJoinWorldEvent entityJoinWorldEvent) {
-            Entity entity = entityJoinWorldEvent.getEntity();
+        public void makeCreepersBeAfraid(EntityJoinWorldEvent event) {
+            Entity entity = event.getEntity();
             if (entity instanceof EntityCreeper) {
                 EntityCreeper creeper = (EntityCreeper)entity;
                 creeper.tasks.addTask(3, new EntityAIAvoidEntity<LunaEntity>(creeper, LunaEntity.class, 6.0f, 1.0, 1.2));

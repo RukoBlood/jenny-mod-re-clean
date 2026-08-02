@@ -57,8 +57,7 @@ public class SexPrompt implements IMessage {
         byteBuf.writeBoolean(this.d);
     }
 
-    public static class a_inner348
-    implements IMessageHandler<SexPrompt, IMessage> {
+    public static class Handler implements IMessageHandler<SexPrompt, IMessage> {
         public IMessage a(SexPrompt g4_class3472, MessageContext messageContext) {
             if (!g4_class3472.e) {
                 System.out.println("received an invalid message @SexPrompt :(");

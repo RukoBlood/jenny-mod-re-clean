@@ -1,11 +1,4 @@
-/*
- * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
- * 
- * Could not load the following classes:
- *  net.minecraftforge.event.entity.living.LivingDeathEvent
- *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
- */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.companion;
 
 import java.util.UUID;
 
@@ -20,33 +13,33 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public abstract class BaseCompanionGoal extends EntityAIBase {
+public abstract class CompanionBase extends EntityAIBase {
     public GirlEntity entity;
-    public EntityPlayer player;
-    public PathNavigate pathNavigate;
+    public EntityPlayer master;
+    public PathNavigate navigator;
     public EntityDataManager dataManager;
-    public States CurState = States.IDLE;
+    public Mode CurState = Mode.IDLE;
     final static public double BASE_WALK_SPEED = 0.5;
     final static public double BASE_RUN_SPEED = 0.7;
     final static public int DEATH_PREVENTION_TICKS = 60;
 
-    public BaseCompanionGoal(GirlEntity girl) {
+    public CompanionBase(GirlEntity girl) {
         this.entity = girl;
-        this.pathNavigate = girl.getNavigator();
+        this.navigator = girl.getNavigator();
         this.dataManager = girl.getDataManager();
     }
 
-    protected void goNearPlayer() {
+    protected void tpToPlayer() {
         BlockPos targetPos;
         int attempts = 0;
 
         do {
-            targetPos = this.player.getPosition().add(Reference.RANDOM.nextInt(10), 0, Reference.RANDOM.nextInt(10));
+            targetPos = this.master.getPosition().add(Reference.RANDOM.nextInt(10), 0, Reference.RANDOM.nextInt(10));
         }
         while (++attempts < 20 && !this.entity.attemptTeleport(targetPos.getX(), targetPos.getY(), targetPos.getZ()));
 
         if (attempts >= 20) {
-            this.entity.setPosition(this.player.posX, this.player.posY, this.player.posZ);
+            this.entity.setPosition(this.master.posX, this.master.posY, this.master.posZ);
         }
 
         this.entity.motionX = 0.0;
@@ -54,12 +47,12 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
         this.entity.motionZ = 0.0;
     }
 
-    protected double setGirlSpeed() {
+    protected double setMovementSpeed() {
         GirlEntity.WalkSpeed walkSpeed;
         double speed;
-        float distance = this.entity.getDistance(this.player);
+        float distance = this.entity.getDistance(this.master);
 
-        if (this.player.isSprinting()) {
+        if (this.master.isSprinting()) {
             speed = BASE_RUN_SPEED;
             walkSpeed = GirlEntity.WalkSpeed.RUN;
         }
@@ -76,20 +69,20 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
             walkSpeed = GirlEntity.WalkSpeed.WALK;
         }
 
-        this.pathNavigate.setSpeed(speed);
+        this.navigator.setSpeed(speed);
         this.entity.setWalkSpeed(walkSpeed);
         return speed;
     }
 
     @Override
     public void resetTask() {
-        this.pathNavigate.clearPath();
-        this.CurState = States.IDLE;
+        this.navigator.clearPath();
+        this.CurState = Mode.IDLE;
         this.entity.setCurrentAction(Action.NULL);
         this.dataManager.set(GirlEntity.MASTER_UUID, "");
-        this.pathNavigate = null;
+        this.navigator = null;
         this.dataManager = null;
-        this.player = null;
+        this.master = null;
     }
 
     @Override
@@ -105,23 +98,23 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
 
     @Override
     public void startExecuting() {
-        this.pathNavigate = this.entity.getNavigator();
+        this.navigator = this.entity.getNavigator();
         this.dataManager = this.entity.getDataManager();
-        this.player = this.entity.world.getPlayerEntityByUUID(UUID.fromString(this.dataManager.get(GirlEntity.MASTER_UUID)));
+        this.master = this.entity.world.getPlayerEntityByUUID(UUID.fromString(this.dataManager.get(GirlEntity.MASTER_UUID)));
     }
 
     @Override
     public void updateTask() {
-        this.CurState = this.getNewState();
+        this.CurState = this.updateMode();
         if (this.entity.aiLookAtPlayer != null) {
-            this.entity.aiLookAtPlayer.a = this.CurState == States.IDLE;
+            this.entity.aiLookAtPlayer.ShouldLook = this.CurState == Mode.IDLE;
         }
         this.CompanionStates(this.CurState);
     }
 
-    protected abstract States getNewState();
+    protected abstract Mode updateMode();
 
-    protected abstract void CompanionStates(States states);
+    protected abstract void CompanionStates(Mode mode);
 
     @SubscribeEvent
     public void onGirlDeath(LivingDeathEvent event) {
@@ -131,7 +124,7 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
         }
     }
 
-    public static enum States {
+    public static enum Mode {
         ATTACK,
         FOLLOW,
         IDLE,

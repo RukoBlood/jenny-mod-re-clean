@@ -4,13 +4,14 @@
  * Could not load the following classes:
  *  com.google.common.base.Optional
  */
-package com.trolmastercard.sexmod.girls.Luna;
+package com.trolmastercard.sexmod.girls.Luna.FishingRod;
 
 import com.google.common.base.Optional;
 
 import java.util.List;
 import java.util.UUID;
 
+import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -53,7 +54,7 @@ extends Entity {
     private HookState hookState = HookState.FLYING;
     private int a;
     private int o;
-    static public LunaEntity b = null;
+    static public LunaEntity nextAngler = null;
 
     public LunaHookEntity(World world, LunaEntity eb_class2362, double d) {
         super(world);
@@ -68,13 +69,13 @@ extends Entity {
     private void a(LunaEntity lunaEntity) {
         this.setSize(0.25f, 0.25f);
         this.ignoreFrustumCheck = true;
-        lunaEntity.lunaHookEntity = this;
+        lunaEntity.fishEntity = this;
     }
 
     @Override
     protected void entityInit() {
         this.getDataManager().register(g, 0);
-        this.getDataManager().register(f, Optional.of(b.girlID()));
+        this.getDataManager().register(f, Optional.of(nextAngler.girlID()));
     }
 
     @Override
@@ -109,12 +110,12 @@ extends Entity {
         return (LunaEntity)em_class2582;
     }
 
-    public void b(int n) {
-        this.o = n;
+    public void setLureSpeed(int speed) {
+        this.o = speed;
     }
 
-    public void a(int n) {
-        this.a = n;
+    public void setLuck(int luck) {
+        this.a = luck;
     }
 
     @Override
@@ -133,7 +134,7 @@ extends Entity {
         if (eb_class2362 == null) {
             return;
         }
-        BlockPos blockPos = eb_class2362.ai;
+        BlockPos blockPos = eb_class2362.chosenFishingSpot;
         float f = (float)Math.sqrt(eb_class2362.getPositionVector().squareDistanceTo(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
         float f2 = -22.5f + 45.0f * (f / 7.0f);
         float f3 = eb_class2362.getYawRotation().floatValue();
@@ -418,7 +419,7 @@ extends Entity {
     public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
     }
 
-    public int c() {
+    public int handleHookRetraction() {
         if (!this.world.isRemote && this.b() != null) {
             int n = 0;
             // TODO there is a Object var2

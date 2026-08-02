@@ -20,7 +20,7 @@ import com.trolmastercard.sexmod.Packages.InformOfOwnership;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SendBlocks;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
-import com.trolmastercard.sexmod.girls.Allie.LampItem;
+import com.trolmastercard.sexmod.girls.Allie.lamp.LampItem;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -130,14 +130,14 @@ public class PlayerConnectionEvents {
             if (girl instanceof PlayerGirl) {
                 ((PlayerGirl)girl).detachPartner(player);
             }
-            if (girl.getID() == null) continue;
-            if (girl.getID().equals(player.getPersistentID()) || girl.getID().equals(player.getUniqueID())) {
+            if (girl.playerSheHasSexWith() == null) continue;
+            if (girl.playerSheHasSexWith().equals(player.getPersistentID()) || girl.playerSheHasSexWith().equals(player.getUniqueID())) {
                 ResetGirl.a_inner422.a(girl);
                 girl.setAnchored(false);
                 girl.setCurrentAction(Action.NULL);
             }
-            if (!(girl instanceof PlayerGirl) || !((PlayerGirl)girl).getOwnerUserUUID().equals(player.getPersistentID()) || girl.getID() == null) continue;
-            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)event.player.world.getPlayerEntityByUUID(girl.getID());
+            if (!(girl instanceof PlayerGirl) || !((PlayerGirl)girl).getOwnerUserUUID().equals(player.getPersistentID()) || girl.playerSheHasSexWith() == null) continue;
+            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)event.player.world.getPlayerEntityByUUID(girl.playerSheHasSexWith());
             PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
             ResetGirl.a_inner422.a(entityPlayerMP);
             player.setInvisible(false);

@@ -405,7 +405,7 @@ extends PlayerGirl {
                 }
                 case "hugMSG1": {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    if (!entityPlayerSP.getPersistentID().equals(this.getID()) && !entityPlayerSP.getUniqueID().equals(this.getID())) break;
+                    if (!entityPlayerSP.getPersistentID().equals(this.playerSheHasSexWith()) && !entityPlayerSP.getUniqueID().equals(this.playerSheHasSexWith())) break;
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getUniqueID().toString(), entityPlayerSP.getPositionVector(), entityPlayerSP.rotationYaw - 80.0f, entityPlayerSP.rotationPitch));
                     break;
                 }
@@ -431,7 +431,7 @@ extends PlayerGirl {
                 }
                 case "hugDone": {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    if (!entityPlayerSP.getPersistentID().equals(this.getID())) break;
+                    if (!entityPlayerSP.getPersistentID().equals(this.playerSheHasSexWith())) break;
                     this.setCurrentAction(Action.HUGIDLE);
                     this.void_c(entityPlayerSP);
                     break;

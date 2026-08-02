@@ -31,6 +31,8 @@ import javax.vecmath.Vector2f;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.ResetGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.companion.OpenAndCloseDoorBehindHer;
+import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
@@ -534,9 +536,9 @@ implements ai_class30 {
 
     @Override
     protected void initEntityAI() {
-        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 2.0f, 1.0f);
+        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 2.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(3, new AutoCloseDoorGoal(this));
+        this.tasks.addTask(3, new OpenAndCloseDoorBehindHer(this));
         this.tasks.addTask(5, this.aiLookAtPlayer);
     }
 
@@ -593,7 +595,7 @@ implements ai_class30 {
         if (!this.entityDataManager.get(aC).booleanValue()) {
             return;
         }
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             return;
         }
         if (this.currentAction() != Action.NULL) {
@@ -708,7 +710,7 @@ implements ai_class30 {
             return;
         }
         this.Z = -1;
-        UUID uUID = this.getID();
+        UUID uUID = this.playerSheHasSexWith();
         if (uUID == null) {
             this.resetCameraAndPhysics();
             return;
@@ -761,7 +763,7 @@ implements ai_class30 {
             return;
         }
         this.an = -1;
-        UUID uUID = this.getID();
+        UUID uUID = this.playerSheHasSexWith();
         if (uUID == null) {
             return;
         }
@@ -814,7 +816,7 @@ implements ai_class30 {
                 vec3d = this.al.add(af);
             }
         }
-        UUID uUID = this.getID();
+        UUID uUID = this.playerSheHasSexWith();
         if (uUID == null) {
             return;
         }
@@ -859,7 +861,7 @@ implements ai_class30 {
         if (!this.aX) {
             return;
         }
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             return;
         }
         Vec3d vec3d = null;
@@ -1154,7 +1156,7 @@ implements ai_class30 {
         if (!this.aX) {
             return;
         }
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             return;
         }
         this.setTargetPosition(this.al);
@@ -1326,7 +1328,7 @@ implements ai_class30 {
     }
 
     void D_() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
         if (entityPlayer != null) {
             ResetGirl.a_inner422.a((EntityPlayerMP)entityPlayer);
         }
@@ -1342,7 +1344,7 @@ implements ai_class30 {
     }
 
     void void_q() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
         if (entityPlayer == null) {
             return;
         }
@@ -1358,7 +1360,7 @@ implements ai_class30 {
     }
 
     void void_z() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
         if (entityPlayer == null) {
             return;
         }
@@ -1381,7 +1383,7 @@ implements ai_class30 {
         if (itemStack == ItemStack.EMPTY) {
             return;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
         if (entityPlayer == null) {
             return;
         }

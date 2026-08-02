@@ -215,7 +215,7 @@ extends PlayerGirl {
                 case "deepthroat_prepareDone": {
                     this.setCurrentAction(Action.DEEPTHROAT_START);
                     if (!this.isControlledByLocalPlayer()) break;
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.playerSheHasSexWith(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();

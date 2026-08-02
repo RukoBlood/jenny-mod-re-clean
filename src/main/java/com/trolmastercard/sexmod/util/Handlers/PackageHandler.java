@@ -37,7 +37,7 @@ public class PackageHandler {
         INSTANCE.registerMessage(ResetController.Handler.class, ResetController.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(ResetGirl.a_inner422.class, ResetGirl.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(ChangeDataParameter.Handler.class, ChangeDataParameter.class, PackageHandler.discriminator(), Side.SERVER);
-        INSTANCE.registerMessage(bo_class90.a_inner91.class, bo_class90.class, PackageHandler.discriminator(), Side.SERVER);
+        INSTANCE.registerMessage(bo_class90.Handler.class, bo_class90.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(SendCompanionHome.Handler.class, SendCompanionHome.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(SetNewHome.a_inner14.class, SetNewHome.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(UploadInventoryToServer.a_inner61.class, UploadInventoryToServer.class, PackageHandler.discriminator(), Side.SERVER);
@@ -46,11 +46,11 @@ public class PackageHandler {
         INSTANCE.registerMessage(UploadInventoryToServerAlt.a_inner155.class, UploadInventoryToServerAlt.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(MakeRichWish.a_inner104.class, MakeRichWish.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(UpdatePlayerModel.a_inner72.class, UpdatePlayerModel.class, PackageHandler.discriminator(), Side.SERVER);
-        INSTANCE.registerMessage(SexPrompt.a_inner348.class, SexPrompt.class, PackageHandler.discriminator(), Side.SERVER);
-        INSTANCE.registerMessage(SexPrompt.a_inner348.class, SexPrompt.class, PackageHandler.discriminator(), Side.CLIENT);
+        INSTANCE.registerMessage(SexPrompt.Handler.class, SexPrompt.class, PackageHandler.discriminator(), Side.SERVER);
+        INSTANCE.registerMessage(SexPrompt.Handler.class, SexPrompt.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(StartStandingSexAnimation.a_inner274.class, StartStandingSexAnimation.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(BeeOpenChest.a_inner288.class, BeeOpenChest.class, PackageHandler.discriminator(), Side.SERVER);
-        INSTANCE.registerMessage(CatActivateFishing.a_inner254.class, CatActivateFishing.class, PackageHandler.discriminator(), Side.SERVER);
+        INSTANCE.registerMessage(CatActivateFishing.Handler.class, CatActivateFishing.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(CatEatingDone.a_inner374.class, CatEatingDone.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(CatThrowAwayItem.a_inner198.class, CatThrowAwayItem.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(ClaimTribe.a_inner355.class, ClaimTribe.class, PackageHandler.discriminator(), Side.SERVER);

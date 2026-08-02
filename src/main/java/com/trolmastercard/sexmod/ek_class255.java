@@ -20,8 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class ek_class255
-extends GuiContainer {
+public class ek_class255 extends GuiContainer {
     final static private ResourceLocation f = new ResourceLocation("textures/gui/container/generic_54.png");
     final private IInventory e;
     final private IInventory d;

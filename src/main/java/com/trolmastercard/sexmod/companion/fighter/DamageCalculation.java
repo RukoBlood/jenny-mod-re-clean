@@ -5,7 +5,7 @@
  *  net.minecraftforge.event.entity.living.LivingDamageEvent
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod.util.Handlers;
+package com.trolmastercard.sexmod.companion.fighter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,48 +23,48 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 //gu.class
 //Related to armor types
-public class ArmorHandler {
-    public ArmorHandler() {
-        ArmorRegistry.Register(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.LEATHER, 1, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.GOLD, 2, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.CHAIN, 2, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.IRON, 2, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.DIAMOND, 3, 3);
-        ArmorRegistry.Register(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.LEATHER, 3, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.GOLD, 5, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.CHAIN, 5, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.IRON, 6, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.DIAMOND, 8, 3);
-        ArmorRegistry.Register(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.LEATHER, 2, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.GOLD, 3, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.CHAIN, 4, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.IRON, 5, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.DIAMOND, 6, 3);
-        ArmorRegistry.Register(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.LEATHER, 1, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.GOLD, 1, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.CHAIN, 1, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.IRON, 2, 0);
-        ArmorRegistry.Register(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.DIAMOND, 3, 3);
+public class DamageCalculation {
+    public DamageCalculation() {
+        Armor.addArmor(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.LEATHER, 1, 0);
+        Armor.addArmor(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.GOLD, 2, 0);
+        Armor.addArmor(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.CHAIN, 2, 0);
+        Armor.addArmor(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.IRON, 2, 0);
+        Armor.addArmor(EntityEquipmentSlot.HEAD, ItemArmor.ArmorMaterial.DIAMOND, 3, 3);
+        Armor.addArmor(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.LEATHER, 3, 0);
+        Armor.addArmor(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.GOLD, 5, 0);
+        Armor.addArmor(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.CHAIN, 5, 0);
+        Armor.addArmor(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.IRON, 6, 0);
+        Armor.addArmor(EntityEquipmentSlot.CHEST, ItemArmor.ArmorMaterial.DIAMOND, 8, 3);
+        Armor.addArmor(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.LEATHER, 2, 0);
+        Armor.addArmor(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.GOLD, 3, 0);
+        Armor.addArmor(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.CHAIN, 4, 0);
+        Armor.addArmor(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.IRON, 5, 0);
+        Armor.addArmor(EntityEquipmentSlot.LEGS, ItemArmor.ArmorMaterial.DIAMOND, 6, 3);
+        Armor.addArmor(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.LEATHER, 1, 0);
+        Armor.addArmor(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.GOLD, 1, 0);
+        Armor.addArmor(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.CHAIN, 1, 0);
+        Armor.addArmor(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.IRON, 2, 0);
+        Armor.addArmor(EntityEquipmentSlot.FEET, ItemArmor.ArmorMaterial.DIAMOND, 3, 3);
     }
 
     @SubscribeEvent
-    public void onFighterDamage(LivingDamageEvent event) {
+    public void calculateDamage(LivingDamageEvent event) {
         if (!(event.getEntity() instanceof Fighter)) {
             return;
         }
-        Fighter fighter = (Fighter)event.getEntity();
+        Fighter girl = (Fighter)event.getEntity();
         //In jenny mod, slots 2-5 is reserved for armor
-        ItemStack[] armorInventory = new ItemStack[]{
-                fighter.inventory.getStackInSlot(2),
-                fighter.inventory.getStackInSlot(3),
-                fighter.inventory.getStackInSlot(4),
-                fighter.inventory.getStackInSlot(5)
+        ItemStack[] potentialArmors = new ItemStack[]{
+                girl.inventory.getStackInSlot(2),
+                girl.inventory.getStackInSlot(3),
+                girl.inventory.getStackInSlot(4),
+                girl.inventory.getStackInSlot(5)
         };
 
         ArrayList<ItemArmor> armorItems = new ArrayList<ItemArmor>();
         ArrayList<ItemStack> armorStacks = new ArrayList<ItemStack>();
 
-        for (ItemStack stack : armorInventory) {
+        for (ItemStack stack : potentialArmors) {
             if (!(stack.getItem() instanceof ItemArmor)) continue;
             armorItems.add((ItemArmor)stack.getItem());
             armorStacks.add(stack);
@@ -77,8 +77,8 @@ public class ArmorHandler {
         int totalToughnessPoints = 0;
         if (!source.isUnblockable()) {
             for (ItemArmor itemArmor : armorItems) {
-                totalArmorPoints += ArmorRegistry.getArmorValue(itemArmor.armorType, itemArmor.getArmorMaterial());
-                totalToughnessPoints += ArmorRegistry.getToughnessValue(itemArmor.armorType, itemArmor.getArmorMaterial());
+                totalArmorPoints += Armor.getDefencePoints(itemArmor.armorType, itemArmor.getArmorMaterial());
+                totalToughnessPoints += Armor.getToughnessValue(itemArmor.armorType, itemArmor.getArmorMaterial());
             }
         }
         float finalDamage = event.getAmount();
@@ -114,24 +114,20 @@ public class ArmorHandler {
         }
 
         if (f2 > 0.0f && source instanceof EntityDamageSource && source.getTrueSource() != null) {
-            source.getTrueSource().attackEntityFrom(DamageSource.causeThornsDamage(fighter), f2);
+            source.getTrueSource().attackEntityFrom(DamageSource.causeThornsDamage(girl), f2);
         }
         event.setAmount(finalDamage);
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
+    static class Armor {
+        static public HashMap<String, Integer[]> STATS = new HashMap();
 
-    static class ArmorRegistry {
-        static public HashMap<String, Integer[]> DATA_MAP = new HashMap();
-
-        ArmorRegistry() {
+        Armor() {
         }
 
-        public static int getArmorValue(EntityEquipmentSlot slot, ItemArmor.ArmorMaterial material) {
+        public static int getDefencePoints(EntityEquipmentSlot slot, ItemArmor.ArmorMaterial material) {
             try {
-                return DATA_MAP.get(slot.toString() + material.toString())[0];
+                return STATS.get(slot.toString() + material.toString())[0];
             } catch (NullPointerException nullPointerException) {
                 return 3;
             }
@@ -139,14 +135,14 @@ public class ArmorHandler {
 
         public static int getToughnessValue(EntityEquipmentSlot slot, ItemArmor.ArmorMaterial material) {
             try {
-                return DATA_MAP.get(slot.toString() + material.toString())[1];
+                return STATS.get(slot.toString() + material.toString())[1];
             } catch (NullPointerException nullPointerException) {
                 return 0;
             }
         }
 
-        public static void Register(EntityEquipmentSlot slot, ItemArmor.ArmorMaterial material, int armor, int toughness) {
-            DATA_MAP.put(slot.toString() + material.toString(), new Integer[]{armor, toughness});
+        public static void addArmor(EntityEquipmentSlot slot, ItemArmor.ArmorMaterial material, int armor, int toughness) {
+            STATS.put(slot.toString() + material.toString(), new Integer[]{armor, toughness});
         }
     }
 }

@@ -8,10 +8,10 @@ package com.trolmastercard.sexmod.girls.Ellie;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.gui.SexUI;
@@ -71,8 +71,8 @@ implements bh_class82 {
 
     public EllieEntity(World world) {
         super(world);
-        this.P = -85;
-        this.O = -175;
+        this.slashSwordRot = -85;
+        this.stabSwordRot = -175;
         this.holdBowRot = -85;
         this.swordOffsetStab = new Vec3d(-0.1, 0.05, 0.0);
     }
@@ -112,7 +112,7 @@ implements bh_class82 {
 
     @Override
     public void void_b() {
-        UUID uUID = this.getID();
+        UUID uUID = this.playerSheHasSexWith();
         if (uUID == null) {
             this.void_f();
             return;
@@ -239,7 +239,7 @@ implements bh_class82 {
         if (this.currentAction() != Action.CARRY_INTRO) {
             return;
         }
-        UUID uUID = this.getID();
+        UUID uUID = this.playerSheHasSexWith();
         if (uUID == null) {
             return;
         }
@@ -300,7 +300,7 @@ implements bh_class82 {
         if ("Missionary".equals(string)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.MISSIONARY_START);
-            uUID = this.getID();
+            uUID = this.playerSheHasSexWith();
             if (uUID == null) {
                 return;
             }
@@ -321,7 +321,7 @@ implements bh_class82 {
         if ("cowgirl".equals(string)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.COWGIRLSTART);
-            uUID = this.getID();
+            uUID = this.playerSheHasSexWith();
             if (uUID == null) {
                 return;
             }
@@ -396,7 +396,7 @@ implements bh_class82 {
             this.void_f();
             return;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getID());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
         if (entityPlayer != null) {
             entityPlayer.setNoGravity(false);
             entityPlayer.noClip = false;
@@ -484,7 +484,7 @@ implements bh_class82 {
         if (--this.Z != 0) {
             return;
         }
-        UUID uUID = this.getID();
+        UUID uUID = this.playerSheHasSexWith();
         if (uUID == null) {
             this.void_f();
             return;
@@ -522,7 +522,7 @@ implements bh_class82 {
         if (EllieEntity.getActiveSceneInfo(entityPlayer) != null) {
             return false;
         }
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             return false;
         }
         if (this.world.isRemote) {

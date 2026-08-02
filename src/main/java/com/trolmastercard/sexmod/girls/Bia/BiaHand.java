@@ -9,10 +9,10 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 //go.class
-public class BiaLimb extends ModelBase implements IRenderer {
+public class BiaHand extends ModelBase implements IRenderer {
     final public ModelRenderer a;
 
-    public BiaLimb() {
+    public BiaHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.a = new ModelRenderer(this);
@@ -25,10 +25,10 @@ public class BiaLimb extends ModelBase implements IRenderer {
         this.a.render(scale);
     }
 
-    public void a(ModelRenderer modelRenderer, float f, float f2, float f3) {
-        modelRenderer.rotateAngleX = f;
-        modelRenderer.rotateAngleY = f2;
-        modelRenderer.rotateAngleZ = f3;
+    public void rotate(ModelRenderer m, float x, float y, float z) {
+        m.rotateAngleX = x;
+        m.rotateAngleY = y;
+        m.rotateAngleZ = z;
     }
 
     @Override

@@ -1,8 +1,9 @@
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.companion.supporter;
 
+import com.trolmastercard.sexmod.companion.CompanionBase;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 
-public class SupporterCompanion extends BaseCompanionGoal {
+public class SupporterCompanion extends CompanionBase {
     int LoseTargetTicks = 0;
     int PathfindCooldown = 0;
 
@@ -17,12 +18,12 @@ public class SupporterCompanion extends BaseCompanionGoal {
     }
 
     @Override
-    protected States getNewState() {
+    protected Mode updateMode() {
         boolean shoudFollow;
-        float Dist = this.entity.getDistance(this.player);
+        float Dist = this.entity.getDistance(this.master);
         shoudFollow = Dist > 5.0f;
 
-        if (this.entity.getID() == null && !shoudFollow && this.CurState == States.FOLLOW) {
+        if (this.entity.playerSheHasSexWith() == null && !shoudFollow && this.CurState == Mode.FOLLOW) {
             if (++this.LoseTargetTicks > 60) {
                 this.LoseTargetTicks = 0;
             } else {
@@ -30,37 +31,37 @@ public class SupporterCompanion extends BaseCompanionGoal {
             }
         }
         if (shoudFollow) {
-            return States.FOLLOW;
+            return Mode.FOLLOW;
         }
-        return States.IDLE;
+        return Mode.IDLE;
     }
 
     @Override
-    protected void CompanionStates(States states) {
-        switch (states) {
+    protected void CompanionStates(Mode mode) {
+        switch (mode) {
             case FOLLOW: {
-                double dist = this.entity.getDistance(this.player);
+                double dist = this.entity.getDistance(this.master);
 
-                if ((double)this.pathNavigate.getPathSearchRange() > dist) {
-                    this.pathNavigate.clearPath();
-                    this.pathNavigate.tryMoveToEntityLiving(this.player, 0.5);
+                if ((double)this.navigator.getPathSearchRange() > dist) {
+                    this.navigator.clearPath();
+                    this.navigator.tryMoveToEntityLiving(this.master, 0.5);
                 } else {
-                    this.goNearPlayer();
+                    this.tpToPlayer();
                 }
 
                 this.PathfindCooldown = 300;
-                this.setGirlSpeed();
+                this.setMovementSpeed();
                 break;
             }
             case IDLE: {
-                this.setGirlSpeed();
+                this.setMovementSpeed();
             }
         }
     }
 
     @Override
-    protected double setGirlSpeed() {
-        float dist = this.entity.getDistance(this.player);
+    protected double setMovementSpeed() {
+        float dist = this.entity.getDistance(this.master);
         float baseFac = 0.02f;
         double SpeedBonus = Math.min(0.7, Math.floor(dist / 3.0f) * 0.05);
         this.entity.jumpMovementFactor = baseFac = (float)((double)baseFac + SpeedBonus);

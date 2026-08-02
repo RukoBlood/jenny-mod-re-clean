@@ -71,7 +71,11 @@ public abstract class PlayerGirl extends Fighter {
     public boolean isPlayerRiding = false;
     public boolean isPlayerOnGround = true;
     public boolean ah = false;
-    final static protected DataParameter<Optional<UUID>> OWNER = EntityDataManager.createKey(GirlEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID).getSerializer().createKey(118);
+    final static protected DataParameter<Optional<UUID>> OWNER;
+
+    static {
+        OWNER = EntityDataManager.createKey(GirlEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID).getSerializer().createKey(118);
+    }
 
     static public Hashtable<UUID, PlayerGirl> playerGirlUUIDHashtable = new Hashtable();
     static public List<PlayerGirl> Z = new ArrayList<PlayerGirl>();

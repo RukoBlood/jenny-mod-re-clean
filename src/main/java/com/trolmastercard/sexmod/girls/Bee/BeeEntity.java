@@ -8,10 +8,12 @@ package com.trolmastercard.sexmod.girls.Bee;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
+import com.trolmastercard.sexmod.companion.supporter.SupporterCompanion;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.Supporter;
@@ -113,7 +115,7 @@ public class BeeEntity extends Supporter {
 
     @Override
     protected void initEntityAI() {
-        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new SupporterCompanion(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.25));
         this.tasks.addTask(1, new EntityAISwimming(this));
@@ -124,7 +126,7 @@ public class BeeEntity extends Supporter {
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.hornyLevel < 4800.0f && this.getID() == null) {
+        if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.hornyLevel < 4800.0f && this.playerSheHasSexWith() == null) {
             this.removePotionEffect(HornyPotion.HORNY_POTION);
             this.hornyLevel = 6.9420184E7f;
         }
@@ -145,7 +147,7 @@ public class BeeEntity extends Supporter {
     }
 
     void sexLogic() {
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             return;
         }
         if (this.hasMaster()) {

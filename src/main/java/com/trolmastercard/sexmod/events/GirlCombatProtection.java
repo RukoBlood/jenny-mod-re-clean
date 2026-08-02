@@ -21,7 +21,7 @@ public class GirlCombatProtection {
         if (girl instanceof PlayerGirl) {
             event.setCanceled(true);
         } else {
-            event.setCanceled(girl.getID() != null);
+            event.setCanceled(girl.playerSheHasSexWith() != null);
         }
     }
 

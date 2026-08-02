@@ -4,10 +4,11 @@
  * Could not load the following classes:
  *  javax.annotation.Nullable
  */
-package com.trolmastercard.sexmod.girls.Luna;
+package com.trolmastercard.sexmod.girls.Luna.FishingRod;
 
 import javax.annotation.Nullable;
 
+import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -44,29 +45,29 @@ extends Render<LunaHookEntity> {
         Object object;
         Object object2;
         LunaEntity eb_class2362 = gi_class3702.g();
-        if (eb_class2362 == null || this.renderOutlines || eb_class2362.Z == 1.0f) {
+        if (eb_class2362 == null || this.renderOutlines || eb_class2362.throwBackPercentage == 1.0f) {
             return;
         }
-        eb_class2362.lunaHookEntity = gi_class3702;
-        ItemStack itemStack = eb_class2362.getDataManager().get(LunaEntity.ag);
+        eb_class2362.fishEntity = gi_class3702;
+        ItemStack itemStack = eb_class2362.getDataManager().get(LunaEntity.CAUGHT_ITEM);
         if (!itemStack.getItem().equals(Items.AIR)) {
             float f3 = Minecraft.getDebugFPS();
             if (f3 == 0.0f) {
                 f3 = 0.1f;
             }
-            eb_class2362.Z += 60.0f / f3 * 0.01666f * 2.0f;
-            eb_class2362.Z = Math.min(1.0f, eb_class2362.Z);
+            eb_class2362.throwBackPercentage += 60.0f / f3 * 0.01666f * 2.0f;
+            eb_class2362.throwBackPercentage = Math.min(1.0f, eb_class2362.throwBackPercentage);
             object2 = Minecraft.getMinecraft().player;
             Vec3d vec3d = Reference.LerpVec3d(new Vec3d(((EntityPlayer)object2).lastTickPosX, ((EntityPlayer)object2).lastTickPosY, ((EntityPlayer)object2).lastTickPosZ), ((Entity)object2).getPositionVector(), (double)f2);
             object = new Vec3d(d, d2, d3);
             Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(eb_class2362.lastTickPosX, eb_class2362.lastTickPosY + 0.875, eb_class2362.lastTickPosZ), eb_class2362.getPositionVector().add(0.0, 0.875, 0.0), (double)f2);
             vec3d2 = vec3d2.subtract(vec3d);
-            object = Reference.LerpVec3d((Vec3d)object, vec3d2, (double)eb_class2362.Z);
+            object = Reference.LerpVec3d((Vec3d)object, vec3d2, (double)eb_class2362.throwBackPercentage);
             d = ((Vec3d)object).x;
             d2 = ((Vec3d)object).y;
             d3 = ((Vec3d)object).z;
         } else {
-            eb_class2362.Z = 0.0f;
+            eb_class2362.throwBackPercentage = 0.0f;
         }
         GlStateManager.pushMatrix();
         GlStateManager.translate((float)d, (float)d2, (float)d3);

@@ -340,7 +340,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.getID(), "Here, I know u like fish and yea.. these are for you");
+                    this.a(this.playerSheHasSexWith(), "Here, I know u like fish and yea.. these are for you");
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }

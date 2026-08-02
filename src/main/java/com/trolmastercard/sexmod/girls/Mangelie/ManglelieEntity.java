@@ -400,7 +400,7 @@ extends GirlEntity {
         if (f__class2972 == null) {
             return;
         }
-        if (f__class2972.getID() != null) {
+        if (f__class2972.playerSheHasSexWith() != null) {
             return;
         }
         if (f__class2972.currentAction() == Action.MASTERBATE) {
@@ -464,7 +464,7 @@ extends GirlEntity {
             return;
         }
         if (!this.world.isRemote && action == Action.THREESOME_CUM) {
-            GalathMangTracker.setLastCumTime(this.getID(), this.world.getTotalWorldTime());
+            GalathMangTracker.setLastCumTime(this.playerSheHasSexWith(), this.world.getTotalWorldTime());
         }
         super.setCurrentAction(action);
     }

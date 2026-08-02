@@ -9,12 +9,10 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class KoboldLimb
-extends ModelBase
-implements IRenderer {
+public class KoboldHand extends ModelBase implements IRenderer {
     final private ModelRenderer a;
 
-    public KoboldLimb() {
+    public KoboldHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.a = new ModelRenderer(this);

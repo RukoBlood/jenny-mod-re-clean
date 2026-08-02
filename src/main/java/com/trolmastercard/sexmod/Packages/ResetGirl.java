@@ -81,7 +81,7 @@ implements IMessage {
                 ((EntityPlayer)object2).noClip = false;
                 em_class2582.setAnchored(false);
                 em_class2582.setCurrentAction(Action.NULL);
-                if (em_class2582.getID() != null && (object = em_class2582.world.getPlayerEntityByUUID(em_class2582.getID())) != null) {
+                if (em_class2582.playerSheHasSexWith() != null && (object = em_class2582.world.getPlayerEntityByUUID(em_class2582.playerSheHasSexWith())) != null) {
                     ((EntityPlayer)object).capabilities.isFlying = false;
                     ((Entity)object).setNoGravity(false);
                     ((EntityPlayer)object).noClip = false;
@@ -126,8 +126,8 @@ implements IMessage {
                 ArrayList<GirlEntity> arrayList = GirlEntity.girlList(s_class4212.c);
                 for (GirlEntity em_class2582 : arrayList) {
                     if (em_class2582.world.isRemote) continue;
-                    if (em_class2582.getID() != null) {
-                        a_inner422.a(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(em_class2582.getID()));
+                    if (em_class2582.playerSheHasSexWith() != null) {
+                        a_inner422.a(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(em_class2582.playerSheHasSexWith()));
                     }
                     if (s_class4212.a) continue;
                     a_inner422.a(em_class2582);

@@ -44,9 +44,5 @@ public class f4_class289 {
         entityInteractSpecific.setCanceled(true);
         entityInteractSpecific.setResult(Event.Result.DENY);
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

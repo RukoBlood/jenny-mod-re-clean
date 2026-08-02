@@ -9,7 +9,7 @@
  *  net.minecraftforge.fml.common.registry.ForgeRegistries
  *  net.minecraftforge.registries.IForgeRegistryEntry
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gender_change.hornypotion;
 
 import com.trolmastercard.sexmod.Packages.bd_class76;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -75,7 +75,7 @@ public class HornyPotion extends Potion {
     public void a(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
         EntityAgeable entityAgeable;
         if (livingUpdateEvent.getEntity() instanceof EntityVillager && (entityAgeable = (EntityVillager)livingUpdateEvent.getEntity()).isPotionActive(HORNY_POTION)) {
-            ((EntityVillager)entityAgeable).tasks.addTask(2, new EntityAIVillagerJustBang((EntityVillager)entityAgeable));
+            ((EntityVillager)entityAgeable).tasks.addTask(2, new EntityAIVillagerJustBangHerWithoutThinking((EntityVillager)entityAgeable));
             entityAgeable.removePotionEffect(HORNY_POTION);
         }
         if (!(livingUpdateEvent.getEntity() instanceof EntityAnimal)) {
@@ -90,10 +90,6 @@ public class HornyPotion extends Potion {
             }
             entityAgeable.removePotionEffect(HORNY_POTION);
         }
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

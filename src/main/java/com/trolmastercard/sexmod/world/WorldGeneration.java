@@ -18,7 +18,6 @@ import java.util.Random;
 import com.trolmastercard.sexmod.Point2D;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.world.gen.generators.WorldGenStructure;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;

@@ -4,10 +4,11 @@
 package com.trolmastercard.sexmod.util.Handlers;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.girls.Allie.LampItem;
+import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
+import com.trolmastercard.sexmod.girls.Allie.lamp.LampItem;
 import com.trolmastercard.sexmod.girls.Galath.GalathCoin;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEggItem;
-import com.trolmastercard.sexmod.girls.Luna.LunaRod;
+import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaRod;
 
 public class ItemHandler {
     public static void RegisterItems() {

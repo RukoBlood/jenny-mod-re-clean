@@ -18,6 +18,8 @@ import com.trolmastercard.sexmod.girls.Goblin.*;
 import com.trolmastercard.sexmod.girls.Jenny.*;
 import com.trolmastercard.sexmod.girls.Kobold.*;
 import com.trolmastercard.sexmod.girls.Luna.*;
+import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaHookEntity;
+import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaHookRenderer;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieRenderer;

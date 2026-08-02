@@ -129,10 +129,6 @@ implements IAnimatable {
                 rightClickBlock.setCanceled(true);
             }
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

@@ -197,7 +197,7 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
 
     @CheckReturnValue
     protected boolean isSteveSkinType(T girl) {
-        UUID ownerUUID = girl.getID();
+        UUID ownerUUID = girl.playerSheHasSexWith();
         if (ownerUUID == null) {
             return true;
         }

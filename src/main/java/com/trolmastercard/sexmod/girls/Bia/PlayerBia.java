@@ -92,7 +92,7 @@ extends PlayerGirl {
 
     @Override
     public IRenderer getHandRenderer(int n) {
-        return new BiaLimb();
+        return new BiaHand();
     }
 
     @Override

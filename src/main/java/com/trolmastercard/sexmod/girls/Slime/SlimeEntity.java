@@ -6,9 +6,9 @@
  */
 package com.trolmastercard.sexmod.girls.Slime;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeEntity;
@@ -188,11 +188,11 @@ public class SlimeEntity extends GirlEntity {
 
     @SideOnly(value=Side.CLIENT)
     void updateClientPlayerPosition() {
-        if (this.getID() == null) {
+        if (this.playerSheHasSexWith() == null) {
             return;
         }
         EntityPlayerSP clientPlayer = Minecraft.getMinecraft().player;
-        if (!this.getID().equals(clientPlayer.getPersistentID())) {
+        if (!this.playerSheHasSexWith().equals(clientPlayer.getPersistentID())) {
             return;
         }
         Vec3d offset = this.getPositionVector();

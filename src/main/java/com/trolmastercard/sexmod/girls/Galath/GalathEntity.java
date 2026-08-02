@@ -29,6 +29,8 @@ import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.companion.OpenAndCloseDoorBehindHer;
+import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -408,10 +410,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
 
     @Override
     protected void initEntityAI() {
-        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
-        this.tasks.addTask(3, new AutoCloseDoorGoal(this));
+        this.tasks.addTask(3, new OpenAndCloseDoorBehindHer(this));
         this.tasks.addTask(5, this.aiLookAtPlayer);
     }
 
@@ -923,7 +925,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         }
         this.void_P();
         super.updateAITasks();
-        this.aiLookAtPlayer.a = this.boolean_x();
+        this.aiLookAtPlayer.ShouldLook = this.boolean_x();
         if (this.maybeMountedByMangFn()) {
             // TODO something with creating a mang
             this.void_ae();
@@ -1271,7 +1273,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         if (Action.a((GirlEntity)this, Action.MASTERBATE, Action.HUG_MANG)) {
             return;
         }
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             return;
         }
         this.void_Q();
@@ -1339,7 +1341,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         if (!this.world.isRemote && Action.a(currentAction, Action.CORRUPT_CUM, Action.RAPE_CUM, Action.MORNING_BLOWJOB_CUM)) {
-            GalathMangTracker.setLastCumTime(this.getID(), this.world.getTotalWorldTime());
+            GalathMangTracker.setLastCumTime(this.playerSheHasSexWith(), this.world.getTotalWorldTime());
         }
         if (action == Action.CORRUPT_SLOW) {
             this.aT = false;
@@ -1412,7 +1414,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-        if (!entityPlayerSP.getPersistentID().equals(this.getID())) {
+        if (!entityPlayerSP.getPersistentID().equals(this.playerSheHasSexWith())) {
             this.ab = fp_class3242;
             return;
         }
@@ -1680,7 +1682,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         GalathAttackAction h8_class3993 = this.bZ;
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             if (h8_class3993 != null) {
                 h8_class3993.executeStop(this);
             }
@@ -1723,7 +1725,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         if (this.boolean_f()) {
             return;
         }
-        if (this.getID() != null) {
+        if (this.playerSheHasSexWith() != null) {
             return;
         }
         boolean mounted = this.maybeMountedByMangFn();

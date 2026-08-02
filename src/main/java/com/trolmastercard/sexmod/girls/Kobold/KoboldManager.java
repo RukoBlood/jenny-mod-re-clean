@@ -494,7 +494,7 @@ public class KoboldManager {
             return false;
         }
         for (KoboldEntity member : tribe.members) {
-            if (member.getID() == null) continue;
+            if (member.playerSheHasSexWith() == null) continue;
             return true;
         }
         return false;

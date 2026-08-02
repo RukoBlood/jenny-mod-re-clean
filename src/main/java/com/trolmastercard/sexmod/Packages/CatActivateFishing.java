@@ -13,7 +13,7 @@ package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
-import com.trolmastercard.sexmod.girls.Luna.LunaRod;
+import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaRod;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -47,7 +47,7 @@ implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
     }
 
-    public static class a_inner254
+    public static class Handler
     implements IMessageHandler<CatActivateFishing, IMessage> {
         public IMessage a(CatActivateFishing ej_class2532, MessageContext messageContext) {
             if (!ej_class2532.b || messageContext.side != Side.SERVER) {
@@ -61,7 +61,7 @@ implements IMessage {
                     LunaEntity eb_class2362 = (LunaEntity)em_class2582;
                     ItemStack itemStack = eb_class2362.ao;
                     LunaRod gp_class3792 = (LunaRod)itemStack.getItem();
-                    gp_class3792.a(messageContext.getServerHandler().player.world, eb_class2362, EnumHand.MAIN_HAND);
+                    gp_class3792.onItemRightClick(messageContext.getServerHandler().player.world, eb_class2362, EnumHand.MAIN_HAND);
                 }
             });
             return null;
@@ -70,10 +70,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(CatActivateFishing iMessage, MessageContext messageContext) {
             return this.a((CatActivateFishing)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

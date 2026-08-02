@@ -6,7 +6,7 @@
  *  net.minecraftforge.event.entity.living.BabyEntitySpawnEvent
  *  net.minecraftforge.fml.common.eventhandler.Event
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gender_change.hornypotion;
 
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
@@ -20,15 +20,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 /*
 * Breed Villagers when horny potion is used on them
 * */
-public class EntityAIVillagerJustBang extends EntityAIBase {
+public class EntityAIVillagerJustBangHerWithoutThinking extends EntityAIBase {
     final private EntityVillager c;
     private EntityVillager d;
     final private World a;
     private int b;
 
-    public EntityAIVillagerJustBang(EntityVillager entityVillager) {
-        this.c = entityVillager;
-        this.a = entityVillager.world;
+    public EntityAIVillagerJustBangHerWithoutThinking(EntityVillager villager) {
+        this.c = villager;
+        this.a = villager.world;
         this.setMutexBits(3);
     }
 

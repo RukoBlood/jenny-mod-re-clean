@@ -49,9 +49,9 @@ implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.toString());
     }
 
-    public static class a_inner91
+    public static class Handler
     implements IMessageHandler<bo_class90, IMessage> {
-        public IMessage a(bo_class90 bo_class902, MessageContext messageContext) {
+        public IMessage execute(bo_class90 bo_class902, MessageContext messageContext) {
             if (!bo_class902.c || messageContext.side != Side.SERVER) {
                 return null;
             }
@@ -66,11 +66,7 @@ implements IMessage {
 
                 @Override
         public IMessage onMessage(bo_class90 iMessage, MessageContext messageContext) {
-            return this.a((bo_class90)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
+            return this.execute((bo_class90)iMessage, messageContext);
         }
     }
 }

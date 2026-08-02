@@ -77,13 +77,13 @@ implements IMessage {
                 girl.motionX = 0.0;
                 girl.motionY = 0.0;
                 girl.motionZ = 0.0;
-                if (girl.getID() == null) {
+                if (girl.playerSheHasSexWith() == null) {
                     girl.setInteractionPlayerUUID(uUID2);
                 }
                 if (bl2) {
                     girl.setTargetPosition(girl.getFrontOffsetVector());
                 }
-                girl.snapPlayerToPosition(girl.getID());
+                girl.snapPlayerToPosition(girl.playerSheHasSexWith());
                 if (!bl) {
                     return;
                 }

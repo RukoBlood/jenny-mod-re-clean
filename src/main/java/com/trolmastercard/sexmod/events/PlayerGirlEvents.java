@@ -350,7 +350,7 @@ public class PlayerGirlEvents {
         if (playerGirl.useVanillaItemHolding()) {
             return;
         }
-        if (playerGirl.getID() != null) {
+        if (playerGirl.playerSheHasSexWith() != null) {
             return;
         }
         if (playerGirl.currentAction() != Action.NULL) {

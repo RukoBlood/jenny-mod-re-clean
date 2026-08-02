@@ -27,7 +27,7 @@ import com.trolmastercard.sexmod.girls.Kobold.KoboldEggEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.PlayerKobold;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
-import com.trolmastercard.sexmod.girls.Luna.LunaHookEntity;
+import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaHookEntity;
 import com.trolmastercard.sexmod.girls.Luna.PlayerLuna;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;

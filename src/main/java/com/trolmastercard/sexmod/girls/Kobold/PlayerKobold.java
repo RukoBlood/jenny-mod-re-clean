@@ -215,7 +215,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
 
     @Override
     public IRenderer getHandRenderer(int n) {
-        return new KoboldLimb();
+        return new KoboldHand();
     }
 
     @Override
@@ -446,7 +446,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.getID(), "I'd like to use ur services owo");
+                    this.a(this.playerSheHasSexWith(), "I'd like to use ur services owo");
                     this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
@@ -468,14 +468,14 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.playerSheHasSexWith().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.playerSheHasSexWith().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
                 case "lipsound": {
@@ -540,7 +540,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.playerSheHasSexWith().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
                     break;
                 }
                 case "pounding": {

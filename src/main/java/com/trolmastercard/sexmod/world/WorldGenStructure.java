@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.world.gen.generators;
+package com.trolmastercard.sexmod.world;
 
 import java.util.Random;
 

@@ -8,12 +8,13 @@ package com.trolmastercard.sexmod.girls.Jenny;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.SendCompanionHome;
 import com.trolmastercard.sexmod.Packages.SendGirlToSex;
 import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
 import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -70,8 +71,8 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     public JennyEntity(World world) {
         super(world);
         this.setSize(0.49f, 1.95f);
-        this.P = 140;
-        this.O = 50;
+        this.slashSwordRot = 140;
+        this.stabSwordRot = 50;
         this.holdBowRot = 140;
         this.swordOffsetStab = new Vec3d(0.0, -0.029999997854232782, -0.2);
     }
@@ -127,7 +128,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (this.af && entityPlayer != null && entityPlayer.getPositionVector().distanceTo(this.getPositionVector()) < 0.5) {
             this.af = false;
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, this.world.getClosestPlayerToEntity(this, 15.0).getPersistentID().toString());
-            EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.getID());
+            EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.playerSheHasSexWith());
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, object.getPersistentID().toString());
             ((EntityPlayerMP)object).setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
             this.alignPlayerToGirl((EntityPlayerMP)object, false);
@@ -161,7 +162,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             if (this.getPositionVector().equals(GirlEntity.TARGET_POS) || this.ac > 40) {
                 this.ab = false;
                 this.ac = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getID()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.playerSheHasSexWith()).rotationYaw + 180.0f);
                 this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 if (this.entityDataManager.get(Y)) {
@@ -200,7 +201,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.getID() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.playerSheHasSexWith() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER_UUID).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
                 GirlEntity.openInventoryGui(player, this, stringArray, true);
@@ -295,7 +296,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (fp_class3243 != Action.STARTBLOWJOB && fp_class3243 != Action.PAIZURI_START) {
             return;
         }
-        UUID uUID = this.getID();
+        UUID uUID = this.playerSheHasSexWith();
         if (uUID == null) {
             return;
         }
@@ -350,7 +351,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new lookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.aiLookAtPlayer);
         this.tasks.addTask(5, this.aiWander);
     }

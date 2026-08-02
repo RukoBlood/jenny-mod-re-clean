@@ -34,12 +34,12 @@ public class GirlRenderEvent {
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         for (GirlEntity girl : GirlEntity.GirlEntityList()) {
-            if (girl.isDead || girl.getID() == null || girl.currentAction() == Action.NULL)
+            if (girl.isDead || girl.playerSheHasSexWith() == null || girl.currentAction() == Action.NULL)
                 continue;
 
             EntityPlayer player = event.getEntityPlayer();
 
-            if (!girl.currentAction().hasPlayer || !girl.getID().equals(player.getPersistentID()) && !girl.getID().equals(player.getUniqueID()))
+            if (!girl.currentAction().hasPlayer || !girl.playerSheHasSexWith().equals(player.getPersistentID()) && !girl.playerSheHasSexWith().equals(player.getUniqueID()))
                 continue;
 
             event.setCanceled(true);
@@ -60,7 +60,7 @@ public class GirlRenderEvent {
         }
 
         for (GirlEntity girl : GirlEntity.GirlEntityList()) {
-            UUID girlID = girl.getID();
+            UUID girlID = girl.playerSheHasSexWith();
             Action currentAction = girl.currentAction();
 
             if (girl.isDead || girlID == null || currentAction == null || !currentAction.hasPlayer || !girlID.equals(player.getUniqueID()) && !girlID.equals(player.getPersistentID()))

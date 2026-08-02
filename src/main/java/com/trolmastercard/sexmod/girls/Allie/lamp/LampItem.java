@@ -13,11 +13,12 @@
  *  net.minecraftforge.fml.common.gameevent.PlayerEvent$PlayerLoggedOutEvent
  *  net.minecraftforge.registries.IForgeRegistryEntry
  */
-package com.trolmastercard.sexmod.girls.Allie;
+package com.trolmastercard.sexmod.girls.Allie.lamp;
 
 import java.util.HashSet;
 import java.util.List;
 
+import com.trolmastercard.sexmod.girls.Allie.AllieEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -68,17 +69,18 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class LampItem extends Item implements IAnimatable {
-    final static String e = "sexmodAllieInUse";
-    final static String d = "sexmodAllieInUseTicks";
+    final static String inUse = "sexmodAllieInUse";
+    final static String inUseTicks = "sexmodAllieInUseTicks";
     final static public String j = "sexmodUses";
     final static public String h = "sexmodAllieID";
     final static Integer c = 95;
     final static Integer k = 50;
     final static public int a = 150;
     final static public float f = 0.75f;
+
     final static public LampItem LAMP_ITEM = new LampItem();
-    final private AnimationFactory i = new AnimationFactory(this);
-    AnimationController<LampItem> g;
+    final private AnimationFactory factory = new AnimationFactory(this);
+    AnimationController<LampItem> controller;
 
     public LampItem() {
         this.setCreativeTab(CreativeTabs.MISC);
@@ -92,37 +94,37 @@ public class LampItem extends Item implements IAnimatable {
     }
 
     @SubscribeEvent
-    public static void a(RegistryEvent.Register<Item> register) {
+    public static void register(RegistryEvent.Register<Item> register) {
         register.getRegistry().register(LAMP_ITEM);
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public static void a(ModelRegistryEvent modelRegistryEvent) {
+    public static void registerModel(ModelRegistryEvent modelRegistryEvent) {
         ModelLoader.setCustomModelResourceLocation((Item) LAMP_ITEM, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:allies_lamp"));
         LAMP_ITEM.setTileEntityItemStackRenderer(new LampRenderer());
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(RenderGameOverlayEvent.Pre pre) {
+    public void hideHotbar(RenderGameOverlayEvent.Pre event) {
         NBTTagCompound nBTTagCompound = Minecraft.getMinecraft().player.getEntityData();
-        if (nBTTagCompound.getBoolean(e)) {
-            pre.setCanceled(true);
+        if (nBTTagCompound.getBoolean(inUse)) {
+            event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public void a(LootTableLoadEvent lootTableLoadEvent) {
-        HashSet<ResourceLocation> hashSet = new HashSet<ResourceLocation>();
-        hashSet.add(LootTableList.CHESTS_ABANDONED_MINESHAFT);
-        hashSet.add(LootTableList.CHESTS_DESERT_PYRAMID);
-        hashSet.add(LootTableList.CHESTS_SIMPLE_DUNGEON);
-        hashSet.add(LootTableList.CHESTS_WOODLAND_MANSION);
-        if (hashSet.contains(lootTableLoadEvent.getName())) {
-            LootPool lootPool = lootTableLoadEvent.getTable().getPool("pool3");
+    public void putInChests(LootTableLoadEvent event) {
+        HashSet<ResourceLocation> lootChests = new HashSet<ResourceLocation>();
+        lootChests.add(LootTableList.CHESTS_ABANDONED_MINESHAFT);
+        lootChests.add(LootTableList.CHESTS_DESERT_PYRAMID);
+        lootChests.add(LootTableList.CHESTS_SIMPLE_DUNGEON);
+        lootChests.add(LootTableList.CHESTS_WOODLAND_MANSION);
+        if (lootChests.contains(event.getName())) {
+            LootPool lootPool = event.getTable().getPool("pool3");
             if (lootPool == null) {
-                lootPool = lootTableLoadEvent.getTable().getPool("pool2");
+                lootPool = event.getTable().getPool("pool2");
             }
             if (lootPool != null) {
                 lootPool.addEntry(new LootEntryItem((Item) LAMP_ITEM, 5, 0, new LootFunction[0], new LootCondition[0], "sexmod:allies_lamp"));
@@ -132,8 +134,8 @@ public class LampItem extends Item implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        this.g = new AnimationController<LampItem>(this, "controller", 2.0f, this::a);
-        animationData.addAnimationController(this.g);
+        this.controller = new AnimationController<LampItem>(this, "controller", 2.0f, this::predicate);
+        animationData.addAnimationController(this.controller);
     }
 
     @Override
@@ -160,15 +162,15 @@ public class LampItem extends Item implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected <segs extends IAnimatable> PlayState a(AnimationEvent<segs> animationEvent) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
         NBTTagCompound nBTTagCompound = entityPlayerSP.getEntityData();
-        boolean bl = nBTTagCompound.getBoolean(e);
+        boolean bl = nBTTagCompound.getBoolean(inUse);
         if (!bl) {
-            animationEvent.getController().clearAnimationCache();
+            event.getController().clearAnimationCache();
             return PlayState.STOP;
         }
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.lamp.rub", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.lamp.rub", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
         return PlayState.CONTINUE;
     }
 
@@ -183,12 +185,12 @@ public class LampItem extends Item implements IAnimatable {
         if (!itemStack.equals(entityPlayer.getHeldItemMainhand()) && !itemStack.equals(entityPlayer.getHeldItemOffhand())) {
             return;
         }
-        boolean bl2 = nBTTagCompound.getBoolean(e);
-        int n2 = nBTTagCompound.getInteger(d);
+        boolean bl2 = nBTTagCompound.getBoolean(inUse);
+        int n2 = nBTTagCompound.getInteger(inUseTicks);
         if (!bl2) {
             return;
         }
-        nBTTagCompound.setInteger(d, n2 + 1);
+        nBTTagCompound.setInteger(inUseTicks, n2 + 1);
         if (n2 > k && n2 < c) {
             double d = (float)(n2 - k) / (float)(c - k);
             d = Reference.h(d);
@@ -199,8 +201,8 @@ public class LampItem extends Item implements IAnimatable {
             return;
         }
         WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer), 150, 0.75, 2.0);
-        nBTTagCompound.setBoolean(e, false);
-        nBTTagCompound.setInteger(d, 0);
+        nBTTagCompound.setBoolean(inUse, false);
+        nBTTagCompound.setInteger(inUseTicks, 0);
         if (world.isRemote) {
             HandlePlayerMovement.setMovementLock(false);
             return;
@@ -235,7 +237,7 @@ public class LampItem extends Item implements IAnimatable {
 
     @Override
     public AnimationFactory getFactory() {
-        return this.i;
+        return this.factory;
     }
 
     private static RuntimeException a(RuntimeException runtimeException) {
@@ -245,7 +247,7 @@ public class LampItem extends Item implements IAnimatable {
     public static class a_inner38 {
         @SubscribeEvent
         public void a(PlayerEvent.PlayerLoggedOutEvent playerLoggedOutEvent) {
-            playerLoggedOutEvent.player.getEntityData().setBoolean(LampItem.e, false);
+            playerLoggedOutEvent.player.getEntityData().setBoolean(LampItem.inUse, false);
         }
 
         @SubscribeEvent
@@ -276,12 +278,12 @@ public class LampItem extends Item implements IAnimatable {
                 return;
             }
             NBTTagCompound nBTTagCompound2 = entityPlayer.getEntityData();
-            boolean bl = nBTTagCompound2.getBoolean(LampItem.e);
+            boolean bl = nBTTagCompound2.getBoolean(LampItem.inUse);
             if (bl) {
                 return;
             }
-            nBTTagCompound2.setBoolean(LampItem.e, true);
-            nBTTagCompound2.setInteger(LampItem.d, 0);
+            nBTTagCompound2.setBoolean(LampItem.inUse, true);
+            nBTTagCompound2.setInteger(LampItem.inUseTicks, 0);
         }
     }
 }

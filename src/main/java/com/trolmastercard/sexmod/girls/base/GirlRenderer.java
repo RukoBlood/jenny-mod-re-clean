@@ -127,15 +127,15 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     // getResourceLocation TODO is this supposed to override?
     protected ResourceLocation getOrCreateDynamicSkin(T entity) throws IOException {
         ResourceLocation cachedLocation;
-        if (((GirlEntity)entity).world instanceof FakeWorld || ((GirlEntity)entity).getID() == null) {
+        if (((GirlEntity)entity).world instanceof FakeWorld || ((GirlEntity)entity).playerSheHasSexWith() == null) {
             cachedLocation = skinTextureCache.get(mc.getSession().getProfile().getId());
             if (cachedLocation == null) {
                 return this.generateSkinTexture(mc.getSession().getProfile().getId(), ((GirlEntity)entity).world);
             }
         } else {
-            cachedLocation = skinTextureCache.get(((GirlEntity)entity).getID());
+            cachedLocation = skinTextureCache.get(((GirlEntity)entity).playerSheHasSexWith());
             if (cachedLocation == null) {
-                return this.generateSkinTexture(((GirlEntity)entity).getID(), ((GirlEntity)entity).world);
+                return this.generateSkinTexture(((GirlEntity)entity).playerSheHasSexWith(), ((GirlEntity)entity).world);
             }
         }
         return cachedLocation;
@@ -1003,9 +1003,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             GL11.glRotatef((float)fighter.holdBowRot, 1.0f, 0.0f, 0.0f);
         } else if (fighter.currentAction() == Action.ATTACK && fighter.nextAttack == 0) {
             GlStateManager.translate(fighter.swordOffsetStab.x, fighter.swordOffsetStab.y, fighter.swordOffsetStab.z);
-            GL11.glRotatef((float)fighter.O, 1.0f, 0.0f, 0.0f);
+            GL11.glRotatef((float)fighter.stabSwordRot, 1.0f, 0.0f, 0.0f);
         } else {
-            GL11.glRotatef((float)fighter.P, 1.0f, 0.0f, 0.0f);
+            GL11.glRotatef((float)fighter.slashSwordRot, 1.0f, 0.0f, 0.0f);
         }
         Minecraft.getMinecraft().getItemRenderer().renderItem((EntityLivingBase)this.renderEntity, weaponStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
         this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));

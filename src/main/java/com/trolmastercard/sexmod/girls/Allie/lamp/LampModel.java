@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.girls.Allie;
+package com.trolmastercard.sexmod.girls.Allie.lamp;
 
 import java.awt.Color;
 import java.awt.Graphics;

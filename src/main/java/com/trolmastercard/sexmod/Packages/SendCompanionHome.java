@@ -13,7 +13,7 @@ package com.trolmastercard.sexmod.Packages;
 
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.ho_class404;
+import com.trolmastercard.sexmod.companion.CompanionPearl;
 import com.trolmastercard.sexmod.util.Reference;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class SendCompanionHome implements IMessage {
                     }
                     if (girlEntity.activePearl == null) {
                         float f = (float)girlEntity.getPositionVector().distanceTo(girlEntity.homeCoords);
-                        girlEntity.activePearl = new ho_class404(girlEntity.world, girlEntity);
+                        girlEntity.activePearl = new CompanionPearl(girlEntity.world, girlEntity);
                         girlEntity.activePearl.shoot(girlEntity.homeCoords.x - girlEntity.posX, girlEntity.homeCoords.y - girlEntity.posY, girlEntity.homeCoords.z - girlEntity.posZ, Math.min(4.0f, f * 0.1f), 0.0f);
                         girlEntity.world.spawnEntity(girlEntity.activePearl);
                         continue;

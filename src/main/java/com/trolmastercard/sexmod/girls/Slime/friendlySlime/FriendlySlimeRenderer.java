@@ -3,7 +3,6 @@
  */
 package com.trolmastercard.sexmod.girls.Slime.friendlySlime;
 
-import com.trolmastercard.sexmod.FriendlySlimeGelLayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;

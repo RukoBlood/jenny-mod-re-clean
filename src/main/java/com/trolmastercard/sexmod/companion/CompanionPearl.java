@@ -7,7 +7,7 @@
  *  net.minecraftforge.fml.common.eventhandler.Event
  *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.companion;
 
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -25,41 +25,43 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ho_class404 extends EntityEnderPearl {
-    public ho_class404(World world) {
+public class CompanionPearl extends EntityEnderPearl {
+    public CompanionPearl(World world) {
         super(world);
     }
 
-    public ho_class404(World world, EntityLivingBase entityLivingBase) {
-        super(world, entityLivingBase);
+    public CompanionPearl(World world, EntityLivingBase throwerIn) {
+        super(world, throwerIn);
     }
 
     @Override
-    protected void onImpact(RayTraceResult rayTraceResult) {
+    protected void onImpact(RayTraceResult result) {
         BlockPos blockPos;
         TileEntity tileEntity;
         EntityLivingBase entityLivingBase = this.getThrower();
-        if (rayTraceResult.typeOfHit == RayTraceResult.Type.BLOCK && (tileEntity = this.world.getTileEntity(blockPos = rayTraceResult.getBlockPos())) instanceof TileEntityEndGateway) {
-            TileEntityEndGateway tileEntityEndGateway = (TileEntityEndGateway)tileEntity;
+        if (result.typeOfHit == RayTraceResult.Type.BLOCK && (tileEntity = this.world.getTileEntity(blockPos = result.getBlockPos())) instanceof TileEntityEndGateway) {
+            TileEntityEndGateway gateway = (TileEntityEndGateway)tileEntity;
             if (entityLivingBase != null) {
                 if (entityLivingBase instanceof EntityPlayerMP) {
                     CriteriaTriggers.ENTER_BLOCK.trigger((EntityPlayerMP)entityLivingBase, this.world.getBlockState(blockPos));
                 }
-                tileEntityEndGateway.teleportEntity(entityLivingBase);
+                gateway.teleportEntity(entityLivingBase);
                 this.setDead();
                 return;
             }
-            tileEntityEndGateway.teleportEntity(this);
+            gateway.teleportEntity(this);
             return;
         }
+
         for (int i = 0; i < 32; ++i) {
             this.world.spawnParticle(EnumParticleTypes.PORTAL, this.posX, this.posY + this.rand.nextDouble() * 2.0, this.posZ, this.rand.nextGaussian(), 0.0, this.rand.nextGaussian(), new int[0]);
         }
+
         if (!this.world.isRemote) {
             if (entityLivingBase != null) {
-                GirlEntity em_class2582 = (GirlEntity)entityLivingBase;
+                GirlEntity girl = (GirlEntity)entityLivingBase;
                 EnderTeleportEvent event = new EnderTeleportEvent(entityLivingBase, this.posX, this.posY, this.posZ, 5.0f);
-                if (em_class2582.homeCoords.distanceTo(this.getPositionVector()) < 5.0
+                if (girl.homeCoords.distanceTo(this.getPositionVector()) < 5.0
                         && !MinecraftForge.EVENT_BUS.post(event)) {
                     if (entityLivingBase.isRiding()) {
                         entityLivingBase.dismountRidingEntity();
@@ -72,13 +74,9 @@ public class ho_class404 extends EntityEnderPearl {
         }
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
-    public static class a_inner405 {
+    public static class EventHandler {
         @SubscribeEvent
-        public void a(EnderTeleportEvent enderTeleportEvent) {
+        public void arrive(EnderTeleportEvent enderTeleportEvent) {
             if (enderTeleportEvent.getEntityLiving() instanceof GirlEntity) {
                 GirlEntity girl = (GirlEntity)enderTeleportEvent.getEntityLiving();
                 girl.activePearl = null;

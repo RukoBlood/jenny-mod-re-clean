@@ -95,7 +95,7 @@ extends GirlEntity {
         if (this.currentAction() == Action.NULL) {
             this.world.removeEntity(this);
         }
-        if ((uUID = this.getID()) == null) {
+        if ((uUID = this.playerSheHasSexWith()) == null) {
             return;
         }
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
@@ -347,7 +347,7 @@ extends GirlEntity {
                     this.sendLocalClientMessage(I18n.format("allie.dialogue.summon8", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_HUH, new int[0]);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.openGuiForPlayer(this.world.getPlayerEntityByUUID(this.getID()));
+                    this.openGuiForPlayer(this.world.getPlayerEntityByUUID(this.playerSheHasSexWith()));
                     break;
                 }
                 case "summonDone": {
@@ -381,7 +381,7 @@ extends GirlEntity {
                         break;
                     }
                     this.setCurrentAction(Action.DEEPTHROAT_START);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getID(), false, true));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.playerSheHasSexWith(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();

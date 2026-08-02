@@ -1,10 +1,8 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Slime.friendlySlime;
 
-import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeEntity;
-import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.renderer.GlStateManager;

@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.companion;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
@@ -14,7 +14,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 
-public class AutoCloseDoorGoal extends EntityAIBase {
+public class OpenAndCloseDoorBehindHer extends EntityAIBase {
     protected EntityLiving entity;
     protected BlockPos doorPos = BlockPos.ORIGIN;
     protected BlockDoor doorBlock;
@@ -23,7 +23,7 @@ public class AutoCloseDoorGoal extends EntityAIBase {
     float initStepY;
     int closeDelayTimer = 10;
 
-    public AutoCloseDoorGoal(EntityLiving e) {
+    public OpenAndCloseDoorBehindHer(EntityLiving e) {
         this.entity = e;
         if (!(e.getNavigator() instanceof PathNavigateGround)) {
             throw new IllegalArgumentException("Unsupported mob type for DoorInteractGoal");
