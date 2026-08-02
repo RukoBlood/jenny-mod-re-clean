@@ -19,7 +19,6 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.BoneDeformProcessor;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import com.trolmastercard.sexmod.world.FakeWorld;

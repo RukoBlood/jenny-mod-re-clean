@@ -10,7 +10,7 @@ package com.trolmastercard.sexmod.girls.Allie;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;

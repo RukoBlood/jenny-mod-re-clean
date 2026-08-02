@@ -19,7 +19,7 @@ package com.trolmastercard.sexmod.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.Allie.PlayerAllie;

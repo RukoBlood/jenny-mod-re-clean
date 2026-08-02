@@ -9,6 +9,7 @@ package com.trolmastercard.sexmod;
 
 import java.util.UUID;
 
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -53,7 +54,7 @@ public abstract class BaseCompanionGoal extends EntityAIBase {
         this.entity.motionZ = 0.0;
     }
 
-    protected double setCompanionSpeed() {
+    protected double setGirlSpeed() {
         GirlEntity.WalkTypes walkTypes;
         double speed;
         float distance = this.entity.getDistance(this.player);

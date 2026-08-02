@@ -18,7 +18,7 @@ package com.trolmastercard.sexmod.girls.Allie;
 import java.util.HashSet;
 import java.util.List;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;

@@ -12,7 +12,7 @@ package com.trolmastercard.sexmod.girls.Goblin;
 import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.ai_class30;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;

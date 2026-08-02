@@ -14,6 +14,7 @@ import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.AbstractPlayerKoblinGoboldRenderer;
 import com.trolmastercard.sexmod.util.Reference;

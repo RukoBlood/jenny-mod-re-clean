@@ -4,12 +4,13 @@
  * Could not load the following classes:
  *  javax.annotation.Nullable
  */
-package com.trolmastercard.sexmod.girls.Slime;
+package com.trolmastercard.sexmod.girls.Slime.friendlySlime;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import com.trolmastercard.sexmod.girls.Slime.SlimeEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;

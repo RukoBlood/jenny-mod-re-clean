@@ -14,7 +14,7 @@ package com.trolmastercard.sexmod.events;
 
 import javax.vecmath.Vector2f;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.PlayerGirlRenderer;

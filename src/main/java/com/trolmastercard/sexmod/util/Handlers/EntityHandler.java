@@ -32,7 +32,7 @@ import com.trolmastercard.sexmod.girls.Luna.PlayerLuna;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.girls.PlayerGirlEntity;
 import com.trolmastercard.sexmod.girls.Pyrocynical.PyrocynicalEntity;
-import com.trolmastercard.sexmod.girls.Slime.FriendlySlimeEntity;
+import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeEntity;
 import com.trolmastercard.sexmod.girls.Slime.PlayerSlime;
 import com.trolmastercard.sexmod.girls.Slime.SlimeEntity;
 import net.minecraft.entity.Entity;

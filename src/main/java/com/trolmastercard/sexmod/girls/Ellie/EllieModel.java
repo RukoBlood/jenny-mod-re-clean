@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod.girls.Ellie;
 
 import java.util.HashMap;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.util.Utils;

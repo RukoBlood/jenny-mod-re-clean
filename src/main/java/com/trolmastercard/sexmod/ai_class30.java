@@ -6,6 +6,8 @@
  */
 package com.trolmastercard.sexmod;
 
+import com.trolmastercard.sexmod.girls.Action;
+
 import java.util.UUID;
 import javax.annotation.Nullable;
 

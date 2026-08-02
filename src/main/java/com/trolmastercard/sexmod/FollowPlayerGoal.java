@@ -50,17 +50,17 @@ public class FollowPlayerGoal extends BaseCompanionGoal {
                 }
 
                 this.PathfindCooldown = 300;
-                this.setCompanionSpeed();
+                this.setGirlSpeed();
                 break;
             }
             case IDLE: {
-                this.setCompanionSpeed();
+                this.setGirlSpeed();
             }
         }
     }
 
     @Override
-    protected double setCompanionSpeed() {
+    protected double setGirlSpeed() {
         float dist = this.entity.getDistance(this.player);
         float baseFac = 0.02f;
         double SpeedBonus = Math.min(0.7, Math.floor(dist / 3.0f) * 0.05);

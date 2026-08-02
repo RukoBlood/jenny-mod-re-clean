@@ -36,9 +36,5 @@ public enum g5_class349 {
         }
         return n;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

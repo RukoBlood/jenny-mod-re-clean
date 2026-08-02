@@ -6,7 +6,7 @@ package com.trolmastercard.sexmod.girls.Kobold;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.dr_class199;
 import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;

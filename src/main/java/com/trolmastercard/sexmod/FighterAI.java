@@ -14,6 +14,7 @@ import com.google.common.collect.Multimap;
 
 import java.util.List;
 
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -122,7 +123,7 @@ public class FighterAI extends BaseCompanionGoal {
                     this.goNearPlayer();
                 }
                 this.j = 300;
-                this.setCompanionSpeed();
+                this.setGirlSpeed();
                 break;
             }
             case IDLE: {
@@ -135,7 +136,7 @@ public class FighterAI extends BaseCompanionGoal {
                         this.pathNavigate.clearPath();
                         this.pathNavigate.tryMoveToXYZ(vec3d2.x, vec3d2.y, vec3d2.z, 0.5);
                     }
-                    this.setCompanionSpeed();
+                    this.setGirlSpeed();
                     break;
                 }
                 if (!(this.fighter.getDistance(this.player) > 10.0f)) break;
@@ -309,8 +310,8 @@ public class FighterAI extends BaseCompanionGoal {
     }
 
     @Override
-    protected double setCompanionSpeed() {
-        double d = super.setCompanionSpeed();
+    protected double setGirlSpeed() {
+        double d = super.setGirlSpeed();
         if (this.fighter.N) {
             d = 0.0;
         }

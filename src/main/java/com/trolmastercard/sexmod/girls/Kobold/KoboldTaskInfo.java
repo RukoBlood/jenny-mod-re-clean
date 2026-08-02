@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod.girls.Kobold;
 
 import java.util.*;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;

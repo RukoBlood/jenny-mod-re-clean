@@ -8,11 +8,11 @@ package com.trolmastercard.sexmod.girls.Allie;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.MakeRichWish;
 import com.trolmastercard.sexmod.Packages.UploadInventoryToServerAlt;
 import com.trolmastercard.sexmod.Packages.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;

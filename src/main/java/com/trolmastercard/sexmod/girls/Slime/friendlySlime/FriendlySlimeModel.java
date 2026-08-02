@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.girls.Slime;
+package com.trolmastercard.sexmod.girls.Slime.friendlySlime;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;

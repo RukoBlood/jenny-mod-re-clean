@@ -13,12 +13,14 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlRenderer;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieRenderer;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.interfaces.IModelBoneFilter;
+import com.trolmastercard.sexmod.util.interfaces.IWingsOwner;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

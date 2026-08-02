@@ -11,7 +11,7 @@ import java.util.Arrays;
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
-import com.trolmastercard.sexmod.Action;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.girls.GirlEntity;

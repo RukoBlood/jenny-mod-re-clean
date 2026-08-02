@@ -11,7 +11,6 @@ import java.util.Objects;
 import javax.annotation.CheckReturnValue;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.Action;
 import com.trolmastercard.sexmod.bu_class100;
 import com.trolmastercard.sexmod.util.GeckoMatrixBridge;
 import net.minecraft.client.Minecraft;

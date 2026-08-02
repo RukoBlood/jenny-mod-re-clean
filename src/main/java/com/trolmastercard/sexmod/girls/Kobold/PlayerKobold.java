@@ -16,6 +16,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packages.TeleportPlayer;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.gui.GirlInventoryUI;
 import com.trolmastercard.sexmod.gui.SexUI;
 import com.trolmastercard.sexmod.gui.fh_class313;

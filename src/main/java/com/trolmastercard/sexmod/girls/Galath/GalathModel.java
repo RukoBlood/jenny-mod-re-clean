@@ -4,6 +4,7 @@
 package com.trolmastercard.sexmod.girls.Galath;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
@@ -11,6 +12,7 @@ import com.trolmastercard.sexmod.girls.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.interfaces.IWingsOwner;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

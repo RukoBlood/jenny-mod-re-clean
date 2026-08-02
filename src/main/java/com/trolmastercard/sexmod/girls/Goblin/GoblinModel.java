@@ -6,6 +6,7 @@ package com.trolmastercard.sexmod.girls.Goblin;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.Action;
 import com.trolmastercard.sexmod.girls.GirlEntity;
 import com.trolmastercard.sexmod.girls.GirlModel;
 import com.trolmastercard.sexmod.girls.PlayerGirl;

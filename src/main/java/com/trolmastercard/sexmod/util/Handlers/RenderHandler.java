@@ -24,6 +24,8 @@ import com.trolmastercard.sexmod.girls.Mangelie.ManglelieRenderer;
 import com.trolmastercard.sexmod.girls.Pyrocynical.PyrocynicalEntity;
 import com.trolmastercard.sexmod.girls.Pyrocynical.PyrocynicalRenderer;
 import com.trolmastercard.sexmod.girls.Slime.*;
+import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeEntity;
+import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeRenderer;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 //fk
