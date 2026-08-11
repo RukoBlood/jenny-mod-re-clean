@@ -41,11 +41,11 @@ public class HornyPotion extends Potion {
         super(false, 0);
     }
 
-    public HornyPotion(String string, boolean bl, int n, int n2, int n3) {
+    public HornyPotion(String name, boolean bl, int n, int n2, int n3) {
         super(bl, n);
-        this.setPotionName(string);
+        this.setPotionName(name);
         this.setIconIndex(n2, n3);
-        this.setRegistryName(new ResourceLocation("sexmod:" + string));
+        this.setRegistryName(new ResourceLocation("sexmod:" + name));
     }
 
     public static void RegisterPotion() {
@@ -55,20 +55,20 @@ public class HornyPotion extends Potion {
     }
 
     @SubscribeEvent
-    public void a(TickEvent.PlayerTickEvent playerTickEvent) {
-        EntityPlayer entityPlayer = playerTickEvent.player;
-        PotionEffect potionEffect = entityPlayer.getActivePotionEffect(HORNY_POTION);
-        if (entityPlayer.world.isRemote) {
+    public void onPlayerTick(TickEvent.PlayerTickEvent tickEvent) {
+        EntityPlayer player = tickEvent.player;
+        PotionEffect effect = player.getActivePotionEffect(HORNY_POTION);
+        if (player.world.isRemote) {
             return;
         }
-        if (potionEffect == null) {
+        if (effect == null) {
             return;
         }
-        if (potionEffect.getDuration() > 3500) {
+        if (effect.getDuration() > 3500) {
             return;
         }
-        entityPlayer.removePotionEffect(HORNY_POTION);
-        PackageHandler.INSTANCE.sendTo((IMessage)new bd_class76(entityPlayer), (EntityPlayerMP)entityPlayer);
+        player.removePotionEffect(HORNY_POTION);
+        PackageHandler.INSTANCE.sendTo((IMessage)new bd_class76(player), (EntityPlayerMP)player);
     }
 
     @SubscribeEvent

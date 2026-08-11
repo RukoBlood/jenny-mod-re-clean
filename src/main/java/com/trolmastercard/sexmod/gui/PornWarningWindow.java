@@ -34,8 +34,8 @@ public class PornWarningWindow extends JFrame {
                 window = new PornWarningWindow();
                 window.setVisible(true);
                 window.requestFocus();
-            } catch (Exception exception) {
-                exception.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

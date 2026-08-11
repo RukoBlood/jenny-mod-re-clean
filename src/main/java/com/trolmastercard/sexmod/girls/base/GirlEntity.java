@@ -717,12 +717,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return list;
     }
 
-    protected BlockPos net_minecraft_util_math_BlockPos_a(BlockPos blockPos) {
-        return this.a(blockPos, 1);
+    protected BlockPos getNearestBed(BlockPos pos) {
+        return this.findNearestBed(pos, 1);
     }
 
-    public BlockPos a(BlockPos blockPos, int n) {
-        return this.findNearestStructureBlock(blockPos, n, Blocks.BED, 22, 3, null);
+    public BlockPos findNearestBed(BlockPos pos, int radius) {
+        return this.findNearestStructureBlock(pos, radius, Blocks.BED, 22, 3, null);
     }
 
     public void W() {

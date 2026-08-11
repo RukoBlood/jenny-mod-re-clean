@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class bd_class76 implements IMessage {
-    boolean c = false;
+    boolean valid = false;
     EntityPlayer b;
     HashMap<PlayerGirlEntity, String> a = new HashMap();
 
@@ -41,13 +41,13 @@ public class bd_class76 implements IMessage {
         for (int i = 0; i < n; ++i) {
             this.a.put(PlayerGirlEntity.valueOf(ByteBufUtils.readUTF8String((ByteBuf)byteBuf)), ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
         }
-        this.c = true;
+        this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         for (PlayerGirlEntity fy_class3352 : PlayerGirlEntity.values()) {
             String string;
-            if (!fy_class3352.hasSpecifics || "".equals(string = this.b.getEntityData().getString("sexmod:GirlSpecific" + (Object)((Object)fy_class3352)))) continue;
+            if (!fy_class3352.hasSpecifics || (string = this.b.getEntityData().getString("sexmod:GirlSpecific" + (Object) ((Object) fy_class3352))).isEmpty()) continue;
             this.a.put(fy_class3352, string);
         }
         byteBuf.writeInt(this.a.size());
@@ -57,28 +57,24 @@ public class bd_class76 implements IMessage {
         }
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static class Handler implements IMessageHandler<bd_class76, IMessage> {
-        public IMessage a(bd_class76 message, MessageContext ctx) {
-            if (!message.c || ctx.side != Side.CLIENT) {
+        public IMessage execMessage(bd_class76 message, MessageContext ctx) {
+            if (!message.valid || ctx.side != Side.CLIENT) {
                 return null;
             }
-            this.a(message.a);
+            this.CallUIDraw(message.a);
             return null;
         }
 
         @SideOnly(value=Side.CLIENT)
-        public void a(HashMap<PlayerGirlEntity, String> hashMap) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            minecraft.addScheduledTask(() -> minecraft.displayGuiScreen(new b5_class66(hashMap)));
+        public void CallUIDraw(HashMap<PlayerGirlEntity, String> hashMap) {
+            Minecraft mc = Minecraft.getMinecraft();
+            mc.addScheduledTask(() -> mc.displayGuiScreen(new b5_class66(hashMap)));
         }
 
         @Override
         public IMessage onMessage(bd_class76 iMessage, MessageContext messageContext) {
-            return this.a((bd_class76)iMessage, messageContext);
+            return this.execMessage((bd_class76)iMessage, messageContext);
         }
     }
 }

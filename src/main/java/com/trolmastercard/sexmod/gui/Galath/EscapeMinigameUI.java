@@ -10,7 +10,7 @@
  *  net.minecraftforge.fml.common.gameevent.TickEvent$Phase
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.gui;
+package com.trolmastercard.sexmod.gui.Galath;
 
 import java.util.Random;
 

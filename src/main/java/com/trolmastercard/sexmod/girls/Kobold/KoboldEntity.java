@@ -2824,7 +2824,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "paymentDone": {

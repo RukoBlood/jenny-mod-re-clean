@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.gui;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.UploadInventoryToServer;
-import com.trolmastercard.sexmod.ca_class121;
+import com.trolmastercard.sexmod.LunaContainer;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
@@ -20,31 +20,31 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class az_class56 extends GuiContainer {
+public class LunaGUIContainer extends GuiContainer {
     final static ResourceLocation b = new ResourceLocation("sexmod", "textures/gui/girlinventory.png");
-    UUID c;
-    LunaEntity d;
-    UUID a;
+    UUID ID;
+    LunaEntity lunaEntity;
+    UUID invID;
 
-    public az_class56(LunaEntity eb_class2362, InventoryPlayer inventoryPlayer, UUID uUID) {
-        super(new ca_class121(eb_class2362, inventoryPlayer, uUID));
-        this.c = uUID;
-        this.d = eb_class2362;
-        this.a = inventoryPlayer.player.getPersistentID();
+    public LunaGUIContainer(LunaEntity luna, InventoryPlayer invPlayer, UUID ID) {
+        super(new LunaContainer(luna, invPlayer, ID));
+        this.ID = ID;
+        this.lunaEntity = luna;
+        this.invID = invPlayer.player.getPersistentID();
     }
 
     @Override
-    public void drawScreen(int n, int n2, float f) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
-        super.drawScreen(n, n2, f);
-        this.renderHoveredToolTip(n, n2);
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        for (ca_class121 ca_class1212 : ca_class121.c) {
-            if (!ca_class1212.a.equals(this.c)) continue;
+        for (LunaContainer ca_class1212 : LunaContainer.OPEN_CONTAINERS) {
+            if (!ca_class1212.containerID.equals(this.ID)) continue;
             ItemStack[] itemStackArray = new ItemStack[43];
             Minecraft.getMinecraft().player.inventory.mainInventory.toArray(itemStackArray);
             itemStackArray[36] = ca_class1212.getSlot(0).getStack();
@@ -54,7 +54,7 @@ public class az_class56 extends GuiContainer {
             itemStackArray[40] = ca_class1212.getSlot(4).getStack();
             itemStackArray[41] = ca_class1212.getSlot(5).getStack();
             itemStackArray[42] = ca_class1212.getSlot(6).getStack();
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.d.girlID(), this.a, itemStackArray));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.lunaEntity.girlID(), this.invID, itemStackArray));
         }
     }
 

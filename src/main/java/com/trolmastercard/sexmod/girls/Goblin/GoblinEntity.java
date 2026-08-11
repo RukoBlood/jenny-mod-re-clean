@@ -235,14 +235,14 @@ implements ai_class30 {
 
     public void void_c(UUID uUID) {
         this.aY = 0;
-        BlackScreenUI.b();
+        BlackScreenUI.run();
         HandlePlayerMovement.setMovementLock(false);
         this.setInteractionPlayerUUID(uUID);
     }
 
     public void void_b(UUID uUID) {
         this.az = 0;
-        BlackScreenUI.b();
+        BlackScreenUI.run();
         HandlePlayerMovement.setMovementLock(false);
         this.setInteractionPlayerUUID(uUID);
     }
@@ -1828,7 +1828,7 @@ implements ai_class30 {
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "paizuriCumDone": {

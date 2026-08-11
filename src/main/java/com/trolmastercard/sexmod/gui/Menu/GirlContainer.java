@@ -5,7 +5,7 @@
  *  net.minecraftforge.items.CapabilityItemHandler
  *  net.minecraftforge.items.IItemHandler
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui.Menu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +22,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class d4_class162 extends Container {
+public class GirlContainer extends Container {
     GirlEntity b;
     public Slot[] d;
-    public UUID a;
-    static public List<d4_class162> c = new ArrayList<d4_class162>();
+    public UUID containerID;
+    static public List<GirlContainer> c = new ArrayList<GirlContainer>();
 
-    public d4_class162(GirlEntity em_class2582, InventoryPlayer inventoryPlayer, UUID uUID) {
-        this.a = uUID;
+    public GirlContainer(GirlEntity em_class2582, InventoryPlayer inventoryPlayer, UUID uUID) {
+        this.containerID = uUID;
         c.add(this);
         if (em_class2582.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH)) {
             int n;

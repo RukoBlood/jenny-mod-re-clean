@@ -65,8 +65,8 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
     final static public Vector3fSexmodSpecial OVERLAY_COLOR_NONE = new Vector3fSexmodSpecial(0.0f, 0.0f, 0.0f);
     final static ColorRGBA RIBBON_COLOR_PRIMARY = new ColorRGBA(152, 45, 62, 255);
     final static ColorRGBA RIBBON_COLOR_SECONDARY = new ColorRGBA(84, 66, 88, 255);
-    final static Vector2f WING_UV_OFFSET_1 = new Vector2f(0.25f, 0.125f);
-    final static Vector2f WING_UV_OFFSET_2 = new Vector2f(0.375f, 0.125f);
+    final static Rotation2f WING_UV_OFFSET_1 = new Rotation2f(0.25f, 0.125f);
+    final static Rotation2f WING_UV_OFFSET_2 = new Rotation2f(0.375f, 0.125f);
     final static float WING_UV_SIZE = 0.125f;
     final static ResourceLocation STAR_TEXTURE = new ResourceLocation("sexmod", "textures/star.png");
     final static int v = 105;

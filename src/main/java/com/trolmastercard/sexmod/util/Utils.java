@@ -9,7 +9,7 @@ import java.awt.datatransfer.StringSelection;
 import java.util.Random;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Vector2f;
+import com.trolmastercard.sexmod.Rotation2f;
 import net.minecraft.util.math.Vec3d;
 
 public class Utils {
@@ -28,9 +28,9 @@ public class Utils {
         return (float)diff;
     }
 
-    public static Vector2f CalculateLookAngles(Vec3d startPos, Vec3d endPos) {
+    public static Rotation2f CalculateLookAngles(Vec3d startPos, Vec3d endPos) {
         Vec3d vec3d3 = endPos.subtract(startPos).normalize();
-        return new Vector2f((float)Math.atan2(vec3d3.x, vec3d3.z), (float)Math.atan2(vec3d3.y, Math.sqrt(vec3d3.x * vec3d3.x + vec3d3.z * vec3d3.z)));
+        return new Rotation2f((float)Math.atan2(vec3d3.x, vec3d3.z), (float)Math.atan2(vec3d3.y, Math.sqrt(vec3d3.x * vec3d3.x + vec3d3.z * vec3d3.z)));
     }
 
     public static void copyToClipboard(String text) {

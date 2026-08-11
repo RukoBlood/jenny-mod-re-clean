@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.Packages.UpdateVelocity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.gui.GalathFlightUI;
+import com.trolmastercard.sexmod.gui.Galath.GalathFlightUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -461,7 +461,7 @@ implements IWingsOwner {
                 case "blackScreenTamed": 
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "flapControlled": {

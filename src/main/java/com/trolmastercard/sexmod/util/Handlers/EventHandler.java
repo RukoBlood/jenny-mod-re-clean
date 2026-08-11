@@ -34,6 +34,8 @@ import com.trolmastercard.sexmod.girls.Allie.PlayerAllieRenderer;
 import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblin;
 import com.trolmastercard.sexmod.gui.*;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
+import com.trolmastercard.sexmod.gui.Galath.EscapeMinigameUI;
+import com.trolmastercard.sexmod.gui.Galath.GalathFlightUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.world.NameStorage;
 import com.trolmastercard.sexmod.world.WorldGenStructure;

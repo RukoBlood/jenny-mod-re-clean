@@ -37,8 +37,8 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
-import com.trolmastercard.sexmod.gui.EscapeMinigameUI;
-import com.trolmastercard.sexmod.gui.GalathFlightUI;
+import com.trolmastercard.sexmod.gui.Galath.EscapeMinigameUI;
+import com.trolmastercard.sexmod.gui.Galath.GalathFlightUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.*;
@@ -1884,7 +1884,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         if ("anal".equals(string)) {
-            BlackScreenUI.b();
+            BlackScreenUI.run();
             HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
@@ -1897,7 +1897,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         if ("cowgirl".equals(string)) {
-            BlackScreenUI.b();
+            BlackScreenUI.run();
             HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
@@ -1914,7 +1914,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             if (f8_class2932 == null) {
                 return;
             }
-            BlackScreenUI.b();
+            BlackScreenUI.run();
             HandlePlayerMovement.setMovementLock(false);
             Utils.runDelayedTask(1200, () -> {
                 Minecraft minecraft = Minecraft.getMinecraft();
@@ -2634,12 +2634,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "blackScreenMaster": {
                     if (!Minecraft.getMinecraft().player.getPersistentID().equals(this.getMasterUUID())) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     HandlePlayerMovement.setMovementLock(false);
                     break;
                 }
@@ -2727,7 +2727,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 return;
             }
             checkSpawn.setResult(Event.Result.DENY);
-            fq_class325.a(blockPos, fq_class325.c);
+            fq_class325.addPosInList(blockPos, fq_class325.c);
             GalathEntity f__class2972 = new GalathEntity(world);
             f__class2972.setPositionAndUpdate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             world.spawnEntity(f__class2972);

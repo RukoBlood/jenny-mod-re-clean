@@ -189,7 +189,7 @@ extends PlayerGirl {
         }
         if (this.ar == -1) {
             if (this.world.isRemote) {
-                BlackScreenUI.b();
+                BlackScreenUI.run();
                 HandlePlayerMovement.setMovementLock(false);
             } else {
                 this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
@@ -521,7 +521,7 @@ extends PlayerGirl {
                 }
                 case "anal_cumBlackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "doggy_cumDone": 

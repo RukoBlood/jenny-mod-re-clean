@@ -456,7 +456,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "paymentDone": {

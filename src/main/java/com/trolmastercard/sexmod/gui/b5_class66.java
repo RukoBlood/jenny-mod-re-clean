@@ -30,34 +30,34 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 //b5.class
 
 public class b5_class66 extends GuiScreen {
-    List<EntityLivingBase> a = new ArrayList<EntityLivingBase>();
+    List<EntityLivingBase> girls = new ArrayList<EntityLivingBase>();
     int b = 0;
-    static float c = 0.0f;
+    static float angle = 0.0f;
 
     public b5_class66(HashMap<PlayerGirlEntity, String> hashMap) {
         this.mc = Minecraft.getMinecraft();
-        for (PlayerGirlEntity fy_class3352 : PlayerGirlEntity.values()) {
-            if (fy_class3352.isNpcOnly) continue;
+        for (PlayerGirlEntity entity : PlayerGirlEntity.values()) {
+            if (entity.isNpcOnly) continue;
             try {
-                Constructor<? extends GirlEntity> constructor = fy_class3352.npcClass.getConstructor(World.class);
-                GirlEntity em_class2582 = constructor.newInstance(this.mc.world);
-                em_class2582.setLocallyRegistered(true);
-                this.a.add(em_class2582);
-                String string = hashMap.get((Object)fy_class3352);
+                Constructor<? extends GirlEntity> worldConstructor = entity.npcClass.getConstructor(World.class);
+                GirlEntity girl = worldConstructor.newInstance(this.mc.world);
+                girl.setLocallyRegistered(true);
+                this.girls.add(girl);
+                String string = hashMap.get((Object)entity);
                 if (string == null) continue;
-                em_class2582.void_a(GirlEntity.c(string));
-            } catch (Exception exception) {
-                exception.printStackTrace();
+                girl.void_a(GirlEntity.c(string));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        this.a.add(this.mc.player);
+        this.girls.add(this.mc.player);
     }
 
     @Override
     public void drawScreen(int n, int n2, float f) {
         super.drawScreen(n, n2, f);
         this.buttonList.clear();
-        b5_class66.a(this.width / 2, this.height / 2 + 20, 30, this.a.get(this.b));
+        b5_class66.a(this.width / 2, this.height / 2 + 20, 30, this.girls.get(this.b));
         this.buttonList.add(new GuiButton(1, this.width / 2 + 30, this.height / 2 - 10, 20, 20, ">"));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 50, this.height / 2 - 10, 20, 20, "<"));
         this.buttonList.add(new GuiButton(0, this.width / 2 - 30, this.height / 2 + 30, 60, 20, "pick"));
@@ -65,14 +65,14 @@ public class b5_class66 extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton guiButton) {
-        if (">".equals(guiButton.displayString) && ++this.b >= this.a.size()) {
+        if (">".equals(guiButton.displayString) && ++this.b >= this.girls.size()) {
             this.b = 0;
         }
         if ("<".equals(guiButton.displayString) && --this.b < 0) {
-            this.b = this.a.size() - 1;
+            this.b = this.girls.size() - 1;
         }
         if (guiButton.id == 0) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.fromGirl(this.a.get(this.b))));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.fromGirl(this.girls.get(this.b))));
             EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
             ((EntityPlayer)entityPlayerSP).closeScreen();
             entityPlayerSP.eyeHeight = entityPlayerSP.getDefaultEyeHeight();
@@ -87,27 +87,27 @@ public class b5_class66 extends GuiScreen {
         return false;
     }
 
-    public static void a(int n, int n2, int n3, EntityLivingBase entityLivingBase) {
-        float f = entityLivingBase.renderYawOffset;
-        float f2 = entityLivingBase.rotationYaw;
-        float f3 = entityLivingBase.rotationPitch;
-        float f4 = entityLivingBase.prevRotationYawHead;
-        float f5 = entityLivingBase.rotationYawHead;
-        if (!(entityLivingBase instanceof EntityPlayer)) {
-            entityLivingBase.posX = 0.0;
-            entityLivingBase.posY = 0.0;
-            entityLivingBase.posZ = 0.0;
+    public static void a(int n, int n2, int n3, EntityLivingBase entity) {
+        float f = entity.renderYawOffset;
+        float f2 = entity.rotationYaw;
+        float f3 = entity.rotationPitch;
+        float f4 = entity.prevRotationYawHead;
+        float f5 = entity.rotationYawHead;
+        if (!(entity instanceof EntityPlayer)) {
+            entity.posX = 0.0;
+            entity.posY = 0.0;
+            entity.posZ = 0.0;
         }
-        entityLivingBase.renderYawOffset = 0.0f;
-        entityLivingBase.rotationYaw = 0.0f;
-        entityLivingBase.rotationPitch = 0.0f;
-        entityLivingBase.prevRotationYawHead = 0.0f;
-        entityLivingBase.rotationYawHead = 0.0f;
-        float f6 = Minecraft.getDebugFPS();
-        if (f6 == 0.0f) {
-            f6 = 0.1f;
+        entity.renderYawOffset = 0.0f;
+        entity.rotationYaw = 0.0f;
+        entity.rotationPitch = 0.0f;
+        entity.prevRotationYawHead = 0.0f;
+        entity.rotationYawHead = 0.0f;
+        float dt = Minecraft.getDebugFPS();
+        if (dt == 0.0f) {
+            dt = 0.1f;
         }
-        c += 60.0f / f6;
+        angle += 60.0f / dt;
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
         GlStateManager.translate(n, n2, 50.0f);
@@ -116,12 +116,12 @@ public class b5_class66 extends GuiScreen {
         GlStateManager.rotate(135.0f, 0.0f, 1.0f, 0.0f);
         RenderHelper.enableStandardItemLighting();
         GlStateManager.rotate(-135.0f, 0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate(c, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(angle, 0.0f, 1.0f, 0.0f);
         GlStateManager.translate(0.0f, 0.0f, 0.0f);
         RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
         renderManager.setPlayerViewY(180.0f);
         renderManager.setRenderShadow(false);
-        renderManager.renderEntity(entityLivingBase, 0.0, 0.0, 0.0, 0.0f, 1.2345679f, false);
+        renderManager.renderEntity(entity, 0.0, 0.0, 0.0, 0.0f, 1.2345679f, false);
         renderManager.setRenderShadow(true);
         GlStateManager.popMatrix();
         RenderHelper.disableStandardItemLighting();
@@ -129,11 +129,11 @@ public class b5_class66 extends GuiScreen {
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        entityLivingBase.renderYawOffset = f;
-        entityLivingBase.rotationYaw = f2;
-        entityLivingBase.rotationPitch = f3;
-        entityLivingBase.prevRotationYawHead = f4;
-        entityLivingBase.rotationYawHead = f5;
+        entity.renderYawOffset = f;
+        entity.rotationYaw = f2;
+        entity.rotationPitch = f3;
+        entity.prevRotationYawHead = f4;
+        entity.rotationYawHead = f5;
     }
 }
 

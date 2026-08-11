@@ -526,7 +526,7 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "bjcBlackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "bjcDone": 

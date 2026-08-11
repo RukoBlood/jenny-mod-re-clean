@@ -147,7 +147,7 @@ extends PlayerGirl {
     void a(EntityPlayer entityPlayer, int n) {
         EntityPlayerSP entityPlayerSP;
         if (n == 0 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
-            BlackScreenUI.b();
+            BlackScreenUI.run();
             entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
             HandlePlayerMovement.setMovementLock(false);
         }
@@ -471,7 +471,7 @@ extends PlayerGirl {
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "touch_boobs_cumDone": {

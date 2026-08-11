@@ -21,14 +21,14 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 * Breed Villagers when horny potion is used on them
 * */
 public class EntityAIVillagerJustBangHerWithoutThinking extends EntityAIBase {
-    final private EntityVillager c;
-    private EntityVillager d;
-    final private World a;
+    final private EntityVillager villager;
+    private EntityVillager targetVillager;
+    final private World world;
     private int b;
 
     public EntityAIVillagerJustBangHerWithoutThinking(EntityVillager villager) {
-        this.c = villager;
-        this.a = villager.world;
+        this.villager = villager;
+        this.world = villager.world;
         this.setMutexBits(3);
     }
 
@@ -37,18 +37,18 @@ public class EntityAIVillagerJustBangHerWithoutThinking extends EntityAIBase {
         if (this.b != 0) {
             return false;
         }
-        EntityVillager entityVillager = this.a.findNearestEntityWithinAABB(EntityVillager.class, this.c.getEntityBoundingBox().grow(8.0, 3.0, 8.0), this.c);
-        if (entityVillager == null) {
+        EntityVillager villagersInArea = this.world.findNearestEntityWithinAABB(EntityVillager.class, this.villager.getEntityBoundingBox().grow(8.0, 3.0, 8.0), this.villager);
+        if (villagersInArea == null) {
             return false;
         }
-        this.d = entityVillager;
+        this.targetVillager = villagersInArea;
         return true;
     }
 
     @Override
     public void startExecuting() {
         this.b = 300;
-        this.c.setMating(true);
+        this.villager.setMating(true);
     }
 
     @Override
@@ -63,34 +63,34 @@ public class EntityAIVillagerJustBangHerWithoutThinking extends EntityAIBase {
     @Override
     public void updateTask() {
         --this.b;
-        this.c.getLookHelper().setLookPositionWithEntity(this.d, 10.0f, 30.0f);
-        if (this.c.getDistanceSq(this.d) > 2.25) {
-            this.c.getNavigator().tryMoveToEntityLiving(this.d, 0.25);
+        this.villager.getLookHelper().setLookPositionWithEntity(this.targetVillager, 10.0f, 30.0f);
+        if (this.villager.getDistanceSq(this.targetVillager) > 2.25) {
+            this.villager.getNavigator().tryMoveToEntityLiving(this.targetVillager, 0.25);
         }
         if (this.b <= 0) {
-            this.a();
-            this.c.tasks.removeTask(this);
+            this.spawnBaby();
+            this.villager.tasks.removeTask(this);
         }
-        if (this.c.getRNG().nextInt(35) == 0) {
-            this.a.setEntityState(this.c, (byte)12);
+        if (this.villager.getRNG().nextInt(35) == 0) {
+            this.world.setEntityState(this.villager, (byte)12);
         }
     }
 
-    private void a() {
-        EntityAgeable entityAgeable = this.c.createChild(this.d);
-        this.d.setGrowingAge(6000);
-        this.c.setGrowingAge(6000);
-        this.d.setIsWillingToMate(false);
-        this.c.setIsWillingToMate(false);
-        BabyEntitySpawnEvent babyEntitySpawnEvent = new BabyEntitySpawnEvent((EntityLiving)this.c, (EntityLiving)this.d, entityAgeable);
+    private void spawnBaby() {
+        EntityAgeable entityAgeable = this.villager.createChild(this.targetVillager);
+        this.targetVillager.setGrowingAge(6000);
+        this.villager.setGrowingAge(6000);
+        this.targetVillager.setIsWillingToMate(false);
+        this.villager.setIsWillingToMate(false);
+        BabyEntitySpawnEvent babyEntitySpawnEvent = new BabyEntitySpawnEvent((EntityLiving)this.villager, (EntityLiving)this.targetVillager, entityAgeable);
         if (MinecraftForge.EVENT_BUS.post((Event)babyEntitySpawnEvent) || babyEntitySpawnEvent.getChild() == null) {
             return;
         }
         entityAgeable = babyEntitySpawnEvent.getChild();
         entityAgeable.setGrowingAge(-24000);
-        entityAgeable.setLocationAndAngles(this.c.posX, this.c.posY, this.c.posZ, 0.0f, 0.0f);
-        this.a.spawnEntity(entityAgeable);
-        this.a.setEntityState(entityAgeable, (byte)12);
+        entityAgeable.setLocationAndAngles(this.villager.posX, this.villager.posY, this.villager.posZ, 0.0f, 0.0f);
+        this.world.spawnEntity(entityAgeable);
+        this.world.setEntityState(entityAgeable, (byte)12);
     }
 }
 

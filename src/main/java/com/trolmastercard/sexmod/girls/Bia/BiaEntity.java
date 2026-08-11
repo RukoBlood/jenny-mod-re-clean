@@ -215,7 +215,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.world.isRemote && this.isControlledByLocalPlayer() && this.currentAction() == Action.PRONE_DOGGY_INTRO && !BlackScreenUI.a()) {
+        if (this.world.isRemote && this.isControlledByLocalPlayer() && this.currentAction() == Action.PRONE_DOGGY_INTRO && !BlackScreenUI.getActive()) {
             SexUI.init();
         }
         this.void_d();
@@ -242,7 +242,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         }
         if (this.ac == -1) {
             if (this.world.isRemote) {
-                BlackScreenUI.b();
+                BlackScreenUI.run();
                 HandlePlayerMovement.setMovementLock(false);
             } else {
                 this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
@@ -357,7 +357,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         BlockPos blockPos = null;
         int n = 0;
         while (!this.boolean_a(blockPos)) {
-            blockPos = this.a(this.getPosition(), n);
+            blockPos = this.findNearestBed(this.getPosition(), n);
             if (++n != 50) continue;
         }
         if (blockPos == null || n == 50) {
@@ -409,7 +409,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     Vector4d javax_vecmath_Vector4d_b() {
-        BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
+        BlockPos blockPos = this.getNearestBed(this.getPosition());
         if (blockPos == null) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
             this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
@@ -812,7 +812,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 case "blackScreen": 
                 case "anal_cumBlackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "doggy_cumDone": 

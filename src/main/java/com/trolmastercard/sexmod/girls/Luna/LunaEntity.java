@@ -321,7 +321,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
     void a(EntityPlayer entityPlayer, int n) {
         EntityPlayerSP entityPlayerSP;
         if (n == 0 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
-            BlackScreenUI.b();
+            BlackScreenUI.run();
             entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
             HandlePlayerMovement.setMovementLock(false);
         }
@@ -335,7 +335,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
         this.entityDataManager.set(IS_ANCHORED, false);
         this.setCurrentAction(Action.NULL);
         this.ar = true;
-        BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
+        BlockPos blockPos = this.getNearestBed(this.getPosition());
         if (blockPos == null) {
             this.PlaySound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
             PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
@@ -991,7 +991,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "touch_boobs_cumDone": {

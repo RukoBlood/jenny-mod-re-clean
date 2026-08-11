@@ -264,7 +264,7 @@ implements bh_class82 {
             return;
         }
         if (entityPlayer.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID())) {
-            BlackScreenUI.b();
+            BlackScreenUI.run();
         }
     }
 
@@ -433,7 +433,7 @@ implements bh_class82 {
         Vec3d[][] vec3dArrayArray = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.18), new Vec3d(0.0, 0.0, -1.0), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(0.5, 0.0, 1.18), new Vec3d(0.0, 0.0, 1.0), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(-0.18, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0), new Vec3d(1.0, 0.0, 0.0)}, {new Vec3d(1.18, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0), new Vec3d(-1.0, 0.0, 0.0)}};
         int[] nArray = new int[]{0, 180, -90, 90};
         do {
-            if ((object = this.a(this.getPosition(), ++n2)) == null) {
+            if ((object = this.findNearestBed(this.getPosition(), ++n2)) == null) {
                 return null;
             }
             vec3d = new Vec3d(((Vec3i)object).getX(), ((Vec3i)object).getY(), ((Vec3i)object).getZ());
@@ -849,7 +849,7 @@ implements bh_class82 {
                 case "cowgirlcumMSG6": 
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "missionary_cumDone": 

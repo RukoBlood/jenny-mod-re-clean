@@ -23,24 +23,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 //fh.class -> BlackScreenUI
 @SideOnly(value=Side.CLIENT)
 public class BlackScreenUI extends GuiScreen {
-    final static public int d = 1200;
-    static private boolean b = false;
+    final static public int DELAY = 1200;
+    static private boolean active = false;
     static private double step = 0.0;
     static ResourceLocation transitionScreen = new ResourceLocation("sexmod", "textures/gui/transitionscreen.png");
     static ResourceLocation mirroredTransitionScreen = new ResourceLocation("sexmod", "textures/gui/mirroredtransitionscreen.png");
     static ResourceLocation blackScreen = new ResourceLocation("sexmod", "textures/gui/blackscreen.png");
 
-    public static boolean a() {
-        return b;
+    public static boolean getActive() {
+        return active;
     }
 
-    public static void b() {
-        b = true;
+    public static void run() {
+        active = true;
     }
 
-    public static void a(Runnable runnable) {
-        b = true;
-        Utils.runDelayedTask(1200, runnable);
+    public static void runWithDelay(Runnable runnable) {
+        active = true;
+        Utils.runDelayedTask(DELAY, runnable);
     }
 
     @Override
@@ -49,44 +49,47 @@ public class BlackScreenUI extends GuiScreen {
     }
 
     @SubscribeEvent
-    public void a(RenderGameOverlayEvent renderGameOverlayEvent) {
-        if (!b) {
+    public void Render(RenderGameOverlayEvent event) {
+        if (!active) {
             return;
         }
-        if (renderGameOverlayEvent.getType() != RenderGameOverlayEvent.ElementType.TEXT) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT) {
             return;
         }
-        Minecraft minecraft = Minecraft.getMinecraft();
-        int n = minecraft.gameSettings.guiScale;
-        float f = n == 1
+        Minecraft mc1 = Minecraft.getMinecraft();
+        int guiScale = mc1.gameSettings.guiScale;
+        float overlayScale = guiScale == 1
                 ? (float) Reference.LerpDouble(-1800.0, 1000.0, 0.5 * Math.cos(step / 25.0) + 0.5)
-                : (n == 2 ? (float) Reference.LerpDouble(-900.0, 750.0, 0.5 * Math.cos(step / 25.0) + 0.5)
-                : (float) Reference.LerpDouble(-900.0, 600.0, 0.5 * Math.cos((step += (double)(minecraft.getTickLength() * 0.75f)) / 25.0) + 0.5));
+                : (guiScale == 2 ? (float) Reference.LerpDouble(-900.0, 750.0, 0.5 * Math.cos(step / 25.0) + 0.5)
+                : (float) Reference.LerpDouble(-900.0, 600.0, 0.5 * Math.cos((step += (double)(mc1.getTickLength() * 0.75f)) / 25.0) + 0.5));
+
         GlStateManager.pushMatrix();
-        if (n == 1) {
+
+        if (guiScale == 1) {
             GlStateManager.scale(2.0f, 2.0f, 2.0f);
         }
-        if (n == 2) {
+        if (guiScale == 2) {
             GlStateManager.scale(1.5, 1.5, 1.5);
         }
-        minecraft.renderEngine.bindTexture(transitionScreen);
-        this.drawTexturedModalRect(f, 0.0f, 0, (int)(step * 1.5), 256, 256);
-        this.drawTexturedModalRect(f, 256.0f, 0, (int)(step * 1.5), 256, 256);
-        this.drawTexturedModalRect(f, 512.0f, 0, (int)(step * 1.5), 256, 256);
-        minecraft.renderEngine.bindTexture(BlackScreenUI.mirroredTransitionScreen);
-        this.drawTexturedModalRect(f + 600.0f, 0.0f, 0, (int)(step * 1.5), 256, 256);
-        this.drawTexturedModalRect(f + 600.0f, 256.0f, 0, (int)(step * 1.5), 256, 256);
-        this.drawTexturedModalRect(f + 600.0f, 512.0f, 0, (int)(step * 1.5), 256, 256);
-        minecraft.renderEngine.bindTexture(blackScreen);
-        this.drawTexturedModalRect(f + 200.0f, 0.0f, 0, 0, 400, 256);
-        this.drawTexturedModalRect(f + 200.0f, 256.0f, 0, 0, 400, 256);
-        this.drawTexturedModalRect(f + 200.0f, 512.0f, 0, 0, 400, 256);
+
+        mc1.renderEngine.bindTexture(transitionScreen);
+        this.drawTexturedModalRect(overlayScale, 0.0f, 0, (int)(step * 1.5), 256, 256);
+        this.drawTexturedModalRect(overlayScale, 256.0f, 0, (int)(step * 1.5), 256, 256);
+        this.drawTexturedModalRect(overlayScale, 512.0f, 0, (int)(step * 1.5), 256, 256);
+        mc1.renderEngine.bindTexture(BlackScreenUI.mirroredTransitionScreen);
+        this.drawTexturedModalRect(overlayScale + 600.0f, 0.0f, 0, (int)(step * 1.5), 256, 256);
+        this.drawTexturedModalRect(overlayScale + 600.0f, 256.0f, 0, (int)(step * 1.5), 256, 256);
+        this.drawTexturedModalRect(overlayScale + 600.0f, 512.0f, 0, (int)(step * 1.5), 256, 256);
+        mc1.renderEngine.bindTexture(blackScreen);
+        this.drawTexturedModalRect(overlayScale + 200.0f, 0.0f, 0, 0, 400, 256);
+        this.drawTexturedModalRect(overlayScale + 200.0f, 256.0f, 0, 0, 400, 256);
+        this.drawTexturedModalRect(overlayScale + 200.0f, 512.0f, 0, 0, 400, 256);
         if (step > 30.0) {
             SexUI.hide();
         }
         if (step > 69.0) {
             step = 0.0;
-            b = false;
+            active = false;
         }
         GlStateManager.popMatrix();
     }

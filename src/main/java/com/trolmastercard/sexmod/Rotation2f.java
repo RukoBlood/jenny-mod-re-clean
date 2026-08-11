@@ -3,12 +3,12 @@
  */
 package com.trolmastercard.sexmod;
 
-public class Vector2f {
-    final static public Vector2f ZERO = new Vector2f(0.0f, 0.0f);
+public class Rotation2f {
+    final static public Rotation2f ZERO = new Rotation2f(0.0f, 0.0f);
     public float pitch;
     public float yaw;
 
-    public Vector2f(float f, float f2) {
+    public Rotation2f(float f, float f2) {
         this.pitch = f;
         this.yaw = f2;
     }

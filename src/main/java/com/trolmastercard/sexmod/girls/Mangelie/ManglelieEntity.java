@@ -175,7 +175,7 @@ extends GirlEntity {
 
     @Override
     public Float getYawRotation() {
-        float f = super.getYawRotation().floatValue();
+        float f = super.getYawRotation();
         if (ManglelieModel.boolean_c(this)) {
             f += 180.0f;
         }
@@ -714,7 +714,7 @@ extends GirlEntity {
             if (!(Math.sqrt(blockPos.distanceSq(blockPos2)) < 700.0)) continue;
             return false;
         }
-        fq_class325.a(blockPos, fq_class325.b);
+        fq_class325.addPosInList(blockPos, fq_class325.b);
         return true;
     }
 
@@ -883,7 +883,7 @@ extends GirlEntity {
                 }
                 case "blackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                 }
             }
         });

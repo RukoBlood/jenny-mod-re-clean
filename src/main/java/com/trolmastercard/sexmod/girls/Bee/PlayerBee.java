@@ -235,7 +235,7 @@ public class PlayerBee extends PlayerGirl {
                 }
                 case "blackscreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "sex_cumDone": {

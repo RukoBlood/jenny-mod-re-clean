@@ -554,7 +554,7 @@ extends PlayerGirl {
                 }
                 case "cowgirlcumMSG6": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "missionary_cumDone": 

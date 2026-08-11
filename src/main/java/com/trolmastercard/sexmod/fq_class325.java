@@ -32,46 +32,46 @@ extends WorldSavedData {
         super("sexmod:galath_spawn_list");
     }
 
-    public static void a(BlockPos blockPos, List<BlockPos> list) {
-        list.add(blockPos);
+    public static void addPosInList(BlockPos pos, List<BlockPos> positions) {
+        positions.add(pos);
     }
 
     @SubscribeEvent
-    public void a(WorldEvent.Save save) {
+    public void SaveSpawnList(WorldEvent.Save save) {
         World world = save.getWorld();
         world.getMapStorage().setData("sexmod:galath_spawn_list", this);
         this.markDirty();
     }
 
     @SubscribeEvent
-    public void a(WorldEvent.Load load) {
+    public void LoadSpawnList(WorldEvent.Load load) {
         World world = load.getWorld();
         world.getMapStorage().getOrLoadData(fq_class325.class, "sexmod:galath_spawn_list");
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nBTTagCompound) {
-        NBTTagCompound nBTTagCompound2 = nBTTagCompound.getCompoundTag("sexmod:galath_spawn_list");
+    public void readFromNBT(NBTTagCompound nbt) {
+        NBTTagCompound nBTTagCompound2 = nbt.getCompoundTag("sexmod:galath_spawn_list");
         this.b(nBTTagCompound2, "", c);
         this.b(nBTTagCompound2, "mang", b);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nBTTagCompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         NBTTagCompound nBTTagCompound2 = new NBTTagCompound();
         this.a(nBTTagCompound2, "", c);
         this.a(nBTTagCompound2, "mang", b);
-        nBTTagCompound.setTag("sexmod:galath_spawn_list", nBTTagCompound2);
-        return nBTTagCompound;
+        nbt.setTag("sexmod:galath_spawn_list", nBTTagCompound2);
+        return nbt;
     }
 
-    void a(NBTTagCompound nBTTagCompound, String string, List<BlockPos> list) {
-        nBTTagCompound.setInteger("sexmod:pos_amount" + string, list.size());
+    void a(NBTTagCompound nbt, String string, List<BlockPos> positions) {
+        nbt.setInteger("sexmod:pos_amount" + string, positions.size());
         int n = 0;
-        for (BlockPos blockPos : list) {
-            nBTTagCompound.setInteger("sexmod:x" + string + n, blockPos.getX());
-            nBTTagCompound.setInteger("sexmod:y" + string + n, blockPos.getY());
-            nBTTagCompound.setInteger("sexmod:z" + string + n, blockPos.getZ());
+        for (BlockPos pos : positions) {
+            nbt.setInteger("sexmod:x" + string + n, pos.getX());
+            nbt.setInteger("sexmod:y" + string + n, pos.getY());
+            nbt.setInteger("sexmod:z" + string + n, pos.getZ());
             ++n;
         }
     }
@@ -80,12 +80,12 @@ extends WorldSavedData {
         list.clear();
         int n = nBTTagCompound.getInteger("sexmod:pos_amount" + string);
         for (int i = 0; i < n; ++i) {
-            list.add(new BlockPos(nBTTagCompound.getInteger("sexmod:x" + string + i), nBTTagCompound.getInteger("sexmod:y" + string + i), nBTTagCompound.getInteger("sexmod:z" + string + i)));
+            list.add(new BlockPos(
+                    nBTTagCompound.getInteger("sexmod:x" + string + i),
+                    nBTTagCompound.getInteger("sexmod:y" + string + i),
+                    nBTTagCompound.getInteger("sexmod:z" + string + i)
+            ));
         }
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

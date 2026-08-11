@@ -209,7 +209,7 @@ extends PlayerGirl {
                 }
                 case "blackscreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "deepthroat_prepareDone": {

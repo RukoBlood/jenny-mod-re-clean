@@ -395,7 +395,7 @@ public class BeeEntity extends Supporter {
                 }
                 case "blackscreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "sex_cumDone": {

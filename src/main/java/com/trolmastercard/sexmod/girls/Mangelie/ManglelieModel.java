@@ -106,86 +106,86 @@ extends GirlModel<GirlEntity> {
         iBone3.setRotationX(iBone3.getRotationX() + f);
     }*/
 
-    void void_a(GirlEntity em_class2582) {
-        if (!(em_class2582 instanceof ManglelieEntity)) {
+    void void_a(GirlEntity girl) {
+        if (!(girl instanceof ManglelieEntity)) {
             return;
         }
-        if (ManglelieModel.boolean_c(em_class2582)) {
+        if (ManglelieModel.boolean_c(girl)) {
             return;
         }
-        ManglelieEntity f8_class2932 = (ManglelieEntity)em_class2582;
-        GalathEntity f__class2972 = f8_class2932.com_trolmastercard_sexmod_f__class297_a(false);
-        if (f__class2972 == null) {
+        ManglelieEntity manglelie = (ManglelieEntity)girl;
+        GalathEntity galath = manglelie.com_trolmastercard_sexmod_f__class297_a(false);
+        if (galath == null) {
             return;
         }
         IBone iBone = this.getAnimationProcessor().getBone("body");
-        iBone.setRotationY(f__class2972.bodyRotationY + (this.mc.isGamePaused() ? 0.0f : iBone.getRotationY()));
-        iBone.setScaleX(f__class2972.bodyScaleY);
-        iBone.setScaleY(f__class2972.bodyScaleY);
-        iBone.setScaleZ(f__class2972.bodyScaleY);
+        iBone.setRotationY(galath.bodyRotationY + (this.mc.isGamePaused() ? 0.0f : iBone.getRotationY()));
+        iBone.setScaleX(galath.bodyScaleY);
+        iBone.setScaleY(galath.bodyScaleY);
+        iBone.setScaleZ(galath.bodyScaleY);
     }
 
     Vec3d a(@Nonnull Entity entity) {
         return ak_class32.a(entity, this.mc.getRenderPartialTicks()).add(0.0, entity.getEyeHeight(), 0.0);
     }
 
-    void void_d(GirlEntity em_class2582) {
+    void void_d(GirlEntity girl) {
         float f;
         boolean bl;
         if (ClientProxy.IS_PRELOADING) {
             return;
         }
-        if (ManglelieModel.boolean_c(em_class2582)) {
+        if (ManglelieModel.boolean_c(girl)) {
             return;
         }
         if (this.mc.isGamePaused()) {
             return;
         }
-        ManglelieEntity f8_class2932 = (ManglelieEntity)em_class2582;
-        if (!f8_class2932.boolean_r()) {
+        ManglelieEntity manglelie = (ManglelieEntity)girl;
+        if (!manglelie.boolean_r()) {
             return;
         }
-        GalathEntity f__class2972 = f8_class2932.com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity f__class2972 = manglelie.com_trolmastercard_sexmod_f__class297_a(false);
         if (f__class2972 == null) {
             return;
         }
-        AnimationProcessor animationProcessor = this.getAnimationProcessor();
-        IBone iBone = animationProcessor.getBone("armL");
-        IBone iBone2 = animationProcessor.getBone("armR");
-        IBone iBone3 = animationProcessor.getBone("lowerArmL");
-        IBone iBone4 = animationProcessor.getBone("lowerArmR");
-        IBone iBone5 = animationProcessor.getBone("elbowR");
-        IBone iBone6 = animationProcessor.getBone("elbowL");
-        Entity entity = f8_class2932.b_7();
-        boolean bl2 = bl = entity == null;
+        AnimationProcessor processor = this.getAnimationProcessor();
+        IBone armL = processor.getBone("armL");
+        IBone armR = processor.getBone("armR");
+        IBone lowerArmL = processor.getBone("lowerArmL");
+        IBone lowerArmR = processor.getBone("lowerArmR");
+        IBone elbowR = processor.getBone("elbowR");
+        IBone elbowL = processor.getBone("elbowL");
+        Entity entity = manglelie.b_7();
+        bl = entity == null;
         if (!bl) {
-            f8_class2932.R = this.a(entity);
+            manglelie.R = this.a(entity);
         }
         if ((f = (float)Minecraft.getDebugFPS()) == 0.0f) {
             f = 1.0f;
         }
-        f8_class2932.V = f8_class2932.aj == bl ? 0.0f : (f8_class2932.V += 1.5f / f);
-        if (f8_class2932.V >= 1.0f) {
-            f8_class2932.V = 0.0f;
-            f8_class2932.aj = bl;
+        manglelie.V = manglelie.aj == bl ? 0.0f : (manglelie.V += 1.5f / f);
+        if (manglelie.V >= 1.0f) {
+            manglelie.V = 0.0f;
+            manglelie.aj = bl;
         }
-        a_inner128 a_inner1282 = f8_class2932.V == 0.0f ? (bl ? this.a(f__class2972, iBone2, iBone, iBone3, iBone4) : this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor)) : a_inner128.a(this.a(f__class2972, iBone2, iBone, iBone3, iBone4), this.a(f8_class2932, f__class2972, iBone4, iBone3, animationProcessor), (float)(f8_class2932.aj ? Reference.EaseOutBack(f8_class2932.V) : 1.0 - Reference.EaseOutBack(f8_class2932.V)));
-        iBone2.setRotationX(a_inner128.access$000((a_inner128)a_inner1282).x);
-        iBone2.setRotationY(a_inner128.access$000((a_inner128)a_inner1282).y);
-        iBone2.setRotationZ(a_inner128.access$000((a_inner128)a_inner1282).z);
-        iBone.setRotationX(a_inner128.access$100((a_inner128)a_inner1282).x);
-        iBone.setRotationY(a_inner128.access$100((a_inner128)a_inner1282).y);
-        iBone.setRotationZ(a_inner128.access$100((a_inner128)a_inner1282).z);
-        iBone3.setRotationX(a_inner128.access$200((a_inner128)a_inner1282).x);
-        iBone3.setRotationY(a_inner128.access$200((a_inner128)a_inner1282).y);
-        iBone3.setRotationZ(a_inner128.access$200((a_inner128)a_inner1282).z);
-        iBone4.setRotationX(a_inner128.access$300((a_inner128)a_inner1282).x);
-        iBone4.setRotationY(a_inner128.access$300((a_inner128)a_inner1282).y);
-        iBone4.setRotationZ(a_inner128.access$300((a_inner128)a_inner1282).z);
-        iBone.setScaleY(a_inner128.access$400(a_inner1282));
-        iBone2.setScaleY(a_inner128.access$500(a_inner1282));
-        iBone5.setRotationY(a_inner128.access$600(a_inner1282));
-        iBone6.setRotationY(a_inner128.access$700(a_inner1282));
+        a_inner128 a_inner1282 = manglelie.V == 0.0f ? (bl ? this.a(f__class2972, armR, armL, lowerArmL, lowerArmR) : this.a(manglelie, f__class2972, lowerArmR, lowerArmL, processor)) : a_inner128.a(this.a(f__class2972, armR, armL, lowerArmL, lowerArmR), this.a(manglelie, f__class2972, lowerArmR, lowerArmL, processor), (float)(manglelie.aj ? Reference.EaseOutBack(manglelie.V) : 1.0 - Reference.EaseOutBack(manglelie.V)));
+        armR.setRotationX(a_inner128.access$000((a_inner128)a_inner1282).x);
+        armR.setRotationY(a_inner128.access$000((a_inner128)a_inner1282).y);
+        armR.setRotationZ(a_inner128.access$000((a_inner128)a_inner1282).z);
+        armL.setRotationX(a_inner128.access$100((a_inner128)a_inner1282).x);
+        armL.setRotationY(a_inner128.access$100((a_inner128)a_inner1282).y);
+        armL.setRotationZ(a_inner128.access$100((a_inner128)a_inner1282).z);
+        lowerArmL.setRotationX(a_inner128.access$200((a_inner128)a_inner1282).x);
+        lowerArmL.setRotationY(a_inner128.access$200((a_inner128)a_inner1282).y);
+        lowerArmL.setRotationZ(a_inner128.access$200((a_inner128)a_inner1282).z);
+        lowerArmR.setRotationX(a_inner128.access$300((a_inner128)a_inner1282).x);
+        lowerArmR.setRotationY(a_inner128.access$300((a_inner128)a_inner1282).y);
+        lowerArmR.setRotationZ(a_inner128.access$300((a_inner128)a_inner1282).z);
+        armL.setScaleY(a_inner128.access$400(a_inner1282));
+        armR.setScaleY(a_inner128.access$500(a_inner1282));
+        elbowR.setRotationY(a_inner128.access$600(a_inner1282));
+        elbowL.setRotationY(a_inner128.access$700(a_inner1282));
     }
 
     a_inner128 a(@Nonnull ManglelieEntity f8_class2932, @Nonnull GalathEntity f__class2972, IBone iBone, IBone iBone2, AnimationProcessor animationProcessor) {
@@ -199,8 +199,8 @@ extends GirlModel<GirlEntity> {
         Vec3d vec3d = ManglelieRenderer.a(f__class2972, f3);
         Vec3d vec3d2 = f8_class2932.getCachedBoneOffset("armR").add(vec3d);
         Vec3d vec3d3 = f8_class2932.getCachedBoneOffset("armL").add(vec3d);
-        Vector2f bm_class882 = Utils.CalculateLookAngles(vec3d2, f8_class2932.R);
-        Vector2f bm_class883 = Utils.CalculateLookAngles(vec3d3, f8_class2932.R);
+        Rotation2f bm_class882 = Utils.CalculateLookAngles(vec3d2, f8_class2932.R);
+        Rotation2f bm_class883 = Utils.CalculateLookAngles(vec3d3, f8_class2932.R);
         Float f4 = GalathEntity.updateRenderPositions(f__class2972, f3);
         float f5 = f4 == null ? Reference.LerpAngleDegrees(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f3) : f4.floatValue();
         float f6 = TrigMath.toRadians(f5);

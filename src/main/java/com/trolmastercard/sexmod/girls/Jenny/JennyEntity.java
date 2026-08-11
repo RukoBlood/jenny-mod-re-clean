@@ -124,8 +124,8 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     public void updateAITasks() {
         //Object object;
         super.updateAITasks();
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 15.0);
-        if (this.af && entityPlayer != null && entityPlayer.getPositionVector().distanceTo(this.getPositionVector()) < 0.5) {
+        EntityPlayer player = this.world.getClosestPlayerToEntity(this, 15.0);
+        if (this.af && player != null && player.getPositionVector().distanceTo(this.getPositionVector()) < 0.5) {
             this.af = false;
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, this.world.getClosestPlayerToEntity(this, 15.0).getPersistentID().toString());
             EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.playerSheHasSexWith());
@@ -240,14 +240,16 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public void goToSexBed() {
-        BlockPos blockPos = this.net_minecraft_util_math_BlockPos_a(this.getPosition());
-        if (blockPos == null) {
+        BlockPos nearestBed = this.getNearestBed(this.getPosition());
+        if (nearestBed == null) {
+            //no beds nearby
             this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[2]);
             this.sendLocalClientMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
-        } else {
+        }
+        else {
             this.tasks.removeTask(this.aiWander);
             this.tasks.removeTask(this.aiLookAtPlayer);
-            Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+            Vec3d vec3d = new Vec3d(nearestBed.getX(), nearestBed.getY(), nearestBed.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
             Vec3d[][] vec3dArrayArray = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.5), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(0.5, 0.0, 1.5), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(-0.5, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0)}, {new Vec3d(1.5, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0)}};
             int n = -1;
@@ -282,18 +284,18 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
-        if (fp_class3243 == Action.DOGGYCUM && (action == Action.DOGGYSLOW || action == Action.DOGGYFAST)) {
+        Action currentAction = this.currentAction();
+        if (currentAction == Action.DOGGYCUM && (action == Action.DOGGYSLOW || action == Action.DOGGYFAST)) {
             return;
         }
-        if (fp_class3243 == Action.CUMBLOWJOB && (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB)) {
+        if (currentAction == Action.CUMBLOWJOB && (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB)) {
             return;
         }
-        if (fp_class3243 == Action.PAIZURI_CUM && (action == Action.PAIZURI_SLOW || action == Action.PAIZURI_FAST)) {
+        if (currentAction == Action.PAIZURI_CUM && (action == Action.PAIZURI_SLOW || action == Action.PAIZURI_FAST)) {
             return;
         }
         super.setCurrentAction(action);
-        if (fp_class3243 != Action.STARTBLOWJOB && fp_class3243 != Action.PAIZURI_START) {
+        if (currentAction != Action.STARTBLOWJOB && currentAction != Action.PAIZURI_START) {
             return;
         }
         UUID uUID = this.playerSheHasSexWith();
@@ -763,7 +765,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "bjcBlackScreen": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.b();
+                    BlackScreenUI.run();
                     break;
                 }
                 case "bjcDone": 

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.UploadInventoryToServer;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.gui.Menu.GirlContainer;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class ek_class255 extends GuiContainer {
+public class GirlGUIContainer extends GuiContainer {
     final static private ResourceLocation f = new ResourceLocation("textures/gui/container/generic_54.png");
     final private IInventory e;
     final private IInventory d;
@@ -29,7 +30,7 @@ public class ek_class255 extends GuiContainer {
     GirlEntity b;
     UUID a;
 
-    public ek_class255(EntityPlayer entityPlayer, GirlEntity em_class2582, UUID uUID) {
+    public GirlGUIContainer(EntityPlayer entityPlayer, GirlEntity em_class2582, UUID uUID) {
         super(new GirlInventory(entityPlayer.inventory, (IInventory)((Object)em_class2582), entityPlayer, uUID));
         this.c = uUID;
         this.b = em_class2582;
@@ -57,7 +58,7 @@ public class ek_class255 extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int n, int n2) {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-        this.mc.getTextureManager().bindTexture(ek_class255.f);
+        this.mc.getTextureManager().bindTexture(GirlGUIContainer.f);
         int n3 = (this.width - this.xSize) / 2;
         int n4 = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(n3, n4, 0, 0, this.xSize, this.g * 18 + 17);
@@ -67,8 +68,8 @@ public class ek_class255 extends GuiContainer {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        for (d4_class162 d4_class1622 : d4_class162.c) {
-            if (!d4_class1622.a.equals(this.c)) continue;
+        for (GirlContainer d4_class1622 : GirlContainer.c) {
+            if (!d4_class1622.containerID.equals(this.c)) continue;
             ItemStack[] itemStackArray = new ItemStack[63];
             Minecraft.getMinecraft().player.inventory.mainInventory.toArray(itemStackArray);
             for (int i = 0; i < 27; ++i) {
@@ -76,10 +77,6 @@ public class ek_class255 extends GuiContainer {
             }
             PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.b.girlID(), this.a, itemStackArray));
         }
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

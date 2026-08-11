@@ -19,20 +19,20 @@ public class e8_class231 extends ModelBase {
     }
 
     @Override
-    public void render(Entity entity, float f, float f2, float f3, float f4, float f5, float f6) {
+    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(2.0f, 2.0f, 2.0f);
-        GlStateManager.rotate(f2, 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(limbSwingAmount, 0.0f, 1.0f, 0.0f);
         GlStateManager.rotate(60.0f, 0.7071f, 0.0f, 0.7071f);
-        this.a.render(f6);
+        this.a.render(scale);
         GlStateManager.scale(0.875f, 0.875f, 0.875f);
         GlStateManager.rotate(60.0f, 0.7071f, 0.0f, 0.7071f);
-        GlStateManager.rotate(f2, 0.0f, 1.0f, 0.0f);
-        this.a.render(f6);
+        GlStateManager.rotate(limbSwingAmount, 0.0f, 1.0f, 0.0f);
+        this.a.render(scale);
         GlStateManager.scale(0.875f, 0.875f, 0.875f);
         GlStateManager.rotate(60.0f, 0.7071f, 0.0f, 0.7071f);
-        GlStateManager.rotate(f2, 0.0f, 1.0f, 0.0f);
-        this.b.render(f6);
+        GlStateManager.rotate(limbSwingAmount, 0.0f, 1.0f, 0.0f);
+        this.b.render(scale);
         GlStateManager.popMatrix();
     }
 }

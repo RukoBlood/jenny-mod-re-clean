@@ -36,9 +36,9 @@ public class g7_class352 extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        this.d = new GuiTextField(0, this.mc.fontRenderer, this.width / 2 - 50, this.height / 2 - 10, 100, 20);
+        this.d = new GuiTextField(0, this.mc.fontRenderer, this.width / 2 - 50, this.height / 2 - 10, a, c);
         this.d.setFocused(true);
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 25, this.height / 2 + 20, 50, 20, "set"));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 25, this.height / 2 + 20, 50, c, "set"));
     }
 
     @Override
@@ -65,8 +65,8 @@ public class g7_class352 extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton guiButton) throws IOException {
-        super.actionPerformed(guiButton);
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
         String string = this.d.getText().trim();
         if (string.isEmpty()) {
             return;

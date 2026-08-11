@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.gui;
+package com.trolmastercard.sexmod.gui.Galath;
 
 public enum EscapeMinigameUIKeybinds {
     W,
