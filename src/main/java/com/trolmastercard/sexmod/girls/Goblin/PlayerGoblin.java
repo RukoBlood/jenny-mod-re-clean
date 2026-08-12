@@ -28,7 +28,7 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.gui.GirlInventoryUI;
+import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -143,7 +143,7 @@ implements ai_class30 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public boolean openGuiForPlayer(EntityPlayer player) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "paizuri"}, null, false));
+        Minecraft.getMinecraft().displayGuiScreen(new FighterUI(this, player, new String[]{"anal", "paizuri"}, null, false));
         return true;
     }
 

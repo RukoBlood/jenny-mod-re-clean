@@ -23,20 +23,20 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class GirlContainer extends Container {
-    GirlEntity b;
-    public Slot[] d;
+    GirlEntity girl;
+    public Slot[] equipmentSlots;
     public UUID containerID;
-    static public List<GirlContainer> c = new ArrayList<GirlContainer>();
+    static public List<GirlContainer> OPEN_CONTAINERS = new ArrayList<GirlContainer>();
 
-    public GirlContainer(GirlEntity em_class2582, InventoryPlayer inventoryPlayer, UUID uUID) {
-        this.containerID = uUID;
-        c.add(this);
-        if (em_class2582.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH)) {
+    public GirlContainer(GirlEntity girl, InventoryPlayer inventoryPlayer, UUID containerID) {
+        this.containerID = containerID;
+        OPEN_CONTAINERS.add(this);
+        if (girl.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH)) {
             int n;
-            IItemHandler iItemHandler = (IItemHandler)em_class2582.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
-            this.b = em_class2582;
+            IItemHandler iItemHandler = (IItemHandler)girl.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
+            this.girl = girl;
 
-            this.d = new Slot[]{
+            this.equipmentSlots = new Slot[]{
                     new EquipmentSlot(EquipmentSlot.GirlEquipmentType.WEAPON, iItemHandler, EquipmentSlot.GirlEquipmentType.WEAPON.id, 31, 60),
                     new EquipmentSlot(EquipmentSlot.GirlEquipmentType.BOW, iItemHandler, EquipmentSlot.GirlEquipmentType.BOW.id, 50, 60),
                     new EquipmentSlot(EquipmentSlot.GirlEquipmentType.HELMET, iItemHandler, EquipmentSlot.GirlEquipmentType.HELMET.id, 72, 60),
@@ -45,19 +45,19 @@ public class GirlContainer extends Container {
                     new EquipmentSlot(EquipmentSlot.GirlEquipmentType.SHOES, iItemHandler, EquipmentSlot.GirlEquipmentType.SHOES.id, 129, 60)
             };
 
-            ArrayList<Slot> arrayList = new ArrayList<Slot>();
+            ArrayList<Slot> playerSlots = new ArrayList<Slot>();
             for (n = 0; n < 3; ++n) {
                 for (int i = 0; i < 9; ++i) {
-                    arrayList.add(new Slot(inventoryPlayer, i + n * 9 + 9, 8 + i * 18, 84 + n * 18));
+                    playerSlots.add(new Slot(inventoryPlayer, i + n * 9 + 9, 8 + i * 18, 84 + n * 18));
                 }
             }
             for (n = 0; n < 9; ++n) {
-                arrayList.add(new Slot(inventoryPlayer, n, 8 + n * 18, 142));
+                playerSlots.add(new Slot(inventoryPlayer, n, 8 + n * 18, 142));
             }
-            for (Slot slot : this.d) {
+            for (Slot slot : this.equipmentSlots) {
                 this.addSlotToContainer(slot);
             }
-            for (Slot slot : arrayList) {
+            for (Slot slot : playerSlots) {
                 this.addSlotToContainer(slot);
             }
         }

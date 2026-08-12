@@ -23,7 +23,7 @@ import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaRod;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.gui.GirlInventoryUI;
+import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -205,7 +205,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
 
     @SideOnly(value=Side.CLIENT)
     protected static void CreateGUI(EntityPlayer entityPlayer, GirlEntity girlEntity, String[] stringArray, ItemStack[] itemStackArray) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(girlEntity, entityPlayer, stringArray, itemStackArray, true));
+        Minecraft.getMinecraft().displayGuiScreen(new FighterUI(girlEntity, entityPlayer, stringArray, itemStackArray, true));
     }
 
     public void b(ItemStack itemStack) {

@@ -38,7 +38,7 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntit
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.gui.GirlInventoryUI;
+import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.gui.g7_class352;
@@ -495,14 +495,14 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements bh_class
     @SideOnly(value=Side.CLIENT)
     public boolean openGuiForPlayer(EntityPlayer player) {
         if (this.hasMaster() && player.getPersistentID().toString().equals(this.entityDataManager.get(MASTER))) {
-            Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral", "mating"}, null, false));
+            Minecraft.getMinecraft().displayGuiScreen(new FighterUI(this, player, new String[]{"anal", "oral", "mating"}, null, false));
             return true;
         }
         if (this.getActivePotionEffect(HornyPotion.HORNY_POTION) != null) {
-            Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral"}, null, false));
+            Minecraft.getMinecraft().displayGuiScreen(new FighterUI(this, player, new String[]{"anal", "oral"}, null, false));
             return true;
         }
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral"}, new ItemStack[]{new ItemStack(Items.GOLD_INGOT, 3), new ItemStack(Items.IRON_PICKAXE)}, false));
+        Minecraft.getMinecraft().displayGuiScreen(new FighterUI(this, player, new String[]{"anal", "oral"}, new ItemStack[]{new ItemStack(Items.GOLD_INGOT, 3), new ItemStack(Items.IRON_PICKAXE)}, false));
         return true;
     }
 

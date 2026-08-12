@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.Supporter;
-import com.trolmastercard.sexmod.gui.BeeInventoryUI;
+import com.trolmastercard.sexmod.gui.Menu.SupporterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -258,7 +258,7 @@ public class BeeEntity extends Supporter {
 
     @SideOnly(value=Side.CLIENT)
     void DisplayBeeUI(EntityPlayer entityPlayer) {
-        Minecraft.getMinecraft().displayGuiScreen(new BeeInventoryUI(this, entityPlayer));
+        Minecraft.getMinecraft().displayGuiScreen(new SupporterUI(this, entityPlayer));
     }
 
     @Override

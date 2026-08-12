@@ -9,8 +9,7 @@ package com.trolmastercard.sexmod.gui;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.gui.Menu.GirlContainer;
-import com.trolmastercard.sexmod.gui.Menu.GirlInventoryUI;
+import com.trolmastercard.sexmod.gui.Menu.*;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import net.minecraft.client.Minecraft;
@@ -58,7 +57,7 @@ public class ModGuiHandler implements IGuiHandler {
         }
     }
 
-    //how ts was not overrided before
+    //how ts was not overriden before
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == 0) {
@@ -82,6 +81,7 @@ public class ModGuiHandler implements IGuiHandler {
         return null;
     }
 
+    //this too
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == 0) {
@@ -89,7 +89,7 @@ public class ModGuiHandler implements IGuiHandler {
                 if (!girl.world.isRemote || girl.getPosition().getX() != x || girl.getPosition().getY() != y || girl.getPosition().getZ() != z)
                     continue;
                 if (girl instanceof LunaEntity) {
-                    return new LunaGUIContainer((LunaEntity) girl, player.inventory, UUID.randomUUID());
+                    return new LunaInventoryUI((LunaEntity) girl, player.inventory, UUID.randomUUID());
                 }
                 return new GirlInventoryUI(girl, player.inventory, UUID.randomUUID());
             }

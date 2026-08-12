@@ -5,7 +5,7 @@
  *  net.minecraftforge.items.CapabilityItemHandler
  *  net.minecraftforge.items.IItemHandler
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.gui.Menu;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -45,7 +45,7 @@ import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
-import com.trolmastercard.sexmod.gui.GirlInventoryUI;
+import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.ClientServerCheck;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
@@ -608,17 +608,17 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected static void openInventoryGui(EntityPlayer player, GirlEntity girl) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(girl, player));
+        Minecraft.getMinecraft().displayGuiScreen(new FighterUI(girl, player));
     }
 
     @SideOnly(value=Side.CLIENT)
     protected static void openInventoryGui(EntityPlayer player, GirlEntity girl, String[] slots, ItemStack[] items, boolean flag) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(girl, player, slots, items, flag));
+        Minecraft.getMinecraft().displayGuiScreen(new FighterUI(girl, player, slots, items, flag));
     }
 
     @SideOnly(value=Side.CLIENT)
     protected static void openInventoryGui(EntityPlayer player, GirlEntity girl, String[] slots, boolean flag) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(girl, player, slots, null, flag));
+        Minecraft.getMinecraft().displayGuiScreen(new FighterUI(girl, player, slots, null, flag));
     }
 
     public void setHeldItemOverride(ItemStack stack) {

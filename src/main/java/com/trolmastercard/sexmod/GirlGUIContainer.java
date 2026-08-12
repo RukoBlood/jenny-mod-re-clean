@@ -68,7 +68,7 @@ public class GirlGUIContainer extends GuiContainer {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        for (GirlContainer d4_class1622 : GirlContainer.c) {
+        for (GirlContainer d4_class1622 : GirlContainer.OPEN_CONTAINERS) {
             if (!d4_class1622.containerID.equals(this.c)) continue;
             ItemStack[] itemStackArray = new ItemStack[63];
             Minecraft.getMinecraft().player.inventory.mainInventory.toArray(itemStackArray);

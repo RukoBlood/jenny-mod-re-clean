@@ -4,12 +4,11 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.gui;
+package com.trolmastercard.sexmod.gui.Menu;
 
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packages.UploadInventoryToServer;
-import com.trolmastercard.sexmod.LunaContainer;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
@@ -20,13 +19,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class LunaGUIContainer extends GuiContainer {
-    final static ResourceLocation b = new ResourceLocation("sexmod", "textures/gui/girlinventory.png");
+public class LunaInventoryUI extends GuiContainer {
+    final static ResourceLocation ITEMS_BACKGROUND = new ResourceLocation("sexmod", "textures/gui/girlinventory.png");
     UUID ID;
     LunaEntity lunaEntity;
     UUID invID;
 
-    public LunaGUIContainer(LunaEntity luna, InventoryPlayer invPlayer, UUID ID) {
+    public LunaInventoryUI(LunaEntity luna, InventoryPlayer invPlayer, UUID ID) {
         super(new LunaContainer(luna, invPlayer, ID));
         this.ID = ID;
         this.lunaEntity = luna;
@@ -43,25 +42,25 @@ public class LunaGUIContainer extends GuiContainer {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        for (LunaContainer ca_class1212 : LunaContainer.OPEN_CONTAINERS) {
-            if (!ca_class1212.containerID.equals(this.ID)) continue;
-            ItemStack[] itemStackArray = new ItemStack[43];
-            Minecraft.getMinecraft().player.inventory.mainInventory.toArray(itemStackArray);
-            itemStackArray[36] = ca_class1212.getSlot(0).getStack();
-            itemStackArray[37] = ca_class1212.getSlot(1).getStack();
-            itemStackArray[38] = ca_class1212.getSlot(2).getStack();
-            itemStackArray[39] = ca_class1212.getSlot(3).getStack();
-            itemStackArray[40] = ca_class1212.getSlot(4).getStack();
-            itemStackArray[41] = ca_class1212.getSlot(5).getStack();
-            itemStackArray[42] = ca_class1212.getSlot(6).getStack();
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.lunaEntity.girlID(), this.invID, itemStackArray));
+        for (LunaContainer container : LunaContainer.OPEN_CONTAINERS) {
+            if (!container.containerID.equals(this.ID)) continue;
+            ItemStack[] stacks = new ItemStack[43];
+            Minecraft.getMinecraft().player.inventory.mainInventory.toArray(stacks);
+            stacks[36] = container.getSlot(0).getStack();
+            stacks[37] = container.getSlot(1).getStack();
+            stacks[38] = container.getSlot(2).getStack();
+            stacks[39] = container.getSlot(3).getStack();
+            stacks[40] = container.getSlot(4).getStack();
+            stacks[41] = container.getSlot(5).getStack();
+            stacks[42] = container.getSlot(6).getStack();
+            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.lunaEntity.girlID(), this.invID, stacks));
         }
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int n, int n2) {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-        this.mc.renderEngine.bindTexture(b);
+        this.mc.renderEngine.bindTexture(ITEMS_BACKGROUND);
         this.drawTexturedModalRect(this.width / 2 - 88, this.height / 2 - 7 - 24, 80, 142, 176, 114);
     }
 }

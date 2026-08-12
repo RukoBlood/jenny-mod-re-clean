@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.Packages.TeleportPlayer;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.gui.GirlInventoryUI;
+import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -190,7 +190,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public boolean openGuiForPlayer(EntityPlayer player) {
-        Minecraft.getMinecraft().displayGuiScreen(new GirlInventoryUI(this, player, new String[]{"anal", "oral", "mating"}, null, false));
+        Minecraft.getMinecraft().displayGuiScreen(new FighterUI(this, player, new String[]{"anal", "oral", "mating"}, null, false));
         return true;
     }
 

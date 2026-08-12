@@ -42,7 +42,7 @@ public class GirlInventoryUI extends GuiContainer {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        for (GirlContainer container : GirlContainer.c) {
+        for (GirlContainer container : GirlContainer.OPEN_CONTAINERS) {
             if (!container.containerID.equals(this.containerUUID)) continue;
             ItemStack[] stacks = new ItemStack[42];
             Minecraft.getMinecraft().player.inventory.mainInventory.toArray(stacks);

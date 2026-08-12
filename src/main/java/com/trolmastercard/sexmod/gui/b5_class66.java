@@ -54,8 +54,8 @@ public class b5_class66 extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int n, int n2, float f) {
-        super.drawScreen(n, n2, f);
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
         this.buttonList.clear();
         b5_class66.a(this.width / 2, this.height / 2 + 20, 30, this.girls.get(this.b));
         this.buttonList.add(new GuiButton(1, this.width / 2 + 30, this.height / 2 - 10, 20, 20, ">"));
@@ -64,14 +64,14 @@ public class b5_class66 extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton guiButton) {
-        if (">".equals(guiButton.displayString) && ++this.b >= this.girls.size()) {
+    protected void actionPerformed(GuiButton button) {
+        if (">".equals(button.displayString) && ++this.b >= this.girls.size()) {
             this.b = 0;
         }
-        if ("<".equals(guiButton.displayString) && --this.b < 0) {
+        if ("<".equals(button.displayString) && --this.b < 0) {
             this.b = this.girls.size() - 1;
         }
-        if (guiButton.id == 0) {
+        if (button.id == 0) {
             PackageHandler.INSTANCE.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.fromGirl(this.girls.get(this.b))));
             EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
             ((EntityPlayer)entityPlayerSP).closeScreen();
