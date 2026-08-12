@@ -17,7 +17,7 @@ import java.io.IOException;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
-import com.trolmastercard.sexmod.gui.ModGuiHandler;
+import com.trolmastercard.sexmod.util.Handlers.GuiHandler;
 import com.trolmastercard.sexmod.util.Handlers.*;
 import com.trolmastercard.sexmod.world.WorldGenStructure;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -38,7 +38,7 @@ public class CommonProxy {
     public void initRegistries(FMLInitializationEvent fMLInitializationEvent) throws IOException {
         Main.setConfigs();
         SoundsHandler.RegisterSounds();
-        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new ModGuiHandler());
+        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new GuiHandler());
         EventHandler.Register(false);
         PackageHandler.RegisterMessages();
     }
@@ -52,10 +52,6 @@ public class CommonProxy {
             return;
         }
         CustomModel.LoadModels(false);
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

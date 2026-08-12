@@ -8,10 +8,10 @@ package com.trolmastercard.sexmod.gui.Menu;
 
 import java.io.IOException;
 
-import com.trolmastercard.sexmod.Packages.BeeOpenChest;
-import com.trolmastercard.sexmod.Packages.ChangeDataParameter;
-import com.trolmastercard.sexmod.Packages.SendCompanionHome;
-import com.trolmastercard.sexmod.Packages.SetNewHome;
+import com.trolmastercard.sexmod.Packets.BeeOpenChest;
+import com.trolmastercard.sexmod.Packets.ChangeDataParameter;
+import com.trolmastercard.sexmod.Packets.SendCompanionHome;
+import com.trolmastercard.sexmod.Packets.SetNewHome;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.Supporter;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

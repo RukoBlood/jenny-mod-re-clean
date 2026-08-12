@@ -15,7 +15,7 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.Packages.GetTribeUIValues;
+import com.trolmastercard.sexmod.Packets.GetTribeUIValues;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.gui.DragonStaffGUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

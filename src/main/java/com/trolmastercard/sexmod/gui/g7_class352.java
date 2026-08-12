@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.gui;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Packages.ClaimTribe;
+import com.trolmastercard.sexmod.Packets.ClaimTribe;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

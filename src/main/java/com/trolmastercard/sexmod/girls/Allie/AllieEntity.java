@@ -8,9 +8,9 @@ package com.trolmastercard.sexmod.girls.Allie;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Packages.MakeRichWish;
-import com.trolmastercard.sexmod.Packages.UploadInventoryToServerAlt;
-import com.trolmastercard.sexmod.Packages.SyncActionPacket;
+import com.trolmastercard.sexmod.Packets.MakeRichWish;
+import com.trolmastercard.sexmod.Packets.UploadInventoryToServerAlt;
+import com.trolmastercard.sexmod.Packets.SyncActionPacket;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;

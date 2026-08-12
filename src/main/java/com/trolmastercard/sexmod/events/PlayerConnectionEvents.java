@@ -16,10 +16,10 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.Packages.InformOfOwnership;
-import com.trolmastercard.sexmod.Packages.ResetGirl;
-import com.trolmastercard.sexmod.Packages.SendBlocks;
-import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.Packets.InformOfOwnership;
+import com.trolmastercard.sexmod.Packets.ResetGirl;
+import com.trolmastercard.sexmod.Packets.SendBlocks;
+import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.girls.Allie.lamp.LampItem;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;

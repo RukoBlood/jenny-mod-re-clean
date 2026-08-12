@@ -22,10 +22,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
 
-import com.trolmastercard.sexmod.Packages.ForcePlayerGirlUpdate;
-import com.trolmastercard.sexmod.Packages.ResetGirl;
-import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
-import com.trolmastercard.sexmod.Packages.SexPrompt;
+import com.trolmastercard.sexmod.Packets.ForcePlayerGirlUpdate;
+import com.trolmastercard.sexmod.Packets.ResetGirl;
+import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
+import com.trolmastercard.sexmod.Packets.SexPrompt;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import com.trolmastercard.sexmod.girls.base.Action;

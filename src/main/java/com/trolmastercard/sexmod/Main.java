@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractKoboldGoblinRenderer;
+import com.trolmastercard.sexmod.girls.base.AbstractKoboldGoblinRenderer;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;

@@ -18,8 +18,8 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractKoboldGoblinRenderer;
+import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractKoboldGoblinRenderer;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;

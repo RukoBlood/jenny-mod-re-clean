@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.companion.fighter.FighterCompanion;
-import com.trolmastercard.sexmod.Packages.SendCompanionHome;
-import com.trolmastercard.sexmod.Packages.SetNewHome;
-import com.trolmastercard.sexmod.Packages.bo_class90;
+import com.trolmastercard.sexmod.Packets.SendCompanionHome;
+import com.trolmastercard.sexmod.Packets.SetNewHome;
+import com.trolmastercard.sexmod.Packets.bo_class90;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;

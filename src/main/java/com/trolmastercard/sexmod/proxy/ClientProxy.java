@@ -17,7 +17,7 @@ import java.io.IOException;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
-import com.trolmastercard.sexmod.gui.ModGuiHandler;
+import com.trolmastercard.sexmod.util.Handlers.GuiHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.RenderHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
@@ -35,8 +35,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-public class ClientProxy
-extends CommonProxy {
+public class ClientProxy extends CommonProxy {
     static public boolean IS_PRELOADING = false;
     static public KeyBinding[] keyBindings;
 
@@ -60,7 +59,7 @@ extends CommonProxy {
         }
         Main.setConfigs();
         SoundsHandler.RegisterSounds();
-        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new ModGuiHandler(true));
+        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new GuiHandler(true));
         EventHandler.Register(true);
         PackageHandler.RegisterMessages();
         Minecraft mc = Minecraft.getMinecraft();

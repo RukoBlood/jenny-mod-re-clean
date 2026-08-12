@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.gui.Menu;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Packages.UploadInventoryToServer;
+import com.trolmastercard.sexmod.Packets.UploadInventoryToServer;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;

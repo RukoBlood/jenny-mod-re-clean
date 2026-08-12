@@ -34,6 +34,7 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
 import com.trolmastercard.sexmod.util.SkinHelper;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;

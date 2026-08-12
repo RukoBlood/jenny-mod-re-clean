@@ -22,12 +22,13 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.Packages.ResetGirl;
-import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.Packets.ResetGirl;
+import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.ew_class277;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
@@ -250,7 +251,7 @@ implements ai_class30 {
     }
 
     @Override
-    protected void void_a() {
+    protected void ResetColors() {
         PlayerGoblinRenderer.ResetColors();
         GoblinRenderer.ResetColors();
     }

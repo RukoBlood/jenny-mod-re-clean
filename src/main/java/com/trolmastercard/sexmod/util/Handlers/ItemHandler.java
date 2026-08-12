@@ -12,7 +12,7 @@ import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaRod;
 
 public class ItemHandler {
     public static void RegisterItems() {
-        HornyPotion.RegisterPotion();
+        HornyPotion.RegisterHornyPotion();
         LampItem.RegisterLamp();
         DragonStaffItem.RegisterStaff();
         TribeEgg.RegisterTribeEgg();

@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.trolmastercard.sexmod.Packages.ResetController;
-import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
-import com.trolmastercard.sexmod.Packages.SpawnEnergyBallParticlesAlt;
+import com.trolmastercard.sexmod.Packets.ResetController;
+import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
+import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesAlt;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.EnergyBallEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathDamageSource;

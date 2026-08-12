@@ -33,6 +33,7 @@ import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.girls.Allie.PlayerAllieRenderer;
 import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblin;
 import com.trolmastercard.sexmod.gui.*;
+import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.gui.Galath.EscapeMinigameUI;
 import com.trolmastercard.sexmod.gui.Galath.GalathFlightUI;

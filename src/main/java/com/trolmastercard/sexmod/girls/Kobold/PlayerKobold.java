@@ -13,10 +13,11 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.Packages.TeleportPlayer;
+import com.trolmastercard.sexmod.Packets.TeleportPlayer;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.ew_class277;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
@@ -72,7 +73,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.values()[this.getRNG().nextInt(EyeAndKoboldColor.values().length)];
         this.entityDataManager.register(au, new BlockPos(eyeAndKoboldColor_.getMainColor()));
         this.entityDataManager.register(as, aw.name());
-        this.entityDataManager.register(aA, Float.valueOf(0.0f));
+        this.entityDataManager.register(aA, 0.0f);
     }
 
     @Override
@@ -154,7 +155,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    protected void void_a() {
+    protected void ResetColors() {
         PlayerKoboldRenderer.ResetColors();
         KoboldRenderer.ResetColors();
     }
@@ -202,14 +203,14 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
 
     @Override
     protected MatrixStack applyAdditionalMatrixTransformations(MatrixStack stack) {
-        float f = 0.25f - this.entityDataManager.get(aA).floatValue();
+        float f = 0.25f - this.entityDataManager.get(aA);
         stack.scale(1.0f - f, 1.0f - f, 1.0f - f);
         return stack;
     }
 
     @Override
     protected float transformCameraPivotY(float pivotY) {
-        float f2 = 1.0f - (0.25f - this.entityDataManager.get(aA).floatValue());
+        float f2 = 1.0f - (0.25f - this.entityDataManager.get(aA));
         return pivotY * f2;
     }
 

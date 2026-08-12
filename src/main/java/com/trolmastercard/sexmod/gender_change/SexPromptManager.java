@@ -12,7 +12,7 @@ package com.trolmastercard.sexmod.gender_change;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 
-import com.trolmastercard.sexmod.Packages.StartStandingSexAnimation;
+import com.trolmastercard.sexmod.Packets.StartStandingSexAnimation;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;

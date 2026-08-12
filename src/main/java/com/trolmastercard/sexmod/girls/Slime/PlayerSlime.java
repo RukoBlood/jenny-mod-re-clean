@@ -9,8 +9,8 @@ package com.trolmastercard.sexmod.girls.Slime;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
-import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
+import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
+import com.trolmastercard.sexmod.Packets.SetPlayerForGirl;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;

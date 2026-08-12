@@ -14,7 +14,7 @@ package com.trolmastercard.sexmod.gui.Galath;
 
 import java.util.Random;
 
-import com.trolmastercard.sexmod.Packages.GalathBackOffRape;
+import com.trolmastercard.sexmod.Packets.GalathBackOffRape;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.client.Minecraft;

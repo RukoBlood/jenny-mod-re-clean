@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.girls.Kobold;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractPlayerKoblinGoboldRenderer;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.EnumAction;

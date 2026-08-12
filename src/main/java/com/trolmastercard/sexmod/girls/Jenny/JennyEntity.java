@@ -8,10 +8,10 @@ package com.trolmastercard.sexmod.girls.Jenny;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Packages.SendCompanionHome;
-import com.trolmastercard.sexmod.Packages.SendGirlToSex;
-import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
-import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.Packets.SendCompanionHome;
+import com.trolmastercard.sexmod.Packets.SendGirlToSex;
+import com.trolmastercard.sexmod.Packets.SetPlayerForGirl;
+import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;

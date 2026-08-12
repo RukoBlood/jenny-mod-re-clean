@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.girls.Luna;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Packages.SendCompanionHome;
+import com.trolmastercard.sexmod.Packets.SendCompanionHome;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;

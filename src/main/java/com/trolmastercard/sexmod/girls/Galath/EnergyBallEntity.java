@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.Packages.SpawnEnergyBallParticlesAlt;
+import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesAlt;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Reference;

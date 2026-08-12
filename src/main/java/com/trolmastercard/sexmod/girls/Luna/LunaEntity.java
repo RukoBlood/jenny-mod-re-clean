@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.Packets.*;
 import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaHookEntity;

@@ -10,8 +10,8 @@ package com.trolmastercard.sexmod.girls.Bia;
 import java.util.UUID;
 import javax.vecmath.Vector4d;
 
-import com.trolmastercard.sexmod.Packages.SendCompanionHome;
-import com.trolmastercard.sexmod.Packages.SendGirlToSex;
+import com.trolmastercard.sexmod.Packets.SendCompanionHome;
+import com.trolmastercard.sexmod.Packets.SendGirlToSex;
 import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;

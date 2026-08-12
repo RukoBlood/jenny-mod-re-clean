@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.Packets.*;
 import com.trolmastercard.sexmod.companion.OpenAndCloseDoorBehindHer;
 import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
@@ -2788,7 +2788,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 f__class2972.void_a((Entity)f__class2972.getCombatTracker().getFighter());
             } else {
                 GalathCoin.a(f__class2972);
-                PackageHandler.INSTANCE.sendToAllTracking((IMessage)new com.trolmastercard.sexmod.Packages.SpawnEnergyBallParticles(f__class2972.girlID(), GalathMangTracker.b(f__class2972)), (Entity)f__class2972);
+                PackageHandler.INSTANCE.sendToAllTracking((IMessage)new com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticles(f__class2972.girlID(), GalathMangTracker.b(f__class2972)), (Entity)f__class2972);
                 Utils.runDelayedTask(900, () -> GalathMangTracker.a(f__class2972));
                 f__class2972.bU = true;
             }

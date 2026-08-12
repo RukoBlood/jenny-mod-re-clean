@@ -29,12 +29,12 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector4d;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.Packets.*;
 import com.trolmastercard.sexmod.companion.OpenAndCloseDoorBehindHer;
 import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;

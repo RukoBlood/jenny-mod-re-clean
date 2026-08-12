@@ -8,8 +8,8 @@ package com.trolmastercard.sexmod.girls.Bee;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Packages.SendCompanionHome;
-import com.trolmastercard.sexmod.Packages.SetPlayerMovement;
+import com.trolmastercard.sexmod.Packets.SendCompanionHome;
+import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
 import com.trolmastercard.sexmod.companion.supporter.SupporterCompanion;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;

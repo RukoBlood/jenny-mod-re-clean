@@ -7,12 +7,12 @@
  */
 package com.trolmastercard.sexmod.util.Handlers;
 
-import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.Packets.*;
 
-import com.trolmastercard.sexmod.Packages.SendChatMessage;
-import com.trolmastercard.sexmod.Packages.SendGirlToSex;
-import com.trolmastercard.sexmod.Packages.SetPlayerForGirl;
-import com.trolmastercard.sexmod.Packages.SyncActionPacket;
+import com.trolmastercard.sexmod.Packets.SendChatMessage;
+import com.trolmastercard.sexmod.Packets.SendGirlToSex;
+import com.trolmastercard.sexmod.Packets.SetPlayerForGirl;
+import com.trolmastercard.sexmod.Packets.SyncActionPacket;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -64,7 +64,7 @@ public class PackageHandler {
         INSTANCE.registerMessage(SpawnParticle.a_inner261.class, SpawnParticle.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(SendEgg.a_inner434.class, SendEgg.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(Mine.a_inner227.class, Mine.class, PackageHandler.discriminator(), Side.SERVER);
-        INSTANCE.registerMessage(bd_class76.Handler.class, bd_class76.class, PackageHandler.discriminator(), Side.CLIENT);
+        INSTANCE.registerMessage(GenderChangePacket.Handler.class, GenderChangePacket.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(ForcePlayerGirlUpdate.a_inner362.class, ForcePlayerGirlUpdate.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(UploadModelString.a_inner333.class, UploadModelString.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(GalathRapePounce.a_inner357.class, GalathRapePounce.class, PackageHandler.discriminator(), Side.SERVER);

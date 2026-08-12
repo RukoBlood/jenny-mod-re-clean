@@ -6,7 +6,7 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.Packages.RequestServerModelAvailability;
+import com.trolmastercard.sexmod.Packets.RequestServerModelAvailability;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.command.CommandBase;

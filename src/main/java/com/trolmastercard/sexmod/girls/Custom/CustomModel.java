@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.Packages.RequestServerModelAvailability;
+import com.trolmastercard.sexmod.Packets.RequestServerModelAvailability;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;

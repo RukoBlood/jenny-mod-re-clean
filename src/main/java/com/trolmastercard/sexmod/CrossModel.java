@@ -24,20 +24,20 @@ public class CrossModel extends AnimatedGeoModel<CustomModelEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(CustomModelEntity cy_class1532) {
-        if (cy_class1532.isItemModel) {
+    public ResourceLocation getTextureLocation(CustomModelEntity entity) {
+        if (entity.isItemModel) {
             return new ResourceLocation("sexmod", "textures/cross.png");
         }
-        return CustomModel.c(cy_class1532.getModelName());
+        return CustomModel.c(entity.getModelName());
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(CustomModelEntity cy_class1532) {
+    public ResourceLocation getAnimationFileLocation(CustomModelEntity entity) {
         return new ResourceLocation("sexmod", "animations/slime/slime.animation.json");
     }
 
     @Override
-    public void setLivingAnimations(CustomModelEntity cy_class1532, Integer n, @Nullable AnimationEvent animationEvent) {
+    public void setLivingAnimations(CustomModelEntity entity, Integer uniqueID, @Nullable AnimationEvent event) {
     }
 }
 

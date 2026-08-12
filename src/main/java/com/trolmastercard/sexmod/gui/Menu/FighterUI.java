@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.Packages.RemoveItems;
+import com.trolmastercard.sexmod.Packets.RemoveItems;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

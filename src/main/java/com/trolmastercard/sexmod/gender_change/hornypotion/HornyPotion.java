@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.gender_change.hornypotion;
 
-import com.trolmastercard.sexmod.Packages.bd_class76;
+import com.trolmastercard.sexmod.Packets.GenderChangePacket;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -35,28 +35,34 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class HornyPotion extends Potion {
     final static public Potion HORNY_POTION = new HornyPotion("horny potion", false, 16736968, 0, 0);
-    final static public PotionType POTION_TYPE = (PotionType)new PotionType("horny_potion", new PotionEffect(HORNY_POTION, 3600), new PotionEffect(MobEffects.NAUSEA, 200, 1)).setRegistryName("horny_potion");
+    final static public PotionType POTION_TYPE;
+
+    static {
+        POTION_TYPE = (PotionType) new PotionType("horny_potion",
+                new PotionEffect(HORNY_POTION, 3600),
+                new PotionEffect(MobEffects.NAUSEA, 200, 1)).setRegistryName("horny_potion");
+    }
 
     public HornyPotion() {
         super(false, 0);
     }
 
-    public HornyPotion(String name, boolean bl, int n, int n2, int n3) {
-        super(bl, n);
+    public HornyPotion(String name, boolean isBadPotion, int color, int iconIndexX, int iconIndexY) {
+        super(isBadPotion, color);
         this.setPotionName(name);
-        this.setIconIndex(n2, n3);
+        this.setIconIndex(iconIndexX, iconIndexY);
         this.setRegistryName(new ResourceLocation("sexmod:" + name));
     }
 
-    public static void RegisterPotion() {
+    public static void RegisterHornyPotion() {
         ForgeRegistries.POTIONS.register(HORNY_POTION);
         ForgeRegistries.POTION_TYPES.register(POTION_TYPE);
         PotionHelper.addMix(PotionTypes.MUNDANE, Item.getItemFromBlock(Blocks.RED_FLOWER), POTION_TYPE);
     }
 
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent tickEvent) {
-        EntityPlayer player = tickEvent.player;
+    public void removeHornyFromPlayer(TickEvent.PlayerTickEvent event) {
+        EntityPlayer player = event.player;
         PotionEffect effect = player.getActivePotionEffect(HORNY_POTION);
         if (player.world.isRemote) {
             return;
@@ -68,27 +74,27 @@ public class HornyPotion extends Potion {
             return;
         }
         player.removePotionEffect(HORNY_POTION);
-        PackageHandler.INSTANCE.sendTo((IMessage)new bd_class76(player), (EntityPlayerMP)player);
+        PackageHandler.INSTANCE.sendTo((IMessage)new GenderChangePacket(player), (EntityPlayerMP)player);
     }
 
     @SubscribeEvent
-    public void a(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
-        EntityAgeable entityAgeable;
-        if (livingUpdateEvent.getEntity() instanceof EntityVillager && (entityAgeable = (EntityVillager)livingUpdateEvent.getEntity()).isPotionActive(HORNY_POTION)) {
-            ((EntityVillager)entityAgeable).tasks.addTask(2, new EntityAIVillagerJustBangHerWithoutThinking((EntityVillager)entityAgeable));
-            entityAgeable.removePotionEffect(HORNY_POTION);
+    public void makeAnimalsHorny(LivingEvent.LivingUpdateEvent event) {
+        EntityAgeable entity;
+        if (event.getEntity() instanceof EntityVillager && (entity = (EntityVillager)event.getEntity()).isPotionActive(HORNY_POTION)) {
+            ((EntityVillager)entity).tasks.addTask(2, new EntityAIVillagerJustBangHerWithoutThinking((EntityVillager)entity));
+            entity.removePotionEffect(HORNY_POTION);
         }
-        if (!(livingUpdateEvent.getEntity() instanceof EntityAnimal)) {
+        if (!(event.getEntity() instanceof EntityAnimal)) {
             return;
         }
-        entityAgeable = (EntityAnimal)livingUpdateEvent.getEntity();
-        if (entityAgeable.isPotionActive(HORNY_POTION)) {
-            if (entityAgeable.getGrowingAge() >= 0) {
-                entityAgeable.setGrowingAge(0);
-                ((EntityAnimal)entityAgeable).resetInLove();
-                ((EntityAnimal)entityAgeable).setInLove(((EntityAnimal)entityAgeable).world.getClosestPlayerToEntity(entityAgeable, 30.0));
+        entity = (EntityAnimal)event.getEntity();
+        if (entity.isPotionActive(HORNY_POTION)) {
+            if (entity.getGrowingAge() >= 0) {
+                entity.setGrowingAge(0);
+                ((EntityAnimal)entity).resetInLove();
+                ((EntityAnimal)entity).setInLove(((EntityAnimal)entity).world.getClosestPlayerToEntity(entity, 30.0));
             }
-            entityAgeable.removePotionEffect(HORNY_POTION);
+            entity.removePotionEffect(HORNY_POTION);
         }
     }
 }

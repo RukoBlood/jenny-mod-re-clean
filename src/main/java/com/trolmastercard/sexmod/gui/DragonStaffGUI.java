@@ -15,7 +15,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.DragonStaffRenderer;
-import com.trolmastercard.sexmod.Packages.*;
+import com.trolmastercard.sexmod.Packets.*;
 import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.gm_class376;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

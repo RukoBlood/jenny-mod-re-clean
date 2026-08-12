@@ -11,8 +11,8 @@ import com.google.common.base.Optional;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Packages.*;
-import com.trolmastercard.sexmod.Packages.SendGirlToSex;
+import com.trolmastercard.sexmod.Packets.*;
+import com.trolmastercard.sexmod.Packets.SendGirlToSex;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
