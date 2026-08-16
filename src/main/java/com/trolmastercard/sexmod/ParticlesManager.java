@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(value=Side.CLIENT)
-public class ga_class358 {
+public class ParticlesManager {
     final static ResourceLocation CUMMY_TEXTURE = new ResourceLocation("sexmod", "textures/cummy.png");
     static Minecraft minecraft = Minecraft.getMinecraft();
     static List<DynamicTrailRenderer> a = new ArrayList<DynamicTrailRenderer>();
@@ -37,14 +37,14 @@ public class ga_class358 {
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void a(RenderWorldLastEvent renderWorldLastEvent) {
-        ga_class358.minecraft.renderEngine.bindTexture(CUMMY_TEXTURE);
+        ParticlesManager.minecraft.renderEngine.bindTexture(CUMMY_TEXTURE);
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         float f = renderWorldLastEvent.getPartialTicks();
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
-        if (ga_class358.minecraft.player == null) {
+        if (ParticlesManager.minecraft.player == null) {
             return;
         }
         for (DynamicTrailRenderer ep_class2632 : a) {
@@ -73,17 +73,13 @@ public class ga_class358 {
         a.add(new DynamicTrailRenderer(n, ar_class412, b8_class692, em_class2582, f, f2));
     }
 
-    public static void a(@Nonnull GirlEntity em_class2582) {
+    public static void spawnSexParticles(@Nonnull GirlEntity girl) {
         ArrayList<DynamicTrailRenderer> arrayList = new ArrayList<DynamicTrailRenderer>();
         for (DynamicTrailRenderer ep_class2632 : a) {
-            if (!ep_class2632.ownerEntity.girlID().equals(em_class2582.girlID())) continue;
+            if (!ep_class2632.ownerEntity.girlID().equals(girl.girlID())) continue;
             arrayList.add(ep_class2632);
         }
         a.removeAll(arrayList);
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
     }
 }
 

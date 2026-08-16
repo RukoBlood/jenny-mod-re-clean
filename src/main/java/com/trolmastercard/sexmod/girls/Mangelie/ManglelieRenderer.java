@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Utils;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathGeometryRender;
@@ -95,7 +96,7 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     boolean c(ManglelieEntity f8_class2932) {
-        GalathEntity f__class2972 = f8_class2932.com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity f__class2972 = f8_class2932.getMommyGalath(false);
         if (f__class2972 == null) {
             return false;
         }
@@ -113,17 +114,17 @@ extends GirlRenderer<ManglelieEntity> {
         if (f8_class2932.currentAction() != Action.RIDE_MOMMY_HEAD) {
             return false;
         }
-        return f8_class2932.com_trolmastercard_sexmod_f__class297_a(false) == null;
+        return f8_class2932.getMommyGalath(false) == null;
     }
 
     // TODO clashes
     boolean d_(ManglelieEntity f8_class2932) {
-        GalathEntity f__class2972 = f8_class2932.com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity f__class2972 = f8_class2932.getMommyGalath(false);
         if (f__class2972 == null) {
             return false;
         }
         if (f__class2972.isDead) {
-            f8_class2932.void_a((UUID)null);
+            f8_class2932.setMommyUUID((UUID)null);
             return false;
         }
         return f__class2972.isWingsAnimated();
@@ -135,11 +136,11 @@ extends GirlRenderer<ManglelieEntity> {
             super.doRenderShadowAndFire(entity, d, d2, d3, f, f2);
             return;
         }
-        ManglelieEntity f8_class2932 = (ManglelieEntity)entity;
-        if (this.d_(f8_class2932)) {
+        ManglelieEntity manglelie = (ManglelieEntity)entity;
+        if (this.d_(manglelie)) {
             return;
         }
-        if (f8_class2932.boolean_r()) {
+        if (manglelie.isAttachedToMommy()) {
             return;
         }
         super.doRenderShadowAndFire(entity, d, d2, d3, f, f2);
@@ -149,7 +150,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (!(em_class2582 instanceof ManglelieEntity)) {
             return false;
         }
-        GalathEntity f__class2972 = ((ManglelieEntity)em_class2582).com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity f__class2972 = ((ManglelieEntity)em_class2582).getMommyGalath(false);
         if (f__class2972 == null) {
             return false;
         }
@@ -189,13 +190,13 @@ extends GirlRenderer<ManglelieEntity> {
             return;
         }
         ManglelieEntity f8_class2932 = (ManglelieEntity)em_class2582;
-        if (!f8_class2932.boolean_r()) {
+        if (!f8_class2932.isAttachedToMommy()) {
             return;
         }
         if (ManglelieModel.isThreesomeAction(f8_class2932)) {
             return;
         }
-        GalathEntity f__class2972 = f8_class2932.com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity f__class2972 = f8_class2932.getMommyGalath(false);
         if (f__class2972 == null) {
             return;
         }
@@ -204,7 +205,7 @@ extends GirlRenderer<ManglelieEntity> {
 
     static boolean a_5(GirlEntity em_class2582) {
         if (em_class2582 instanceof GalathEntity) {
-            em_class2582 = ((GalathEntity)em_class2582).com_trolmastercard_sexmod_f8_class293_a(false);
+            em_class2582 = ((GalathEntity)em_class2582).getManglelieUUID(false);
         }
         if (em_class2582 == null) {
             return false;
@@ -245,14 +246,14 @@ extends GirlRenderer<ManglelieEntity> {
     @Override
     protected void onBoneProcessing(BufferBuilder buffer, String boneName, GeoBone bone) {
         ManglelieRenderer.a(this.renderEntity, boneName, bone, false);
-        Entity entity = ((ManglelieEntity)this.renderEntity).b_7();
+        Entity entity = ((ManglelieEntity)this.renderEntity).getTargetEntity();
         if (entity == null) {
             return;
         }
-        if ("weapon".equals(boneName) && ((ManglelieEntity)this.renderEntity).a(entity, mc.getRenderPartialTicks())) {
+        if ("weapon".equals(boneName) && ((ManglelieEntity)this.renderEntity).checkRelativeHandPosition(entity, mc.getRenderPartialTicks())) {
             this.a(buffer, bone, true);
         }
-        if ("offhand".equals(boneName) && !((ManglelieEntity)this.renderEntity).a(entity, mc.getRenderPartialTicks())) {
+        if ("offhand".equals(boneName) && !((ManglelieEntity)this.renderEntity).checkRelativeHandPosition(entity, mc.getRenderPartialTicks())) {
             this.a(buffer, bone, false);
         }
     }
@@ -274,7 +275,7 @@ extends GirlRenderer<ManglelieEntity> {
         }
         GlStateManager.scale(0.7, 0.7, 0.7);
         ItemStack itemStack = new ItemStack(Items.BOW);
-        float f = ((ManglelieEntity)this.renderEntity).float_b(mc.getRenderPartialTicks());
+        float f = ((ManglelieEntity)this.renderEntity).getAttackProgress(mc.getRenderPartialTicks());
         if (f < 1.0f) {
             float f2 = (float) Reference.EaseOutQuart(f);
             ((ManglelieEntity)this.renderEntity).setItemUseCount((int)(11.0f * (1.0f - f2) + 71980.0f));
@@ -301,7 +302,7 @@ extends GirlRenderer<ManglelieEntity> {
             return;
         }
         int n = ManglelieRenderer.a(string);
-        if (Utils.isValueInBounds((double)n, 17.0, 35.0)) {
+        if (com.trolmastercard.sexmod.util.Utils.isValueInBounds((double)n, 17.0, 35.0)) {
             if (mc.isGamePaused()) {
                 return;
             }
@@ -314,7 +315,7 @@ extends GirlRenderer<ManglelieEntity> {
             }
             geoBone.setPositionY(geoBone.getPositionY() + f * 0.01f);
         }
-        if (Utils.isValueInBounds((double)n, 1.0, 11.0)) {
+        if (com.trolmastercard.sexmod.util.Utils.isValueInBounds((double)n, 1.0, 11.0)) {
             if (!string.endsWith("1")) {
                 return;
             }
@@ -423,14 +424,14 @@ extends GirlRenderer<ManglelieEntity> {
             entity.rotationYawHead = yaw;
             return baseVector;
         }
-        if (ManglelieRenderer.b_4(entity) && (f__class2972 = entity.com_trolmastercard_sexmod_f__class297_a(false)) != null) {
-            ManglelieRenderer.a(f__class2972, partialTicks, entity);
-            return ManglelieRenderer.b(f__class2972, partialTicks);
+        if (ManglelieRenderer.hasValidModel(entity) && (f__class2972 = entity.getMommyGalath(false)) != null) {
+            ManglelieRenderer.setupModelPosition(f__class2972, partialTicks, entity);
+            return ManglelieRenderer.getMommyHeadOffset(f__class2972, partialTicks);
         }
         return baseVector;
     }
 
-    public static void a(GalathEntity f__class2972, float f, EntityLivingBase entityLivingBase) {
+    public static void setupModelPosition(GalathEntity f__class2972, float f, EntityLivingBase entityLivingBase) {
         boolean bl = f__class2972.isAnchored();
         float f2 = bl ? f__class2972.getYawRotation() : f__class2972.rotationYawHead;
         float f3 = bl ? f__class2972.getYawRotation() : f__class2972.prevRotationYawHead;
@@ -446,16 +447,16 @@ extends GirlRenderer<ManglelieEntity> {
         entityLivingBase.rotationYawHead = f2;
     }
 
-    public static boolean b_4(ManglelieEntity f8_class2932) {
-        return f8_class2932.boolean_r() && !ManglelieModel.isThreesomeAction(f8_class2932);
+    public static boolean hasValidModel(ManglelieEntity f8_class2932) {
+        return f8_class2932.isAttachedToMommy() && !ManglelieModel.isThreesomeAction(f8_class2932);
     }
 
-    public static Vec3d b(GalathEntity f__class2972, float f) {
-        return ak_class32.a(f__class2972, ManglelieRenderer.mc.player, f).add(f__class2972.getCachedBoneOffset("mangPos"));
+    public static Vec3d getMommyHeadOffset(GalathEntity f__class2972, float f) {
+        return Utils.a(f__class2972, ManglelieRenderer.mc.player, f).add(f__class2972.getCachedBoneOffset("mangPos"));
     }
 
     public static Vec3d a(GalathEntity f__class2972, float f) {
-        return ak_class32.getInterpolatedPosition(f__class2972, f).add(f__class2972.getCachedBoneOffset("mangPos"));
+        return Utils.getInterpolatedPosition(f__class2972, f).add(f__class2972.getCachedBoneOffset("mangPos"));
     }
 
     // gay synthetics

@@ -96,7 +96,7 @@ extends WorldSavedData {
 
     public static void a(GalathEntity f__class2972) {
         UUID uUID;
-        ManglelieEntity f8_class2932 = f__class2972.com_trolmastercard_sexmod_f8_class293_a(true);
+        ManglelieEntity f8_class2932 = f__class2972.getManglelieUUID(true);
         if (f8_class2932 != null) {
             f__class2972.world.removeEntity(f8_class2932);
         }

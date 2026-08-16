@@ -17,18 +17,18 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class fq_class325
+public class StructureTracker
 extends WorldSavedData {
-    final static public List<BlockPos> c = new ArrayList<BlockPos>();
-    final static public List<BlockPos> b = new ArrayList<BlockPos>();
+    final static public List<BlockPos> STRUCTURE_POSITIONS = new ArrayList<BlockPos>();
+    final static public List<BlockPos> TEMP_POSITIONS = new ArrayList<BlockPos>();
     final static String d = "sexmod:galath_spawn_list";
     final static String a = "sexmod:galath_spawn_list";
 
-    public fq_class325() {
+    public StructureTracker() {
         super("sexmod:galath_spawn_list");
     }
 
-    public fq_class325(String string) {
+    public StructureTracker(String string) {
         super("sexmod:galath_spawn_list");
     }
 
@@ -46,21 +46,21 @@ extends WorldSavedData {
     @SubscribeEvent
     public void LoadSpawnList(WorldEvent.Load load) {
         World world = load.getWorld();
-        world.getMapStorage().getOrLoadData(fq_class325.class, "sexmod:galath_spawn_list");
+        world.getMapStorage().getOrLoadData(StructureTracker.class, "sexmod:galath_spawn_list");
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         NBTTagCompound nBTTagCompound2 = nbt.getCompoundTag("sexmod:galath_spawn_list");
-        this.b(nBTTagCompound2, "", c);
-        this.b(nBTTagCompound2, "mang", b);
+        this.b(nBTTagCompound2, "", STRUCTURE_POSITIONS);
+        this.b(nBTTagCompound2, "mang", TEMP_POSITIONS);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         NBTTagCompound nBTTagCompound2 = new NBTTagCompound();
-        this.a(nBTTagCompound2, "", c);
-        this.a(nBTTagCompound2, "mang", b);
+        this.a(nBTTagCompound2, "", STRUCTURE_POSITIONS);
+        this.a(nBTTagCompound2, "mang", TEMP_POSITIONS);
         nbt.setTag("sexmod:galath_spawn_list", nBTTagCompound2);
         return nbt;
     }

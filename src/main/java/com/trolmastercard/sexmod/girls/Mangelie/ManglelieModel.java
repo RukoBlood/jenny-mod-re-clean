@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.girls.Mangelie;
 
 import javax.annotation.Nonnull;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Utils;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -117,7 +117,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         }
 
         ManglelieEntity manglelie = (ManglelieEntity) girl;
-        GalathEntity galath = manglelie.com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity galath = manglelie.getMommyGalath(false);
 
         if (galath == null) {
             return;
@@ -155,7 +155,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         }
 
         ManglelieEntity manglelie = (ManglelieEntity)girl;
-        GalathEntity galath = manglelie.com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity galath = manglelie.getMommyGalath(false);
         if (galath == null) {
             return;
         }
@@ -167,7 +167,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
     }
 
     Vec3d getEntityEyePosition(@Nonnull Entity entity) {
-        return ak_class32.getInterpolatedPosition(entity, this.mc.getRenderPartialTicks()).add(0.0, entity.getEyeHeight(), 0.0);
+        return Utils.getInterpolatedPosition(entity, this.mc.getRenderPartialTicks()).add(0.0, entity.getEyeHeight(), 0.0);
     }
 
     void updateArmIK(GirlEntity girl) {
@@ -184,11 +184,11 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         }
 
         ManglelieEntity manglelie = (ManglelieEntity)girl;
-        if (!manglelie.boolean_r()) {
+        if (!manglelie.isAttachedToMommy()) {
             return;
         }
 
-        GalathEntity galath = manglelie.com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity galath = manglelie.getMommyGalath(false);
         if (galath == null) {
             return;
         }
@@ -200,32 +200,32 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         IBone lowerArmR = processor.getBone("lowerArmR");
         IBone elbowR = processor.getBone("elbowR");
         IBone elbowL = processor.getBone("elbowL");
-        Entity targetEntity = manglelie.b_7();
+        Entity targetEntity = manglelie.getTargetEntity();
 
         boolean hasNoTarget = targetEntity == null;
         if (!hasNoTarget) {
-            manglelie.R = this.getEntityEyePosition(targetEntity);
+            manglelie.ikTargetPos = this.getEntityEyePosition(targetEntity);
         }
 
         float fps = (float)Minecraft.getDebugFPS();
         if (fps == 0.0f) {
             fps = 1.0f;
         }
-        manglelie.V = manglelie.aj == hasNoTarget ? 0.0f : (manglelie.V += 1.5f / fps);
-        if (manglelie.V >= 1.0f) {
-            manglelie.V = 0.0f;
-            manglelie.aj = hasNoTarget;
+        manglelie.ikProgress = manglelie.isTargetHandRight == hasNoTarget ? 0.0f : (manglelie.ikProgress += 1.5f / fps);
+        if (manglelie.ikProgress >= 1.0f) {
+            manglelie.ikProgress = 0.0f;
+            manglelie.isTargetHandRight = hasNoTarget;
         }
 
-        ArmTransformState state = manglelie.V == 0.0f
+        ArmTransformState state = manglelie.ikProgress == 0.0f
                 ? (hasNoTarget
                 ? this.calculateIdleArmState(galath, armR, armL, lowerArmL, lowerArmR)
                 : this.calculateTargetedArmState(manglelie, galath, lowerArmR, lowerArmL, processor))
                 : ArmTransformState.lerp(this.calculateIdleArmState(galath, armR, armL, lowerArmL, lowerArmR),
                 this.calculateTargetedArmState(manglelie, galath, lowerArmR, lowerArmL, processor),
-                (float)(manglelie.aj
-                        ? Reference.EaseOutBack(manglelie.V)
-                        : 1.0 - Reference.EaseOutBack(manglelie.V)
+                (float)(manglelie.isTargetHandRight
+                        ? Reference.EaseOutBack(manglelie.ikProgress)
+                        : 1.0 - Reference.EaseOutBack(manglelie.ikProgress)
                 )
         );
 
@@ -267,14 +267,14 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         Vec3d armRPos = manglelie.getCachedBoneOffset("armR").add(renderPos);
         Vec3d armLPos = manglelie.getCachedBoneOffset("armL").add(renderPos);
 
-        Rotation2f lookR = Utils.CalculateLookAngles(armRPos, manglelie.R);
-        Rotation2f lookL = Utils.CalculateLookAngles(armLPos, manglelie.R);
+        Rotation2f lookR = com.trolmastercard.sexmod.util.Utils.CalculateLookAngles(armRPos, manglelie.ikTargetPos);
+        Rotation2f lookL = com.trolmastercard.sexmod.util.Utils.CalculateLookAngles(armLPos, manglelie.ikTargetPos);
 
         Float headPos = GalathEntity.updateRenderPositions(galath, partialTicks);
         float yawHead = headPos == null ? Reference.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks) : headPos;
         float radYawHead = TrigMath.toRadians(yawHead);
 
-        float progressRaw = manglelie.float_b(partialTicks);
+        float progressRaw = manglelie.getAttackProgress(partialTicks);
         float progressQuart = (float) Reference.EaseOutQuart(Math.min(1.0f, progressRaw));
 
         float factor = 0.0f;
@@ -287,7 +287,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
 
         float lerpedRot = TrigMath.toRadians(Reference.LerpFloat(0.0f, 90.0f, progressQuart));
 
-        boolean isRightHandDominant = manglelie.boolean_a(manglelie.R, partialTicks);
+        boolean isRightHandDominant = manglelie.isVectorRightOfMommy(manglelie.ikTargetPos, partialTicks);
         if (isRightHandDominant) {
             //ArmTransformState.access$002(state, new Vector3fSexmodSpecial(-headOffset + lookR.yaw + TrigMath.toRadians(90.0f), lookR.pitch, 0.0f));
             //ArmTransformState.access$102(state, new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.toRadians(90.0f), (float)((double)lookL.pitch + (double) TrigMath.toRadians(-20.0f) * Math.cos(lookR.pitch + radYawHead * 1.0f) + (double) Reference.LerpFloat(lerpedRot / 2.0f, 0.0f, f9)), 0.0f));
@@ -372,10 +372,10 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         }
         ManglelieEntity manglelie = (ManglelieEntity)girl;
 
-        if (!ManglelieRenderer.b_4(manglelie)) {
+        if (!ManglelieRenderer.hasValidModel(manglelie)) {
             return;
         }
-        GalathEntity galath = manglelie.com_trolmastercard_sexmod_f__class297_a(false);
+        GalathEntity galath = manglelie.getMommyGalath(false);
         if (galath == null) {
             return;
         }
@@ -397,8 +397,8 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             head.setRotationX(headRotX * 0.666f);
         }
 
-        float diffY = Utils.getAngleDifferences((double)manglelie.T, manglelie.af);
-        float diffX = Utils.getAngleDifferences((double)manglelie.ai, manglelie.W);
+        float diffY = com.trolmastercard.sexmod.util.Utils.getAngleDifferences((double)manglelie.T, manglelie.targetHeadYaw);
+        float diffX = com.trolmastercard.sexmod.util.Utils.getAngleDifferences((double)manglelie.ai, manglelie.targetHeadPitch);
 
         float fps = Minecraft.getDebugFPS();
         if (fps == 0.0f) {
@@ -434,7 +434,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         for (int i = 0; i < 3; ++i) {
             IBone cockBone = processor.getBone("cockStage" + i);
             if (cockBone == null) continue;
-            cockBone.setHidden(i > ((ManglelieEntity)girl).an);
+            cockBone.setHidden(i > ((ManglelieEntity)girl).cockStage);
         }
     }
 

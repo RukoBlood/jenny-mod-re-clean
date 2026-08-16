@@ -424,7 +424,7 @@ implements IWingsOwner {
                     break;
                 }
                 case "clearcum": {
-                    ga_class358.a(this);
+                    ParticlesManager.spawnSexParticles(this);
                 }
                 case "reset": {
                     if (!this.isControlledByLocalPlayer()) break;
@@ -449,12 +449,12 @@ implements IWingsOwner {
                     break;
                 }
                 case "creampie": {
-                    ga_class358.a(new DynamicTrailRenderer(130, em_class2582 -> {
+                    ParticlesManager.a(new DynamicTrailRenderer(130, em_class2582 -> {
                         Vec3d vec3d = em_class2582.getBoneWorldPosition("futaCockTip");
                         Vec3d vec3d2 = em_class2582.getBoneWorldPosition("futaCockTipDirHelp");
                         return vec3d.subtract(vec3d2).normalize();
                     }, em_class2582 -> em_class2582.getCachedBoneOffset("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
-                    ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
+                    ParticlesManager.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }

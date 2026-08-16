@@ -1210,8 +1210,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return entityPlayer.getPositionVector().add(-Math.sin((double)yaw * (Math.PI / 180)) * distance, 0.0, Math.cos((double)yaw * (Math.PI / 180)) * distance);
     }
 
-    public Vec3d net_minecraft_util_math_Vec3d_a(Vec3d vec3d, float f) {
-        return vec3d;
+    public Vec3d getInterpolatedRenderPos(Vec3d pos, float partialTicks) {
+        return pos;
     }
 
     public static void spawnParticlesAround(EnumParticleTypes particle, GirlEntity girl) {

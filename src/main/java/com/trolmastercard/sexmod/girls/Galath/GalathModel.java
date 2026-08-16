@@ -4,6 +4,7 @@
 package com.trolmastercard.sexmod.girls.Galath;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Utils;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlModel;
@@ -183,7 +184,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
             masterPlayer = this.mc.player;
         }
         MolangParser parser = GeckoLibCache.getInstance().parser;
-        Vec3d targetOffset = ak_class32.getVectorToPlayer(girl, masterPlayer, this.mc.getRenderPartialTicks()).add(girl.getCachedBoneOffset("head"));
+        Vec3d targetOffset = Utils.getVectorToPlayer(girl, masterPlayer, this.mc.getRenderPartialTicks()).add(girl.getCachedBoneOffset("head"));
         float relativeYaw = (float) TrigMath.toDegrees(Math.atan2(targetOffset.z, targetOffset.x)) - girl.getYawRotation();
         float pitchAngle = (float) TrigMath.toDegrees(Math.atan2(targetOffset.y, Math.sqrt(targetOffset.x * targetOffset.x + targetOffset.z * targetOffset.z)));
 
@@ -332,7 +333,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
             this.swordDashEndTime = this.swordDashStartTime + 8L;
         }
 
-        if (!Utils.isValueInBounds((double) attackProgress, 24.0D, 32.0D)) {
+        if (!com.trolmastercard.sexmod.util.Utils.isValueInBounds((double) attackProgress, 24.0D, 32.0D)) {
             return;
         }
 

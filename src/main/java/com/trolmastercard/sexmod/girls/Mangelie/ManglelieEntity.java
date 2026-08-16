@@ -25,7 +25,6 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;
@@ -59,10 +58,10 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class ManglelieEntity
 extends GirlEntity {
-    final static public String ac = "sexmod:mommy";
-    final static public float am = 60.0f;
-    final static public float ag = 4.0f;
-    final static public float P = 3.5f;
+    final static public String NBT_MOMMY_KEY = "sexmod:mommy";
+    final static public float MAX_ATTACK_DISTANCE = 60.0f;
+    final static public float ARROW_SPEED = 4.0f;
+    final static public float MOMMY_HEAD_OFFSET_Y = 3.5f;
     final static public float ah = 28.0f;
     final static public float ae = 15.0f;
     final static public float K = 15.0f;
@@ -71,28 +70,30 @@ extends GirlEntity {
     final static public float O = 6.0f;
     final static public float ak = 80.0f;
     final static public float X = 700.0f;
-    final static public DataParameter<String> ad = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.STRING).getSerializer().createKey(111);
-    final static public DataParameter<Boolean> ap = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(112);
-    final static public DataParameter<Integer> ab = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.VARINT).getSerializer().createKey(113);
-    final static public DataParameter<String> al = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.STRING).getSerializer().createKey(114);
-    final static public DataParameter<Boolean> ar = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(115);
-    private UUID Q = null;
-    public boolean aj = true;
-    public Vec3d R = Vec3d.ZERO;
-    public float V = 0.0f;
-    boolean aq = true;
-    boolean S = false;
-    boolean U = false;
-    public float af = 0.0f;
-    public float W = 0.0f;
+    final static public DataParameter<String> MOMMY_UUID_DATA = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.STRING).getSerializer().createKey(111);
+    final static public DataParameter<Boolean> IS_RIDING_MOMMY = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(112);
+    final static public DataParameter<Integer> TARGET_ENTITY_ID = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.VARINT).getSerializer().createKey(113);
+    final static public DataParameter<String> ATTACK_START_TIME = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.STRING).getSerializer().createKey(114);
+    final static public DataParameter<Boolean> IS_SCARED = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(115);
+    private UUID pendingMommyUUID = null;
+
+    public boolean isTargetHandRight = true;
+    public Vec3d ikTargetPos = Vec3d.ZERO;
+    public float ikProgress = 0.0f;
+
+    boolean isWild = true;
+    boolean isDespawnedLocal = false;
+    boolean hasFiredArrow = false;
+    public float targetHeadYaw = 0.0f;
+    public float targetHeadPitch = 0.0f;
     public float T = 0.0f;
     public float ai = 0.0f;
-    boolean aa = false;
-    boolean Z = false;
-    boolean N = false;
-    boolean Y = false;
-    boolean M = false;
-    public int an = 2;
+    boolean isDespawned = false;
+    boolean customModelLoaded = false;
+    boolean isThreesomeTransitioning = false;
+    boolean isThreesomeHard = false;
+    boolean isThreesomeSlowBack = false;
+    public int cockStage = 2;
 
     public ManglelieEntity(World world) {
         super(world);
@@ -101,11 +102,11 @@ extends GirlEntity {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.entityDataManager.register(ad, "");
-        this.entityDataManager.register(ap, false);
-        this.entityDataManager.register(ab, -1);
-        this.entityDataManager.register(al, "");
-        this.entityDataManager.register(ar, false);
+        this.entityDataManager.register(MOMMY_UUID_DATA, "");
+        this.entityDataManager.register(IS_RIDING_MOMMY, false);
+        this.entityDataManager.register(TARGET_ENTITY_ID, -1);
+        this.entityDataManager.register(ATTACK_START_TIME, "");
+        this.entityDataManager.register(IS_SCARED, false);
     }
 
     @Override
@@ -124,186 +125,191 @@ extends GirlEntity {
         return 0.0f;
     }
 
-    public void c(boolean bl) {
-        this.entityDataManager.set(ap, bl);
+    public void setAttachedToMommy(boolean riding) {
+        this.entityDataManager.set(IS_RIDING_MOMMY, riding);
     }
 
-    public boolean boolean_r() {
-        return this.entityDataManager.get(ap);
+    public boolean isAttachedToMommy() {
+        return this.entityDataManager.get(IS_RIDING_MOMMY);
     }
 
     @Nullable
-    public UUID java_util_UUID_v() {
-        String string = this.entityDataManager.get(ad);
-        if ("".equals(string)) {
+    public UUID getMommyUUID() {
+        String uuidStr = this.entityDataManager.get(MOMMY_UUID_DATA);
+        if (uuidStr.isEmpty()) {
             return null;
         }
         try {
-            return UUID.fromString(string);
-        } catch (Exception exception) {
-            exception.printStackTrace();
+            return UUID.fromString(uuidStr);
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
 
     @Override
     public boolean shouldRenderNameTag() {
-        return !this.boolean_r();
+        return !this.isAttachedToMommy();
     }
 
     @Nullable
-    public GalathEntity com_trolmastercard_sexmod_f__class297_a(boolean bl) {
-        GirlEntity em_class2582;
-        UUID uUID = this.java_util_UUID_v();
+    public GalathEntity getMommyGalath(boolean isServer) {
+        //GirlEntity girl;
+        UUID uUID = this.getMommyUUID();
         if (uUID == null) {
             return null;
         }
-        GirlEntity em_class2583 = em_class2582 = bl ? GirlEntity.getServerGirlEntity(uUID) : GirlEntity.getClientGirlEntity(uUID);
-        if (!(em_class2582 instanceof GalathEntity)) {
+        GirlEntity girl = isServer ? GirlEntity.getServerGirlEntity(uUID) : GirlEntity.getClientGirlEntity(uUID);
+        if (!(girl instanceof GalathEntity)) {
             return null;
         }
-        return (GalathEntity)em_class2582;
+        return (GalathEntity)girl;
     }
 
-    public void void_a(UUID uUID) {
+    public void setMommyUUID(@Nullable UUID uUID) {
         if (uUID == null) {
-            this.entityDataManager.set(ad, "");
+            this.entityDataManager.set(MOMMY_UUID_DATA, "");
             return;
         }
-        this.entityDataManager.set(ad, uUID.toString());
+        this.entityDataManager.set(MOMMY_UUID_DATA, uUID.toString());
     }
 
     @Override
     public Float getYawRotation() {
-        float f = super.getYawRotation();
+        float yaw = super.getYawRotation();
         if (ManglelieModel.isThreesomeAction(this)) {
-            f += 180.0f;
+            yaw += 180.0f;
         }
-        return f;
+        return yaw;
     }
 
-    public void void_q() {
-        this.S = true;
+    public void markDespawned() {
+        this.isDespawnedLocal = true;
     }
 
     @Override
     public void updateAITasks() {
-        if (this.aa) {
+        if (this.isDespawned) {
             this.world.removeEntity(this);
             return;
         }
-        this.void_f();
-        this.void_w();
+        this.initCustomModel();
+        this.updatePositionSyncWithMommy();
         super.updateAITasks();
-        this.void_j();
-        this.void_c();
-        this.void_d();
-        this.void_i();
-        this.void_n();
-        this.u_();
-        this.void_h();
-        this.a_();
-        this.void_t();
+        this.processPendingMommyLink();
+        this.updateNavigationToGalath();
+        this.validateCombatTarget();
+        this.updateTargetTimeout();
+        this.findCombatTarget();
+        this.updatePhysicsState();
+        this.updateArrowAttack();
+        this.checkMommyDisown();
+        this.validateWildStatus();
     }
 
-    void void_t() {
-        if (this.java_util_UUID_v() != null) {
-            this.aq = false;
+    void validateWildStatus() {
+        if (this.getMommyUUID() != null) {
+            this.isWild = false;
         }
-        if (this.aq) {
+        if (this.isWild) {
             return;
         }
-        if (this.com_trolmastercard_sexmod_f__class297_a(true) == null) {
+        if (this.getMommyGalath(true) == null) {
             System.out.println("removed non-wild mang for lack of mommy");
             this.world.removeEntity(this);
         }
     }
 
-    void a_() {
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(true);
-        if (f__class2972 == null) {
+    void checkMommyDisown() {
+        GalathEntity galath = this.getMommyGalath(true);
+        if (galath == null) {
             return;
         }
-        if (f__class2972.aF() == null) {
+        if (galath.getManglelieUUID() == null) {
             return;
         }
-        if (this.girlID().equals(f__class2972.aF())) {
+        if (this.girlID().equals(galath.getManglelieUUID())) {
             return;
         }
         System.out.println("removed non-wild mang cuz her mommy disowned her and got another mang");
         this.world.removeEntity(this);
     }
 
-    public static GalathEntity a(GirlEntity em_class2582, boolean bl) {
-        if (!(em_class2582 instanceof ManglelieEntity)) {
+    public static GalathEntity getMommyFromEntity(GirlEntity girl, boolean isServer) {
+        if (!(girl instanceof ManglelieEntity)) {
             return null;
         }
-        return ((ManglelieEntity)em_class2582).com_trolmastercard_sexmod_f__class297_a(bl);
+        return ((ManglelieEntity)girl).getMommyGalath(isServer);
     }
 
-    public long long_e() {
-        String string = this.entityDataManager.get(al);
-        if ("".equals(string)) {
+    public long getAttackStartTime() {
+        String timeStr = this.entityDataManager.get(ATTACK_START_TIME);
+        if (timeStr.isEmpty()) {
             return -1L;
         }
         try {
-            return Long.parseLong(string);
-        } catch (Exception exception) {
+            return Long.parseLong(timeStr);
+        } catch (Exception e) {
             return -1L;
         }
     }
 
-    public void a(long l) {
-        this.entityDataManager.set(al, Long.toString(l));
-        this.U = false;
+    public void setAttackStartTime(long worldTime) {
+        this.entityDataManager.set(ATTACK_START_TIME, Long.toString(worldTime));
+        this.hasFiredArrow = false;
     }
 
-    void void_h() {
-        long l = this.long_e();
-        if (l == -1L) {
+    void updateArrowAttack() {
+        long startTime = this.getAttackStartTime();
+        if (startTime == -1L) {
             return;
         }
-        long l2 = this.world.getTotalWorldTime();
-        if ((float)l2 < 28.0f + (float)l) {
+        long currentTime = this.world.getTotalWorldTime();
+        if ((float)currentTime < 28.0f + (float)startTime) {
             return;
         }
-        if (this.U) {
+        if (this.hasFiredArrow) {
             return;
         }
-        Entity entity = this.b_7();
-        if (entity == null) {
+
+        Entity target = this.getTargetEntity();
+        if (target == null) {
             return;
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(true);
-        if (f__class2972 == null) {
+        GalathEntity galath = this.getMommyGalath(true);
+        if (galath == null) {
             return;
         }
-        EntityTippedArrow entityTippedArrow = new EntityTippedArrow(this.world, this);
-        Vec3d vec3d = f__class2972.getPositionVector().add(0.0, 3.5, 0.0);
-        entityTippedArrow.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-        Vec3d vec3d2 = entity.getPositionVector();
-        Vec3d vec3d3 = vec3d2.subtract(vec3d).normalize();
-        entityTippedArrow.motionX = vec3d3.x * 4.0;
-        entityTippedArrow.motionY = vec3d3.y * 4.0;
-        entityTippedArrow.motionZ = vec3d3.z * 4.0;
-        GirlEntity.girlPlaySound((GirlEntity)f__class2972, SoundEvents.ENTITY_ARROW_SHOOT, true);
-        this.world.spawnEntity(entityTippedArrow);
-        this.U = true;
+
+        EntityTippedArrow arrow = new EntityTippedArrow(this.world, this);
+        Vec3d spawnPos = galath.getPositionVector().add(0.0, MOMMY_HEAD_OFFSET_Y, 0.0);
+        arrow.setPositionAndUpdate(spawnPos.x, spawnPos.y, spawnPos.z);
+
+        Vec3d targetPos = target.getPositionVector();
+        Vec3d direction = targetPos.subtract(spawnPos).normalize();
+
+        arrow.motionX = direction.x * 4.0;
+        arrow.motionY = direction.y * 4.0;
+        arrow.motionZ = direction.z * 4.0;
+        GirlEntity.girlPlaySound((GirlEntity)galath, SoundEvents.ENTITY_ARROW_SHOOT, true);
+        this.world.spawnEntity(arrow);
+        this.hasFiredArrow = true;
     }
 
     @Override
     public void addPotionEffect(PotionEffect potionEffect) {
+        //do nothing, she is immune
     }
 
-    void u_() {
-        boolean bl = this.java_util_UUID_v() != null;
-        this.setNoGravity(bl);
-        this.noClip = bl;
+    void updatePhysicsState() {
+        boolean attached = this.getMommyUUID() != null;
+        this.setNoGravity(attached);
+        this.noClip = attached;
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return this.java_util_UUID_v() == null;
+        return this.getMommyUUID() == null;
     }
 
     @Override
@@ -312,149 +318,163 @@ extends GirlEntity {
         if (this.isLocallyRegistered()) {
             return super.renderCustomModelTransform(mc, entity, renderEntity, partialTicks);
         }
-        if (!this.boolean_r()) {
+        if (!this.isAttachedToMommy()) {
             return super.renderCustomModelTransform(mc, entity, renderEntity, partialTicks);
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(false);
-        if (f__class2972 == null) {
+
+        GalathEntity galath = this.getMommyGalath(false);
+        if (galath == null) {
             return super.renderCustomModelTransform(mc, entity, renderEntity, partialTicks);
         }
-        ManglelieRenderer.a(f__class2972, partialTicks, entity);
-        return ManglelieRenderer.b(f__class2972, partialTicks);
+        ManglelieRenderer.setupModelPosition(galath, partialTicks, entity);
+        return ManglelieRenderer.getMommyHeadOffset(galath, partialTicks);
     }
 
-    public float float_b(float f) {
-        long l = this.long_e();
-        if (l == -1L) {
+    public float getAttackProgress(float partialTicks) {
+        long startTime = this.getAttackStartTime();
+        if (startTime == -1L) {
             return 0.0f;
         }
-        long l2 = this.world.getTotalWorldTime();
-        float f2 = l2 - l;
-        return (f2 + f) / 28.0f;
+        long currentTime = this.world.getTotalWorldTime();
+        float elapsed = currentTime - startTime;
+        return (elapsed + partialTicks) / 28.0f;
     }
 
     @Nullable
-    public Entity b_7() {
-        int n = this.entityDataManager.get(ab);
-        if (n == -1) {
+    public Entity getTargetEntity() {
+        int id = this.entityDataManager.get(TARGET_ENTITY_ID);
+        if (id == -1) {
             return null;
         }
-        return this.world.getEntityByID(n);
+        return this.world.getEntityByID(id);
     }
 
-    void a(int n) {
-        this.entityDataManager.set(ab, n);
-        this.a(n == -1 ? -1L : this.world.getTotalWorldTime());
+    void setTargetEntityId(int entityID) {
+        this.entityDataManager.set(TARGET_ENTITY_ID, entityID);
+        this.setAttackStartTime(entityID == -1 ? -1L : this.world.getTotalWorldTime());
     }
 
-    void void_d() {
-        Entity entity = this.b_7();
-        if (entity == null) {
+    void validateCombatTarget() {
+        Entity target = this.getTargetEntity();
+        if (target == null) {
             return;
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(true);
-        if (f__class2972 == null) {
-            this.a(-1);
+
+        GalathEntity galath = this.getMommyGalath(true);
+        if (galath == null) {
+            this.setTargetEntityId(-1);
             return;
         }
-        if (!this.boolean_r()) {
-            this.a(-1);
+        if (!this.isAttachedToMommy()) {
+            this.setTargetEntityId(-1);
             return;
         }
-        if (ManglelieEntity.a(entity, f__class2972)) {
-            this.a(-1);
+        if (ManglelieEntity.isInvalidTarget(target, galath)) {
+            this.setTargetEntityId(-1);
         }
     }
 
-    public static boolean a(Entity e, GalathEntity galath) {
-        if (e.isDead) {
+    public static boolean isInvalidTarget(Entity target, GalathEntity galath) {
+        if (target.isDead) {
             return true;
         }
-        if (e.dimension != galath.dimension) {
+        if (target.dimension != galath.dimension) {
             return true;
         }
-        if (!GalathMobTarget.isValidTarget(e)) {
+        if (!GalathMobTarget.isValidTarget(target)) {
             return true;
         }
-        if (!GalathMobTarget.hasLineOfSight(galath.world, galath.getTargetPosition().add(0.0, galath.getEyeHeight(), 0.0), e)) {
+        if (!GalathMobTarget.hasLineOfSight(galath.world, galath.getTargetPosition().add(0.0, galath.getEyeHeight(), 0.0), target)) {
             return true;
         }
-        Vec3d vec3d = e.getPositionVector().subtract(galath.getPositionVector());
-        if (vec3d.x * vec3d.x + vec3d.z * vec3d.z > 225.0) {
+
+        Vec3d diff = target.getPositionVector().subtract(galath.getPositionVector());
+        if (diff.x * diff.x + diff.z * diff.z > 225.0) {
             return true;
         }
-        Float f = GalathEntity.updateRenderPositions(galath, 0.0f);
-        float f2 = f == null ? galath.rotationYawHead : f.floatValue();
-        Vec3d vec3d2 = VectorMath.rotate(vec3d, f2);
+
+        Float headYaw = GalathEntity.updateRenderPositions(galath, 0.0f);
+        float yaw = headYaw == null ? galath.rotationYawHead : headYaw;
+        Vec3d vec3d2 = VectorMath.rotate(diff, yaw);
         return vec3d2.z < 0.0;
     }
 
-    void void_n() {
+    void findCombatTarget() {
         if (this.getAnimationProcessor() != null) {
             return;
         }
-        if (!this.boolean_r()) {
+        if (!this.isAttachedToMommy()) {
             return;
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(true);
-        if (f__class2972 == null) {
+
+        GalathEntity galath = this.getMommyGalath(true);
+        if (galath == null) {
             return;
         }
-        if (f__class2972.playerSheHasSexWith() != null) {
+        if (galath.playerSheHasSexWith() != null) {
             return;
         }
-        if (f__class2972.currentAction() == Action.MASTERBATE) {
+        if (galath.currentAction() == Action.MASTERBATE) {
             return;
         }
-        BlockPos blockPos = f__class2972.getPosition();
-        BlockPos blockPos2 = new BlockPos(15.0, 15.0, 15.0);
-        List<EntityMob> list = this.world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(blockPos.add(blockPos2), blockPos.subtract(blockPos2)));
-        for (EntityMob entityMob : list) {
-            if (ManglelieEntity.a(entityMob, f__class2972)) continue;
-            this.a(entityMob.getEntityId());
+
+        BlockPos pos = galath.getPosition();
+        BlockPos radius = new BlockPos(15.0, 15.0, 15.0);
+        List<EntityMob> mobs = this.world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(pos.add(radius), pos.subtract(radius)));
+        for (EntityMob mob : mobs) {
+            if (ManglelieEntity.isInvalidTarget(mob, galath)) continue;
+            this.setTargetEntityId(mob.getEntityId());
             return;
-        }
+        } //probably it was while cycle, but cfr did it foreach
+
     }
 
-    void void_i() {
-        Entity entity = this.b_7();
-        if (entity == null) {
+    void updateTargetTimeout() {
+        Entity target = this.getTargetEntity();
+        if (target == null) {
             return;
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(true);
-        if (f__class2972 == null) {
+
+        GalathEntity galath = this.getMommyGalath(true);
+        if (galath == null) {
             return;
         }
-        long l = this.long_e();
-        if (l == -1L) {
+
+        long startTime = this.getAttackStartTime();
+        if (startTime == -1L) {
             return;
         }
-        long l2 = this.world.getTotalWorldTime();
-        long l3 = l2 - this.long_e();
-        if ((float)l3 < 60.0f) {
+
+        long currentTime = this.world.getTotalWorldTime();
+        long deltaTime = currentTime - this.getAttackStartTime();
+
+        if ((float)deltaTime < 60.0f) {
             return;
         }
-        this.U = false;
-        this.a(-1);
+
+        this.hasFiredArrow = false;
+        this.setTargetEntityId(-1);
     }
 
-    void void_j() {
-        if (this.Q == null) {
+    void processPendingMommyLink() {
+        if (this.pendingMommyUUID == null) {
             return;
         }
-        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(this.Q);
-        if (!(em_class2582 instanceof GalathEntity)) {
+
+        GirlEntity girl = GirlEntity.getServerGirlEntity(this.pendingMommyUUID);
+        if (!(girl instanceof GalathEntity)) {
             return;
         }
-        GalathEntity f__class2972 = (GalathEntity)em_class2582;
-        this.void_a(this.Q);
-        f__class2972.void_a(this.girlID());
-        this.c(true);
+
+        GalathEntity galath = (GalathEntity)girl;
+        this.setMommyUUID(this.pendingMommyUUID);
+        galath.setManglelieUUID(this.girlID());
+        this.setAttachedToMommy(true);
         this.setCurrentAction(Action.RIDE_MOMMY_HEAD);
-        this.Q = null;
-        if (f__class2972.currentAction() == Action.HUG_MANG) {
-            f__class2972.setAnchored(false);
-            f__class2972.setCurrentAction((Action)null);
+        this.pendingMommyUUID = null;
+        if (galath.currentAction() == Action.HUG_MANG) {
+            galath.setAnchored(false);
+            galath.setCurrentAction((Action)null);
         }
     }
 
@@ -469,21 +489,23 @@ extends GirlEntity {
         super.setCurrentAction(action);
     }
 
-    void void_w() {
-        if (!this.boolean_r() || Action.a((GirlEntity)this, Action.THREESOME_SLOW, Action.THREESOME_CUM, Action.THREESOME_FAST)) {
+    void updatePositionSyncWithMommy() {
+        if (!this.isAttachedToMommy() || Action.a((GirlEntity)this, Action.THREESOME_SLOW, Action.THREESOME_CUM, Action.THREESOME_FAST)) {
             return;
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(true);
-        if (f__class2972 == null) {
+        GalathEntity galath = this.getMommyGalath(true);
+        if (galath == null) {
             return;
         }
-        if (f__class2972.isDead || !this.girlID().equals(f__class2972.aF())) {
+
+        if (galath.isDead || !this.girlID().equals(galath.getManglelieUUID())) {
             Main.LOGGER.warn("A dead mommy has been saved onto a mang. Deleting her and creating a new one");
             this.world.removeEntity(this);
             return;
         }
+
         this.setYawRotation(0.0f);
-        this.setTargetPosition(f__class2972.getPositionVector());
+        this.setTargetPosition(galath.getPositionVector());
         this.setAnchored(true);
     }
 
@@ -493,39 +515,43 @@ extends GirlEntity {
     }
 
     @Override
-    public Vec3d net_minecraft_util_math_Vec3d_a(Vec3d vec3d, float f) {
-        if (!this.boolean_r()) {
-            return vec3d;
+    public Vec3d getInterpolatedRenderPos(Vec3d pos, float partialTicks) {
+        if (!this.isAttachedToMommy()) {
+            return pos;
         }
         if (ManglelieModel.isThreesomeAction(this)) {
-            return vec3d;
+            return pos;
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(false);
-        if (f__class2972 == null) {
-            return vec3d;
+
+        GalathEntity galath = this.getMommyGalath(false);
+        if (galath == null) {
+            return pos;
         }
-        return ManglelieRenderer.b(f__class2972, f);
+        return ManglelieRenderer.getMommyHeadOffset(galath, partialTicks);
     }
 
-    void void_c() {
-        if (this.boolean_r()) {
+    void updateNavigationToGalath() {
+        if (this.isAttachedToMommy()) {
             return;
         }
-        if (this.java_util_UUID_v() != null) {
+        if (this.getMommyUUID() != null) {
             return;
         }
-        BlockPos blockPos = this.getPosition();
-        BlockPos blockPos2 = blockPos.add(-15.0, -15.0, -15.0);
-        BlockPos blockPos3 = blockPos.add(15.0, 15.0, 15.0);
-        AxisAlignedBB axisAlignedBB = new AxisAlignedBB(blockPos2, blockPos3);
-        List<GalathEntity> list = this.world.getEntitiesWithinAABB(GalathEntity.class, axisAlignedBB);
-        Entity entity = null;
-        for (GalathEntity object2 : list) {
-            if (object2.isDead || object2.com_trolmastercard_sexmod_f8_class293_a(true) != null || !object2.onGround) continue;
-            entity = object2;
+
+        BlockPos pos = this.getPosition();
+        BlockPos startPos = pos.add(-15.0, -15.0, -15.0);
+        BlockPos endPos = pos.add(15.0, 15.0, 15.0);
+        AxisAlignedBB searchBox = new AxisAlignedBB(startPos, endPos);
+
+        List<GalathEntity> galaths = this.world.getEntitiesWithinAABB(GalathEntity.class, searchBox);
+
+        Entity targetGalath = null;
+        for (GalathEntity galath : galaths) {
+            if (galath.isDead || galath.getManglelieUUID(true) != null || !galath.onGround) continue;
+            targetGalath = galath;
             break;
         }
-        if (entity == null) {
+        if (targetGalath == null) {
             if (this.currentAction() == Action.RUN) {
                 this.setCurrentAction((Action)null);
                 this.getNavigator().clearPath();
@@ -536,127 +562,129 @@ extends GirlEntity {
             return;
         }
         this.setCurrentAction(Action.RUN);
-        Vec3d vec3d = this.getPositionVector();
-        Vec3d vec3d2 = entity.getPositionVector();
-        Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        float f = (float) TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) - 90.0f;
-        this.setYawRotation(f);
+
+        Vec3d mangPos = this.getPositionVector();
+        Vec3d galPos = targetGalath.getPositionVector();
+        Vec3d diff = galPos.subtract(mangPos);
+        float yaw = (float) TrigMath.toDegrees(Math.atan2(diff.z, diff.x)) - 90.0f;
+        this.setYawRotation(yaw);
         this.pathNavigator = this.getNavigator();
         this.pathNavigator.clearPath();
-        this.pathNavigator.tryMoveToEntityLiving(entity, 0.65f);
+        this.pathNavigator.tryMoveToEntityLiving(targetGalath, 0.65f);
     }
 
-    boolean a(Entity entity, float f) {
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(f == 1.0f);
-        if (f__class2972 == null) {
+    public boolean checkRelativeHandPosition(Entity entity, float partialTicks) {
+        GalathEntity galath = this.getMommyGalath(partialTicks == 1.0f);
+        if (galath == null) {
             return false;
         }
-        Vec3d vec3d = ak_class32.getInterpolatedPosition(this, f);
-        return this.a(ak_class32.getInterpolatedPosition(entity, f).subtract(vec3d), f__class2972, f);
+        Vec3d myPos = Utils.getInterpolatedPosition(this, partialTicks);
+        return this.isVectorRightOfMommy(Utils.getInterpolatedPosition(entity, partialTicks).subtract(myPos), galath, partialTicks);
     }
 
-    boolean boolean_a(Vec3d vec3d, float f) {
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(f == 1.0f);
-        if (f__class2972 == null) {
+    public boolean isVectorRightOfMommy(Vec3d vec, float partialTicks) {
+        GalathEntity galath = this.getMommyGalath(partialTicks == 1.0f);
+        if (galath == null) {
             return false;
         }
-        Vec3d vec3d2 = ak_class32.getInterpolatedPosition(this, f);
-        return this.a(vec3d.subtract(vec3d2), f__class2972, f);
+        Vec3d myPos = Utils.getInterpolatedPosition(this, partialTicks);
+        return this.isVectorRightOfMommy(vec.subtract(myPos), galath, partialTicks);
     }
 
-    boolean a(Vec3d vec3d, GalathEntity f__class2972, float f) {
-        Vec3d vec3d2 = VectorMath.rotate(vec3d, Reference.LerpAngleDegrees(f__class2972.prevRotationYawHead, f__class2972.rotationYawHead, (double)f));
-        return vec3d2.x > 0.35;
+    boolean isVectorRightOfMommy(Vec3d vec, GalathEntity galath, float partialTicks) {
+        Vec3d rotated = VectorMath.rotate(vec, Reference.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks));
+        return rotated.x > 0.35;
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
         if (this.world.isRemote) {
-            this.void_m();
+            this.updateClientLookAngles();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_m() {
+    void updateClientLookAngles() {
         if ((float)Minecraft.getMinecraft().player.ticksExisted % 7.0f != 0.0f) {
             return;
         }
-        if (!ManglelieRenderer.b_4(this)) {
+        if (!ManglelieRenderer.hasValidModel(this)) {
             return;
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(false);
-        if (f__class2972 == null) {
+        GalathEntity galath = this.getMommyGalath(false);
+        if (galath == null) {
             return;
         }
-        Entity entity = this.net_minecraft_entity_Entity_o();
-        if (entity == null) {
-            this.af = 0.0f;
-            this.W = 0.0f;
+        Entity target = this.getNearestPlayerOrTarget();
+        if (target == null) {
+            this.targetHeadYaw = 0.0f;
+            this.targetHeadPitch = 0.0f;
             return;
         }
-        Vec3d vec3d = entity.getPositionVector().add(0.0, entity.getEyeHeight(), 0.0);
-        Vec3d vec3d2 = f__class2972.getPositionVector().add(f__class2972.getCachedBoneOffset("mangPos")).add(this.getCachedBoneOffset("head"));
-        Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        float f = (float)(TrigMath.toDegrees(Math.atan2(vec3d3.z, vec3d3.x)) + 90.0);
-        Float f2 = GalathEntity.updateRenderPositions(f__class2972, 0.0f);
-        f -= f__class2972.rotationYawHead;
-        if (f2 != null) {
-            f -= f2.floatValue();
+        Vec3d targetEyePos = target.getPositionVector().add(0.0, target.getEyeHeight(), 0.0);
+        Vec3d mangleHeadPos = galath.getPositionVector().add(galath.getCachedBoneOffset("mangPos")).add(this.getCachedBoneOffset("head"));
+        Vec3d diff = mangleHeadPos.subtract(targetEyePos);
+
+        float yaw = (float)(TrigMath.toDegrees(Math.atan2(diff.z, diff.x)) + 90.0);
+        Float galathHeadPos = GalathEntity.updateRenderPositions(galath, 0.0f);
+        yaw -= galath.rotationYawHead;
+        if (galathHeadPos != null) {
+            yaw -= galathHeadPos;
         }
-        this.af = Math.abs(WorldUtils.CalculateAngleDifferences(0.0f, f)) < 80.0f ? -TrigMath.toRadians(f) : 0.0f;
-        this.W = this.af == 0.0f ? 0.0f : (float) Utils.clamp(-vec3d3.y / 2.0, -0.75, 0.75);
+        this.targetHeadYaw = Math.abs(WorldUtils.CalculateAngleDifferences(0.0f, yaw)) < 80.0f ? -TrigMath.toRadians(yaw) : 0.0f;
+        this.targetHeadPitch = this.targetHeadYaw == 0.0f ? 0.0f : (float) com.trolmastercard.sexmod.util.Utils.clamp(-diff.y / 2.0, -0.75, 0.75);
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float f) {
-        if (damageSource == DamageSource.OUT_OF_WORLD) {
-            return super.attackEntityFrom(damageSource, f);
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        if (source == DamageSource.OUT_OF_WORLD) {
+            return super.attackEntityFrom(source, amount);
         }
-        GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(true);
-        if (f__class2972 == null) {
-            return super.attackEntityFrom(damageSource, f);
+        GalathEntity galath = this.getMommyGalath(true);
+        if (galath == null) {
+            return super.attackEntityFrom(source, amount);
         }
-        f__class2972.attackEntityFrom(damageSource, f);
+        galath.attackEntityFrom(source, amount); //Mangle dies second. Galath dies first. This makes sense.
         return false;
     }
 
     @Nullable
-    Entity net_minecraft_entity_Entity_o() {
-        Entity entity = this.b_7();
-        if (entity != null) {
-            return entity;
+    Entity getNearestPlayerOrTarget() {
+        Entity target = this.getTargetEntity();
+        if (target != null) {
+            return target;
         }
-        for (EntityPlayer entityPlayer : this.world.playerEntities) {
-            float f = entityPlayer.getDistance(this);
-            if (f > 6.0f || entity != null && !(entity.getDistance(this) > f)) continue;
-            entity = entityPlayer;
+        for (EntityPlayer player : this.world.playerEntities) {
+            float dist = player.getDistance(this);
+            if (dist > 6.0f || target != null && !(target.getDistance(this) > dist)) continue;
+            target = player;
         }
-        return entity;
+        return target;
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        UUID uUID = this.java_util_UUID_v();
-        nbt.setString(ac, uUID == null ? "" : uUID.toString());
-        nbt.setBoolean("sexmod:iswild", this.aq);
-        if (this.S) {
+        UUID uUID = this.getMommyUUID();
+        nbt.setString(NBT_MOMMY_KEY, uUID == null ? "" : uUID.toString());
+        nbt.setBoolean("sexmod:iswild", this.isWild);
+        if (this.isDespawnedLocal) {
             nbt.setBoolean("sexmod:despawned", true);
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nBTTagCompound) {
-        super.readFromNBT(nBTTagCompound);
-        String string = nBTTagCompound.getString(ac);
-        if (!"".equals(string)) {
-            this.Q = UUID.fromString(string);
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+        String uuidStr = nbt.getString(NBT_MOMMY_KEY);
+        if (!uuidStr.isEmpty()) {
+            this.pendingMommyUUID = UUID.fromString(uuidStr);
         }
-        if (nBTTagCompound.getBoolean("sexmod:despawned")) {
-            this.aa = true;
+        if (nbt.getBoolean("sexmod:despawned")) {
+            this.isDespawned = true;
         }
-        this.aq = nBTTagCompound.getBoolean("sexmod:iswild");
+        this.isWild = nbt.getBoolean("sexmod:iswild");
     }
 
     @Override
@@ -667,15 +695,15 @@ extends GirlEntity {
     @Override
     public void setCustomModelKey(String string) {
         super.setCustomModelKey(string);
-        bj_class84.a(this);
+        CustomModelHandler.registerGalathMangModel(this);
     }
 
-    void void_f() {
-        if (this.Z) {
+    void initCustomModel() {
+        if (this.customModelLoaded) {
             return;
         }
-        this.setCustomModelKey(bj_class84.c(this));
-        this.Z = true;
+        this.setCustomModelKey(CustomModelHandler.c(this));
+        this.customModelLoaded = true;
     }
 
     @Override
@@ -687,14 +715,14 @@ extends GirlEntity {
     @Override
     protected Action CumAction(Action action) {
         if (Action.a(action, Action.THREESOME_FAST, Action.THREESOME_SLOW)) {
-            this.N = true;
+            this.isThreesomeTransitioning = true;
         }
         return null;
     }
 
     @Override
     public void ResetNPCTasks() {
-        if (this.boolean_r()) {
+        if (this.isAttachedToMommy()) {
             this.setCurrentAction(Action.RIDE_MOMMY_HEAD);
             this.setYawRotation(0.0f);
             this.entityDataManager.setDirty(YAW_ROTATION);
@@ -706,73 +734,82 @@ extends GirlEntity {
         if (!super.getCanSpawnHere()) {
             return false;
         }
-        BlockPos blockPos = this.getPosition();
-        ArrayList<BlockPos> arrayList = new ArrayList<BlockPos>();
-        arrayList.addAll(fq_class325.c);
-        arrayList.addAll(fq_class325.b);
-        for (BlockPos blockPos2 : arrayList) {
-            if (!(Math.sqrt(blockPos.distanceSq(blockPos2)) < 700.0)) continue;
+
+        BlockPos currentPos = this.getPosition();
+        ArrayList<BlockPos> restrictedPositions = new ArrayList<BlockPos>();
+        restrictedPositions.addAll(StructureTracker.STRUCTURE_POSITIONS);
+        restrictedPositions.addAll(StructureTracker.TEMP_POSITIONS);
+        for (BlockPos pos : restrictedPositions) {
+            if (!(Math.sqrt(currentPos.distanceSq(pos)) < 700.0)) continue;
             return false;
         }
-        fq_class325.addPosInList(blockPos, fq_class325.b);
+        StructureTracker.addPosInList(currentPos, StructureTracker.TEMP_POSITIONS);
         return true;
     }
 
     @Override
     protected boolean handleActionAnimationOverrides(Action action, String animName, boolean flag, AnimationEvent event) {
         if (action == Action.THREESOME_CUM) {
-            this.N = false;
-            this.Y = false;
-            this.M = false;
-            this.an = 2;
+            this.isThreesomeTransitioning = false;
+            this.isThreesomeHard = false;
+            this.isThreesomeSlowBack = false;
+            this.cockStage = 2;
             this.resetCameraAndPhysics();
-            GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(false);
-            if (f__class2972 != null) {
-                f__class2972.resetCameraAndPhysics();
-                ga_class358.a(f__class2972);
+
+            GalathEntity galath = this.getMommyGalath(false);
+            if (galath != null) {
+                galath.resetCameraAndPhysics();
+                ParticlesManager.spawnSexParticles(galath);
             }
-            ga_class358.a(this);
+            ParticlesManager.spawnSexParticles(this);
             return true;
         }
-        if (this.N && action == Action.THREESOME_FAST) {
+
+        if (this.isThreesomeTransitioning && action == Action.THREESOME_FAST) {
             this.setCurrentAction(Action.THREESOME_CUM);
             this.createAnimation("animation.shared.double_holding_cum", true, event, true);
-            GalathEntity f__class2973 = this.com_trolmastercard_sexmod_f__class297_a(false);
-            if (f__class2973 != null) {
-                f__class2973.setCurrentAction(Action.MASTERBATE_SITTING_CUM);
+
+            GalathEntity galath = this.getMommyGalath(false);
+            if (galath != null) {
+                galath.setCurrentAction(Action.MASTERBATE_SITTING_CUM);
             }
             return true;
         }
-        if ((this.N || flag) && action == Action.THREESOME_SLOW) {
-            this.Y = false;
+
+        if ((this.isThreesomeTransitioning || flag) && action == Action.THREESOME_SLOW) {
+            this.isThreesomeHard = false;
             this.setCurrentAction(Action.THREESOME_FAST);
             this.createAnimation("animation.shared.double_holding_soft", true, event, true);
-            GalathEntity f__class2974 = this.com_trolmastercard_sexmod_f__class297_a(false);
-            if (f__class2974 != null) {
-                f__class2974.ak();
+            GalathEntity galath = this.getMommyGalath(false);
+            if (galath != null) {
+                galath.startFastAction();
             }
             return true;
         }
-        if (this.N) {
+
+        if (this.isThreesomeTransitioning) {
             return false;
         }
-        if (flag && !this.Y && action == Action.THREESOME_FAST) {
-            this.Y = true;
+
+        if (flag && !this.isThreesomeHard && action == Action.THREESOME_FAST) {
+            this.isThreesomeHard = true;
             this.createAnimation("animation.shared.double_holding_hard", true, event, true);
             return true;
         }
+
         if (!flag && action == Action.THREESOME_FAST) {
-            this.M = true;
+            this.isThreesomeSlowBack = true;
             this.setCurrentAction(Action.THREESOME_SLOW);
             this.createAnimation("animation.shared.double_holding_back", true, event, true);
-            GalathEntity f__class2975 = this.com_trolmastercard_sexmod_f__class297_a(false);
-            if (f__class2975 != null) {
-                f__class2975.void_a();
+            GalathEntity galath = this.getMommyGalath(false);
+            if (galath != null) {
+                galath.startSlowAction();
             }
             return true;
         }
-        if (this.M && action == Action.THREESOME_SLOW) {
-            this.M = false;
+
+        if (this.isThreesomeSlowBack && action == Action.THREESOME_SLOW) {
+            this.isThreesomeSlowBack = false;
             this.createAnimation("animation.shared.double_holding_slow", true, event, true);
             return true;
         }
@@ -781,20 +818,20 @@ extends GirlEntity {
 
     @Override
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        AnimationController animationController = event.getController();
-        if (this.eyesController == animationController) {
+        AnimationController controller = event.getController();
+        if (this.eyesController == controller) {
             if (this.getAnimationProcessor() == null) {
                 return PlayState.STOP;
             }
             this.createAnimation("animation.manglelie.angry_face", true, event);
             return PlayState.CONTINUE;
         }
-        if (this.movementController == animationController) {
-            if (this.currentAction() != Action.NULL || this.boolean_r()) {
+        if (this.movementController == controller) {
+            if (this.currentAction() != Action.NULL || this.isAttachedToMommy()) {
                 return PlayState.STOP;
             }
             if (Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ) > 0.0) {
-                if (this.entityDataManager.get(ar).booleanValue()) {
+                if (this.entityDataManager.get(IS_SCARED)) {
                     this.createAnimation("animation.manglelie.scared_run", true, event);
                 } else {
                     this.createAnimation("animation.manglelie.walk", true, event);
@@ -818,7 +855,7 @@ extends GirlEntity {
                 break;
             }
             case THREESOME_SLOW: {
-                if (this.M) {
+                if (this.isThreesomeSlowBack) {
                     this.createAnimation("animation.shared.double_holding_back", true, event);
                     break;
                 }
@@ -826,7 +863,7 @@ extends GirlEntity {
                 break;
             }
             case THREESOME_FAST: {
-                if (this.Y) {
+                if (this.isThreesomeHard) {
                     this.playRandomizedAnimation("animation.shared.double_holding_hard", 3, 0.33f, event);
                     break;
                 }
@@ -853,15 +890,15 @@ extends GirlEntity {
                     break;
                 }
                 case "cs0": {
-                    this.an = 0;
+                    this.cockStage = 0;
                     break;
                 }
                 case "cs1": {
-                    this.an = 1;
+                    this.cockStage = 1;
                     break;
                 }
                 case "cs2": {
-                    this.an = 2;
+                    this.cockStage = 2;
                     break;
                 }
                 case "sexui": {
@@ -874,7 +911,7 @@ extends GirlEntity {
                     this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                 }
                 case "doubleSemen": {
-                    ga_class358.a(new DynamicTrailRenderer(10, em_class2582 -> {
+                    ParticlesManager.a(new DynamicTrailRenderer(10, em_class2582 -> {
                         Vec3d vec3d = em_class2582.getBoneWorldPosition("semenEmitter");
                         Vec3d vec3d2 = em_class2582.getBoneWorldPosition("semenDir");
                         return vec3d.subtract(vec3d2).normalize();

@@ -23,7 +23,7 @@ public class bt_class99 extends EntityAIAvoidEntity<EntityPlayer> {
     }
 
     boolean a() {
-        if (this.manglelie.java_util_UUID_v() != null) {
+        if (this.manglelie.getMommyUUID() != null) {
             return true;
         }
         BlockPos blockPos = this.manglelie.getPosition();
@@ -54,13 +54,13 @@ public class bt_class99 extends EntityAIAvoidEntity<EntityPlayer> {
 
     @Override
     public void startExecuting() {
-        this.manglelie.getDataManager().set(ManglelieEntity.ar, true);
+        this.manglelie.getDataManager().set(ManglelieEntity.IS_SCARED, true);
         super.startExecuting();
     }
 
     @Override
     public void resetTask() {
-        this.manglelie.getDataManager().set(ManglelieEntity.ar, false);
+        this.manglelie.getDataManager().set(ManglelieEntity.IS_SCARED, false);
         super.resetTask();
     }
 

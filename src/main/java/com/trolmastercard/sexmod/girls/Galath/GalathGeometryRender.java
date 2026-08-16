@@ -224,7 +224,7 @@ public class GalathGeometryRender {
         }
     }
 
-    public static void setupRenderTranslations(Minecraft mc, GirlEntity entity1, float partialTicks) {
+    public static void setupRenderTranslations(Minecraft mc, GirlEntity girl, float partialTicks) {
         EntityPlayerSP player = mc.player;
         if (player == null) {
             return;
@@ -232,11 +232,11 @@ public class GalathGeometryRender {
 
         GlStateManager.translate(0.0, 0.01, 0.0);
 
-        Entity renderBase = ((GirlRenderer<?>) Objects.requireNonNull(mc.getRenderManager().getEntityRenderObject(entity1))).resolveTargetEntity(entity1);
-        Vec3d girlPos = entity1.isAnchored() ? entity1.getTargetPosition() : Reference.LerpVec3d(new Vec3d(renderBase.lastTickPosX, renderBase.lastTickPosY, renderBase.lastTickPosZ), renderBase.getPositionVector(), (double)partialTicks);
+        Entity renderBase = ((GirlRenderer<?>) Objects.requireNonNull(mc.getRenderManager().getEntityRenderObject(girl))).resolveTargetEntity(girl);
+        Vec3d girlPos = girl.isAnchored() ? girl.getTargetPosition() : Reference.LerpVec3d(new Vec3d(renderBase.lastTickPosX, renderBase.lastTickPosY, renderBase.lastTickPosZ), renderBase.getPositionVector(), (double)partialTicks);
         Vec3d playerPos = Reference.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), (double)partialTicks);
         Vec3d translationVec = girlPos.subtract(playerPos);
-        translationVec = entity1.net_minecraft_util_math_Vec3d_a(translationVec, partialTicks);
+        translationVec = girl.getInterpolatedRenderPos(translationVec, partialTicks);
         GlStateManager.translate(translationVec.x, translationVec.y, translationVec.z);
     }
 }

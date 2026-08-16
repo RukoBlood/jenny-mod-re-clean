@@ -22,22 +22,22 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class bj_class84 extends WorldSavedData {
+public class CustomModelHandler extends WorldSavedData {
     final static String a = "sexmod:static_custom_model_manager";
     final static String d = "sexmod:static_custom_model_manager";
     static public HashMap<UUID, String> c = new HashMap();
     static public HashMap<UUID, String> b = new HashMap();
 
-    public bj_class84() {
+    public CustomModelHandler() {
         super("sexmod:static_custom_model_manager");
     }
 
-    public bj_class84(String string) {
+    public CustomModelHandler(String string) {
         super("sexmod:static_custom_model_manager");
     }
 
     public static String c(GirlEntity em_class2582) {
-        String string = bj_class84.b(em_class2582);
+        String string = CustomModelHandler.b(em_class2582);
         if (string == null) {
             return "";
         }
@@ -54,13 +54,13 @@ public class bj_class84 extends WorldSavedData {
             return c.get(uUID2);
         }
         if (girl instanceof ManglelieEntity) {
-            UUID uUID = GalathMangTracker.f(((ManglelieEntity)girl).java_util_UUID_v());
+            UUID uUID = GalathMangTracker.f(((ManglelieEntity)girl).getMommyUUID());
             return b.get(uUID == null ? girl.girlID() : uUID);
         }
         return null;
     }
 
-    public static void a(GirlEntity em_class2582) {
+    public static void registerGalathMangModel(GirlEntity em_class2582) {
         if (em_class2582 instanceof GalathEntity) {
             UUID uUID = em_class2582.girlID();
             UUID uUID2 = GalathMangTracker.f(uUID);
@@ -71,7 +71,7 @@ public class bj_class84 extends WorldSavedData {
             return;
         }
         if (em_class2582 instanceof ManglelieEntity) {
-            UUID uUID = GalathMangTracker.f(((ManglelieEntity)em_class2582).java_util_UUID_v());
+            UUID uUID = GalathMangTracker.f(((ManglelieEntity)em_class2582).getMommyUUID());
             b.put(uUID == null ? em_class2582.girlID() : uUID, em_class2582.getCustomModelKey());
         }
     }
@@ -86,7 +86,7 @@ public class bj_class84 extends WorldSavedData {
     @SubscribeEvent
     public void a(WorldEvent.Load load) {
         World world = load.getWorld();
-        world.getMapStorage().getOrLoadData(bj_class84.class, "sexmod:static_custom_model_manager");
+        world.getMapStorage().getOrLoadData(CustomModelHandler.class, "sexmod:static_custom_model_manager");
     }
 
     @Override

@@ -44,6 +44,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.util.interfaces.IWingsOwner;
 import com.trolmastercard.sexmod.world.NameStorage;
 import com.trolmastercard.sexmod.world.WorldUtils;
@@ -216,7 +217,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     final static public DataParameter<Boolean> IS_FLYING_FLAG = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(118);
     final static public DataParameter<Float> SPIN_YAW_FACTOR = EntityDataManager.createKey(GalathEntity.class, DataSerializers.FLOAT).getSerializer().createKey(119);
     final static public DataParameter<Boolean> HIDE_EFFECTS_FLAG = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(120);
-    final static public DataParameter<String> a4 = EntityDataManager.createKey(GalathEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
+    final static public DataParameter<String> MANGLELIE_UUID = EntityDataManager.createKey(GalathEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
     final static public DataParameter<Boolean> bT = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(122);
     final static public double b0 = 0.2;
     final static public float bS = 5.0f;
@@ -317,7 +318,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     @Override
     public void setCustomModelKey(String string) {
         super.setCustomModelKey(string);
-        bj_class84.a(this);
+        CustomModelHandler.registerGalathMangModel(this);
     }
 
     @Override
@@ -327,7 +328,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
 
     @Override
     public float getNameTagHeightOffset() {
-        return this.aF() == null ? 0.5f : 1.35f;
+        return this.getManglelieUUID() == null ? 0.5f : 1.35f;
     }
 
     @Override
@@ -389,7 +390,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         this.entityDataManager.register(IS_FLYING_FLAG, false);
         this.entityDataManager.register(SPIN_YAW_FACTOR, 0.0f);
         this.entityDataManager.register(HIDE_EFFECTS_FLAG, false);
-        this.entityDataManager.register(a4, "");
+        this.entityDataManager.register(MANGLELIE_UUID, "");
         this.entityDataManager.register(bT, false);
     }
 
@@ -438,28 +439,28 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     }
 
     @Nullable
-    public UUID aF() {
-        String string = this.entityDataManager.get(a4);
-        if ("".equals(string)) {
+    public UUID getManglelieUUID() {
+        String string = this.entityDataManager.get(MANGLELIE_UUID);
+        if (string.isEmpty()) {
             return null;
         }
         try {
             return UUID.fromString(string);
-        } catch (Exception exception) {
+        } catch (Exception e) {
             return null;
         }
     }
 
     @Nullable
-    public ManglelieEntity com_trolmastercard_sexmod_f8_class293_a(boolean bl) {
-        GirlEntity girlEntity;
-        UUID uUID = this.aF();
+    public ManglelieEntity getManglelieUUID(boolean bl) {
+        //GirlEntity girlEntity;
+        UUID uUID = this.getManglelieUUID();
         if (uUID == null) {
             return null;
         }
-        GirlEntity em_class2583 = girlEntity = bl ? GalathEntity.getServerGirlEntity(uUID) : GalathEntity.getClientGirlEntity(uUID);
-        if (girlEntity instanceof ManglelieEntity) {
-            return (ManglelieEntity)girlEntity;
+        GirlEntity girl = bl ? GalathEntity.getServerGirlEntity(uUID) : GalathEntity.getClientGirlEntity(uUID);
+        if (girl instanceof ManglelieEntity) {
+            return (ManglelieEntity)girl;
         }
         return null;
     }
@@ -469,18 +470,18 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         if (!(em_class2582 instanceof GalathEntity)) {
             return null;
         }
-        return ((GalathEntity)em_class2582).com_trolmastercard_sexmod_f8_class293_a(bl);
+        return ((GalathEntity)em_class2582).getManglelieUUID(bl);
     }
 
-    public void void_a(@Nullable UUID uUID) {
-        this.entityDataManager.set(a4, uUID == null ? "" : uUID.toString());
+    public void setManglelieUUID(@Nullable UUID uUID) {
+        this.entityDataManager.set(MANGLELIE_UUID, uUID == null ? "" : uUID.toString());
     }
 
     public void aC() {
         this.bA = true;
-        ManglelieEntity f8_class2932 = this.com_trolmastercard_sexmod_f8_class293_a(true);
-        if (f8_class2932 != null) {
-            f8_class2932.void_q();
+        ManglelieEntity manglelie = this.getManglelieUUID(true);
+        if (manglelie != null) {
+            manglelie.markDespawned();
         }
     }
 
@@ -654,7 +655,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     }
 
     static boolean a(BlockPos blockPos, World world) {
-        for (BlockPos object : fq_class325.c) {
+        for (BlockPos object : StructureTracker.STRUCTURE_POSITIONS) {
             if (!(Math.sqrt(blockPos.distanceSq(object)) < 1000.0)) continue;
             return false;
         }
@@ -938,7 +939,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         if (this.bK) {
             return;
         }
-        this.setCustomModelKey(bj_class84.c(this));
+        this.setCustomModelKey(CustomModelHandler.c(this));
         this.bK = true;
     }
 
@@ -984,7 +985,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         this.void_m();
-        if (this.aF() == null) {
+        if (this.getManglelieUUID() == null) {
             this.aJ();
         } else {
             this.am();
@@ -1112,7 +1113,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         if (!this.onGround) {
             return;
         }
-        if (this.aF() != null) {
+        if (this.getManglelieUUID() != null) {
             return;
         }
         if (this.currentAction() == Action.HUG_MANG) {
@@ -1128,7 +1129,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         List<ManglelieEntity> list = this.world.getEntitiesWithinAABB(ManglelieEntity.class, axisAlignedBB);
         Entity entity = null;
         for (ManglelieEntity object2 : list) {
-            if (object2.isDead || object2.com_trolmastercard_sexmod_f__class297_a(true) != null) continue;
+            if (object2.isDead || object2.getMommyGalath(true) != null) continue;
             entity = object2;
             break;
         }
@@ -1148,8 +1149,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             this.motionZ = 0.0;
             this.setTargetPosition(this.getPositionVector());
             this.setAnchored(true);
-            this.void_a(((GirlEntity)entity).girlID());
-            ((ManglelieEntity)entity).void_a(this.girlID());
+            this.setManglelieUUID(((GirlEntity)entity).girlID());
+            ((ManglelieEntity)entity).setMommyUUID(this.girlID());
             ((ManglelieEntity)entity).setCurrentAction(Action.RIDE_MOMMY_HEAD);
             GalathMangTracker.e(this.girlID());
             return;
@@ -1374,11 +1375,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
 
     void al() {
         this.setAnchored(false);
-        ManglelieEntity f8_class2932 = this.com_trolmastercard_sexmod_f8_class293_a(true);
+        ManglelieEntity f8_class2932 = this.getManglelieUUID(true);
         if (f8_class2932 == null) {
             return;
         }
-        f8_class2932.c(true);
+        f8_class2932.setAttachedToMommy(true);
     }
 
     void GiveCoinToPlayer() {
@@ -1460,16 +1461,16 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     }
 
     public boolean boolean_v() {
-        if (this.com_trolmastercard_sexmod_f8_class293_a(true) != null) {
+        if (this.getManglelieUUID(true) != null) {
             return false;
         }
-        ManglelieEntity f8_class2932 = new ManglelieEntity(this.world);
-        this.void_a(f8_class2932.girlID());
-        f8_class2932.void_a(this.girlID());
-        f8_class2932.c(true);
-        f8_class2932.setCurrentAction(Action.RIDE_MOMMY_HEAD);
-        f8_class2932.setPositionAndUpdate(this.posX, this.posY, this.posZ);
-        this.world.spawnEntity(f8_class2932);
+        ManglelieEntity manglelie = new ManglelieEntity(this.world);
+        this.setManglelieUUID(manglelie.girlID());
+        manglelie.setMommyUUID(this.girlID());
+        manglelie.setAttachedToMommy(true);
+        manglelie.setCurrentAction(Action.RIDE_MOMMY_HEAD);
+        manglelie.setPositionAndUpdate(this.posX, this.posY, this.posZ);
+        this.world.spawnEntity(manglelie);
         return true;
     }
 
@@ -1837,7 +1838,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
     @Override
     @SideOnly(value=Side.CLIENT)
     public GirlEntity com_trolmastercard_sexmod_em_class258_E() {
-        ManglelieEntity f8_class2932 = this.com_trolmastercard_sexmod_f8_class293_a(false);
+        ManglelieEntity f8_class2932 = this.getManglelieUUID(false);
         if (f8_class2932 == null) {
             return super.com_trolmastercard_sexmod_em_class258_E();
         }
@@ -1868,7 +1869,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return false;
         }
         this.PlaySound(SoundsHandler.GIRLS_GALATH_HUH, new int[0]);
-        String[] stringArray = !entityPlayer.onGround ? new String[]{"ride"} : (this.com_trolmastercard_sexmod_f8_class293_a(false) == null ? new String[]{"cowgirl", "anal", "ride"} : new String[]{"cowgirl", "anal", "threesome", "ride"});
+        String[] stringArray = !entityPlayer.onGround ? new String[]{"ride"} : (this.getManglelieUUID(false) == null ? new String[]{"cowgirl", "anal", "ride"} : new String[]{"cowgirl", "anal", "threesome", "ride"});
         if (this.world.isRemote) {
             GalathEntity.openInventoryGui(entityPlayer, this.com_trolmastercard_sexmod_em_class258_af(), stringArray, false);
         }
@@ -1910,7 +1911,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
             return;
         }
         if ("threesome".equals(string)) {
-            ManglelieEntity f8_class2932 = this.com_trolmastercard_sexmod_f8_class293_a(false);
+            ManglelieEntity f8_class2932 = this.getManglelieUUID(false);
             if (f8_class2932 == null) {
                 return;
             }
@@ -2160,7 +2161,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         }
     }
 
-    public void ak() {
+    public void startFastAction() {
         if (this.currentAction() == Action.MASTERBATE_SITTING) {
             return;
         }
@@ -2168,7 +2169,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
         this.setCurrentAction(Action.MASTERBATE_SITTING);
     }
 
-    public void void_a() {
+    public void startSlowAction() {
         this.a5 = true;
         this.setCurrentAction(Action.PUSSY_LICKING);
     }
@@ -2585,7 +2586,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                     break;
                 }
                 case "clearcum": {
-                    ga_class358.a(this);
+                    ParticlesManager.spawnSexParticles(this);
                     break;
                 }
                 case "setCamCorrupt": {
@@ -2607,7 +2608,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 }
                 case "masterbateCumming": {
                     if (!FutaCommand.enabled) break;
-                    ga_class358.a(new DynamicTrailRenderer(90, girlEntity -> {
+                    ParticlesManager.a(new DynamicTrailRenderer(90, girlEntity -> {
                         Vec3d vec3d = girlEntity.getBoneWorldPosition("futaCockTip");
                         Vec3d vec3d2 = girlEntity.getBoneWorldPosition("futaCockTipDirHelp");
                         return vec3d.subtract(vec3d2).normalize();
@@ -2615,12 +2616,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                     break;
                 }
                 case "creampie": {
-                    ga_class358.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
+                    ParticlesManager.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
                     // TODO fallthrough looks intentional
                 }
                 case "creampieGalath": {
                     if (FutaCommand.enabled) {
-                        ga_class358.a(new DynamicTrailRenderer(130, em_class2582 -> {
+                        ParticlesManager.a(new DynamicTrailRenderer(130, em_class2582 -> {
                             Vec3d vec3d = em_class2582.getBoneWorldPosition("futaCockTip");
                             Vec3d vec3d2 = em_class2582.getBoneWorldPosition("futaCockTipDirHelp");
                             return vec3d.subtract(vec3d2).normalize();
@@ -2727,7 +2728,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IWings
                 return;
             }
             checkSpawn.setResult(Event.Result.DENY);
-            fq_class325.addPosInList(blockPos, fq_class325.c);
+            StructureTracker.addPosInList(blockPos, StructureTracker.STRUCTURE_POSITIONS);
             GalathEntity f__class2972 = new GalathEntity(world);
             f__class2972.setPositionAndUpdate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             world.spawnEntity(f__class2972);

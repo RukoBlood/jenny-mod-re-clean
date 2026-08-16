@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 
-public class ak_class32 {
+public class Utils {
     public static Vec3d getVectorToPlayer(Entity entity, EntityPlayer entityPlayer, float f) {
         Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY + (double)entityPlayer.getEyeHeight(), entity.lastTickPosZ), entity.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0), (double)f);
         Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
@@ -18,21 +18,21 @@ public class ak_class32 {
     }
 
     public static Vec3d a(Entity entity, EntityPlayer entityPlayer, float f) {
-        Vec3d vec3d = ak_class32.getInterpolatedPosition(entity, f);
+        Vec3d vec3d = Utils.getInterpolatedPosition(entity, f);
         if (entityPlayer == null) {
             return vec3d;
         }
-        Vec3d vec3d2 = ak_class32.getInterpolatedPosition(entityPlayer, f);
+        Vec3d vec3d2 = Utils.getInterpolatedPosition(entityPlayer, f);
         return vec3d.subtract(vec3d2);
     }
 
     public static Vec3d getInterpolatedPosition(Entity entity, float f) {
         if (!(entity instanceof GirlEntity)) {
-            return ak_class32.b(entity, f);
+            return Utils.b(entity, f);
         }
         GirlEntity em_class2582 = (GirlEntity)entity;
         if (!em_class2582.isAnchored()) {
-            return ak_class32.b(entity, f);
+            return Utils.b(entity, f);
         }
         return em_class2582.getTargetPosition();
     }

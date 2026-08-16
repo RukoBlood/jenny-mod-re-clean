@@ -90,7 +90,7 @@ public class Main {
         WorldGenStructure.Generate().clear();
         GirlID.ClearGirlList();
         CustomModel.isLoaded = false;
-        bj_class84.a();
+        CustomModelHandler.a();
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             Main.clientReset();
         }

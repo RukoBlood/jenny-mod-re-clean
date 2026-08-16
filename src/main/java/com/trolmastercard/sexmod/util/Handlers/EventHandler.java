@@ -77,9 +77,9 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new GalathMangTracker());
         MinecraftForge.EVENT_BUS.register((Object) GalathCoin.GALATH_COIN);
         MinecraftForge.EVENT_BUS.register((Object) NYIWinchesterItem.NYI_WINCHESTER_ITEM);
-        MinecraftForge.EVENT_BUS.register((Object)new fq_class325());
+        MinecraftForge.EVENT_BUS.register((Object)new StructureTracker());
         MinecraftForge.EVENT_BUS.register((Object)new NameStorage());
-        MinecraftForge.EVENT_BUS.register((Object)new bj_class84());
+        MinecraftForge.EVENT_BUS.register((Object)new CustomModelHandler());
         MinecraftForge.EVENT_BUS.register((Object) WorldGenStructure.Generate());
         MinecraftForge.EVENT_BUS.register((Object)new ManglelieEntity.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new f4_class289());
@@ -109,7 +109,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new ClothingGui.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new CustomModel.a_inner95());
         MinecraftForge.EVENT_BUS.register((Object)new EscapeMinigameUI());
-        MinecraftForge.EVENT_BUS.register((Object)new ga_class358());
+        MinecraftForge.EVENT_BUS.register((Object)new ParticlesManager());
         MinecraftForge.EVENT_BUS.register((Object)new GalathFlightUI());
     }
 
