@@ -100,7 +100,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
         GalathEntity galath = (GalathEntity) girl;
         galath.cachedHeadRotationX = this.getAnimationProcessor().getBone("head").getRotationX();
         if (galath.isWingsAnimated()) {
-            ManglelieModel.a(galath, this.getAnimationProcessor(), event.getPartialTick());
+            ManglelieModel.updateClothAndCockVisibility(galath, this.getAnimationProcessor(), event.getPartialTick());
         }
     }
 

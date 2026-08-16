@@ -23,27 +23,28 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.IClientCommand;
 
 public class FutaCommand extends CommandBase implements IClientCommand {
-    final static String d = "sexmod/futa";
+    final static String CONFIG_PATH = "sexmod/futa";
     final static int a = 10;
     final static float c = 0.025f;
     static public boolean enabled = true;
-    final static public FutaCommand b = new FutaCommand();
+    final static public FutaCommand FUTA_COMMAND = new FutaCommand();
 
 
     public FutaCommand() {
-        String string = "";
+        String value = "";
         try {
-            new BufferedReader(new FileReader(d)).readLine().toLowerCase();
+            new BufferedReader(new FileReader(CONFIG_PATH)).readLine().toLowerCase();
         } catch (Exception e) {
-            //
+            System.out.println("FutaCommand.class: Error reading config.");
+            e.printStackTrace();
         }
-        if (string.isEmpty()) {
+        if (value.isEmpty()) {
             return;
         }
-        if ("true".equals(string)) {
+        if ("true".equals(value)) {
             enabled = true;
         }
-        if ("false".equals(string)) {
+        if ("false".equals(value)) {
             enabled = false;
         }
     }
@@ -54,53 +55,57 @@ public class FutaCommand extends CommandBase implements IClientCommand {
     }
 
     @Override
-    public String getUsage(ICommandSender iCommandSender) {
+    public String getUsage(ICommandSender sender) {
         return "/futa <true|false>";
     }
 
     @Override
-    public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] stringArray) throws CommandException {
-        if (stringArray.length < 1) {
-            this.FutaYesNoErrorMessage(iCommandSender);
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length < 1) {
+            this.FutaYesNoErrorMessage(sender);
             return;
         }
-        String string = stringArray[0].toLowerCase();
-        if ("true".equals(string)) {
+        String arg = args[0].toLowerCase();
+        if ("true".equals(arg)) {
             enabled = true;
-        } else if ("false".equals(string)) {
+        } else if ("false".equals(arg)) {
             enabled = false;
         } else {
-            this.FutaYesNoErrorMessage(iCommandSender);
+            this.FutaYesNoErrorMessage(sender);
             return;
         }
+
         try {
-            FileWriter fileWriter = new FileWriter(d);
-            fileWriter.write(string);
+            FileWriter fileWriter = new FileWriter(CONFIG_PATH);
+            fileWriter.write(arg);
             fileWriter.close();
-        } catch (IOException iOException) {
-            iOException.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("FutaCommand.class: Error writing to file.");
+            e.printStackTrace();
         }
+
         try {
-            for (GirlEntity girlEntity : GirlEntity.GirlEntityList()) {
-                if (girlEntity.isDead || !girlEntity.world.isRemote || !(girlEntity instanceof GalathEntity)) continue;
-                Vec3d vec3d = girlEntity.getCachedBoneOffset("cockParticles").add(girlEntity.getPositionVector());
-                Random random = girlEntity.getRNG();
+            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+                if (girl.isDead || !girl.world.isRemote || !(girl instanceof GalathEntity)) continue;
+
+                Vec3d pos = girl.getCachedBoneOffset("cockParticles").add(girl.getPositionVector());
+                Random random = girl.getRNG();
                 for (int i = 0; i < 10; ++i) {
-                    girlEntity.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), new int[0]);
+                    girl.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, pos.x, pos.y, pos.z, random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), new int[0]);
                 }
             }
         } catch (Exception e) {
-            System.out.println("wtf he thinks sexmod/futa is a file??");
+            System.out.println("No galath nearby, o algo");
             e.printStackTrace();
         }
 
     }
 
-    void FutaYesNoErrorMessage(ICommandSender iCommandSender) {
-        iCommandSender.sendMessage(new TextComponentString(String.format("%sYou can either do %s/futa true %sor %s/futa false", new Object[]{TextFormatting.YELLOW, TextFormatting.GRAY, TextFormatting.YELLOW, TextFormatting.GRAY})));
+    void FutaYesNoErrorMessage(ICommandSender sender) {
+        sender.sendMessage(new TextComponentString(String.format("%sYou can either do %s/futa true %sor %s/futa false", new Object[]{TextFormatting.YELLOW, TextFormatting.GRAY, TextFormatting.YELLOW, TextFormatting.GRAY})));
     }
 
-    public boolean allowUsageWithoutPrefix(ICommandSender iCommandSender, String string) {
+    public boolean allowUsageWithoutPrefix(ICommandSender sender, String message) {
         return false;
     }
 }

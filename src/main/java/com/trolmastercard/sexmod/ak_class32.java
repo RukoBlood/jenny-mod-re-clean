@@ -18,15 +18,15 @@ public class ak_class32 {
     }
 
     public static Vec3d a(Entity entity, EntityPlayer entityPlayer, float f) {
-        Vec3d vec3d = ak_class32.a(entity, f);
+        Vec3d vec3d = ak_class32.getInterpolatedPosition(entity, f);
         if (entityPlayer == null) {
             return vec3d;
         }
-        Vec3d vec3d2 = ak_class32.a(entityPlayer, f);
+        Vec3d vec3d2 = ak_class32.getInterpolatedPosition(entityPlayer, f);
         return vec3d.subtract(vec3d2);
     }
 
-    public static Vec3d a(Entity entity, float f) {
+    public static Vec3d getInterpolatedPosition(Entity entity, float f) {
         if (!(entity instanceof GirlEntity)) {
             return ak_class32.b(entity, f);
         }
@@ -37,8 +37,8 @@ public class ak_class32 {
         return em_class2582.getTargetPosition();
     }
 
-    static Vec3d b(Entity entity, float f) {
-        return Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f);
+    static Vec3d b(Entity entity, float step) {
+        return Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)step);
     }
 
     public static void a() {

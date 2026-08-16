@@ -21,7 +21,8 @@ public class Reference {
     final static public int e = 6281823;
     static public Vec3d j = Vec3d.ZERO;
     static public Vec3d k = Vec3d.ZERO;
-    //looks like penismath now in reference
+
+    //looks like penismath.class now merged into reference class
     public static Vec3d a(Vec3d vec3d, Vec3d vec3d2, int n) {
         if (n == 0) {
             return vec3d2;

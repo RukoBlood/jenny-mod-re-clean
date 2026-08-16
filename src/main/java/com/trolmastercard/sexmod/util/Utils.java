@@ -9,7 +9,6 @@ import java.awt.datatransfer.StringSelection;
 import java.util.Random;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.Rotation2f;
 import net.minecraft.util.math.Vec3d;
 
 public class Utils {

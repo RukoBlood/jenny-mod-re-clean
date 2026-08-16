@@ -410,7 +410,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         Tessellator.getInstance().draw();
         if (body2Bone != null) {
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-            Minecraft.getMinecraft().renderEngine.bindTexture(ManglelieModel.j);
+            Minecraft.getMinecraft().renderEngine.bindTexture(ManglelieModel.TEXTURE_MANGELIE);
             this.renderRecursively(buffer, body2Bone, r, g, b, ((GalathEntity)this.renderEntity).float_v());
             Tessellator.getInstance().draw();
         }
@@ -543,7 +543,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         }
         float progress = ((GalathEntity)this.renderEntity).isTransformingManglelie ? 1.0f - Math.min(0.29f, Action.a(this.renderEntity, mc.getRenderPartialTicks())) / 0.29f : 1.0f;
         this.renderAnimatedRibbon(buffer, bone, progress);
-        this.bindTexture(ManglelieModel.j);
+        this.bindTexture(ManglelieModel.TEXTURE_MANGELIE);
     }
 
     void updateMouthBlowjobAnimation(GeoBone bone) {

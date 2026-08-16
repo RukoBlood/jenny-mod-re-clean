@@ -192,7 +192,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (!f8_class2932.boolean_r()) {
             return;
         }
-        if (ManglelieModel.boolean_c(f8_class2932)) {
+        if (ManglelieModel.isThreesomeAction(f8_class2932)) {
             return;
         }
         GalathEntity f__class2972 = f8_class2932.com_trolmastercard_sexmod_f__class297_a(false);
@@ -346,7 +346,7 @@ extends GirlRenderer<ManglelieEntity> {
 
     @Override
     protected void processModelSkeleton(GeoModel model, BufferBuilder buffer, ManglelieEntity entity, float r, float g, float b, float a, float partialTicks) {
-        if (!ManglelieModel.boolean_c(entity)) {
+        if (!ManglelieModel.isThreesomeAction(entity)) {
             super.processModelSkeleton(model, buffer, entity, r, g, b, a, partialTicks);
             return;
         }
@@ -415,12 +415,12 @@ extends GirlRenderer<ManglelieEntity> {
     protected Vec3d applyCustomTranslationOffsets(ManglelieEntity entity, float partialTicks, Vec3d baseVector) {
         GalathEntity f__class2972;
         if (entity.currentAction() == Action.RUN) {
-            float f2;
-            entity.rotationYaw = f2 = entity.getYawRotation().floatValue();
-            entity.prevRenderYawOffset = f2;
-            entity.renderYawOffset = f2;
-            entity.prevRotationYawHead = f2;
-            entity.rotationYawHead = f2;
+            float yaw;
+            entity.rotationYaw = yaw = entity.getYawRotation();
+            entity.prevRenderYawOffset = yaw;
+            entity.renderYawOffset = yaw;
+            entity.prevRotationYawHead = yaw;
+            entity.rotationYawHead = yaw;
             return baseVector;
         }
         if (ManglelieRenderer.b_4(entity) && (f__class2972 = entity.com_trolmastercard_sexmod_f__class297_a(false)) != null) {
@@ -432,12 +432,12 @@ extends GirlRenderer<ManglelieEntity> {
 
     public static void a(GalathEntity f__class2972, float f, EntityLivingBase entityLivingBase) {
         boolean bl = f__class2972.isAnchored();
-        float f2 = bl ? f__class2972.getYawRotation().floatValue() : f__class2972.rotationYawHead;
-        float f3 = bl ? f__class2972.getYawRotation().floatValue() : f__class2972.prevRotationYawHead;
+        float f2 = bl ? f__class2972.getYawRotation() : f__class2972.rotationYawHead;
+        float f3 = bl ? f__class2972.getYawRotation() : f__class2972.prevRotationYawHead;
         Float f4 = GalathEntity.updateRenderPositions(f__class2972, f);
         if (f4 != null) {
-            f2 = f4.floatValue();
-            f3 = f4.floatValue();
+            f2 = f4;
+            f3 = f4;
         }
         entityLivingBase.rotationYaw = f2;
         entityLivingBase.prevRenderYawOffset = f3;
@@ -447,7 +447,7 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     public static boolean b_4(ManglelieEntity f8_class2932) {
-        return f8_class2932.boolean_r() && !ManglelieModel.boolean_c(f8_class2932);
+        return f8_class2932.boolean_r() && !ManglelieModel.isThreesomeAction(f8_class2932);
     }
 
     public static Vec3d b(GalathEntity f__class2972, float f) {
@@ -455,7 +455,7 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     public static Vec3d a(GalathEntity f__class2972, float f) {
-        return ak_class32.a(f__class2972, f).add(f__class2972.getCachedBoneOffset("mangPos"));
+        return ak_class32.getInterpolatedPosition(f__class2972, f).add(f__class2972.getCachedBoneOffset("mangPos"));
     }
 
     // gay synthetics

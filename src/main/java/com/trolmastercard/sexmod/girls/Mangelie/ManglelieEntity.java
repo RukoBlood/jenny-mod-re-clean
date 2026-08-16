@@ -176,10 +176,10 @@ extends GirlEntity {
     @Override
     public Float getYawRotation() {
         float f = super.getYawRotation();
-        if (ManglelieModel.boolean_c(this)) {
+        if (ManglelieModel.isThreesomeAction(this)) {
             f += 180.0f;
         }
-        return Float.valueOf(f);
+        return f;
     }
 
     public void void_q() {
@@ -497,7 +497,7 @@ extends GirlEntity {
         if (!this.boolean_r()) {
             return vec3d;
         }
-        if (ManglelieModel.boolean_c(this)) {
+        if (ManglelieModel.isThreesomeAction(this)) {
             return vec3d;
         }
         GalathEntity f__class2972 = this.com_trolmastercard_sexmod_f__class297_a(false);
@@ -551,8 +551,8 @@ extends GirlEntity {
         if (f__class2972 == null) {
             return false;
         }
-        Vec3d vec3d = ak_class32.a(this, f);
-        return this.a(ak_class32.a(entity, f).subtract(vec3d), f__class2972, f);
+        Vec3d vec3d = ak_class32.getInterpolatedPosition(this, f);
+        return this.a(ak_class32.getInterpolatedPosition(entity, f).subtract(vec3d), f__class2972, f);
     }
 
     boolean boolean_a(Vec3d vec3d, float f) {
@@ -560,7 +560,7 @@ extends GirlEntity {
         if (f__class2972 == null) {
             return false;
         }
-        Vec3d vec3d2 = ak_class32.a(this, f);
+        Vec3d vec3d2 = ak_class32.getInterpolatedPosition(this, f);
         return this.a(vec3d.subtract(vec3d2), f__class2972, f);
     }
 

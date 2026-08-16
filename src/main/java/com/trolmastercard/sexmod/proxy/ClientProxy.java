@@ -76,10 +76,10 @@ public class ClientProxy extends CommonProxy {
         }
         IS_PRELOADING = false;
         SexPromptManager.INSTANCE = new SexPromptManager();
-        ClientCommandHandler.instance.registerCommand((ICommand) WhitelistServerModelsCommand.a);
-        ClientCommandHandler.instance.registerCommand((ICommand) SetModelCodeCommand.a);
-        ClientCommandHandler.instance.registerCommand((ICommand) FutaCommand.b);
-        Minecraft.getMinecraft().effectRenderer.registerParticle(625115, (n, world, d, d2, d3, d4, d5, d6, nArray) -> new ParticleGalathTrail(world, d, d2, d3));
+        ClientCommandHandler.instance.registerCommand((ICommand) WhitelistServerModelsCommand.WHITELIST_SERVER_MODELS_COMMAND);
+        ClientCommandHandler.instance.registerCommand((ICommand) SetModelCodeCommand.SET_MODEL_CODE_COMMAND);
+        ClientCommandHandler.instance.registerCommand((ICommand) FutaCommand.FUTA_COMMAND);
+        Minecraft.getMinecraft().effectRenderer.registerParticle(625115, (n, world, x, y, z, d4, d5, d6, nArray) -> new ParticleGalathTrail(world, x, y, z));
     }
 }
 

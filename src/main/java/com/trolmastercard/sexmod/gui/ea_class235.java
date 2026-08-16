@@ -22,6 +22,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+//ea.class
+//goblin related UI
 public class ea_class235 extends GuiScreen {
     final static float j = 100.0f;
     final static float c = 15.0f;
@@ -34,12 +36,12 @@ public class ea_class235 extends GuiScreen {
     float e = 0.0f;
     float d = 0.0f;
     float m = 0.0f;
-    GirlEntity f;
-    boolean h = false;
+    GirlEntity girl;
+    boolean isGoblin = false;
 
-    public ea_class235(GirlEntity em_class2582) {
-        this.f = em_class2582;
-        this.h = em_class2582 instanceof GoblinEntity;
+    public ea_class235(GirlEntity girl) {
+        this.girl = girl;
+        this.isGoblin = girl instanceof GoblinEntity;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ea_class235 extends GuiScreen {
             this.c();
             return;
         }
-        if (!this.h) {
+        if (!this.isGoblin) {
             return;
         }
         if (this.d > this.m) {
@@ -63,20 +65,20 @@ public class ea_class235 extends GuiScreen {
     }
 
     void a() {
-        if (this.h) {
-            ((GoblinEntity)this.f).void_c(Minecraft.getMinecraft().player.getPersistentID());
+        if (this.isGoblin) {
+            ((GoblinEntity)this.girl).void_c(Minecraft.getMinecraft().player.getPersistentID());
         }
     }
 
     void b() {
-        ((GoblinEntity)this.f).void_b(Minecraft.getMinecraft().player.getPersistentID());
+        ((GoblinEntity)this.girl).void_b(Minecraft.getMinecraft().player.getPersistentID());
     }
 
     void c() {
-        if (this.f.playerSheHasSexWith() != null) {
+        if (this.girl.playerSheHasSexWith() != null) {
             return;
         }
-        this.f.setCurrentAction(Action.START_THROWING);
+        this.girl.setCurrentAction(Action.START_THROWING);
     }
 
     @Override
@@ -89,18 +91,18 @@ public class ea_class235 extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int n, int n2, float f) {
-        super.drawScreen(n, n2, f);
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
         GL11.glEnable(3042);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glBlendFunc(770, 771);
         this.a = Math.min(1.0f, this.a + this.mc.getTickLength() / 5.0f);
         float f2 = (float) this.a(this.a);
         float f3 = (1.0f - f2) * 100.0f;
-        this.g += (float) (n < this.width / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.e += (float) (n > this.width / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.d += (float) (n2 < this.height / 2 - 1 ? 1 : -1) * this.mc.getTickLength();
-        this.m += (float) (n2 > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.g += (float) (mouseX < this.width / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.e += (float) (mouseX > this.width / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.d += (float) (mouseY < this.height / 2 - 1 ? 1 : -1) * this.mc.getTickLength();
+        this.m += (float) (mouseY > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
         this.g = Utils.clamp(this.g, 0.0f, 1.0f);
         this.e = Utils.clamp(this.e, 0.0f, 1.0f);
         this.d = Utils.clamp(this.d, 0.0f, 1.0f);
@@ -114,7 +116,7 @@ public class ea_class235 extends GuiScreen {
         this.drawTexturedModalRect(-62.0f + f3 - this.g * 15.0f, f3 - 32.0f, 0, 0, 64, 64);
         this.drawTexturedModalRect(-62.0f + f3 - this.g * 15.0f, f3 - 32.0f, 64, 128, 64, 64);
         GlStateManager.popMatrix();
-        if (!this.h) {
+        if (!this.isGoblin) {
             GlStateManager.popMatrix();
             GL11.glDisable(3042);
             return;
@@ -149,10 +151,6 @@ public class ea_class235 extends GuiScreen {
     @Override
     public boolean doesGuiPauseGame() {
         return false;
-    }
-
-    private static Exception a(Exception exception) {
-        return exception;
     }
 }
 

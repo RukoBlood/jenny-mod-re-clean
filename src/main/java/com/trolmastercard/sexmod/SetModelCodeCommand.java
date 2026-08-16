@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SetModelCodeCommand extends CommandBase implements IClientCommand {
-    final static public SetModelCodeCommand a = new SetModelCodeCommand();
+    final static public SetModelCodeCommand SET_MODEL_CODE_COMMAND = new SetModelCodeCommand();
 
     public boolean allowUsageWithoutPrefix(ICommandSender iCommandSender, String string) {
         return false;
@@ -41,25 +41,25 @@ public class SetModelCodeCommand extends CommandBase implements IClientCommand {
     }
 
     @Override
-    public String getUsage(ICommandSender iCommandSender) {
+    public String getUsage(ICommandSender sender) {
         return "/setmodelcode";
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer minecraftServer, ICommandSender iCommandSender) {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return true;
     }
 
     @Override
-    public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] stringArray) throws CommandException {
-        GirlEntity em_class2582;
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        GirlEntity girl;
         //String[] stringArray2;
         Minecraft minecraft = Minecraft.getMinecraft();
         EntityPlayerSP entityPlayerSP = minecraft.player;
         String string = "";
         String string2 = "";
-        if (stringArray.length > 0) {
-            String[] stringArray2 = stringArray[0].split("\\$");
+        if (args.length > 0) {
+            String[] stringArray2 = args[0].split("\\$");
             string = stringArray2[0];
             if (stringArray2.length > 1) {
                 string2 = stringArray2[1];
@@ -67,40 +67,36 @@ public class SetModelCodeCommand extends CommandBase implements IClientCommand {
         }
         {
             RayTraceResult result = Minecraft.getMinecraft().objectMouseOver;
-            if ((em_class2582 = this.a(result)) == null) {
+            if ((girl = this.checkEntity(result)) == null) {
                 ((EntityPlayer) entityPlayerSP).sendStatusMessage(new TextComponentString("You gotta transform into the girl you want to apply the model-code to"), true);
                 return;
             }
         }
-        if ("".equals(string2)) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, em_class2582.girlID()));
-            ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.a(em_class2582)), true);
+        if (string2.isEmpty()) {
+            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, girl.girlID()));
+            ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
             return;
         }
-        PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, em_class2582.girlID(), GirlEntity.c(string2)));
-        ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.a(em_class2582)), true);
+        PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, girl.girlID(), GirlEntity.c(string2)));
+        ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
     }
 
-    String a(GirlEntity em_class2582) {
-        if (em_class2582 instanceof PlayerGirl) {
-            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + Utils.CapitalizeString(PlayerGirlEntity.fromGirl(em_class2582).toString());
+    String showModelCode(GirlEntity girl) {
+        if (girl instanceof PlayerGirl) {
+            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + Utils.CapitalizeString(PlayerGirlEntity.fromGirl(girl).toString());
         }
-        return (Object)((Object)TextFormatting.YELLOW) + "applied model code to this " + em_class2582.getGirlName();
+        return (Object)((Object)TextFormatting.YELLOW) + "applied model code to this " + girl.getGirlName();
     }
 
     @SideOnly(value=Side.CLIENT)
-    GirlEntity a(RayTraceResult rayTraceResult) {
-        if (rayTraceResult == null) {
+    GirlEntity checkEntity(RayTraceResult result) {
+        if (result == null) {
             return PlayerGirl.GetPlayer(Minecraft.getMinecraft().player);
         }
-        if (GirlEntity.isValidGirl(rayTraceResult.entityHit)) {
-            return (GirlEntity)rayTraceResult.entityHit;
+        if (GirlEntity.isValidGirl(result.entityHit)) {
+            return (GirlEntity)result.entityHit;
         }
         return PlayerGirl.GetPlayer(Minecraft.getMinecraft().player);
-    }
-
-    private static Exception a(Exception exception) {
-        return exception;
     }
 }
 
