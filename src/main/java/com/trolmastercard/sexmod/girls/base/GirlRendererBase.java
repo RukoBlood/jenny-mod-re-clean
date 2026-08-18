@@ -40,7 +40,7 @@ import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-public abstract class GirlRendererBase<G extends AbstractGoblinKoboldEntity> extends GirlRenderer<G> {
+public abstract class GirlRendererBase<G extends AbstractNpcOnlyEntity> extends GirlRenderer<G> {
     final static protected Vec3i DEFAULT_COLOR = new Vec3i(255, 255, 255);
     static HashMap<Integer, Vec3i> colorCache = new HashMap();
 
@@ -54,7 +54,7 @@ public abstract class GirlRendererBase<G extends AbstractGoblinKoboldEntity> ext
 
     protected Vec3i getBoneColor(GeoBone bone) {
         String boneName = bone.getName();
-        int compositeKey = boneName.hashCode() + ((AbstractGoblinKoboldEntity)this.renderEntity).getPersistentID().hashCode();
+        int compositeKey = boneName.hashCode() + ((AbstractNpcOnlyEntity)this.renderEntity).getPersistentID().hashCode();
         Vec3i cachedColor = colorCache.get(compositeKey);
         if (cachedColor != null) {
             return cachedColor;
@@ -129,14 +129,14 @@ public abstract class GirlRendererBase<G extends AbstractGoblinKoboldEntity> ext
 
     @Override
     public void renderCustomBones(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a, double uOffset) {
-        if (((AbstractGoblinKoboldEntity)this.renderEntity).world instanceof FakeWorld) {
+        if (((AbstractNpcOnlyEntity)this.renderEntity).world instanceof FakeWorld) {
             return;
         }
         String boneName = bone.getName();
         if (boneName.equals("weapon")) {
             this.RenderHeldItem(buffer, bone);
         }
-        if (boneName.equals("itemRenderer") && ((AbstractGoblinKoboldEntity)this.renderEntity).getCurrentAction() == Action.PAYMENT) {
+        if (boneName.equals("itemRenderer") && ((AbstractNpcOnlyEntity)this.renderEntity).getCurrentAction() == Action.PAYMENT) {
             this.renderTradeOverlay(buffer, bone);
         }
         this.onBoneProcessing(buffer, bone.getName(), bone);

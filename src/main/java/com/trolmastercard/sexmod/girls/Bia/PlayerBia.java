@@ -410,7 +410,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "stripMSG1": {
-                    this.broadcastChatMessage("Hihi~");
+                    this.sendGirlChatMessage("Hihi~");
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }

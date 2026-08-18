@@ -9,7 +9,7 @@ import java.util.List;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.dr_class199;
-import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlModel;
 import net.minecraft.client.Minecraft;
@@ -53,7 +53,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
             animationProcessor.getBone("crown").setHidden(true);
             animationProcessor.getBone("egg").setHidden(true);
         }
-        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(girl);
+        String[] stringArray = AbstractNpcOnlyEntity.getModelCodeParts(girl);
         this.b(animationProcessor, stringArray[0]);
         this.e(animationProcessor, stringArray[1]);
         this.a(animationProcessor, stringArray[2], 0.75f, 1.35f, "boobL", "boobR", "armorBoobs");

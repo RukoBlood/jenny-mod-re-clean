@@ -383,7 +383,7 @@ public class EllieEntity extends Fighter implements IEllie {
             }
 
             if (this.am == null) {
-                this.broadcastChatMessage("no bed in sight...");
+                this.sendGirlChatMessage("no bed in sight...");
                 this.world.playSound(null, this.getPosition(), SoundsHandler.GIRLS_ELLIE_SIGH[0], SoundCategory.NEUTRAL, 6.0f, 1.0f);
                 this.resetGirlState();
                 this.resetSitScale();
@@ -480,7 +480,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 this.noClip = true;
                 PackageHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(false), (EntityPlayerMP) player);
                 this.tasks.removeTask(this.aiWander);
-                this.tasks.removeTask(this.aiLookAtPlayer);
+                this.tasks.removeTask(this.watchClosestGirlGoal);
             }
         }
     }
@@ -735,22 +735,22 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "hugMSG2": {
-                    this.broadcastChatMessage("Hmm...");
+                    this.sendGirlChatMessage("Hmm...");
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
                     break;
                 }
                 case "hugMSG3": {
-                    this.broadcastChatMessage("Hey!");
+                    this.sendGirlChatMessage("Hey!");
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[1], 1.0f);
                     break;
                 }
                 case "hugMSG4": {
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_MOMMYHORNY, 0.5f);
                     break;
                 }
                 case "hugMSG5": {
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[1], 6.0f);
                     break;
                 }
@@ -762,12 +762,12 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "hugselectedMSG1": {
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
                     break;
                 }
                 case "hugselectedMSG2": {
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
                     if (!this.isControlledByLocalPlayer()) break;
                     HandlePlayerMovement.setMovementLock(true);
@@ -776,7 +776,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 case "sitdownMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_COMETOMOMMY, 0.5f);
                     if (!this.getClosestPlayerID()) break;
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
                     break;
                 }
                 case "cowgirlStartMSG0": {

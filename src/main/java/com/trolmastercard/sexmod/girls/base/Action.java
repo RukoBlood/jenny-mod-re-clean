@@ -286,9 +286,9 @@ public enum Action {
         this.hideNameTag = hideNameTag;
     }
 
-    public static boolean isAny(Action action, Action... actions) {
-        for (Action action1 : actions) {
-            if (action == action1) {
+    public static boolean isAny(Action candidate, Action... actions) {
+        for (Action action : actions) {
+            if (candidate == action) {
                 return true;
             }
         }
@@ -316,26 +316,23 @@ public enum Action {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static float c(GirlEntity girl, float f) {
-        return (float)(girl.getFactory().getOrCreateAnimationData((Integer) (int) girl.getUniqueID().hashCode()).tick + (double)f - girl.actionController.tickOffset);
+    public static float getActionTick(GirlEntity girl, float offset) {
+        return (float)(girl.getFactory().getOrCreateAnimationData((Integer) (int) girl.getUniqueID().hashCode()).tick + (double)offset - girl.actionController.tickOffset);
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static float a(GirlEntity girl, float f) {
-        return Action.c(girl, f) / 20.0f;
+    public static float getActionTickSeconds(GirlEntity girl, float offset) {
+        return Action.getActionTick(girl, offset) / 20.0f;
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static float getActionTimeScale(GirlEntity girl, float f) {
-        float f2 = Action.getAnimationLength(girl);
-        if (f2 <= 0.0f) {
-            return 0.0f;
-        }
-        return ThreadNames.clamp(Action.c(girl, f) / f2, 0.0f, 1.0f);
+    public static float getActionTimeScale(GirlEntity girl, float tick) {
+        float length1 = Action.getAnimationLength(girl);
+        return length1 <= 0.0f ? 0.0f : ThreadNames.clamp(Action.getActionTick(girl, tick) / length1, 0.0f, 1.0f);
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static boolean isPlayingInteractiveAction(GirlEntity girl, float f) {
+    public static boolean isActionComplete(GirlEntity girl, float f) {
         return Action.getActionTimeScale(girl, f) == 1.0f;
     }
 }

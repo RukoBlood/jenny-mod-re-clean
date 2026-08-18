@@ -215,8 +215,8 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.watchClosestGirlGoal);
         this.tasks.addTask(5, this.aiWander);
     }
 
@@ -398,8 +398,8 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.getInteractionPlayerUUID() != null) {
             return;
         }
-        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.watchClosestGirlGoal);
         if (this.hasMaster()) {
             return;
         }
@@ -450,9 +450,9 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.tasks.removeTask(this.aiWander);
                 this.aiWander = null;
             }
-            if (this.aiLookAtPlayer != null) {
-                this.tasks.removeTask(this.aiLookAtPlayer);
-                this.aiLookAtPlayer = null;
+            if (this.watchClosestGirlGoal != null) {
+                this.tasks.removeTask(this.watchClosestGirlGoal);
+                this.watchClosestGirlGoal = null;
             }
             if (this.getCurrentAction() == Action.NULL) {
                 this.setCurrentAction(Action.FISHING_START);

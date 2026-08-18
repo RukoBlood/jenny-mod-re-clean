@@ -18,11 +18,8 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
-import com.trolmastercard.sexmod.girls.base.GirlRendererBase;
-import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.girls.base.Fighter;
-import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.*;
+import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.ThreadNames;
@@ -80,7 +77,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
         ResourceLocation resourceLocation;
         UUID uUID = entity.getInteractionPlayerUUID();
         if (uUID == null) {
-            uUID = entity.java_util_UUID_e();
+            uUID = entity.getOwnerUUID();
         }
         if (entity.world instanceof FakeWorld || uUID == null) {
             resourceLocation = (ResourceLocation) skinTextureCache.get(minecraft.getSession().getProfile().getId());
@@ -163,7 +160,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
         this.v = partialTicks;
         B = entityYaw;
         Action action = entity.getCurrentAction();
-        UUID uUID = entity.java_util_UUID_e();
+        UUID uUID = entity.getOwnerUUID();
         if (entity.isLocallyRegistered()) {
             object = GoblinRenderer.a(entity.world, entity, uUID, x, y, z);
             x = ((Vec3d)object).x;
@@ -190,7 +187,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
                 object = GoblinRenderer.minecraft.player.getLookVec();
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(((Vec3d)object).x, ((Vec3d)object).y + (double) GoblinRenderer.minecraft.player.getEyeHeight(), ((Vec3d)object).z);
-                Vec3d vec3d = GoblinEntity.b(new Vec3d(-Math.abs(GoblinRenderer.minecraft.player.rotationPitch), 0.0, 0.0), GoblinRenderer.minecraft.player.rotationYaw);
+                Vec3d vec3d = GoblinEntity.rotateVectorYaw(new Vec3d(-Math.abs(GoblinRenderer.minecraft.player.rotationPitch), 0.0, 0.0), GoblinRenderer.minecraft.player.rotationYaw);
                 GlStateManager.rotate(GoblinRenderer.minecraft.player.rotationPitch, (float)vec3d.x, 0.0f, (float)vec3d.z);
                 x = 0.0;
                 y = 0.0;
@@ -208,7 +205,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
                         entity.prevRenderYawOffset = GoblinRenderer.minecraft.player.rotationYaw;
                     }
                 }
-                object = GoblinRenderer.a((GirlEntity) entity, entity.java_util_UUID_e(), partialTicks);
+                object = GoblinRenderer.a((GirlEntity) entity, entity.getOwnerUUID(), partialTicks);
                 x = ((Vec3d)object).x;
                 y = ((Vec3d)object).y;
                 z = ((Vec3d)object).z;
@@ -216,7 +213,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
         } else if (this.u) {
             GoblinRenderer.a(partialTicks);
             object = new Vec3d(ReferenceAndRotationHelper.LerpFloat(-0.1f, 0.2f, GoblinRenderer.minecraft.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
-            object = GoblinEntity.b((Vec3d)object, GoblinRenderer.minecraft.player.rotationYaw);
+            object = GoblinEntity.rotateVectorYaw((Vec3d)object, GoblinRenderer.minecraft.player.rotationYaw);
             x = ((Vec3d)object).x;
             y = ((Vec3d)object).y;
             z = ((Vec3d)object).z;
@@ -297,7 +294,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
 
     @Override
     protected Vec3i resolveBoneColor(String boneName) {
-        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity);
+        String[] stringArray = AbstractNpcOnlyEntity.getModelCodeParts(this.renderEntity);
         if (stringArray.length < 8) {
             return DEFAULT_COLOR;
         }
@@ -323,7 +320,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
     }
 
     public static Vec3i unknownCalcVec(String string) {
-        return eh_class250.values()[Integer.parseInt(string)].a();
+        return EyeColor.values()[Integer.parseInt(string)].a();
     }
 
     public static Vec3i c(String string) {
@@ -331,7 +328,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
     }
 
     public static Vec3i d(String string) {
-        return g5_class349.values()[Integer.parseInt(string)].a();
+        return HairColor.values()[Integer.parseInt(string)].a();
     }
 
     @Override
@@ -339,7 +336,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
         if (((GoblinEntity)this.renderEntity).world instanceof FakeWorld) {
             return;
         }
-        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity);
+        String[] stringArray = AbstractNpcOnlyEntity.getModelCodeParts(this.renderEntity);
         if (stringArray.length < 8) {
             return;
         }

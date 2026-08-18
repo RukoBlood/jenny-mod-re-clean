@@ -97,7 +97,7 @@ public class ClothingGui extends GuiScreen {
 
         this.initPartCategories();
 
-        String customModelKey = targetGirl.getCustomModelKey();
+        String customModelKey = targetGirl.getCustomModelCode();
         this.previewGirl.getDataManager().set(GirlEntity.CUSTOM_MODEL_KEY, customModelKey);
         int customBoneCount = 0;
 

@@ -83,7 +83,7 @@ implements IMessage {
                 boolean bl = fw_class3322.d.size() > 0;
                 boolean bl2 = false;
                 if (bl && (bl2 = this.a(em_class2582, fw_class3322.d))) {
-                    em_class2582.void_a(fw_class3322.d);
+                    em_class2582.setCustomPartList(fw_class3322.d);
                 }
                 if (!(em_class2582 instanceof PlayerGirl)) {
                     em_class2582.setCustomModelCode(fw_class3322.c);
@@ -105,7 +105,7 @@ implements IMessage {
         }
 
         boolean a(GirlEntity em_class2582, List<Integer> list) {
-            ArrayList<Integer> arrayList = em_class2582.D();
+            ArrayList<Integer> arrayList = em_class2582.getCustomPartIdList();
             try {
                 for (int i = 0; i < arrayList.size(); ++i) {
                     if (arrayList.get(i) > list.get(i)) continue;

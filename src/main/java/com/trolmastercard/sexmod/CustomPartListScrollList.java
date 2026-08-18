@@ -401,7 +401,7 @@ public class CustomPartListScrollList extends GuiListExtended {
             }
 
             int currentX = xOffset + 10;
-            CustomPartListScrollList.this.parentGUI.drawIcon(currentX, y += 5, CustomPartListScrollList.this.parentGUI.previewGirl.g(globalIndex));
+            CustomPartListScrollList.this.parentGUI.drawIcon(currentX, y += 5, CustomPartListScrollList.this.parentGUI.previewGirl.getModelPartByIndex(globalIndex));
             currentX += 25;
 
             if (isSliderActive) {

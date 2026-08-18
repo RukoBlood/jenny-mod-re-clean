@@ -67,12 +67,12 @@ public class GirlWorldData extends WorldSavedData {
             if (uUID2 == null) {
                 uUID2 = uUID;
             }
-            c.put(uUID2, em_class2582.getCustomModelKey());
+            c.put(uUID2, em_class2582.getCustomModelCode());
             return;
         }
         if (em_class2582 instanceof ManglelieEntity) {
             UUID uUID = GalathMangTracker.getManglelieOwnerId(((ManglelieEntity)em_class2582).getMommyUUID());
-            b.put(uUID == null ? em_class2582.girlID() : uUID, em_class2582.getCustomModelKey());
+            b.put(uUID == null ? em_class2582.girlID() : uUID, em_class2582.getCustomModelCode());
         }
     }
 

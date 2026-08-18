@@ -115,11 +115,11 @@ public class BeeEntity extends Supporter {
 
     @Override
     protected void initEntityAI() {
-        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new SupporterCompanion(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.25));
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, this.aiLookAtPlayer);
+        this.tasks.addTask(2, this.watchClosestGirlGoal);
         this.tasks.addTask(3, new EntityAIWanderAvoidWaterFlying(this, 1.0));
     }
 

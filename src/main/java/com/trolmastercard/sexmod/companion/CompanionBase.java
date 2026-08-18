@@ -106,8 +106,8 @@ public abstract class CompanionBase extends EntityAIBase {
     @Override
     public void updateTask() {
         this.CurState = this.updateMode();
-        if (this.entity.aiLookAtPlayer != null) {
-            this.entity.aiLookAtPlayer.isWatching = this.CurState == Mode.IDLE;
+        if (this.entity.watchClosestGirlGoal != null) {
+            this.entity.watchClosestGirlGoal.isWatching = this.CurState == Mode.IDLE;
         }
         this.CompanionStates(this.CurState);
     }

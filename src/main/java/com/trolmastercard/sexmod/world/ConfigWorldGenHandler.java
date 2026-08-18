@@ -168,7 +168,7 @@ public class ConfigWorldGenHandler extends WorldSavedData implements IWorldGener
         int n12 = Integer.MAX_VALUE;
         for (n5 = n8; n5 < n8 + n10; ++n5) {
             for (n4 = n7; n4 < n7 + n6; ++n4) {
-                n3 = WorldUtils.getSurfaceHeight(world, n5, n4);
+                n3 = WorldUtils.getHeightAt(world, n5, n4);
                 if (b_inner3462.d && world.getBlockState(new BlockPos(n5, n3, n4)).getBlock() == Blocks.WATER) {
                     return;
                 }
@@ -214,7 +214,7 @@ public class ConfigWorldGenHandler extends WorldSavedData implements IWorldGener
         }
         int n3 = n * 16 + 8;
         int n4 = n2 * 16 + 8;
-        int n5 = WorldUtils.getSurfaceHeight(world, n3, n4);
+        int n5 = WorldUtils.getHeightAt(world, n3, n4);
         if (world.getBlockState(new BlockPos(n3, n5, n4)).getMaterial().isLiquid()) {
             return;
         }
@@ -280,7 +280,7 @@ public class ConfigWorldGenHandler extends WorldSavedData implements IWorldGener
                     var23 = new Vec3i(GoblinEntity.ah.getX() - 1, 0, GoblinEntity.ah.getZ() - 1);
                 } else {
                     var18 = Rotation.COUNTERCLOCKWISE_90;
-                    var20 = GoblinEntity.U;
+                    var20 = GoblinEntity.THROW_OFFSET_U;
                     var23 = new Vec3i(0, 0, GoblinEntity.ah.getZ() - 1);
                     var25 = 90.0F;
                 }

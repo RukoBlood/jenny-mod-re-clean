@@ -12,7 +12,7 @@ import java.util.HashSet;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 
-import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.GirlRendererBase;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.world.FakeWorld;
@@ -86,7 +86,7 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
         if ("blowOpening".equals(string)) {
             uOffset = 0.0;
         }
-        if ("mouth".equals(string) && (n = Integer.parseInt((stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity))[7])) == 1) {
+        if ("mouth".equals(string) && (n = Integer.parseInt((stringArray = AbstractNpcOnlyEntity.getModelCodeParts(this.renderEntity))[7])) == 1) {
             uOffset = -0.078125;
         }
         super.renderCustomBones(buffer, bone, r, g, b, a, uOffset);
@@ -119,7 +119,7 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
 
     @Override
     public void doRender(KoboldEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        String string = entity.getDataManager().get(AbstractGoblinKoboldEntity.CURRENT_ACTION);
+        String string = entity.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION);
         if (entity.as == null) {
             entity.as = string;
         }

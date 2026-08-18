@@ -541,7 +541,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         if (!Action.isAnyAction(this.renderEntity, Action.MORNING_BLOWJOB_SLOW) && !((GalathEntity)this.renderEntity).isTransformingManglelie) {
             return;
         }
-        float progress = ((GalathEntity)this.renderEntity).isTransformingManglelie ? 1.0f - Math.min(0.29f, Action.a(this.renderEntity, mc.getRenderPartialTicks())) / 0.29f : 1.0f;
+        float progress = ((GalathEntity)this.renderEntity).isTransformingManglelie ? 1.0f - Math.min(0.29f, Action.getActionTickSeconds(this.renderEntity, mc.getRenderPartialTicks())) / 0.29f : 1.0f;
         this.renderAnimatedRibbon(buffer, bone, progress);
         this.bindTexture(ManglelieModel.TEXTURE_MANGELIE);
     }
@@ -564,7 +564,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         if (!((GalathEntity)this.renderEntity).isTransformingManglelie) {
             return;
         }
-        float factor = 1.0f - Math.min(0.5f, Action.a(this.renderEntity, mc.getRenderPartialTicks())) / 0.5f;
+        float factor = 1.0f - Math.min(0.5f, Action.getActionTickSeconds(this.renderEntity, mc.getRenderPartialTicks())) / 0.5f;
         bone.setRotationY(bone.getRotationY() + rotY * factor);
         bone.setRotationZ(bone.getRotationZ() + rotZ * factor);
     }
@@ -587,7 +587,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         if (!((GalathEntity)this.renderEntity).isTransformingManglelie) {
             return;
         }
-        float factor = Math.min(0.5f, Action.a(this.renderEntity, mc.getRenderPartialTicks())) / 0.5f;
+        float factor = Math.min(0.5f, Action.getActionTickSeconds(this.renderEntity, mc.getRenderPartialTicks())) / 0.5f;
         geoBone.setRotationY(geoBone.getRotationY() + rotY * factor);
         geoBone.setRotationZ(geoBone.getRotationZ() + rotZ * factor);
         //super.a((GeoBone)null);

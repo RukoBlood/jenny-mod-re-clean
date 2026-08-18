@@ -12,7 +12,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -46,7 +46,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
 
     @Override
     protected Vec3i resolveBoneColor(String name) {
-        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity);
+        String[] stringArray = AbstractNpcOnlyEntity.getModelCodeParts(this.renderEntity);
         if (stringArray.length < 8) {
             return DEFAULT_COLOR;
         }
@@ -134,7 +134,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
 
     @Override
     protected void onBoneRenderStart(String boneName, GeoBone geoBone) {
-        String[] stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity);
+        String[] stringArray = AbstractNpcOnlyEntity.getModelCodeParts(this.renderEntity);
         if (stringArray.length < 8) {
             return;
         }
@@ -187,7 +187,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
         this.partialTicks = partialTicks;
         GoblinRenderer.B = entityYaw;
         Action fp_class3242 = entity.getCurrentAction();
-        UUID uUID = this.B.java_util_UUID_e();
+        UUID uUID = this.B.getOwnerUUID();
         if (entity.isLocallyRegistered()) {
             object = GoblinRenderer.a(entity.world, entity, uUID, x, y, z);
             x = ((Vec3d)object).x;
@@ -214,7 +214,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
                 object = PlayerGoblinRenderer.mc.player.getLookVec();
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(((Vec3d)object).x, ((Vec3d)object).y + (double) PlayerGoblinRenderer.mc.player.getEyeHeight(), ((Vec3d)object).z);
-                Vec3d vec3d = GoblinEntity.b(new Vec3d(-Math.abs(PlayerGoblinRenderer.mc.player.rotationPitch), 0.0, 0.0), PlayerGoblinRenderer.mc.player.rotationYaw);
+                Vec3d vec3d = GoblinEntity.rotateVectorYaw(new Vec3d(-Math.abs(PlayerGoblinRenderer.mc.player.rotationPitch), 0.0, 0.0), PlayerGoblinRenderer.mc.player.rotationYaw);
                 GlStateManager.rotate(PlayerGoblinRenderer.mc.player.rotationPitch, (float)vec3d.x, 0.0f, (float)vec3d.z);
                 x = 0.0;
                 y = 0.0;
@@ -232,7 +232,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
                         entity.prevRenderYawOffset = PlayerGoblinRenderer.mc.player.rotationYaw;
                     }
                 }
-                object = GoblinRenderer.a(entity, this.B.java_util_UUID_e(), partialTicks);
+                object = GoblinRenderer.a(entity, this.B.getOwnerUUID(), partialTicks);
                 x = ((Vec3d)object).x;
                 y = ((Vec3d)object).y;
                 z = ((Vec3d)object).z;
@@ -240,7 +240,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
         } else if (this.C) {
             GoblinRenderer.a(partialTicks);
             object = new Vec3d(ReferenceAndRotationHelper.LerpFloat(-0.1f, 0.2f, PlayerGoblinRenderer.mc.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
-            object = GoblinEntity.b((Vec3d)object, PlayerGoblinRenderer.mc.player.rotationYaw);
+            object = GoblinEntity.rotateVectorYaw((Vec3d)object, PlayerGoblinRenderer.mc.player.rotationYaw);
             x = ((Vec3d)object).x;
             y = ((Vec3d)object).y;
             z = ((Vec3d)object).z;

@@ -25,7 +25,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.ResetGirl;
 import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.ew_class277;
@@ -67,7 +67,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlayerGoblin extends ew_class277
-implements ai_class30 {
+implements IGoblin {
     final static public float aI = 2.0f;
     final static public DataParameter<String> ax = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.STRING).getSerializer().createKey(122);
     final static public DataParameter<Boolean> aA = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.BOOLEAN).getSerializer().createKey(126);
@@ -118,7 +118,7 @@ implements ai_class30 {
     @Override
     protected void entityInit() {
         super.entityInit();
-        eh_class250 eh_class2502 = eh_class250.values()[this.getRNG().nextInt(eh_class250.values().length)];
+        EyeColor eh_class2502 = EyeColor.values()[this.getRNG().nextInt(EyeColor.values().length)];
         this.entityDataManager.register(au, new BlockPos(eh_class2502.a()));
         this.entityDataManager.register(as, GoblinEntity.DEFAULT_COLOR.name());
         this.entityDataManager.register(aA, false);
@@ -150,7 +150,7 @@ implements ai_class30 {
 
     @Override
     public EntityPlayer getPlayerEntity(EntityPlayer entityPlayer) {
-        UUID uUID = this.java_util_UUID_e();
+        UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
             return entityPlayer;
         }
@@ -163,18 +163,18 @@ implements ai_class30 {
 
     @Override
     public boolean isInteractable() {
-        return this.java_util_UUID_e() == null || !Minecraft.getMinecraft().player.getPersistentID().equals(this.getOwnerUserUUID());
+        return this.getOwnerUUID() == null || !Minecraft.getMinecraft().player.getPersistentID().equals(this.getOwnerUserUUID());
     }
 
     @Override
     public boolean boolean_z() {
-        UUID uUID = this.java_util_UUID_e();
+        UUID uUID = this.getOwnerUUID();
         return uUID == null;
     }
 
     @Override
     public Vec3d c(Vec3d vec3d, float f) {
-        UUID uUID = this.java_util_UUID_e();
+        UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
             return vec3d;
         }
@@ -191,16 +191,16 @@ implements ai_class30 {
         if (this.getCurrentAction() != Action.NULL) {
             return;
         }
-        if (this.java_util_UUID_e() != null) {
+        if (this.getOwnerUUID() != null) {
             return;
         }
-        if (GoblinEntity.d_19(entityPlayer.getPersistentID())) {
+        if (GoblinEntity.hasGoblinWithUUID(entityPlayer.getPersistentID())) {
             entityPlayer.sendStatusMessage(new TextComponentString("you are already carrying a Goblin"), true);
             return;
         }
-        this.void_a(entityPlayer.getPersistentID());
+        this.setOwnerUUID(entityPlayer.getPersistentID());
         this.setCurrentAction(Action.PICK_UP);
-        this.void_b(45);
+        this.setHeldPlayerDistance(45);
         EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
         if (entityPlayer2 == null) {
             return;
@@ -215,21 +215,21 @@ implements ai_class30 {
 
     @Override
     protected String a(StringBuilder stringBuilder) {
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 3);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 2);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 2);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 7);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 7);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 5);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, g5_class349.values().length - 1);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, SkinColor.values().length - 1);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, eh_class250.values().length - 1);
-        AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, 0);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 3);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 7);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 7);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 5);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, HairColor.values().length - 1);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, SkinColor.values().length - 1);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, EyeColor.values().length - 1);
+        AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, 0);
         return stringBuilder.toString();
     }
 
     @Override
-    public ArrayList<Integer> D() {
+    public ArrayList<Integer> getCustomPartIdList() {
         return new ArrayList<Integer>(){
             {
                 this.add(4);
@@ -238,15 +238,15 @@ implements ai_class30 {
                 this.add(16);
                 this.add(16);
                 this.add(6);
-                this.add(g5_class349.values().length);
+                this.add(HairColor.values().length);
                 this.add(SkinColor.values().length);
-                this.add(eh_class250.values().length);
+                this.add(EyeColor.values().length);
             }
         };
     }
 
     @Override
-    public List<Integer> u() {
+    public List<Integer> getCustomPartExtraIdList() {
         return Collections.singletonList(2);
     }
 
@@ -263,13 +263,13 @@ implements ai_class30 {
 
     @Override
     public boolean boolean_o() {
-        return this.isAnchored() || this.java_util_UUID_e() != null;
+        return this.isAnchored() || this.getOwnerUUID() != null;
     }
 
     @Override
     public boolean a(Action fp_class3242, EntityPlayer entityPlayer) {
         float f;
-        UUID uUID = this.java_util_UUID_e();
+        UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
             return false;
         }
@@ -297,7 +297,7 @@ implements ai_class30 {
 
     @Override
     public Vec3d b(Vec3d vec3d, float f) {
-        UUID uUID = this.java_util_UUID_e();
+        UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
             return vec3d;
         }
@@ -335,7 +335,7 @@ implements ai_class30 {
 
     @Override
     public void onUpdate() {
-        GoblinEntity.e(this);
+        GoblinEntity.handleGoblinThrowAction(this);
         this.void_d();
         this.void_j();
         super.onUpdate();
@@ -351,7 +351,7 @@ implements ai_class30 {
 
     @Override
     public boolean boolean_E() {
-        return this.java_util_UUID_e() != null;
+        return this.getOwnerUUID() != null;
     }
 
     void void_j() {
@@ -359,10 +359,10 @@ implements ai_class30 {
         if (fp_class3242 == Action.THROWN) {
             return;
         }
-        if (fp_class3242 == Action.START_THROWING && this.int_a() > 15) {
+        if (fp_class3242 == Action.START_THROWING && this.getThrowProgress() > 15) {
             return;
         }
-        UUID uUID = this.java_util_UUID_e();
+        UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
             return;
         }
@@ -381,23 +381,23 @@ implements ai_class30 {
 
     void void_d() {
         PlayerGoblin eq_class2642 = this;
-        int n = eq_class2642.int_a();
+        int n = eq_class2642.getThrowProgress();
         if (n == -1) {
             return;
         }
-        eq_class2642.void_c(++n);
+        eq_class2642.setThrowProgress(++n);
         EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return;
         }
         if (n == 15) {
-            Vec3d vec3d = GoblinEntity.b(this);
-            float f = GoblinEntity.d(this);
-            float f2 = GoblinEntity.c(this);
+            Vec3d vec3d = GoblinEntity.getGoblinThrowPos(this);
+            float f = GoblinEntity.getGoblinThrowHeight(this);
+            float f2 = GoblinEntity.getGoblinThrowDistance(this);
             if (this.world.isRemote && this.boolean_f()) {
                 HandlePlayerMovement.setMovementLock(true);
             }
-            Vec3d vec3d2 = GoblinEntity.a(new Vec3d(0.0, 0.0, 1.5), f, f2);
+            Vec3d vec3d2 = GoblinEntity.rotateVectorPitchYaw(new Vec3d(0.0, 0.0, 1.5), f, f2);
             entityPlayer.motionX = vec3d2.x;
             entityPlayer.motionY = vec3d2.y;
             entityPlayer.motionZ = vec3d2.z;
@@ -408,17 +408,17 @@ implements ai_class30 {
         entityPlayer.noClip = false;
         entityPlayer.setNoGravity(false);
         if (n == 39) {
-            this.void_c(-1);
+            this.setThrowProgress(-1);
             this.setCurrentAction(Action.THROWN);
             this.setInteractionPlayerUUID((UUID)null);
-            this.void_a((UUID)null);
+            this.setOwnerUUID((UUID)null);
         }
     }
 
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        GoblinEntity.void_a(this);
+        GoblinEntity.handlePickUpState(this);
         this.void_o();
         this.void_e();
     }
@@ -445,18 +445,18 @@ implements ai_class30 {
         if (!entityPlayer.onGround) {
             return;
         }
-        int n = this.int_d() + 1;
-        this.void_a(n);
+        int n = this.getThrowTickCount() + 1;
+        this.setThrowTickCount(n);
         if (n < 30) {
             return;
         }
-        this.void_a(0);
+        this.setThrowTickCount(0);
         this.setCurrentAction(Action.STAND_UP);
     }
 
     @Override
     @Nullable
-    public UUID java_util_UUID_e() {
+    public UUID getOwnerUUID() {
         String string = this.entityDataManager.get(ax);
         if ("".equals(string)) {
             return null;
@@ -470,16 +470,16 @@ implements ai_class30 {
     }
 
     @Override
-    public void void_a(UUID uUID) {
-        if (uUID == null) {
+    public void setOwnerUUID(UUID uuid) {
+        if (uuid == null) {
             this.entityDataManager.set(ax, "");
             return;
         }
-        this.entityDataManager.set(ax, uUID.toString());
+        this.entityDataManager.set(ax, uuid.toString());
     }
 
     public EntityPlayer net_minecraft_entity_player_EntityPlayer_r() {
-        UUID uUID = this.java_util_UUID_e();
+        UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
             return null;
         }
@@ -487,42 +487,42 @@ implements ai_class30 {
     }
 
     @Override
-    public void void_c(int n) {
-        this.az = n;
+    public void setThrowProgress(int progress) {
+        this.az = progress;
     }
 
     @Override
-    public int int_a() {
+    public int getThrowProgress() {
         return this.az;
     }
 
     @Override
-    public void void_a(int n) {
-        this.aG = n;
+    public void setThrowTickCount(int ticks) {
+        this.aG = ticks;
     }
 
     @Override
-    public int int_d() {
+    public int getThrowTickCount() {
         return this.aG;
     }
 
     @Override
-    public void void_a(Action fp_class3242) {
-        this.aw = fp_class3242;
+    public void setPreviousAction(Action action) {
+        this.aw = action;
     }
 
     @Override
-    public Action GoblinAction() {
+    public Action getPreviousAction() {
         return this.aw;
     }
 
     @Override
-    public void void_b(int n) {
-        this.aE = n;
+    public void setHeldPlayerDistance(int distance) {
+        this.aE = distance;
     }
 
     @Override
-    public int int_c() {
+    public int getHeldPlayerDistance() {
         return this.aE;
     }
 
@@ -530,10 +530,10 @@ implements ai_class30 {
     public void ResetNPCTasks() {
         super.ResetNPCTasks();
         this.entityDataManager.set(aA, false);
-        if (this.java_util_UUID_e() == null) {
+        if (this.getOwnerUUID() == null) {
             return;
         }
-        this.void_a((UUID)null);
+        this.setOwnerUUID((UUID)null);
         EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
         if (entityPlayer == null) {
             return;
@@ -568,12 +568,12 @@ implements ai_class30 {
     }
 
     @Override
-    public void void_a(List<Integer> list) {
+    public void setCustomPartList(List<Integer> list) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int n : list) {
-            AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, n);
+            AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, n);
         }
-        AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, 1);
+        AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, 1);
         this.entityDataManager.set(at, stringBuilder.toString());
     }
 
@@ -655,18 +655,18 @@ implements ai_class30 {
 
     @Override
     public boolean canInteract() {
-        return this.java_util_UUID_e() == null;
+        return this.getOwnerUUID() == null;
     }
 
     @Override
     public void detachPartner(EntityPlayer entityPlayer) {
-        if (!entityPlayer.getPersistentID().equals(this.java_util_UUID_e())) {
+        if (!entityPlayer.getPersistentID().equals(this.getOwnerUUID())) {
             return;
         }
         ResetGirl.EventHandler.resetGirl(this);
         this.setAnchored(false);
         this.setCurrentAction(Action.NULL);
-        this.void_a((UUID)null);
+        this.setOwnerUUID((UUID)null);
     }
 
     @Override
@@ -742,7 +742,7 @@ implements ai_class30 {
             }
             case "action": {
                 Minecraft minecraft = Minecraft.getMinecraft();
-                String string = minecraft.player.getPersistentID().equals(this.java_util_UUID_e()) && minecraft.gameSettings.thirdPersonView == 0 ? "1" : "3";
+                String string = minecraft.player.getPersistentID().equals(this.getOwnerUUID()) && minecraft.gameSettings.thirdPersonView == 0 ? "1" : "3";
                 switch (this.getCurrentAction()) {
                     case SHOULDER_IDLE: {
                         this.createAnimation("animation.goblin.shoulder_idle", true, event);
@@ -1150,10 +1150,10 @@ implements ai_class30 {
             if (ei_class2512 == null) {
                 return;
             }
-            if (!(ei_class2512 instanceof ai_class30)) {
+            if (!(ei_class2512 instanceof IGoblin)) {
                 return;
             }
-            if (((ai_class30)((Object)ei_class2512)).java_util_UUID_e() != null) {
+            if (((IGoblin)((Object)ei_class2512)).getOwnerUUID() != null) {
                 renderHandEvent.setCanceled(true);
             }
         }
@@ -1189,10 +1189,10 @@ implements ai_class30 {
             if (fp_class3242 == Action.THROWN) {
                 return;
             }
-            if (fp_class3242 == Action.START_THROWING && ((ai_class30)((Object)ei_class2512)).int_a() > 15) {
+            if (fp_class3242 == Action.START_THROWING && ((IGoblin)((Object)ei_class2512)).getThrowProgress() > 15) {
                 return;
             }
-            UUID uUID = ((PlayerGoblin)ei_class2512).java_util_UUID_e();
+            UUID uUID = ((PlayerGoblin)ei_class2512).getOwnerUUID();
             if (uUID == null) {
                 return;
             }
@@ -1258,7 +1258,7 @@ implements ai_class30 {
             for (EntityPlayer entityPlayer : minecraft.world.playerEntities) {
                 PlayerGoblin eq_class2642;
                 PlayerGirl ei_class2512;
-                if (entityPlayer == entityPlayerSP || !((ei_class2512 = PlayerGirl.GetPlayer(entityPlayer)) instanceof PlayerGoblin) || (eq_class2642 = (PlayerGoblin)ei_class2512).java_util_UUID_e() == null) continue;
+                if (entityPlayer == entityPlayerSP || !((ei_class2512 = PlayerGirl.GetPlayer(entityPlayer)) instanceof PlayerGoblin) || (eq_class2642 = (PlayerGoblin)ei_class2512).getOwnerUUID() == null) continue;
                 Action fp_class3242 = eq_class2642.getCurrentAction();
                 if (fp_class3242 == Action.THROWN || fp_class3242 == Action.START_THROWING) {
                     return;

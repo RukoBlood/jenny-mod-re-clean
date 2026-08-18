@@ -407,11 +407,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
 
     @Override
     protected void initEntityAI() {
-        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new DoorInteractAIGoal(this));
-        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.tasks.addTask(5, this.watchClosestGirlGoal);
     }
 
     @Override
@@ -887,7 +887,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }else {
             this.void_P();
             super.updateAITasks();
-            this.aiLookAtPlayer.isWatching = this.isFlyingIdle();
+            this.watchClosestGirlGoal.isWatching = this.isFlyingIdle();
             if (this.hasMasterOAlgo()) {
                 this.void_ae();
             } else {
@@ -1137,7 +1137,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                         if (this.bG == null || this.getDistance(this.bG.getX(), this.bG.getY(), this.bG.getZ()) > this.getFlightRange() || this.aC > 175) {
                             int n = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(10);
                             int n2 = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(10);
-                            int n3 = this.world.provider.getDimensionType() == DimensionType.NETHER ? (int) Math.ceil(this.posY) : WorldUtils.getSurfaceHeight(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
+                            int n3 = this.world.provider.getDimensionType() == DimensionType.NETHER ? (int) Math.ceil(this.posY) : WorldUtils.getHeightAt(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
                             this.bG = new BlockPos(this.getPosition().getX() + n, n3, this.getPosition().getZ() + n2);
                             this.aC = 0;
                         }

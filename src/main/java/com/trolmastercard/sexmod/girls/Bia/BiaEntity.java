@@ -296,8 +296,8 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.watchClosestGirlGoal);
         this.tasks.addTask(5, this.aiWander);
     }
 
@@ -366,7 +366,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             return null;
         }
         this.tasks.removeTask(this.aiWander);
-        this.tasks.removeTask(this.aiLookAtPlayer);
+        this.tasks.removeTask(this.watchClosestGirlGoal);
         Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         int n2 = -1;
         for (int i = 0; i < this.ad.length; ++i) {
@@ -416,7 +416,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             return null;
         }
         this.tasks.removeTask(this.aiWander);
-        this.tasks.removeTask(this.aiLookAtPlayer);
+        this.tasks.removeTask(this.watchClosestGirlGoal);
         Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         int n = -1;
         for (int i = 0; i < this.ad.length; ++i) {

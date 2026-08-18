@@ -410,22 +410,22 @@ extends PlayerGirl {
                     break;
                 }
                 case "hugMSG2": {
-                    this.broadcastChatMessage("Hmm...");
+                    this.sendGirlChatMessage("Hmm...");
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH[3], 3.0f);
                     break;
                 }
                 case "hugMSG3": {
-                    this.broadcastChatMessage("Hey!");
+                    this.sendGirlChatMessage("Hey!");
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_AHH[2], 3.0f);
                     break;
                 }
                 case "hugMSG4": {
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[0], 3.0f);
                     break;
                 }
                 case "hugMSG5": {
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[1], 3.0f);
                     break;
                 }
@@ -437,12 +437,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "hugselectedMSG1": {
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_MMM[0], 3.0f);
                     break;
                 }
                 case "hugselectedMSG2": {
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
                     break;
                 }
@@ -461,7 +461,7 @@ extends PlayerGirl {
                 case "sitdownMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
                     if (!this.getClosestPlayerID()) break;
-                    this.broadcastChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
                     break;
                 }
                 case "sitdownDone": {

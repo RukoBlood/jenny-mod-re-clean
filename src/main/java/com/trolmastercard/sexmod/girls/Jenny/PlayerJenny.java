@@ -345,12 +345,12 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "stripMSG1": {
-                    this.broadcastChatMessage("Hihi~");
+                    this.sendGirlChatMessage("Hihi~");
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "paymentMSG1": {
-                    this.broadcastChatMessage("Huh?");
+                    this.sendGirlChatMessage("Huh?");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_HUH[1]);
                     break;
                 }
@@ -379,7 +379,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "paymentMSG3": {
-                    this.broadcastChatMessage("Hehe~");
+                    this.sendGirlChatMessage("Hehe~");
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
@@ -397,7 +397,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG1": {
-                    this.broadcastChatMessage("What are you...");
+                    this.sendGirlChatMessage("What are you...");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
                     this.cameraYaw = 180.0f;
                     if (!this.isControlledByLocalPlayer()) break;
@@ -405,12 +405,12 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG2": {
-                    this.broadcastChatMessage("eh... boys...");
+                    this.sendGirlChatMessage("eh... boys...");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG3": {
-                    this.broadcastChatMessage("OHOhh...!");
+                    this.sendGirlChatMessage("OHOhh...!");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_AFTERSESSIONMOAN[0]);
                     break;
                 }
@@ -419,19 +419,19 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG5": {
-                    this.broadcastChatMessage("Was this really necessary?!");
+                    this.sendGirlChatMessage("Was this really necessary?!");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "bjiMSG6": {
-                    this.broadcastChatMessage("Oh~");
+                    this.sendGirlChatMessage("Oh~");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG7": {
-                    this.broadcastChatMessage("You like it?~");
+                    this.sendGirlChatMessage("You like it?~");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[4]);
                     break;
                 }
@@ -441,7 +441,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG9": {
-                    this.broadcastChatMessage("Hihihi~");
+                    this.sendGirlChatMessage("Hihihi~");
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[2]);
                     break;
                 }

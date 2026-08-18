@@ -11,15 +11,15 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class AbstractGoblinKoboldEntity extends GirlEntity {
-    final static public DataParameter<String> CURRENT_ACTION = EntityDataManager.createKey(AbstractGoblinKoboldEntity.class, DataSerializers.STRING).getSerializer().createKey(119);
-    final static public DataParameter<BlockPos> ACTION_TARGET_POS = EntityDataManager.createKey(AbstractGoblinKoboldEntity.class, DataSerializers.BLOCK_POS).getSerializer().createKey(120);
-    final static public DataParameter<String> APPEARANCE_DNA = EntityDataManager.createKey(AbstractGoblinKoboldEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
+public abstract class AbstractNpcOnlyEntity extends GirlEntity {
+    final static public DataParameter<String> CURRENT_ACTION = EntityDataManager.createKey(AbstractNpcOnlyEntity.class, DataSerializers.STRING).getSerializer().createKey(119);
+    final static public DataParameter<BlockPos> ACTION_TARGET_POS = EntityDataManager.createKey(AbstractNpcOnlyEntity.class, DataSerializers.BLOCK_POS).getSerializer().createKey(120);
+    final static public DataParameter<String> APPEARANCE_DNA = EntityDataManager.createKey(AbstractNpcOnlyEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
     String lastCachedAction = null;
     String lastCachedDNA = null;
     BlockPos lastCachedTargetPos = null;
 
-    protected AbstractGoblinKoboldEntity(World world) {
+    protected AbstractNpcOnlyEntity(World world) {
         super(world);
     }
 
@@ -63,7 +63,7 @@ public abstract class AbstractGoblinKoboldEntity extends GirlEntity {
 
     protected abstract String generateAppearanceDNA(StringBuilder dnaBuilder);
 
-    public static void appendFixedGene(StringBuilder dnaBuilder, int value) {
+    public static void appendPaddedNumber2(StringBuilder dnaBuilder, int value) {
         if (value < 10) {
             dnaBuilder.append(0);
         }
@@ -71,7 +71,7 @@ public abstract class AbstractGoblinKoboldEntity extends GirlEntity {
         dnaBuilder.append("-");
     }
 
-    public static void appendRandomGeneInclusive(StringBuilder stringBuilder, int bound) {
+    public static void appendPaddedNumber(StringBuilder stringBuilder, int bound) {
         int randomVal = ReferenceAndRotationHelper.RANDOM.nextInt(bound + 1);
         if (randomVal < 10) {
             stringBuilder.append(0);
@@ -101,7 +101,7 @@ public abstract class AbstractGoblinKoboldEntity extends GirlEntity {
         dnaBuilder.append("-");
     }
 
-    public static String[] SplitDnaIntoGenes(GirlEntity girl) {
+    public static String[] getModelCodeParts(GirlEntity girl) {
         return girl.getDataManager().get(APPEARANCE_DNA).split("-");
     }
     

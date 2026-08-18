@@ -41,7 +41,7 @@ extends CommandBase {
         for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
             if (!(em_class2582 instanceof GoblinEntity)) continue;
             GoblinEntity e3_class2192 = (GoblinEntity) em_class2582;
-            if (!e3_class2192.aX) continue;
+            if (!e3_class2192.isQueen) continue;
             if (entity2 == null) {
                 entity2 = e3_class2192;
                 continue;

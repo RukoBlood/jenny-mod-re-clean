@@ -24,7 +24,7 @@ import org.lwjgl.opengl.GL11;
 
 //ea.class
 //goblin related UI
-public class ea_class235 extends GuiScreen {
+public class GalathScreen extends GuiScreen {
     final static float j = 100.0f;
     final static float c = 15.0f;
     final static float k = 5.0f;
@@ -39,7 +39,7 @@ public class ea_class235 extends GuiScreen {
     GirlEntity girl;
     boolean isGoblin = false;
 
-    public ea_class235(GirlEntity girl) {
+    public GalathScreen(GirlEntity girl) {
         this.girl = girl;
         this.isGoblin = girl instanceof GoblinEntity;
     }
@@ -66,12 +66,12 @@ public class ea_class235 extends GuiScreen {
 
     void a() {
         if (this.isGoblin) {
-            ((GoblinEntity)this.girl).void_c(Minecraft.getMinecraft().player.getPersistentID());
+            ((GoblinEntity)this.girl).setThrowTarget(Minecraft.getMinecraft().player.getPersistentID());
         }
     }
 
     void b() {
-        ((GoblinEntity)this.girl).void_b(Minecraft.getMinecraft().player.getPersistentID());
+        ((GoblinEntity)this.girl).setPickupTarget(Minecraft.getMinecraft().player.getPersistentID());
     }
 
     void c() {

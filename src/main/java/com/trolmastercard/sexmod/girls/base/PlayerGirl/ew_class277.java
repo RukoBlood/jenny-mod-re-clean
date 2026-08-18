@@ -65,7 +65,7 @@ public abstract class ew_class277 extends PlayerGirl {
         String string = entityPlayer.getEntityData().getString("sexmod:GirlSpecific" + (Object)((Object) PlayerGirlEntity.fromGirl(this)));
         this.ar = false;
         if (!string.isEmpty()) {
-            this.void_a(ew_class277.c(string));
+            this.setCustomPartList(ew_class277.c(string));
         }
     }
 

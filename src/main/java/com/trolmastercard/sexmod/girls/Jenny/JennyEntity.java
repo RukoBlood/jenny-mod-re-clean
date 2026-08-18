@@ -248,7 +248,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
         }
         else {
             this.tasks.removeTask(this.aiWander);
-            this.tasks.removeTask(this.aiLookAtPlayer);
+            this.tasks.removeTask(this.watchClosestGirlGoal);
             Vec3d vec3d = new Vec3d(nearestBed.getX(), nearestBed.getY(), nearestBed.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
             Vec3d[][] vec3dArrayArray = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.5), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(0.5, 0.0, 1.5), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(-0.5, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0)}, {new Vec3d(1.5, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0)}};
@@ -353,8 +353,8 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.tasks.addTask(5, this.watchClosestGirlGoal);
         this.tasks.addTask(5, this.aiWander);
     }
 
@@ -581,12 +581,12 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "stripMSG1": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.hihi", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.hihi", new Object[0]));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "paymentMSG1": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.huh", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.huh", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_HUH[1]);
                     break;
                 }
@@ -615,7 +615,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "paymentMSG3": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.hehe", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.hehe", new Object[0]));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
@@ -633,7 +633,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjiMSG1": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext1", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext1", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     if (!this.isControlledByLocalPlayer()) break;
@@ -641,12 +641,12 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjiMSG2": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext2", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext2", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG3": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext3", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext3", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_AFTERSESSIONMOAN[0]);
                     break;
                 }
@@ -655,19 +655,19 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjiMSG5": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext4", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext4", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "bjiMSG6": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext5", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext5", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG7": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext6", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext6", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[4]);
                     break;
                 }
@@ -677,7 +677,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjiMSG9": {
-                    this.broadcastChatMessage(I18n.format("jenny.dialogue.blowjobtext8", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext8", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[2]);
                     break;
                 }

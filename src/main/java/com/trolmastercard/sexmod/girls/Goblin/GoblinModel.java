@@ -56,7 +56,7 @@ extends GirlModel<GirlEntity> {
         GoblinEntity e3_class2192 = (GoblinEntity) girl;
         UUID uUID = e3_class2192.getInteractionPlayerUUID();
         if (uUID == null) {
-            uUID = e3_class2192.java_util_UUID_e();
+            uUID = e3_class2192.getOwnerUUID();
         }
         if (uUID == null) {
             return true;
@@ -85,7 +85,7 @@ extends GirlModel<GirlEntity> {
         if ((fp_class3242 == Action.BREEDING_SLOW_2 || fp_class3242 == Action.BREEDING_FAST_2 || fp_class3242 == Action.BREEDING_CUM_2) && this.f.gameSettings.thirdPersonView == 0) {
             iBone2.setPositionY(iBone2.getPositionY() + 1.5f);
         }
-        ai_class30 ai_class302 = (ai_class30)((Object) girl);
+        IGoblin ai_class302 = (IGoblin)((Object) girl);
         if (bl && fp_class3242 == Action.AWAIT_PICK_UP || fp_class3242 == Action.VANISH) {
             this.a(girl, iBone2, iBone3);
         }
@@ -93,7 +93,7 @@ extends GirlModel<GirlEntity> {
             this.a(girl, iBone3);
         }
         if (fp_class3242 == Action.START_THROWING) {
-            if (this.f.player.getPersistentID().equals(ai_class302.java_util_UUID_e())) {
+            if (this.f.player.getPersistentID().equals(ai_class302.getOwnerUUID())) {
                 this.a(iBone2, animationProcessor, girl, ai_class302);
             } else {
                 this.a(iBone2, animationProcessor, girl);
@@ -134,7 +134,7 @@ extends GirlModel<GirlEntity> {
         if (em_class2582.getCurrentAction() != Action.PICK_UP) {
             return;
         }
-        if (this.f.gameSettings.thirdPersonView == 0 && this.f.player.getPersistentID().equals(((ai_class30)((Object)em_class2582)).java_util_UUID_e())) {
+        if (this.f.gameSettings.thirdPersonView == 0 && this.f.player.getPersistentID().equals(((IGoblin)((Object)em_class2582)).getOwnerUUID())) {
             return;
         }
         IBone iBone = animationProcessor.getBone("body");
@@ -149,8 +149,8 @@ extends GirlModel<GirlEntity> {
         iBone2.setPositionY(iBone2.getPositionY() - 32.0f);
     }
 
-    void a(AnimationProcessor animationProcessor, ai_class30 ai_class302, GirlEntity em_class2582) {
-        UUID uUID = ai_class302.java_util_UUID_e();
+    void a(AnimationProcessor animationProcessor, IGoblin ai_class302, GirlEntity em_class2582) {
+        UUID uUID = ai_class302.getOwnerUUID();
         if (uUID == null) {
             em_class2582.getInteractionPlayerUUID();
         }
@@ -245,11 +245,11 @@ extends GirlModel<GirlEntity> {
         }
     }
 
-    void a(IBone iBone, AnimationProcessor animationProcessor, GirlEntity em_class2582, ai_class30 ai_class302) {
+    void a(IBone iBone, AnimationProcessor animationProcessor, GirlEntity em_class2582, IGoblin ai_class302) {
         if (em_class2582.isLocallyRegistered()) {
             iBone.setHidden(true);
         } else {
-            iBone.setHidden(ai_class302.int_a() < 15);
+            iBone.setHidden(ai_class302.getThrowProgress() < 15);
         }
         if (!em_class2582.isLocallyRegistered()) {
             animationProcessor.getBone("steve").setHidden(true);

@@ -57,7 +57,7 @@ public class PyrocynicalEntity extends EntityLiving {
         if (this.targetWanderPos == null || this.getDistance(this.targetWanderPos.getX(), this.targetWanderPos.getY(), this.targetWanderPos.getZ()) > this.getMaxWanderDistance() || this.stuckTicksCounter > MAX_STUCK_TICKS) {
             int offsetX = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(MOVEMENT_RANGE);
             int offsetZ = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(MOVEMENT_RANGE);
-            int targetY = this.world.provider.getDimensionType() == DimensionType.NETHER ? (int)Math.ceil(this.posY) : WorldUtils.getSurfaceHeight(this.world, this.getPosition().getX() + offsetX, this.getPosition().getZ() + offsetZ);
+            int targetY = this.world.provider.getDimensionType() == DimensionType.NETHER ? (int)Math.ceil(this.posY) : WorldUtils.getHeightAt(this.world, this.getPosition().getX() + offsetX, this.getPosition().getZ() + offsetZ);
             this.targetWanderPos = new BlockPos(this.getPosition().getX() + offsetX, targetY, this.getPosition().getZ() + offsetZ);
             this.stuckTicksCounter = 0;
         }

@@ -13,7 +13,7 @@ import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.ai_class30;
+import com.trolmastercard.sexmod.IGoblin;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
@@ -37,8 +37,8 @@ public class am_class34 {
         UUID uUID = minecraft.player.getPersistentID();
         GirlEntity girlEntity = null;
         for (GirlEntity entity : GirlEntity.getGirlEntityList()) {
-            ai_class30 ai_class302;
-            if (entity == null || entity.isDead || !entity.world.isRemote || !(entity instanceof ai_class30) || !uUID.equals((ai_class302 = (ai_class30) ((Object) entity)).java_util_UUID_e()))
+            IGoblin ai_class302;
+            if (entity == null || entity.isDead || !entity.world.isRemote || !(entity instanceof IGoblin) || !uUID.equals((ai_class302 = (IGoblin) ((Object) entity)).getOwnerUUID()))
                 continue;
             girlEntity = entity;
             break;
@@ -77,11 +77,11 @@ public class am_class34 {
         }
         UUID uUID = minecraft.player.getPersistentID();
         for (GirlEntity girlEntity : GirlEntity.getGirlEntityList()) {
-            if (!girlEntity.world.isRemote || girlEntity.isDead || !(girlEntity instanceof ai_class30)) continue;
-            ai_class30 ai_class302 = (ai_class30) ((Object) girlEntity);
+            if (!girlEntity.world.isRemote || girlEntity.isDead || !(girlEntity instanceof IGoblin)) continue;
+            IGoblin ai_class302 = (IGoblin) ((Object) girlEntity);
             if (girlEntity.getCurrentAction() != Action.START_THROWING) continue;
             girlEntity.setLocallyRegistered(true);
-            minecraft.getRenderManager().renderEntity(girlEntity, 0.0, 0.0, 0.0, uUID.equals(ai_class302.java_util_UUID_e()) ? -420.69f : 0.0f, minecraft.getRenderPartialTicks(), false);
+            minecraft.getRenderManager().renderEntity(girlEntity, 0.0, 0.0, 0.0, uUID.equals(ai_class302.getOwnerUUID()) ? -420.69f : 0.0f, minecraft.getRenderPartialTicks(), false);
             girlEntity.setLocallyRegistered(false);
             return;
         }
@@ -96,10 +96,10 @@ public class am_class34 {
         Minecraft minecraft = Minecraft.getMinecraft();
         UUID uUID = minecraft.player.getPersistentID();
         for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
-            ai_class30 ai_class302;
+            IGoblin ai_class302;
             UUID uUID2;
             Action fp_class3242;
-            if (!(em_class2582 instanceof ai_class30) || (fp_class3242 = em_class2582.getCurrentAction()) != Action.PICK_UP && fp_class3242 != Action.START_THROWING || !uUID.equals(uUID2 = (ai_class302 = (ai_class30) ((Object) em_class2582)).java_util_UUID_e()))
+            if (!(em_class2582 instanceof IGoblin) || (fp_class3242 = em_class2582.getCurrentAction()) != Action.PICK_UP && fp_class3242 != Action.START_THROWING || !uUID.equals(uUID2 = (ai_class302 = (IGoblin) ((Object) em_class2582)).getOwnerUUID()))
                 continue;
             renderHandEvent.setCanceled(true);
             break;
@@ -111,10 +111,10 @@ public class am_class34 {
     public void a(RenderPlayerEvent.Pre pre) {
         UUID uUID = pre.getEntityPlayer().getPersistentID();
         for (GirlEntity girlEntity : GirlEntity.getGirlEntityList()) {
-            if (!(girlEntity instanceof ai_class30)) continue;
-            ai_class30 ai_class302 = (ai_class30) ((Object) girlEntity);
+            if (!(girlEntity instanceof IGoblin)) continue;
+            IGoblin ai_class302 = (IGoblin) ((Object) girlEntity);
             Action action = girlEntity.getCurrentAction();
-            if (action != Action.PICK_UP && action != Action.START_THROWING || !uUID.equals(ai_class302.java_util_UUID_e()))
+            if (action != Action.PICK_UP && action != Action.START_THROWING || !uUID.equals(ai_class302.getOwnerUUID()))
                 continue;
             pre.setCanceled(true);
             break;

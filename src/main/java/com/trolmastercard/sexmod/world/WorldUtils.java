@@ -91,7 +91,7 @@ public class WorldUtils {
         return targetDirection.normalize();
     }
 
-    public static int getSurfaceHeight(World world, int x, int z) {
+    public static int getHeightAt(World world, int x, int z) {
         HashSet surfaceBlocks = Sets.newHashSet((Object[])new Block[]{Blocks.GRASS, Blocks.SAND, Blocks.RED_SANDSTONE, Blocks.WATER, Blocks.STONE, Blocks.COBBLESTONE});
         int currentY = world.getHeight();
         boolean isSurfaceFound = false;
@@ -103,7 +103,7 @@ public class WorldUtils {
     }
 
     public static BlockPos getSurfacePosition(World world, BlockPos blockPos) {
-        return new BlockPos(blockPos.getX(), WorldUtils.getSurfaceHeight(world, blockPos.getX(), blockPos.getZ()), blockPos.getZ());
+        return new BlockPos(blockPos.getX(), WorldUtils.getHeightAt(world, blockPos.getX(), blockPos.getZ()), blockPos.getZ());
     }
 
     public static boolean b(World world, BlockPos blockPos) {

@@ -45,7 +45,7 @@ public class GenderChangeUI extends GuiScreen {
                 this.entities.add(girl);
                 String string = hashMap.get((Object)entity);
                 if (string == null) continue;
-                girl.void_a(GirlEntity.c(string));
+                girl.setCustomPartList(GirlEntity.c(string));
             } catch (Exception e) {
                 e.printStackTrace();
             }

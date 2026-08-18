@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.TeleportPlayer;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
-import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.ew_class277;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
@@ -85,7 +85,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    public void void_a(List<Integer> list) {
+    public void setCustomPartList(List<Integer> list) {
         StringBuilder stringBuilder = new StringBuilder();
         block5: for (int i = 0; i < list.size(); ++i) {
             int n = list.get(i);
@@ -103,7 +103,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     continue block5;
                 }
                 default: {
-                    AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, n);
+                    AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, n);
                 }
             }
         }
@@ -124,19 +124,19 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
 
     @Override
     protected String a(StringBuilder stringBuilder) {
-        AbstractGoblinKoboldEntity.appendRandomGeneExclusive(stringBuilder, 8);
-        AbstractGoblinKoboldEntity.appendRandomGeneExclusive(stringBuilder, 3);
-        AbstractGoblinKoboldEntity.appendGaussianBodyGene(stringBuilder);
-        AbstractGoblinKoboldEntity.appendGaussianBodyGene(stringBuilder);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 2);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 2);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 1);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 1);
+        AbstractNpcOnlyEntity.appendRandomGeneExclusive(stringBuilder, 8);
+        AbstractNpcOnlyEntity.appendRandomGeneExclusive(stringBuilder, 3);
+        AbstractNpcOnlyEntity.appendGaussianBodyGene(stringBuilder);
+        AbstractNpcOnlyEntity.appendGaussianBodyGene(stringBuilder);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 1);
+        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 1);
         return stringBuilder.toString();
     }
 
     @Override
-    public ArrayList<Integer> D() {
+    public ArrayList<Integer> getCustomPartIdList() {
         return new ArrayList<Integer>(){
             {
                 this.add(101);

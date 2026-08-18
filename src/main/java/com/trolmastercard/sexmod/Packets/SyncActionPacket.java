@@ -70,7 +70,7 @@ implements IMessage {
             for (GirlEntity girl : GirlEntity.girlList(uUID)) {
                 if (girl.world.isRemote) continue;
                 if (girl instanceof JennyEntity || girl instanceof EllieEntity || girl instanceof LunaEntity) {
-                    girl.tasks.removeTask(girl.aiLookAtPlayer);
+                    girl.tasks.removeTask(girl.watchClosestGirlGoal);
                     girl.tasks.removeTask(girl.aiWander);
                 }
                 girl.getNavigator().clearPath();

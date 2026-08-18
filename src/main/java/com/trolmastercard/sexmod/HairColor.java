@@ -6,7 +6,7 @@ package com.trolmastercard.sexmod;
 import net.minecraft.util.math.Vec3i;
 //g5
 //goblin colors or some shit
-public enum g5_class349 {
+public enum HairColor {
     PURPLE(103, 39, 123),
     ORANGE(251, 153, 56),
     BLACK(30, 33, 38),
@@ -18,7 +18,7 @@ public enum g5_class349 {
 
     final private Vec3i b;
 
-    private g5_class349(int n2, int n3, int n4) {
+    private HairColor(int n2, int n3, int n4) {
         this.b = new Vec3i(n2, n3, n4);
     }
 
@@ -26,9 +26,9 @@ public enum g5_class349 {
         return this.b;
     }
 
-    public static int a(g5_class349 g5_class3492) {
+    public static int a(HairColor g5_class3492) {
         int n = 0;
-        for (g5_class349 g5_class3493 : g5_class349.values()) {
+        for (HairColor g5_class3493 : HairColor.values()) {
             if (g5_class3492 == g5_class3493) {
                 return n;
             }

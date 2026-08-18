@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.girls.Kobold;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractPlayerKoblinGoboldRenderer;
-import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.EnumAction;
@@ -46,7 +46,7 @@ extends AbstractPlayerKoblinGoboldRenderer {
     protected Vector4f calculateBoneArmorColor(String boneName, float r, float g, float b) {
         String[] stringArray;
         int n;
-        if ("mouth".equals(boneName) && (n = Integer.parseInt((stringArray = AbstractGoblinKoboldEntity.SplitDnaIntoGenes(this.renderEntity))[7])) == 1) {
+        if ("mouth".equals(boneName) && (n = Integer.parseInt((stringArray = AbstractNpcOnlyEntity.getModelCodeParts(this.renderEntity))[7])) == 1) {
             return new Vector4f(r, g, b, -0.078125f);
         }
         return super.calculateBoneArmorColor(boneName, r, g, b);

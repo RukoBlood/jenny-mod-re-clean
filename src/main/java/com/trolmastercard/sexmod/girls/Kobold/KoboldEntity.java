@@ -34,7 +34,7 @@ import com.trolmastercard.sexmod.companion.DoorInteractAIGoal;
 import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
-import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
+import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
@@ -111,7 +111,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
 // ff_class308
-public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, IInventory, dr_class199 {
+public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInventory, dr_class199 {
     final static public EyeAndKoboldColor COLOR = EyeAndKoboldColor.PURPLE;
     final static public float Y = 0.25f;
     final static int ar = 20;
@@ -229,15 +229,15 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
         KoboldEntity.appendRandomGeneExclusive(dnaBuilder, 3);
         KoboldEntity.appendGaussianBodyGene(dnaBuilder);
         KoboldEntity.appendGaussianBodyGene(dnaBuilder);
-        KoboldEntity.appendRandomGeneInclusive(dnaBuilder, 2);
-        KoboldEntity.appendRandomGeneInclusive(dnaBuilder, 2);
-        KoboldEntity.appendRandomGeneInclusive(dnaBuilder, 1);
-        KoboldEntity.appendRandomGeneInclusive(dnaBuilder, 1);
+        KoboldEntity.appendPaddedNumber(dnaBuilder, 2);
+        KoboldEntity.appendPaddedNumber(dnaBuilder, 2);
+        KoboldEntity.appendPaddedNumber(dnaBuilder, 1);
+        KoboldEntity.appendPaddedNumber(dnaBuilder, 1);
         return dnaBuilder.toString();
     }
 
     @Override
-    public ArrayList<Integer> D() {
+    public ArrayList<Integer> getCustomPartIdList() {
         return new ArrayList<Integer>(){
             {
                 this.add(101);
@@ -265,7 +265,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
     }
 
     @Override
-    public void void_a(List<Integer> list) {
+    public void setCustomPartList(List<Integer> list) {
         StringBuilder stringBuilder = new StringBuilder();
         block5: for (int i = 0; i < list.size(); ++i) {
             int n = list.get(i);
@@ -288,7 +288,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
                     continue block5;
                 }
                 default: {
-                    KoboldEntity.appendFixedGene(stringBuilder, n);
+                    KoboldEntity.appendPaddedNumber2(stringBuilder, n);
                 }
             }
         }
@@ -318,7 +318,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
                     continue block5;
                 }
                 default: {
-                    KoboldEntity.appendFixedGene(stringBuilder, n);
+                    KoboldEntity.appendPaddedNumber2(stringBuilder, n);
                 }
             }
         }
@@ -327,8 +327,8 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
     }
 
     @Override
-    public Point2D g(int n) {
-        switch (n) {
+    public Point2D getModelPartByIndex(int index) {
+        switch (index) {
             case 0: {
                 return new Point2D(160, 0);
             }
@@ -403,11 +403,11 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
 
     @Override
     protected void initEntityAI() {
-        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new DoorInteractAIGoal(this));
-        this.tasks.addTask(5, this.aiLookAtPlayer);
+        this.tasks.addTask(5, this.watchClosestGirlGoal);
     }
 
     @Override
@@ -696,7 +696,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
         this.entityDataManager.set(ak, KoboldManager.isTribeAlerted((UUID)optional.get()));
         this.void_d();
         this.void_h();
-        this.aiLookAtPlayer.isWatching = this.boolean_o();
+        this.watchClosestGirlGoal.isWatching = this.boolean_o();
     }
 
     @Override
@@ -955,7 +955,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
                 case REST: {
                     this.p(uUID);
                     KoboldManager.setTribeHomePos(uUID, (BlockPos) null);
-                    this.broadcastChatMessage("okay resting time owo");
+                    this.sendGirlChatMessage("okay resting time owo");
                     break;
                 }
                 case ACTIVE: {
@@ -1111,7 +1111,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
         if (collection.isEmpty()) {
             this.ao = false;
             this.r(uUID);
-            this.broadcastChatMessage("Lets go somewhere else");
+            this.sendGirlChatMessage("Lets go somewhere else");
         }
     }
 
@@ -1137,7 +1137,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
             return;
         }
         this.ao = true;
-        this.broadcastChatMessage("Time to work bitches!");
+        this.sendGirlChatMessage("Time to work bitches!");
         int n = KoboldManager.getTribeMemberCount(uUID);
         for (int i = 1; i < n; ++i) {
             this.c(uUID, collection);
@@ -1179,7 +1179,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
         int n = (int)((double)((blockPos3.getX() > 0 ? 1 : -1) * 20) * (d == (double)Math.abs(blockPos3.getX()) ? d3 : 1.0 - d3));
         int n2 = (int)((double)((blockPos3.getZ() > 0 ? 1 : -1) * 20) * (d == (double)Math.abs(blockPos3.getZ()) ? d3 : 1.0 - d3));
         BlockPos blockPos4 = this.getPosition().add(n, 0, n2);
-        blockPos4 = new BlockPos(blockPos4.getX(), WorldUtils.getSurfaceHeight(this.world, blockPos4.getX(), blockPos4.getZ()) + 1, blockPos4.getZ());
+        blockPos4 = new BlockPos(blockPos4.getX(), WorldUtils.getHeightAt(this.world, blockPos4.getX(), blockPos4.getZ()) + 1, blockPos4.getZ());
         return blockPos4;
     }
 
@@ -1189,7 +1189,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
         do {
             blockPos = this.getPosition();
             blockPos = blockPos.add((50 + this.getRNG().nextInt(50)) * (this.getRNG().nextBoolean() ? 1 : -1), 0, (50 + this.getRNG().nextInt(50)) * (this.getRNG().nextBoolean() ? 1 : -1));
-        } while (((blockPos = new BlockPos(blockPos.getX(), WorldUtils.getSurfaceHeight(this.world, blockPos.getX(), blockPos.getZ()), blockPos.getZ())).getY() <= 0 || !this.getNavigator().canEntityStandOnPos(blockPos)) && ++n < 100);
+        } while (((blockPos = new BlockPos(blockPos.getX(), WorldUtils.getHeightAt(this.world, blockPos.getX(), blockPos.getZ()), blockPos.getZ())).getY() <= 0 || !this.getNavigator().canEntityStandOnPos(blockPos)) && ++n < 100);
         KoboldManager.setTribeHomePos(uUID, blockPos);
     }
 
@@ -1213,7 +1213,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
             return;
         }
         KoboldTaskInfo.createTreeFellingTask(this.world, blockPos, uUID);
-        this.broadcastChatMessage("Someone, go fall this tree!");
+        this.sendGirlChatMessage("Someone, go fall this tree!");
     }
 
     @CheckReturnValue
@@ -1367,10 +1367,10 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
                 bs_class972 = bs_class973;
                 this.aI = null;
                 if (bs_class973.getTaskType() == KoboldTaskInfo.KoboldTask.FALL_TREE) {
-                    this.broadcastChatMessage("Ima fall this tree owo");
+                    this.sendGirlChatMessage("Ima fall this tree owo");
                     break;
                 }
-                this.broadcastChatMessage("Ima go mine uwu");
+                this.sendGirlChatMessage("Ima go mine uwu");
                 this.b(bs_class973.getOriginPos());
                 this.world.setBlockState(bs_class973.getOriginPos(), Blocks.AIR.getDefaultState());
                 break;
@@ -1967,7 +1967,7 @@ public class KoboldEntity extends AbstractGoblinKoboldEntity implements IEllie, 
         if (this.ap == null || this.getDistance(this.ap.getX(), this.ap.getY(), this.ap.getZ()) > this.double_n() || this.ab > 100) {
             int n = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(5);
             int n2 = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(5);
-            int n3 = WorldUtils.getSurfaceHeight(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
+            int n3 = WorldUtils.getHeightAt(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
             this.ap = new BlockPos(this.getPosition().getX() + n, n3, this.getPosition().getZ() + n2);
             this.ab = 0;
         }
