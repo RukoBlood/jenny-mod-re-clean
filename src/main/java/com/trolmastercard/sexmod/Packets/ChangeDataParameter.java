@@ -76,7 +76,7 @@ implements IMessage {
                         break;
                     }
                     case "currentAction": {
-                        if (Action.valueOf(n_class4152.c) == Action.ATTACK && girlEntity.currentAction() != Action.NULL) break;
+                        if (Action.valueOf(n_class4152.c) == Action.ATTACK && girlEntity.getCurrentAction() != Action.NULL) break;
                         girlEntity.setCurrentAction(Action.valueOf(n_class4152.c));
                         break;
                     }

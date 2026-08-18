@@ -25,9 +25,9 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.util.interfaces.IBoneRotationSupplier;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;
@@ -85,8 +85,8 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         this.armBonesMap.put("customLowerArmL", "lowerArmL");
         this.armBonesMap.put("customArmR", "armR");
         this.armBonesMap.put("customLowerArmR", "lowerArmR");
-        this.boneRotationSuppliers.put("lowerArmR", girl -> TrigMath.toRadians(girl.getRightArmRotation()));
-        this.boneRotationSuppliers.put("lowerArmL", girl -> TrigMath.toRadians(girl.getLeftArmRotation()));
+        this.boneRotationSuppliers.put("lowerArmR", girl -> TrigMath.wrapDegrees(girl.getRightArmRotation()));
+        this.boneRotationSuppliers.put("lowerArmL", girl -> TrigMath.wrapDegrees(girl.getLeftArmRotation()));
     }
 
     boolean validateAndCleanModel(CustomModelEntity entity) {
@@ -218,7 +218,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         int blockLight = targetEntity.world.getLight((BlockPos)entityBlockPos, true);
 
         Vec3d vec3d = new Vec3d(1.0, 1.0, 1.0);
-        float lightFactor = Utils.clamp(blockLight, 10.0f, 15.0f) / 15.0f;
+        float lightFactor = ThreadNames.clamp(blockLight, 10.0f, 15.0f) / 15.0f;
         this.colorMultiplier = new Vec3d(vec3d.x * (double)lightFactor, vec3d.y * (double)lightFactor, vec3d.z * (double)lightFactor);
 
         GlStateManager.pushMatrix();
@@ -273,10 +273,10 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
             entity.posX = targetEntity.posX;
             entity.posY = targetEntity.posY;
             entity.posZ = targetEntity.posZ;
-            targetPos = Reference.LerpVec3d(new Vec3d(targetEntity.lastTickPosX, targetEntity.lastTickPosY, targetEntity.lastTickPosZ), targetEntity.getPositionVector(), (double)partialTicks);
+            targetPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(targetEntity.lastTickPosX, targetEntity.lastTickPosY, targetEntity.lastTickPosZ), targetEntity.getPositionVector(), (double)partialTicks);
         }
         EntityPlayerSP object = mc.player;
-        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)partialTicks);
+        Vec3d vec3d2 = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)partialTicks);
         return targetPos.subtract(vec3d2);
     }
 

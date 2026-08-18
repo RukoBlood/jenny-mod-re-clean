@@ -56,7 +56,7 @@ implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+                for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
                     if (em_class2582.world.isRemote || !em_class2582.girlID().equals(bo_class902.a)) continue;
                     ((EntityPlayerMP)em_class2582.world.getPlayerEntityByUUID(bo_class902.b)).openGui(Main.instance, 0, em_class2582.world, em_class2582.getPosition().getX(), em_class2582.getPosition().getY(), em_class2582.getPosition().getZ());
                 }

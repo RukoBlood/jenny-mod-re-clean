@@ -23,10 +23,10 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
-import com.trolmastercard.sexmod.util.AnimationStateHolder;
+import com.trolmastercard.sexmod.util.Vector4d;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.interfaces.IWingsOwner;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.interfaces.IGalath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,7 +46,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlayerGalath
 extends PlayerGirl
-implements IWingsOwner {
+implements IGalath {
     boolean ap = false;
     int ar = 0;
     boolean as = false;
@@ -72,12 +72,12 @@ implements IWingsOwner {
 
     @Override
     @Nullable
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         return null;
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.CORRUPT_FAST || action == Action.CORRUPT_SLOW) {
             return Action.CORRUPT_CUM;
         }
@@ -88,7 +88,7 @@ implements IWingsOwner {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 2.3f;
     }
 
@@ -111,7 +111,7 @@ implements IWingsOwner {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
+        Action fp_class3243 = this.getCurrentAction();
         if (fp_class3243 == Action.CORRUPT_CUM && (action == Action.CORRUPT_FAST || action == Action.CORRUPT_SLOW)) {
             return;
         }
@@ -137,7 +137,7 @@ implements IWingsOwner {
     }
 
     @Override
-    public boolean isWingsAnimated() {
+    public boolean isHuggingManglelie() {
         return false;
     }
 
@@ -158,18 +158,18 @@ implements IWingsOwner {
     }
 
     @Override
-    public AnimationStateHolder getWingAnimationState() {
-        return new AnimationStateHolder(0.0, 0.0, 0.0, 0.0);
+    public Vector4d getFlightData() {
+        return new Vector4d(0.0, 0.0, 0.0, 0.0);
     }
 
     @Override
-    public boolean hasWingState() {
+    public boolean isWingsAnimated() {
         return this.getOutfitIndex() == 0 || this.ap;
     }
 
     @Override
     public boolean isWingsVisible() {
-        switch (this.currentAction()) {
+        switch (this.getCurrentAction()) {
             case CORRUPT_CUM:
             case CORRUPT_FAST:
             case CORRUPT_SLOW:
@@ -199,14 +199,14 @@ implements IWingsOwner {
         if (!this.isControlledByLocalPlayer()) {
             return;
         }
-        if (this.currentAction() != Action.RAPE_INTRO) {
+        if (this.getCurrentAction() != Action.RAPE_INTRO) {
             return;
         }
         SexUI.a(false);
     }
 
     void void_b() {
-        switch (this.currentAction()) {
+        switch (this.getCurrentAction()) {
             case CORRUPT_CUM:
             case CORRUPT_FAST:
             case CORRUPT_SLOW:
@@ -234,7 +234,7 @@ implements IWingsOwner {
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.galath.null", true, event);
                     break;
                 }
@@ -243,7 +243,7 @@ implements IWingsOwner {
             }
             case "movement": {
                 this.movementController.setAnimationSpeed(1.0);
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.galath.null", true, event);
                     break;
                 }
@@ -274,7 +274,7 @@ implements IWingsOwner {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         return PlayState.STOP;
                     }
@@ -440,7 +440,7 @@ implements IWingsOwner {
                     float f = this.getYawRotation().floatValue() + 220.0f;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.getYawRotation().floatValue()).add(this.getTargetPosition());
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "enableBoyCam": {
@@ -473,7 +473,7 @@ implements IWingsOwner {
                     MovementInput movementInput = entityPlayerSP.movementInput;
                     Vec2f vec2f = movementInput.getMoveVector();
                     if (vec2f.x == 0.0f && vec2f.y == 0.0f) break;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(-vec2f.x, 0.0, vec2f.y), Reference.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), Reference.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(-vec2f.x, 0.0, vec2f.y), ReferenceAndRotationHelper.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), ReferenceAndRotationHelper.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
                     PackageHandler.INSTANCE.sendToServer((IMessage)new UpdateVelocity(vec3d, this.girlID()));
                     break;
                 }
@@ -495,7 +495,7 @@ implements IWingsOwner {
                 }
                 case "sexui": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                 }
             }
         });

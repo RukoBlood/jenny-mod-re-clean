@@ -20,7 +20,7 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -102,7 +102,7 @@ public class EditorWand extends Item {
                 return;
             }
         }
-        ClothingGui.openGuiForGirl(((GirlEntity)entity).com_trolmastercard_sexmod_em_class258_E());
+        ClothingGui.openGuiForGirl(((GirlEntity)entity).asGirl());
     }
 
     @SubscribeEvent
@@ -134,7 +134,7 @@ public class EditorWand extends Item {
         String string2 = GirlEntity.c(GirlEntity.h(em_class2582.girlID()));
         entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{em_class2582.getGirlName(), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
-        Utils.copyToClipboard(String.format("%s$%s", string, string2));
+        ThreadNames.copyToClipboard(String.format("%s$%s", string, string2));
     }
 
     @SubscribeEvent
@@ -170,9 +170,9 @@ public class EditorWand extends Item {
         }
         String string = ei_class2512.getCustomModelKey();
         String string2 = GirlEntity.c(GirlEntity.h(ei_class2512.girlID()));
-        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{Utils.CapitalizeString(PlayerGirlEntity.fromGirl(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
+        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{ThreadNames.CapitalizeString(PlayerGirlEntity.fromGirl(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
-        Utils.copyToClipboard(String.format("%s$%s", string, string2));
+        ThreadNames.copyToClipboard(String.format("%s$%s", string, string2));
         return true;
     }
 

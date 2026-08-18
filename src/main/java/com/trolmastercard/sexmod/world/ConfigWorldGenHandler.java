@@ -37,32 +37,32 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class WorldGenStructure extends WorldSavedData implements IWorldGenerator {
+public class ConfigWorldGenHandler extends WorldSavedData implements IWorldGenerator {
     final static String j = "sexmod:generation";
     final static int h = 156;
     final static int a = 62;
     final static int b = 6;
     final double f = 0.004f;
-    static public boolean i = true;
+    static public boolean GENERATION_ENABLED = true;
     final List<genStructure> e = new ArrayList<genStructure>();
     final List<a_inner345> d = new ArrayList<a_inner345>();
-    static private WorldGenStructure worldGenStructure = null;
+    static private ConfigWorldGenHandler configWorldGenHandler = null;
     static boolean c = true;
 
-    public static WorldGenStructure Generate() {
-        if (worldGenStructure == null) {
-            worldGenStructure = new WorldGenStructure();
+    public static ConfigWorldGenHandler Generate() {
+        if (configWorldGenHandler == null) {
+            configWorldGenHandler = new ConfigWorldGenHandler();
         }
-        return worldGenStructure;
+        return configWorldGenHandler;
     }
 
-    public WorldGenStructure(String string) {
+    public ConfigWorldGenHandler(String string) {
         this();
     }
 
-    private WorldGenStructure() {
+    private ConfigWorldGenHandler() {
         super(j);
-        worldGenStructure = this;
+        configWorldGenHandler = this;
         this.e.add(new genStructure("ellie", new HashSet<Biome>(Arrays.asList(Biomes.REDWOOD_TAIGA, Biomes.COLD_TAIGA, Biomes.TAIGA, Biomes.ROOFED_FOREST)), new Vec3i(30, 27, 26), 9, true));
         this.e.add(new genStructure("jenny", new HashSet<Biome>(Arrays.asList(Biomes.PLAINS, Biomes.FOREST)), new Vec3i(9, 4, 9), 1, true));
         this.e.add(new genStructure("ellie", new HashSet<Biome>(Arrays.asList(Biomes.REDWOOD_TAIGA, Biomes.COLD_TAIGA, Biomes.TAIGA, Biomes.ROOFED_FOREST)), new Vec3i(30, 27, 26), 9, true));
@@ -84,7 +84,7 @@ public class WorldGenStructure extends WorldSavedData implements IWorldGenerator
     @SubscribeEvent
     public void a(WorldEvent.Load load) {
         World world = load.getWorld();
-        world.getMapStorage().getOrLoadData(WorldGenStructure.class, j);
+        world.getMapStorage().getOrLoadData(ConfigWorldGenHandler.class, j);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class WorldGenStructure extends WorldSavedData implements IWorldGenerator
             String string = nBTTagCompound2.getString("sexmod:name" + n);
             String string2 = nBTTagCompound2.getString("sexmod:pos" + n);
             if (string.isEmpty() || string2.isEmpty()) break;
-            this.d.add(new a_inner345(WorldGenStructure.a(string2), string));
+            this.d.add(new a_inner345(ConfigWorldGenHandler.a(string2), string));
             ++n;
         }
     }
@@ -108,7 +108,7 @@ public class WorldGenStructure extends WorldSavedData implements IWorldGenerator
         int n = 0;
         for (a_inner345 a_inner3452 : this.d) {
             nBTTagCompound2.setString("sexmod:name" + n, a_inner3452.a);
-            nBTTagCompound2.setString("sexmod:pos" + n++, WorldGenStructure.a(a_inner3452.b));
+            nBTTagCompound2.setString("sexmod:pos" + n++, ConfigWorldGenHandler.a(a_inner3452.b));
         }
         nBTTagCompound.setTag(j, nBTTagCompound2);
         return nBTTagCompound;
@@ -124,7 +124,7 @@ public class WorldGenStructure extends WorldSavedData implements IWorldGenerator
     }
 
     public void generate(Random random, int n, int n2, World world, IChunkGenerator iChunkGenerator, IChunkProvider iChunkProvider) {
-        if (!i) {
+        if (!GENERATION_ENABLED) {
             return;
         }
         if (world.getWorldType() == WorldType.FLAT) {

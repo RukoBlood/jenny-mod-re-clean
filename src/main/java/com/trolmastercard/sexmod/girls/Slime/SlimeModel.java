@@ -67,8 +67,8 @@ extends GirlModel<GirlEntity> {
         super.setLivingAnimations(girl, instanceID, event);
         AnimationProcessor<SlimeEntity> animationProcessor = this.getAnimationProcessor();
         if (!(girl.world instanceof FakeWorld) && animationProcessor.getBone("bedSlime") != null && animationProcessor.getBone("bedSlimeLayer") != null) {
-            animationProcessor.getBone("bedSlime").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.currentAction()));
-            animationProcessor.getBone("bedSlimeLayer").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.currentAction()));
+            animationProcessor.getBone("bedSlime").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.getCurrentAction()));
+            animationProcessor.getBone("bedSlimeLayer").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.getCurrentAction()));
         }
         if (girl instanceof PlayerGirl) {
             return;

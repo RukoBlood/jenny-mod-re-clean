@@ -8,8 +8,8 @@
 package com.trolmastercard.sexmod.gui.Galath;
 
 import com.trolmastercard.sexmod.FlightUITextureBounds;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -42,7 +42,7 @@ public class GalathFlightUI extends Gui {
     static long uiFadeInStartTime = 0L;
     static long uiFadeOutStartTime = 9223372036854775307L;
 
-    public static boolean canBoost() {
+    public static boolean canUseCharge() {
         if (availableCharges <= 0) {
             return false;
         }
@@ -90,7 +90,7 @@ public class GalathFlightUI extends Gui {
                 ? (float)(curTime - uiFadeInStartTime) / (float) FADE_DURATION
                 : (curTime < uiFadeOutStartTime + FADE_DURATION ? 1.0f + (float)(uiFadeOutStartTime - curTime) / (float) FADE_DURATION : 1.0f);
 
-        alpha = Utils.clamp(alpha, 0.0f, 1.0f);
+        alpha = ThreadNames.clamp(alpha, 0.0f, 1.0f);
         GlStateManager.color(1.0f, 1.0f, 1.0f, alpha);
 
         this.drawElement(BACKGROUND_BOUNDS, centerX - GalathFlightUI.BACKGROUND_BOUNDS.w / 2, screenH - UI_Y_OFFSET);
@@ -98,8 +98,8 @@ public class GalathFlightUI extends Gui {
         this.drawElement(ICON_SHADOWS_BOUNDS, centerX - GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2 + 1, screenH - UI_Y_OFFSET + 3);
         this.drawElement(ICON_SHADOWS_BOUNDS, centerX + GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2 + 1, screenH - UI_Y_OFFSET + 3);
 
-        float spentProgress = (float) Reference.EaseOutSine(Math.min(1.0f, (float)(curTime - lastChargeUsedTime) / ANIMATION_SPEED));
-        float regenProgress = spentProgress == 1.0f ? Utils.clamp(1.0f - (float)(curTime - GalathFlightUI.lastRegenTime) / 500.0f, 0.0f, 1.0f) : 0.0f;
+        float spentProgress = (float) ReferenceAndRotationHelper.EaseOutSine(Math.min(1.0f, (float)(curTime - lastChargeUsedTime) / ANIMATION_SPEED));
+        float regenProgress = spentProgress == 1.0f ? ThreadNames.clamp(1.0f - (float)(curTime - GalathFlightUI.lastRegenTime) / 500.0f, 0.0f, 1.0f) : 0.0f;
         this.renderDynamicChargeIcon(1, -1.5f * (float) GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w, regenProgress, spentProgress, centerX, screenH, alpha);
         this.renderDynamicChargeIcon(2, (float)(-GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w) / 2.0f, regenProgress, spentProgress, centerX, screenH, alpha);
         this.renderDynamicChargeIcon(3, (float) GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2.0f, regenProgress, spentProgress, centerX, screenH, alpha);

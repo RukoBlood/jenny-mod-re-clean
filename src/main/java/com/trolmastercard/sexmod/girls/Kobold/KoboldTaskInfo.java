@@ -88,7 +88,7 @@ public class KoboldTaskInfo {
 
     public void resetAllWorkers() {
         for (KoboldEntity worker : this.assignedWorkers) {
-            if (worker.playerSheHasSexWith() != null) continue;
+            if (worker.getInteractionPlayerUUID() != null) continue;
             worker.setNoGravity(false);
             worker.noClip = false;
             worker.setCurrentAction(Action.NULL);

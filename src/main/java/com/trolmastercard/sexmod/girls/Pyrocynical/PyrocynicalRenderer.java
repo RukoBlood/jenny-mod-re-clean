@@ -10,8 +10,8 @@ package com.trolmastercard.sexmod.girls.Pyrocynical;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Utils;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ThreadNames;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -58,8 +58,8 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
         EntityPlayerSP entityPlayerSP = this.minecraft.player;
-        Vec3d vec3d = Reference.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f2);
-        Vec3d vec3d2 = Reference.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
+        Vec3d vec3d = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f2);
+        Vec3d vec3d2 = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         ResourceLocation resourceLocation = this.a(entity, Math.abs(vec3d3.x) + Math.abs(vec3d3.y) + Math.abs(vec3d3.z));
         this.minecraft.renderEngine.bindTexture(resourceLocation);
@@ -114,7 +114,7 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
         if (al_class332.triggerTick == -1) {
             return 0;
         }
-        return (int) Utils.clamp(this.minecraft.player.ticksExisted - al_class332.triggerTick, 1.0f, 30.0f);
+        return (int) ThreadNames.clamp(this.minecraft.player.ticksExisted - al_class332.triggerTick, 1.0f, 30.0f);
     }
 
     float a(PyrocynicalEntity al_class332, float f) {
@@ -136,7 +136,7 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
             return 0.0f;
         }
         int n = 90;
-        float f2 = Utils.clamp(this.minecraft.player.ticksExisted - al_class332.triggerTick, n, 120.0f) - (float)n;
+        float f2 = ThreadNames.clamp(this.minecraft.player.ticksExisted - al_class332.triggerTick, n, 120.0f) - (float)n;
         float f3 = (f2 + f) / 30.0f;
         return 1.0f - f3;
     }

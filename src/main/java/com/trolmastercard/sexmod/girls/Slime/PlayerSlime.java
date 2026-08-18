@@ -19,7 +19,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,7 +45,7 @@ public class PlayerSlime extends PlayerGirl {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 1.6f;
     }
 
@@ -91,17 +91,17 @@ public class PlayerSlime extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.CUMBLOWJOB && (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB)) {
+        if (this.getCurrentAction() == Action.CUMBLOWJOB && (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB)) {
             return;
         }
-        if (this.currentAction() == Action.DOGGYCUM && (action == Action.DOGGYFAST || action == Action.DOGGYSLOW)) {
+        if (this.getCurrentAction() == Action.DOGGYCUM && (action == Action.DOGGYFAST || action == Action.DOGGYSLOW)) {
             return;
         }
         super.setCurrentAction(action);
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.SUCKBLOWJOB) {
             return Action.THRUSTBLOWJOB;
         }
@@ -112,7 +112,7 @@ public class PlayerSlime extends PlayerGirl {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.SUCKBLOWJOB || action == Action.THRUSTBLOWJOB) {
             return Action.CUMBLOWJOB;
         }
@@ -125,7 +125,7 @@ public class PlayerSlime extends PlayerGirl {
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        if (this.currentAction() != Action.WAITDOGGY) {
+        if (this.getCurrentAction() != Action.WAITDOGGY) {
             return;
         }
         EntityPlayer partner = this.getPlayerPartner();
@@ -157,7 +157,7 @@ public class PlayerSlime extends PlayerGirl {
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() == Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() == Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.slime.null", true, event);
                     break;
                 }
@@ -165,7 +165,7 @@ public class PlayerSlime extends PlayerGirl {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.slime.null", true, event);
                     break;
                 }
@@ -196,11 +196,11 @@ public class PlayerSlime extends PlayerGirl {
                 break;
             }
             case "action": {
-                if (this.currentAction() == Action.NULL) {
+                if (this.getCurrentAction() == Action.NULL) {
                     this.createAnimation("animation.slime.null", true, event);
                     break;
                 }
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case UNDRESS: {
                         this.createAnimation("animation.slime.undress", false, event);
                         break block5;
@@ -298,7 +298,7 @@ public class PlayerSlime extends PlayerGirl {
                 }
                 case "sexUiOn": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "bjiMSG10": {
@@ -313,7 +313,7 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG12": {
-                    if (Reference.RANDOM.nextInt(5) == 0) {
+                    if (ReferenceAndRotationHelper.RANDOM.nextInt(5) == 0) {
                         this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
                     this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
@@ -331,7 +331,7 @@ public class PlayerSlime extends PlayerGirl {
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "bjtDone": {
@@ -410,14 +410,14 @@ public class PlayerSlime extends PlayerGirl {
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "doggyslowMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
-                    int n = Reference.RANDOM.nextInt(4);
+                    int n = ReferenceAndRotationHelper.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = Reference.RANDOM.nextInt(2);
+                        n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                         } else {
@@ -437,7 +437,7 @@ public class PlayerSlime extends PlayerGirl {
                     }
                     ++this.thrustSoundCounter;
                     if (this.thrustSoundCounter % 2 == 0) {
-                        int n = Reference.RANDOM.nextInt(2);
+                        int n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                             break;

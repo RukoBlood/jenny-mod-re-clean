@@ -12,7 +12,7 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
@@ -83,7 +83,7 @@ public class SetModelCodeCommand extends CommandBase implements IClientCommand {
 
     String showModelCode(GirlEntity girl) {
         if (girl instanceof PlayerGirl) {
-            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + Utils.CapitalizeString(PlayerGirlEntity.fromGirl(girl).toString());
+            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + ThreadNames.CapitalizeString(PlayerGirlEntity.fromGirl(girl).toString());
         }
         return (Object)((Object)TextFormatting.YELLOW) + "applied model code to this " + girl.getGirlName();
     }

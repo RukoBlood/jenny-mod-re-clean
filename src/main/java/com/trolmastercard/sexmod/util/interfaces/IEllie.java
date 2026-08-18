@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod.util.interfaces;
 
-public interface bh_class82 {
-    public void void_b();
+public interface IEllie {
+    public void setDismounted();
 }
 

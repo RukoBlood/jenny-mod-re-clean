@@ -4,7 +4,7 @@
 package com.trolmastercard.sexmod.girls.Pyrocynical;
 
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -102,7 +102,7 @@ public class PyrocynicalEntity extends EntityLiving {
             this.playDissapearEffects();
         }
         this.isDissapearing = true;
-        Utils.runDelayedTask(6250, () -> this.world.removeEntity(this));
+        ThreadNames.createDaemonThread(6250, () -> this.world.removeEntity(this));
         return false;
     }
 

@@ -25,7 +25,7 @@ import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.girls.Slime.PlayerSlime;
 import com.trolmastercard.sexmod.girls.Slime.SlimeEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.entity.Entity;
 
 //fy
@@ -57,7 +57,7 @@ public enum PlayerGirlEntity {
         this.playerClass = playerClass;
         this.isNpcOnly = false;
         this.hasSpecifics = hasSpecifics;
-        this.editorID = Reference.b++;
+        this.editorID = ReferenceAndRotationHelper.b++;
     }
 
     private PlayerGirlEntity(Class<? extends GirlEntity> npcClass, int id, Class<? extends PlayerGirl> playerNPCClass, int PlayerID) {
@@ -67,7 +67,7 @@ public enum PlayerGirlEntity {
         this.playerClass = playerNPCClass;
         this.isNpcOnly = false;
         this.hasSpecifics = false;
-        this.editorID = Reference.b++;
+        this.editorID = ReferenceAndRotationHelper.b++;
     }
 
     private PlayerGirlEntity(Class<? extends GirlEntity> npcClass, int id) {
@@ -75,7 +75,7 @@ public enum PlayerGirlEntity {
         this.npcClass = npcClass;
         this.isNpcOnly = true;
         this.hasSpecifics = false;
-        this.editorID = Reference.b++;
+        this.editorID = ReferenceAndRotationHelper.b++;
         this.playerClass = null;
         this.playerID = 0;
     }

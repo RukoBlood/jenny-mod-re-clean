@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.interfaces.IGirlAnimGeoModel;
 import com.trolmastercard.sexmod.world.FakeWorld;
@@ -91,7 +91,7 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
         }
 
         if (girl.actionController != null) {
-            ((GirlEntity)girl).actionController.transitionLengthTicks = girl.world instanceof FakeWorld || girl.currentAction() == null ? 5.0 : (double) girl.currentAction().transitionTick;
+            ((GirlEntity)girl).actionController.transitionLengthTicks = girl.world instanceof FakeWorld || girl.getCurrentAction() == null ? 5.0 : (double) girl.getCurrentAction().transitionTick;
         }
 
         this.processHeadLookRotation(girl, processor, event);
@@ -131,11 +131,11 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
 
         double halfY = normalized.y / 2.0 + 0.5;
 
-        float pitch = (float) Reference.LerpDouble(-180.0, 0.0, halfY);
+        float pitch = (float) ReferenceAndRotationHelper.LerpDouble(-180.0, 0.0, halfY);
         if (Float.isNaN(pitch)) {
             pitch = -90.0f;
         }
-        roll = halfY < 0.5 ? 0.0f : (float) Reference.LerpDouble(0.0, 16.0, -halfY);
+        roll = halfY < 0.5 ? 0.0f : (float) ReferenceAndRotationHelper.LerpDouble(0.0, 16.0, -halfY);
         if (Float.isNaN(roll)) {
             roll = 0.0f;
         }
@@ -144,7 +144,7 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
             yaw = 8.0f;
         }
 
-        return new Vec3d(TrigMath.toRadians(pitch), roll, yaw);
+        return new Vec3d(TrigMath.wrapDegrees(pitch), roll, yaw);
     }
 
     void updateArmorPartVisibility(AnimationProcessor<T> processor, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots) {
@@ -196,7 +196,7 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
 
     @CheckReturnValue
     protected boolean isSteveSkinType(T girl) {
-        UUID ownerUUID = girl.playerSheHasSexWith();
+        UUID ownerUUID = girl.getInteractionPlayerUUID();
         if (ownerUUID == null) {
             return true;
         }
@@ -221,7 +221,7 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
         processor.getBone("leftLowerArmSteve").setHidden(!isSteve);
         IBone steveBone = processor.getBone("steve");
         if (steveBone != null) {
-            steveBone.setHidden(!girl.currentAction().hasPlayer);
+            steveBone.setHidden(!girl.getCurrentAction().hasPlayer);
         }
     }
 
@@ -239,7 +239,7 @@ public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<
             return;
         }
 
-        if (girl.currentAction() != Action.NULL && girl.currentAction() != Action.ATTACK && girl.currentAction() != Action.BOW) {
+        if (girl.getCurrentAction() != Action.NULL && girl.getCurrentAction() != Action.ATTACK && girl.getCurrentAction() != Action.BOW) {
             return;
         }
 

@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractPlayerKoblinGoboldRenderer;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -182,11 +182,11 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
         Object object;
         this.D = forceRenderNextFrame;
         this.B = (PlayerGoblin) entity;
-        this.C = -420.69f == entityYaw && entity.currentAction() == Action.SHOULDER_IDLE;
-        this.E = -420.69f == entityYaw && entity.currentAction() == Action.PICK_UP;
+        this.C = -420.69f == entityYaw && entity.getCurrentAction() == Action.SHOULDER_IDLE;
+        this.E = -420.69f == entityYaw && entity.getCurrentAction() == Action.PICK_UP;
         this.partialTicks = partialTicks;
         GoblinRenderer.B = entityYaw;
-        Action fp_class3242 = entity.currentAction();
+        Action fp_class3242 = entity.getCurrentAction();
         UUID uUID = this.B.java_util_UUID_e();
         if (entity.isLocallyRegistered()) {
             object = GoblinRenderer.a(entity.world, entity, uUID, x, y, z);
@@ -239,7 +239,7 @@ public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
             }
         } else if (this.C) {
             GoblinRenderer.a(partialTicks);
-            object = new Vec3d(Reference.LerpFloat(-0.1f, 0.2f, PlayerGoblinRenderer.mc.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
+            object = new Vec3d(ReferenceAndRotationHelper.LerpFloat(-0.1f, 0.2f, PlayerGoblinRenderer.mc.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
             object = GoblinEntity.b((Vec3d)object, PlayerGoblinRenderer.mc.player.rotationYaw);
             x = ((Vec3d)object).x;
             y = ((Vec3d)object).y;

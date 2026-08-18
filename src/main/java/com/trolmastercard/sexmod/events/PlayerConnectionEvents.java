@@ -79,7 +79,7 @@ public class PlayerConnectionEvents {
         if (playerGirl != null) {
             playerGirl.setAnchored(false);
             playerGirl.setCurrentAction(Action.NULL);
-            ResetGirl.a_inner422.a(playerGirl);
+            ResetGirl.EventHandler.resetGirl(playerGirl);
         }
         if ((playerUUID = event.player.getPersistentID()).equals(BIA_PLAYER_UUID)) {
             this.spawnSpecialBia(serverWorld, (EntityPlayer)playerMP, playerUUID);
@@ -87,7 +87,7 @@ public class PlayerConnectionEvents {
         if (playerUUID.equals(ELLIE_PLAYER_UUID)) {
             this.spawnSpecialEllie(serverWorld, playerMP, playerUUID);
         }
-        GalathEntity.void_c(playerMP);
+        GalathEntity.handlePlayerJoin(playerMP);
     }
 
     void spawnSpecialBia(World world, EntityPlayer player, UUID playerUUID) {
@@ -126,20 +126,20 @@ public class PlayerConnectionEvents {
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         EntityPlayer player = event.player;
-        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
             if (girl instanceof PlayerGirl) {
                 ((PlayerGirl)girl).detachPartner(player);
             }
-            if (girl.playerSheHasSexWith() == null) continue;
-            if (girl.playerSheHasSexWith().equals(player.getPersistentID()) || girl.playerSheHasSexWith().equals(player.getUniqueID())) {
-                ResetGirl.a_inner422.a(girl);
+            if (girl.getInteractionPlayerUUID() == null) continue;
+            if (girl.getInteractionPlayerUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID().equals(player.getUniqueID())) {
+                ResetGirl.EventHandler.resetGirl(girl);
                 girl.setAnchored(false);
                 girl.setCurrentAction(Action.NULL);
             }
-            if (!(girl instanceof PlayerGirl) || !((PlayerGirl)girl).getOwnerUserUUID().equals(player.getPersistentID()) || girl.playerSheHasSexWith() == null) continue;
-            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)event.player.world.getPlayerEntityByUUID(girl.playerSheHasSexWith());
+            if (!(girl instanceof PlayerGirl) || !((PlayerGirl)girl).getOwnerUserUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID() == null) continue;
+            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)event.player.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID());
             PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
-            ResetGirl.a_inner422.a(entityPlayerMP);
+            ResetGirl.EventHandler.resetGirls(entityPlayerMP);
             player.setInvisible(false);
             girl.setInteractionPlayerUUID((UUID)null);
         }

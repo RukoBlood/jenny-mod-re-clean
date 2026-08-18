@@ -12,7 +12,7 @@ import com.trolmastercard.sexmod.Packets.SendCompanionHome;
 import com.trolmastercard.sexmod.Packets.SendGirlToSex;
 import com.trolmastercard.sexmod.Packets.SetPlayerForGirl;
 import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
-import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
+import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.base.Action;
@@ -22,10 +22,10 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
-import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.util.interfaces.IEllie;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -57,7 +57,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl {
+public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
     public boolean Z = false;
     public boolean ab = false;
     public boolean af = false;
@@ -89,7 +89,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return -0.2f;
     }
 
@@ -128,7 +128,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (this.af && player != null && player.getPositionVector().distanceTo(this.getPositionVector()) < 0.5) {
             this.af = false;
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, this.world.getClosestPlayerToEntity(this, 15.0).getPersistentID().toString());
-            EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.playerSheHasSexWith());
+            EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID());
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, object.getPersistentID().toString());
             ((EntityPlayerMP)object).setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
             this.alignPlayerToGirl((EntityPlayerMP)object, false);
@@ -162,7 +162,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
             if (this.getPositionVector().equals(GirlEntity.TARGET_POS) || this.ac > 40) {
                 this.ab = false;
                 this.ac = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.playerSheHasSexWith()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 if (this.entityDataManager.get(Y)) {
@@ -174,7 +174,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 this.rotationYaw = this.getYawRotation().floatValue();
                 this.setTargetPosition(this.getFrontOffsetVector());
                 this.setNoGravity(false);
-                Vec3d object = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
+                Vec3d object = ReferenceAndRotationHelper.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
                 this.setPosition(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
             }
         }
@@ -201,7 +201,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.playerSheHasSexWith() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.getInteractionPlayerUUID() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
                 GirlEntity.openInventoryGui(player, this, stringArray, true);
@@ -284,7 +284,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
 
     @Override
     public void setCurrentAction(Action action) {
-        Action currentAction = this.currentAction();
+        Action currentAction = this.getCurrentAction();
         if (currentAction == Action.DOGGYCUM && (action == Action.DOGGYSLOW || action == Action.DOGGYFAST)) {
             return;
         }
@@ -298,7 +298,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         if (currentAction != Action.STARTBLOWJOB && currentAction != Action.PAIZURI_START) {
             return;
         }
-        UUID uUID = this.playerSheHasSexWith();
+        UUID uUID = this.getInteractionPlayerUUID();
         if (uUID == null) {
             return;
         }
@@ -311,7 +311,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.SUCKBLOWJOB || action == Action.THRUSTBLOWJOB) {
             this.moveCamera(0.0, 0.0, 0.0, 0.0f, 70.0f);
             return Action.CUMBLOWJOB;
@@ -326,7 +326,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         switch (action) {
             case SUCKBLOWJOB: {
                 return Action.THRUSTBLOWJOB;
@@ -346,14 +346,14 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
     }
 
     @Override
-    public void void_b() {
+    public void setDismounted() {
         this.ab = true;
     }
 
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.aiLookAtPlayer);
         this.tasks.addTask(5, this.aiWander);
     }
@@ -407,7 +407,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
         }
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.jenny.null", true, event);
                     break;
                 }
@@ -415,7 +415,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL && this.currentAction() != null) {
+                if (this.getCurrentAction() != Action.NULL && this.getCurrentAction() != null) {
                     this.createAnimation("animation.jenny.null", true, event);
                     break;
                 }
@@ -444,7 +444,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.jenny.null", true, event);
                         break block5;
@@ -621,7 +621,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 }
                 case "sexUiOn": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "paymentMSG4": {
@@ -696,7 +696,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     break;
                 }
                 case "bjiMSG12": {
-                    if (Reference.RANDOM.nextInt(5) == 0) {
+                    if (ReferenceAndRotationHelper.RANDOM.nextInt(5) == 0) {
                         this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_BJMOAN));
                     }
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_LIPSOUND));
@@ -714,7 +714,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "bjtDone": {
@@ -827,7 +827,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 // TODO
@@ -860,9 +860,9 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                 case "doggyslowMSG1": {
                     this.aa = false;
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
-                    int n = Reference.RANDOM.nextInt(4);
+                    int n = ReferenceAndRotationHelper.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = Reference.RANDOM.nextInt(2);
+                        n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MMM));
                         } else {
@@ -886,7 +886,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     }
                     ++this.ag;
                     if (this.ag % 2 == 0) {
-                        int n = Reference.RANDOM.nextInt(2);
+                        int n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
                             break;
@@ -942,7 +942,7 @@ public class JennyEntity extends Fighter implements bh_class82, IBeddableSexGirl
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.PAIZURI_SLOW);
                     SexUI.resetCumPercentage();
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "paizuriFastMSG1": {

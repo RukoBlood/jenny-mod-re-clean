@@ -14,7 +14,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 
-public class OpenAndCloseDoorBehindHer extends EntityAIBase {
+public class DoorInteractAIGoal extends EntityAIBase {
     protected EntityLiving entity;
     protected BlockPos doorPos = BlockPos.ORIGIN;
     protected BlockDoor doorBlock;
@@ -23,7 +23,7 @@ public class OpenAndCloseDoorBehindHer extends EntityAIBase {
     float initStepY;
     int closeDelayTimer = 10;
 
-    public OpenAndCloseDoorBehindHer(EntityLiving e) {
+    public DoorInteractAIGoal(EntityLiving e) {
         this.entity = e;
         if (!(e.getNavigator() instanceof PathNavigateGround)) {
             throw new IllegalArgumentException("Unsupported mob type for DoorInteractGoal");

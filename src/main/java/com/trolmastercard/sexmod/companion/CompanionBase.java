@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -34,7 +34,7 @@ public abstract class CompanionBase extends EntityAIBase {
         int attempts = 0;
 
         do {
-            targetPos = this.master.getPosition().add(Reference.RANDOM.nextInt(10), 0, Reference.RANDOM.nextInt(10));
+            targetPos = this.master.getPosition().add(ReferenceAndRotationHelper.RANDOM.nextInt(10), 0, ReferenceAndRotationHelper.RANDOM.nextInt(10));
         }
         while (++attempts < 20 && !this.entity.attemptTeleport(targetPos.getX(), targetPos.getY(), targetPos.getZ()));
 
@@ -107,7 +107,7 @@ public abstract class CompanionBase extends EntityAIBase {
     public void updateTask() {
         this.CurState = this.updateMode();
         if (this.entity.aiLookAtPlayer != null) {
-            this.entity.aiLookAtPlayer.ShouldLook = this.CurState == Mode.IDLE;
+            this.entity.aiLookAtPlayer.isWatching = this.CurState == Mode.IDLE;
         }
         this.CompanionStates(this.CurState);
     }

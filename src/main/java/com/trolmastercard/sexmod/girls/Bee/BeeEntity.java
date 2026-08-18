@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packets.SendCompanionHome;
 import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
-import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
+import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.companion.supporter.SupporterCompanion;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
@@ -78,7 +78,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return -0.1f;
     }
 
@@ -115,7 +115,7 @@ public class BeeEntity extends Supporter {
 
     @Override
     protected void initEntityAI() {
-        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new SupporterCompanion(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.25));
         this.tasks.addTask(1, new EntityAISwimming(this));
@@ -126,12 +126,12 @@ public class BeeEntity extends Supporter {
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.hornyLevel < 4800.0f && this.playerSheHasSexWith() == null) {
+        if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.hornyLevel < 4800.0f && this.getInteractionPlayerUUID() == null) {
             this.removePotionEffect(HornyPotion.HORNY_POTION);
             this.hornyLevel = 6.9420184E7f;
         }
         this.sexLogic();
-        if (this.currentAction().equals((Object) Action.CITIZEN_CUM)) {
+        if (this.getCurrentAction().equals((Object) Action.CITIZEN_CUM)) {
             this.particleTicks = Math.max(1, this.particleTicks);
         }
         this.doParticleStuff();
@@ -140,14 +140,14 @@ public class BeeEntity extends Supporter {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.CITIZEN_CUM && (action == Action.CITIZEN_FAST || action == Action.COWGIRLSLOW)) {
+        if (this.getCurrentAction() == Action.CITIZEN_CUM && (action == Action.CITIZEN_FAST || action == Action.COWGIRLSLOW)) {
             return;
         }
         super.setCurrentAction(action);
     }
 
     void sexLogic() {
-        if (this.playerSheHasSexWith() != null) {
+        if (this.getInteractionPlayerUUID() != null) {
             return;
         }
         if (this.hasMaster()) {
@@ -164,7 +164,7 @@ public class BeeEntity extends Supporter {
         if (BeeEntity.getActiveSceneInfo(closestPlayer) != null) {
             return;
         }
-        if (PlayerGirl.e(closestPlayer)) {
+        if (PlayerGirl.isOwnerPlayer(closestPlayer)) {
             return;
         }
         if (closestPlayer.getDistance(this) < 1.5f) {
@@ -271,7 +271,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.CITIZEN_SLOW) {
             return Action.CITIZEN_FAST;
         }
@@ -279,7 +279,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.CITIZEN_FAST || action == Action.CITIZEN_SLOW) {
             return Action.CITIZEN_CUM;
         }
@@ -316,7 +316,7 @@ public class BeeEntity extends Supporter {
         }
         block4 : switch (event.getController().getName()) {
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.bee.null", true, event);
                     break;
                 }
@@ -324,7 +324,7 @@ public class BeeEntity extends Supporter {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case CITIZEN_START: {
                         this.createAnimation("animation.bee.sex_start", false, event);
                         break block4;
@@ -358,7 +358,7 @@ public class BeeEntity extends Supporter {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "pearl": {
-                    if (!this.getClosestPlayerID() || this.currentAction() != Action.THROW_PEARL) break;
+                    if (!this.getClosestPlayerID() || this.getCurrentAction() != Action.THROW_PEARL) break;
                     PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
@@ -385,7 +385,7 @@ public class BeeEntity extends Supporter {
                 case "sex_startDone": {
                     this.setCurrentAction(Action.CITIZEN_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "sex_cumMSG1": {

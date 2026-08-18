@@ -40,7 +40,7 @@ implements IMessage {
                 return null;
             }
             EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
-            UUID uUID = GalathMangTracker.b(entityPlayerMP);
+            UUID uUID = GalathMangTracker.getOwnerOf(entityPlayerMP);
             GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
             if (em_class2582 == null) {
                 return null;

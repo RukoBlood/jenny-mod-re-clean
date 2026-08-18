@@ -22,7 +22,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
@@ -55,7 +55,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 2.05f;
     }
 
@@ -130,7 +130,7 @@ extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
+        Action fp_class3243 = this.getCurrentAction();
         if (fp_class3243 == Action.MISSIONARY_CUM && (action == Action.MISSIONARY_FAST || action == Action.MISSIONARY_SLOW)) {
             return;
         }
@@ -141,7 +141,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.COWGIRLSLOW) {
             return Action.COWGIRLFAST;
         }
@@ -155,7 +155,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.COWGIRLFAST || action == Action.COWGIRLSLOW) {
             return Action.COWGIRLCUM;
         }
@@ -171,7 +171,7 @@ extends PlayerGirl {
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        if (this.currentAction() == Action.SITDOWNIDLE) {
+        if (this.getCurrentAction() == Action.SITDOWNIDLE) {
             String string = this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES);
             if (!"Missionary".equals(string) && !"Cowgirl".equals(string)) {
                 return;
@@ -219,7 +219,7 @@ extends PlayerGirl {
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.ellie.null", true, event);
                     break;
                 }
@@ -227,7 +227,7 @@ extends PlayerGirl {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.ellie.null", true, event);
                     break;
                 }
@@ -261,7 +261,7 @@ extends PlayerGirl {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.ellie.null", true, event);
                         break block5;
@@ -405,7 +405,7 @@ extends PlayerGirl {
                 }
                 case "hugMSG1": {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    if (!entityPlayerSP.getPersistentID().equals(this.playerSheHasSexWith()) && !entityPlayerSP.getUniqueID().equals(this.playerSheHasSexWith())) break;
+                    if (!entityPlayerSP.getPersistentID().equals(this.getInteractionPlayerUUID()) && !entityPlayerSP.getUniqueID().equals(this.getInteractionPlayerUUID())) break;
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getUniqueID().toString(), entityPlayerSP.getPositionVector(), entityPlayerSP.rotationYaw - 80.0f, entityPlayerSP.rotationPitch));
                     break;
                 }
@@ -431,7 +431,7 @@ extends PlayerGirl {
                 }
                 case "hugDone": {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    if (!entityPlayerSP.getPersistentID().equals(this.playerSheHasSexWith())) break;
+                    if (!entityPlayerSP.getPersistentID().equals(this.getInteractionPlayerUUID())) break;
                     this.setCurrentAction(Action.HUGIDLE);
                     this.void_c(entityPlayerSP);
                     break;
@@ -473,7 +473,7 @@ extends PlayerGirl {
                 case "missionary_startDone": {
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.MISSIONARY_SLOW);
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "cowgirlStartMSG0": {
@@ -496,7 +496,7 @@ extends PlayerGirl {
                 case "cowgirlStartDone": {
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.COWGIRLSLOW);
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "cowgirlfastMSG1": {
@@ -516,7 +516,7 @@ extends PlayerGirl {
                         this.setCurrentAction(Action.COWGIRLSLOW);
                         break;
                     }
-                    if (Reference.RANDOM.nextInt(4) == 1) break;
+                    if (ReferenceAndRotationHelper.RANDOM.nextInt(4) == 1) break;
                     this.actionController.clearAnimationCache();
                     break;
                 }
@@ -576,7 +576,7 @@ extends PlayerGirl {
                 }
                 case "openSexUi": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "missionary_slowMSG1": {
@@ -664,7 +664,7 @@ extends PlayerGirl {
                 }
                 case "sexUI": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                 }
             }
         };

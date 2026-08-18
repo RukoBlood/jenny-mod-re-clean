@@ -79,7 +79,7 @@ public class ClientProxy extends CommonProxy {
         ClientCommandHandler.instance.registerCommand((ICommand) WhitelistServerModelsCommand.WHITELIST_SERVER_MODELS_COMMAND);
         ClientCommandHandler.instance.registerCommand((ICommand) SetModelCodeCommand.SET_MODEL_CODE_COMMAND);
         ClientCommandHandler.instance.registerCommand((ICommand) FutaCommand.FUTA_COMMAND);
-        Minecraft.getMinecraft().effectRenderer.registerParticle(625115, (n, world, x, y, z, d4, d5, d6, nArray) -> new ParticleGalathTrail(world, x, y, z));
+        Minecraft.getMinecraft().effectRenderer.registerParticle(625115, (n, world, x, y, z, d4, d5, d6, nArray) -> new DragonBreathParticle(world, x, y, z));
     }
 }
 

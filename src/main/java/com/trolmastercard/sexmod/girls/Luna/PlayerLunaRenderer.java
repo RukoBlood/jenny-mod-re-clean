@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -36,7 +36,7 @@ extends PlayerGirlRenderer {
 
     @Override
     protected ItemStack getHeldItem(@Nullable ItemStack input) {
-        switch (this.renderEntity.currentAction()) {
+        switch (this.renderEntity.getCurrentAction()) {
             case FISHING_IDLE: 
             case FISHING_START: {
                 ItemStack itemStack2 = ((LunaEntity)this.renderEntity).ao;
@@ -63,8 +63,8 @@ extends PlayerGirlRenderer {
             }
             case "backHair": {
                 if (this.boolean_b() || !(this.z > 0.0f)) break;
-                double d = this.z / TrigMath.toRadians(45.0f);
-                float f = (float) Reference.LerpDouble(0.0, 0.75, d);
+                double d = this.z / TrigMath.wrapDegrees(45.0f);
+                float f = (float) ReferenceAndRotationHelper.LerpDouble(0.0, 0.75, d);
                 geoBone.setPositionZ(f);
                 geoBone.setPositionY(f);
                 geoBone.setRotationX(-this.z);

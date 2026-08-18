@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packets;
 
-import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.util.interfaces.IEllie;
 import com.trolmastercard.sexmod.girls.Ellie.EllieEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;
@@ -77,21 +77,21 @@ implements IMessage {
                 girl.motionX = 0.0;
                 girl.motionY = 0.0;
                 girl.motionZ = 0.0;
-                if (girl.playerSheHasSexWith() == null) {
+                if (girl.getInteractionPlayerUUID() == null) {
                     girl.setInteractionPlayerUUID(uUID2);
                 }
                 if (bl2) {
                     girl.setTargetPosition(girl.getFrontOffsetVector());
                 }
-                girl.snapPlayerToPosition(girl.playerSheHasSexWith());
+                girl.snapPlayerToPosition(girl.getInteractionPlayerUUID());
                 if (!bl) {
                     return;
                 }
-                if (!(girl instanceof bh_class82)) {
+                if (!(girl instanceof IEllie)) {
                     return;
                 }
-                bh_class82 bh_class822 = (bh_class82) ((Object) girl);
-                bh_class822.void_b();
+                IEllie bh_class822 = (IEllie) ((Object) girl);
+                bh_class822.setDismounted();
             }
         }
 

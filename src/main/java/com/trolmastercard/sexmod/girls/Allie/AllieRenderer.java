@@ -20,7 +20,7 @@ extends GirlRenderer {
     @Override
     public void render(GeoModel model, GirlEntity entity, float partialTicks, float r, float g, float b, float a) {
         AllieEntity allieEntity = (AllieEntity) entity;
-        if (entity.currentAction() == Action.NULL && !entity.isLocallyRegistered()) {
+        if (entity.getCurrentAction() == Action.NULL && !entity.isLocallyRegistered()) {
             return;
         }
         a = allieEntity.U = allieEntity.U == 1.0f ? allieEntity.U : allieEntity.U - 0.01f;
@@ -31,19 +31,19 @@ extends GirlRenderer {
 
     @Override
     protected void renderNameTag(double x, double y, double z) {
-        if (this.renderEntity.currentAction() == Action.NULL) {
+        if (this.renderEntity.getCurrentAction() == Action.NULL) {
             return;
         }
         if (this.renderEntity.isLocallyRegistered()) {
             return;
         }
-        if (this.renderEntity.currentAction().hideNameTag) {
+        if (this.renderEntity.getCurrentAction().hideNameTag) {
             return;
         }
         if (AllieRenderer.mc.getRenderManager().renderViewEntity == null) {
             return;
         }
-        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText(), x, y + (double)this.renderEntity.getNameTagHeightOffset(), z, 300);
+        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText(), x, y + (double)this.renderEntity.getScaleFactor(), z, 300);
     }
 }
 

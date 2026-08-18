@@ -47,7 +47,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 1.5f;
     }
 
@@ -123,17 +123,17 @@ extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.ANAL_CUM && (action == Action.ANAL_FAST || action == Action.ANAL_SLOW)) {
+        if (this.getCurrentAction() == Action.ANAL_CUM && (action == Action.ANAL_FAST || action == Action.ANAL_SLOW)) {
             return;
         }
-        if (this.currentAction() == Action.PRONE_DOGGY_CUM && (action == Action.PRONE_DOGGY_HARD || action == Action.PRONE_DOGGY_SOFT)) {
+        if (this.getCurrentAction() == Action.PRONE_DOGGY_CUM && (action == Action.PRONE_DOGGY_HARD || action == Action.PRONE_DOGGY_SOFT)) {
             return;
         }
         super.setCurrentAction(action);
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.ANAL_SLOW) {
             return Action.ANAL_FAST;
         }
@@ -144,7 +144,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.ANAL_SLOW || action == Action.ANAL_FAST) {
             return Action.ANAL_CUM;
         }
@@ -173,7 +173,7 @@ extends PlayerGirl {
 
     void a_() {
         float f;
-        Action fp_class3242 = this.currentAction();
+        Action fp_class3242 = this.getCurrentAction();
         if (fp_class3242 != Action.ANAL_WAIT && fp_class3242 != Action.SITDOWNIDLE) {
             return;
         }
@@ -209,7 +209,7 @@ extends PlayerGirl {
                 Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.isControlledByLocalPlayer()) {
-                SexUI.init();
+                SexUI.showUI();
             }
             return;
         }
@@ -235,7 +235,7 @@ extends PlayerGirl {
     @SideOnly(value=Side.CLIENT)
     public void resetAnimationControllerTicks() {
         super.resetAnimationControllerTicks();
-        if (this.currentAction() != Action.PRONE_DOGGY_HARD) {
+        if (this.getCurrentAction() != Action.PRONE_DOGGY_HARD) {
             return;
         }
         int n = this.aq;
@@ -248,7 +248,7 @@ extends PlayerGirl {
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.bia.null", true, event);
                     break;
                 }
@@ -256,7 +256,7 @@ extends PlayerGirl {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.bia.null", true, event);
                     break;
                 }
@@ -290,7 +290,7 @@ extends PlayerGirl {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.bia.null", true, event);
                         break block5;
@@ -416,7 +416,7 @@ extends PlayerGirl {
                 }
                 case "sexUiOn": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "pearl": {
@@ -512,7 +512,7 @@ extends PlayerGirl {
                 case "anal_startDone": {
                     this.setCurrentAction(Action.ANAL_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "anal_cumMSG2": {
@@ -606,7 +606,7 @@ extends PlayerGirl {
                 }
                 case "openSexUI": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                 }
             }
         };

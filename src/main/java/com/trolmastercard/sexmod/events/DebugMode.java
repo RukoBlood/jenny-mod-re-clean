@@ -63,9 +63,9 @@ public class DebugMode {
         if (!"resetcolor".equalsIgnoreCase(event.getMessage())) {
             return;
         }
-        KoboldRenderer.ResetColors();
+        KoboldRenderer.clearBoneColors();
         PlayerKoboldRenderer.ResetColors();
-        GoblinRenderer.ResetColors();
+        GoblinRenderer.clearBoneColors();
         PlayerGoblinRenderer.ResetColors();
     }
 
@@ -348,7 +348,7 @@ public class DebugMode {
                 e.printStackTrace();
                 return;
             }
-            GalathMangTracker.setLastCumTime(player.getPersistentID(), cumtime);
+            GalathMangTracker.saveCumTime(player.getPersistentID(), cumtime);
             ((Entity)player).sendMessage(new TextComponentString("set to: " + cumtime));
         }
     }

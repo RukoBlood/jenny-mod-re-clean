@@ -17,16 +17,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class SpawnEnergyBallParticlesAlt
-implements IMessage {
+public class SpawnEnergyBallParticlesPacket2 implements IMessage {
     Vec3d a;
     boolean c;
     boolean b = false;
 
-    public SpawnEnergyBallParticlesAlt() {
+    public SpawnEnergyBallParticlesPacket2() {
     }
 
-    public SpawnEnergyBallParticlesAlt(Vec3d vec3d, boolean bl) {
+    public SpawnEnergyBallParticlesPacket2(Vec3d vec3d, boolean bl) {
         this.a = vec3d;
         this.c = bl;
     }
@@ -44,9 +43,8 @@ implements IMessage {
         byteBuf.writeBoolean(this.c);
     }
 
-    public static class a_inner102
-    implements IMessageHandler<SpawnEnergyBallParticlesAlt, IMessage> {
-        public IMessage a(SpawnEnergyBallParticlesAlt bv_class1012, MessageContext messageContext) {
+    public static class a_inner102 implements IMessageHandler<SpawnEnergyBallParticlesPacket2, IMessage> {
+        public IMessage a(SpawnEnergyBallParticlesPacket2 bv_class1012, MessageContext messageContext) {
             if (!bv_class1012.b || !messageContext.side.equals((Object)Side.CLIENT)) {
                 System.out.println("received an invalid message @SpawnEnergyBallParticles :(");
                 return null;
@@ -60,8 +58,8 @@ implements IMessage {
         }
 
                 @Override
-        public IMessage onMessage(SpawnEnergyBallParticlesAlt iMessage, MessageContext messageContext) {
-            return this.a((SpawnEnergyBallParticlesAlt)iMessage, messageContext);
+        public IMessage onMessage(SpawnEnergyBallParticlesPacket2 iMessage, MessageContext messageContext) {
+            return this.a((SpawnEnergyBallParticlesPacket2)iMessage, messageContext);
         }
 
         private static RuntimeException a(RuntimeException runtimeException) {

@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import com.trolmastercard.sexmod.girls.base.AbstractKoboldGoblinRenderer;
+import com.trolmastercard.sexmod.girls.base.GirlRendererBase;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -34,7 +34,7 @@ import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.CommonProxy;
-import com.trolmastercard.sexmod.world.WorldGenStructure;
+import com.trolmastercard.sexmod.world.ConfigWorldGenHandler;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -82,30 +82,30 @@ public class Main {
     }
 
     @Mod.EventHandler
-    public static void onWorldClosed(FMLServerStoppedEvent fMLServerStoppedEvent) {
-        GirlEntity.GirlEntityList().clear();
-        KoboldManager.clear();
+    public static void onWorldClosed(FMLServerStoppedEvent event) {
+        GirlEntity.getGirlEntityList().clear();
+        KoboldManager.clearAll();
         KoboldEntity.aY.clear();
         GalathMangTracker.clear();
-        WorldGenStructure.Generate().clear();
+        ConfigWorldGenHandler.Generate().clear();
         GirlID.ClearGirlList();
         CustomModel.isLoaded = false;
-        CustomModelHandler.a();
+        GirlWorldData.a();
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             Main.clientReset();
         }
     }
 
     @Mod.EventHandler
-    public static void onWorldStart(FMLServerStartingEvent fMLServerStartingEvent) {
-        fMLServerStartingEvent.registerServerCommand((ICommand) LocateGoblinLairCommand.LOCATE_GOBLIN_LAIR_COMMAND);
-        fMLServerStartingEvent.registerServerCommand((ICommand) ReloadCustomModelsCommand.RELOAD_CUSTOM_MODELS_COMMAND);
+    public static void onWorldStart(FMLServerStartingEvent event) {
+        event.registerServerCommand((ICommand) LocateGoblinLairCommand.LOCATE_GOBLIN_LAIR_COMMAND);
+        event.registerServerCommand((ICommand) ReloadCustomModelsCommand.RELOAD_CUSTOM_MODELS_COMMAND);
     }
 
     @SideOnly(value=Side.CLIENT)
     static void clientReset() {
-        gm_class376.ClearList();
-        AbstractKoboldGoblinRenderer.ResetColors();
+        StructureMarkerRenderer.ClearMarkers();
+        GirlRendererBase.clearBoneColors();
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -115,67 +115,63 @@ public class Main {
     }
 
     public static void setConfigs() throws IOException {
-        Appendable appendable;
-        File configFolder = new File("config");
-        configFolder.mkdir();
-        File config = new File("config/sexmod.json");
-        if (!config.exists()) {
-            config.createNewFile();
-            appendable = new FileWriter(config);
-            ((Writer)appendable).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
-            ((OutputStreamWriter)appendable).close();
+        Appendable jsonBuilder;
+        File configDir = new File("config");
+        configDir.mkdir();
+        File configFile = new File("config/sexmod.json");
+        if (!configFile.exists()) {
+            configFile.createNewFile();
+            jsonBuilder = new FileWriter(configFile);
+            ((Writer)jsonBuilder).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
+            ((OutputStreamWriter)jsonBuilder).close();
         }
-        appendable = new StringBuilder();
-        Object object = new BufferedReader(new FileReader(config));
-        Object object2 = null;
+        jsonBuilder = new StringBuilder();
+        Object json = new BufferedReader(new FileReader(configFile));
+        Object writer2 = null;
         try {
-            String string;
-            while ((string = ((BufferedReader)object).readLine()) != null) {
-                ((StringBuilder)appendable).append(string);
+            String line;
+            while ((line = ((BufferedReader)json).readLine()) != null) {
+                ((StringBuilder)jsonBuilder).append(line);
             }
-        } catch (Throwable throwable) {
-            object2 = throwable;
-            throw throwable;
+        } catch (Throwable e) {
+            //writer2 = e;
+            //throw e;
         } finally {
-            if (object != null) {
-                if (object2 != null) {
+            if (json != null) {
+                if (writer2 != null) {
                     try {
-                        ((BufferedReader)object).close();
+                        ((BufferedReader)json).close();
                     } catch (Throwable throwable) {
-                        ((Throwable)object2).addSuppressed(throwable);
+                        ((Throwable)writer2).addSuppressed(throwable);
                     }
                 } else {
-                    ((BufferedReader)object).close();
+                    ((BufferedReader)json).close();
                 }
             }
         }
-        object = ((StringBuilder)appendable).toString();
-        if (!((String)object).contains("shouldGenBuildings")) {
-            config.delete();
-            config = new File("config/sexmod.json");
-            config.createNewFile();
-            object2 = new FileWriter(config);
-            ((Writer)object2).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
-            ((OutputStreamWriter)object2).close();
-            WorldGenStructure.i = true;
+        json = ((StringBuilder)jsonBuilder).toString();
+        if (!((String)json).contains("shouldGenBuildings")) {
+            configFile.delete();
+            configFile = new File("config/sexmod.json");
+            configFile.createNewFile();
+            writer2 = new FileWriter(configFile);
+            ((Writer)writer2).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
+            ((OutputStreamWriter)writer2).close();
+            ConfigWorldGenHandler.GENERATION_ENABLED = true;
             GirlModel.enableModelCache = false;
             PlayerGirl.ag = true;
             return;
         }
-        int n = ((String)object).indexOf("shouldGenBuildings");
-        int n2 = ((String)object).indexOf("shouldLoadOtherSkins");
-        int n3 = ((String)object).indexOf("allowFlying");
-        WorldGenStructure.i = 't' == ((String)object).charAt(n + 20);
-        GirlModel.enableModelCache = 't' == ((String)object).charAt(n2 + 22);
-        PlayerGirl.ag = 't' == ((String)object).charAt(n3 + 13);
+        int genIdx = ((String)json).indexOf("shouldGenBuildings");
+        int n2 = ((String)json).indexOf("shouldLoadOtherSkins");
+        int n3 = ((String)json).indexOf("allowFlying");
+        ConfigWorldGenHandler.GENERATION_ENABLED = 't' == ((String)json).charAt(genIdx + 20);
+        GirlModel.enableModelCache = 't' == ((String)json).charAt(n2 + 22);
+        PlayerGirl.ag = 't' == ((String)json).charAt(n3 + 13);
     }
 
     static {
         LOGGER = LogManager.getLogger((String)"sexmod");
-    }
-
-    private static Throwable a(Throwable throwable) {
-        return throwable;
     }
 }
 

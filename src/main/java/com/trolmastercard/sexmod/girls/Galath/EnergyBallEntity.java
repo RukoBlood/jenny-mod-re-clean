@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Random;
 
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesAlt;
+import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesPacket2;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
@@ -44,7 +44,7 @@ extends EntityLiving {
     final static float a = 0.5f;
     final static float l = 0.15f;
     final static public float j = 0.75f;
-    public double g = 1.0;
+    public double SCALE_1_0 = 1.0;
     Vec3d h = Vec3d.ZERO;
     boolean c = false;
     boolean i = true;
@@ -115,13 +115,13 @@ extends EntityLiving {
         }
         this.world.createExplosion(this, this.posX, this.posY, this.posZ, 1.0f, true);
         for (GalathEntity f__class2972 : list) {
-            f__class2972.f(this.getPositionVector());
+            f__class2972.setFlightVelocity(this.getPositionVector());
         }
         this.world.removeEntity(this);
     }
 
     void a() {
-        this.a(Reference.LerpDouble(this.lastTickPosX, this.posX, 0.5), Reference.LerpDouble(this.lastTickPosY, this.posY, 0.5), Reference.LerpDouble(this.lastTickPosZ, this.posZ, 0.5));
+        this.a(ReferenceAndRotationHelper.LerpDouble(this.lastTickPosX, this.posX, 0.5), ReferenceAndRotationHelper.LerpDouble(this.lastTickPosY, this.posY, 0.5), ReferenceAndRotationHelper.LerpDouble(this.lastTickPosZ, this.posZ, 0.5));
         this.a(this.posX, this.posY, this.posZ);
     }
 
@@ -150,7 +150,7 @@ extends EntityLiving {
         entityWitherSkeleton.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.STONE_SWORD));
         entityWitherSkeleton.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
         this.world.spawnEntity(entityWitherSkeleton);
-        PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(vec3d, true), (Entity)this);
+        PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesPacket2(vec3d, true), (Entity)this);
         this.f.witherSkeletons.add(entityWitherSkeleton);
     }
 
@@ -168,8 +168,8 @@ extends EntityLiving {
     @SideOnly(value=Side.CLIENT)
     public static void a(Vec3d vec3d) {
         WorldClient worldClient = Minecraft.getMinecraft().world;
-        float f = TrigMath.toRadians(1.8f);
-        Random random = Reference.RANDOM;
+        float f = TrigMath.wrapDegrees(1.8f);
+        Random random = ReferenceAndRotationHelper.RANDOM;
         float f2 = 0.0f;
         while ((double)f2 < Math.PI * 2) {
             double d = Math.sin(f2);
@@ -188,7 +188,7 @@ extends EntityLiving {
     @SideOnly(value=Side.CLIENT)
     public static void c(Vec3d vec3d) {
         WorldClient worldClient = Minecraft.getMinecraft().world;
-        Random random = Reference.RANDOM;
+        Random random = ReferenceAndRotationHelper.RANDOM;
         for (int i = 0; i < 100; ++i) {
             worldClient.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, new int[0]);
         }
@@ -206,7 +206,7 @@ extends EntityLiving {
         if (!this.world.isRemote && "arrow".equals(damageSource.damageType)) {
             this.setHealth(0.0f);
             this.i = false;
-            PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesAlt(this.getPositionVector(), false), (Entity)this);
+            PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesPacket2(this.getPositionVector(), false), (Entity)this);
             Entity entity = damageSource.getImmediateSource();
             if (entity != null) {
                 this.world.removeEntity(entity);

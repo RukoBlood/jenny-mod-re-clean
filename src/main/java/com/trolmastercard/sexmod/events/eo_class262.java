@@ -18,7 +18,7 @@ public class eo_class262 {
     public void a(LivingDeathEvent livingDeathEvent) {
         if (livingDeathEvent.getEntity() instanceof GirlEntity) {
             GirlEntity em_class2582 = (GirlEntity)livingDeathEvent.getEntity();
-            GirlEntity.GirlEntityList().remove(em_class2582);
+            GirlEntity.getGirlEntityList().remove(em_class2582);
         }
     }
 }

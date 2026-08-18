@@ -64,7 +64,7 @@ implements IMessage {
                     return;
                 }
                 if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()) {
-                    for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+                    for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
                         if (!(em_class2582 instanceof PlayerGirl)) continue;
                         ei_class2512 = (PlayerGirl) em_class2582;
                         if (ei_class2512.world.isRemote || !ei_class2512.getOwnerUserUUID().equals(eu_class2732.a))

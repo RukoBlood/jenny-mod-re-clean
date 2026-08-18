@@ -3,13 +3,13 @@
  */
 package com.trolmastercard.sexmod.util;
 
-public class AnimationStateHolder {
+public class Vector4d {
     public double pitch;
     public double roll;
     public double prevPitch;
     public double prevRoll;
 
-    public AnimationStateHolder(double pitch, double roll, double prevPitch, double prevRoll) {
+    public Vector4d(double pitch, double roll, double prevPitch, double prevRoll) {
         this.pitch = pitch;
         this.roll = roll;
         this.prevPitch = prevPitch;

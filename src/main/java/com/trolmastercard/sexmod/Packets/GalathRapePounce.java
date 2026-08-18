@@ -50,7 +50,7 @@ implements IMessage {
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 GirlEntity em_class2582 = GirlEntity.getActiveSceneInfo(messageContext.getServerHandler().player.getPersistentID());
                 if (em_class2582 instanceof GalathEntity) {
-                    ((GalathEntity)em_class2582).c(g__class3562.b);
+                    ((GalathEntity)em_class2582).handleRapeAction(g__class3562.b);
                 }
             });
             return null;

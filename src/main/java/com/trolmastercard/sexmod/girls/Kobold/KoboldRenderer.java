@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 
 import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
-import com.trolmastercard.sexmod.girls.base.AbstractKoboldGoblinRenderer;
+import com.trolmastercard.sexmod.girls.base.GirlRendererBase;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ import net.minecraft.util.math.Vec3i;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
+public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
     final static HashSet<String> t = new HashSet<String>(Arrays.asList("colorSpots", "neck", "head", "snout", "midSectionR", "midSectionL", "innerCheekLR", "innerCheekRR", "gayL", "gayR", "legR", "legL", "shinL", "toesL", "kneeL", "curvesL", "shinR", "toesR", "kneeR", "curvesR", "sideL", "sideR", "hip", "torsoL", "torsoR", "armR", "lowerArmR", "ellbowR", "armL", "lowerArmL", "ellbowL", "hornUL", "hornUR", "tail", "tail2", "tail3", "tail4", "tail5", "hornDL2", "hornDR2", "hornDR3M", "hornDL3M", "frecklesAL1", "frecklesAL2", "frecklesAR1", "frecklesAR2", "frecklesHL1", "frecklesHL2", "frecklesHR1", "frecklesHR2"));
     final static HashSet<String> u = new HashSet<String>(Arrays.asList("boobR", "boobL", "frontNeck", "Rside", "Lside", "frontAndInside", "innerCheekLL", "innerCheekRL", "layer", "layer2", "down", "down2", "down3", "down4", "down5", "fuckhole", "hornDR3S", "hornDL3S", "assholeCoverUp", "assholeCoverUp2"));
     Minecraft w = Minecraft.getMinecraft();
@@ -57,7 +57,7 @@ public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
 
     @Override
     protected ItemStack getHeldItem(@Nullable ItemStack input) {
-        switch (((KoboldEntity)this.renderEntity).currentAction()) {
+        switch (((KoboldEntity)this.renderEntity).getCurrentAction()) {
             case MINE: {
                 if (((KoboldEntity)this.renderEntity).getDataManager().get(KoboldEntity.at).booleanValue()) {
                     return new ItemStack(Items.IRON_AXE);
@@ -124,7 +124,7 @@ public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
             entity.as = string;
         }
         if (!entity.as.equals(string)) {
-            KoboldRenderer.ResetColors();
+            KoboldRenderer.clearBoneColors();
             entity.as = string;
         }
         this.v = new Vector3f((float) x, (float) y, (float) z);
@@ -141,7 +141,7 @@ public class KoboldRenderer extends AbstractKoboldGoblinRenderer<KoboldEntity> {
         }
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
         string = (Object)((Object) eyeAndKoboldColor_.getTextColor()) + " -" + string + "-";
-        this.renderLivingLabel(this.renderEntity, ((KoboldEntity)this.renderEntity).getDisplayNameText() + string, x, y + (double)((KoboldEntity)this.renderEntity).getNameTagHeightOffset(), z, 300);
+        this.renderLivingLabel(this.renderEntity, ((KoboldEntity)this.renderEntity).getDisplayNameText() + string, x, y + (double)((KoboldEntity)this.renderEntity).getScaleFactor(), z, 300);
     }
 }
 

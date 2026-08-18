@@ -8,8 +8,8 @@
  */
 package com.trolmastercard.sexmod.gui.Sex;
 
-import com.trolmastercard.sexmod.util.Utils;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ThreadNames;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -40,7 +40,7 @@ public class BlackScreenUI extends GuiScreen {
 
     public static void runWithDelay(Runnable runnable) {
         active = true;
-        Utils.runDelayedTask(DELAY, runnable);
+        ThreadNames.createDaemonThread(DELAY, runnable);
     }
 
     @Override
@@ -59,9 +59,9 @@ public class BlackScreenUI extends GuiScreen {
         Minecraft mc1 = Minecraft.getMinecraft();
         int guiScale = mc1.gameSettings.guiScale;
         float overlayScale = guiScale == 1
-                ? (float) Reference.LerpDouble(-1800.0, 1000.0, 0.5 * Math.cos(step / 25.0) + 0.5)
-                : (guiScale == 2 ? (float) Reference.LerpDouble(-900.0, 750.0, 0.5 * Math.cos(step / 25.0) + 0.5)
-                : (float) Reference.LerpDouble(-900.0, 600.0, 0.5 * Math.cos((step += (double)(mc1.getTickLength() * 0.75f)) / 25.0) + 0.5));
+                ? (float) ReferenceAndRotationHelper.LerpDouble(-1800.0, 1000.0, 0.5 * Math.cos(step / 25.0) + 0.5)
+                : (guiScale == 2 ? (float) ReferenceAndRotationHelper.LerpDouble(-900.0, 750.0, 0.5 * Math.cos(step / 25.0) + 0.5)
+                : (float) ReferenceAndRotationHelper.LerpDouble(-900.0, 600.0, 0.5 * Math.cos((step += (double)(mc1.getTickLength() * 0.75f)) / 25.0) + 0.5));
 
         GlStateManager.pushMatrix();
 

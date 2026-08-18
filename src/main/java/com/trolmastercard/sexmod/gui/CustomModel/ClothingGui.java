@@ -34,7 +34,7 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
@@ -221,7 +221,7 @@ public class ClothingGui extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         if (this.isMouseDragging) {
-            MODEL_Y_ROTATION += Reference.LerpFloat((float) prevDragVelocity, (float) currentDragVelocity, partialTicks);
+            MODEL_Y_ROTATION += ReferenceAndRotationHelper.LerpFloat((float) prevDragVelocity, (float) currentDragVelocity, partialTicks);
         }
         this.updateModelInertiaRotation();
         this.mc.renderEngine.bindTexture(CLOTHING_ICONS_TEX);

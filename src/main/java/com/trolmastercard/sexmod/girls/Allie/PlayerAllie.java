@@ -51,7 +51,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 1.9f + this.aq;
     }
 
@@ -97,10 +97,10 @@ extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.DEEPTHROAT_CUM && (action == Action.DEEPTHROAT_FAST || action == Action.DEEPTHROAT_SLOW)) {
+        if (this.getCurrentAction() == Action.DEEPTHROAT_CUM && (action == Action.DEEPTHROAT_FAST || action == Action.DEEPTHROAT_SLOW)) {
             return;
         }
-        if (this.currentAction() == Action.REVERSE_COWGIRL_CUM && (action == Action.REVERSE_COWGIRL_SLOW || action == Action.REVERSE_COWGIRL_FAST_START || action == Action.REVERSE_COWGIRL_FAST_CONTINUES)) {
+        if (this.getCurrentAction() == Action.REVERSE_COWGIRL_CUM && (action == Action.REVERSE_COWGIRL_SLOW || action == Action.REVERSE_COWGIRL_FAST_START || action == Action.REVERSE_COWGIRL_FAST_CONTINUES)) {
             return;
         }
         super.setCurrentAction(action);
@@ -108,7 +108,7 @@ extends PlayerGirl {
 
     @Override
     public boolean boolean_F() {
-        switch (this.currentAction()) {
+        switch (this.getCurrentAction()) {
             case ALLIE_PREPARE_NORMAL:
             case DEEPTHROAT_START:
             case DEEPTHROAT_CUM:
@@ -164,7 +164,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.DEEPTHROAT_SLOW) {
             return Action.DEEPTHROAT_FAST;
         }
@@ -175,7 +175,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.DEEPTHROAT_FAST || action == Action.DEEPTHROAT_SLOW) {
             return Action.DEEPTHROAT_CUM;
         }
@@ -215,7 +215,7 @@ extends PlayerGirl {
                 case "deepthroat_prepareDone": {
                     this.setCurrentAction(Action.DEEPTHROAT_START);
                     if (!this.isControlledByLocalPlayer()) break;
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.playerSheHasSexWith(), false, true));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getInteractionPlayerUUID(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
@@ -224,7 +224,7 @@ extends PlayerGirl {
                 case "deepthroat_fastMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_BJMOAN));
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     SexUI.addCumPercentage(0.04f);
                     break;
                 }
@@ -240,7 +240,7 @@ extends PlayerGirl {
                 case "deepthroat_slowMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
@@ -309,7 +309,7 @@ extends PlayerGirl {
                 }
                 case "fastSwitch": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    Action fp_class3242 = this.currentAction();
+                    Action fp_class3242 = this.getCurrentAction();
                     if (fp_class3242 == Action.REVERSE_COWGIRL_FAST_START) {
                         this.setCurrentAction(Action.REVERSE_COWGIRL_FAST_CONTINUES);
                         break;
@@ -323,7 +323,7 @@ extends PlayerGirl {
                 }
                 case "openSexUi": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "cum": {
@@ -347,7 +347,7 @@ extends PlayerGirl {
         }
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.allie.null", true, event);
                     break;
                 }
@@ -362,7 +362,7 @@ extends PlayerGirl {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.allie.null", true, event);
                         break block5;

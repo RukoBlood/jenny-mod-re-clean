@@ -30,7 +30,7 @@ public class bt_class99 extends EntityAIAvoidEntity<EntityPlayer> {
         BlockPos blockPos2 = new BlockPos(this.b, this.b, this.b);
         List<GalathEntity> list = this.manglelie.world.getEntitiesWithinAABB(GalathEntity.class, new AxisAlignedBB(blockPos.add(blockPos2), blockPos.subtract(blockPos2)));
         for (GalathEntity galathEntity : list) {
-            if (galathEntity.world.isRemote || galathEntity.isDead || !galathEntity.maybeMountedByMangFn()) continue;
+            if (galathEntity.world.isRemote || galathEntity.isDead || !galathEntity.hasMasterOAlgo()) continue;
             return true;
         }
         return false;

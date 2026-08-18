@@ -11,7 +11,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.girls.Slime.SlimeEntity;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -151,10 +151,10 @@ extends EntityLiving {
     }
 
     void a(EnumParticleTypes enumParticleTypes) {
-        double d = Reference.RANDOM.nextGaussian() * 0.02;
-        double d2 = Reference.RANDOM.nextGaussian() * 0.02;
-        double d3 = Reference.RANDOM.nextGaussian() * 0.02;
-        this.world.spawnParticle(enumParticleTypes, this.posX + (double)(Reference.RANDOM.nextFloat() * this.width * 2.0f) - (double)this.width, this.posY + 0.15 + (double)(Reference.RANDOM.nextFloat() * this.height), this.posZ + (double)(Reference.RANDOM.nextFloat() * this.width * 2.0f) - (double)this.width, d, d2, d3, new int[0]);
+        double d = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
+        double d2 = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
+        double d3 = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
+        this.world.spawnParticle(enumParticleTypes, this.posX + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * this.width * 2.0f) - (double)this.width, this.posY + 0.15 + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * this.height), this.posZ + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * this.width * 2.0f) - (double)this.width, d, d2, d3, new int[0]);
     }
 
     @Override
@@ -357,7 +357,7 @@ extends EntityLiving {
                         if (this.a) {
                             this.c /= 3;
                         }
-                        float f = Reference.RANDOM.nextInt(360);
+                        float f = ReferenceAndRotationHelper.RANDOM.nextInt(360);
                         ((b_inner53)this.d.getMoveHelper()).a(f, false);
                         this.d.getJumpHelper().setJumping();
                         if (this.d.i()) {

@@ -12,7 +12,7 @@ package com.trolmastercard.sexmod;
 
 import java.util.HashSet;
 
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
@@ -40,36 +40,36 @@ import org.lwjgl.opengl.GL11;
 //gm
 //Mark related stuff
 //P.S. Dragon Staff related
-public class gm_class376 {
+public class StructureMarkerRenderer {
     final static Vec3i e = new Vec3i(255, 0, 0);
     final static Vec3i g = new Vec3i(0, 255, 0);
     final static Vec3i d = new Vec3i(0, 0, 255);
     final static ResourceLocation MARK_TEXTURE = new ResourceLocation("sexmod", "textures/mark.png");
-    static HashSet<BlockPos> blockPositionsList = new HashSet();
+    static HashSet<BlockPos> markers = new HashSet();
     static Minecraft minecraft = Minecraft.getMinecraft();
     static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
-    public static void ClearList() {
-        blockPositionsList.clear();
+    public static void ClearMarkers() {
+        markers.clear();
     }
 
     public static boolean a(BlockPos pos) {
-        return blockPositionsList.contains(pos);
+        return markers.contains(pos);
     }
 
     public static void Render() {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        Vec3d vec3d = Reference.LerpVec3d(Reference.k, Reference.j, (double) minecraft.getRenderPartialTicks());
+        Vec3d vec3d = ReferenceAndRotationHelper.LerpVec3d(ReferenceAndRotationHelper.k, ReferenceAndRotationHelper.j, (double) minecraft.getRenderPartialTicks());
         GlStateManager.pushMatrix();
         GlStateManager.disableCull();
         GlStateManager.disableDepth();
         textureManager.bindTexture(MARK_TEXTURE);
         GlStateManager.translate(-vec3d.x, -vec3d.y, -vec3d.z);
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        for (BlockPos blockPos : blockPositionsList) {
-            Vec3i vec3i = gm_class376.b(blockPos);
-            gm_class376.a(bufferBuilder, blockPos, vec3i.getX(), vec3i.getY(), vec3i.getZ());
+        for (BlockPos blockPos : markers) {
+            Vec3i vec3i = StructureMarkerRenderer.b(blockPos);
+            StructureMarkerRenderer.a(bufferBuilder, blockPos, vec3i.getX(), vec3i.getY(), vec3i.getZ());
         }
         tessellator.draw();
         GlStateManager.enableDepth();
@@ -116,23 +116,23 @@ public class gm_class376 {
     }
 
     public static void AddList(HashSet<BlockPos> list) {
-        blockPositionsList.addAll(list);
+        markers.addAll(list);
     }
 
     public static void CleanList(HashSet<BlockPos> list) {
-        blockPositionsList.removeAll(list);
+        markers.removeAll(list);
     }
 
     @SubscribeEvent
     public void a(RenderWorldLastEvent event) {
         GlStateManager.enableColorMaterial();
         GL11.glDisable(2896);
-        ItemStack itemStack = gm_class376.minecraft.player.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack itemStack = StructureMarkerRenderer.minecraft.player.getHeldItem(EnumHand.MAIN_HAND);
         if (itemStack.getItem() != DragonStaffItem.DRAGON_STAFF) {
-            itemStack = gm_class376.minecraft.player.getHeldItem(EnumHand.OFF_HAND);
+            itemStack = StructureMarkerRenderer.minecraft.player.getHeldItem(EnumHand.OFF_HAND);
         }
         if (itemStack.getItem() == DragonStaffItem.DRAGON_STAFF) {
-            gm_class376.Render();
+            StructureMarkerRenderer.Render();
         }
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
@@ -150,8 +150,8 @@ public class gm_class376 {
         if (playerSP == null) {
             return;
         }
-        Reference.k = Reference.j;
-        Reference.j = playerSP.getPositionVector();
+        ReferenceAndRotationHelper.k = ReferenceAndRotationHelper.j;
+        ReferenceAndRotationHelper.j = playerSP.getPositionVector();
     }
 }
 

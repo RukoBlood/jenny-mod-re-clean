@@ -36,7 +36,7 @@ import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -92,7 +92,7 @@ implements ai_class30 {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 0.9f;
     }
 
@@ -112,7 +112,7 @@ implements ai_class30 {
         if (stringArray.length < 8) {
             return super.net_minecraft_util_math_Vec3i_b(n);
         }
-        return by_class106.values()[Integer.parseInt(stringArray[7])].a();
+        return SkinColor.values()[Integer.parseInt(stringArray[7])].getColor();
     }
 
     @Override
@@ -120,7 +120,7 @@ implements ai_class30 {
         super.entityInit();
         eh_class250 eh_class2502 = eh_class250.values()[this.getRNG().nextInt(eh_class250.values().length)];
         this.entityDataManager.register(au, new BlockPos(eh_class2502.a()));
-        this.entityDataManager.register(as, GoblinEntity.ax.name());
+        this.entityDataManager.register(as, GoblinEntity.DEFAULT_COLOR.name());
         this.entityDataManager.register(aA, false);
         this.entityDataManager.register(ax, "");
     }
@@ -184,11 +184,11 @@ implements ai_class30 {
         }
         Vec3d vec3d2 = entityPlayer.getPositionVector();
         Vec3d vec3d3 = new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ);
-        return Reference.LerpVec3d(vec3d3, vec3d2, (double)f);
+        return ReferenceAndRotationHelper.LerpVec3d(vec3d3, vec3d2, (double)f);
     }
 
     void void_c(EntityPlayer entityPlayer) {
-        if (this.currentAction() != Action.NULL) {
+        if (this.getCurrentAction() != Action.NULL) {
             return;
         }
         if (this.java_util_UUID_e() != null) {
@@ -222,7 +222,7 @@ implements ai_class30 {
         AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 7);
         AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, 5);
         AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, g5_class349.values().length - 1);
-        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, by_class106.values().length - 1);
+        AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, SkinColor.values().length - 1);
         AbstractGoblinKoboldEntity.appendRandomGeneInclusive(stringBuilder, eh_class250.values().length - 1);
         AbstractGoblinKoboldEntity.appendFixedGene(stringBuilder, 0);
         return stringBuilder.toString();
@@ -239,7 +239,7 @@ implements ai_class30 {
                 this.add(16);
                 this.add(6);
                 this.add(g5_class349.values().length);
-                this.add(by_class106.values().length);
+                this.add(SkinColor.values().length);
                 this.add(eh_class250.values().length);
             }
         };
@@ -253,7 +253,7 @@ implements ai_class30 {
     @Override
     protected void ResetColors() {
         PlayerGoblinRenderer.ResetColors();
-        GoblinRenderer.ResetColors();
+        GoblinRenderer.clearBoneColors();
     }
 
     @Override
@@ -305,10 +305,10 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return vec3d;
         }
-        float f2 = Reference.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
+        float f2 = ReferenceAndRotationHelper.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
         Vec3d vec3d2 = vec3d;
         float f3 = 135.0f;
-        Action fp_class3242 = this.currentAction();
+        Action fp_class3242 = this.getCurrentAction();
         if (fp_class3242 == Action.PICK_UP) {
             vec3d2 = new Vec3d(vec3d.x, vec3d.y, -vec3d.z);
             f3 += 40.0f;
@@ -325,7 +325,7 @@ implements ai_class30 {
         if (entityPlayer == null) {
             return;
         }
-        if (this.currentAction() == Action.START_THROWING) {
+        if (this.getCurrentAction() == Action.START_THROWING) {
             entityPlayer.isDead = false;
             if (!this.world.loadedEntityList.contains(entityPlayer)) {
                 this.world.spawnEntity(entityPlayer);
@@ -343,7 +343,7 @@ implements ai_class30 {
             return;
         }
         this.void_f();
-        Action fp_class3242 = this.currentAction();
+        Action fp_class3242 = this.getCurrentAction();
         this.d(fp_class3242);
         this.void_c(fp_class3242);
         this.aw = fp_class3242;
@@ -355,7 +355,7 @@ implements ai_class30 {
     }
 
     void void_j() {
-        Action fp_class3242 = this.currentAction();
+        Action fp_class3242 = this.getCurrentAction();
         if (fp_class3242 == Action.THROWN) {
             return;
         }
@@ -424,7 +424,7 @@ implements ai_class30 {
     }
 
     void void_e() {
-        if (this.currentAction() != Action.STAND_UP) {
+        if (this.getCurrentAction() != Action.STAND_UP) {
             return;
         }
         if (++this.aJ < 37) {
@@ -435,7 +435,7 @@ implements ai_class30 {
     }
 
     void void_o() {
-        if (this.currentAction() != Action.THROWN) {
+        if (this.getCurrentAction() != Action.THROWN) {
             return;
         }
         EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
@@ -551,7 +551,7 @@ implements ai_class30 {
     @SideOnly(value=Side.CLIENT)
     void d(Action fp_class3242) {
         Minecraft minecraft = Minecraft.getMinecraft();
-        if (!minecraft.player.getPersistentID().equals(this.playerSheHasSexWith())) {
+        if (!minecraft.player.getPersistentID().equals(this.getInteractionPlayerUUID())) {
             return;
         }
         if (minecraft.gameSettings.thirdPersonView != 0) {
@@ -579,7 +579,7 @@ implements ai_class30 {
 
     @Override
     @Nullable
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         switch (action) {
             case PAIZURI_IDLE: 
             case PAIZURI_SLOW: {
@@ -600,7 +600,7 @@ implements ai_class30 {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
+        Action fp_class3243 = this.getCurrentAction();
         if (fp_class3243 == Action.PAIZURI_CUM && (action == Action.PAIZURI_SLOW || action == Action.PAIZURI_FAST)) {
             return;
         }
@@ -626,7 +626,7 @@ implements ai_class30 {
     }
 
     void void_q() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
         if (entityPlayer == null) {
             return;
         }
@@ -639,7 +639,7 @@ implements ai_class30 {
     }
 
     void void_m() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
         if (entityPlayer == null) {
             return;
         }
@@ -663,14 +663,14 @@ implements ai_class30 {
         if (!entityPlayer.getPersistentID().equals(this.java_util_UUID_e())) {
             return;
         }
-        ResetGirl.a_inner422.a(this);
+        ResetGirl.EventHandler.resetGirl(this);
         this.setAnchored(false);
         this.setCurrentAction(Action.NULL);
         this.void_a((UUID)null);
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         switch (action) {
             case PAIZURI_SLOW: 
             case PAIZURI_FAST: 
@@ -699,7 +699,7 @@ implements ai_class30 {
         }
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.goblin.null", true, event);
                     break;
                 }
@@ -707,7 +707,7 @@ implements ai_class30 {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.goblin.null", true, event);
                     break;
                 }
@@ -743,7 +743,7 @@ implements ai_class30 {
             case "action": {
                 Minecraft minecraft = Minecraft.getMinecraft();
                 String string = minecraft.player.getPersistentID().equals(this.java_util_UUID_e()) && minecraft.gameSettings.thirdPersonView == 0 ? "1" : "3";
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case SHOULDER_IDLE: {
                         this.createAnimation("animation.goblin.shoulder_idle", true, event);
                         break block5;
@@ -956,7 +956,7 @@ implements ai_class30 {
                 case "paizuri_startDone": {
                     this.setCurrentAction(Action.PAIZURI_IDLE);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "paizuriFastDone": {
@@ -1038,7 +1038,7 @@ implements ai_class30 {
                 case "breedingIntroDone": {
                     this.setCurrentAction(Action.BREEDING_SLOW_0);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "breeding_slow1Done": {
@@ -1098,7 +1098,7 @@ implements ai_class30 {
                 case "neslon_introDone": {
                     this.setCurrentAction(Action.NELSON_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "nelson_slowDone": {
@@ -1185,7 +1185,7 @@ implements ai_class30 {
             if (!(ei_class2512 instanceof PlayerGoblin)) {
                 return;
             }
-            Action fp_class3242 = ei_class2512.currentAction();
+            Action fp_class3242 = ei_class2512.getCurrentAction();
             if (fp_class3242 == Action.THROWN) {
                 return;
             }
@@ -1259,7 +1259,7 @@ implements ai_class30 {
                 PlayerGoblin eq_class2642;
                 PlayerGirl ei_class2512;
                 if (entityPlayer == entityPlayerSP || !((ei_class2512 = PlayerGirl.GetPlayer(entityPlayer)) instanceof PlayerGoblin) || (eq_class2642 = (PlayerGoblin)ei_class2512).java_util_UUID_e() == null) continue;
-                Action fp_class3242 = eq_class2642.currentAction();
+                Action fp_class3242 = eq_class2642.getCurrentAction();
                 if (fp_class3242 == Action.THROWN || fp_class3242 == Action.START_THROWING) {
                     return;
                 }

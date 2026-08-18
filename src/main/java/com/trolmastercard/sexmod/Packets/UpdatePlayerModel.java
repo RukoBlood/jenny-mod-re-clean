@@ -74,13 +74,13 @@ implements IMessage {
                 UUID uUID = messageContext.getServerHandler().player.getPersistentID();
                 PlayerGirl ei_class2513 = PlayerGirl.getUUIDHashtable(uUID);
                 if (ei_class2513 != null) {
-                    for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
+                    for (GirlEntity object2 : GirlEntity.getGirlEntityList()) {
                         if (object2.world.isRemote || !object2.girlID().equals(ei_class2513.girlID())) continue;
                         world.removeEntity(object2);
                     }
                     ei_class2513.void_y();
                     PlayerGirl.playerGirlUUIDHashtable.remove(uUID);
-                    GirlEntity.GirlEntityList().remove(ei_class2513);
+                    GirlEntity.getGirlEntityList().remove(ei_class2513);
                     ei_class2513.a(Optional.absent());
                 }
                 if ((fy_class3352 = b__class712.a) == null) {

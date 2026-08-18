@@ -88,7 +88,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         this.partialTicks = partialTicks;
         playerGirl.syncWithPlayerProperties(owner);
         if (this.shouldRenderNameTag(owner, entity)) {
-            this.renderLivingLabel(entity, owner.getName(), x, y + (double)playerGirl.getNameTagHeightOffset(), z, 300);
+            this.renderLivingLabel(entity, owner.getName(), x, y + (double)playerGirl.getScaleFactor(), z, 300);
         }
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
@@ -110,7 +110,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         if (player.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID())) {
             return false;
         }
-        Action currentAction = girl.currentAction();
+        Action currentAction = girl.getCurrentAction();
         if (currentAction == null) {
             return true;
         }

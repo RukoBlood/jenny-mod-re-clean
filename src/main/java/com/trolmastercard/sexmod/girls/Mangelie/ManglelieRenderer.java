@@ -100,7 +100,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (f__class2972 == null) {
             return false;
         }
-        switch (f__class2972.currentAction()) {
+        switch (f__class2972.getCurrentAction()) {
             case CONTROLLED_FLIGHT: 
             case BOOST: {
                 return true;
@@ -111,7 +111,7 @@ extends GirlRenderer<ManglelieEntity> {
 
     // todo clashes
     boolean a_0(ManglelieEntity f8_class2932) {
-        if (f8_class2932.currentAction() != Action.RIDE_MOMMY_HEAD) {
+        if (f8_class2932.getCurrentAction() != Action.RIDE_MOMMY_HEAD) {
             return false;
         }
         return f8_class2932.getMommyGalath(false) == null;
@@ -127,7 +127,7 @@ extends GirlRenderer<ManglelieEntity> {
             f8_class2932.setMommyUUID((UUID)null);
             return false;
         }
-        return f__class2972.isWingsAnimated();
+        return f__class2972.isHuggingManglelie();
     }
 
     @Override
@@ -200,7 +200,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (f__class2972 == null) {
             return;
         }
-        GlStateManager.rotate(-Reference.LerpAngleDegrees(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(-ReferenceAndRotationHelper.LerpAngleDegrees(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
     }
 
     static boolean a_5(GirlEntity em_class2582) {
@@ -210,7 +210,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (em_class2582 == null) {
             return false;
         }
-        return !Action.a(em_class2582, Action.THREESOME_SLOW, Action.THREESOME_FAST, Action.THREESOME_CUM);
+        return !Action.isAnyAction(em_class2582, Action.THREESOME_SLOW, Action.THREESOME_FAST, Action.THREESOME_CUM);
     }
 
     static void a(GirlEntity em_class2582, BufferBuilder bufferBuilder, Tessellator tessellator) {
@@ -277,7 +277,7 @@ extends GirlRenderer<ManglelieEntity> {
         ItemStack itemStack = new ItemStack(Items.BOW);
         float f = ((ManglelieEntity)this.renderEntity).getAttackProgress(mc.getRenderPartialTicks());
         if (f < 1.0f) {
-            float f2 = (float) Reference.EaseOutQuart(f);
+            float f2 = (float) ReferenceAndRotationHelper.EaseOutQuart(f);
             ((ManglelieEntity)this.renderEntity).setItemUseCount((int)(11.0f * (1.0f - f2) + 71980.0f));
             ((ManglelieEntity)this.renderEntity).setHeldItemOverride(itemStack);
             ((ManglelieEntity)this.renderEntity).setActiveHand(EnumHand.MAIN_HAND);
@@ -302,7 +302,7 @@ extends GirlRenderer<ManglelieEntity> {
             return;
         }
         int n = ManglelieRenderer.a(string);
-        if (com.trolmastercard.sexmod.util.Utils.isValueInBounds((double)n, 17.0, 35.0)) {
+        if (ThreadNames.isValueInBounds((double)n, 17.0, 35.0)) {
             if (mc.isGamePaused()) {
                 return;
             }
@@ -315,7 +315,7 @@ extends GirlRenderer<ManglelieEntity> {
             }
             geoBone.setPositionY(geoBone.getPositionY() + f * 0.01f);
         }
-        if (com.trolmastercard.sexmod.util.Utils.isValueInBounds((double)n, 1.0, 11.0)) {
+        if (ThreadNames.isValueInBounds((double)n, 1.0, 11.0)) {
             if (!string.endsWith("1")) {
                 return;
             }
@@ -326,8 +326,8 @@ extends GirlRenderer<ManglelieEntity> {
             if ((f = TrigMath.toDegrees(em_class2582.getAnimationProcessor().getBone(string2).getRotationX())) < 0.0f) {
                 return;
             }
-            geoBone.setRotationX(TrigMath.toRadians(f));
-            geoBone.setPositionY(TrigMath.toRadians(f * 0.03f));
+            geoBone.setRotationX(TrigMath.wrapDegrees(f));
+            geoBone.setPositionY(TrigMath.wrapDegrees(f * 0.03f));
         }
     }
 
@@ -379,7 +379,7 @@ extends GirlRenderer<ManglelieEntity> {
         } catch (IOException iOException) {
             iOException.printStackTrace();
         }
-        this.renderRecursively(buffer, geoBone3, r, g, b, (this.renderEntity).float_v());
+        this.renderRecursively(buffer, geoBone3, r, g, b, (this.renderEntity).getRenderScaleFactor());
         Tessellator.getInstance().draw();
         MATRIX_STACK.pop();
     }
@@ -415,7 +415,7 @@ extends GirlRenderer<ManglelieEntity> {
     @Override
     protected Vec3d applyCustomTranslationOffsets(ManglelieEntity entity, float partialTicks, Vec3d baseVector) {
         GalathEntity f__class2972;
-        if (entity.currentAction() == Action.RUN) {
+        if (entity.getCurrentAction() == Action.RUN) {
             float yaw;
             entity.rotationYaw = yaw = entity.getYawRotation();
             entity.prevRenderYawOffset = yaw;
@@ -435,7 +435,7 @@ extends GirlRenderer<ManglelieEntity> {
         boolean bl = f__class2972.isAnchored();
         float f2 = bl ? f__class2972.getYawRotation() : f__class2972.rotationYawHead;
         float f3 = bl ? f__class2972.getYawRotation() : f__class2972.prevRotationYawHead;
-        Float f4 = GalathEntity.updateRenderPositions(f__class2972, f);
+        Float f4 = GalathEntity.getAimYaw(f__class2972, f);
         if (f4 != null) {
             f2 = f4;
             f3 = f4;

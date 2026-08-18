@@ -12,7 +12,7 @@ package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.world.WorldUtils;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.gm_class376;
+import com.trolmastercard.sexmod.StructureMarkerRenderer;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
@@ -78,9 +78,9 @@ implements IMessage {
             }
             if (messageContext.side.isClient()) {
                 if (h6_class3972.a) {
-                    gm_class376.AddList(h6_class3972.c);
+                    StructureMarkerRenderer.AddList(h6_class3972.c);
                 } else {
-                    gm_class376.CleanList(h6_class3972.c);
+                    StructureMarkerRenderer.CleanList(h6_class3972.c);
                 }
                 return null;
             }

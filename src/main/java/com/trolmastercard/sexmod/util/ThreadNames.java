@@ -11,7 +11,7 @@ import java.util.UUID;
 
 import net.minecraft.util.math.Vec3d;
 
-public class Utils {
+public class ThreadNames {
     public static float getAngleDifferences(double src, double target) {
         double diff;
         src = (src + Math.PI * 2) % (Math.PI * 2);
@@ -72,7 +72,7 @@ public class Utils {
     }
 
     public static int getRandomSign() {
-        return Reference.RANDOM.nextBoolean() ? 1 : -1;
+        return ReferenceAndRotationHelper.RANDOM.nextBoolean() ? 1 : -1;
     }
 
     public static float clamp(float f, float f2, float f3) {
@@ -108,7 +108,7 @@ public class Utils {
         return Math.round((float)d);
     }
 
-    public static void runDelayedTask(int ms, Runnable task) {
+    public static void createDaemonThread(int ms, Runnable task) {
         String randomUUID = UUID.randomUUID().toString();
         new Thread(() -> {
             try {

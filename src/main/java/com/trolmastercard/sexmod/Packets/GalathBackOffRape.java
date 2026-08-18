@@ -38,7 +38,7 @@ public class GalathBackOffRape implements IMessage {
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 GirlEntity girl = GirlEntity.getGirlByUUID(ctx.getServerHandler().player.getPersistentID(), true);
                 if (girl instanceof GalathEntity) {
-                    ((GalathEntity)girl).void_w();
+                    ((GalathEntity)girl).handleRapeState();
                 }
             });
             return null;

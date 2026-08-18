@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
@@ -67,16 +67,16 @@ public class SlimeEntity extends GirlEntity {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 1.6f;
     }
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.CUMBLOWJOB && (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB)) {
+        if (this.getCurrentAction() == Action.CUMBLOWJOB && (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB)) {
             return;
         }
-        if (this.currentAction() == Action.DOGGYCUM && (action == Action.DOGGYFAST || action == Action.DOGGYSLOW)) {
+        if (this.getCurrentAction() == Action.DOGGYCUM && (action == Action.DOGGYFAST || action == Action.DOGGYSLOW)) {
             return;
         }
         super.setCurrentAction(action);
@@ -101,7 +101,7 @@ public class SlimeEntity extends GirlEntity {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.SUCKBLOWJOB || action == Action.THRUSTBLOWJOB) {
             return Action.CUMBLOWJOB;
         }
@@ -112,7 +112,7 @@ public class SlimeEntity extends GirlEntity {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.SUCKBLOWJOB) {
             return Action.THRUSTBLOWJOB;
         }
@@ -174,7 +174,7 @@ public class SlimeEntity extends GirlEntity {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.currentAction() == Action.NULL) {
+        if (this.getCurrentAction() == Action.NULL) {
             this.updateSlimeMovementAndState();
         }
         if (this.entityDataManager.get(HornyLevel) >= 2 && this.ticksExisted % 10 == 0) {
@@ -188,11 +188,11 @@ public class SlimeEntity extends GirlEntity {
 
     @SideOnly(value=Side.CLIENT)
     void updateClientPlayerPosition() {
-        if (this.playerSheHasSexWith() == null) {
+        if (this.getInteractionPlayerUUID() == null) {
             return;
         }
         EntityPlayerSP clientPlayer = Minecraft.getMinecraft().player;
-        if (!this.playerSheHasSexWith().equals(clientPlayer.getPersistentID())) {
+        if (!this.getInteractionPlayerUUID().equals(clientPlayer.getPersistentID())) {
             return;
         }
         Vec3d offset = this.getPositionVector();
@@ -233,7 +233,7 @@ public class SlimeEntity extends GirlEntity {
         if (hornyLevel < 2) {
             return;
         }
-        if (hornyLevel >= 4 && this.onGround && this.currentAction() == Action.NULL) {
+        if (hornyLevel >= 4 && this.onGround && this.getCurrentAction() == Action.NULL) {
             this.setTargetPosition(this.getPositionVector());
             this.setYawRotation(this.rotationYaw);
             this.entityDataManager.set(IS_ANCHORED, true);
@@ -259,7 +259,7 @@ public class SlimeEntity extends GirlEntity {
 
         Vec3d offset = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation());
         player.setPosition(this.posX + offset.x, this.posY, this.posZ + offset.z);
-        if (this.currentAction() == Action.WAITDOGGY) {
+        if (this.getCurrentAction() == Action.WAITDOGGY) {
             this.setCurrentAction(Action.DOGGYSTART);
         } else {
             this.setCurrentAction(Action.SUCKBLOWJOB);
@@ -338,7 +338,7 @@ public class SlimeEntity extends GirlEntity {
     }
 
     float getRandomYaw() {
-        return Reference.RANDOM.nextFloat() * 360.0f;
+        return ReferenceAndRotationHelper.RANDOM.nextFloat() * 360.0f;
     }
 
     @Override
@@ -352,7 +352,7 @@ public class SlimeEntity extends GirlEntity {
         }
         block4 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() == Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() == Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.slime.null", true, event);
                     break;
                 }
@@ -360,11 +360,11 @@ public class SlimeEntity extends GirlEntity {
                 break;
             }
             case "action": {
-                if (this.currentAction() == Action.NULL) {
+                if (this.getCurrentAction() == Action.NULL) {
                     this.createAnimation(this.slimeMovementState.animationPath, true, event);
                     break;
                 }
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case UNDRESS: {
                         this.createAnimation("animation.slime.undress", false, event);
                         break block4;
@@ -445,7 +445,7 @@ public class SlimeEntity extends GirlEntity {
                 }
                 case "sexUiOn": {
                     if (!this.isControlledByLocalPlayer() || SexUI.shouldBeRendered) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "bjiMSG10": {
@@ -460,7 +460,7 @@ public class SlimeEntity extends GirlEntity {
                     break;
                 }
                 case "bjiMSG12": {
-                    if (Reference.RANDOM.nextInt(5) == 0) {
+                    if (ReferenceAndRotationHelper.RANDOM.nextInt(5) == 0) {
                         this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
                     this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
@@ -478,7 +478,7 @@ public class SlimeEntity extends GirlEntity {
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "bjtDone": {
@@ -551,14 +551,14 @@ public class SlimeEntity extends GirlEntity {
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "doggyslowMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
-                    int n = Reference.RANDOM.nextInt(4);
+                    int n = ReferenceAndRotationHelper.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = Reference.RANDOM.nextInt(2);
+                        n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                         } else {
@@ -578,7 +578,7 @@ public class SlimeEntity extends GirlEntity {
                     }
                     ++this.performJump;
                     if (this.performJump % 2 == 0) {
-                        int n = Reference.RANDOM.nextInt(2);
+                        int n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                             break;

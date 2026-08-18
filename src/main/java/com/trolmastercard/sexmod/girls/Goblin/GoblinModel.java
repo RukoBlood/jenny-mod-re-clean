@@ -10,9 +10,9 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlModel;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -54,7 +54,7 @@ extends GirlModel<GirlEntity> {
             return super.isSteveSkinType(girl);
         }
         GoblinEntity e3_class2192 = (GoblinEntity) girl;
-        UUID uUID = e3_class2192.playerSheHasSexWith();
+        UUID uUID = e3_class2192.getInteractionPlayerUUID();
         if (uUID == null) {
             uUID = e3_class2192.java_util_UUID_e();
         }
@@ -81,7 +81,7 @@ extends GirlModel<GirlEntity> {
         iBone.setHidden(girl.getDataManager().get(GoblinEntity.aV) == false);
         IBone iBone2 = animationProcessor.getBone("body");
         IBone iBone3 = animationProcessor.getBone("head");
-        Action fp_class3242 = girl.currentAction();
+        Action fp_class3242 = girl.getCurrentAction();
         if ((fp_class3242 == Action.BREEDING_SLOW_2 || fp_class3242 == Action.BREEDING_FAST_2 || fp_class3242 == Action.BREEDING_CUM_2) && this.f.gameSettings.thirdPersonView == 0) {
             iBone2.setPositionY(iBone2.getPositionY() + 1.5f);
         }
@@ -117,7 +117,7 @@ extends GirlModel<GirlEntity> {
     }
 
     void a(AnimationProcessor<GirlEntity> animationProcessor, GirlEntity em_class2582) {
-        if (em_class2582.currentAction() != Action.START_THROWING) {
+        if (em_class2582.getCurrentAction() != Action.START_THROWING) {
             return;
         }
         if (this.f.gameSettings.thirdPersonView != 0 || !this.f.player.getPersistentID().equals(((PlayerGirl)em_class2582).getOwnerUserUUID())) {
@@ -131,7 +131,7 @@ extends GirlModel<GirlEntity> {
     }
 
     void b(AnimationProcessor animationProcessor, GirlEntity em_class2582) {
-        if (em_class2582.currentAction() != Action.PICK_UP) {
+        if (em_class2582.getCurrentAction() != Action.PICK_UP) {
             return;
         }
         if (this.f.gameSettings.thirdPersonView == 0 && this.f.player.getPersistentID().equals(((ai_class30)((Object)em_class2582)).java_util_UUID_e())) {
@@ -152,7 +152,7 @@ extends GirlModel<GirlEntity> {
     void a(AnimationProcessor animationProcessor, ai_class30 ai_class302, GirlEntity em_class2582) {
         UUID uUID = ai_class302.java_util_UUID_e();
         if (uUID == null) {
-            em_class2582.playerSheHasSexWith();
+            em_class2582.getInteractionPlayerUUID();
         }
         if (uUID == null) {
             return;
@@ -161,12 +161,12 @@ extends GirlModel<GirlEntity> {
         if (entityPlayer == null) {
             return;
         }
-        float f = Reference.LerpFloat(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
+        float f = ReferenceAndRotationHelper.LerpFloat(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
         float f2 = entityPlayer.limbSwing;
         float f3 = (float)Math.sin(f2);
         IBone iBone = animationProcessor.getBone("LeftLeg");
         IBone iBone2 = animationProcessor.getBone("RightLeg");
-        float f4 = TrigMath.toRadians(60.0f * f3 * f);
+        float f4 = TrigMath.wrapDegrees(60.0f * f3 * f);
         iBone.setRotationX(f4);
         iBone2.setRotationX(-f4);
     }
@@ -217,8 +217,8 @@ extends GirlModel<GirlEntity> {
             }
         }
         float f3 = (float)(-(MathHelper.atan2(vec3d3.z, vec3d3.x) * 57.29577951308232 + (double)f2));
-        float f4 = Utils.clamp((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
-        iBone.setRotationY(TrigMath.toRadians(f3));
+        float f4 = ThreadNames.clamp((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
+        iBone.setRotationY(TrigMath.wrapDegrees(f3));
         iBone.setRotationX(f4);
     }
 
@@ -231,8 +231,8 @@ extends GirlModel<GirlEntity> {
         Vec3d vec3d2 = em_class2582.getPositionVector();
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         float f = (float)(-(Math.atan2(vec3d3.z, vec3d3.x) * 57.29577951308232)) + 90.0f;
-        float f2 = Utils.clamp((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
-        iBone.setRotationY(TrigMath.toRadians(f));
+        float f2 = ThreadNames.clamp((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
+        iBone.setRotationY(TrigMath.wrapDegrees(f));
         iBone2.setRotationX(f2);
     }
 

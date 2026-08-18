@@ -47,7 +47,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 1.4f;
     }
 
@@ -88,7 +88,7 @@ public class PlayerBee extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.CITIZEN_CUM && (action == Action.CITIZEN_FAST || action == Action.COWGIRLSLOW)) {
+        if (this.getCurrentAction() == Action.CITIZEN_CUM && (action == Action.CITIZEN_FAST || action == Action.COWGIRLSLOW)) {
             return;
         }
         super.setCurrentAction(action);
@@ -105,7 +105,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.CITIZEN_SLOW) {
             return Action.CITIZEN_FAST;
         }
@@ -113,7 +113,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.CITIZEN_FAST || action == Action.CITIZEN_SLOW) {
             return Action.CITIZEN_CUM;
         }
@@ -130,7 +130,7 @@ public class PlayerBee extends PlayerGirl {
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block4 : switch (event.getController().getName()) {
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.bee.null", true, event);
                     break;
                 }
@@ -138,7 +138,7 @@ public class PlayerBee extends PlayerGirl {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.bee.null", false, event);
                         break block4;
@@ -193,7 +193,7 @@ public class PlayerBee extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    if (!this.getClosestPlayerID() || this.currentAction() != Action.THROW_PEARL) break;
+                    if (!this.getClosestPlayerID() || this.getCurrentAction() != Action.THROW_PEARL) break;
                     PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
@@ -225,7 +225,7 @@ public class PlayerBee extends PlayerGirl {
                 case "sex_startDone": {
                     this.setCurrentAction(Action.CITIZEN_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "sex_cumMSG1": {

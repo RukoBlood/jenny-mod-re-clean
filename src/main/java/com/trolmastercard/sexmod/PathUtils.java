@@ -11,7 +11,7 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 
 public class PathUtils {
-    public static BlockPos getFinalPathPosition(Path path) {
+    public static BlockPos getPathEnd(Path path) {
         if (path == null) {
             return BlockPos.ORIGIN;
         }
@@ -22,10 +22,10 @@ public class PathUtils {
         return new BlockPos(finalPoint.x, finalPoint.y, finalPoint.z);
     }
 
-    public static BlockPos getFinalPathPosition(EntityLiving entity) {
+    public static BlockPos getPathEnd(EntityLiving entity) {
         PathNavigate navigator = entity.getNavigator();
         Path currentPath = navigator.getPath();
-        return PathUtils.getFinalPathPosition(currentPath);
+        return PathUtils.getPathEnd(currentPath);
     }
 
     public static boolean isPathIntersecting(Path path, BlockPos[] targetPositions) {

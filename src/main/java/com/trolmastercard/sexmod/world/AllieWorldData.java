@@ -21,15 +21,15 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class NameStorage extends WorldSavedData {
+public class AllieWorldData extends WorldSavedData {
     final static String DATA_IDENTIFIER = "sexmod:customstaticgirlnames";
     final static HashMap<UUID, HashMap<PlayerGirlEntity, String>> GLOBAL_NAMES_MAP = new HashMap();
 
-    public NameStorage() {
+    public AllieWorldData() {
         super(DATA_IDENTIFIER);
     }
 
-    public NameStorage(String identifier) {
+    public AllieWorldData(String identifier) {
         super(DATA_IDENTIFIER);
     }
 
@@ -45,10 +45,10 @@ public class NameStorage extends WorldSavedData {
     public void onWorldLoad(WorldEvent.Load event) {
         World world = event.getWorld();
         assert world.getMapStorage() != null;
-        world.getMapStorage().getOrLoadData(NameStorage.class, DATA_IDENTIFIER);
+        world.getMapStorage().getOrLoadData(AllieWorldData.class, DATA_IDENTIFIER);
     }
 
-    public static void setCustomName(UUID uUID, PlayerGirlEntity pg, String name) {
+    public static void addAllie(UUID uUID, PlayerGirlEntity pg, String name) {
         HashMap<PlayerGirlEntity, String> playerNames = GLOBAL_NAMES_MAP.get(uUID);
         if (playerNames == null) {
             playerNames = new HashMap();

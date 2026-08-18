@@ -58,9 +58,9 @@ public class VectorMath {
     }
 
     public static Vec3d rotateEuler(Vec3d vec, float pitch, float yaw, float roll) {
-        pitch = TrigMath.toRadians(pitch);
-        yaw = TrigMath.toRadians(yaw);
-        roll = TrigMath.toRadians(roll);
+        pitch = TrigMath.wrapDegrees(pitch);
+        yaw = TrigMath.wrapDegrees(yaw);
+        roll = TrigMath.wrapDegrees(roll);
 
         double sinP = (float)Math.sin(pitch);
         double cosP = (float)Math.cos(pitch);

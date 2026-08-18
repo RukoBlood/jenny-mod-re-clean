@@ -10,7 +10,7 @@ package com.trolmastercard.sexmod.gui;
 import java.io.IOException;
 
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
@@ -75,7 +75,7 @@ public class ea_class235 extends GuiScreen {
     }
 
     void c() {
-        if (this.girl.playerSheHasSexWith() != null) {
+        if (this.girl.getInteractionPlayerUUID() != null) {
             return;
         }
         this.girl.setCurrentAction(Action.START_THROWING);
@@ -103,10 +103,10 @@ public class ea_class235 extends GuiScreen {
         this.e += (float) (mouseX > this.width / 2 ? 1 : -1) * this.mc.getTickLength();
         this.d += (float) (mouseY < this.height / 2 - 1 ? 1 : -1) * this.mc.getTickLength();
         this.m += (float) (mouseY > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.g = Utils.clamp(this.g, 0.0f, 1.0f);
-        this.e = Utils.clamp(this.e, 0.0f, 1.0f);
-        this.d = Utils.clamp(this.d, 0.0f, 1.0f);
-        this.m = Utils.clamp(this.m, 0.0f, 1.0f);
+        this.g = ThreadNames.clamp(this.g, 0.0f, 1.0f);
+        this.e = ThreadNames.clamp(this.e, 0.0f, 1.0f);
+        this.d = ThreadNames.clamp(this.d, 0.0f, 1.0f);
+        this.m = ThreadNames.clamp(this.m, 0.0f, 1.0f);
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) this.width / 2.0f, (float) this.height / 2.0f, 0.0f);
         GlStateManager.scale(f2, f2, f2);

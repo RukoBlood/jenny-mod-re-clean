@@ -19,7 +19,7 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
 import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
-import com.trolmastercard.sexmod.util.interfaces.IWingsOwner;
+import com.trolmastercard.sexmod.util.interfaces.IGalath;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -46,7 +46,7 @@ extends PlayerGirlRenderer {
         if (entity.world instanceof FakeWorld) {
             return null;
         }
-        if (((IWingsOwner)((Object) entity)).hasWingState()) {
+        if (((IGalath)((Object) entity)).isWingsAnimated()) {
             return null;
         }
         return GalathRenderer.OVERLAY_COLOR_NONE;
@@ -186,7 +186,7 @@ extends PlayerGirlRenderer {
         } catch (IOException iOException) {
             iOException.printStackTrace();
         }
-        this.renderRecursively(buffer, geoBone3, r, g, b, this.renderEntity.float_v());
+        this.renderRecursively(buffer, geoBone3, r, g, b, this.renderEntity.getRenderScaleFactor());
         Tessellator.getInstance().draw();
         MATRIX_STACK.pop();
     }

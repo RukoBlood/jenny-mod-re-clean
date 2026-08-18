@@ -10,18 +10,18 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ParticleGalathTrail extends ParticleDragonBreath {
+public class DragonBreathParticle extends ParticleDragonBreath {
     final static public float DEFAULT_ALPHA = 0.2f;
     final static public float MAX_LIFETIME_MODIFIER = 0.5f;
-    static public float globalParticleScale = 0.2f;
+    static public float BREATH_SCALE = 0.2f;
 
-    public ParticleGalathTrail(World world, double x, double y, double z) {
+    public DragonBreathParticle(World world, double x, double y, double z) {
         super(world, x, y, z, 0.0, 0.0, 0.0);
     }
 
     @Override
     public void renderParticle(BufferBuilder buf, Entity entity, float partialTicks, float rotationX, float rotationY, float rotationZ, float rotationXY, float rotationXZ) {
-        this.particleScale = globalParticleScale;
+        this.particleScale = BREATH_SCALE;
         float MinU = (float)this.particleTextureIndexX / 16.0f;
         float MaxU = MinU + 0.0624375f;
         float MinV = (float)this.particleTextureIndexY / 16.0f;
@@ -52,9 +52,9 @@ public class ParticleGalathTrail extends ParticleDragonBreath {
         if (this.particleAngle != 0.0f) {
             float currentAngle = this.particleAngle + (this.particleAngle - this.prevParticleAngle) * partialTicks;
             float cosHalf = MathHelper.cos(currentAngle * 0.5f);
-            float sinHalfX = MathHelper.sin(currentAngle * 0.5f) * (float) ParticleGalathTrail.cameraViewDir.x;
-            float sinHalfY = MathHelper.sin(currentAngle * 0.5f) * (float) ParticleGalathTrail.cameraViewDir.y;
-            float sinHalfZ = MathHelper.sin(currentAngle * 0.5f) * (float) ParticleGalathTrail.cameraViewDir.z;
+            float sinHalfX = MathHelper.sin(currentAngle * 0.5f) * (float) DragonBreathParticle.cameraViewDir.x;
+            float sinHalfY = MathHelper.sin(currentAngle * 0.5f) * (float) DragonBreathParticle.cameraViewDir.y;
+            float sinHalfZ = MathHelper.sin(currentAngle * 0.5f) * (float) DragonBreathParticle.cameraViewDir.z;
             Vec3d rotVector = new Vec3d(sinHalfX, sinHalfY, sinHalfZ);
 
             for (int i = 0; i < 4; ++i) {

@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod.girls.base;
 
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.builder.Animation;
@@ -286,16 +286,17 @@ public enum Action {
         this.hideNameTag = hideNameTag;
     }
 
-    public static boolean a(Action action, Action... actionArray) {
-        for (Action action1 : actionArray) {
-            if (action != action1) continue;
-            return true;
+    public static boolean isAny(Action action, Action... actions) {
+        for (Action action1 : actions) {
+            if (action == action1) {
+                return true;
+            }
         }
         return false;
     }
 
-    public static boolean a(GirlEntity girl, Action... actionArray) {
-        return Action.a(girl.currentAction(), actionArray);
+    public static boolean isAnyAction(GirlEntity girl, Action... actionArray) {
+        return Action.isAny(girl.getCurrentAction(), actionArray);
     }
 
     public static double getAnimationLength(AnimationController controller) {
@@ -325,17 +326,17 @@ public enum Action {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static float d(GirlEntity girl, float f) {
+    public static float getActionTimeScale(GirlEntity girl, float f) {
         float f2 = Action.getAnimationLength(girl);
         if (f2 <= 0.0f) {
             return 0.0f;
         }
-        return Utils.clamp(Action.c(girl, f) / f2, 0.0f, 1.0f);
+        return ThreadNames.clamp(Action.c(girl, f) / f2, 0.0f, 1.0f);
     }
 
     @SideOnly(value=Side.CLIENT)
     public static boolean isPlayingInteractiveAction(GirlEntity girl, float f) {
-        return Action.d(girl, f) == 1.0f;
+        return Action.getActionTimeScale(girl, f) == 1.0f;
     }
 }
 

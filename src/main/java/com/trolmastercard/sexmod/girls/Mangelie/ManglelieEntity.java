@@ -23,7 +23,8 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.world.WorldUtils;
@@ -121,11 +122,11 @@ extends GirlEntity {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 0.0f;
     }
 
-    public void setAttachedToMommy(boolean riding) {
+    public void setCorrupting(boolean riding) {
         this.entityDataManager.set(IS_RIDING_MOMMY, riding);
     }
 
@@ -393,7 +394,7 @@ extends GirlEntity {
             return true;
         }
 
-        Float headYaw = GalathEntity.updateRenderPositions(galath, 0.0f);
+        Float headYaw = GalathEntity.getAimYaw(galath, 0.0f);
         float yaw = headYaw == null ? galath.rotationYawHead : headYaw;
         Vec3d vec3d2 = VectorMath.rotate(diff, yaw);
         return vec3d2.z < 0.0;
@@ -411,10 +412,10 @@ extends GirlEntity {
         if (galath == null) {
             return;
         }
-        if (galath.playerSheHasSexWith() != null) {
+        if (galath.getInteractionPlayerUUID() != null) {
             return;
         }
-        if (galath.currentAction() == Action.MASTERBATE) {
+        if (galath.getCurrentAction() == Action.MASTERBATE) {
             return;
         }
 
@@ -469,10 +470,10 @@ extends GirlEntity {
         GalathEntity galath = (GalathEntity)girl;
         this.setMommyUUID(this.pendingMommyUUID);
         galath.setManglelieUUID(this.girlID());
-        this.setAttachedToMommy(true);
+        this.setCorrupting(true);
         this.setCurrentAction(Action.RIDE_MOMMY_HEAD);
         this.pendingMommyUUID = null;
-        if (galath.currentAction() == Action.HUG_MANG) {
+        if (galath.getCurrentAction() == Action.HUG_MANG) {
             galath.setAnchored(false);
             galath.setCurrentAction((Action)null);
         }
@@ -480,17 +481,17 @@ extends GirlEntity {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.THREESOME_CUM && Action.a(action, Action.THREESOME_FAST, Action.THREESOME_SLOW)) {
+        if (this.getCurrentAction() == Action.THREESOME_CUM && Action.isAny(action, Action.THREESOME_FAST, Action.THREESOME_SLOW)) {
             return;
         }
         if (!this.world.isRemote && action == Action.THREESOME_CUM) {
-            GalathMangTracker.setLastCumTime(this.playerSheHasSexWith(), this.world.getTotalWorldTime());
+            GalathMangTracker.saveCumTime(this.getInteractionPlayerUUID(), this.world.getTotalWorldTime());
         }
         super.setCurrentAction(action);
     }
 
     void updatePositionSyncWithMommy() {
-        if (!this.isAttachedToMommy() || Action.a((GirlEntity)this, Action.THREESOME_SLOW, Action.THREESOME_CUM, Action.THREESOME_FAST)) {
+        if (!this.isAttachedToMommy() || Action.isAnyAction((GirlEntity)this, Action.THREESOME_SLOW, Action.THREESOME_CUM, Action.THREESOME_FAST)) {
             return;
         }
         GalathEntity galath = this.getMommyGalath(true);
@@ -552,13 +553,13 @@ extends GirlEntity {
             break;
         }
         if (targetGalath == null) {
-            if (this.currentAction() == Action.RUN) {
+            if (this.getCurrentAction() == Action.RUN) {
                 this.setCurrentAction((Action)null);
                 this.getNavigator().clearPath();
             }
             return;
         }
-        if (this.currentAction() == Action.RIDE_MOMMY_HEAD) {
+        if (this.getCurrentAction() == Action.RIDE_MOMMY_HEAD) {
             return;
         }
         this.setCurrentAction(Action.RUN);
@@ -566,7 +567,7 @@ extends GirlEntity {
         Vec3d mangPos = this.getPositionVector();
         Vec3d galPos = targetGalath.getPositionVector();
         Vec3d diff = galPos.subtract(mangPos);
-        float yaw = (float) TrigMath.toDegrees(Math.atan2(diff.z, diff.x)) - 90.0f;
+        float yaw = (float) TrigMath.sinDegrees(Math.atan2(diff.z, diff.x)) - 90.0f;
         this.setYawRotation(yaw);
         this.pathNavigator = this.getNavigator();
         this.pathNavigator.clearPath();
@@ -592,7 +593,7 @@ extends GirlEntity {
     }
 
     boolean isVectorRightOfMommy(Vec3d vec, GalathEntity galath, float partialTicks) {
-        Vec3d rotated = VectorMath.rotate(vec, Reference.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks));
+        Vec3d rotated = VectorMath.rotate(vec, ReferenceAndRotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks));
         return rotated.x > 0.35;
     }
 
@@ -626,14 +627,14 @@ extends GirlEntity {
         Vec3d mangleHeadPos = galath.getPositionVector().add(galath.getCachedBoneOffset("mangPos")).add(this.getCachedBoneOffset("head"));
         Vec3d diff = mangleHeadPos.subtract(targetEyePos);
 
-        float yaw = (float)(TrigMath.toDegrees(Math.atan2(diff.z, diff.x)) + 90.0);
-        Float galathHeadPos = GalathEntity.updateRenderPositions(galath, 0.0f);
+        float yaw = (float)(TrigMath.sinDegrees(Math.atan2(diff.z, diff.x)) + 90.0);
+        Float galathHeadPos = GalathEntity.getAimYaw(galath, 0.0f);
         yaw -= galath.rotationYawHead;
         if (galathHeadPos != null) {
             yaw -= galathHeadPos;
         }
-        this.targetHeadYaw = Math.abs(WorldUtils.CalculateAngleDifferences(0.0f, yaw)) < 80.0f ? -TrigMath.toRadians(yaw) : 0.0f;
-        this.targetHeadPitch = this.targetHeadYaw == 0.0f ? 0.0f : (float) com.trolmastercard.sexmod.util.Utils.clamp(-diff.y / 2.0, -0.75, 0.75);
+        this.targetHeadYaw = Math.abs(WorldUtils.CalculateAngleDifferences(0.0f, yaw)) < 80.0f ? -TrigMath.wrapDegrees(yaw) : 0.0f;
+        this.targetHeadPitch = this.targetHeadYaw == 0.0f ? 0.0f : (float) ThreadNames.clamp(-diff.y / 2.0, -0.75, 0.75);
     }
 
     @Override
@@ -693,28 +694,28 @@ extends GirlEntity {
     }
 
     @Override
-    public void setCustomModelKey(String string) {
-        super.setCustomModelKey(string);
-        CustomModelHandler.registerGalathMangModel(this);
+    public void setCustomModelCode(String string) {
+        super.setCustomModelCode(string);
+        GirlWorldData.setCustomModelCode(this);
     }
 
     void initCustomModel() {
         if (this.customModelLoaded) {
             return;
         }
-        this.setCustomModelKey(CustomModelHandler.c(this));
+        this.setCustomModelCode(GirlWorldData.getCustomModelCode(this));
         this.customModelLoaded = true;
     }
 
     @Override
     @Nullable
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         return null;
     }
 
     @Override
-    protected Action CumAction(Action action) {
-        if (Action.a(action, Action.THREESOME_FAST, Action.THREESOME_SLOW)) {
+    protected Action getCumAction(Action action) {
+        if (Action.isAny(action, Action.THREESOME_FAST, Action.THREESOME_SLOW)) {
             this.isThreesomeTransitioning = true;
         }
         return null;
@@ -827,7 +828,7 @@ extends GirlEntity {
             return PlayState.CONTINUE;
         }
         if (this.movementController == controller) {
-            if (this.currentAction() != Action.NULL || this.isAttachedToMommy()) {
+            if (this.getCurrentAction() != Action.NULL || this.isAttachedToMommy()) {
                 return PlayState.STOP;
             }
             if (Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ) > 0.0) {
@@ -842,7 +843,7 @@ extends GirlEntity {
             this.createAnimation("animation.manglelie.idle", true, event);
             return PlayState.CONTINUE;
         }
-        switch (this.currentAction()) {
+        switch (this.getCurrentAction()) {
             default: {
                 return PlayState.STOP;
             }
@@ -903,7 +904,7 @@ extends GirlEntity {
                 }
                 case "sexui": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "doubleSemen0": {
@@ -911,9 +912,9 @@ extends GirlEntity {
                     this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                 }
                 case "doubleSemen": {
-                    ParticlesManager.a(new DynamicTrailRenderer(10, em_class2582 -> {
-                        Vec3d vec3d = em_class2582.getBoneWorldPosition("semenEmitter");
-                        Vec3d vec3d2 = em_class2582.getBoneWorldPosition("semenDir");
+                    ParticlesManager.a(new DynamicTrailRenderer(10, girl -> {
+                        Vec3d vec3d = girl.getBoneWorldPosition("semenEmitter");
+                        Vec3d vec3d2 = girl.getBoneWorldPosition("semenDir");
                         return vec3d.subtract(vec3d2).normalize();
                     }, em_class2582 -> em_class2582.getCachedBoneOffset("semenEmitter").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
                     break;

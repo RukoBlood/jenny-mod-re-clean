@@ -8,7 +8,7 @@ import net.minecraft.util.math.Vec3i;
 
 import java.util.Random;
 
-public class Reference {
+public class ReferenceAndRotationHelper {
     final static public String MOD_ID = "sexmod";
     final static public String NAME = "Fapcraft";
     final static public String VERSION = "1.1.0";
@@ -53,7 +53,7 @@ public class Reference {
     public static float LerpAngleDegrees(float start, float end, double step) {
         double StartRad = Math.toRadians(start);
         double EndRad = Math.toRadians(end);
-        return (float)Math.toDegrees(Reference.a((float)StartRad, (float)EndRad, step));
+        return (float)Math.toDegrees(ReferenceAndRotationHelper.a((float)StartRad, (float)EndRad, step));
     }
 
     public static Vec3d LerpVec3d(Vec3d start, Vec3d end, double step) {

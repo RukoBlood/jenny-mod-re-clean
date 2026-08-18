@@ -25,7 +25,7 @@ import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -193,7 +193,7 @@ public class LampItem extends Item implements IAnimatable {
         nBTTagCompound.setInteger(inUseTicks, n2 + 1);
         if (n2 > k && n2 < c) {
             double d = (float)(n2 - k) / (float)(c - k);
-            d = Reference.h(d);
+            d = ReferenceAndRotationHelper.h(d);
             vec3d = new Vec3d(0.0, (double)entityPlayer.eyeHeight * (1.0 - d), 0.0);
             WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer).add(vec3d), (int)(d * 150.0), d * 0.75, d);
         }
@@ -255,14 +255,14 @@ public class LampItem extends Item implements IAnimatable {
             EntityPlayer entityPlayer = rightClickItem.getEntityPlayer();
             EnumHand enumHand = rightClickItem.getHand();
             ItemStack itemStack = entityPlayer.getHeldItem(enumHand);
-            if (PlayerGirl.e(entityPlayer)) {
+            if (PlayerGirl.isOwnerPlayer(entityPlayer)) {
                 return;
             }
             if (entityPlayer.world.isRemote && !HandlePlayerMovement.b()) {
                 return;
             }
             if (!entityPlayer.world.isRemote) {
-                for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
+                for (GirlEntity object2 : GirlEntity.getGirlEntityList()) {
                     AllieEntity bl;
                     ItemStack itemStack2;
                     if (object2.isDead || !(object2 instanceof AllieEntity) || !itemStack.equals(itemStack2 = (bl = (AllieEntity) object2).getDataManager().get(AllieEntity.itemStack)))

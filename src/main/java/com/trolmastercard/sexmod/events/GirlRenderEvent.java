@@ -15,7 +15,7 @@ import java.util.UUID;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,13 +33,13 @@ public class GirlRenderEvent {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
-            if (girl.isDead || girl.playerSheHasSexWith() == null || girl.currentAction() == Action.NULL)
+        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+            if (girl.isDead || girl.getInteractionPlayerUUID() == null || girl.getCurrentAction() == Action.NULL)
                 continue;
 
             EntityPlayer player = event.getEntityPlayer();
 
-            if (!girl.currentAction().hasPlayer || !girl.playerSheHasSexWith().equals(player.getPersistentID()) && !girl.playerSheHasSexWith().equals(player.getUniqueID()))
+            if (!girl.getCurrentAction().hasPlayer || !girl.getInteractionPlayerUUID().equals(player.getPersistentID()) && !girl.getInteractionPlayerUUID().equals(player.getUniqueID()))
                 continue;
 
             event.setCanceled(true);
@@ -59,9 +59,9 @@ public class GirlRenderEvent {
             return;
         }
 
-        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
-            UUID girlID = girl.playerSheHasSexWith();
-            Action currentAction = girl.currentAction();
+        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+            UUID girlID = girl.getInteractionPlayerUUID();
+            Action currentAction = girl.getCurrentAction();
 
             if (girl.isDead || girlID == null || currentAction == null || !currentAction.hasPlayer || !girlID.equals(player.getUniqueID()) && !girlID.equals(player.getPersistentID()))
                 continue;
@@ -98,7 +98,7 @@ public class GirlRenderEvent {
         if (girlEntity == null) {
             return;
         }
-        if (!girlEntity.currentAction().useBoyCam) {
+        if (!girlEntity.getCurrentAction().useBoyCam) {
             return;
         }
         if (girlEntity.isCustomType()) {
@@ -106,7 +106,7 @@ public class GirlRenderEvent {
         }
         this.origPos = mc.player.getPositionVector();
         this.origLastTickPos = new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ);
-        Vec3d targetCameraPos = girlEntity.isAnchored() ? girlEntity.getCachedBoneOffset("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.getCachedBoneOffset("boyCam").add(Reference.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
+        Vec3d targetCameraPos = girlEntity.isAnchored() ? girlEntity.getCachedBoneOffset("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.getCachedBoneOffset("boyCam").add(ReferenceAndRotationHelper.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
         mc.player.posX = targetCameraPos.x;
         mc.player.posY = targetCameraPos.y - (double)mc.player.getEyeHeight();
         mc.player.posZ = targetCameraPos.z;

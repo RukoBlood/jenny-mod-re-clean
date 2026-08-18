@@ -70,7 +70,7 @@ public class HandlePlayerMovement {
     @SideOnly(value=Side.CLIENT)
     static void a() {
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-        if (!PlayerGirl.e(entityPlayerSP)) {
+        if (!PlayerGirl.isOwnerPlayer(entityPlayerSP)) {
             return;
         }
         ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString("Jump to get out of the animation"), true);

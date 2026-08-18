@@ -38,8 +38,8 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.gui.Galath.EscapeMinigameUI;
 import com.trolmastercard.sexmod.gui.Galath.GalathFlightUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
-import com.trolmastercard.sexmod.world.NameStorage;
-import com.trolmastercard.sexmod.world.WorldGenStructure;
+import com.trolmastercard.sexmod.world.AllieWorldData;
+import com.trolmastercard.sexmod.world.ConfigWorldGenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -78,9 +78,9 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object) GalathCoin.GALATH_COIN);
         MinecraftForge.EVENT_BUS.register((Object) NYIWinchesterItem.NYI_WINCHESTER_ITEM);
         MinecraftForge.EVENT_BUS.register((Object)new StructureTracker());
-        MinecraftForge.EVENT_BUS.register((Object)new NameStorage());
-        MinecraftForge.EVENT_BUS.register((Object)new CustomModelHandler());
-        MinecraftForge.EVENT_BUS.register((Object) WorldGenStructure.Generate());
+        MinecraftForge.EVENT_BUS.register((Object)new AllieWorldData());
+        MinecraftForge.EVENT_BUS.register((Object)new GirlWorldData());
+        MinecraftForge.EVENT_BUS.register((Object) ConfigWorldGenHandler.Generate());
         MinecraftForge.EVENT_BUS.register((Object)new ManglelieEntity.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new f4_class289());
         if (clientSide) {
@@ -104,7 +104,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new RenderPlayerGirl());
         MinecraftForge.EVENT_BUS.register((Object)new SexPromptManager());
         MinecraftForge.EVENT_BUS.register((Object)new PlayerAllieRenderer.a_inner205());
-        MinecraftForge.EVENT_BUS.register((Object)new gm_class376());
+        MinecraftForge.EVENT_BUS.register((Object)new StructureMarkerRenderer());
         MinecraftForge.EVENT_BUS.register((Object)new DeprecatedCheckForUpdates());
         MinecraftForge.EVENT_BUS.register((Object)new ClothingGui.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new CustomModel.a_inner95());

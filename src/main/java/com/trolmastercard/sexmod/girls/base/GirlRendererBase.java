@@ -40,15 +40,15 @@ import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-public abstract class AbstractKoboldGoblinRenderer<G extends AbstractGoblinKoboldEntity> extends GirlRenderer<G> {
+public abstract class GirlRendererBase<G extends AbstractGoblinKoboldEntity> extends GirlRenderer<G> {
     final static protected Vec3i DEFAULT_COLOR = new Vec3i(255, 255, 255);
     static HashMap<Integer, Vec3i> colorCache = new HashMap();
 
-    public AbstractKoboldGoblinRenderer(RenderManager renderManager, AnimatedGeoModel modelProvider, double shadowSize) {
+    public GirlRendererBase(RenderManager renderManager, AnimatedGeoModel modelProvider, double shadowSize) {
         super(renderManager, modelProvider, shadowSize);
     }
 
-    public static void ResetColors() {
+    public static void clearBoneColors() {
         colorCache.clear();
     }
 
@@ -136,7 +136,7 @@ public abstract class AbstractKoboldGoblinRenderer<G extends AbstractGoblinKobol
         if (boneName.equals("weapon")) {
             this.RenderHeldItem(buffer, bone);
         }
-        if (boneName.equals("itemRenderer") && ((AbstractGoblinKoboldEntity)this.renderEntity).currentAction() == Action.PAYMENT) {
+        if (boneName.equals("itemRenderer") && ((AbstractGoblinKoboldEntity)this.renderEntity).getCurrentAction() == Action.PAYMENT) {
             this.renderTradeOverlay(buffer, bone);
         }
         this.onBoneProcessing(buffer, bone.getName(), bone);

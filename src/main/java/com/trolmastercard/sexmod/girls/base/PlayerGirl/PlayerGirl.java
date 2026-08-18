@@ -106,7 +106,7 @@ public abstract class PlayerGirl extends Fighter {
 
     @Nullable
     public static PlayerGirl getByPlayerUUID(UUID uUID) {
-        for (GirlEntity girl : PlayerGirl.GirlEntityList()) {
+        for (GirlEntity girl : PlayerGirl.getGirlEntityList()) {
             PlayerGirl playerGirl;
             if (girl.world.isRemote || !(girl instanceof PlayerGirl) || !uUID.equals((playerGirl = (PlayerGirl)girl).getOwnerUserUUID())) continue;
             return playerGirl;
@@ -274,11 +274,8 @@ public abstract class PlayerGirl extends Fighter {
         return false;
     }
 
-    public static boolean e(EntityPlayer entityPlayer) {
-        if (entityPlayer == null) {
-            return false;
-        }
-        return PlayerGirl.boolean_e(entityPlayer.getPersistentID());
+    public static boolean isOwnerPlayer(EntityPlayer entityPlayer) {
+        return entityPlayer != null && PlayerGirl.boolean_e(entityPlayer.getPersistentID());
     }
 
     @Override
@@ -384,7 +381,7 @@ public abstract class PlayerGirl extends Fighter {
     void void_d(EntityPlayer entityPlayer) {
         NBTTagCompound nBTTagCompound = entityPlayer.getEntityData();
         String string = nBTTagCompound.getString(aa + (Object)((Object) PlayerGirlEntity.fromGirl(this)));
-        this.setCustomModelKey(string);
+        this.setCustomModelCode(string);
     }
 
     @Override
@@ -409,7 +406,7 @@ public abstract class PlayerGirl extends Fighter {
         } else {
             this.setPositionAndUpdate(entityPlayer.posX, entityPlayer.posY + 0.0, entityPlayer.posZ);
         }
-        Action object = this.currentAction();
+        Action object = this.getCurrentAction();
         if (object == Action.NULL && entityPlayer.isSwingInProgress) {
             this.setCurrentAction(Action.ATTACK);
         }
@@ -430,7 +427,7 @@ public abstract class PlayerGirl extends Fighter {
         if (this.an < 100) {
             return;
         }
-        if (this.currentAction() != Action.STRIP) {
+        if (this.getCurrentAction() != Action.STRIP) {
             return;
         }
         if (this.world.isRemote) {

@@ -12,7 +12,7 @@ import javax.vecmath.Vector4d;
 
 import com.trolmastercard.sexmod.Packets.SendCompanionHome;
 import com.trolmastercard.sexmod.Packets.SendGirlToSex;
-import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
+import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
@@ -21,10 +21,10 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
-import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.util.interfaces.IEllie;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
@@ -51,7 +51,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
+public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     final static int ae = 3;
     public boolean Y = false;
     int ag = 0;
@@ -79,7 +79,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return -0.2f;
     }
 
@@ -90,13 +90,13 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     @Override
-    public void void_b() {
+    public void setDismounted() {
         this.Y = true;
     }
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
+        Action fp_class3243 = this.getCurrentAction();
         if (fp_class3243 == Action.ANAL_CUM || fp_class3243 == Action.PRONE_DOGGY_CUM) {
             this.entityDataManager.set(GIRL_HAND_STATES, "");
         }
@@ -127,7 +127,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
             if (this.getPositionVector().equals(this.getTargetPosition()) || this.ag > 40) {
                 this.Y = false;
                 this.ag = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.playerSheHasSexWith()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.U();
@@ -139,7 +139,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                     this.setTargetPosition(this.getFrontOffsetVector());
                 }
                 this.setNoGravity(false);
-                Vec3d vec3d = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
+                Vec3d vec3d = ReferenceAndRotationHelper.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
             }
         }
@@ -175,7 +175,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         if (super.processInteract(entityPlayer, enumHand)) {
             return true;
         }
-        if (this.currentAction() == Action.SITDOWNIDLE) {
+        if (this.getCurrentAction() == Action.SITDOWNIDLE) {
             return true;
         }
         ItemStack itemStack = entityPlayer.getHeldItem(enumHand);
@@ -192,7 +192,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     @Override
     public boolean openGuiForPlayer(EntityPlayer player) {
-        if (this.playerSheHasSexWith() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+        if (this.getInteractionPlayerUUID() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.openInventoryGui(player, this, stringArray, true);
             return true;
@@ -215,8 +215,8 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.world.isRemote && this.isControlledByLocalPlayer() && this.currentAction() == Action.PRONE_DOGGY_INTRO && !BlackScreenUI.getActive()) {
-            SexUI.init();
+        if (this.world.isRemote && this.isControlledByLocalPlayer() && this.getCurrentAction() == Action.PRONE_DOGGY_INTRO && !BlackScreenUI.getActive()) {
+            SexUI.showUI();
         }
         this.void_d();
     }
@@ -229,7 +229,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
 
     void void_d() {
         float f;
-        Action fp_class3242 = this.currentAction();
+        Action fp_class3242 = this.getCurrentAction();
         if (fp_class3242 != Action.ANAL_WAIT && fp_class3242 != Action.SITDOWNIDLE) {
             return;
         }
@@ -262,7 +262,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.isControlledByLocalPlayer()) {
-                SexUI.init();
+                SexUI.showUI();
             }
             return;
         }
@@ -284,7 +284,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @SideOnly(value=Side.CLIENT)
     public void resetAnimationControllerTicks() {
         super.resetAnimationControllerTicks();
-        if (this.currentAction() != Action.PRONE_DOGGY_HARD) {
+        if (this.getCurrentAction() != Action.PRONE_DOGGY_HARD) {
             return;
         }
         int n = this.ah;
@@ -296,7 +296,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.aiLookAtPlayer);
         this.tasks.addTask(5, this.aiWander);
     }
@@ -459,7 +459,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.ANAL_SLOW) {
             return Action.ANAL_FAST;
         }
@@ -470,7 +470,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.ANAL_SLOW || action == Action.ANAL_FAST) {
             return Action.ANAL_CUM;
         }
@@ -526,7 +526,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
         }
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.bia.null", true, event);
                     break;
                 }
@@ -534,7 +534,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.bia.null", true, event);
                     break;
                 }
@@ -563,7 +563,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.bia.null", true, event);
                         break block5;
@@ -708,7 +708,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 }
                 case "sexUiOn": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "pearl": {
@@ -802,7 +802,7 @@ public class BiaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
                 case "anal_startDone": {
                     this.setCurrentAction(Action.ANAL_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "anal_cumMSG2": {

@@ -48,7 +48,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 1.6f;
     }
 
@@ -99,10 +99,10 @@ extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.COWGIRL_SITTING_CUM && (action == Action.COWGIRL_SITTING_SLOW || action == Action.COWGIRL_SITTING_FAST)) {
+        if (this.getCurrentAction() == Action.COWGIRL_SITTING_CUM && (action == Action.COWGIRL_SITTING_SLOW || action == Action.COWGIRL_SITTING_FAST)) {
             return;
         }
-        if (this.currentAction() == Action.TOUCH_BOOBS_CUM && (action == Action.TOUCH_BOOBS_FAST || action == Action.TOUCH_BOOBS_SLOW)) {
+        if (this.getCurrentAction() == Action.TOUCH_BOOBS_CUM && (action == Action.TOUCH_BOOBS_FAST || action == Action.TOUCH_BOOBS_SLOW)) {
             return;
         }
         super.setCurrentAction(action);
@@ -111,7 +111,7 @@ extends PlayerGirl {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (Action.WAIT_CAT.equals((Object)this.currentAction())) {
+        if (Action.WAIT_CAT.equals((Object)this.getCurrentAction())) {
             this.a_();
         } else {
             this.ar = 0;
@@ -157,7 +157,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.TOUCH_BOOBS_SLOW) {
             return Action.TOUCH_BOOBS_FAST;
         }
@@ -168,7 +168,7 @@ extends PlayerGirl {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.TOUCH_BOOBS_SLOW || action == Action.TOUCH_BOOBS_FAST) {
             return Action.TOUCH_BOOBS_CUM;
         }
@@ -182,7 +182,7 @@ extends PlayerGirl {
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.cat.null", true, event);
                     break;
                 }
@@ -190,7 +190,7 @@ extends PlayerGirl {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.cat.null", true, event);
                     break;
                 }
@@ -224,7 +224,7 @@ extends PlayerGirl {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.cat.null", true, event);
                         break block5;
@@ -340,7 +340,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.playerSheHasSexWith(), "Here, I know u like fish and yea.. these are for you");
+                    this.a(this.getInteractionPlayerUUID(), "Here, I know u like fish and yea.. these are for you");
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
@@ -434,7 +434,7 @@ extends PlayerGirl {
                     this.setCurrentAction(Action.TOUCH_BOOBS_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    SexUI.init();
+                    SexUI.showUI();
                     HandlePlayerMovement.setMovementLock(false);
                     break;
                 }
@@ -511,7 +511,7 @@ extends PlayerGirl {
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     SexUI.resetCumPercentage();
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "sitting_slowMSG1": {

@@ -11,7 +11,7 @@ import java.util.Random;
 
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -31,20 +31,20 @@ public class FutaCommand extends CommandBase implements IClientCommand {
 
 
     public FutaCommand() {
-        String value = "";
+        String line = "";
         try {
             new BufferedReader(new FileReader(CONFIG_PATH)).readLine().toLowerCase();
         } catch (Exception e) {
             System.out.println("FutaCommand.class: Error reading config.");
             e.printStackTrace();
         }
-        if (value.isEmpty()) {
+        if (line.isEmpty()) {
             return;
         }
-        if ("true".equals(value)) {
+        if ("true".equals(line)) {
             enabled = true;
         }
-        if ("false".equals(value)) {
+        if ("false".equals(line)) {
             enabled = false;
         }
     }
@@ -85,13 +85,13 @@ public class FutaCommand extends CommandBase implements IClientCommand {
         }
 
         try {
-            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (girl.isDead || !girl.world.isRemote || !(girl instanceof GalathEntity)) continue;
 
                 Vec3d pos = girl.getCachedBoneOffset("cockParticles").add(girl.getPositionVector());
                 Random random = girl.getRNG();
                 for (int i = 0; i < 10; ++i) {
-                    girl.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, pos.x, pos.y, pos.z, random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), random.nextFloat() * 0.025f * (float) Utils.getRandomSign(), new int[0]);
+                    girl.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, pos.x, pos.y, pos.z, random.nextFloat() * 0.025f * (float) ThreadNames.getRandomSign(), random.nextFloat() * 0.025f * (float) ThreadNames.getRandomSign(), random.nextFloat() * 0.025f * (float) ThreadNames.getRandomSign(), new int[0]);
                 }
             }
         } catch (Exception e) {

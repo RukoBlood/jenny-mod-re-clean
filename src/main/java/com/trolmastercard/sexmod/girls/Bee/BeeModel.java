@@ -45,7 +45,7 @@ public class BeeModel extends GirlModel<GirlEntity> {
 
     @Override
     protected void processHeadLookRotation(GirlEntity girl, AnimationProcessor<GirlEntity> processor, AnimationEvent<GirlEntity> event) {
-        if (!(girl.world instanceof FakeWorld || girl.currentAction() != Action.NULL && girl.currentAction() != Action.ATTACK && girl.currentAction() != Action.BOW)) {
+        if (!(girl.world instanceof FakeWorld || girl.getCurrentAction() != Action.NULL && girl.getCurrentAction() != Action.ATTACK && girl.getCurrentAction() != Action.BOW)) {
             EntityModelData entityModelData = event.getExtraDataOfType(EntityModelData.class).get(0);
             IBone iBone = processor.getBone("neck");
             iBone.setRotationY(entityModelData.netHeadYaw * 0.5f * ((float)Math.PI / 180));

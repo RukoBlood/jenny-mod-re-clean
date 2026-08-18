@@ -13,24 +13,24 @@ public class TrigMath {
         return Math.atan2(dZ, Math.sqrt(dX * dX + dY * dY));
     }
 
-    public static float NormalizeAngle(float f) {
-        if ((f %= 360.0f) < 0.0f) {
-            f += 360.0f;
+    public static float NormalizeAngle(float angle) {
+        if ((angle %= 360.0f) < 0.0f) {
+            angle += 360.0f;
         }
-        return f;
+        return angle;
     }
 
     public static float normalizedAngle360(float angle) {
-        float normalized;
-        return (normalized = angle % 360.0F) >= 0.0F ? normalized : normalized + 360.0F;
+        float result;
+        return (result = angle % 360.0F) >= 0.0F ? result : result + 360.0F;
     }
 
     public static double normalizedAngle360(double angle) {
-        double var2;
-        return (var2 = angle % 360.0) >= 0.0 ? var2 : var2 + 360.0;
+        double result;
+        return (result = angle % 360.0) >= 0.0 ? result : result + 360.0;
     }
 
-    public static float toRadians(float deg) {
+    public static float wrapDegrees(float deg) {
         return (float)(Math.PI * 2 / (360.0 / (double)deg));
     }
 
@@ -42,8 +42,8 @@ public class TrigMath {
         return (float)(57.29577951308232 * (double)rad);
     }
 
-    public static double toDegrees(double rad) {
-        return 57.29577951308232 * rad;
+    public static double sinDegrees(double degrees) {
+        return 57.29577951308232 * degrees;
     }
 }
 

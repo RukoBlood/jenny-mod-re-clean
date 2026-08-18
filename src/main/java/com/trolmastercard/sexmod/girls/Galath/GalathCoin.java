@@ -24,7 +24,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -184,7 +184,7 @@ implements IAnimatable {
             return;
         }
         GalathEntity f__class2972 = null;
-        for (GirlEntity object2 : GirlEntity.GirlEntityList()) {
+        for (GirlEntity object2 : GirlEntity.getGirlEntityList()) {
             if (object2.isDead || !object2.world.isRemote || !(object2 instanceof GalathEntity) || !entityPlayer.equals(object2.getMasterPlayer()))
                 continue;
             f__class2972 = (GalathEntity) object2;
@@ -197,9 +197,9 @@ implements IAnimatable {
         Vec3d vec3d2 = entityPlayer.getPositionVector().add(0.0, entityPlayer.getEyeHeight(), 0.0);
         Vec3d vec3d3 = vec3d2.add(VectorMath.RotateY((float) (entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double) (-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         float f = (float) (l - l2 - 1000L) / 2000.0f;
-        Vec3d vec3d4 = Reference.LerpVec3d(vec3d, vec3d3, (double) f);
-        ParticleGalathTrail.globalParticleScale = 0.2f;
-        Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGalathTrail(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
+        Vec3d vec3d4 = ReferenceAndRotationHelper.LerpVec3d(vec3d, vec3d3, (double) f);
+        DragonBreathParticle.BREATH_SCALE = 0.2f;
+        Minecraft.getMinecraft().effectRenderer.addEffect(new DragonBreathParticle(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -219,9 +219,9 @@ implements IAnimatable {
         Vec3d vec3d2 = vec3d.add(VectorMath.RotateY((float)(entityPlayer.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double)(-0.01f + entityPlayer.rotationPitch * 0.0015f), 0.0, entityPlayer.renderYawOffset));
         Vec3d vec3d3 = vec3d.add(entityPlayer.getLookVec().normalize().scale(2.0));
         float f = (float)(l - l2 - 1000L) / 2000.0f;
-        Vec3d vec3d4 = Reference.LerpVec3d(vec3d2, vec3d3, (double)f);
-        ParticleGalathTrail.globalParticleScale = 0.2f;
-        Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGalathTrail(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
+        Vec3d vec3d4 = ReferenceAndRotationHelper.LerpVec3d(vec3d2, vec3d3, (double)f);
+        DragonBreathParticle.BREATH_SCALE = 0.2f;
+        Minecraft.getMinecraft().effectRenderer.addEffect(new DragonBreathParticle(entityPlayer.world, vec3d4.x, vec3d4.y, vec3d4.z));
     }
 
     @SubscribeEvent
@@ -230,12 +230,12 @@ implements IAnimatable {
         if (entityPlayer.world.isRemote) {
             return;
         }
-        UUID uUID = GalathMangTracker.b(entityPlayer);
+        UUID uUID = GalathMangTracker.getOwnerOf(entityPlayer);
         GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
         if (em_class2582 == null) {
             return;
         }
-        GalathMangTracker.a((GalathEntity)em_class2582);
+        GalathMangTracker.updateMangleliePartner((GalathEntity)em_class2582);
         PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
     }
 
@@ -262,10 +262,10 @@ implements IAnimatable {
         }
         GalathEntity f__class2972 = new GalathEntity(entityPlayer.world, entityPlayer, vec3d2);
         f__class2972.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-        GalathMangTracker.a(entityPlayer, f__class2972);
+        GalathMangTracker.grantOwnership(entityPlayer, f__class2972);
         entityPlayer.world.spawnEntity(f__class2972);
-        if (GalathMangTracker.doesPlayerOwnGalathMangPair(entityPlayer.getPersistentID())) {
-            f__class2972.boolean_v();
+        if (GalathMangTracker.isManglelieOwned(entityPlayer.getPersistentID())) {
+            f__class2972.canStartPussyLicking();
         }
     }
 
@@ -278,7 +278,7 @@ implements IAnimatable {
     }
 
     void c(EntityPlayer entityPlayer) {
-        UUID uUID = GalathMangTracker.b(entityPlayer);
+        UUID uUID = GalathMangTracker.getOwnerOf(entityPlayer);
         GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
         if (em_class2582 instanceof GalathEntity) {
             GalathCoin.a((GalathEntity)em_class2582);
@@ -296,7 +296,7 @@ implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     void b(EntityPlayer entityPlayer) {
         GalathEntity f__class2972 = null;
-        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+        for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
             if (em_class2582.isDead || !em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !entityPlayer.equals(em_class2582.getMasterPlayer()))
                 continue;
             f__class2972 = (GalathEntity) em_class2582;
@@ -305,7 +305,7 @@ implements IAnimatable {
         if (f__class2972 == null) {
             return;
         }
-        GalathCoin.a(entityPlayer, f__class2972);
+        GalathCoin.summonForPlayer(entityPlayer, f__class2972);
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -327,7 +327,7 @@ implements IAnimatable {
         }
     }
 
-    public static void a(EntityPlayer entityPlayer, GalathEntity f__class2972) {
+    public static void summonForPlayer(EntityPlayer entityPlayer, GalathEntity f__class2972) {
         GalathCoin.a(entityPlayer.getPersistentID(), f__class2972);
     }
 
@@ -348,12 +348,12 @@ implements IAnimatable {
         if (l - l2 <= 3000L) {
             return;
         }
-        UUID uUID = GalathMangTracker.b(entityPlayer);
+        UUID uUID = GalathMangTracker.getOwnerOf(entityPlayer);
         GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
         if (!(em_class2582 instanceof GalathEntity)) {
             return;
         }
-        GalathMangTracker.a((GalathEntity)em_class2582);
+        GalathMangTracker.updateMangleliePartner((GalathEntity)em_class2582);
     }
 
     @Override

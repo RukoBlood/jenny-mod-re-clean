@@ -62,7 +62,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         this.a(animationProcessor, stringArray[4]);
         this.d(animationProcessor, stringArray[5]);
         this.a(girl, animationProcessor, stringArray[6]);
-        switch (girl.currentAction()) {
+        switch (girl.getCurrentAction()) {
             case STARTBLOWJOB: 
             case SUCKBLOWJOB_BLINK: 
             case THRUSTBLOWJOB: 
@@ -83,7 +83,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         }
         float f = em_class2582.getDataManager().get(KoboldEntity.aE);
         f = 0.25f - f;
-        switch (em_class2582.currentAction()) {
+        switch (em_class2582.getCurrentAction()) {
             case SUCKBLOWJOB_BLINK: 
             case THRUSTBLOWJOB: 
             case CUMBLOWJOB: {
@@ -139,7 +139,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
                 iBone2.setHidden(true);
             }
         }
-        if (em_class2582.currentAction() == Action.PAYMENT) {
+        if (em_class2582.getCurrentAction() == Action.PAYMENT) {
             iBone.setHidden(false);
         }
     }
@@ -236,7 +236,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         if (girl.world instanceof FakeWorld) {
             return;
         }
-        switch (girl.currentAction()) {
+        switch (girl.getCurrentAction()) {
             case NULL: {
                 if (Math.abs(girl.prevPosX - girl.posX) + Math.abs(girl.prevPosZ - girl.posZ) < 0.0 || girl.onGround && Math.abs(Math.abs(girl.prevPosY) - Math.abs(girl.posY)) > (double)0.1f || !((dr_class199)((Object) girl)).boolean_a()) break;
             }

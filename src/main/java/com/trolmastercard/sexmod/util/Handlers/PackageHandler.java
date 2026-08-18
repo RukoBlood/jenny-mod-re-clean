@@ -35,7 +35,7 @@ public class PackageHandler {
         INSTANCE.registerMessage(SyncActionPacket.Handler.class, SyncActionPacket.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(ResetController.Handler.class, ResetController.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(ResetController.Handler.class, ResetController.class, PackageHandler.discriminator(), Side.SERVER);
-        INSTANCE.registerMessage(ResetGirl.a_inner422.class, ResetGirl.class, PackageHandler.discriminator(), Side.SERVER);
+        INSTANCE.registerMessage(ResetGirl.EventHandler.class, ResetGirl.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(ChangeDataParameter.Handler.class, ChangeDataParameter.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(bo_class90.Handler.class, bo_class90.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(SendCompanionHome.Handler.class, SendCompanionHome.class, PackageHandler.discriminator(), Side.SERVER);
@@ -73,7 +73,7 @@ public class PackageHandler {
         INSTANCE.registerMessage(RequestServerModelAvailability.a_inner351.class, RequestServerModelAvailability.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(DownloadServerModel.a_inner147.class, DownloadServerModel.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(DownloadServerModel.a_inner147.class, DownloadServerModel.class, PackageHandler.discriminator(), Side.CLIENT);
-        INSTANCE.registerMessage(SpawnEnergyBallParticlesAlt.a_inner102.class, SpawnEnergyBallParticlesAlt.class, PackageHandler.discriminator(), Side.CLIENT);
+        INSTANCE.registerMessage(SpawnEnergyBallParticlesPacket2.a_inner102.class, SpawnEnergyBallParticlesPacket2.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(GalathBackOffRape.Handler.class, GalathBackOffRape.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(InformOfOwnership.Handler.class, InformOfOwnership.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(RequestRiding.Handler.class, RequestRiding.class, PackageHandler.discriminator(), Side.SERVER);

@@ -14,7 +14,7 @@ import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.util.MatrixHelper;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,7 +39,7 @@ public class LunaRenderer extends GirlRenderer {
 
     @Override
     protected ItemStack getHeldItem(@Nullable ItemStack input) {
-        switch (this.renderEntity.currentAction()) {
+        switch (this.renderEntity.getCurrentAction()) {
             case FISHING_IDLE: 
             case FISHING_START: {
                 ItemStack itemStack2 = ((LunaEntity)this.renderEntity).ao;
@@ -72,8 +72,8 @@ public class LunaRenderer extends GirlRenderer {
             }
             case "backHair": {
                 if (this.boolean_a()) break;
-                double d = this.r / TrigMath.toRadians(45.0f);
-                float f = (float) Reference.LerpDouble(0.0, 0.75, d);
+                double d = this.r / TrigMath.wrapDegrees(45.0f);
+                float f = (float) ReferenceAndRotationHelper.LerpDouble(0.0, 0.75, d);
                 bone.setPositionZ(f);
                 bone.setPositionY(f);
                 bone.setRotationX(-this.r);
@@ -82,8 +82,8 @@ public class LunaRenderer extends GirlRenderer {
             case "sideHairR": 
             case "sideHairL": {
                 if (this.boolean_a()) break;
-                double d = this.r / TrigMath.toRadians(45.0f);
-                float f = (float) Reference.LerpDouble(0.0, (double)1.3f, d);
+                double d = this.r / TrigMath.wrapDegrees(45.0f);
+                float f = (float) ReferenceAndRotationHelper.LerpDouble(0.0, (double)1.3f, d);
                 bone.setPositionZ(-f);
                 bone.setPositionY(f);
             }

@@ -32,7 +32,7 @@ import com.trolmastercard.sexmod.Packets.SendBlocks;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -79,7 +79,7 @@ public class KoboldManager {
 
     static HashMap<KoboldEntity, BlockPos[]> bedAssignments = new HashMap<>();
 
-    public static void clear() {
+    public static void clearAll() {
         tribesMap.clear();
         bedAssignments.clear();
     }
@@ -99,7 +99,7 @@ public class KoboldManager {
             members.add(kobold);
         }
 
-        EyeAndKoboldColor color = EyeAndKoboldColor.values()[Reference.RANDOM.nextInt(EyeAndKoboldColor.values().length)];
+        EyeAndKoboldColor color = EyeAndKoboldColor.values()[ReferenceAndRotationHelper.RANDOM.nextInt(EyeAndKoboldColor.values().length)];
         KoboldSavedData.KoboldTribe tribe = new KoboldSavedData.KoboldTribe(tribeUUID, color, (KoboldEntity) members.get(0), members);
         tribesMap.put(tribeUUID, tribe);
 
@@ -494,7 +494,7 @@ public class KoboldManager {
             return false;
         }
         for (KoboldEntity member : tribe.members) {
-            if (member.playerSheHasSexWith() == null) continue;
+            if (member.getInteractionPlayerUUID() == null) continue;
             return true;
         }
         return false;

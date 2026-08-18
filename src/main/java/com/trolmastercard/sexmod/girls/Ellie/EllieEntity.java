@@ -20,7 +20,7 @@ import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
-import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.util.interfaces.IEllie;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -45,8 +45,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class EllieEntity extends Fighter
-implements bh_class82 {
+public class EllieEntity extends Fighter implements IEllie {
     final static float ad = 10.0f;
     final static int ao = 16;
     final static int ap = 79;
@@ -60,13 +59,13 @@ implements bh_class82 {
     boolean ae = false;
     boolean ac = false;
     int af = -1;
-    int Y = -1;
+    int yFlag = -1;
     int al = -1;
     int ai = -1;
     boolean ah = false;
     Object[] am;
-    int Z = -1;
-    int aa = 1;
+    int zFlag = -1;
+    int state = 1;
     boolean aj = false;
 
     public EllieEntity(World world) {
@@ -93,7 +92,7 @@ implements bh_class82 {
         return LootTableHandler.ELLIE_LOOT_TABLE;
     }
 
-    boolean boolean_i() {
+    boolean isBedBlocked() {
         if (this.isLocallyRegistered()) {
             return false;
         }
@@ -102,38 +101,38 @@ implements bh_class82 {
 
     @Override
     public float getEyeHeight() {
-        return this.boolean_i() ? 1.53f : 1.9f;
+        return this.isBedBlocked() ? 1.53f : 1.9f;
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 0.4f;
     }
 
     @Override
-    public void void_b() {
-        UUID uUID = this.playerSheHasSexWith();
+    public void setDismounted() {
+        UUID uUID = this.getInteractionPlayerUUID();
         if (uUID == null) {
-            this.void_f();
+            this.resetSitScale();
             return;
         }
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
         if (entityPlayer == null) {
-            this.void_f();
+            this.resetSitScale();
             return;
         }
-        float f = entityPlayer.rotationYaw - 180.0f;
-        this.setYawRotation(f);
+        float yaw = entityPlayer.rotationYaw - 180.0f;
+        this.setYawRotation(yaw);
         this.setCurrentAction(Action.CARRY_INTRO);
         this.setAnchored(true);
     }
 
     @Override
     public boolean shouldRenderNameTag() {
-        return this.currentAction() != Action.CARRY_INTRO;
+        return this.getCurrentAction() != Action.CARRY_INTRO;
     }
 
-    public boolean a(EntityPlayer entityPlayer, boolean bl) {
+    public boolean canJoinPlayer(EntityPlayer entityPlayer, boolean bl) {
         if (bl) {
             EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
             return true;
@@ -182,22 +181,22 @@ implements bh_class82 {
     }
 
     @Override
-    protected void alignPlayerToGirl(EntityPlayerMP player, boolean teleport) {
+    protected void alignPlayerToGirl(EntityPlayerMP player, boolean force) {
     }
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
+        Action currentAction = this.getCurrentAction();
         if (action == Action.HUGSELECTED && !this.world.isRemote) {
             this.ai = 79;
         }
-        if (fp_class3243 == Action.MISSIONARY_CUM && (action == Action.MISSIONARY_FAST || action == Action.MISSIONARY_SLOW)) {
+        if (currentAction == Action.MISSIONARY_CUM && (action == Action.MISSIONARY_FAST || action == Action.MISSIONARY_SLOW)) {
             return;
         }
-        if (fp_class3243 == Action.COWGIRLCUM && (action == Action.COWGIRLSLOW || action == Action.COWGIRLFAST)) {
+        if (currentAction == Action.COWGIRLCUM && (action == Action.COWGIRLSLOW || action == Action.COWGIRLFAST)) {
             return;
         }
-        if (fp_class3243 == Action.CARRY_CUM && (action == Action.CARRY_SLOW || action == Action.CARRY_FAST)) {
+        if (currentAction == Action.CARRY_CUM && (action == Action.CARRY_SLOW || action == Action.CARRY_FAST)) {
             return;
         }
         if (action == Action.CARRY_INTRO) {
@@ -211,24 +210,24 @@ implements bh_class82 {
     public void onUpdate() {
         super.onUpdate();
         if (this.ae) {
-            this.a(Minecraft.getMinecraft().player, true);
+            this.canJoinPlayer(Minecraft.getMinecraft().player, true);
             this.ae = false;
         }
-        this.void_m();
-        this.void_h();
+        this.handleSitIdle();
+        this.showHornyMeter();
     }
 
-    void void_h() {
+    void showHornyMeter() {
         if (SexUI.getShouldBeRendered()) {
             return;
         }
-        if (this.currentAction() != Action.CARRY_SLOW) {
+        if (this.getCurrentAction() != Action.CARRY_SLOW) {
             return;
         }
-        SexUI.init();
+        SexUI.showUI();
     }
 
-    void void_e() {
+    void handleSitTimer() {
         if (this.ak == -1) {
             return;
         }
@@ -236,24 +235,24 @@ implements bh_class82 {
             return;
         }
         this.ak = -1;
-        if (this.currentAction() != Action.CARRY_INTRO) {
+        if (this.getCurrentAction() != Action.CARRY_INTRO) {
             return;
         }
-        UUID uUID = this.playerSheHasSexWith();
+        UUID uUID = this.getInteractionPlayerUUID();
         if (uUID == null) {
             return;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
+        EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+        if (player == null) {
             return;
         }
-        float f = this.getYawRotation().floatValue();
-        Vec3d vec3d = this.getTargetPosition().add(VectorMath.rotate(new Vec3d(0.0, 2.5625f - entityPlayer.getEyeHeight(), -0.3125), 180.0f + f));
-        entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
+        float yaw = this.getYawRotation();
+        Vec3d pos = this.getTargetPosition().add(VectorMath.rotate(new Vec3d(0.0, 2.5625f - player.getEyeHeight(), -0.3125), 180.0f + yaw));
+        player.setPositionAndUpdate(pos.x, pos.y, pos.z);
     }
 
-    void void_m() {
-        if (this.currentAction() != Action.SITDOWNIDLE) {
+    void handleSitIdle() {
+        if (this.getCurrentAction() != Action.SITDOWNIDLE) {
             return;
         }
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
@@ -271,268 +270,273 @@ implements bh_class82 {
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        this.void_o();
-        this.void_d();
-        this.void_n();
-        this.void_q();
-        this.void_j();
-        this.a_10();
-        this.void_t();
-        this.u_();
+        this.setFirstSit();
+        this.handleHornyPotion();
+        this.handleSitUpFinish();
+        this.handleSitUpTimer();
+        this.handleSitDownTimer();
+        this.handleHugTimer();
+        this.handleSitTransition();
+        this.handleStandTimer();
     }
 
-    void void_o() {
-        if (this.ac) {
-            return;
+    void setFirstSit() {
+        if (!this.ac) {
+            this.ac = true;
+            this.noClip = false;
+            this.setNoGravity(false);
         }
-        this.ac = true;
-        this.noClip = false;
-        this.setNoGravity(false);
     }
 
     @Override
     protected void U() {
         Vec3d vec3d;
-        Vec3d vec3d2;
-        EntityPlayer entityPlayer;
+        Vec3d pos;
+//        EntityPlayer player;
         UUID uUID;
-        String string = (String)this.entityDataManager.get(GIRL_HAND_STATES);
-        if ("Missionary".equals(string)) {
+        String handState = (String)this.entityDataManager.get(GIRL_HAND_STATES);
+        if ("Missionary".equals(handState)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.MISSIONARY_START);
-            uUID = this.playerSheHasSexWith();
+            uUID = this.getInteractionPlayerUUID();
             if (uUID == null) {
                 return;
             }
-            entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-            if (entityPlayer == null) {
+
+            EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+            if (player == null) {
                 this.resetCameraAndPhysics();
                 return;
             }
-            entityPlayer.setNoGravity(true);
-            entityPlayer.noClip = true;
-            vec3d2 = this.getTargetPosition();
-            entityPlayer.rotationYaw = this.getYawRotation().floatValue();
-            vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.1), entityPlayer.rotationYaw);
-            vec3d2 = vec3d2.add(vec3d);
-            entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+
+            player.setNoGravity(true);
+            player.noClip = true;
+            pos = this.getTargetPosition();
+            player.rotationYaw = this.getYawRotation();
+            vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.1), player.rotationYaw);
+            pos = pos.add(vec3d);
+            player.setPositionAndUpdate(pos.x, pos.y, pos.z);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
         }
-        if ("cowgirl".equals(string)) {
+        if ("cowgirl".equals(handState)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.COWGIRLSTART);
-            uUID = this.playerSheHasSexWith();
+            uUID = this.getInteractionPlayerUUID();
             if (uUID == null) {
                 return;
             }
-            entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-            if (entityPlayer == null) {
+            EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+            if (player == null) {
                 this.resetCameraAndPhysics();
                 return;
             }
-            entityPlayer.setNoGravity(true);
-            entityPlayer.noClip = true;
-            vec3d2 = this.getTargetPosition();
-            entityPlayer.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
-            vec3d = VectorMath.rotate(new Vec3d(0.0, 1.0 - (double)entityPlayer.eyeHeight, -1.8125), entityPlayer.rotationYaw);
-            vec3d2 = vec3d2.add(vec3d);
-            entityPlayer.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            player.setNoGravity(true);
+            player.noClip = true;
+            pos = this.getTargetPosition();
+            player.rotationYaw = this.getYawRotation() + 180.0f;
+            vec3d = VectorMath.rotate(new Vec3d(0.0, 1.0 - (double)player.eyeHeight, -1.8125), player.rotationYaw);
+            pos = pos.add(vec3d);
+            player.setPositionAndUpdate(pos.x, pos.y, pos.z);
+            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
         }
     }
 
-    void u_() {
-        if (--this.af != 0) {
-            return;
+    void handleStandTimer() {
+        if (--this.af == 0) {
+            this.U();
         }
-        this.U();
     }
 
-    void void_t() {
-        if (this.currentAction() != Action.SITDOWNIDLE || this.af >= 0) {
-            return;
+    void handleSitTransition() {
+        if (this.getCurrentAction() == Action.SITDOWNIDLE && this.af < 0) {
+            EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
+            if (entityPlayer != null) {
+                if (!(this.getDistance(entityPlayer) > 1.5f)) {
+                    this.af = 20;
+                    this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
+                }
+            }
         }
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
-        if (entityPlayer == null) {
-            return;
-        }
-        if (this.getDistance(entityPlayer) > 1.5f) {
-            return;
-        }
-        this.af = 20;
-        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
     }
 
-    void a_10() {
-        if (--this.Y != 0) {
-            return;
+    void handleHugTimer() {
+        if (--this.yFlag == 0) {
+            this.setCurrentAction(Action.HUGIDLE);
         }
-        this.setCurrentAction(Action.HUGIDLE);
     }
 
-    void void_j() {
-        if (--this.al != 0) {
-            return;
+    void handleSitDownTimer() {
+        if (--this.al == 0) {
+            this.setCurrentAction(Action.SITDOWNIDLE);
         }
-        this.setCurrentAction(Action.SITDOWNIDLE);
     }
 
-    void void_q() {
-        if (--this.ai != 0 && !this.ah) {
-            return;
+    void handleSitUpTimer() {
+        if (--this.ai == 0 || this.ah) {
+            this.ah = true;
+            this.entityDataManager.set(IS_ANCHORED, false);
+            this.setCurrentAction(Action.NULL);
+            this.noClip = false;
+            this.setNoGravity(false);
+            if (this.am == null) {
+                this.am = this.getRandomSitPose();
+            }
+
+            if (this.am == null) {
+                this.broadcastChatMessage("no bed in sight...");
+                this.world.playSound(null, this.getPosition(), SoundsHandler.GIRLS_ELLIE_SIGH[0], SoundCategory.NEUTRAL, 6.0f, 1.0f);
+                this.resetGirlState();
+                this.resetSitScale();
+                return;
+            }else {
+                EntityPlayer player = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
+                if (player != null) {
+                    player.setNoGravity(false);
+                    player.noClip = false;
+                }
+                Vec3d sitPos = (Vec3d) this.am[0];
+                int yaw = (Integer) this.am[1];
+                if (sitPos.distanceTo(this.getPositionVector()) > 1.0) {
+                    this.getNavigator().tryMoveToXYZ(sitPos.x, sitPos.y, sitPos.z, 0.35f);
+                    this.applyCustomPathNodeVelocity();
+                    return;
+                } else {
+                    this.setTargetPosition(sitPos);
+                    this.setYawRotation(yaw);
+                    this.setCurrentAction(Action.SITDOWN);
+                    this.entityDataManager.set(IS_ANCHORED, true);
+                    this.al = 109;
+                    this.noClip = true;
+                    this.setNoGravity(true);
+                    this.ah = false;
+                    this.am = null;
+                }
+            }
         }
-        this.ah = true;
-        this.entityDataManager.set(IS_ANCHORED, false);
-        this.setCurrentAction(Action.NULL);
-        this.noClip = false;
-        this.setNoGravity(false);
-        if (this.am == null) {
-            this.am = this.java_lang_Object_arr_g();
-        }
-        if (this.am == null) {
-            this.broadcastChatMessage("no bed in sight...");
-            this.world.playSound(null, this.getPosition(), SoundsHandler.GIRLS_ELLIE_SIGH[0], SoundCategory.NEUTRAL, 6.0f, 1.0f);
-            this.resetGirlState();
-            this.void_f();
-            return;
-        }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
-        if (entityPlayer != null) {
-            entityPlayer.setNoGravity(false);
-            entityPlayer.noClip = false;
-        }
-        Vec3d vec3d = (Vec3d)this.am[0];
-        int n = (Integer)this.am[1];
-        if (vec3d.distanceTo(this.getPositionVector()) > 1.0) {
-            this.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 0.35f);
-            this.applyCustomPathNodeVelocity();
-            return;
-        }
-        this.setTargetPosition(vec3d);
-        this.setYawRotation(n);
-        this.setCurrentAction(Action.SITDOWN);
-        this.entityDataManager.set(IS_ANCHORED, true);
-        this.al = 109;
-        this.noClip = true;
-        this.setNoGravity(true);
-        this.ah = false;
-        this.am = null;
     }
 
     @Override
     public void ResetNPCTasks() {
         super.ResetNPCTasks();
-        this.Y = -1;
+        this.yFlag = -1;
     }
 
-    Object[] java_lang_Object_arr_g() {
-        Vec3d vec3d;
-        Object object;
-        int n = -1;
-        int n2 = 0;
-        Vec3d[][] vec3dArrayArray = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.18), new Vec3d(0.0, 0.0, -1.0), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(0.5, 0.0, 1.18), new Vec3d(0.0, 0.0, 1.0), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(-0.18, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0), new Vec3d(1.0, 0.0, 0.0)}, {new Vec3d(1.18, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0), new Vec3d(-1.0, 0.0, 0.0)}};
-        int[] nArray = new int[]{0, 180, -90, 90};
+    Object[] getRandomSitPose() {
+        Vec3d bedVec;
+        BlockPos bedPos;
+        int bestIndex = -1;
+        int attempts = 0;
+
+        Vec3d[][] offsets = new Vec3d[][]{
+                {new Vec3d(0.5, 0.0, -0.18), new Vec3d(0.0, 0.0, -1.0), new Vec3d(0.0, 0.0, 1.0)},
+                {new Vec3d(0.5, 0.0, 1.18), new Vec3d(0.0, 0.0, 1.0), new Vec3d(0.0, 0.0, -1.0)},
+                {new Vec3d(-0.18, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0), new Vec3d(1.0, 0.0, 0.0)},
+                {new Vec3d(1.18, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0), new Vec3d(-1.0, 0.0, 0.0)}
+        };
+
+        int[] yaws = new int[]{0, 180, -90, 90};
         do {
-            if ((object = this.findNearestBed(this.getPosition(), ++n2)) == null) {
+            if ((bedPos = this.findNearestBed(this.getPosition(), ++attempts)) == null) {
                 return null;
             }
-            vec3d = new Vec3d(((Vec3i)object).getX(), ((Vec3i)object).getY(), ((Vec3i)object).getZ());
-            for (int i = 0; i < vec3dArrayArray.length; ++i) {
-                Vec3d vec3d2 = vec3d.add(vec3dArrayArray[i][1]);
-                Block block = this.world.getBlockState(new BlockPos(vec3d2.x, vec3d2.y, vec3d2.z)).getBlock();
-                Vec3d vec3d3 = vec3d.add(vec3dArrayArray[i][2]);
-                Block block2 = this.world.getBlockState(new BlockPos(vec3d3.x, vec3d3.y, vec3d3.z)).getBlock();
-                if (block != Blocks.AIR || block2 != Blocks.BED) continue;
-                if (n == -1) {
-                    n = i;
-                    continue;
+
+            bedVec = new Vec3d(bedPos.getX(), bedPos.getY(), ((Vec3i)bedPos).getZ());
+            for (int i = 0; i < offsets.length; ++i) {
+                Vec3d offsetVec = bedVec.add(offsets[i][1]);
+                Block block = this.world.getBlockState(new BlockPos(offsetVec.x, offsetVec.y, offsetVec.z)).getBlock();
+                Vec3d headVec = bedVec.add(offsets[i][2]);
+                Block headBlock = this.world.getBlockState(new BlockPos(headVec.x, headVec.y, headVec.z)).getBlock();
+                if (block == Blocks.AIR && headBlock == Blocks.BED) {
+                    if (bestIndex == -1) {
+                        bestIndex = i;
+                        continue;
+                    }
+                    double bestDist = this.getPosition().distanceSq(bedVec.add((Vec3d) offsets[bestIndex][0]).x, bedVec.add((Vec3d) offsets[bestIndex][0]).y, bedVec.add((Vec3d) offsets[bestIndex][0]).z);
+                    double dist = this.getPosition().distanceSq(bedVec.add((Vec3d) offsets[i][0]).x, bedVec.add((Vec3d) offsets[i][0]).y, bedVec.add((Vec3d) offsets[i][0]).z);
+                    if (dist < bestDist) {
+                        bestIndex = i;
+                    }
                 }
-                double d = this.getPosition().distanceSq(vec3d.add((Vec3d)vec3dArrayArray[n][0]).x, vec3d.add((Vec3d)vec3dArrayArray[n][0]).y, vec3d.add((Vec3d)vec3dArrayArray[n][0]).z);
-                double d2 = this.getPosition().distanceSq(vec3d.add((Vec3d)vec3dArrayArray[i][0]).x, vec3d.add((Vec3d)vec3dArrayArray[i][0]).y, vec3d.add((Vec3d)vec3dArrayArray[i][0]).z);
-                if (!(d2 < d)) continue;
-                n = i;
             }
-        } while (n == -1);
-        object = vec3d.add(vec3dArrayArray[n][0]);
-        return new Object[]{object, nArray[n]};
+        } while (bestIndex == -1);
+
+        Vec3d sitOffset = bedVec.add(offsets[bestIndex][0]);
+        return new Object[]{sitOffset, yaws[bestIndex]};
     }
 
-    void void_d() {
-        if (this.getActivePotionEffect(HornyPotion.HORNY_POTION) == null) {
-            return;
+    void handleHornyPotion() {
+        if (this.getActivePotionEffect(HornyPotion.HORNY_POTION) != null) {
+            EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10.0);
+            if (player != null) {
+                this.removeActivePotionEffect(HornyPotion.HORNY_POTION);
+                this.setInteractionPlayerUUID(player.getPersistentID());
+                float yaw = (float) (Math.atan2(this.posZ - player.posZ, this.posX - player.posX) * 57.29577951308232);
+                this.setYawRotation(yaw);
+                this.setTargetPosition(this.getPositionVector());
+                this.entityDataManager.set(IS_ANCHORED, true);
+                this.setCurrentAction(Action.DASH);
+                this.zFlag = 16;
+                this.setNoGravity(true);
+                this.noClip = true;
+                PackageHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(false), (EntityPlayerMP) player);
+                this.tasks.removeTask(this.aiWander);
+                this.tasks.removeTask(this.aiLookAtPlayer);
+            }
         }
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
-        if (entityPlayer == null) {
-            return;
-        }
-        this.removeActivePotionEffect(HornyPotion.HORNY_POTION);
-        this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-        float f = (float)(Math.atan2(this.posZ - entityPlayer.posZ, this.posX - entityPlayer.posX) * 57.29577951308232);
-        this.setYawRotation(f);
-        this.setTargetPosition(this.getPositionVector());
-        this.entityDataManager.set(IS_ANCHORED, true);
-        this.setCurrentAction(Action.DASH);
-        this.Z = 16;
-        this.setNoGravity(true);
-        this.noClip = true;
-        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-        this.tasks.removeTask(this.aiWander);
-        this.tasks.removeTask(this.aiLookAtPlayer);
     }
 
-    void void_n() {
-        if (--this.Z != 0) {
-            return;
+    void handleSitUpFinish() {
+        if (--this.zFlag == 0) {
+            UUID uUID = this.getInteractionPlayerUUID();
+            if (uUID == null) {
+                this.resetSitScale();
+            } else {
+                EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
+                if (entityPlayer == null) {
+                    this.resetSitScale();
+                } else {
+                    entityPlayer.setNoGravity(true);
+                    entityPlayer.noClip = true;
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, -0.5), entityPlayer.rotationYaw);
+                    Vec3d vec3d2 = vec3d.add(entityPlayer.getPositionVector());
+                    this.setTargetPosition(vec3d2);
+                    this.setYawRotation(entityPlayer.rotationYaw);
+                    this.setCurrentAction(Action.HUG);
+                    this.yFlag = 150;
+                }
+            }
         }
-        UUID uUID = this.playerSheHasSexWith();
-        if (uUID == null) {
-            this.void_f();
-            return;
-        }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            this.void_f();
-            return;
-        }
-        entityPlayer.setNoGravity(true);
-        entityPlayer.noClip = true;
-        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, -0.5), entityPlayer.rotationYaw);
-        Vec3d vec3d2 = vec3d.add(entityPlayer.getPositionVector());
-        this.setTargetPosition(vec3d2);
-        this.setYawRotation(entityPlayer.rotationYaw);
-        this.setCurrentAction(Action.HUG);
-        this.Y = 150;
     }
 
-    void void_f() {
+    void resetSitScale() {
         this.entityDataManager.set(IS_ANCHORED, false);
         this.setCurrentAction(Action.NULL);
         this.setInteractionPlayerUUID((UUID)null);
         this.noClip = false;
         this.setNoGravity(false);
         this.ah = false;
-        this.Y = -1;
-        this.Z = -1;
+        this.yFlag = -1;
+        this.zFlag = -1;
         this.ai = -1;
         this.am = null;
     }
 
     @Override
-    protected boolean processInteract(EntityPlayer entityPlayer, EnumHand enumHand) {
-        if (EllieEntity.getActiveSceneInfo(entityPlayer) != null) {
+    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (EllieEntity.getActiveSceneInfo(player) != null) {
             return false;
         }
-        if (this.playerSheHasSexWith() != null) {
+        if (this.getInteractionPlayerUUID() != null) {
             return false;
         }
         if (this.world.isRemote) {
-            this.a(entityPlayer, false);
+            this.canJoinPlayer(player, false);
         }
         return true;
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.COWGIRLFAST || action == Action.COWGIRLSLOW) {
             return Action.COWGIRLCUM;
         }
@@ -546,7 +550,7 @@ implements bh_class82 {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.COWGIRLSLOW) {
             return Action.COWGIRLFAST;
         }
@@ -564,151 +568,147 @@ implements bh_class82 {
         if (this.world instanceof FakeWorld) {
             return null;
         }
-        block5 : switch (event.getController().getName()) {
+        
+        switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() == Action.NULL && this.getCurrentAction().autoBlink) {
+                    this.createAnimation("animation.ellie.eyes", true, event);
+                } else {
                     this.createAnimation("animation.ellie.null", true, event);
-                    break;
                 }
-                this.createAnimation("animation.ellie.eyes", true, event);
-                break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.ellie.null", true, event);
-                    break;
-                }
-                double d = Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ);
-                if (d == 0.0) {
-                    this.createAnimation(this.boolean_i() ? "animation.ellie.crouchidle" : "animation.ellie.idle", true, event);
-                    break;
-                }
-                if (this.boolean_i()) {
-                    this.createAnimation("animation.ellie.crouchwalk", true, event);
-                    break;
-                }
-                switch (this.getWalkType()) {
-                    case RUN: {
-                        this.createAnimation("animation.ellie.run", true, event);
-                        break;
+                } else {
+                    double moved = Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ);
+                    if (moved == 0.0) {
+                        this.createAnimation(this.isBedBlocked() ? "animation.ellie.crouchidle" : "animation.ellie.idle", true, event);
                     }
-                    case FAST_WALK: {
-                        this.createAnimation("animation.ellie.fastwalk", true, event);
-                        break;
+                    if (this.isBedBlocked()) {
+                        this.createAnimation("animation.ellie.crouchwalk", true, event);
                     }
-                    case WALK: {
-                        this.createAnimation("animation.ellie.walk", true, event);
+                    switch (this.getWalkType()) {
+                        case RUN: {
+                            this.createAnimation("animation.ellie.run", true, event);
+                            return PlayState.CONTINUE;
+                        }
+                        case FAST_WALK: {
+                            this.createAnimation("animation.ellie.fastwalk", true, event);
+                            return PlayState.CONTINUE;
+                        }
+                        case WALK: {
+                            this.createAnimation("animation.ellie.walk", true, event);
+                        }
                     }
                 }
                 break;
             }
-            case "action": {
-                switch (this.currentAction()) {
-                    case NULL: {
+            case "action":
+                switch (this.getCurrentAction()) {
+                    case NULL:
                         this.createAnimation("animation.ellie.null", true, event);
-                        break block5;
-                    }
+                        break;
                     case STRIP: {
                         this.createAnimation("animation.ellie.strip", false, event);
-                        break block5;
+                        break;
                     }
                     case DASH: {
                         this.createAnimation("animation.ellie.dash", false, event);
-                        break block5;
+                        break;
                     }
                     case HUG: {
                         this.createAnimation("animation.ellie.hug", false, event);
-                        break block5;
+                        break ;
                     }
                     case HUGIDLE: {
                         this.createAnimation("animation.ellie.hugidle", true, event);
-                        break block5;
+                        break ;
                     }
                     case HUGSELECTED: {
                         this.createAnimation("animation.ellie.hugselected", false, event);
-                        break block5;
+                        break ;
                     }
                     case SITDOWN: {
                         this.createAnimation("animation.ellie.sitdown", false, event);
-                        break block5;
+                        break ;
                     }
                     case SITDOWNIDLE: {
                         this.createAnimation("animation.ellie.sitdownidle", true, event);
-                        break block5;
+                        break ;
                     }
                     case COWGIRLSTART: {
                         this.createAnimation("animation.ellie.cowgirlstart", false, event);
-                        break block5;
+                        break ;
                     }
                     case COWGIRLSLOW: {
                         this.createAnimation("animation.ellie.cowgirlslow2", true, event);
-                        break block5;
+                        break ;
                     }
                     case COWGIRLFAST: {
                         this.createAnimation("animation.ellie.cowgirlfast", true, event);
-                        break block5;
+                        break ;
                     }
                     case COWGIRLCUM: {
                         this.createAnimation("animation.ellie.cowgirlcum", true, event);
-                        break block5;
+                        break ;
                     }
                     case ATTACK: {
                         this.createAnimation("animation.ellie.attack" + this.nextAttack, false, event);
-                        break block5;
+                        break ;
                     }
                     case BOW: {
                         this.createAnimation("animation.ellie.bowcharge", false, event);
-                        break block5;
+                        break ;
                     }
                     case RIDE: {
                         this.createAnimation("animation.ellie.ride", true, event);
-                        break block5;
+                        break ;
                     }
                     case SIT: {
                         this.createAnimation("animation.ellie.sit", true, event);
-                        break block5;
+                        break ;
                     }
                     case THROW_PEARL: {
                         this.createAnimation("animation.ellie.throwpearl", false, event);
-                        break block5;
+                        break ;
                     }
                     case DOWNED: {
                         this.createAnimation("animation.ellie.downed", true, event);
-                        break block5;
+                        break ;
                     }
                     case MISSIONARY_START: {
                         this.createAnimation("animation.ellie.missionary_start", false, event);
-                        break block5;
+                        break ;
                     }
                     case MISSIONARY_SLOW: {
                         this.createAnimation("animation.ellie.missionary_slow", true, event);
-                        break block5;
+                        break ;
                     }
                     case MISSIONARY_FAST: {
                         this.createAnimation("animation.ellie.missionary_fast", true, event);
-                        break block5;
+                        break ;
                     }
                     case MISSIONARY_CUM: {
                         this.createAnimation("animation.ellie.missionary_cum", false, event);
-                        break block5;
+                        break ;
                     }
                     case CARRY_INTRO: {
                         this.createAnimation("animation.ellie.carry_intro", false, event);
-                        break block5;
+                        break ;
                     }
                     case CARRY_SLOW: {
-                        this.createAnimation("animation.ellie.carry_slow" + this.aa, true, event);
-                        break block5;
+                        this.createAnimation("animation.ellie.carry_slow" + this.state, true, event);
+                        break ;
                     }
                     case CARRY_FAST: {
                         this.createAnimation("animation.ellie.carry_fast", true, event);
-                        break block5;
+                        break;
                     }
                     case CARRY_CUM: {
                         this.createAnimation("animation.ellie.carry_cum", true, event);
                     }
                 }
-            }
         }
         return PlayState.CONTINUE;
     }
@@ -719,11 +719,13 @@ implements bh_class82 {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
-        AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
-            switch (soundKeyframeEvent.sound) {
+        AnimationController.ISoundListener soundListener = sound -> {
+            switch (sound.sound) {
                 case "becomeNude": {
-                    if (!this.getClosestPlayerID()) break;
-                    this.changeDataParameterFromClient("currentModel", (Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
+                    if (this.getClosestPlayerID()) {
+                        this.changeDataParameterFromClient("currentModel", (Integer) this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
+                        break;
+                    }
                     break;
                 }
                 case "stripDone": {
@@ -753,8 +755,10 @@ implements bh_class82 {
                     break;
                 }
                 case "hugDone": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    this.a(Minecraft.getMinecraft().player, true);
+                    if (this.isControlledByLocalPlayer()) {
+                        this.canJoinPlayer(Minecraft.getMinecraft().player, true);
+                        break;
+                    }
                     break;
                 }
                 case "hugselectedMSG1": {
@@ -795,7 +799,7 @@ implements bh_class82 {
                 case "cowgirlStartDone": {
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.COWGIRLSLOW);
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "cowgirlfastMSG1": {
@@ -876,7 +880,7 @@ implements bh_class82 {
                 }
                 case "openSexUi": {
                     if (!this.getClosestPlayerID()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "missionary_slowMSG1": {
@@ -904,7 +908,7 @@ implements bh_class82 {
                 case "missionary_startDone": {
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.MISSIONARY_SLOW);
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "missionary_fastDone": {
@@ -953,10 +957,10 @@ implements bh_class82 {
                     break;
                 }
                 case "carry_slowDone": {
-                    int n = this.aa;
+                    int oldstate = this.state;
                     do {
-                        this.aa = this.getRNG().nextInt(4) + 1;
-                    } while (this.aa == n);
+                        this.state = this.getRNG().nextInt(4) + 1;
+                    } while (this.state == oldstate);
                     break;
                 }
                 case "carry_fastDone": {
@@ -965,14 +969,14 @@ implements bh_class82 {
                 }
             }
         };
-        this.actionController.registerSoundListener(iSoundListener);
+        this.actionController.registerSoundListener(soundListener);
         data.addAnimationController(this.actionController);
         data.addAnimationController(this.movementController);
         data.addAnimationController(this.eyesController);
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
+//    private static RuntimeException ZelixClassMaster(RuntimeException zelixClassMaster) {
+//        return zelixClassMaster;
+//    }
 }
 

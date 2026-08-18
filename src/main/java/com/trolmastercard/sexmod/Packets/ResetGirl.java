@@ -66,9 +66,9 @@ implements IMessage {
         this.b = true;
     }
 
-    public static class a_inner422
+    public static class EventHandler
     implements IMessageHandler<ResetGirl, IMessage> {
-        public static void a(GirlEntity em_class2582) {
+        public static void resetGirl(GirlEntity em_class2582) {
             Object object;
             Object object2;
             em_class2582.ResetNPCTasks();
@@ -81,7 +81,7 @@ implements IMessage {
                 ((EntityPlayer)object2).noClip = false;
                 em_class2582.setAnchored(false);
                 em_class2582.setCurrentAction(Action.NULL);
-                if (em_class2582.playerSheHasSexWith() != null && (object = em_class2582.world.getPlayerEntityByUUID(em_class2582.playerSheHasSexWith())) != null) {
+                if (em_class2582.getInteractionPlayerUUID() != null && (object = em_class2582.world.getPlayerEntityByUUID(em_class2582.getInteractionPlayerUUID())) != null) {
                     ((EntityPlayer)object).capabilities.isFlying = false;
                     ((Entity)object).setNoGravity(false);
                     ((EntityPlayer)object).noClip = false;
@@ -100,7 +100,7 @@ implements IMessage {
             em_class2582.setPositionAndUpdate(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
         }
 
-        public static void a(EntityPlayerMP entityPlayerMP) {
+        public static void resetGirls(EntityPlayerMP entityPlayerMP) {
             if (entityPlayerMP == null) {
                 return;
             }
@@ -126,11 +126,11 @@ implements IMessage {
                 ArrayList<GirlEntity> arrayList = GirlEntity.girlList(s_class4212.c);
                 for (GirlEntity em_class2582 : arrayList) {
                     if (em_class2582.world.isRemote) continue;
-                    if (em_class2582.playerSheHasSexWith() != null) {
-                        a_inner422.a(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(em_class2582.playerSheHasSexWith()));
+                    if (em_class2582.getInteractionPlayerUUID() != null) {
+                        EventHandler.resetGirls(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(em_class2582.getInteractionPlayerUUID()));
                     }
                     if (s_class4212.a) continue;
-                    a_inner422.a(em_class2582);
+                    EventHandler.resetGirl(em_class2582);
                 }
             });
             return null;

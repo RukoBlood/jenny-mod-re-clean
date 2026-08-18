@@ -36,7 +36,7 @@ public class GuiHandler implements IGuiHandler {
     void initDebugContainers() {
         int debugState = 2;
         if (debugState == 0) {
-            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (girl.world.isRemote || girl.getPosition().getX() != 5 || girl.getPosition().getY() != 7 || girl.getPosition().getZ() != 5)
                     continue;
 
@@ -48,7 +48,7 @@ public class GuiHandler implements IGuiHandler {
             }
         }
         if (debugState == 1) {
-            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (girl.world.isRemote || !(girl instanceof IInventory) || girl.getPosition().getX() != 3 || girl.getPosition().getY() != 1 || girl.getPosition().getZ() != 7)
                     continue;
                 IInventory inventory = (IInventory) ((Object) girl);
@@ -61,7 +61,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == 0) {
-            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (girl.world.isRemote || girl.getPosition().getX() != x || girl.getPosition().getY() != y || girl.getPosition().getZ() != z)
                     continue;
                 if (girl instanceof LunaEntity) {
@@ -71,7 +71,7 @@ public class GuiHandler implements IGuiHandler {
             }
         }
         if (ID == 1) {
-            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (girl.world.isRemote || !(girl instanceof IInventory) || girl.getPosition().getX() != x || girl.getPosition().getY() != y || girl.getPosition().getZ() != z)
                     continue;
                 IInventory iInventory = (IInventory) ((Object) girl);
@@ -85,7 +85,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == 0) {
-            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (!girl.world.isRemote || girl.getPosition().getX() != x || girl.getPosition().getY() != y || girl.getPosition().getZ() != z)
                     continue;
                 if (girl instanceof LunaEntity) {
@@ -95,7 +95,7 @@ public class GuiHandler implements IGuiHandler {
             }
         }
         if (ID == 1) {
-            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (!girl.world.isRemote || !(girl instanceof IInventory) || girl.getPosition().getX() != x || girl.getPosition().getY() != y || girl.getPosition().getZ() != z)
                     continue;
                 return new GirlGUIContainer(player, girl, UUID.randomUUID());

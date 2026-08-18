@@ -16,8 +16,8 @@ import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.DragonStaffRenderer;
 import com.trolmastercard.sexmod.Packets.*;
-import com.trolmastercard.sexmod.util.Utils;
-import com.trolmastercard.sexmod.gm_class376;
+import com.trolmastercard.sexmod.util.ThreadNames;
+import com.trolmastercard.sexmod.StructureMarkerRenderer;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -91,7 +91,7 @@ public class DragonStaffGUI extends GuiScreen {
     void executeBaseObjectInteraction() {
         IBlockState block = this.mc.world.getBlockState(this.targetPos);
         if (block.getBlock() instanceof BlockBed || block.getBlock() instanceof BlockChest) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SendBlocks(this.targetPos, !gm_class376.a(this.targetPos)));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new SendBlocks(this.targetPos, !StructureMarkerRenderer.a(this.targetPos)));
         }
     }
 
@@ -107,14 +107,14 @@ public class DragonStaffGUI extends GuiScreen {
         Object[] mineParams;
         Block block = this.targetBlockState.getBlock();
         if (block instanceof BlockLog) {
-            if (gm_class376.a(this.targetPos)) {
+            if (StructureMarkerRenderer.a(this.targetPos)) {
                 PackageHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
                 return;
             }
             PackageHandler.INSTANCE.sendToServer((IMessage)new FallTree(this.targetPos));
         }
         if ((mineParams = this.validateAndCalculateMiningZone()) != null) {
-            if (gm_class376.a(this.targetPos)) {
+            if (StructureMarkerRenderer.a(this.targetPos)) {
                 PackageHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
                 return;
             }
@@ -159,10 +159,10 @@ public class DragonStaffGUI extends GuiScreen {
         this.weightBottomRight += (float) (mouseX > this.width / 2 && mouseY > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
         this.weightTopRight += (float) (mouseX > this.width / 2 && mouseY < this.height / 2 ? 1 : -1) * this.mc.getTickLength();
 
-        this.weightBottomLeft = Utils.clamp(this.weightBottomLeft, 0.0f, 1.0f);
-        this.weightTopLeft = Utils.clamp(this.weightTopLeft, 0.0f, 1.0f);
-        this.weightBottomRight = Utils.clamp(this.weightBottomRight, 0.0f, 1.0f);
-        this.weightTopRight = Utils.clamp(this.weightTopRight, 0.0f, 1.0f);
+        this.weightBottomLeft = ThreadNames.clamp(this.weightBottomLeft, 0.0f, 1.0f);
+        this.weightTopLeft = ThreadNames.clamp(this.weightTopLeft, 0.0f, 1.0f);
+        this.weightBottomRight = ThreadNames.clamp(this.weightBottomRight, 0.0f, 1.0f);
+        this.weightTopRight = ThreadNames.clamp(this.weightTopRight, 0.0f, 1.0f);
 
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) this.width / 2.0f, (float) this.height / 2.0f, 0.0f);
@@ -201,7 +201,7 @@ public class DragonStaffGUI extends GuiScreen {
             if (isBed) {
                 this.drawBedIcon(offsetDistance);
             }
-            if (gm_class376.a(this.targetPos)) {
+            if (StructureMarkerRenderer.a(this.targetPos)) {
                 this.drawTexturedModalRect(-62.0f + offsetDistance - this.weightBottomLeft * 15.0f, -2.0f - offsetDistance + this.weightBottomLeft * 15.0f, 128, 64, 64, 64);
             }
             GlStateManager.popMatrix();
@@ -220,7 +220,7 @@ public class DragonStaffGUI extends GuiScreen {
             if (isDiggable) {
                 this.drawMiningIcon(offsetDistance);
             }
-            if (gm_class376.a(this.targetPos)) {
+            if (StructureMarkerRenderer.a(this.targetPos)) {
                 this.drawTexturedModalRect(-2.0f - offsetDistance + this.weightTopRight * 15.0f, -62.0f + offsetDistance - this.weightTopRight * 15.0f, 128, 64, 64, 64);
             }
             GlStateManager.popMatrix();

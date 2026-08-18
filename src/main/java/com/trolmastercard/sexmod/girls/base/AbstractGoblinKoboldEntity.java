@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod.girls.base;
 
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -72,7 +72,7 @@ public abstract class AbstractGoblinKoboldEntity extends GirlEntity {
     }
 
     public static void appendRandomGeneInclusive(StringBuilder stringBuilder, int bound) {
-        int randomVal = Reference.RANDOM.nextInt(bound + 1);
+        int randomVal = ReferenceAndRotationHelper.RANDOM.nextInt(bound + 1);
         if (randomVal < 10) {
             stringBuilder.append(0);
         }
@@ -81,7 +81,7 @@ public abstract class AbstractGoblinKoboldEntity extends GirlEntity {
     }
 
     public static void appendGaussianBodyGene(StringBuilder dnaBuilder) {
-        double randDouble = Reference.RANDOM.nextDouble();
+        double randDouble = ReferenceAndRotationHelper.RANDOM.nextDouble();
         double gaussianVal = Math.pow(Math.E, -Math.pow(-2.5 + 5.0 * randDouble, 2.0));
         String formattedString = String.format("%.2f", gaussianVal);
         String[] splitParts = formattedString.split("\\.");
@@ -93,7 +93,7 @@ public abstract class AbstractGoblinKoboldEntity extends GirlEntity {
     }
 
     public static void appendRandomGeneExclusive(StringBuilder dnaBuilder, int bound) {
-        int randomVal = Reference.RANDOM.nextInt(bound);
+        int randomVal = ReferenceAndRotationHelper.RANDOM.nextInt(bound);
         if (randomVal < 10) {
             dnaBuilder.append(0);
         }

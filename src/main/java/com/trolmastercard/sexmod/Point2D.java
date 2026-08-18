@@ -13,9 +13,9 @@ public class Point2D {
         this.y = y;
     }
 
-    public float distanceTo(int tX, int tY) {
-        float dx = tX - this.x;
-        float dy = tY - this.y;
+    public float distanceTo(int x, int y) {
+        float dx = x - this.x;
+        float dy = y - this.y;
         return (float)Math.sqrt(dx * dx + dy * dy);
     }
 

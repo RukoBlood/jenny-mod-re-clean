@@ -36,8 +36,8 @@ import com.trolmastercard.sexmod.Packets.ResetGirl;
 import com.trolmastercard.sexmod.Packets.TeleportPlayer;
 import com.trolmastercard.sexmod.Packets.SendChatMessage;
 import com.trolmastercard.sexmod.Packets.SyncActionPacket;
-import com.trolmastercard.sexmod.companion.OpenAndCloseDoorBehindHer;
-import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
+import com.trolmastercard.sexmod.companion.DoorInteractAIGoal;
+import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
@@ -51,7 +51,7 @@ import com.trolmastercard.sexmod.util.ClientServerCheck;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
@@ -120,7 +120,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     final static protected long TICK_RATE = 20L;
     final private AnimationFactory factory = new AnimationFactory(this);
     public EntityAIWanderAvoidWater aiWander;
-    public LookAtNearbyEntity aiLookAtPlayer;
+    public WatchClosestGirlGoal aiLookAtPlayer;
     static public HashSet<GirlEntity> GLOBAL_GIRL_CACHE = new HashSet();
     public Vec3d playerCameraOffsetPos;
     protected float cameraYaw;
@@ -187,12 +187,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    public Action currentAction() {
+    public Action getCurrentAction() {
         return Action.valueOf(this.entityDataManager.get(CUR_ACTION));
     }
 
     public void setCurrentAction(Action action) {
-        Action previousAction = this.currentAction();
+        Action previousAction = this.getCurrentAction();
         if (previousAction == action) {
             return;
         }
@@ -226,7 +226,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @Nullable
     public EntityPlayer getPlayerEntity() {
-        UUID uUID = this.playerSheHasSexWith();
+        UUID uUID = this.getInteractionPlayerUUID();
         if (uUID == null) {
             return null;
         }
@@ -275,7 +275,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @Nullable
-    public UUID playerSheHasSexWith() {
+    public UUID getInteractionPlayerUUID() {
         String uuidStr = this.entityDataManager.get(INTERACTION_PARTNER_UUID);
         if (uuidStr.equals("null")) {
             return null;
@@ -395,7 +395,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return this.isRegisteredLocally;
     }
 
-    public static List<GirlEntity> GirlEntityList() {
+    public static List<GirlEntity> getGirlEntityList() {
         if (!ClientServerCheck.getInstance()) {
             return GirlEntity.getClientGirls();
         }
@@ -434,10 +434,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @Override
     protected void initEntityAI() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
-        this.tasks.addTask(3, new OpenAndCloseDoorBehindHer(this));
+        this.tasks.addTask(3, new DoorInteractAIGoal(this));
         this.tasks.addTask(5, this.aiLookAtPlayer);
         this.tasks.addTask(5, this.aiWander);
     }
@@ -469,7 +469,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.homeCoords = new Vec3d(nbt.getDouble("homeX"), nbt.getDouble("homeY"), nbt.getDouble("homeZ"));
         String customName = nbt.getString("sexmod:customname");
         if (!customName.isEmpty()) {
-            this.setCustomName(customName);
+            this.setCustomNameOverride(customName);
         }
 
         if ((uuidStr = nbt.getString("girlID")).isEmpty()) {
@@ -489,7 +489,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
         this.entityDataManager.set(GIRL_ID, uUID.toString());
         if (this.supportsCustomModels()) {
-            this.setCustomModelKey(nbt.getString("sexmod:customModel"));
+            this.setCustomModelCode(nbt.getString("sexmod:customModel"));
         }
     }
 
@@ -558,12 +558,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             return;
         }
         activeParts.removeAll(partsToRemove);
-        this.setCustomModelKey(GirlEntity.serializePartsSet(activeParts));
+        this.setCustomModelCode(GirlEntity.serializePartsSet(activeParts));
     }
     //end of deobfuscation #2
 
     protected void updateActionTicks() {
-        Action action = this.currentAction();
+        Action action = this.getCurrentAction();
         int sideIndex = this.world.isRemote ? 1 : 0;
         action.ticksPlaying[sideIndex] = action.ticksPlaying[sideIndex] + 1;
         if (action.ticksPlaying[sideIndex] < action.length) {
@@ -651,11 +651,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    protected void alignPlayerToGirl(EntityPlayerMP player, boolean teleport) {
+    protected void alignPlayerToGirl(EntityPlayerMP player, boolean force) {
         player.motionX = 0.0;
         player.motionY = 0.0;
         player.motionZ = 0.0;
-        if (teleport) {
+        if (force) {
             Vec3d pos = this.getFrontOffsetVector(0.35);
             player.setPositionAndUpdate(pos.x, pos.y, pos.z);
         }
@@ -706,7 +706,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public static ArrayList<GirlEntity> girlList(UUID uUID) {
         ArrayList<GirlEntity> list = new ArrayList<GirlEntity>();
         try {
-            for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (girl == null || !girl.girlID().equals(uUID)) continue;
                 list.add(girl);
             }
@@ -842,7 +842,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected void createAnimation(String animName, boolean looped, AnimationEvent event, boolean bl2) {
-        if (!bl2 && Action.isPlayingInteractiveAction(this, event.getPartialTick()) && this.handleActionAnimationOverrides(this.currentAction(), animName, HandlePlayerMovement.isThrusting, event)) {
+        if (!bl2 && Action.isPlayingInteractiveAction(this, event.getPartialTick()) && this.handleActionAnimationOverrides(this.getCurrentAction(), animName, HandlePlayerMovement.isThrusting, event)) {
             return;
         }
         ILoopType.EDefaultLoopTypes eDefaultLoopTypes = looped ? ILoopType.EDefaultLoopTypes.LOOP : ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME;
@@ -860,7 +860,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
         if (!disableThrustOverride
                 && Action.isPlayingInteractiveAction(this, event.getPartialTick())
-                && this.handleActionAnimationOverrides(this.currentAction(), baseAnimNade, HandlePlayerMovement.isThrusting, event)
+                && this.handleActionAnimationOverrides(this.getCurrentAction(), baseAnimNade, HandlePlayerMovement.isThrusting, event)
         ) {
             return;
         }
@@ -925,7 +925,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             this.playerCameraOffsetPos = null;
             PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID(), true));
         } else if (!this.world.isRemote) {
-            ResetGirl.a_inner422.a((EntityPlayerMP)this.world.getPlayerEntityByUUID(this.playerSheHasSexWith()));
+            ResetGirl.EventHandler.resetGirls((EntityPlayerMP)this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID()));
         }
     }
 
@@ -946,8 +946,8 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public static GirlEntity getGirlByUUID(@Nonnull UUID uUID, Boolean isServerSide) {
-        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
-            if (girl.isDead || !uUID.equals(girl.playerSheHasSexWith())) continue;
+        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+            if (girl.isDead || !uUID.equals(girl.getInteractionPlayerUUID())) continue;
             if (isServerSide == null) {
                 return girl;
             }
@@ -964,9 +964,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @Nullable
     public static GirlEntity getActiveSceneInfo(@Nonnull UUID uUID) {
         boolean bl = FMLCommonHandler.instance().getMinecraftServerInstance() == null;
-        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
             boolean bl2;
-            if (girl.isDead || (bl2 = girl.world.isRemote) != bl || !uUID.equals(girl.playerSheHasSexWith()))
+            if (girl.isDead || (bl2 = girl.world.isRemote) != bl || !uUID.equals(girl.getInteractionPlayerUUID()))
                 continue;
             return girl;
         }
@@ -1001,10 +1001,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     public static void triggerFastSexAction(UUID uUID) {
-        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
-            UUID id = girl.playerSheHasSexWith();
+        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+            UUID id = girl.getInteractionPlayerUUID();
             if (id == null || !id.equals(uUID)) continue;
-            Action fastSexAction = girl.FastSexAction(girl.currentAction());
+            Action fastSexAction = girl.getNextAction(girl.getCurrentAction());
             if (fastSexAction == null) {
                 return;
             }
@@ -1015,10 +1015,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     public static void triggerCumAction(UUID uUID) {
-        for (GirlEntity girl : GirlEntity.GirlEntityList()) {
+        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
             Action cumAction;
             UUID id;
-            if (girl.isDead || !girl.world.isRemote || (id = girl.playerSheHasSexWith()) == null || !id.equals(uUID) || (cumAction = girl.CumAction(girl.currentAction())) == null)
+            if (girl.isDead || !girl.world.isRemote || (id = girl.getInteractionPlayerUUID()) == null || !id.equals(uUID) || (cumAction = girl.getCumAction(girl.getCurrentAction())) == null)
                 continue;
             girl.setCurrentAction(cumAction);
         }
@@ -1037,22 +1037,22 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     @Nullable
-    protected abstract Action FastSexAction(Action action);
+    protected abstract Action getNextAction(Action action);
 
     @SideOnly(value=Side.CLIENT)
-    protected abstract Action CumAction(Action action);
+    protected abstract Action getCumAction(Action action);
 
     public NetworkRegistry.TargetPoint getTargetNetworkPoint() {
         return new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 50.0);
     }
 
     protected void moveCamera(double x, double y, double z, float yaw, float pitch) {
-        if (this.playerSheHasSexWith() == null) {
+        if (this.getInteractionPlayerUUID() == null) {
             System.out.println("couldnt move camera because the player isn't set");
             return;
         }
 
-        EntityPlayer player = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
+        EntityPlayer player = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
         if (this.playerCameraOffsetPos == null) {
             assert player != null;
             this.playerCameraOffsetPos = player.getPositionVector();
@@ -1082,13 +1082,13 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             return false;
         }
         EntityPlayerSP clientPlayer = Minecraft.getMinecraft().player;
-        return clientPlayer.getPersistentID().equals(this.playerSheHasSexWith()) || clientPlayer.getUniqueID().equals(this.playerSheHasSexWith());
+        return clientPlayer.getPersistentID().equals(this.getInteractionPlayerUUID()) || clientPlayer.getUniqueID().equals(this.getInteractionPlayerUUID());
     }
 
     protected void U() {
     }
 
-    public void setCustomName(String name) {
+    public void setCustomNameOverride(String name) {
         this.entityDataManager.set(CUSTOM_NAME, name);
     }
 
@@ -1106,7 +1106,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return this.getGirlName();
     }
 
-    public abstract float getNameTagHeightOffset();
+    public abstract float getScaleFactor();
 
     @SideOnly(value=Side.CLIENT)
     public boolean shouldRenderNameTag() {
@@ -1186,7 +1186,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public GirlEntity com_trolmastercard_sexmod_em_class258_E() {
+    public GirlEntity asGirl() {
         return this;
     }
 
@@ -1204,7 +1204,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public Vec3d getFrontOffsetVector(double distance) {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
         assert entityPlayer != null;
         float yaw = entityPlayer.rotationYaw;
         return entityPlayer.getPositionVector().add(-Math.sin((double)yaw * (Math.PI / 180)) * distance, 0.0, Math.cos((double)yaw * (Math.PI / 180)) * distance);
@@ -1215,10 +1215,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public static void spawnParticlesAround(EnumParticleTypes particle, GirlEntity girl) {
-        double vx = Reference.RANDOM.nextGaussian() * 0.02;
-        double vy = Reference.RANDOM.nextGaussian() * 0.02;
-        double vz = Reference.RANDOM.nextGaussian() * 0.02;
-        girl.world.spawnParticle(particle, girl.posX + (double)(Reference.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, girl.posY + 0.5 + (double)(Reference.RANDOM.nextFloat() * girl.height), girl.posZ + (double)(Reference.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, vx, vy, vz, new int[0]);
+        double vx = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
+        double vy = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
+        double vz = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
+        girl.world.spawnParticle(particle, girl.posX + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, girl.posY + 0.5 + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * girl.height), girl.posZ + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, vx, vy, vz, new int[0]);
     }
 
     public static void spawnParticlesAround(EnumParticleTypes particle, GirlEntity girl, int times) {
@@ -1287,7 +1287,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (this.isAnchored()) {
             ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(this.getYawRotation())));
         } else if (applyYaw) {
-            ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(Reference.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
+            ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(ReferenceAndRotationHelper.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
         }
 
         for (GeoBone ancestor : boneHierarchy) {
@@ -1344,7 +1344,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public float float_v() {
+    public float getRenderScaleFactor() {
         return 1.0f;
     }
 
@@ -1506,7 +1506,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return new ArrayList<Integer>();
     }
 
-    public void setCustomModelKey(String string) {
+    public void setCustomModelCode(String string) {
         this.entityDataManager.set(CUSTOM_MODEL_KEY, string);
     }
 

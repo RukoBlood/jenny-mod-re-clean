@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod;
 
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 
 public enum CustomPartCategory {
     GIRL_SPECIFIC,
@@ -30,9 +30,9 @@ public enum CustomPartCategory {
     private CustomPartCategory(int xPos, String boneName) {
         this.iconXPos = xPos;
         this.boneName = boneName;
-        ++Reference.i;
-        this.buttonIDPlus = Reference.i++;
-        this.buttonIDMinus = Reference.i;
+        ++ReferenceAndRotationHelper.i;
+        this.buttonIDPlus = ReferenceAndRotationHelper.i++;
+        this.buttonIDMinus = ReferenceAndRotationHelper.i;
     }
 
     public static int a() {

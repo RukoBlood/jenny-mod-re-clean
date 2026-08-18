@@ -30,8 +30,8 @@ import javax.vecmath.Vector2f;
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.ResetGirl;
 import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
-import com.trolmastercard.sexmod.companion.OpenAndCloseDoorBehindHer;
-import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
+import com.trolmastercard.sexmod.companion.DoorInteractAIGoal;
+import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.AbstractGoblinKoboldEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
@@ -91,7 +91,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 public class GoblinEntity
 extends AbstractGoblinKoboldEntity
 implements ai_class30 {
-    final static public by_class106 ax = by_class106.DARK_GREEN;
+    final static public SkinColor DEFAULT_COLOR = SkinColor.DARK_GREEN;
     final static public Vec3i ah = new Vec3i(11, 6, 11);
     final static public Vec3d aB = new Vec3d(5.0, 1.0, 9.0);
     final static public Vec3d af = new Vec3d(3.0, -1.0, 6.0);
@@ -195,7 +195,7 @@ implements ai_class30 {
         super.entityInit();
         eh_class250 eh_class2502 = eh_class250.values()[this.getRNG().nextInt(eh_class250.values().length)];
         this.entityDataManager.register(ACTION_TARGET_POS, new BlockPos(eh_class2502.a()));
-        this.entityDataManager.register(CURRENT_ACTION, ax.name());
+        this.entityDataManager.register(CURRENT_ACTION, DEFAULT_COLOR.name());
         this.entityDataManager.register(Q, "");
         this.entityDataManager.register(aK, "");
         this.entityDataManager.register(a0, ItemStack.EMPTY);
@@ -205,7 +205,7 @@ implements ai_class30 {
 
     @Override
     protected void onDataWatcherUpdate() {
-        GoblinRenderer.ResetColors();
+        GoblinRenderer.clearBoneColors();
     }
 
     @Override
@@ -258,7 +258,7 @@ implements ai_class30 {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 0.1f;
     }
 
@@ -304,7 +304,7 @@ implements ai_class30 {
         GoblinEntity.appendFixedGene(stringBuilder, 7);
         GoblinEntity.appendRandomGeneInclusive(stringBuilder, 5);
         GoblinEntity.appendRandomGeneInclusive(stringBuilder, g5_class349.values().length - 1);
-        GoblinEntity.appendRandomGeneInclusive(stringBuilder, by_class106.values().length - 1);
+        GoblinEntity.appendRandomGeneInclusive(stringBuilder, SkinColor.values().length - 1);
         GoblinEntity.appendRandomGeneInclusive(stringBuilder, eh_class250.values().length - 1);
         GoblinEntity.appendFixedGene(stringBuilder, 1);
         return stringBuilder.toString();
@@ -319,7 +319,7 @@ implements ai_class30 {
         GoblinEntity.appendRandomGeneInclusive(dnaBuilder, 8);
         GoblinEntity.appendRandomGeneInclusive(dnaBuilder, 5);
         GoblinEntity.appendRandomGeneInclusive(dnaBuilder, g5_class349.values().length - 1);
-        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, by_class106.values().length - 1);
+        GoblinEntity.appendRandomGeneInclusive(dnaBuilder, SkinColor.values().length - 1);
         GoblinEntity.appendRandomGeneInclusive(dnaBuilder, eh_class250.values().length - 1);
         GoblinEntity.appendFixedGene(dnaBuilder, 0);
         return dnaBuilder.toString();
@@ -336,7 +336,7 @@ implements ai_class30 {
                 this.add(16);
                 this.add(6);
                 this.add(g5_class349.values().length);
-                this.add(by_class106.values().length);
+                this.add(SkinColor.values().length);
                 this.add(eh_class250.values().length);
             }
         };
@@ -393,7 +393,7 @@ implements ai_class30 {
         GoblinEntity.appendFixedGene(stringBuilder, Integer.parseInt(GoblinEntity.SplitDnaIntoGenes(this)[9]));
         this.entityDataManager.set(APPEARANCE_DNA, stringBuilder.toString());
         if (Main.proxy instanceof ClientProxy) {
-            GoblinRenderer.ResetColors();
+            GoblinRenderer.clearBoneColors();
         }
     }
 
@@ -408,7 +408,7 @@ implements ai_class30 {
         }
         GoblinEntity.appendFixedGene(stringBuilder, Integer.parseInt(GoblinEntity.SplitDnaIntoGenes(this)[9]));
         this.entityDataManager.set(APPEARANCE_DNA, stringBuilder.toString());
-        GoblinRenderer.ResetColors();
+        GoblinRenderer.clearBoneColors();
     }
 
     protected String java_lang_String_a(StringBuilder stringBuilder, int n) {
@@ -490,7 +490,7 @@ implements ai_class30 {
         if (this.aX) {
             return true;
         }
-        if (this.currentAction() == Action.RUN) {
+        if (this.getCurrentAction() == Action.RUN) {
             if ((double)this.getDistance(entityPlayer) > 3.5) {
                 entityPlayer.sendStatusMessage(new TextComponentString("get a bit closer..."), true);
             } else {
@@ -524,7 +524,7 @@ implements ai_class30 {
         if (uUID == null) {
             return false;
         }
-        for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+        for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
             UUID uUID2;
             if (!(em_class2582 instanceof ai_class30) || em_class2582.world.isRemote || em_class2582.isDead || !uUID.equals(uUID2 = ((ai_class30) ((Object) em_class2582)).java_util_UUID_e()))
                 continue;
@@ -535,9 +535,9 @@ implements ai_class30 {
 
     @Override
     protected void initEntityAI() {
-        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 2.0f, 1.0f);
+        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 2.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(3, new OpenAndCloseDoorBehindHer(this));
+        this.tasks.addTask(3, new DoorInteractAIGoal(this));
         this.tasks.addTask(5, this.aiLookAtPlayer);
     }
 
@@ -562,7 +562,7 @@ implements ai_class30 {
 
     @Override
     public boolean canBeCollidedWith() {
-        Action fp_class3242 = this.currentAction();
+        Action fp_class3242 = this.getCurrentAction();
         if (fp_class3242 == Action.THROWN) {
             return false;
         }
@@ -594,10 +594,10 @@ implements ai_class30 {
         if (!this.entityDataManager.get(aC).booleanValue()) {
             return;
         }
-        if (this.playerSheHasSexWith() != null) {
+        if (this.getInteractionPlayerUUID() != null) {
             return;
         }
-        if (this.currentAction() != Action.NULL) {
+        if (this.getCurrentAction() != Action.NULL) {
             return;
         }
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 15.0);
@@ -626,7 +626,7 @@ implements ai_class30 {
     }
 
     void u_() {
-        if (this.currentAction() != Action.STAND_UP) {
+        if (this.getCurrentAction() != Action.STAND_UP) {
             return;
         }
         if (++this.aa < 37) {
@@ -647,7 +647,7 @@ implements ai_class30 {
     }
 
     void void_o() {
-        if (this.currentAction() != Action.THROWN) {
+        if (this.getCurrentAction() != Action.THROWN) {
             return;
         }
         if (!this.onGround) {
@@ -709,7 +709,7 @@ implements ai_class30 {
             return;
         }
         this.Z = -1;
-        UUID uUID = this.playerSheHasSexWith();
+        UUID uUID = this.getInteractionPlayerUUID();
         if (uUID == null) {
             this.resetCameraAndPhysics();
             return;
@@ -762,7 +762,7 @@ implements ai_class30 {
             return;
         }
         this.an = -1;
-        UUID uUID = this.playerSheHasSexWith();
+        UUID uUID = this.getInteractionPlayerUUID();
         if (uUID == null) {
             return;
         }
@@ -791,7 +791,7 @@ implements ai_class30 {
         if (!this.aX) {
             return;
         }
-        if (this.currentAction() != Action.JUMP_0) {
+        if (this.getCurrentAction() != Action.JUMP_0) {
             return;
         }
         if (++this.am < 26) {
@@ -815,7 +815,7 @@ implements ai_class30 {
                 vec3d = this.al.add(af);
             }
         }
-        UUID uUID = this.playerSheHasSexWith();
+        UUID uUID = this.getInteractionPlayerUUID();
         if (uUID == null) {
             return;
         }
@@ -860,7 +860,7 @@ implements ai_class30 {
         if (!this.aX) {
             return;
         }
-        if (this.playerSheHasSexWith() != null) {
+        if (this.getInteractionPlayerUUID() != null) {
             return;
         }
         Vec3d vec3d = null;
@@ -955,7 +955,7 @@ implements ai_class30 {
         }
         this.noClip = false;
         this.setNoGravity(false);
-        if (!(this.aX || this.entityDataManager.get(aC).booleanValue() || this.entityDataManager.get(aK).equals("") || this.currentAction() != Action.NULL)) {
+        if (!(this.aX || this.entityDataManager.get(aC).booleanValue() || this.entityDataManager.get(aK).equals("") || this.getCurrentAction() != Action.NULL)) {
             this.world.removeEntity(this);
         }
         this.aZ = true;
@@ -1035,7 +1035,7 @@ implements ai_class30 {
         if (!this.onGround) {
             return;
         }
-        if (this.currentAction() != Action.RUN) {
+        if (this.getCurrentAction() != Action.RUN) {
             return;
         }
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 100.0);
@@ -1061,7 +1061,7 @@ implements ai_class30 {
 
     @Override
     protected void jump() {
-        if (this.currentAction() == Action.RUN && !this.boolean_j()) {
+        if (this.getCurrentAction() == Action.RUN && !this.boolean_j()) {
             return;
         }
         super.jump();
@@ -1093,7 +1093,7 @@ implements ai_class30 {
         if (this.entityDataManager.get(aV).booleanValue()) {
             return;
         }
-        if (this.currentAction() != Action.SIT) {
+        if (this.getCurrentAction() != Action.SIT) {
             return;
         }
         if (++this.aO < 32000) {
@@ -1155,7 +1155,7 @@ implements ai_class30 {
         if (!this.aX) {
             return;
         }
-        if (this.playerSheHasSexWith() != null) {
+        if (this.getInteractionPlayerUUID() != null) {
             return;
         }
         this.setTargetPosition(this.al);
@@ -1207,7 +1207,7 @@ implements ai_class30 {
     }
 
     public static void e(GirlEntity girlEntity) {
-        Action action = girlEntity.currentAction();
+        Action action = girlEntity.getCurrentAction();
         ai_class30 ai_class302 = (ai_class30)((Object)girlEntity);
         if (ai_class302.GoblinAction() != Action.START_THROWING && action == Action.START_THROWING) {
             ai_class302.void_c(0);
@@ -1223,7 +1223,7 @@ implements ai_class30 {
     }
 
     void void_F() {
-        if (this.currentAction() != Action.VANISH) {
+        if (this.getCurrentAction() != Action.VANISH) {
             return;
         }
         this.ar -= 0.05f;
@@ -1237,7 +1237,7 @@ implements ai_class30 {
         if (this.entityDataManager.get(aC).booleanValue()) {
             return;
         }
-        if (this.currentAction() != Action.THROWN) {
+        if (this.getCurrentAction() != Action.THROWN) {
             return;
         }
         if (!this.onGround && !this.isInWater()) {
@@ -1286,7 +1286,7 @@ implements ai_class30 {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
+        Action fp_class3243 = this.getCurrentAction();
         if (fp_class3243 == Action.PAIZURI_CUM && (action == Action.PAIZURI_SLOW || action == Action.PAIZURI_FAST)) {
             return;
         }
@@ -1306,7 +1306,7 @@ implements ai_class30 {
         if (action == Action.NELSON_INTRO && !this.world.isRemote) {
             this.void_q();
         }
-        if (this.currentAction() == Action.PAIZURI_CUM && action == Action.NULL && !this.world.isRemote) {
+        if (this.getCurrentAction() == Action.PAIZURI_CUM && action == Action.NULL && !this.world.isRemote) {
             this.D_();
         }
         if (action == Action.BREEDING_CUM_0) {
@@ -1327,9 +1327,9 @@ implements ai_class30 {
     }
 
     void D_() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
         if (entityPlayer != null) {
-            ResetGirl.a_inner422.a((EntityPlayerMP)entityPlayer);
+            ResetGirl.EventHandler.resetGirls((EntityPlayerMP)entityPlayer);
         }
         this.setInteractionPlayerUUID((UUID)null);
         this.setAnchored(false);
@@ -1343,7 +1343,7 @@ implements ai_class30 {
     }
 
     void void_q() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
         if (entityPlayer == null) {
             return;
         }
@@ -1359,7 +1359,7 @@ implements ai_class30 {
     }
 
     void void_z() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
         if (entityPlayer == null) {
             return;
         }
@@ -1382,7 +1382,7 @@ implements ai_class30 {
         if (itemStack == ItemStack.EMPTY) {
             return;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.playerSheHasSexWith());
+        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
         if (entityPlayer == null) {
             return;
         }
@@ -1391,7 +1391,7 @@ implements ai_class30 {
     }
 
     public static void void_a(GirlEntity em_class2582) {
-        if (em_class2582.currentAction() != Action.PICK_UP) {
+        if (em_class2582.getCurrentAction() != Action.PICK_UP) {
             return;
         }
         ai_class30 ai_class302 = (ai_class30)((Object)em_class2582);
@@ -1428,7 +1428,7 @@ implements ai_class30 {
     @Override
     @SideOnly(value=Side.CLIENT)
     public boolean shouldRenderNameTag() {
-        if (this.currentAction() != Action.NULL) {
+        if (this.getCurrentAction() != Action.NULL) {
             return false;
         }
         if (this.java_util_UUID_e() != null) {
@@ -1441,7 +1441,7 @@ implements ai_class30 {
     }
 
     void void_y() {
-        if (this.currentAction() != Action.SHOULDER_IDLE) {
+        if (this.getCurrentAction() != Action.SHOULDER_IDLE) {
             return;
         }
         UUID uUID = this.java_util_UUID_e();
@@ -1458,7 +1458,7 @@ implements ai_class30 {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         switch (action) {
             case PAIZURI_IDLE: 
             case PAIZURI_SLOW: {
@@ -1478,7 +1478,7 @@ implements ai_class30 {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         switch (action) {
             case PAIZURI_SLOW: 
             case PAIZURI_FAST: 
@@ -1499,7 +1499,7 @@ implements ai_class30 {
             case BREEDING_SLOW_0: 
             case BREEDING_FAST_0: {
                 for (GoblinEntity e3_class2192 : this.ab) {
-                    e3_class2192.CumAction(action);
+                    e3_class2192.getCumAction(action);
                 }
                 return Action.BREEDING_CUM_0;
             }
@@ -1514,7 +1514,7 @@ implements ai_class30 {
 
     @Override
     public void fall(float f, float f2) {
-        Action fp_class3242 = this.currentAction();
+        Action fp_class3242 = this.getCurrentAction();
         if (fp_class3242 == Action.THROWN || fp_class3242 == Action.START_THROWING) {
             return;
         }
@@ -1531,7 +1531,7 @@ implements ai_class30 {
         }
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.goblin.null", true, event);
                     break;
                 }
@@ -1539,7 +1539,7 @@ implements ai_class30 {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.goblin.null", true, event);
                     break;
                 }
@@ -1563,7 +1563,7 @@ implements ai_class30 {
             case "action": {
                 Minecraft minecraft = Minecraft.getMinecraft();
                 String string = minecraft.player.getPersistentID().equals(this.java_util_UUID_e()) && minecraft.gameSettings.thirdPersonView == 0 ? "1" : "3";
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.goblin.null", true, event);
                         break block5;
@@ -1796,7 +1796,7 @@ implements ai_class30 {
                 case "paizuri_startDone": {
                     this.setCurrentAction(Action.PAIZURI_IDLE);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "paizuriFastDone": {
@@ -1881,7 +1881,7 @@ implements ai_class30 {
                 case "breedingIntroDone": {
                     this.setCurrentAction(Action.BREEDING_SLOW_0);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "breeding_slow1Done": {
@@ -1941,7 +1941,7 @@ implements ai_class30 {
                 case "neslon_introDone": {
                     this.setCurrentAction(Action.NELSON_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "nelson_slowDone": {
@@ -2001,7 +2001,7 @@ implements ai_class30 {
                 return;
             }
             ArrayList<GoblinEntity> arrayList = new ArrayList<GoblinEntity>();
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+            for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
                 EntityPlayer entityPlayer;
                 GoblinEntity e3_class2192;
                 UUID uUID;
@@ -2023,7 +2023,7 @@ implements ai_class30 {
             int n = event.toDim;
             World world = entityPlayer.world;
             GoblinEntity e3_class2192 = null;
-            for (GirlEntity em_class2582 : GirlEntity.GirlEntityList()) {
+            for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
                 GoblinEntity e3_class2193;
                 if (em_class2582.world.isRemote || !(em_class2582 instanceof GoblinEntity) || !uUID.equals((e3_class2193 = (GoblinEntity) em_class2582).java_util_UUID_e()))
                     continue;
@@ -2036,7 +2036,7 @@ implements ai_class30 {
                 GoblinEntity e3_class2194 = new GoblinEntity(world);
                 e3_class2194.dimension = n;
                 e3_class2194.forceSpawn = true;
-                e3_class2194.setCustomModelKey(string);
+                e3_class2194.setCustomModelCode(string);
                 e3_class2194.e(string2);
                 GoblinEntity.access$000(e3_class2194).set(aC, true);
                 world.spawnEntity(e3_class2194);
@@ -2049,7 +2049,7 @@ implements ai_class30 {
                 return;
             }
             world.removeEntity(e3_class2192);
-            GirlEntity.GirlEntityList().remove(e3_class2192);
+            GirlEntity.getGirlEntityList().remove(e3_class2192);
         }
 
         @SubscribeEvent
@@ -2073,7 +2073,7 @@ implements ai_class30 {
             if (a == null) {
                 a = Minecraft.getMinecraft();
             }
-            if (EventHandler.a.currentScreen instanceof ea_class235) {
+            if (GoblinEntity.EventHandler.a.currentScreen instanceof ea_class235) {
                 return;
             }
             if (!ClientProxy.keyBindings[0].isPressed()) {
@@ -2081,7 +2081,7 @@ implements ai_class30 {
             }
             GirlEntity em_class2582 = null;
             UUID uUID = Minecraft.getMinecraft().player.getPersistentID();
-            for (GirlEntity em_class2583 : GirlEntity.GirlEntityList()) {
+            for (GirlEntity em_class2583 : GirlEntity.getGirlEntityList()) {
                 ai_class30 ai_class302;
                 if (!em_class2583.world.isRemote || !(em_class2583 instanceof ai_class30) || !uUID.equals((ai_class302 = (ai_class30) ((Object) em_class2583)).java_util_UUID_e()))
                     continue;
@@ -2091,7 +2091,7 @@ implements ai_class30 {
             if (em_class2582 == null) {
                 return;
             }
-            if (em_class2582.currentAction() != Action.SHOULDER_IDLE) {
+            if (em_class2582.getCurrentAction() != Action.SHOULDER_IDLE) {
                 return;
             }
             Minecraft.getMinecraft().displayGuiScreen(new ea_class235(em_class2582));

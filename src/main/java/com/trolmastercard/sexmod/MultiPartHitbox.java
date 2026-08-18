@@ -8,7 +8,7 @@ import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.world.World;
 
 public class MultiPartHitbox extends MultiPartEntityPart {
-    public boolean isCollidable = false;
+    public boolean isActive = false;
 
     public MultiPartHitbox(World world) {
         super(null, "", 0.0f, 0.0f);
@@ -20,7 +20,7 @@ public class MultiPartHitbox extends MultiPartEntityPart {
 
     @Override
     public boolean canBeCollidedWith() {
-        return this.isCollidable;
+        return this.isActive;
     }
 }
 

@@ -14,7 +14,7 @@ package com.trolmastercard.sexmod.Packets;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.companion.CompanionPearl;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -57,7 +57,7 @@ public class SendCompanionHome implements IMessage {
                 ArrayList<GirlEntity> arrayList = GirlEntity.girlList(gg_class3662.a);
                 for (GirlEntity girlEntity : arrayList) {
                     if (girlEntity.world.isRemote) continue;
-                    if (girlEntity.currentAction() != Action.THROW_PEARL) {
+                    if (girlEntity.getCurrentAction() != Action.THROW_PEARL) {
                         girlEntity.setCurrentAction(Action.THROW_PEARL);
                         girlEntity.setYawRotation((float)Math.atan2(girlEntity.posZ - girlEntity.homeCoords.z, girlEntity.posX - girlEntity.homeCoords.x) * 57.29578f + 90.0f);
                         girlEntity.setTargetPosition(girlEntity.getPositionVector());
@@ -74,7 +74,7 @@ public class SendCompanionHome implements IMessage {
                     }
                     WorldServer worldServer = (WorldServer)girlEntity.world;
                     for (int i = 0; i < 32; ++i) {
-                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girlEntity.posX, girlEntity.posY + Reference.RANDOM.nextDouble() * 2.0, girlEntity.posZ, 32, 0.2, 0.2, 0.2, Reference.RANDOM.nextGaussian(), new int[0]);
+                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girlEntity.posX, girlEntity.posY + ReferenceAndRotationHelper.RANDOM.nextDouble() * 2.0, girlEntity.posZ, 32, 0.2, 0.2, 0.2, ReferenceAndRotationHelper.RANDOM.nextGaussian(), new int[0]);
                     }
                     girlEntity.setPosition(girlEntity.homeCoords.x, girlEntity.homeCoords.y, girlEntity.homeCoords.z);
                     girlEntity.activePearl = null;

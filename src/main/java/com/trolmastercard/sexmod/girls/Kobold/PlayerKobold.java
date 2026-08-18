@@ -25,7 +25,7 @@ import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -157,11 +157,11 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     @Override
     protected void ResetColors() {
         PlayerKoboldRenderer.ResetColors();
-        KoboldRenderer.ResetColors();
+        KoboldRenderer.clearBoneColors();
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         float f = 0.25f - this.entityDataManager.get(aA).floatValue();
         return 1.4f - f;
     }
@@ -236,7 +236,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
 
     @Override
     @Nullable
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.SUCKBLOWJOB_BLINK) {
             return Action.THRUSTBLOWJOB;
         }
@@ -247,7 +247,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.THRUSTBLOWJOB || action == Action.SUCKBLOWJOB_BLINK) {
             return Action.CUMBLOWJOB;
         }
@@ -262,7 +262,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
+        Action fp_class3243 = this.getCurrentAction();
         if (fp_class3243 == Action.MATING_PRESS_CUM && (action == Action.MATING_PRESS_SOFT || action == Action.MATING_PRESS_HARD)) {
             return;
         }
@@ -284,7 +284,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
         GeckoLibCache.getInstance().parser.setValue("size", f);
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.kobold.null", true, event);
                     break;
                 }
@@ -292,7 +292,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.kobold.null", true, event);
                     break;
                 }
@@ -326,7 +326,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.kobold.null", true, event);
                         break block5;
@@ -429,7 +429,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     void b(SoundEvent soundEvent, float f) {
         float f2 = 0.25f - this.entityDataManager.get(aA).floatValue();
         double d = f2 / 0.25f;
-        float f3 = (float) Reference.LerpDouble((double)0.9f, (double)1.1f, d);
+        float f3 = (float) ReferenceAndRotationHelper.LerpDouble((double)0.9f, (double)1.1f, d);
         this.PlaySoundAtPosition(soundEvent, f, f3);
     }
 
@@ -447,7 +447,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.playerSheHasSexWith(), "I'd like to use ur services owo");
+                    this.a(this.getInteractionPlayerUUID(), "I'd like to use ur services owo");
                     this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
                     break;
                 }
@@ -469,14 +469,14 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.playerSheHasSexWith().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.playerSheHasSexWith().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
                 case "lipsound": {
@@ -497,7 +497,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     this.ay = false;
                     this.az = true;
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "switch": {
@@ -534,14 +534,14 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 case "analStartDone": {
                     this.setCurrentAction(Action.KOBOLD_ANAL_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "analStartCam": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.playerSheHasSexWith().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
+                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
                     break;
                 }
                 case "pounding": {
@@ -550,7 +550,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 }
                 case "analFastRapid": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    if (this.currentAction() == Action.KOBOLD_ANAL_FAST) {
+                    if (this.getCurrentAction() == Action.KOBOLD_ANAL_FAST) {
                         this.resetAnimationControllerOffset();
                         break;
                     }
@@ -558,7 +558,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                     break;
                 }
                 case "analDone": {
-                    if (this.currentAction() != Action.KOBOLD_ANAL_FAST) break;
+                    if (this.getCurrentAction() != Action.KOBOLD_ANAL_FAST) break;
                     this.setCurrentAction(Action.KOBOLD_ANAL_SLOW);
                     break;
                 }
@@ -638,7 +638,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
                 }
                 case "mating_press_startDone": {
                     if (this.isControlledByLocalPlayer()) {
-                        SexUI.init();
+                        SexUI.showUI();
                     }
                 }
                 case "mating_press_hardDone": {

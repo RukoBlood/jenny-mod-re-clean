@@ -19,7 +19,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.util.Handlers.GuiHandler;
 import com.trolmastercard.sexmod.util.Handlers.*;
-import com.trolmastercard.sexmod.world.WorldGenStructure;
+import com.trolmastercard.sexmod.world.ConfigWorldGenHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy {
     public void preInitRegistries(FMLPreInitializationEvent fMLPreInitializationEvent) {
-        GameRegistry.registerWorldGenerator((IWorldGenerator) WorldGenStructure.Generate(), 0);
+        GameRegistry.registerWorldGenerator((IWorldGenerator) ConfigWorldGenHandler.Generate(), 0);
         EntityInnit.Register();
         ItemHandler.RegisterItems();
     }

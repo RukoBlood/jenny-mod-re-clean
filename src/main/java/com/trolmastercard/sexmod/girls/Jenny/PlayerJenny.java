@@ -20,7 +20,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,7 +51,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return 1.75f;
     }
 
@@ -114,7 +114,7 @@ public class PlayerJenny extends PlayerGirl {
     public void updateAITasks() {
         EntityPlayer entityPlayer;
         super.updateAITasks();
-        if (this.currentAction() == Action.WAITDOGGY && (entityPlayer = this.getPlayerPartner()) != null && entityPlayer.getDistance(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z) < 1.0) {
+        if (this.getCurrentAction() == Action.WAITDOGGY && (entityPlayer = this.getPlayerPartner()) != null && entityPlayer.getDistance(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z) < 1.0) {
             if (this.boolean_c(entityPlayer.getPersistentID())) {
                 entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.DARK_PURPLE) + "sowy no lesbo action yet uwu"));
                 return;
@@ -139,7 +139,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         switch (action) {
             case SUCKBLOWJOB: {
                 return Action.THRUSTBLOWJOB;
@@ -159,7 +159,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.SUCKBLOWJOB || action == Action.THRUSTBLOWJOB) {
             this.moveCamera(0.0, 0.0, 0.0, 0.0f, 70.0f);
             return Action.CUMBLOWJOB;
@@ -175,7 +175,7 @@ public class PlayerJenny extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.currentAction();
+        Action fp_class3243 = this.getCurrentAction();
         if (fp_class3243 == Action.DOGGYCUM && (action == Action.DOGGYSLOW || action == Action.DOGGYFAST)) {
             return;
         }
@@ -192,7 +192,7 @@ public class PlayerJenny extends PlayerGirl {
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL || !this.currentAction().autoBlink) {
+                if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.jenny.null", true, event);
                     break;
                 }
@@ -200,7 +200,7 @@ public class PlayerJenny extends PlayerGirl {
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.jenny.null", true, event);
                     break;
                 }
@@ -234,7 +234,7 @@ public class PlayerJenny extends PlayerGirl {
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.jenny.null", true, event);
                         break block5;
@@ -385,7 +385,7 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "sexUiOn": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "paymentMSG4": {
@@ -457,7 +457,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG12": {
-                    if (Reference.RANDOM.nextInt(5) == 0) {
+                    if (ReferenceAndRotationHelper.RANDOM.nextInt(5) == 0) {
                         this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_BJMOAN));
                     }
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_LIPSOUND));
@@ -475,7 +475,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "bjiDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "bjtDone": {
@@ -588,15 +588,15 @@ public class PlayerJenny extends PlayerGirl {
                 case "doggystartDone": {
                     this.setCurrentAction(Action.DOGGYSLOW);
                     if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "doggyslowMSG1": {
                     this.ar = false;
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
-                    int n = Reference.RANDOM.nextInt(4);
+                    int n = ReferenceAndRotationHelper.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = Reference.RANDOM.nextInt(2);
+                        n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MMM));
                         } else {
@@ -620,7 +620,7 @@ public class PlayerJenny extends PlayerGirl {
                     }
                     ++this.aq;
                     if (this.aq % 2 == 0) {
-                        int n = Reference.RANDOM.nextInt(2);
+                        int n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
                             break;
@@ -673,7 +673,7 @@ public class PlayerJenny extends PlayerGirl {
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.PAIZURI_SLOW);
                     SexUI.resetCumPercentage();
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "paizuriFastMSG1": {

@@ -86,7 +86,7 @@ implements IMessage {
                     em_class2582.void_a(fw_class3322.d);
                 }
                 if (!(em_class2582 instanceof PlayerGirl)) {
-                    em_class2582.setCustomModelKey(fw_class3322.c);
+                    em_class2582.setCustomModelCode(fw_class3322.c);
                     return;
                 }
                 EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;

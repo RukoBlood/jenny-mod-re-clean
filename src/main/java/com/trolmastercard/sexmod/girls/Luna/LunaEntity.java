@@ -16,7 +16,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.Packets.*;
-import com.trolmastercard.sexmod.companion.fighter.LookAtNearbyEntity;
+import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaHookEntity;
 import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaRod;
@@ -28,11 +28,11 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
-import com.trolmastercard.sexmod.util.interfaces.bh_class82;
+import com.trolmastercard.sexmod.util.interfaces.IEllie;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -77,7 +77,7 @@ import software.bernie.geckolib3.core.controller.AnimationController.ISoundListe
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl {
+public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     static public double ap = 0.01;
     public ItemStack ao = new ItemStack(LunaRod.LUNA_ROD);
     final static public DataParameter<Float> TARGET_DISTANCE;
@@ -137,7 +137,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
     }
 
     @Override
-    public float getNameTagHeightOffset() {
+    public float getScaleFactor() {
         return -0.2f;
     }
 
@@ -158,17 +158,17 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.currentAction() == Action.COWGIRL_SITTING_CUM && (action == Action.COWGIRL_SITTING_SLOW || action == Action.COWGIRL_SITTING_FAST)) {
+        if (this.getCurrentAction() == Action.COWGIRL_SITTING_CUM && (action == Action.COWGIRL_SITTING_SLOW || action == Action.COWGIRL_SITTING_FAST)) {
             return;
         }
-        if (this.currentAction() == Action.TOUCH_BOOBS_CUM && (action == Action.TOUCH_BOOBS_FAST || action == Action.TOUCH_BOOBS_SLOW)) {
+        if (this.getCurrentAction() == Action.TOUCH_BOOBS_CUM && (action == Action.TOUCH_BOOBS_FAST || action == Action.TOUCH_BOOBS_SLOW)) {
             return;
         }
         super.setCurrentAction(action);
     }
 
     @Override
-    public void void_b() {
+    public void setDismounted() {
         this.isPreparingTalk = true;
     }
 
@@ -215,7 +215,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
     @Override
     public void ResetNPCTasks() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.aiLookAtPlayer);
         this.tasks.addTask(5, this.aiWander);
     }
@@ -257,14 +257,14 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
             if (this.getPositionVector().equals(this.getTargetPosition()) || this.aw > 40) {
                 this.isPreparingTalk = false;
                 this.aw = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.playerSheHasSexWith()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.U();
             } else {
                 this.rotationYaw = this.getYawRotation().floatValue();
                 this.setNoGravity(false);
-                Vec3d vec3d = Reference.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.aw);
+                Vec3d vec3d = ReferenceAndRotationHelper.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.aw);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
             }
         }
@@ -285,7 +285,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (Action.WAIT_CAT.equals((Object)this.currentAction())) {
+        if (Action.WAIT_CAT.equals((Object)this.getCurrentAction())) {
             this.void_f();
         } else {
             this.ab = 0;
@@ -395,10 +395,10 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
             this.world.removeEntity(this.fishEntity);
             this.fishEntity = null;
         }
-        if (this.playerSheHasSexWith() != null) {
+        if (this.getInteractionPlayerUUID() != null) {
             return;
         }
-        this.aiLookAtPlayer = new LookAtNearbyEntity(this, EntityPlayer.class, 3.0f, 1.0f);
+        this.aiLookAtPlayer = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(5, this.aiLookAtPlayer);
         if (this.hasMaster()) {
             return;
@@ -417,7 +417,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
 
     void void_i() {
         Object object;
-        if (this.hasMaster() || this.playerSheHasSexWith() != null || this.ar) {
+        if (this.hasMaster() || this.getInteractionPlayerUUID() != null || this.ar) {
             if (this.entityDataManager.get(IS_FISHING).booleanValue()) {
                 this.void_q();
             }
@@ -439,7 +439,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 }
             }
         }
-        if (!this.currentAction().toString().toLowerCase().contains("fishing")) {
+        if (!this.getCurrentAction().toString().toLowerCase().contains("fishing")) {
             this.void_n();
             this.void_e();
         }
@@ -454,7 +454,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 this.tasks.removeTask(this.aiLookAtPlayer);
                 this.aiLookAtPlayer = null;
             }
-            if (this.currentAction() == Action.NULL) {
+            if (this.getCurrentAction() == Action.NULL) {
                 this.setCurrentAction(Action.FISHING_START);
                 this.setTargetPosition(this.getPositionVector());
                 this.entityDataManager.set(IS_ANCHORED, true);
@@ -549,7 +549,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
             return;
         }
         PathPoint pathPoint = path.getFinalPathPoint();
-        PathPoint pathPoint2 = new PathPoint(Utils.Round(this.posX), Utils.Round(this.posY), Utils.Round(this.posZ));
+        PathPoint pathPoint2 = new PathPoint(ThreadNames.Round(this.posX), ThreadNames.Round(this.posY), ThreadNames.Round(this.posZ));
         if (pathPoint == null) {
             return;
         }
@@ -581,7 +581,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
     }
 
     @Override
-    protected Action FastSexAction(Action action) {
+    protected Action getNextAction(Action action) {
         if (action == Action.TOUCH_BOOBS_SLOW) {
             return Action.TOUCH_BOOBS_FAST;
         }
@@ -592,7 +592,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
     }
 
     @Override
-    protected Action CumAction(Action action) {
+    protected Action getCumAction(Action action) {
         if (action == Action.TOUCH_BOOBS_SLOW || action == Action.TOUCH_BOOBS_FAST) {
             return Action.TOUCH_BOOBS_CUM;
         }
@@ -606,7 +606,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
     protected void U() {
         switch ((String)this.entityDataManager.get(GIRL_HAND_STATES)) {
             case "touch_boobs": {
-                if (this.currentAction() != Action.PAYMENT) {
+                if (this.getCurrentAction() != Action.PAYMENT) {
                     this.setCurrentAction(Action.PAYMENT);
                     return;
                 }
@@ -614,7 +614,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 break;
             }
             case "sex": {
-                if (this.currentAction() != Action.PAYMENT) {
+                if (this.getCurrentAction() != Action.PAYMENT) {
                     this.setCurrentAction(Action.PAYMENT);
                 } else {
                     PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
@@ -665,7 +665,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
         }
         block5 : switch (event.getController().getName()) {
             case "eyes": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.cat.null", true, event);
                     break;
                 }
@@ -673,7 +673,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 break;
             }
             case "movement": {
-                if (this.currentAction() != Action.NULL) {
+                if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.cat.null", true, event);
                     break;
                 }
@@ -694,7 +694,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                 break;
             }
             case "action": {
-                switch (this.currentAction()) {
+                switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.cat.null", true, event);
                         break block5;
@@ -860,7 +860,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.playerSheHasSexWith(), "Here, I know u like fish and yea.. these are for you");
+                    this.a(this.getInteractionPlayerUUID(), "Here, I know u like fish and yea.. these are for you");
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
@@ -954,7 +954,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                     this.setCurrentAction(Action.TOUCH_BOOBS_SLOW);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
-                    SexUI.init();
+                    SexUI.showUI();
                     HandlePlayerMovement.setMovementLock(false);
                     break;
                 }
@@ -1031,7 +1031,7 @@ public class LunaEntity extends Fighter implements bh_class82, IBeddableSexGirl 
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.COWGIRL_SITTING_SLOW);
                     SexUI.resetCumPercentage();
-                    SexUI.init();
+                    SexUI.showUI();
                     break;
                 }
                 case "sitting_slowMSG1": {

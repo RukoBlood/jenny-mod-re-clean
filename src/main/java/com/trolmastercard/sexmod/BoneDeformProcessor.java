@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import javax.vecmath.Vector3f;
 
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IModelBoneFilter;
 import com.trolmastercard.sexmod.world.WorldUtils;
@@ -63,8 +63,8 @@ public class BoneDeformProcessor {
 
     public static Vec3d calculatePhysicsVector(Vec3d origin, Vector3f rotation, Vec3d influende) {
         double d = VectorMath.dotProduct(rotation, influende);
-        double d2 = Reference.EaseOutQuart(Math.abs(d));
-        return Reference.LerpVec3d(origin, d > 0.0 ? MASS_CENTER_MODIFIER : COMPENSATE_VECTOR, d2 *= (double)ELASTICITY_FACTOR);
+        double d2 = ReferenceAndRotationHelper.EaseOutQuart(Math.abs(d));
+        return ReferenceAndRotationHelper.LerpVec3d(origin, d > 0.0 ? MASS_CENTER_MODIFIER : COMPENSATE_VECTOR, d2 *= (double)ELASTICITY_FACTOR);
     }
 
     public static void updateGlobalInfluence(EntityLivingBase entity, float partialTicks) {

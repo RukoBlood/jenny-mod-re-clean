@@ -60,7 +60,7 @@ implements IMessage {
                     return null;
                 }
                 UUID uUID = messageContext.getServerHandler().player.getPersistentID();
-                em_class2582.currentAction().ticksPlaying = new int[]{0, 0};
+                em_class2582.getCurrentAction().ticksPlaying = new int[]{0, 0};
                 for (EntityPlayerMP entityPlayerMP : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
                     if (uUID.equals(entityPlayerMP.getPersistentID()) || !(entityPlayerMP.getDistance(em_class2582) < 100.0f)) continue;
                     PackageHandler.INSTANCE.sendTo((IMessage)new ResetController(a1_class72.a), entityPlayerMP);

@@ -52,19 +52,19 @@ implements IMessage {
 
     public static class a_inner145
     implements IMessageHandler<UpdateVelocity, IMessage> {
-        public IMessage a(UpdateVelocity ct_class1442, MessageContext messageContext) {
-            if (!ct_class1442.c || !messageContext.side.equals((Object)Side.SERVER)) {
+        public IMessage a(UpdateVelocity msg, MessageContext ctx) {
+            if (!msg.c || !ctx.side.equals((Object)Side.SERVER)) {
                 System.out.println("received an invalid message @UpdateVelocity :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                GirlEntity girlEntity = GirlEntity.getServerGirlEntity(ct_class1442.a);
+                GirlEntity girlEntity = GirlEntity.getServerGirlEntity(msg.a);
                 if (!(girlEntity instanceof GalathEntity)) {
                     return;
                 }
                 GalathEntity galathEntity = (GalathEntity)girlEntity;
-                if (messageContext.getServerHandler().player.equals(galathEntity.player())) {
-                    galathEntity.d(ct_class1442.b);
+                if (ctx.getServerHandler().player.equals(galathEntity.getRidingPlayer())) {
+                    galathEntity.applyVelocityDelta(msg.b);
                 }
             });
             return null;

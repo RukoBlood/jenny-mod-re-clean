@@ -23,7 +23,7 @@ public class SupporterCompanion extends CompanionBase {
         float Dist = this.entity.getDistance(this.master);
         shoudFollow = Dist > 5.0f;
 
-        if (this.entity.playerSheHasSexWith() == null && !shoudFollow && this.CurState == Mode.FOLLOW) {
+        if (this.entity.getInteractionPlayerUUID() == null && !shoudFollow && this.CurState == Mode.FOLLOW) {
             if (++this.LoseTargetTicks > 60) {
                 this.LoseTargetTicks = 0;
             } else {

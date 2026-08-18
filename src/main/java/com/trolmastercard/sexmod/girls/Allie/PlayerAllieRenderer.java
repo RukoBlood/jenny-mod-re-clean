@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
-import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -106,13 +106,13 @@ extends PlayerGirlRenderer {
         if ("body".equals(boneName)) {
             this.a(geoBone);
         }
-        if (this.currentGirl.currentAction() == Action.BOW) {
+        if (this.currentGirl.getCurrentAction() == Action.BOW) {
             return;
         }
         if ("armL".equals(boneName)) {
             this.a(geoBone, 0.0f, -0.34906584f, 0.15f);
         }
-        if (this.currentGirl.currentAction() == Action.ATTACK) {
+        if (this.currentGirl.getCurrentAction() == Action.ATTACK) {
             return;
         }
         if ("armR".equals(boneName)) {
@@ -127,10 +127,10 @@ extends PlayerGirlRenderer {
         Vec2f vec2f = new Vec2f((float)(d * Math.cos(d3) + d2 * Math.sin(d3)), (float)(-d * Math.sin(d3) + d2 * Math.cos(d3)));
         this.G = vec2f.y * -8.0f;
         this.I = vec2f.x * 8.0f;
-        this.G = Utils.clamp(this.G, -1.68f, 1.68f);
-        this.I = Utils.clamp(this.I, -1.68f, 1.68f);
-        this.G = Reference.LerpFloat(this.F, this.G, this.partialTicks);
-        this.I = Reference.LerpFloat(this.B, this.I, this.partialTicks);
+        this.G = ThreadNames.clamp(this.G, -1.68f, 1.68f);
+        this.I = ThreadNames.clamp(this.I, -1.68f, 1.68f);
+        this.G = ReferenceAndRotationHelper.LerpFloat(this.F, this.G, this.partialTicks);
+        this.I = ReferenceAndRotationHelper.LerpFloat(this.B, this.I, this.partialTicks);
         geoBone.setRotationX(f + this.G * f3);
         geoBone.setRotationZ(f2 + this.I * f3);
     }
@@ -139,10 +139,10 @@ extends PlayerGirlRenderer {
         double d = this.C - this.A;
         double d2 = this.z - this.D;
         this.L = (Math.abs(d) + Math.abs(d2)) * 5.0;
-        this.L = Utils.clamp((float)this.L, 0.0f, 1.0f);
-        geoBone.setPositionY((float) Reference.a(5.0, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.partialTicks)));
+        this.L = ThreadNames.clamp((float)this.L, 0.0f, 1.0f);
+        geoBone.setPositionY((float) ReferenceAndRotationHelper.a(5.0, 0.0, ReferenceAndRotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks)));
         if (this.currentGirl instanceof PlayerAllie) {
-            ((PlayerAllie)this.currentGirl).aq = (float) Reference.a((double)0.3f, 0.0, Reference.LerpDouble(this.H, this.L, (double)this.partialTicks));
+            ((PlayerAllie)this.currentGirl).aq = (float) ReferenceAndRotationHelper.a((double)0.3f, 0.0, ReferenceAndRotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks));
         }
     }
 

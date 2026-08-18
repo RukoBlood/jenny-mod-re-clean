@@ -36,8 +36,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import org.apache.logging.log4j.Level;
 
-public class GalathMangTracker
-extends WorldSavedData {
+public class GalathMangTracker extends WorldSavedData {
     static public boolean f = true;
     final static public float c = 60.0f;
     final static public String e = "sexmod:galath_owner_ship";
@@ -61,20 +60,19 @@ extends WorldSavedData {
         h.b();
     }
 
-    public static void e(UUID uUID) {
-        UUID uUID2 = GalathMangTracker.f(uUID);
+    public static void markAsManglelieOwned(UUID uUID) {
+        UUID uUID2 = GalathMangTracker.getManglelieOwnerId(uUID);
         if (uUID2 == null) {
             return;
         }
         playersWithGalathMangs.add(uUID2);
     }
 
-    // TODO is this 'playerHasAGalath"?
-    public static boolean doesPlayerOwnGalathMangPair(UUID uUID) {
+    public static boolean isManglelieOwned(UUID uUID) {
         return playersWithGalathMangs.contains(uUID);
     }
 
-    public static boolean c(GalathEntity f__class2972) {
+    public static boolean isOwnerNearby(GalathEntity f__class2972) {
         UUID uUID = h.b(f__class2972.girlID());
         if (uUID == null) {
             return false;
@@ -94,7 +92,7 @@ extends WorldSavedData {
         return f__class2972.girlID().equals(h.c(entityPlayer.getPersistentID()));
     }
 
-    public static void a(GalathEntity f__class2972) {
+    public static void updateMangleliePartner(GalathEntity f__class2972) {
         UUID uUID;
         ManglelieEntity f8_class2932 = f__class2972.getManglelieUUID(true);
         if (f8_class2932 != null) {
@@ -117,22 +115,22 @@ extends WorldSavedData {
         return h.c(uUID) != null;
     }
 
-    public static UUID f(UUID uUID) {
+    public static UUID getManglelieOwnerId(UUID uUID) {
         return h.b(uUID);
     }
 
-    public static UUID b(GalathEntity f__class2972) {
-        if (f__class2972 == null) {
-            return null;
+    public static UUID getManglelieOwnerOf(GalathEntity galath) {
+        if (galath != null) {
+            return GalathMangTracker.getManglelieOwnerId(galath.girlID());
         }
-        return GalathMangTracker.f(f__class2972.girlID());
+        return null;
     }
 
     public static UUID a(UUID uUID) {
         return h.c(uUID);
     }
 
-    public static UUID b(EntityPlayer entityPlayer) {
+    public static UUID getOwnerOf(EntityPlayer entityPlayer) {
         if (entityPlayer == null) {
             return null;
         }
@@ -143,7 +141,7 @@ extends WorldSavedData {
         h.a(uUID, uUID2);
     }
 
-    public static void a(EntityPlayer entityPlayer, GalathEntity f__class2972) {
+    public static void grantOwnership(EntityPlayer entityPlayer, GalathEntity f__class2972) {
         if (entityPlayer == null) {
             return;
         }
@@ -167,7 +165,7 @@ extends WorldSavedData {
     public static boolean isReadyForMorningGlory(UUID uUID, World world) {
         Long lastCumTime = lastCumTimeMap.get(uUID);
         // TODO this is the limiting factor
-        if (!GalathMangTracker.doesPlayerOwnGalathMangPair(uUID)) {
+        if (!GalathMangTracker.isManglelieOwned(uUID)) {
             return false;
         }
         if (lastCumTime == null) {
@@ -176,7 +174,7 @@ extends WorldSavedData {
         return world.getTotalWorldTime() - lastCumTime > 0L;
     }
 
-    public static void setLastCumTime(UUID uUID, Long l) {
+    public static void saveCumTime(UUID uUID, Long l) {
         if (uUID == null) {
             Main.LOGGER.log(Level.WARN, "tried to save last cum dosage time on NULL player");
             return;
