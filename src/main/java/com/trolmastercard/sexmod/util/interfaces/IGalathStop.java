@@ -7,6 +7,6 @@ import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 
 @FunctionalInterface
 public interface IGalathStop {
-    public void execute(GalathEntity var1);
+    public void stop(GalathEntity var1);
 }
 

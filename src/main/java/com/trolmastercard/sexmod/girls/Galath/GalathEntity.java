@@ -206,7 +206,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     final static public int cb = 4;
     final static public float M = 0.5f;
     final static public float bi = 0.55f;
-    final static Class<?>[] aS = new Class[]{BlockAir.class, BlockCarpet.class, BlockBush.class, BlockButton.class, BlockLadder.class, BlockTorch.class, BlockSign.class, BlockBanner.class};
+    final static Class<?>[] INVALID_FLIGHT_BLOCKS = new Class[]{BlockAir.class, BlockCarpet.class, BlockBush.class, BlockButton.class, BlockLadder.class, BlockTorch.class, BlockSign.class, BlockBanner.class};
     final static public DataParameter<Integer> bq = EntityDataManager.createKey(GalathEntity.class, DataSerializers.VARINT).getSerializer().createKey(111);
     final static public DataParameter<Integer> FLY_TICKS = EntityDataManager.createKey(GalathEntity.class, DataSerializers.VARINT).getSerializer().createKey(112);
     final static public DataParameter<Boolean> bN = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(113);
@@ -225,8 +225,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     BossInfoServer healthBar = new BossInfoServer(new TextComponentString(this.getGirlName()), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
     MultiPartHitbox energyBallHitboxLeft = new MultiPartHitbox(this, "energyBallHitBox", 0.75f, 0.75f);
     MultiPartHitbox energyBallHitboxRight = new MultiPartHitbox(this, "energyBallHitBox", 0.75f, 0.75f);
-    public GalathFlightData bZ = null;
-    public Vec3d targetFlyPos = null;
+    public GalathFlightData flightData = null;
+    public Vec3d flightTargetPosition = null;
     public Vec3d previousPos = null;
     public int aF = 0;
     public Vec3d bd = null;
@@ -478,8 +478,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     public void handleRapeState() {
         Action currentAction = this.getCurrentAction();
         if (currentAction == Action.RAPE_ON_GOING) {
-            this.bZ = GalathFlightData.CHANGE_POSITION;
-            this.bZ.executeStart(this);
+            this.flightData = GalathFlightData.CHANGE_POSITION;
+            this.flightData.executeStart(this);
             this.setAnchored(false);
             this.setCurrentAction(Action.FLY);
             EntityPlayer entityPlayer = this.getPlayerEntity();
@@ -854,10 +854,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     public void setFlightVelocity(Vec3d targetPos) {
         if (!this.entityDataManager.get(IS_FLYING_FLAG)) {
             this.entityDataManager.set(IS_FLYING_FLAG, true);
-            if (this.bZ != null) {
-                this.bZ.executeStop(this);
+            if (this.flightData != null) {
+                this.flightData.executeStop(this);
             }
-            this.bZ = null;
+            this.flightData = null;
             Vec3d pos = this.getPositionVector();
             Random random = this.getRNG();
             Vec3d vel = targetPos == null
@@ -977,9 +977,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             return false;
         }
 
-        if (this.bZ != null) {
-            this.bZ.executeStop(this);
-            this.bZ = null;
+        if (this.flightData != null) {
+            this.flightData.executeStop(this);
+            this.flightData = null;
         }
 
         float dist = this.getDistance(owner);
@@ -1026,7 +1026,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     boolean isFlightBlocked(BlockPos pos) {
-        if (this.bZ == null) {
+        if (this.flightData == null) {
             return true;
         }
         BlockPos selfPos = this.getPosition();
@@ -1063,9 +1063,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     void clearFlightData() {
         this.bG = null;
         this.aC = 0;
-        if (this.bZ != null) {
-            this.bZ.executeStop(this);
-            this.bZ = null;
+        if (this.flightData != null) {
+            this.flightData.executeStop(this);
+            this.flightData = null;
         }
     }
 
@@ -1248,10 +1248,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             if (this.getAttackTarget() == null) {
                 int n = this.entityDataManager.get(bq);
                 if (n != -1) {
-                    if (this.bZ != null) {
-                        this.bZ.executeStop(this);
+                    if (this.flightData != null) {
+                        this.flightData.executeStop(this);
                     }
-                    this.bZ = null;
+                    this.flightData = null;
                     this.setCurrentAction(Action.NULL);
                 }
             }
@@ -1519,7 +1519,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 }
             }
             if (!(this.bY < 58.0)) {
-                this.setMotionVector(Vec3d.ZERO);
+                this.setVelocity(Vec3d.ZERO);
                 this.entityDataManager.set(IS_FLYING_FLAG, false);
                 this.bY = 0;
             }
@@ -1580,7 +1580,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     void void_J() {
-        if (this.bZ == GalathFlightData.CHANGE_POSITION) {
+        if (this.flightData == GalathFlightData.CHANGE_POSITION) {
             int progress = this.getFlyTicks();
             this.noClip = progress == 0;
             if (!this.world.isAirBlock(this.getPosition())) {
@@ -1590,18 +1590,18 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     void checkFlightFinished() {
-        if (this.bZ != null) {
-            this.bZ.checkFinished(this);
+        if (this.flightData != null) {
+            this.flightData.checkFinished(this);
         }
     }
 
     void D_() {
         if (this.getAttackTarget() == null) {
             this.aH();
-        } else if (this.bZ == null) {
+        } else if (this.flightData == null) {
             this.initFlightData();
         } else {
-            if (this.bZ.executeStart(this)) {
+            if (this.flightData.executeUpdate(this)) {
                 this.initFlightData();
             }
         }
@@ -1610,18 +1610,18 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     void initFlightData() {
         GalathFlightData chosen;
         if (!this.entityDataManager.get(IS_FLYING_FLAG)) {
-            GalathFlightData flightData = this.bZ;
+            GalathFlightData flightData = this.flightData;
             if (this.getInteractionPlayerUUID() != null) {
                 if (flightData != null) {
                     flightData.executeStop(this);
                 }
-                this.bZ = null;
+                this.flightData = null;
                 return;
             }
             if (flightData != null && flightData.applyAttackCoolDown) {
                 flightData.executeStop(this);
-                this.bZ = GalathFlightData.CHANGE_POSITION;
-                this.bZ.executeStart(this);
+                this.flightData = GalathFlightData.CHANGE_POSITION;
+                this.flightData.executeStart(this);
                 return;
             }
             GalathFlightData[] values = GalathFlightData.values();
@@ -1630,11 +1630,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 chosen = values[this.getRNG().nextInt(values.length)];
             } while (!this.canInitFlight(chosen));
 
-            this.bZ = chosen;
+            this.flightData = chosen;
             if (flightData != null) {
                 flightData.executeStop(this);
             }
-            this.bZ.executeStart(this);
+            this.flightData.executeStart(this);
         }
     }
 
@@ -1643,7 +1643,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     void aH() {
-        this.bZ = null;
+        this.flightData = null;
     }
 
     /*
@@ -1667,11 +1667,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 } else {
                     this.setTargetEntity(target);
                     GirlEntity.girlPlaySound((GirlEntity) this, SoundsHandler.GIRLS_GALATH_DIALOG[1], true);
-                    if (this.bZ != null) {
-                        this.bZ.executeStop(this);
+                    if (this.flightData != null) {
+                        this.flightData.executeStop(this);
                     }
-                    this.bZ = GalathFlightData.CHANGE_POSITION;
-                    this.bZ.executeStart(this);
+                    this.flightData = GalathFlightData.CHANGE_POSITION;
+                    this.flightData.executeStart(this);
                 }
             }
         }
@@ -1720,10 +1720,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     void aI() {
         if (this.getAttackTarget() != null) {
             this.setTargetEntity((EntityLivingBase) null);
-            if (this.bZ != null) {
-                this.bZ.executeStop(this);
+            if (this.flightData != null) {
+                this.flightData.executeStop(this);
             }
-            this.bZ = null;
+            this.flightData = null;
             if (!this.entityDataManager.get(IS_FLYING_FLAG)) {
                 this.setCurrentAction(Action.NULL);
             }
@@ -2708,9 +2708,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 ResetGirl.EventHandler.resetGirl(girl);
                 PackageHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(true), player);
                 girl.setCurrentAction((Action) null);
-                if (galath.bZ != null) {
-                    galath.bZ.executeStop(galath);
-                    galath.bZ = null;
+                if (galath.flightData != null) {
+                    galath.flightData.executeStop(galath);
+                    galath.flightData = null;
                 }
             }
         }
@@ -2810,7 +2810,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
 
         boolean isValidFlightBlock(World world, BlockPos pos) {
             Block block = world.getBlockState(pos).getBlock();
-            for (Class<?> blockClass : aS) {
+            for (Class<?> blockClass : INVALID_FLIGHT_BLOCKS) {
                 if (blockClass.isInstance(block)) {
                     return false;
                 }

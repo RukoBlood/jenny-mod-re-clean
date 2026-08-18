@@ -504,7 +504,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.motionZ = z;
     }
 
-    public void setMotionVector(Vec3d motion) {
+    public void setVelocity(Vec3d motion) {
         this.motionX = motion.x;
         this.motionY = motion.y;
         this.motionZ = motion.z;

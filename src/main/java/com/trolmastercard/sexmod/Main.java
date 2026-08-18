@@ -110,7 +110,7 @@ public class Main {
 
     @SideOnly(value=Side.CLIENT)
     @Mod.EventHandler
-    public void registerReplacedRenderers(FMLInitializationEvent fMLInitializationEvent) {
+    public void registerReplacedRenderers(FMLInitializationEvent event) {
         GeckoLib.initialize();
     }
 
