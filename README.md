@@ -6,8 +6,8 @@
 
 Created by Palkaline, edited by me. Currently i rename come classes, because half of it are still uses reverse engineered gibberish.
 
-##Fortunate news.
-One guy fully reverse engineered Jenny mod's code
+## Fortunate news.
+One guy (RealCrystalNight) fully reverse engineered Jenny mod's code.
 
 Go check it out: https://github.com/ReverseEngineeringEnthusiasts/Jenny-Mod-Fapcraft
 
