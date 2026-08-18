@@ -6,6 +6,12 @@
 
 Created by Palkaline, edited by me. Currently i rename come classes, because half of it are still uses reverse engineered gibberish.
 
+##Fortunate news.
+One guy fully reverse engineered Jenny mod's code
+
+Go check it out: https://github.com/ReverseEngineeringEnthusiasts/Jenny-Mod-Fapcraft
+
+Also found out that This mod was obfuscated with Zelix KlassMaster 13
 ## About
 
 Initial goals of this project
@@ -14,9 +20,12 @@ Initial goals of this project
 - Clean up code
 
 ## Building and/or running
-Check original.
+gradlew build
+if successful - gradlew RunClient
 
 ## Obfuscation
+
+Fapcraft uses Zelix KlassMaster obfuscation.
 
 Ordered by severity
 - exception pass-and-return wrapping
