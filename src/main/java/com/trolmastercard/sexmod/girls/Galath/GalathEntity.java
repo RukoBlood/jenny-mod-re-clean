@@ -470,7 +470,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         this.entityDataManager.set(MANGLELIE_UUID, uUID == null ? "" : uUID.toString());
     }
 
-    public void aC() {
+    public void isManglelieDespawned() {
         this.isDespawned = true;
         ManglelieEntity manglelie = this.getManglelieUUID(true);
         if (manglelie != null) {
@@ -2688,7 +2688,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                             if (!galath.hasMasterOAlgo()) {
                                 galath.sendTrackingMessage((Entity) galath.getCombatTracker().getFighter());
                             } else {
-                                GalathCoin.a(galath);
+                                GalathCoin.deSummonGalath(galath);
                                 PackageHandler.INSTANCE.sendToAllTracking((IMessage) new SpawnEnergyBallParticles(galath.girlID(), GalathMangTracker.getManglelieOwnerOf(galath)), (Entity) galath);
                                 ThreadNames.createDaemonThread(900, () -> GalathMangTracker.updateMangleliePartner(galath));
                                 galath.bU = true;
@@ -2826,7 +2826,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             float yaw;
             EntityPlayer player = event.getEntityPlayer();
             if (!player.world.isRemote) {
-                if (GalathMangTracker.isReadyForMorningGlory(player.getPersistentID(), player.world)) {
+                if (GalathMangTracker.shouldDespawn(player.getPersistentID(), player.world)) {
                     Vec3d vec3d = player.getPositionVector();
                     BlockPos blockPos = new BlockPos(vec3d);
                     if (!this.spawnStructure(player.world, blockPos, player.world.getBlockState(blockPos).getValue(BlockHorizontal.FACING))) {

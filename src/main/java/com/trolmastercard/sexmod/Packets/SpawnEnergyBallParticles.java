@@ -69,7 +69,7 @@ public class SpawnEnergyBallParticles implements IMessage {
                 System.out.println("doesnt exit");
                 return null;
             }
-            GalathCoin.a(ab_class212.b, (GalathEntity)em_class2582);
+            GalathCoin.summonGalathFor(ab_class212.b, (GalathEntity)em_class2582);
             return null;
         }
 

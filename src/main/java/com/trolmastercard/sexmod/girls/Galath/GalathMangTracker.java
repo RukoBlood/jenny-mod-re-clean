@@ -24,6 +24,7 @@ import com.trolmastercard.sexmod.Packets.InformOfOwnership;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.BiDirectionalMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,235 +39,214 @@ import org.apache.logging.log4j.Level;
 
 public class GalathMangTracker extends WorldSavedData {
     static public boolean debugEnabled = true;
-    final static public float c = 60.0f;
-    final static public String e = "sexmod:galath_owner_ship";
-    final static public String d = "sexmod:ownershipdata";
-    final static public String g = "sexmod:mangownershipdata";
+    final static public float CUM_TIMEOUT = 60.0f;
+    final static public String GALATH_OWNERSHIP = "sexmod:galath_owner_ship";
+    final static public String OWNERSHIP_DATA = "sexmod:ownershipdata";
+    final static public String MANG_OWNERSHIP = "sexmod:mangownershipdata";
     final static long a = 0L;
-    static gl_class375<UUID, UUID> h = new gl_class375();
+    static BiDirectionalMap<UUID, UUID> OwnerAndGalath = new BiDirectionalMap();
     static HashMap<UUID, Long> lastCumTimeMap = new HashMap<>();
-    static HashSet<UUID> playersWithGalathMangs = new HashSet<>();
+    static HashSet<UUID> mangOwnershipSet = new HashSet<>();
 
     public GalathMangTracker() {
-        super(e);
+        super(GALATH_OWNERSHIP);
     }
 
     public GalathMangTracker(String string) {
-        super(e);
+        super(GALATH_OWNERSHIP);
     }
 
     public static void clear() {
-        playersWithGalathMangs.clear();
-        h.b();
+        mangOwnershipSet.clear();
+        OwnerAndGalath.clear();
     }
 
     public static void markAsManglelieOwned(UUID uUID) {
-        UUID uUID2 = GalathMangTracker.getManglelieOwnerId(uUID);
-        if (uUID2 == null) {
-            return;
+        UUID ownerId = GalathMangTracker.getManglelieOwnerId(uUID);
+        if (ownerId != null) {
+            mangOwnershipSet.add(ownerId);
         }
-        playersWithGalathMangs.add(uUID2);
     }
 
     public static boolean isManglelieOwned(UUID uUID) {
-        return playersWithGalathMangs.contains(uUID);
+        return mangOwnershipSet.contains(uUID);
     }
 
-    public static boolean isOwnerNearby(GalathEntity f__class2972) {
-        UUID uUID = h.b(f__class2972.girlID());
-        if (uUID == null) {
+    public static boolean isOwnerNearby(GalathEntity galath) {
+        UUID ownerID = OwnerAndGalath.getByValue(galath.girlID());
+        if (ownerID == null) {
             return false;
+        } else {
+            World world = galath.world;
+            EntityPlayer player = world.getPlayerEntityByUUID(ownerID);
+            return player == null || player.dimension == galath.dimension && !(player.getDistance(galath) > CUM_TIMEOUT);
         }
-        World world = f__class2972.world;
-        EntityPlayer entityPlayer = world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            return true;
-        }
-        if (entityPlayer.dimension != f__class2972.dimension) {
-            return false;
-        }
-        return !(entityPlayer.getDistance(f__class2972) > 60.0f);
     }
 
-    public static boolean b(EntityPlayer entityPlayer, GalathEntity f__class2972) {
-        return f__class2972.girlID().equals(h.c(entityPlayer.getPersistentID()));
+    public static boolean isOwnerOf(EntityPlayer player, GalathEntity galath) {
+        return galath.girlID().equals(OwnerAndGalath.getbyKey(player.getPersistentID()));
     }
 
-    public static void updateMangleliePartner(GalathEntity f__class2972) {
+    public static void updateMangleliePartner(GalathEntity galath) {
         UUID uUID;
-        ManglelieEntity f8_class2932 = f__class2972.getManglelieUUID(true);
-        if (f8_class2932 != null) {
-            f__class2972.world.removeEntity(f8_class2932);
+        ManglelieEntity manglelie = galath.getManglelieUUID(true);
+
+        if (manglelie != null) {
+            galath.world.removeEntity(manglelie);
         }
-        if ((uUID = h.b(f__class2972.girlID())) == null) {
-            f__class2972.world.removeEntity(f__class2972);
-            return;
-        }
-        World world = f__class2972.world;
-        EntityPlayer entityPlayer = world.getPlayerEntityByUUID(uUID);
-        f__class2972.world.removeEntity(f__class2972);
-        h.a(uUID);
-        if (entityPlayer != null) {
-            PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
+        if ((uUID = OwnerAndGalath.getByValue(galath.girlID())) == null) {
+            galath.world.removeEntity(galath);
+            //return;
+        } else {
+            World world = galath.world;
+            EntityPlayer player = world.getPlayerEntityByUUID(uUID);
+            galath.world.removeEntity(galath);
+            OwnerAndGalath.removeByKey(uUID);
+            if (player != null) {
+                PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)player);
+            }
         }
     }
 
     public static boolean hasOwner(UUID uUID) {
-        return h.c(uUID) != null;
+        return OwnerAndGalath.getbyKey(uUID) != null;
     }
 
     public static UUID getManglelieOwnerId(UUID uUID) {
-        return h.b(uUID);
+        return OwnerAndGalath.getByValue(uUID);
     }
 
     public static UUID getManglelieOwnerOf(GalathEntity galath) {
-        if (galath != null) {
-            return GalathMangTracker.getManglelieOwnerId(galath.girlID());
+        return galath != null ? GalathMangTracker.getManglelieOwnerId(galath.girlID()) : null;
+    }
+
+    public static UUID getOwnerId(UUID uUID) {
+        return OwnerAndGalath.getbyKey(uUID);
+    }
+
+    public static UUID getOwnerOf(EntityPlayer player) {
+        return player == null ? null : GalathMangTracker.getOwnerId(player.getPersistentID());
+    }
+
+    public static void setOwnership(UUID playerUUID, UUID girlUUID) {
+        OwnerAndGalath.put(playerUUID, girlUUID);
+    }
+
+    public static void grantOwnership(EntityPlayer player, GalathEntity galath) {
+        if (player != null && galath != null) {
+            GalathMangTracker.setOwnership(player.getPersistentID(), galath.girlID());
         }
-        return null;
     }
 
-    public static UUID a(UUID uUID) {
-        return h.c(uUID);
+    public static void removeOwner(UUID ownerID) {
+        OwnerAndGalath.removeByKey(ownerID);
     }
 
-    public static UUID getOwnerOf(EntityPlayer entityPlayer) {
-        if (entityPlayer == null) {
-            return null;
+    public static void removeOwnerOf(EntityPlayer entityPlayer) {
+        if (entityPlayer != null) {
+            GalathMangTracker.removeOwner(entityPlayer.getPersistentID());
         }
-        return GalathMangTracker.a(entityPlayer.getPersistentID());
     }
 
-    public static void a(UUID uUID, UUID uUID2) {
-        h.a(uUID, uUID2);
-    }
-
-    public static void grantOwnership(EntityPlayer entityPlayer, GalathEntity f__class2972) {
-        if (entityPlayer == null) {
-            return;
-        }
-        if (f__class2972 == null) {
-            return;
-        }
-        GalathMangTracker.a(entityPlayer.getPersistentID(), f__class2972.girlID());
-    }
-
-    public static void d(UUID uUID) {
-        h.a(uUID);
-    }
-
-    public static void a(EntityPlayer entityPlayer) {
-        if (entityPlayer == null) {
-            return;
-        }
-        GalathMangTracker.d(entityPlayer.getPersistentID());
-    }
-
-    public static boolean isReadyForMorningGlory(UUID uUID, World world) {
+    public static boolean shouldDespawn(UUID uUID, World world) {
         Long lastCumTime = lastCumTimeMap.get(uUID);
-        // TODO this is the limiting factor
-        if (!GalathMangTracker.isManglelieOwned(uUID)) {
-            return false;
-        }
-        if (lastCumTime == null) {
-            return true;
-        }
-        return world.getTotalWorldTime() - lastCumTime > 0L;
+        return GalathMangTracker.isManglelieOwned(uUID) && (lastCumTime == null || world.getTotalWorldTime() - lastCumTime > 0L);
     }
 
-    public static void saveCumTime(UUID uUID, Long l) {
+    public static void saveCumTime(UUID uUID, Long time) {
         if (uUID == null) {
             Main.LOGGER.log(Level.WARN, "tried to save last cum dosage time on NULL player");
-            return;
-        }
-        lastCumTimeMap.put(uUID, l);
-    }
-
-    @SubscribeEvent
-    public void a(TickEvent.ServerTickEvent serverTickEvent) {
-        if (serverTickEvent.phase != TickEvent.Phase.END) {
-            return;
-        }
-        World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
-        ArrayList<EntityPlayer> arrayList = new ArrayList<EntityPlayer>();
-        for (Map.Entry<UUID, UUID> object : h.c()) {
-            UUID uUID = object.getKey();
-            UUID uUID2 = object.getValue();
-            EntityPlayer entityPlayer = world.getPlayerEntityByUUID(uUID);
-            if (entityPlayer == null || GirlEntity.getServerGirlEntity(uUID2) != null) continue;
-            arrayList.add(entityPlayer);
-        }
-        for (EntityPlayer entityPlayer : arrayList) {
-            h.a(entityPlayer.getPersistentID());
-            PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)entityPlayer);
+        } else {
+            lastCumTimeMap.put(uUID, time);
         }
     }
 
     @SubscribeEvent
-    public void a(WorldEvent.Save save) {
-        World world = save.getWorld();
-        world.getMapStorage().setData(e, this);
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
+            ArrayList<EntityPlayer> players = new ArrayList<EntityPlayer>();
+
+            for (Map.Entry<UUID, UUID> entries : OwnerAndGalath.entrySet()) {
+                UUID ownerUUID = entries.getKey();
+                UUID girlUUID = entries.getValue();
+                EntityPlayer player = world.getPlayerEntityByUUID(ownerUUID);
+                if (player != null && GirlEntity.getServerGirlEntity(girlUUID) == null) {
+                    players.add(player);
+                }
+            }
+            for (EntityPlayer entityPlayer : players) {
+                OwnerAndGalath.removeByKey(entityPlayer.getPersistentID());
+                PackageHandler.INSTANCE.sendTo((IMessage) new InformOfOwnership(false), (EntityPlayerMP) entityPlayer);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onSave(WorldEvent.Save event) {
+        World world = event.getWorld();
+        world.getMapStorage().setData(GALATH_OWNERSHIP, this);
         this.markDirty();
     }
 
     @SubscribeEvent
-    public void a(WorldEvent.Load load) {
-        World world = load.getWorld();
-        world.getMapStorage().getOrLoadData(GalathMangTracker.class, e);
+    public void onLoad(WorldEvent.Load event) {
+        World world = event.getWorld();
+        world.getMapStorage().getOrLoadData(GalathMangTracker.class, GALATH_OWNERSHIP);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nBTTagCompound) {
-        NBTTagCompound nBTTagCompound2 = nBTTagCompound.getCompoundTag(d);
-        int n = nBTTagCompound2.getInteger("amount");
-        for (int i = 0; i < n; ++i) {
-            UUID uUID = nBTTagCompound2.getUniqueId("master" + i);
-            UUID uUID2 = nBTTagCompound2.getUniqueId("galath" + i);
-            long l = nBTTagCompound2.getLong("lastcumdosage" + i);
-            if (uUID == null || uUID2 == null
-                    // TODO, I added these two bottom conditions
-                    || !nBTTagCompound2.hasUniqueId("master" + i) || !nBTTagCompound2.hasUniqueId("galath" + i)) {
+    public void readFromNBT(NBTTagCompound nbt) {
+        NBTTagCompound tag = nbt.getCompoundTag(OWNERSHIP_DATA);
+        int count = tag.getInteger("amount");
+        for (int i = 0; i < count; ++i) {
+            UUID masterId = tag.getUniqueId("master" + i);
+            UUID GalathId = tag.getUniqueId("galath" + i);
+            long lastCumTime = tag.getLong("lastcumdosage" + i);
+            if (masterId != null && GalathId != null && tag.hasUniqueId("master" + i) && tag.hasUniqueId("galath" + i)) {
+                OwnerAndGalath.put(masterId, GalathId);
+                lastCumTimeMap.put(masterId, lastCumTime);
+            } else {
                 Main.LOGGER.fatal("OMFG WHOOP WHOOP SAVING DIDNT WORK CORRECTLY AAAAAAAAAAA");
-                continue;
             }
-            h.a(uUID, uUID2);
-            lastCumTimeMap.put(uUID, l);
         }
-        NBTTagCompound nBTTagCompound3 = nBTTagCompound.getCompoundTag(g);
-        int n2 = 0;
-        while (nBTTagCompound3.hasUniqueId("mang" + n2)) {
-            playersWithGalathMangs.add(nBTTagCompound3.getUniqueId("mang" + n2));
-            ++n2;
+        NBTTagCompound mangTag = nbt.getCompoundTag(MANG_OWNERSHIP);
+        int i2 = 0;
+        while (mangTag.hasUniqueId("mang" + i2)) {
+            mangOwnershipSet.add(mangTag.getUniqueId("mang" + i2));
+            ++i2;
         }
-        nBTTagCompound.setTag(g, new NBTTagCompound());
-        nBTTagCompound.setTag(d, new NBTTagCompound());
+        nbt.setTag(MANG_OWNERSHIP, new NBTTagCompound());
+        nbt.setTag(OWNERSHIP_DATA, new NBTTagCompound());
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nBTTagCompound) {
-        NBTTagCompound nBTTagCompound2 = new NBTTagCompound();
-        nBTTagCompound2.setInteger("amount", h.e());
-        int n = 0;
-        for (Map.Entry<UUID, UUID> object : h.c()) {
-            UUID uUID = object.getKey();
-            UUID uUID2 = object.getValue();
-            Long l = lastCumTimeMap.get(uUID);
-            if (l == null) {
-                l = 0L;
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("amount", OwnerAndGalath.size());
+        int i = 0;
+        for (Map.Entry<UUID, UUID> entry : OwnerAndGalath.entrySet()) {
+            UUID masterUUID = entry.getKey();
+            UUID galathUUID = entry.getValue();
+            Long cumTime = lastCumTimeMap.get(masterUUID);
+            if (cumTime == null) {
+                cumTime = 0L;
             }
-            nBTTagCompound2.setUniqueId("galath" + n, uUID2);
-            nBTTagCompound2.setUniqueId("master" + n, uUID);
-            nBTTagCompound2.setLong("lastcumdosage" + n, l);
-            ++n;
+
+            tag.setUniqueId("galath" + i, galathUUID);
+            tag.setUniqueId("master" + i, masterUUID);
+            tag.setLong("lastcumdosage" + i, cumTime);
+            ++i;
         }
-        NBTTagCompound nBTTagCompound3 = new NBTTagCompound();
-        n = 0;
-        for (UUID uUID : playersWithGalathMangs) {
-            nBTTagCompound3.setUniqueId("mang" + n++, uUID);
+        
+        NBTTagCompound mangTag = new NBTTagCompound();
+        i = 0;
+        for (UUID uUID : mangOwnershipSet) {
+            mangTag.setUniqueId("mang" + i++, uUID);
         }
-        nBTTagCompound.setTag(d, nBTTagCompound2);
-        nBTTagCompound.setTag(g, nBTTagCompound3);
-        return nBTTagCompound;
+        nbt.setTag(OWNERSHIP_DATA, tag);
+        nbt.setTag(MANG_OWNERSHIP, mangTag);
+        return nbt;
     }
 }
 

@@ -74,7 +74,7 @@ public class GalathCoin extends Item implements IAnimatable {
     final static public float d = 0.03f;
     final static public float s = 100.0f;
     final static public float l = 0.2f;
-    final static public float o = 1.5f;
+    final static public float PARTICLE_SPAWN_SPREAD = 1.5f;
     final static public String ACTIVATION_TIME_KEY = "sexmod:galath_coin_activation_time";
     final static public String DEACTIVATION_TIME_KEY = "sexmod:galath_coin_deactivation_time";
     final static public String DE_SUMMON_ANIMATION_KEY = "sexmod:galath_coin_de_summoning_animation_time";
@@ -152,8 +152,8 @@ public class GalathCoin extends Item implements IAnimatable {
             long activationTime = NbtplayerData.getLong("sexmod:galath_coin_activation_time");
             long deactivationTime = NbtplayerData.getLong("sexmod:galath_coin_deactivation_time");
             long now = System.currentTimeMillis();
-            this.writeCooldownNBT(player, NbtplayerData, now, activationTime);
-            this.writeCooldownNBT2(player, NbtplayerData, now, deactivationTime);
+            this.writeActivationNbt(player, NbtplayerData, now, activationTime);
+            this.writeDeactivationNbt(player, NbtplayerData, now, deactivationTime);
             if (deactivationTime != 0L && now > deactivationTime + 4000L) {
                 NbtplayerData.setLong("sexmod:galath_coin_deactivation_time", 0L);
                 NbtplayerData.setBoolean("sexmod:galath_coin_de_summoning_animation_time", false);
@@ -222,138 +222,139 @@ public class GalathCoin extends Item implements IAnimatable {
         }
     }
 
-    void writeCooldownNBT(EntityPlayer player, NBTTagCompound nbt, long now, long startTime) {
-        if (startTime == 0L) {
-            return;
-        }
-        if (now - startTime <= 4000L) {
-            return;
-        }
-        nbt.setLong(ACTIVATION_TIME_KEY, 0L);
-        Vec3d vec3d = player.getPositionVector().add(0.0, player.getEyeHeight(), 0.0);
-        Vec3d vec3d2 = vec3d.add(player.getLookVec().normalize().scale(2.0));
-        Random random = player.getRNG();
-        int n = 0;
-        while ((float)n < 100.0f) {
-            player.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d2.x, vec3d2.y, vec3d2.z, (2.0f * random.nextFloat() - 1.0f) * 0.2f, (2.0f * random.nextFloat() - 1.0f) * 0.2f, (2.0f * random.nextFloat() - 1.0f) * 0.2f, new int[0]);
-            ++n;
-        }
-        World world = player.world;
-        if (world.isRemote) {
-            this.handleCoinClick(player);
-            return;
-        }
-        GalathEntity f__class2972 = new GalathEntity(player.world, player, vec3d2);
-        f__class2972.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-        GalathMangTracker.grantOwnership(player, f__class2972);
-        player.world.spawnEntity(f__class2972);
-        if (GalathMangTracker.isManglelieOwned(player.getPersistentID())) {
-            f__class2972.canStartPussyLicking();
+    void writeActivationNbt(EntityPlayer player, NBTTagCompound nbt, long now, long startTime) {
+        if (startTime != 0L) {
+            if (now - startTime > 4000L) {
+                nbt.setLong(ACTIVATION_TIME_KEY, 0L);
+
+                Vec3d eyePos = player.getPositionVector().add(0.0, player.getEyeHeight(), 0.0);
+                Vec3d summonPos = eyePos.add(player.getLookVec().normalize().scale(2.0));
+                Random random = player.getRNG();
+
+                int i = 0;
+                while ((float) i < 100.0f) {
+                    player.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, summonPos.x, summonPos.y, summonPos.z, (2.0f * random.nextFloat() - 1.0f) * 0.2f, (2.0f * random.nextFloat() - 1.0f) * 0.2f, (2.0f * random.nextFloat() - 1.0f) * 0.2f, new int[0]);
+                    ++i;
+                }
+
+                World world = player.world;
+                if (world.isRemote) {
+                    this.handleCoinClick(player);
+                } else {
+                    GalathEntity galath = new GalathEntity(player.world, player, summonPos);
+                    galath.setPositionAndUpdate(summonPos.x, summonPos.y, summonPos.z);
+                    GalathMangTracker.grantOwnership(player, galath);
+                    player.world.spawnEntity(galath);
+                    if (GalathMangTracker.isManglelieOwned(player.getPersistentID())) {
+                        galath.canStartPussyLicking();
+                    }
+                }
+            }
         }
     }
 
-    void d(EntityPlayer entityPlayer) {
-        if (entityPlayer.world.isRemote) {
-            this.b(entityPlayer);
+    void toggleGalathSummon(EntityPlayer player) {
+        if (player.world.isRemote) {
+            this.summonGalath(player);
         } else {
-            this.c(entityPlayer);
+            this.deSummonOwnedGalath(player);
         }
     }
 
-    void c(EntityPlayer entityPlayer) {
-        UUID uUID = GalathMangTracker.getOwnerOf(entityPlayer);
-        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
-        if (em_class2582 instanceof GalathEntity) {
-            GalathCoin.a((GalathEntity)em_class2582);
+    void deSummonOwnedGalath(EntityPlayer player) {
+        UUID uUID = GalathMangTracker.getOwnerOf(player);
+        GirlEntity girl = GirlEntity.getServerGirlEntity(uUID);
+        if (girl instanceof GalathEntity) {
+            deSummonGalath((GalathEntity)girl);
         }
     }
 
-    public static void a(GalathEntity f__class2972) {
-        f__class2972.setCurrentAction(Action.GALATH_DE_SUMMON);
-        f__class2972.aC();
-        f__class2972.setAnchored(true);
-        f__class2972.setTargetPosition(f__class2972.getPositionVector());
-        f__class2972.setYawRotation(f__class2972.rotationYaw);
-    }
-
-    @SideOnly(value=Side.CLIENT)
-    void b(EntityPlayer entityPlayer) {
-        GalathEntity f__class2972 = null;
-        for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
-            if (em_class2582.isDead || !em_class2582.world.isRemote || !(em_class2582 instanceof GalathEntity) || !entityPlayer.equals(em_class2582.getMasterPlayer()))
-                continue;
-            f__class2972 = (GalathEntity) em_class2582;
-            break;
-        }
-        if (f__class2972 == null) {
-            return;
-        }
-        GalathCoin.summonForPlayer(entityPlayer, f__class2972);
+    public static void deSummonGalath(GalathEntity galath) {
+        galath.setCurrentAction(Action.GALATH_DE_SUMMON);
+        galath.isManglelieDespawned();
+        galath.setAnchored(true);
+        galath.setTargetPosition(galath.getPositionVector());
+        galath.setYawRotation(galath.rotationYaw);
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static void a(UUID uUID, GalathEntity f__class2972) {
-        World world = f__class2972.world;
-        Vec3d vec3d = f__class2972.isAnchored() ? f__class2972.getTargetPosition() : f__class2972.getPositionVector();
-        Vec3d vec3d2 = vec3d.add(0.0, 1.5, 0.0);
-        Random random = f__class2972.getRNG();
-        int n = 0;
-        while ((float)n < 100.0f) {
-            Vec3d vec3d3 = new Vec3d((random.nextFloat() * 2.0f - 1.0f) * 1.5f, (random.nextFloat() * 2.0f - 1.0f) * 1.5f, (random.nextFloat() * 2.0f - 1.0f) * 1.5f);
-            Vec3d vec3d4 = vec3d2.add(vec3d3);
-            Vec3d vec3d5 = vec3d3.scale(-0.03f);
-            world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d4.x, vec3d4.y, vec3d4.z, vec3d5.x, vec3d5.y, vec3d5.z, new int[0]);
-            ++n;
+    void summonGalath(EntityPlayer player) {
+        GalathEntity galath = null;
+        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+            if (!girl.isDead && girl.world.isRemote && girl instanceof GalathEntity && player.equals(girl.getMasterPlayer())) {
+                galath = (GalathEntity) girl;
+                break;
+            }
+        }
+        if (galath != null) {
+            GalathCoin.summonForPlayer(player, galath);
+        }
+    }
+
+    @SideOnly(value=Side.CLIENT)
+    public static void summonGalathFor(UUID uUID, GalathEntity galath) {
+        World world = galath.world;
+        Vec3d basePos = galath.isAnchored() ? galath.getTargetPosition() : galath.getPositionVector();
+        Vec3d targetPos = basePos.add(0.0, 1.5, 0.0);
+        Random random = galath.getRNG();
+
+        int i = 0;
+        while ((float)i < 100.0f) {
+            Vec3d offset = new Vec3d((random.nextFloat() * 2.0f - 1.0f) * 1.5f, (random.nextFloat() * 2.0f - 1.0f) * 1.5f, (random.nextFloat() * 2.0f - 1.0f) * 1.5f);
+            Vec3d spawnPos = targetPos.add(offset);
+            Vec3d velocity = offset.scale(-0.03f);
+            world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, spawnPos.x, spawnPos.y, spawnPos.z, velocity.x, velocity.y, velocity.z, new int[0]);
+            ++i;
         }
         if (Minecraft.getMinecraft().player.getPersistentID().equals(uUID)) {
             GalathMangTracker.debugEnabled = false;
         }
     }
 
-    public static void summonForPlayer(EntityPlayer entityPlayer, GalathEntity f__class2972) {
-        GalathCoin.a(entityPlayer.getPersistentID(), f__class2972);
+    public static void summonForPlayer(EntityPlayer player, GalathEntity galath) {
+        summonGalathFor(player.getPersistentID(), galath);
     }
 
-    void writeCooldownNBT2(EntityPlayer entityPlayer, NBTTagCompound nBTTagCompound, long l, long l2) {
-        if (l2 == 0L) {
-            return;
+    void writeDeactivationNbt(EntityPlayer entityPlayer, NBTTagCompound nBTTagCompound, long now, long startTime) {
+        if (startTime != 0L) {
+            long elapsedTime = now - startTime;
+            World world = entityPlayer.world;
+
+            boolean isDesummoning = nBTTagCompound.getBoolean(DE_SUMMON_ANIMATION_KEY);
+
+            if (!isDesummoning && elapsedTime > 1000L - (long) (world.isRemote ? 0 : 150)) {
+                nBTTagCompound.setBoolean(DE_SUMMON_ANIMATION_KEY, true);
+                this.toggleGalathSummon(entityPlayer);
+            }
+
+            if (!world.isRemote) {
+                if (now - startTime > 3000L) {
+                    UUID ownerUUID = GalathMangTracker.getOwnerOf(entityPlayer);
+                    GirlEntity girl = GirlEntity.getServerGirlEntity(ownerUUID);
+                    if (girl instanceof GalathEntity) {
+                        GalathMangTracker.updateMangleliePartner((GalathEntity) girl);
+                    }
+                }
+            }
         }
-        long l3 = l - l2;
-        World world = entityPlayer.world;
-        boolean bl = nBTTagCompound.getBoolean(DE_SUMMON_ANIMATION_KEY);
-        if (!bl && l3 > 1000L - (long)(world.isRemote ? 0 : 150)) {
-            nBTTagCompound.setBoolean(DE_SUMMON_ANIMATION_KEY, true);
-            this.d(entityPlayer);
-        }
-        if (world.isRemote) {
-            return;
-        }
-        if (l - l2 <= 3000L) {
-            return;
-        }
-        UUID uUID = GalathMangTracker.getOwnerOf(entityPlayer);
-        GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
-        if (!(em_class2582 instanceof GalathEntity)) {
-            return;
-        }
-        GalathMangTracker.updateMangleliePartner((GalathEntity)em_class2582);
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        this.controller = new AnimationController<GalathCoin>(this, "controller", 0.0f, this::a);
+        this.controller = new AnimationController<GalathCoin>(this, "controller", 0.0f, this::predicate);
         animationData.addAnimationController(this.controller);
     }
 
     @SideOnly(value=Side.CLIENT)
-    protected <segs extends IAnimatable> PlayState a(AnimationEvent<segs> animationEvent) {
-        NBTTagCompound nBTTagCompound = Minecraft.getMinecraft().player.getEntityData();
-        if (nBTTagCompound.getLong(ACTIVATION_TIME_KEY) == 0L && nBTTagCompound.getLong(DEACTIVATION_TIME_KEY) == 0L) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+        NBTTagCompound nbtPlayerData = Minecraft.getMinecraft().player.getEntityData();
+        if (nbtPlayerData.getLong(ACTIVATION_TIME_KEY) == 0L && nbtPlayerData.getLong(DEACTIVATION_TIME_KEY) == 0L) {
             animationEvent.getController().clearAnimationCache();
             return PlayState.STOP;
+        } else {
+            this.controller.setAnimation(new AnimationBuilder().addAnimation("animation.galath_coin.summon", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            return PlayState.CONTINUE;
         }
-        this.controller.setAnimation(new AnimationBuilder().addAnimation("animation.galath_coin.summon", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-        return PlayState.CONTINUE;
     }
 
     @Override
