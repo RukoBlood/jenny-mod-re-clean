@@ -23,7 +23,7 @@ import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
 import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblin;
 import com.trolmastercard.sexmod.girls.Jenny.JennyEntity;
 import com.trolmastercard.sexmod.girls.Jenny.PlayerJenny;
-import com.trolmastercard.sexmod.girls.Kobold.KoboldEggEntity;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldEgg.KoboldEggEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.PlayerKobold;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;

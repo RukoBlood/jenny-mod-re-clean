@@ -11,7 +11,6 @@ import java.util.Objects;
 import javax.annotation.CheckReturnValue;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.GirlLayerRenderer;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlRenderer;
@@ -225,7 +224,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
         GL11.glEnable(GL11.GL_LIGHTING);
         this.preRenderCallback();
-        new GirlLayerRenderer((IGeoRenderer)this).render(this.renderEntity, this.renderEntity.limbSwing, this.renderEntity.limbSwingAmount, this.partialTicks, 0.0f, 0.0f, 0.0f, color);
+        new PlayerGirlElytraRenderer((IGeoRenderer)this).render(this.renderEntity, this.renderEntity.limbSwing, this.renderEntity.limbSwingAmount, this.partialTicks, 0.0f, 0.0f, 0.0f, color);
         this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         GlStateManager.enableBlend();

@@ -11,7 +11,7 @@
 package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
-import com.trolmastercard.sexmod.girls.Kobold.KoboldEggItem;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldEgg.KoboldEggItem;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;

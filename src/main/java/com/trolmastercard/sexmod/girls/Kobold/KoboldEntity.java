@@ -28,12 +28,15 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4d;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.Packets.*;
+import com.trolmastercard.sexmod.blocks.SexFire;
 import com.trolmastercard.sexmod.companion.DoorInteractAIGoal;
 import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
+import com.trolmastercard.sexmod.girls.Kobold.DragonStaff.DragonStaffItem;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldEgg.KoboldEggItem;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;

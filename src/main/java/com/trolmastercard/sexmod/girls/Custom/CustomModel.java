@@ -31,11 +31,12 @@ import java.util.Properties;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.Packets.RequestServerModelAvailability;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
+import com.trolmastercard.sexmod.util.CustomPartCategory;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

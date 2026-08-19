@@ -33,7 +33,6 @@ import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
 import com.trolmastercard.sexmod.util.SkinHelper;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
@@ -41,6 +40,7 @@ import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.*;
+import com.trolmastercard.sexmod.util.anim.BoneDeformProcessor;
 import com.trolmastercard.sexmod.util.interfaces.IGirlRenderer;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;

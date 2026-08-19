@@ -15,7 +15,7 @@ package com.trolmastercard.sexmod.proxy;
 
 import java.io.IOException;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.util.Handlers.GuiHandler;
 import com.trolmastercard.sexmod.util.Handlers.*;

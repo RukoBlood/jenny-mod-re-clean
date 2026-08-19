@@ -11,7 +11,6 @@ import java.util.Random;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.TeleportPlayer;
 import com.trolmastercard.sexmod.Packets.UpdateVelocity;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;

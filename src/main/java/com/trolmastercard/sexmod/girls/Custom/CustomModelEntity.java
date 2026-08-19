@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.CustomPartCategory;
+import com.trolmastercard.sexmod.util.CustomPartCategory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;

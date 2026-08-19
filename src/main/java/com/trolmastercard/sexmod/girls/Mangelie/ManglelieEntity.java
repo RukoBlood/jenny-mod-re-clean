@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.companion.AvoidPlayerGoal;
 import com.trolmastercard.sexmod.girls.Galath.*;
 import com.trolmastercard.sexmod.girls.base.Action;
@@ -23,6 +23,7 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.world.GirlWorldData;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;

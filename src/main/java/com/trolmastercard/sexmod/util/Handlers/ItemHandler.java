@@ -3,12 +3,15 @@
  */
 package com.trolmastercard.sexmod.util.Handlers;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.blocks.SexFire;
 import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.Allie.lamp.LampItem;
 import com.trolmastercard.sexmod.girls.Galath.GalathCoin.GalathCoin;
-import com.trolmastercard.sexmod.girls.Kobold.KoboldEggItem;
+import com.trolmastercard.sexmod.girls.Kobold.DragonStaff.DragonStaffItem;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldEgg.KoboldEggItem;
+import com.trolmastercard.sexmod.girls.Kobold.TribeEgg.TribeEgg;
 import com.trolmastercard.sexmod.girls.Luna.FishingRod.LunaRod;
+import com.trolmastercard.sexmod.girls.base.EditorWand.EditorWand;
 
 public class ItemHandler {
     public static void RegisterItems() {

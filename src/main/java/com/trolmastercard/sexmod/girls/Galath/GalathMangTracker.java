@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.Packets.InformOfOwnership;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;

@@ -15,7 +15,7 @@ import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.gui.DragonStaffGUI;
+import com.trolmastercard.sexmod.gui.DragonStaffUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class GetTribeUIValues implements IMessage {
                 return null;
             }
             if (ctx.side.isClient()) {
-                DragonStaffGUI.isTribeFollowing = msg.b;
+                DragonStaffUI.isTribeFollowing = msg.b;
                 KoboldEntity.aY = msg.c;
                 return null;
             }

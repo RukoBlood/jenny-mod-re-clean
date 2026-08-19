@@ -15,7 +15,7 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.BoneDeformProcessor;
+import com.trolmastercard.sexmod.util.anim.BoneDeformProcessor;
 import com.trolmastercard.sexmod.events.DebugMode;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.item.ItemStack;

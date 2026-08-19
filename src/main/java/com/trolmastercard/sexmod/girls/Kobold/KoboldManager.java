@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.Packets.SendBlocks;
 import com.trolmastercard.sexmod.companion.TargetNearestKoboldGoal;
 import com.trolmastercard.sexmod.girls.base.Action;

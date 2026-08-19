@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.ResetGirl;
 import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldHand;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;

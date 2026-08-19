@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.Galath.GalathCoin.GalathCoinRenderer;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -20,6 +19,7 @@ import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieRenderer;
 import com.trolmastercard.sexmod.util.*;
+import com.trolmastercard.sexmod.util.anim.BoneDeformProcessor;
 import com.trolmastercard.sexmod.util.interfaces.IGirlRenderer;
 import com.trolmastercard.sexmod.util.interfaces.IGalath;
 import com.trolmastercard.sexmod.world.FakeWorld;

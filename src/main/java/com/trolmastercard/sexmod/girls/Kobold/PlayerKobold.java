@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.TeleportPlayer;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;

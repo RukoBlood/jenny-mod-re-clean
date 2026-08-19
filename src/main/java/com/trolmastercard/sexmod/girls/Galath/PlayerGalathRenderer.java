@@ -13,12 +13,12 @@ import java.util.HashSet;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
 import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
+import com.trolmastercard.sexmod.util.anim.BoneDeformProcessor;
 import com.trolmastercard.sexmod.util.interfaces.IGalath;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;

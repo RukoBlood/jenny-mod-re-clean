@@ -12,7 +12,7 @@ package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.world.WorldUtils;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.StructureMarkerRenderer;
+import com.trolmastercard.sexmod.girls.Kobold.DragonStaff.StructureMarkerRenderer;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.HashSet;

@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector2f;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.Packets.ResetGirl;
 import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.companion.DoorInteractAIGoal;

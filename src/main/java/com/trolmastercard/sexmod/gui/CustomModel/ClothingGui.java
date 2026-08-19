@@ -23,8 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 
-import com.trolmastercard.sexmod.CustomPartCategory;
-import com.trolmastercard.sexmod.CustomPartListScrollList;
+import com.trolmastercard.sexmod.util.CustomPartCategory;
 import com.trolmastercard.sexmod.Packets.UploadModelString;
 import com.trolmastercard.sexmod.util.Point2D;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
@@ -314,8 +313,8 @@ public class ClothingGui extends GuiScreen {
             selectedEntry = matchingEntries.get(0);
             globalListIndex = (Integer)matchingGlobalIndices.get(0);
         } else {
-            int subIndex = this.customCategoryCount == 0 || itemIndex > this.customCategoryCount - 1 + CustomPartCategory.a()
-                    ? itemIndex - (this.customCategoryCount + CustomPartCategory.a())
+            int subIndex = this.customCategoryCount == 0 || itemIndex > this.customCategoryCount - 1 + CustomPartCategory.getCount()
+                    ? itemIndex - (this.customCategoryCount + CustomPartCategory.getCount())
                     : itemIndex;
             selectedEntry = matchingEntries.get(subIndex);
             globalListIndex = (Integer)matchingGlobalIndices.get(subIndex);

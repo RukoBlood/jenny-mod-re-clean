@@ -17,8 +17,8 @@ package com.trolmastercard.sexmod.girls.Galath.GalathCoin;
 import java.util.Random;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.InformOfOwnership;
+import com.trolmastercard.sexmod.girls.Galath.DragonBreathParticle;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.base.Action;

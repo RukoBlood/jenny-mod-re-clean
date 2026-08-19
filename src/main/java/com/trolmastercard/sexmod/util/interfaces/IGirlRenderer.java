@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod.util.interfaces;
 
 import java.util.HashSet;
 
-import com.trolmastercard.sexmod.BoneDeformProcessor;
+import com.trolmastercard.sexmod.util.anim.BoneDeformProcessor;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 import javax.annotation.CheckReturnValue;

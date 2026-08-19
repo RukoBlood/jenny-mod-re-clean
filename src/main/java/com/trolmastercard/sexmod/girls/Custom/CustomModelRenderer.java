@@ -19,15 +19,17 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.UploadModelString;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
+import com.trolmastercard.sexmod.girls.base.GirlID;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
+import com.trolmastercard.sexmod.util.CustomPartCategory;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.ThreadNames;
+import com.trolmastercard.sexmod.util.anim.BoneDeformProcessor;
 import com.trolmastercard.sexmod.util.interfaces.IBoneRotationSupplier;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;

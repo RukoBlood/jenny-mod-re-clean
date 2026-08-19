@@ -8,7 +8,8 @@ package com.trolmastercard.sexmod.util.Handlers;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.gui.GirlGUIContainer;
+import com.trolmastercard.sexmod.gui.GirlInventory;
 import com.trolmastercard.sexmod.gui.Menu.*;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;

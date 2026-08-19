@@ -14,11 +14,12 @@ package com.trolmastercard.sexmod.proxy;
 
 import java.io.IOException;
 
-import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.command.FutaCommand;
 import com.trolmastercard.sexmod.command.SetModelCodeCommand;
 import com.trolmastercard.sexmod.command.WhitelistServerModelsCommand;
 import com.trolmastercard.sexmod.gender_change.SexPromptManager;
+import com.trolmastercard.sexmod.girls.Galath.DragonBreathParticle;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.GuiHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

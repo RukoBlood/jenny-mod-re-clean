@@ -27,6 +27,8 @@ import java.io.Writer;
 
 import com.trolmastercard.sexmod.command.LocateGoblinLairCommand;
 import com.trolmastercard.sexmod.command.ReloadCustomModelsCommand;
+import com.trolmastercard.sexmod.girls.Kobold.DragonStaff.StructureMarkerRenderer;
+import com.trolmastercard.sexmod.girls.base.GirlID;
 import com.trolmastercard.sexmod.girls.base.GirlRendererBase;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
@@ -37,6 +39,7 @@ import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.CommonProxy;
 import com.trolmastercard.sexmod.world.ConfigWorldGenHandler;
+import com.trolmastercard.sexmod.world.GirlWorldData;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -53,10 +56,7 @@ import org.apache.logging.log4j.Logger;
 import software.bernie.geckolib3.GeckoLib;
 
 /*
-* I need help with this project.
-* I want to reverse engineer this mod so bad.
-* Please, if you know Java, modded 1.12.2 or reverse engineered mods before,
-* fork this project on GitHub, and request your bugfixes or reversed code.
+* Thanks for Palkaline for main Zelix KlassMaster deobfuscation and RealCrystalNight for Class names.
 */
 
 @Mod(modid="sexmod", name="Fapcraft", version="1.1.0", dependencies="after:geckolib")
@@ -173,7 +173,7 @@ public class Main {
     }
 
     static {
-        LOGGER = LogManager.getLogger((String)"sexmod");
+        LOGGER = LogManager.getLogger("sexmod");
     }
 }
 
