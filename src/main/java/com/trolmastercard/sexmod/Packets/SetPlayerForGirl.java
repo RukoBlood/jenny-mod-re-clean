@@ -86,10 +86,6 @@ implements IMessage {
         public IMessage onMessage(SetPlayerForGirl iMessage, MessageContext messageContext) {
             return this.a((SetPlayerForGirl)iMessage, messageContext);
         }
-
-        private static NullPointerException a(NullPointerException nullPointerException) {
-            return nullPointerException;
-        }
     }
 }
 

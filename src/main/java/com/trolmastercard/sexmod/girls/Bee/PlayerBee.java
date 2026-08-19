@@ -249,9 +249,5 @@ public class PlayerBee extends PlayerGirl {
         data.addAnimationController(this.actionController);
         data.addAnimationController(this.movementController);
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

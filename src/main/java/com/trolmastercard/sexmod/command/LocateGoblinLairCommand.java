@@ -56,9 +56,5 @@ public class LocateGoblinLairCommand extends CommandBase {
         BlockPos blockPos = entity2.getPosition();
         iCommandSender.sendMessage(new TextComponentString(String.format("%sgoblin lair found at %s%s %s%s %s%s", new Object[]{TextFormatting.YELLOW, TextFormatting.RED, blockPos.getX(), TextFormatting.GREEN, blockPos.getY(), TextFormatting.BLUE, blockPos.getZ()})));
     }
-
-    private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-        return concurrentModificationException;
-    }
 }
 

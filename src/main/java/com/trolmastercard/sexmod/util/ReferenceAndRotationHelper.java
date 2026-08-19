@@ -116,9 +116,5 @@ public class ReferenceAndRotationHelper {
         double d4 = (1.0 - Math.cos(d3 * Math.PI)) / 2.0;
         return d * (1.0 - d4) + d2 * d4;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

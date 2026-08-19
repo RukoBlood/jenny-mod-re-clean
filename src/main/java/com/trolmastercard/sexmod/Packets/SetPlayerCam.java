@@ -73,10 +73,6 @@ implements IMessage {
         public IMessage onMessage(SetPlayerCam iMessage, MessageContext messageContext) {
             return this.a((SetPlayerCam)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

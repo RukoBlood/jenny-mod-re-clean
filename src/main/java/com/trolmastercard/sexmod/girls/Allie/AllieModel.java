@@ -60,9 +60,5 @@ extends GirlModel<GirlEntity> {
     public String[] Top() {
         return new String[]{"boobsFlesh", "clothes", "clothesR", "clothesL"};
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

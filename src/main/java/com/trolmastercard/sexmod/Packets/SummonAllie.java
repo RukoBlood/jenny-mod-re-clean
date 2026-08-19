@@ -66,10 +66,6 @@ implements IMessage {
         public IMessage onMessage(SummonAllie iMessage, MessageContext messageContext) {
             return this.a((SummonAllie)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

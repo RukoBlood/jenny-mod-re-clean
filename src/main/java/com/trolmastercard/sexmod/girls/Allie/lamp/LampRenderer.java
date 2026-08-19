@@ -124,9 +124,5 @@ public class LampRenderer extends GeoItemRenderer<LampItem> {
             }
         }
     }
-
-    private static Exception a(Exception exception) {
-        return exception;
-    }
 }
 

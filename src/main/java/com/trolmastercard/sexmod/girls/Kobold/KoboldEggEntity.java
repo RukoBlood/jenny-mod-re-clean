@@ -217,9 +217,5 @@ implements IAnimatable {
         b = EntityDataManager.createKey(KoboldEggEntity.class, DataSerializers.STRING).getSerializer().createKey(115);
         c = EntityDataManager.createKey(KoboldEggEntity.class, DataSerializers.VARINT).getSerializer().createKey(116);
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

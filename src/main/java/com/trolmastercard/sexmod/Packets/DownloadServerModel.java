@@ -105,10 +105,6 @@ implements IMessage {
         }
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static enum b_inner148 {
         CFG(".cfg"),
         PNG(".png"),
@@ -227,10 +223,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(DownloadServerModel iMessage, MessageContext messageContext) {
             return this.a((DownloadServerModel)iMessage, messageContext);
-        }
-
-        private static Throwable a(Throwable throwable) {
-            return throwable;
         }
     }
 }

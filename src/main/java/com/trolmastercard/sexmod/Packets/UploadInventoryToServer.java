@@ -64,10 +64,6 @@ implements IMessage {
         }
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static class a_inner61
     implements IMessageHandler<UploadInventoryToServer, IMessage> {
         public IMessage a(UploadInventoryToServer b1_class602, MessageContext messageContext) {
@@ -118,10 +114,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(UploadInventoryToServer iMessage, MessageContext messageContext) {
             return this.a((UploadInventoryToServer)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

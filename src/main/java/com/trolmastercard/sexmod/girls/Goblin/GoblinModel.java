@@ -290,9 +290,5 @@ extends GirlModel<GirlEntity> {
     public String[] Feet() {
         return new String[]{"meatFootL", "meatFootR"};
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

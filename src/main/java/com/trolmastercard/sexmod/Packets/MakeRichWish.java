@@ -69,10 +69,6 @@ implements IMessage {
         public IMessage onMessage(MakeRichWish iMessage, MessageContext messageContext) {
             return this.a((MakeRichWish)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

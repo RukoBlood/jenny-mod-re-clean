@@ -60,10 +60,6 @@ implements IMessage {
         public IMessage onMessage(SetTribeFollowMode iMessage, MessageContext messageContext) {
             return this.a((SetTribeFollowMode)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

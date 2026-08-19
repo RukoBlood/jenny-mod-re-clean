@@ -77,10 +77,6 @@ implements IMessage {
         public IMessage onMessage(SpawnParticle iMessage, MessageContext messageContext) {
             return this.a((SpawnParticle)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

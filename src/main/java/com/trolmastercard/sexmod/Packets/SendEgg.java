@@ -64,10 +64,6 @@ public class SendEgg implements IMessage {
         public IMessage onMessage(SendEgg iMessage, MessageContext messageContext) {
             return this.a((SendEgg)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

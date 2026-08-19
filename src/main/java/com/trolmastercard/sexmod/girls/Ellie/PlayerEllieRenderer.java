@@ -71,9 +71,5 @@ extends PlayerGirlRenderer {
             }
         }
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

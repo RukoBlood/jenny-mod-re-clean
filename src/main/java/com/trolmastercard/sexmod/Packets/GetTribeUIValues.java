@@ -120,10 +120,6 @@ public class GetTribeUIValues implements IMessage {
         public IMessage onMessage(GetTribeUIValues iMessage, MessageContext messageContext) {
             return this.a((GetTribeUIValues)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

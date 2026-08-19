@@ -70,10 +70,6 @@ implements IMessage {
         public IMessage onMessage(RemoveItems iMessage, MessageContext messageContext) {
             return this.a((RemoveItems)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

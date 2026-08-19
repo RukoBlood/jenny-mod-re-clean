@@ -106,9 +106,5 @@ extends WorkerPlayerRenderer {
             GlStateManager.translate(0.0, -0.1, -0.083f);
         }
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

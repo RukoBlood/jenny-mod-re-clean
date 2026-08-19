@@ -315,10 +315,6 @@ extends EntityLiving {
         return false;
     }
 
-    private static Exception a(Exception exception) {
-        return exception;
-    }
-
     static class b_inner53
     extends EntityMoveHelper {
         private float b;
@@ -373,10 +369,6 @@ extends EntityLiving {
                 }
             }
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 
     static class c_inner54
@@ -421,10 +413,6 @@ extends EntityLiving {
             }
             ((b_inner53)this.a.getMoveHelper()).a(1.2);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 
     static class a_inner52
@@ -450,10 +438,6 @@ extends EntityLiving {
                 this.a = this.b.getRNG().nextInt(360);
             }
             ((b_inner53)this.b.getMoveHelper()).a(this.a, false);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

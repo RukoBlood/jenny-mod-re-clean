@@ -66,7 +66,7 @@ public class PackageHandler {
         INSTANCE.registerMessage(Mine.a_inner227.class, Mine.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(GenderChangePacket.Handler.class, GenderChangePacket.class, PackageHandler.discriminator(), Side.CLIENT);
         INSTANCE.registerMessage(ForcePlayerGirlUpdate.a_inner362.class, ForcePlayerGirlUpdate.class, PackageHandler.discriminator(), Side.CLIENT);
-        INSTANCE.registerMessage(UploadModelString.a_inner333.class, UploadModelString.class, PackageHandler.discriminator(), Side.SERVER);
+        INSTANCE.registerMessage(UploadModelString.Handler.class, UploadModelString.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(GalathRapePounce.a_inner357.class, GalathRapePounce.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(UpdateVelocity.a_inner145.class, UpdateVelocity.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(RequestServerModelAvailability.a_inner351.class, RequestServerModelAvailability.class, PackageHandler.discriminator(), Side.SERVER);

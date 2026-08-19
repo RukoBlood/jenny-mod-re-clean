@@ -82,9 +82,5 @@ public class HandlePlayerMovement {
             event.setCanceled(true);
         }
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

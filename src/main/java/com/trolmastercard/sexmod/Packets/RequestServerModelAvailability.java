@@ -69,10 +69,6 @@ implements IMessage {
         }
     }
 
-    private static IndexOutOfBoundsException a(IndexOutOfBoundsException indexOutOfBoundsException) {
-        return indexOutOfBoundsException;
-    }
-
     public static class a_inner351
     implements IMessageHandler<RequestServerModelAvailability, IMessage> {
         public IMessage a(RequestServerModelAvailability g6_class3502, MessageContext messageContext) {
@@ -105,10 +101,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(RequestServerModelAvailability iMessage, MessageContext messageContext) {
             return this.a((RequestServerModelAvailability)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

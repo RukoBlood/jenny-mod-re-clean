@@ -109,10 +109,6 @@ public class TeleportPlayer implements IMessage {
         public IMessage onMessage(TeleportPlayer iMessage, MessageContext messageContext) {
             return this.onMessageMain((TeleportPlayer)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

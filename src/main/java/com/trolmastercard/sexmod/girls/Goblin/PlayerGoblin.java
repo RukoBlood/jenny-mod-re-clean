@@ -1136,10 +1136,6 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         data.addAnimationController(this.eyesController);
     }
 
-    private static Exception a(Exception exception) {
-        return exception;
-    }
-
     public static class EventHandler {
         HashSet<EntityPlayer> a = new HashSet();
 
@@ -1286,10 +1282,6 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                 return;
             }
             ((PlayerGoblin)ei_class2512).void_c(entityInteract.getEntityPlayer());
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

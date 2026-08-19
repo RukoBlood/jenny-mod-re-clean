@@ -64,10 +64,6 @@ implements IMessage {
         public IMessage onMessage(UploadInventoryToServerAlt iMessage, MessageContext messageContext) {
             return this.a((UploadInventoryToServerAlt)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

@@ -52,10 +52,6 @@ implements IMessage {
         public IMessage onMessage(InformOfOwnership iMessage, MessageContext messageContext) {
             return this.a((InformOfOwnership)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

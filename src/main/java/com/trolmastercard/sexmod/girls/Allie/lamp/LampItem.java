@@ -240,10 +240,6 @@ public class LampItem extends Item implements IAnimatable {
         return this.factory;
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static class a_inner38 {
         @SubscribeEvent
         public void a(PlayerEvent.PlayerLoggedOutEvent playerLoggedOutEvent) {

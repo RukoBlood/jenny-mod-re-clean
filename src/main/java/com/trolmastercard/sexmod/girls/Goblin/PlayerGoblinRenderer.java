@@ -377,9 +377,5 @@ public class PlayerGoblinRenderer extends WorkerPlayerRenderer {
             GlStateManager.translate(-0.02, -0.05, -0.05);
         }
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

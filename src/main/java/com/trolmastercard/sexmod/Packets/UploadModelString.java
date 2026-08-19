@@ -27,85 +27,81 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class UploadModelString
-implements IMessage {
-    boolean a = false;
-    String c;
-    List<Integer> d = new ArrayList<Integer>();
-    UUID b;
+public class UploadModelString implements IMessage {
+    boolean isValid = false;
+    String modelCode;
+    List<Integer> partIds = new ArrayList<Integer>();
+    UUID girlUUid;
 
     public UploadModelString() {
     }
 
     public UploadModelString(String string, UUID uUID) {
-        this.c = string;
-        this.b = uUID;
+        this.modelCode = string;
+        this.girlUUid = uUID;
     }
 
-    public UploadModelString(String string, UUID uUID, List<Integer> list) {
-        this.c = string;
-        this.b = uUID;
-        this.d = list;
+    public UploadModelString(String modelcode, UUID uUID, List<Integer> list) {
+        this.modelCode = modelcode;
+        this.girlUUid = uUID;
+        this.partIds = list;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.modelCode = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
+        this.girlUUid = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
         int n = byteBuf.readInt();
         for (int i = 0; i < n; ++i) {
-            this.d.add(byteBuf.readInt());
+            this.partIds.add(byteBuf.readInt());
         }
-        this.a = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c);
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.toString());
-        byteBuf.writeInt(this.d.size());
-        for (int n : this.d) {
+        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.modelCode);
+        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.girlUUid.toString());
+        byteBuf.writeInt(this.partIds.size());
+        for (int n : this.partIds) {
             byteBuf.writeInt(n);
         }
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
+    public static class Handler implements IMessageHandler<UploadModelString, IMessage> {
 
-    public static class a_inner333
-    implements IMessageHandler<UploadModelString, IMessage> {
-        public IMessage a(UploadModelString fw_class3322, MessageContext messageContext) {
-            if (!fw_class3322.a || messageContext.side != Side.SERVER) {
+        @Override
+        public IMessage onMessage(UploadModelString msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @UploadModelString :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(fw_class3322.b);
-                boolean bl = fw_class3322.d.size() > 0;
+                GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(msg.girlUUid);
+                boolean bl = msg.partIds.size() > 0;
                 boolean bl2 = false;
-                if (bl && (bl2 = this.a(em_class2582, fw_class3322.d))) {
-                    em_class2582.setCustomPartList(fw_class3322.d);
+                if (bl && (bl2 = this.isValidModelCode(em_class2582, msg.partIds))) {
+                    em_class2582.setCustomPartList(msg.partIds);
                 }
                 if (!(em_class2582 instanceof PlayerGirl)) {
-                    em_class2582.setCustomModelCode(fw_class3322.c);
+                    em_class2582.setCustomModelCode(msg.modelCode);
                     return;
                 }
-                EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
+                EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
                 NBTTagCompound nBTTagCompound = entityPlayerMP.getEntityData();
                 PlayerGirl ei_class2512 = PlayerGirl.GetPlayer(entityPlayerMP);
                 if (ei_class2512 == null) {
                     return;
                 }
                 PlayerGirlEntity fy_class3352 = PlayerGirlEntity.fromGirl(ei_class2512);
-                nBTTagCompound.setString("sexmod:CustomModel" + fy_class3352.toString(), fw_class3322.c);
+                nBTTagCompound.setString("sexmod:CustomModel" + fy_class3352.toString(), msg.modelCode);
                 if (bl && bl2) {
-                    nBTTagCompound.setString("sexmod:GirlSpecific" + fy_class3352.toString(), GirlEntity.c(fw_class3322.d));
+                    nBTTagCompound.setString("sexmod:GirlSpecific" + fy_class3352.toString(), GirlEntity.c(msg.partIds));
                 }
             });
             return null;
         }
 
-        boolean a(GirlEntity em_class2582, List<Integer> list) {
-            ArrayList<Integer> arrayList = em_class2582.getCustomPartIdList();
+        boolean isValidModelCode(GirlEntity girl, List<Integer> list) {
+            ArrayList<Integer> arrayList = girl.getCustomPartIdList();
             try {
                 for (int i = 0; i < arrayList.size(); ++i) {
                     if (arrayList.get(i) > list.get(i)) continue;
@@ -115,15 +111,6 @@ implements IMessage {
                 return false;
             }
             return true;
-        }
-
-                @Override
-        public IMessage onMessage(UploadModelString iMessage, MessageContext messageContext) {
-            return this.a((UploadModelString)iMessage, messageContext);
-        }
-
-        private static IndexOutOfBoundsException a(IndexOutOfBoundsException indexOutOfBoundsException) {
-            return indexOutOfBoundsException;
         }
     }
 }

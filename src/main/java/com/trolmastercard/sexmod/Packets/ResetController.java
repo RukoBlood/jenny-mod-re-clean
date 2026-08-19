@@ -78,10 +78,6 @@ implements IMessage {
         public IMessage onMessage(ResetController iMessage, MessageContext messageContext) {
             return this.a((ResetController)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

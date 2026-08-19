@@ -56,10 +56,6 @@ public class UpdateEquipment implements IMessage {
         public IMessage onMessage(UpdateEquipment iMessage, MessageContext messageContext) {
             return this.a((UpdateEquipment)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

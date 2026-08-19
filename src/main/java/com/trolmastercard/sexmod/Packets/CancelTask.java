@@ -70,10 +70,6 @@ implements IMessage {
         public IMessage onMessage(CancelTask iMessage, MessageContext messageContext) {
             return this.a((CancelTask)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

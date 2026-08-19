@@ -53,10 +53,6 @@ public class SpawnEnergyBallParticles implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)(this.b == null ? "trol was here" : this.b.toString()));
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static class Handler
     implements IMessageHandler<SpawnEnergyBallParticles, IMessage> {
         public IMessage a(SpawnEnergyBallParticles ab_class212, MessageContext messageContext) {
@@ -76,10 +72,6 @@ public class SpawnEnergyBallParticles implements IMessage {
                 @Override
         public IMessage onMessage(SpawnEnergyBallParticles iMessage, MessageContext messageContext) {
             return this.a((SpawnEnergyBallParticles)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

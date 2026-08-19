@@ -50,9 +50,5 @@ extends PlayerGirlRenderer {
             GlStateManager.translate(0.0f, 0.165f, 0.0f);
         }
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

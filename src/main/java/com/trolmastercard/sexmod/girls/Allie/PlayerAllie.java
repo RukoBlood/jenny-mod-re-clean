@@ -451,9 +451,5 @@ extends PlayerGirl {
         }
         return PlayState.CONTINUE;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

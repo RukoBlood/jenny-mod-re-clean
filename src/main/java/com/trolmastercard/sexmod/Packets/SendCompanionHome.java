@@ -90,10 +90,6 @@ public class SendCompanionHome implements IMessage {
         public IMessage onMessage(SendCompanionHome iMessage, MessageContext messageContext) {
             return this.a((SendCompanionHome)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

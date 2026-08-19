@@ -3140,10 +3140,6 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     public void clear() {
     }
 
-    private static IllegalArgumentException a(IllegalArgumentException illegalArgumentException) {
-        return illegalArgumentException;
-    }
-
     public static class c_inner311 {
         int a = 0;
 

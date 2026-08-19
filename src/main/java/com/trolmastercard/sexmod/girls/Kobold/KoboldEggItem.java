@@ -95,9 +95,5 @@ implements IAnimatable {
         world.spawnEntity(i_class4102);
         itemStack.shrink(1);
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

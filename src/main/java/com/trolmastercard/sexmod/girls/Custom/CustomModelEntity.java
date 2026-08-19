@@ -157,9 +157,5 @@ public class CustomModelEntity extends EntityLivingBase implements IAnimatable {
     public EnumHandSide getPrimaryHand() {
         return EnumHandSide.LEFT;
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

@@ -91,9 +91,5 @@ public class BeeModel extends GirlModel<GirlEntity> {
     public String[] ShoesArmor() {
         return new String[]{"armorShoesL", "armorShoesR"};
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

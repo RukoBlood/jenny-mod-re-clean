@@ -61,10 +61,6 @@ implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)(this.e == null ? "null" : this.e.toString()));
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static class Handler implements IMessageHandler<SyncActionPacket, IMessage> {
         public static void execute(UUID uUID, UUID uUID2, boolean bl, boolean bl2) {
             for (GirlEntity girl : GirlEntity.girlList(uUID)) {
@@ -105,10 +101,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(SyncActionPacket iMessage, MessageContext messageContext) {
             return this.a((SyncActionPacket)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

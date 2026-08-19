@@ -615,9 +615,5 @@ extends PlayerGirl {
         data.addAnimationController(this.eyesController);
         data.addAnimationController(this.actionController);
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

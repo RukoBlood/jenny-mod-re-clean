@@ -286,9 +286,5 @@ public class KoboldModel extends GirlModel<GirlEntity> {
     public String[] Feet() {
         return new String[]{"toesR", "toesL"};
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

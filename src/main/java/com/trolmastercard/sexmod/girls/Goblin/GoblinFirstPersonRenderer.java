@@ -120,9 +120,5 @@ public class GoblinFirstPersonRenderer {
             break;
         }
     }
-
-    private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-        return concurrentModificationException;
-    }
 }
 

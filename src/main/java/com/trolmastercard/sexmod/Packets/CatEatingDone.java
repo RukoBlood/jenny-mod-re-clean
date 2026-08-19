@@ -66,10 +66,6 @@ implements IMessage {
         public IMessage onMessage(CatEatingDone iMessage, MessageContext messageContext) {
             return this.a((CatEatingDone)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

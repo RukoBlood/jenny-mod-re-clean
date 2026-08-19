@@ -81,10 +81,6 @@ implements IMessage {
         public IMessage onMessage(StartStandingSexAnimation iMessage, MessageContext messageContext) {
             return this.a((StartStandingSexAnimation)iMessage, messageContext);
         }
-
-        private static Exception a(Exception exception) {
-            return exception;
-        }
     }
 }
 

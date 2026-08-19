@@ -61,10 +61,6 @@ public class SpawnEnergyBallParticlesPacket2 implements IMessage {
         public IMessage onMessage(SpawnEnergyBallParticlesPacket2 iMessage, MessageContext messageContext) {
             return this.a((SpawnEnergyBallParticlesPacket2)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

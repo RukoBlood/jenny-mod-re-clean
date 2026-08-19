@@ -74,10 +74,6 @@ implements IMessage {
         public IMessage onMessage(UpdateVelocity iMessage, MessageContext messageContext) {
             return this.a((UpdateVelocity)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

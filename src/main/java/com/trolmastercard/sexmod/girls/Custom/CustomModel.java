@@ -678,10 +678,6 @@ public class CustomModel {
         public float f() {
             return this.l;
         }
-
-        private static FileNotFoundException a(FileNotFoundException fileNotFoundException) {
-            return fileNotFoundException;
-        }
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -741,10 +737,6 @@ public class CustomModel {
         public void a(FMLNetworkEvent.ClientDisconnectionFromServerEvent clientDisconnectionFromServerEvent) {
             Minecraft.getMinecraft().addScheduledTask(() -> CustomModel.a(true));
             this.a = false;
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

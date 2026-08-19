@@ -118,10 +118,6 @@ implements IMessage {
         public IMessage onMessage(ChangeDataParameter iMessage, MessageContext messageContext) {
             return this.a((ChangeDataParameter)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

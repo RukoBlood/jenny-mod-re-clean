@@ -55,10 +55,6 @@ implements IMessage {
         }
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static class a_inner72
     implements IMessageHandler<UpdatePlayerModel, IMessage> {
         public IMessage a(UpdatePlayerModel b__class712, MessageContext messageContext) {
@@ -108,10 +104,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(UpdatePlayerModel iMessage, MessageContext messageContext) {
             return this.a((UpdatePlayerModel)iMessage, messageContext);
-        }
-
-        private static ConcurrentModificationException a(ConcurrentModificationException concurrentModificationException) {
-            return concurrentModificationException;
         }
     }
 }

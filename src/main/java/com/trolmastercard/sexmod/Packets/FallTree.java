@@ -116,10 +116,6 @@ implements IMessage {
         public IMessage onMessage(FallTree iMessage, MessageContext messageContext) {
             return this.a((FallTree)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

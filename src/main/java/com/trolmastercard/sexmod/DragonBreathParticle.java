@@ -69,9 +69,5 @@ public class DragonBreathParticle extends ParticleDragonBreath {
         buf.pos((double)renderX + vertices[2].x, (double)renderY + vertices[2].y, (double)renderZ + vertices[2].z).tex(MinU, MinV).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(skyLight, blockLight).endVertex();
         buf.pos((double)renderX + vertices[3].x, (double)renderY + vertices[3].y, (double)renderZ + vertices[3].z).tex(MinU, MaxV).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(skyLight, blockLight).endVertex();
     }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 

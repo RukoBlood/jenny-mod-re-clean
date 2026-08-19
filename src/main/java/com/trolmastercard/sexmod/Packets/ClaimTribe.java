@@ -94,10 +94,6 @@ implements IMessage {
         public IMessage onMessage(ClaimTribe iMessage, MessageContext messageContext) {
             return this.a((ClaimTribe)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

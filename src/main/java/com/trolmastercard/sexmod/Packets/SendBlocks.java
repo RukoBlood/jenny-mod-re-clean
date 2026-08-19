@@ -65,10 +65,6 @@ implements IMessage {
         }
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
     public static class Handler
     implements IMessageHandler<SendBlocks, IMessage> {
         public IMessage a(SendBlocks h6_class3972, MessageContext messageContext) {
@@ -148,10 +144,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(SendBlocks iMessage, MessageContext messageContext) {
             return this.a((SendBlocks)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

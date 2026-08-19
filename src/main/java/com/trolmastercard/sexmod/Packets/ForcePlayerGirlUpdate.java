@@ -70,10 +70,6 @@ implements IMessage {
         public IMessage onMessage(ForcePlayerGirlUpdate iMessage, MessageContext messageContext) {
             return this.a((ForcePlayerGirlUpdate)iMessage, messageContext);
         }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
-        }
     }
 }
 

@@ -415,9 +415,5 @@ public class BeeEntity extends Supporter {
         data.addAnimationController(this.movementController);
         data.addAnimationController(this.eyesController);
     }
-
-    private static RuntimeException b(RuntimeException runtimeException) {
-        return runtimeException;
-    }
 }
 
