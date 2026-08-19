@@ -38,14 +38,11 @@ public class ShaderManager {
             shaderGroup = new ShaderGroup(mc.getTextureManager(), mc.getResourceManager(), mc.getFramebuffer(), RESOURCE_LOCATION);
             shaderGroup.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
             framebuffer = shaderGroup.getFramebufferRaw("final");
-            ClientRegistry.registerEntityShader(GirlEntity.class, (ResourceLocation) RESOURCE_LOCATION);
+            ClientRegistry.registerEntityShader(GirlEntity.class, RESOURCE_LOCATION);
             System.out.println("succ registered the outline shader :)");
         }
-        catch (IOException iOException) {
-            Main.LOGGER.warn("Failed to load shader: {}", (Object) RESOURCE_LOCATION, (Object)iOException);
-        }
-        catch (JsonSyntaxException jsonSyntaxException) {
-            Main.LOGGER.warn("Failed to load shader: {}", (Object) RESOURCE_LOCATION, (Object)jsonSyntaxException);
+        catch (IOException | JsonSyntaxException e) {
+            Main.LOGGER.warn("Failed to load shader: {}", RESOURCE_LOCATION, e);
         }
     }
 

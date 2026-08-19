@@ -2320,11 +2320,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     @Override
     @SideOnly(value=Side.CLIENT)
     public void registerControllers(AnimationData data) {
-        this.actionController = new bz_class107<>(this, "action", 0.0f, this::predicate);
+        this.actionController = new GirlAnimationController<>(this, "action", 0.0f, this::predicate);
         this.movementController = new AnimationController<>(this, "movement", 5.0f, this::predicate);
         this.eyesController = new AnimationController<>(this, "eyes", 10.0f, this::predicate);
-        this.actionController.registerSoundListener(soundKeyframeEvent -> {
-            switch (soundKeyframeEvent.sound) {
+        this.actionController.registerSoundListener(sound -> {
+            switch (sound.sound) {
                 case "goodTiming": {
                     this.PlaySound(SoundsHandler.GIRLS_GALATH_DIALOG[4]);
                     this.sendLocalClientMessage("Good timing boy~");

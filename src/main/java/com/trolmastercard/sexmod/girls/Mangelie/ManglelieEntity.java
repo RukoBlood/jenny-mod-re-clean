@@ -15,11 +15,9 @@ import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.companion.AvoidPlayerGoal;
+import com.trolmastercard.sexmod.girls.Galath.*;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
-import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
-import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
-import com.trolmastercard.sexmod.girls.Galath.GalathMobTarget;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
@@ -577,8 +575,8 @@ extends GirlEntity {
         if (galath == null) {
             return false;
         }
-        Vec3d myPos = Utils.getInterpolatedPosition(this, partialTicks);
-        return this.isVectorRightOfMommy(Utils.getInterpolatedPosition(entity, partialTicks).subtract(myPos), galath, partialTicks);
+        Vec3d myPos = EntityLookVectorHelper.getInterpolatedPosition(this, partialTicks);
+        return this.isVectorRightOfMommy(EntityLookVectorHelper.getInterpolatedPosition(entity, partialTicks).subtract(myPos), galath, partialTicks);
     }
 
     public boolean isVectorRightOfMommy(Vec3d vec, float partialTicks) {
@@ -586,7 +584,7 @@ extends GirlEntity {
         if (galath == null) {
             return false;
         }
-        Vec3d myPos = Utils.getInterpolatedPosition(this, partialTicks);
+        Vec3d myPos = EntityLookVectorHelper.getInterpolatedPosition(this, partialTicks);
         return this.isVectorRightOfMommy(vec.subtract(myPos), galath, partialTicks);
     }
 

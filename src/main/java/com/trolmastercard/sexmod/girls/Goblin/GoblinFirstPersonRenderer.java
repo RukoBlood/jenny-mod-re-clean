@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class am_class34 {
+public class GoblinFirstPersonRenderer {
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void a(RenderWorldLastEvent renderWorldLastEvent) {

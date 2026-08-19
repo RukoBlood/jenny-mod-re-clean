@@ -34,11 +34,11 @@ import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 //d9.class
 // * Used by PlayerKoboldRenderer and PlayerGoblinRenderer.
-public abstract class AbstractPlayerKoblinGoboldRenderer extends PlayerGirlRenderer {
+public abstract class WorkerPlayerRenderer extends PlayerGirlRenderer {
     final static protected Vec3i DEFAULT_COLOR = new Vec3i(255, 255, 255);
     static HashMap<Integer, Vec3i> colorCache = new HashMap();
 
-    public AbstractPlayerKoblinGoboldRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
+    public WorkerPlayerRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
         super(renderManager, animatedGeoModel);
     }
 

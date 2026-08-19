@@ -44,7 +44,7 @@ import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.ew_class277;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerEntity;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.ClientServerCheck;
@@ -1395,7 +1395,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void setCustomPartList(List<Integer> list) {
-        if (!(this instanceof AbstractNpcOnlyEntity) && !(this instanceof ew_class277)) {
+        if (!(this instanceof AbstractNpcOnlyEntity) && !(this instanceof WorkerPlayerEntity)) {
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -1406,7 +1406,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public String java_lang_String_F() {
-        if (this instanceof AbstractNpcOnlyEntity || this instanceof ew_class277) {
+        if (this instanceof AbstractNpcOnlyEntity || this instanceof WorkerPlayerEntity) {
             return this.entityDataManager.get(AbstractNpcOnlyEntity.APPEARANCE_DNA);
         }
         return "";
@@ -1434,7 +1434,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public static List<Integer> h(UUID uUID) {
         GirlEntity em_class2582 = Main.proxy instanceof ClientProxy ? GirlEntity.getClientGirlEntity(uUID) : GirlEntity.getServerGirlEntity(uUID);
         ArrayList<Integer> arrayList = new ArrayList<Integer>(em_class2582.L());
-        if (em_class2582 instanceof AbstractNpcOnlyEntity || em_class2582 instanceof ew_class277) {
+        if (em_class2582 instanceof AbstractNpcOnlyEntity || em_class2582 instanceof WorkerPlayerEntity) {
             arrayList.addAll(GirlEntity.c(em_class2582.getDataManager().get(AbstractNpcOnlyEntity.APPEARANCE_DNA)));
         }
         return arrayList;
@@ -1485,7 +1485,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public void setCustomPartListCode(String string) {
-        if (this instanceof AbstractNpcOnlyEntity || this instanceof ew_class277) {
+        if (this instanceof AbstractNpcOnlyEntity || this instanceof WorkerPlayerEntity) {
             this.entityDataManager.set(AbstractNpcOnlyEntity.APPEARANCE_DNA, string);
         }
     }

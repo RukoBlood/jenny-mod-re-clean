@@ -8,7 +8,7 @@
  *  net.minecraftforge.fml.common.gameevent.TickEvent$ClientTickEvent
  *  net.minecraftforge.fml.common.gameevent.TickEvent$Phase
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Galath;
 
 import java.util.ArrayList;
 import java.util.List;

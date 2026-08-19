@@ -37,7 +37,7 @@ public class PackageHandler {
         INSTANCE.registerMessage(ResetController.Handler.class, ResetController.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(ResetGirl.EventHandler.class, ResetGirl.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(ChangeDataParameter.Handler.class, ChangeDataParameter.class, PackageHandler.discriminator(), Side.SERVER);
-        INSTANCE.registerMessage(bo_class90.Handler.class, bo_class90.class, PackageHandler.discriminator(), Side.SERVER);
+        INSTANCE.registerMessage(PlayerAction.Handler.class, PlayerAction.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(SendCompanionHome.Handler.class, SendCompanionHome.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(SetNewHome.a_inner14.class, SetNewHome.class, PackageHandler.discriminator(), Side.SERVER);
         INSTANCE.registerMessage(UploadInventoryToServer.a_inner61.class, UploadInventoryToServer.class, PackageHandler.discriminator(), Side.SERVER);

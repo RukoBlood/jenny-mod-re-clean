@@ -13,12 +13,12 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class eo_class262 {
+public class LivingDeathHandler {
     @SubscribeEvent(priority=EventPriority.LOW)
-    public void a(LivingDeathEvent livingDeathEvent) {
-        if (livingDeathEvent.getEntity() instanceof GirlEntity) {
-            GirlEntity em_class2582 = (GirlEntity)livingDeathEvent.getEntity();
-            GirlEntity.getGirlEntityList().remove(em_class2582);
+    public void onLivingDeath(LivingDeathEvent event) {
+        if (event.getEntity() instanceof GirlEntity) {
+            GirlEntity entity = (GirlEntity)event.getEntity();
+            GirlEntity.getGirlEntityList().remove(entity);
         }
     }
 }

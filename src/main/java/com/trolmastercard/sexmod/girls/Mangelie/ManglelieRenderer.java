@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.EntityLookVectorHelper;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathGeometryRender;
@@ -451,12 +451,12 @@ extends GirlRenderer<ManglelieEntity> {
         return f8_class2932.isAttachedToMommy() && !ManglelieModel.isThreesomeAction(f8_class2932);
     }
 
-    public static Vec3d getMommyHeadOffset(GalathEntity f__class2972, float f) {
-        return Utils.a(f__class2972, ManglelieRenderer.mc.player, f).add(f__class2972.getCachedBoneOffset("mangPos"));
+    public static Vec3d getMommyHeadOffset(GalathEntity galath, float partialTicks) {
+        return EntityLookVectorHelper.getAimVector(galath, ManglelieRenderer.mc.player, partialTicks).add(galath.getCachedBoneOffset("mangPos"));
     }
 
-    public static Vec3d a(GalathEntity f__class2972, float f) {
-        return Utils.getInterpolatedPosition(f__class2972, f).add(f__class2972.getCachedBoneOffset("mangPos"));
+    public static Vec3d a(GalathEntity galath, float partialTicks) {
+        return EntityLookVectorHelper.getInterpolatedPosition(galath, partialTicks).add(galath.getCachedBoneOffset("mangPos"));
     }
 
     // gay synthetics

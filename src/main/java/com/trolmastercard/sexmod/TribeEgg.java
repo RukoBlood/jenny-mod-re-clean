@@ -47,10 +47,10 @@ public class TribeEgg extends Item {
         Vec3d vec3d3 = eyesPos.add(look.x * 5.0, look.y * 5.0, look.z * 5.0);
         RayTraceResult rayTraceResult = world.rayTraceBlocks(eyesPos, vec3d3, false, false, true);
         if (rayTraceResult == null) {
-            return new ActionResult<ItemStack>(EnumActionResult.FAIL, entityPlayer.getHeldItem(enumHand));
+            return new ActionResult<>(EnumActionResult.FAIL, entityPlayer.getHeldItem(enumHand));
         }
         if (rayTraceResult.typeOfHit == RayTraceResult.Type.MISS) {
-            return new ActionResult<ItemStack>(EnumActionResult.FAIL, entityPlayer.getHeldItem(enumHand));
+            return new ActionResult<>(EnumActionResult.FAIL, entityPlayer.getHeldItem(enumHand));
         }
         if (!entityPlayer.capabilities.isCreativeMode) {
             heldItem.shrink(1);
@@ -58,7 +58,7 @@ public class TribeEgg extends Item {
         if (!world.isRemote) {
             KoboldManager.spawnTribe(world, rayTraceResult.hitVec);
         }
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, entityPlayer.getHeldItem(enumHand));
+        return new ActionResult<>(EnumActionResult.SUCCESS, entityPlayer.getHeldItem(enumHand));
     }
 
     public static void RegisterTribeEgg() {
@@ -74,12 +74,8 @@ public class TribeEgg extends Item {
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public static void a(ModelRegistryEvent modelRegistryEvent) {
-        ModelLoader.setCustomModelResourceLocation((Item) TRIBE_EGG, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:tribe_egg"));
-    }
-
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
+    public static void a(ModelRegistryEvent event) {
+        ModelLoader.setCustomModelResourceLocation(TRIBE_EGG, 0, new ModelResourceLocation("sexmod:tribe_egg"));
     }
 }
 

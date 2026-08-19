@@ -14,20 +14,20 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class ew_class277 extends PlayerGirl {
-    final static public DataParameter<String> as = EntityDataManager.createKey(ew_class277.class, DataSerializers.STRING).getSerializer().createKey(119);
-    final static public DataParameter<BlockPos> au = EntityDataManager.createKey(ew_class277.class, DataSerializers.BLOCK_POS).getSerializer().createKey(120);
-    final static public DataParameter<String> at = EntityDataManager.createKey(ew_class277.class, DataSerializers.STRING).getSerializer().createKey(121);
+public abstract class WorkerPlayerEntity extends PlayerGirl {
+    final static public DataParameter<String> as = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.STRING).getSerializer().createKey(119);
+    final static public DataParameter<BlockPos> au = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.BLOCK_POS).getSerializer().createKey(120);
+    final static public DataParameter<String> at = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
     boolean ar = true;
     String ap = null;
     String av = null;
     BlockPos aq = null;
 
-    protected ew_class277(World world) {
+    protected WorkerPlayerEntity(World world) {
         super(world);
     }
 
-    protected ew_class277(World world, UUID uUID) {
+    protected WorkerPlayerEntity(World world, UUID uUID) {
         super(world, uUID);
     }
 
@@ -65,7 +65,7 @@ public abstract class ew_class277 extends PlayerGirl {
         String string = entityPlayer.getEntityData().getString("sexmod:GirlSpecific" + (Object)((Object) PlayerGirlEntity.fromGirl(this)));
         this.ar = false;
         if (!string.isEmpty()) {
-            this.setCustomPartList(ew_class277.c(string));
+            this.setCustomPartList(WorkerPlayerEntity.c(string));
         }
     }
 

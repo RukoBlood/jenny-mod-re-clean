@@ -19,11 +19,12 @@ import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import com.trolmastercard.sexmod.gender_change.hornypotion.HornyPotion;
 import com.trolmastercard.sexmod.girls.Allie.lamp.LampItem;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
+import com.trolmastercard.sexmod.girls.Galath.CummyEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathCoin.GalathCoin;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;
-import com.trolmastercard.sexmod.girls.Goblin.am_class34;
+import com.trolmastercard.sexmod.girls.Goblin.GoblinFirstPersonRenderer;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEggItem;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
@@ -48,9 +49,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 //Registers Events
 
 public class EventHandler {
-    public static void Register(boolean clientSide) throws IOException {
+    public static void Register(boolean showDebug) throws IOException {
         MinecraftForge.EVENT_BUS.register((Object)new GirlCombatProtection());
-        MinecraftForge.EVENT_BUS.register((Object)new eo_class262());
+        MinecraftForge.EVENT_BUS.register((Object)new LivingDeathHandler());
         MinecraftForge.EVENT_BUS.register((Object)new PlayerConnectionEvents());
         MinecraftForge.EVENT_BUS.register((Object)new HornyPotion());
         MinecraftForge.EVENT_BUS.register((Object)new DamageCalculation());
@@ -68,7 +69,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new DragonStaffItem.a_inner408());
         MinecraftForge.EVENT_BUS.register((Object)new KoboldManager.KoboldSavedData("tribes"));
         MinecraftForge.EVENT_BUS.register((Object)new KoboldEggItem());
-        MinecraftForge.EVENT_BUS.register((Object)new am_class34());
+        MinecraftForge.EVENT_BUS.register((Object)new GoblinFirstPersonRenderer());
         MinecraftForge.EVENT_BUS.register((Object)new GoblinEntity.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new PlayerGoblin.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new LampItem.a_inner38());
@@ -82,15 +83,15 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new GirlWorldData());
         MinecraftForge.EVENT_BUS.register((Object) ConfigWorldGenHandler.Generate());
         MinecraftForge.EVENT_BUS.register((Object)new ManglelieEntity.EventHandler());
-        MinecraftForge.EVENT_BUS.register((Object)new f4_class289());
-        if (clientSide) {
-            com.trolmastercard.sexmod.util.Handlers.EventHandler.RegisterIfAllowed();
+        MinecraftForge.EVENT_BUS.register((Object)new NameTagInteractHandler());
+        if (showDebug) {
+            RegisterIfAllowed();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
     static void RegisterIfAllowed() {
-        if (com.trolmastercard.sexmod.util.Handlers.EventHandler.needsPornWarning()) {
+        if (needsPornWarning()) {
             MinecraftForge.EVENT_BUS.register((Object)new PornWarning());
         } else {
             PornWarningWindow.isAdult = false;

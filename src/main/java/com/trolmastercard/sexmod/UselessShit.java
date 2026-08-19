@@ -3,13 +3,14 @@
  */
 package com.trolmastercard.sexmod;
 
-public class ht_class406 {
-    static public ht_class406 a;
+//TODO: THIS DOES NOTHING
+public class UselessShit {
+    static public UselessShit a;
     public boolean c;
     public boolean d;
     public boolean b;
 
-    public ht_class406(boolean bl, boolean bl2, boolean bl3) {
+    public UselessShit(boolean bl, boolean bl2, boolean bl3) {
         this.c = bl;
         this.d = bl2;
         this.b = bl3;

@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.girls.Mangelie;
 
 import javax.annotation.Nonnull;
 
-import com.trolmastercard.sexmod.util.Utils;
+import com.trolmastercard.sexmod.util.EntityLookVectorHelper;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -167,7 +167,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
     }
 
     Vec3d getEntityEyePosition(@Nonnull Entity entity) {
-        return Utils.getInterpolatedPosition(entity, this.mc.getRenderPartialTicks()).add(0.0, entity.getEyeHeight(), 0.0);
+        return EntityLookVectorHelper.getInterpolatedPosition(entity, this.mc.getRenderPartialTicks()).add(0.0, entity.getEyeHeight(), 0.0);
     }
 
     void updateArmIK(GirlEntity girl) {

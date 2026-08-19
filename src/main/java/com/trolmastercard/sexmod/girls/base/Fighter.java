@@ -15,7 +15,7 @@ import java.util.UUID;
 import com.trolmastercard.sexmod.companion.fighter.FighterCompanion;
 import com.trolmastercard.sexmod.Packets.SendCompanionHome;
 import com.trolmastercard.sexmod.Packets.SetNewHome;
-import com.trolmastercard.sexmod.Packets.bo_class90;
+import com.trolmastercard.sexmod.Packets.PlayerAction;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
@@ -133,7 +133,7 @@ public abstract class Fighter extends GirlEntity {
             this.goHome();
         } else if ("action.names.equipment".equals(actionName)) {
             EntityPlayerSP playerEntity = Minecraft.getMinecraft().player;
-            PackageHandler.INSTANCE.sendToServer((IMessage)new bo_class90(this.girlID(), playerEntity.getPersistentID()));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new PlayerAction(this.girlID(), playerEntity.getPersistentID()));
         } else if ("action.names.gohome".equals(actionName)) {
             this.goHome();
             PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));

@@ -28,7 +28,7 @@ import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.ew_class277;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerEntity;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
@@ -67,8 +67,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlayerGoblin extends ew_class277
-implements IGoblin {
+public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     final static public float aI = 2.0f;
     final static public DataParameter<String> ax = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.STRING).getSerializer().createKey(122);
     final static public DataParameter<Boolean> aA = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.BOOLEAN).getSerializer().createKey(126);

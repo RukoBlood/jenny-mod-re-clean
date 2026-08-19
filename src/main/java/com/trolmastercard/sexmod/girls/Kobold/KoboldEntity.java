@@ -41,7 +41,7 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.gui.g7_class352;
+import com.trolmastercard.sexmod.gui.TribeNameScreen;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Point2D;
@@ -490,7 +490,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     @SideOnly(value=Side.CLIENT)
     void m(UUID uUID) {
-        Minecraft.getMinecraft().displayGuiScreen(new g7_class352(uUID));
+        Minecraft.getMinecraft().displayGuiScreen(new TribeNameScreen(uUID));
     }
 
     @Override

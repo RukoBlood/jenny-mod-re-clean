@@ -23,16 +23,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class bo_class90
-implements IMessage {
+public class PlayerAction implements IMessage {
     boolean c;
     UUID a;
     UUID b;
 
-    public bo_class90() {
+    public PlayerAction() {
     }
 
-    public bo_class90(UUID uUID, UUID uUID2) {
+    public PlayerAction(UUID uUID, UUID uUID2) {
         this.a = uUID;
         this.b = uUID2;
         this.c = true;
@@ -50,8 +49,8 @@ implements IMessage {
     }
 
     public static class Handler
-    implements IMessageHandler<bo_class90, IMessage> {
-        public IMessage execute(bo_class90 bo_class902, MessageContext messageContext) {
+    implements IMessageHandler<PlayerAction, IMessage> {
+        public IMessage execute(PlayerAction bo_class902, MessageContext messageContext) {
             if (!bo_class902.c || messageContext.side != Side.SERVER) {
                 return null;
             }
@@ -65,8 +64,8 @@ implements IMessage {
         }
 
                 @Override
-        public IMessage onMessage(bo_class90 iMessage, MessageContext messageContext) {
-            return this.execute((bo_class90)iMessage, messageContext);
+        public IMessage onMessage(PlayerAction iMessage, MessageContext messageContext) {
+            return this.execute((PlayerAction)iMessage, messageContext);
         }
     }
 }

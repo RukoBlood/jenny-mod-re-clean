@@ -17,8 +17,7 @@ import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class StructureTracker
-extends WorldSavedData {
+public class StructureTracker extends WorldSavedData {
     final static public List<BlockPos> STRUCTURE_POSITIONS = new ArrayList<BlockPos>();
     final static public List<BlockPos> TEMP_POSITIONS = new ArrayList<BlockPos>();
     final static String d = "sexmod:galath_spawn_list";

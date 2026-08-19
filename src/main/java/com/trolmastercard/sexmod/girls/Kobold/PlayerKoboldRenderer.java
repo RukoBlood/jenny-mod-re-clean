@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.girls.Kobold;
 
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractPlayerKoblinGoboldRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerRenderer;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -20,7 +20,7 @@ import net.minecraft.util.math.Vec3i;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class PlayerKoboldRenderer
-extends AbstractPlayerKoblinGoboldRenderer {
+extends WorkerPlayerRenderer {
     public PlayerKoboldRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
         super(renderManager, animatedGeoModel);
     }

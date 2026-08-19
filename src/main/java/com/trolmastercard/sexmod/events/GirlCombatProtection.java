@@ -1,6 +1,6 @@
 package com.trolmastercard.sexmod.events;
 
-import com.trolmastercard.sexmod.CumDrainDamageSource;
+import com.trolmastercard.sexmod.girls.Galath.CumDrainDamageSource;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import net.minecraft.entity.player.EntityPlayer;

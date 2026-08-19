@@ -1,8 +1,7 @@
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Galath;
 
 import javax.annotation.Nullable;
 
-import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;

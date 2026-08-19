@@ -16,7 +16,7 @@ import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.AbstractPlayerKoblinGoboldRenderer;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerRenderer;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -34,7 +34,7 @@ import net.minecraft.util.math.Vec3i;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class PlayerGoblinRenderer extends AbstractPlayerKoblinGoboldRenderer {
+public class PlayerGoblinRenderer extends WorkerPlayerRenderer {
     PlayerGoblin B = null;
     boolean C = false;
     boolean E = false;

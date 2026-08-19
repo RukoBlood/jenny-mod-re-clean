@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.Packets.TeleportPlayer;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.girls.base.PlayerGirl.ew_class277;
+import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerEntity;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
@@ -52,7 +52,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 import software.bernie.geckolib3.util.MatrixStack;
 
-public class PlayerKobold extends ew_class277 implements IKobold {
+public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     final static public EyeAndKoboldColor aw = EyeAndKoboldColor.PURPLE;
     final static public DataParameter<Float> aA = EntityDataManager.createKey(PlayerKobold.class, DataSerializers.FLOAT).getSerializer().createKey(122);
     boolean aB = false;

@@ -14,7 +14,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 //aj
 public class NYIWinchesterItem extends Item implements IAnimatable {
     final static public NYIWinchesterItem NYI_WINCHESTER_ITEM = new NYIWinchesterItem();
-    final private AnimationFactory animationFactory = new AnimationFactory(this);
+    final private AnimationFactory factory = new AnimationFactory(this);
 
     public static void Register() {
         NYI_WINCHESTER_ITEM.setRegistryName("sexmod", "winchester");
@@ -28,7 +28,7 @@ public class NYIWinchesterItem extends Item implements IAnimatable {
 
     @Override
     public AnimationFactory getFactory() {
-        return this.animationFactory;
+        return this.factory;
     }
 }
 

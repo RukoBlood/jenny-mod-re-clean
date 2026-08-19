@@ -17,15 +17,15 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class g7_class352 extends GuiScreen {
+public class TribeNameScreen extends GuiScreen {
     final static int b = 15;
-    final static int a = 100;
-    final static int c = 20;
-    UUID e;
-    GuiTextField d;
+    final static int w = 100;
+    final static int h = 20;
+    UUID koboldID;
+    GuiTextField nameField;
 
-    public g7_class352(UUID uUID) {
-        this.e = uUID;
+    public TribeNameScreen(UUID uUID) {
+        this.koboldID = uUID;
     }
 
     @Override
@@ -36,30 +36,30 @@ public class g7_class352 extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        this.d = new GuiTextField(0, this.mc.fontRenderer, this.width / 2 - 50, this.height / 2 - 10, a, c);
-        this.d.setFocused(true);
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 25, this.height / 2 + 20, 50, c, "set"));
+        this.nameField = new GuiTextField(0, this.mc.fontRenderer, this.width / 2 - 50, this.height / 2 - 10, w, h);
+        this.nameField.setFocused(true);
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 25, this.height / 2 + 20, 50, h, "set"));
     }
 
     @Override
     public void updateScreen() {
-        this.d.updateCursorCounter();
+        this.nameField.updateCursorCounter();
         super.updateScreen();
     }
 
     @Override
     public void drawScreen(int n, int n2, float f) {
         this.drawHoveringText("Name Tribe", this.width / 2 - 39, this.height / 2 - 10);
-        this.d.drawTextBox();
+        this.nameField.drawTextBox();
         super.drawScreen(n, n2, f);
     }
 
     @Override
     protected void keyTyped(char c, int n) throws IOException {
-        this.d.textboxKeyTyped(c, n);
-        String string = this.d.getText();
+        this.nameField.textboxKeyTyped(c, n);
+        String string = this.nameField.getText();
         if (string.length() > 15) {
-            this.d.setText(string.substring(0, 15));
+            this.nameField.setText(string.substring(0, 15));
         }
         super.keyTyped(c, n);
     }
@@ -67,11 +67,11 @@ public class g7_class352 extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
-        String string = this.d.getText().trim();
+        String string = this.nameField.getText().trim();
         if (string.isEmpty()) {
             return;
         }
-        PackageHandler.INSTANCE.sendToServer((IMessage)new ClaimTribe(this.e, Minecraft.getMinecraft().player.getPersistentID(), string));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new ClaimTribe(this.koboldID, Minecraft.getMinecraft().player.getPersistentID(), string));
         Minecraft.getMinecraft().player.closeScreen();
     }
 
