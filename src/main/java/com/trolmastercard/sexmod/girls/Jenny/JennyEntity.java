@@ -405,7 +405,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.world instanceof FakeWorld) {
             return null;
         }
-        block5 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "eyes": {
                 if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.jenny.null", true, event);
@@ -447,99 +447,99 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.jenny.null", true, event);
-                        break block5;
+                        break;
                     }
                     case STRIP: {
                         this.createAnimation("animation.jenny.strip", false, event);
-                        break block5;
+                        break;
                     }
                     case PAYMENT: {
                         this.createAnimation("animation.jenny.payment", false, event);
-                        break block5;
+                        break;
                     }
                     case STARTBLOWJOB: {
                         this.createAnimation("animation.jenny.blowjobintro", false, event);
-                        break block5;
+                        break;
                     }
                     case SUCKBLOWJOB: {
                         this.createAnimation("animation.jenny.blowjobsuck", true, event);
-                        break block5;
+                        break;
                     }
                     case THRUSTBLOWJOB: {
                         this.createAnimation("animation.jenny.blowjobthrust", true, event);
-                        break block5;
+                        break;
                     }
                     case CUMBLOWJOB: {
                         this.createAnimation("animation.jenny.blowjobcum", false, event);
-                        break block5;
+                        break;
                     }
                     case STARTDOGGY: {
                         this.createAnimation("animation.jenny.doggygoonbed", false, event);
-                        break block5;
+                        break;
                     }
                     case WAITDOGGY: {
                         this.createAnimation("animation.jenny.doggywait", true, event);
-                        break block5;
+                        break;
                     }
                     case DOGGYSTART: {
                         this.createAnimation("animation.jenny.doggystart", false, event);
-                        break block5;
+                        break;
                     }
                     case DOGGYSLOW: {
                         this.createAnimation("animation.jenny.doggyslow", true, event);
-                        break block5;
+                        break;
                     }
                     case DOGGYFAST: {
                         this.createAnimation("animation.jenny.doggyfast_" + (this.aa ? "hard" : "soft"), true, event);
-                        break block5;
+                        break;
                     }
                     case DOGGYCUM: {
                         this.createAnimation("animation.jenny.doggycum", false, event);
-                        break block5;
+                        break;
                     }
                     case ATTACK: {
                         this.createAnimation("animation.jenny.attack" + this.nextAttack, false, event);
-                        break block5;
+                        break;
                     }
                     case BOW: {
                         this.createAnimation("animation.jenny.bowcharge", false, event);
-                        break block5;
+                        break;
                     }
                     case RIDE: {
                         this.createAnimation("animation.jenny.ride", true, event);
-                        break block5;
+                        break;
                     }
                     case SIT: {
                         this.createAnimation("animation.jenny.sit", true, event);
-                        break block5;
+                        break;
                     }
                     case THROW_PEARL: {
                         this.createAnimation("animation.jenny.throwpearl", false, event);
-                        break block5;
+                        break;
                     }
                     case DOWNED: {
                         this.createAnimation("animation.jenny.downed", true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_START: {
                         this.createAnimation("animation.jenny.paizuri_start", false, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_SLOW: {
                         this.createAnimation("animation.jenny.paizuri_slow", true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_FAST: {
                         this.createAnimation("animation.jenny.paizuri_fast", true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_CUM: {
                         this.createAnimation("animation.jenny.paizuri_cum", false, event);
-                        break block5;
+                        break;
                     }
                     case WAVE: {
                         this.createAnimation("animation.jenny.wave", true, event);
-                        break block5;
+                        break;
                     }
                     case WAVE_IDLE: {
                         this.createAnimation("animation.jenny.wave_idle", true, event);
@@ -557,7 +557,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
             this.initAnimationControllers();
         }
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
-            block71 : switch (soundKeyframeEvent.sound) {
+            switch (soundKeyframeEvent.sound) {
                 case "attackSound": {
                     this.PlaySound(SoundEvents.ENTITY_PLAYER_ATTACK_STRONG);
                     break;
@@ -596,19 +596,19 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
                         case "strip": {
                             this.b(string + I18n.format("jenny.dialogue.showBobsandveganapls", new Object[0]), true);
-                            break block71;
+                            break;
                         }
                         case "blowjob": {
                             this.b(string + I18n.format("jenny.dialogue.giveblowjob", new Object[0]), true);
-                            break block71;
+                            break;
                         }
                         case "doggy": {
                             this.b(string + I18n.format("jenny.dialogue.givesex", new Object[0]), true);
-                            break block71;
+                            break;
                         }
                         case "boobjob": {
                             this.b(string + I18n.format("jenny.dialogue.givebooba", new Object[0]), true);
-                            break block71;
+                            break;
                         }
                     }
                     this.b(string + "sex pls", true);

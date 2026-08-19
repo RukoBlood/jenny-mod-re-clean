@@ -88,20 +88,20 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     @Override
     public void setCustomPartList(List<Integer> list) {
         StringBuilder stringBuilder = new StringBuilder();
-        block5: for (int i = 0; i < list.size(); ++i) {
+        for (int i = 0; i < list.size(); ++i) {
             int n = list.get(i);
             switch (i) {
                 case 0: {
                     this.entityDataManager.set(aA, Float.valueOf((float)n / 100.0f * 0.25f));
-                    continue block5;
+                    continue;
                 }
                 case 1: {
                     this.entityDataManager.set(as, EyeAndKoboldColor.values()[n].toString());
-                    continue block5;
+                    continue;
                 }
                 case 2: {
                     this.entityDataManager.set(au, new BlockPos(EyeAndKoboldColor.values()[n].getMainColor()));
-                    continue block5;
+                    continue;
                 }
                 default: {
                     AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, n);
@@ -283,7 +283,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
         }
         float f = 0.25f - this.getDataManager().get(KoboldEntity.aE).floatValue();
         GeckoLibCache.getInstance().parser.setValue("size", f);
-        block5 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "eyes": {
                 if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.kobold.null", true, event);
@@ -330,81 +330,81 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                 switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.kobold.null", true, event);
-                        break block5;
+                        break;
                     }
                     case STRIP: {
                         this.createAnimation("animation.kobold.strip", false, event);
-                        break block5;
+                        break;
                     }
                     case ATTACK: {
                         this.createAnimation("animation.kobold.attack" + this.nextAttack, false, event);
-                        break block5;
+                        break;
                     }
                     case BOW: {
                         this.createAnimation("animation.kobold.bowcharge", false, event);
-                        break block5;
+                        break;
                     }
                     case SIT: {
                         this.createAnimation("animation.kobold.sit", true, event);
-                        break block5;
+                        break;
                     }
                     case MINE: {
                         this.createAnimation("animation.kobold.fall_tree", true, event);
-                        break block5;
+                        break;
                     }
                     case PAYMENT: {
                         this.createAnimation("animation.kobold.paymentBackpack", true, event);
-                        break block5;
+                        break;
                     }
                     case STARTBLOWJOB: {
                         this.createAnimation("animation.kobold.blowjobStart", false, event);
-                        break block5;
+                        break;
                     }
                     case SUCKBLOWJOB_BLINK: {
                         String string = this.az ? "R" : "L";
                         String string2 = this.ay ? "Switch" : "";
                         this.createAnimation("animation.kobold.blowjobSlow" + string + string2, true, event);
-                        break block5;
+                        break;
                     }
                     case THRUSTBLOWJOB: {
                         this.createAnimation("animation.kobold.blowjobFast", true, event);
-                        break block5;
+                        break;
                     }
                     case CUMBLOWJOB: {
                         this.createAnimation("animation.kobold.blowjobCum", false, event);
-                        break block5;
+                        break;
                     }
                     case KOBOLD_ANAL_START: {
                         this.createAnimation("animation.kobold.analStart", false, event);
-                        break block5;
+                        break;
                     }
                     case KOBOLD_ANAL_SLOW: {
                         this.createAnimation("animation.kobold.analSoft", true, event);
-                        break block5;
+                        break;
                     }
                     case KOBOLD_ANAL_FAST: {
                         this.createAnimation("animation.kobold.analHard", true, event);
-                        break block5;
+                        break;
                     }
                     case KOBOLD_ANAL_CUM: {
                         this.createAnimation("animation.kobold.analCum", true, event);
-                        break block5;
+                        break;
                     }
                     case SLEEP: {
                         this.createAnimation("animation.kobold.sleep", true, event);
-                        break block5;
+                        break;
                     }
                     case MATING_PRESS_START: {
                         this.createAnimation("animation.kobold.mating_press_start", false, event);
-                        break block5;
+                        break;
                     }
                     case MATING_PRESS_SOFT: {
                         this.createAnimation("animation.kobold.mating_press_soft", true, event);
-                        break block5;
+                        break;
                     }
                     case MATING_PRESS_HARD: {
                         this.createAnimation("animation.kobold.mating_press_hard", true, event);
-                        break block5;
+                        break;
                     }
                     case MATING_PRESS_CUM: {
                         this.createAnimation("animation.kobold.mating_press_cum", true, event);

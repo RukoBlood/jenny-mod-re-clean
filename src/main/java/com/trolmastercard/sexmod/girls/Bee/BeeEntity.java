@@ -314,7 +314,7 @@ public class BeeEntity extends Supporter {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        block4 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "movement": {
                 if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.bee.null", true, event);
@@ -327,22 +327,23 @@ public class BeeEntity extends Supporter {
                 switch (this.getCurrentAction()) {
                     case CITIZEN_START: {
                         this.createAnimation("animation.bee.sex_start", false, event);
-                        break block4;
+                        break;
                     }
                     case CITIZEN_SLOW: {
                         this.createAnimation("animation.bee.sex_slow", true, event);
-                        break block4;
+                        break;
                     }
                     case CITIZEN_FAST: {
                         this.createAnimation("animation.bee.sex_fast", true, event);
-                        break block4;
+                        break;
                     }
                     case CITIZEN_CUM: {
                         this.createAnimation("animation.bee.sex_cum", false, event);
-                        break block4;
+                        break;
                     }
                     case THROW_PEARL: {
                         this.createAnimation("animation.bee.throw_pearl", true, event);
+                        break;
                     }
                 }
             }
@@ -407,6 +408,7 @@ public class BeeEntity extends Supporter {
                 case "sex_fastReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.resetAnimationControllerOffset();
+                    break;
                 }
             }
         };

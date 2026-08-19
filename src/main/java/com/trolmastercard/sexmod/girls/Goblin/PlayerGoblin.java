@@ -697,7 +697,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        block5 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "eyes": {
                 if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.goblin.null", true, event);
@@ -746,123 +746,123 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                 switch (this.getCurrentAction()) {
                     case SHOULDER_IDLE: {
                         this.createAnimation("animation.goblin.shoulder_idle", true, event);
-                        break block5;
+                        break;
                     }
                     case PICK_UP: {
                         this.createAnimation(String.format("animation.goblin.pick_up_%sperson", string), true, event);
-                        break block5;
+                        break;
                     }
                     case START_THROWING: {
                         this.createAnimation(String.format("animation.goblin.throw_%sperson", string), true, event);
-                        break block5;
+                        break;
                     }
                     case THROWN: {
                         this.createAnimation("animation.goblin.thrown", true, event);
-                        break block5;
+                        break;
                     }
                     case NULL: {
                         this.createAnimation("animation.goblin.null", true, event);
-                        break block5;
+                        break;
                     }
                     case STAND_UP: {
                         this.createAnimation("animation.goblin.stand_up", false, event);
-                        break block5;
+                        break;
                     }
                     case STRIP: {
                         this.createAnimation("animation.goblin.strip", false, event);
-                        break block5;
+                        break;
                     }
                     case ATTACK: {
                         this.createAnimation("animation.goblin.attack" + this.nextAttack, false, event);
-                        break block5;
+                        break;
                     }
                     case BOW: {
                         this.createAnimation("animation.goblin.bowcharge", false, event);
-                        break block5;
+                        break;
                     }
                     case SIT: {
                         this.createAnimation("animation.goblin.sit", true, event);
-                        break block5;
+                        break;
                     }
                     case NELSON_INTRO: {
                         this.createAnimation("animation.goblin.nelson_intro", true, event);
-                        break block5;
+                        break;
                     }
                     case NELSON_SLOW: {
                         this.createAnimation("animation.goblin.nelson_slow" + (this.ay ? "" : "2"), true, event);
-                        break block5;
+                        break;
                     }
                     case NELSON_FAST: {
                         this.createAnimation("animation.goblin.nelson_fast" + (this.aF ? "c" : "s"), true, event);
-                        break block5;
+                        break;
                     }
                     case NELSON_CUM: {
                         this.createAnimation("animation.goblin.nelson_cum", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_INTRO_0: {
                         this.createAnimation("animation.goblin.breeding_intro_1", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_INTRO_1: {
                         this.createAnimation("animation.goblin.breeding_intro_2", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_INTRO_2: {
                         this.createAnimation("animation.goblin.breeding_intro_3", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_SLOW_0: {
                         this.createAnimation("animation.goblin.breeding_slow_1" + (this.aB ? "l" : "r"), true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_SLOW_2: {
                         this.createAnimation("animation.goblin.breeding_slow_3", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_FAST_0: {
                         this.createAnimation("animation.goblin.breeding_fast_1" + (this.aH ? "c" : "s"), true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_FAST_2: {
                         this.createAnimation("animation.goblin.breeding_fast_3", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_CUM_0: {
                         this.createAnimation("animation.goblin.breeding_cum_1", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_CUM_1: {
                         this.createAnimation("animation.goblin.breeding_cum_2", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_CUM_2: {
                         this.createAnimation("animation.goblin.breeding_cum_3", true, event);
-                        break block5;
+                        break;
                     }
                     case BREEDING_1: {
                         this.createAnimation("animation.goblin.breeding_2", true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_START: {
                         this.createAnimation("animation.goblin.paizuri_start", true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_SLOW: {
                         this.createAnimation("animation.goblin.paizuri_slow" + this.aD, true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_FAST: {
                         this.createAnimation("animation.goblin.paizuri_fast", true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_FAST_CONTINUES: {
                         this.createAnimation("animation.goblin.paizuri_fast_countinues", true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_IDLE: {
                         this.createAnimation("animation.goblin.paizuri_idle", true, event);
-                        break block5;
+                        break;
                     }
                     case PAIZURI_CUM: {
                         this.createAnimation("animation.goblin.paizuri_cum", true, event);

@@ -518,7 +518,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.world instanceof FakeWorld) {
             return null;
         }
-        block5 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "eyes": {
                 if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.bia.null", true, event);
@@ -560,110 +560,111 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.bia.null", true, event);
-                        break block5;
+                        break;
                     }
                     case STRIP: {
                         this.createAnimation("animation.bia.strip", false, event);
-                        break block5;
+                        break;
                     }
                     case ATTACK: {
                         this.createAnimation("animation.bia.attack" + this.nextAttack, false, event);
-                        break block5;
+                        break;
                     }
                     case BOW: {
                         this.createAnimation("animation.bia.bowcharge", false, event);
-                        break block5;
+                        break;
                     }
                     case RIDE: {
                         this.createAnimation("animation.bia.ride", true, event);
-                        break block5;
+                        break;
                     }
                     case SIT: {
                         this.createAnimation("animation.bia.sit", true, event);
-                        break block5;
+                        break;
                     }
                     case THROW_PEARL: {
                         this.createAnimation("animation.bia.throwpearl", false, event);
-                        break block5;
+                        break;
                     }
                     case DOWNED: {
                         this.createAnimation("animation.bia.downed", true, event);
-                        break block5;
+                        break;
                     }
                     case TALK_HORNY: {
                         this.createAnimation("animation.bia.talk_horny2", true, event);
-                        break block5;
+                        break;
                     }
                     case TALK_IDLE: {
                         this.createAnimation("animation.bia.talk_idle2", true, event);
-                        break block5;
+                        break;
                     }
                     case TALK_RESPONSE: {
                         this.createAnimation("animation.bia.talk_response", true, event);
-                        break block5;
+                        break;
                     }
                     case ANAL_PREPARE: {
                         this.createAnimation("animation.bia.anal_prepare", false, event);
-                        break block5;
+                        break;
                     }
                     case ANAL_WAIT: {
                         this.createAnimation("animation.bia.anal_wait", false, event);
-                        break block5;
+                        break;
                     }
                     case ANAL_START: {
                         this.createAnimation("animation.bia.anal_start", true, event);
-                        break block5;
+                        break;
                     }
                     case ANAL_SLOW: {
                         this.createAnimation("animation.bia.anal_slow", true, event);
-                        break block5;
+                        break;
                     }
                     case ANAL_FAST: {
                         this.createAnimation("animation.bia.anal_fast", true, event);
-                        break block5;
+                        break;
                     }
                     case ANAL_CUM: {
                         this.createAnimation("animation.bia.anal_cum", false, event);
-                        break block5;
+                        break;
                     }
                     case HEAD_PAT: {
                         this.createAnimation("animation.bia.headpat", false, event);
-                        break block5;
+                        break;
                     }
                     case SITDOWN: {
                         this.createAnimation("animation.bia.sitdown", false, event);
-                        break block5;
+                        break;
                     }
                     case SITDOWNIDLE: {
                         this.createAnimation("animation.bia.sitdownidle", true, event);
-                        break block5;
+                        break;
                     }
                     case PRONE_DOGGY_INTRO: {
                         this.createAnimation("animation.bia.prone_doggy_intro", true, event);
-                        break block5;
+                        break;
                     }
                     case PRONE_DOGGY_INSERT: {
                         this.createAnimation("animation.bia.prone_doggy_insert", true, event);
-                        break block5;
+                        break;
                     }
                     case PRONE_DOGGY_SOFT: {
                         this.createAnimation("animation.bia.prone_doggy_soft", true, event);
-                        break block5;
+                        break;
                     }
                     case PRONE_DOGGY_HARD: {
                         this.createAnimation("animation.bia.prone_doggy_hard" + this.ah, true, event);
-                        break block5;
+                        break;
                     }
                     case PRONE_DOGGY_CUM: {
                         this.createAnimation("animation.bia.prone_doggy_cum", true, event);
-                        break block5;
+                        break;
                     }
                     case WAVE_IDLE: {
                         this.createAnimation("animation.bia.wave_idle", true, event);
-                        break block5;
+                        break;
                     }
                     case WAVE: {
                         this.createAnimation("animation.bia.wave", true, event);
+                        break;
                     }
                 }
             }
@@ -885,6 +886,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "orgasm2": {
                     this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[7]);
+                    break;
                 }
             }
         };

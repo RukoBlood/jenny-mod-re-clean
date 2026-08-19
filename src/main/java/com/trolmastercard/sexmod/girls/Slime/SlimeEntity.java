@@ -350,7 +350,7 @@ public class SlimeEntity extends GirlEntity {
         if (this.world instanceof FakeWorld) {
             return null;
         }
-        block4 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "eyes": {
                 if (this.getCurrentAction() == Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.slime.null", true, event);
@@ -367,51 +367,51 @@ public class SlimeEntity extends GirlEntity {
                 switch (this.getCurrentAction()) {
                     case UNDRESS: {
                         this.createAnimation("animation.slime.undress", false, event);
-                        break block4;
+                        break;
                     }
                     case DRESS: {
                         this.createAnimation("animation.slime.dress", false, event);
-                        break block4;
+                        break;
                     }
                     case STRIP: {
                         this.createAnimation("animation.slime.strip", false, event);
-                        break block4;
+                        break;
                     }
                     case STARTBLOWJOB: {
                         this.createAnimation("animation.slime.blowjobintro", false, event);
-                        break block4;
+                        break;
                     }
                     case SUCKBLOWJOB: {
                         this.createAnimation("animation.slime.blowjobsuck", true, event);
-                        break block4;
+                        break;
                     }
                     case THRUSTBLOWJOB: {
                         this.createAnimation("animation.slime.blowjobthrust", true, event);
-                        break block4;
+                        break;
                     }
                     case CUMBLOWJOB: {
                         this.createAnimation("animation.slime.blowjobcum", false, event);
-                        break block4;
+                        break;
                     }
                     case STARTDOGGY: {
                         this.createAnimation("animation.slime.doggygoonbed", false, event);
-                        break block4;
+                        break;
                     }
                     case WAITDOGGY: {
                         this.createAnimation("animation.slime.doggywait", true, event);
-                        break block4;
+                        break;
                     }
                     case DOGGYSTART: {
                         this.createAnimation("animation.slime.doggystart", false, event);
-                        break block4;
+                        break;
                     }
                     case DOGGYSLOW: {
                         this.createAnimation("animation.slime.doggyslow", true, event);
-                        break block4;
+                        break;
                     }
                     case DOGGYFAST: {
                         this.createAnimation("animation.slime.doggyfast", true, event);
-                        break block4;
+                        break;
                     }
                     case DOGGYCUM: {
                         this.createAnimation("animation.slime.doggycum", false, event);

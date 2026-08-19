@@ -217,7 +217,7 @@ extends PlayerGirl {
 
     @Override
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        block5 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "eyes": {
                 if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.ellie.null", true, event);
@@ -264,103 +264,103 @@ extends PlayerGirl {
                 switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.ellie.null", true, event);
-                        break block5;
+                        break;
                     }
                     case STRIP: {
                         this.createAnimation("animation.ellie.strip", false, event);
-                        break block5;
+                        break;
                     }
                     case DASH: {
                         this.createAnimation("animation.ellie.dash", false, event);
-                        break block5;
+                        break;
                     }
                     case HUG: {
                         this.createAnimation("animation.ellie.hug", false, event);
-                        break block5;
+                        break;
                     }
                     case HUGIDLE: {
                         this.createAnimation("animation.ellie.hugidle", true, event);
-                        break block5;
+                        break;
                     }
                     case HUGSELECTED: {
                         this.createAnimation("animation.ellie.hugselected", false, event);
-                        break block5;
+                        break;
                     }
                     case SITDOWN: {
                         this.createAnimation("animation.ellie.sitdown", false, event);
-                        break block5;
+                        break;
                     }
                     case SITDOWNIDLE: {
                         this.createAnimation("animation.ellie.sitdownidle", true, event);
-                        break block5;
+                        break;
                     }
                     case COWGIRLSTART: {
                         this.createAnimation("animation.ellie.cowgirlstart", false, event);
-                        break block5;
+                        break;
                     }
                     case COWGIRLSLOW: {
                         this.createAnimation("animation.ellie.cowgirlslow2", true, event);
-                        break block5;
+                        break;
                     }
                     case COWGIRLFAST: {
                         this.createAnimation("animation.ellie.cowgirlfast", true, event);
-                        break block5;
+                        break;
                     }
                     case COWGIRLCUM: {
                         this.createAnimation("animation.ellie.cowgirlcum", true, event);
-                        break block5;
+                        break;
                     }
                     case ATTACK: {
                         this.createAnimation("animation.ellie.attack" + this.nextAttack, false, event);
-                        break block5;
+                        break;
                     }
                     case BOW: {
                         this.createAnimation("animation.ellie.bowcharge", false, event);
-                        break block5;
+                        break;
                     }
                     case RIDE: {
                         this.createAnimation("animation.ellie.ride", true, event);
-                        break block5;
+                        break;
                     }
                     case SIT: {
                         this.createAnimation("animation.ellie.sit", true, event);
-                        break block5;
+                        break;
                     }
                     case THROW_PEARL: {
                         this.createAnimation("animation.ellie.throwpearl", false, event);
-                        break block5;
+                        break;
                     }
                     case DOWNED: {
                         this.createAnimation("animation.ellie.downed", true, event);
-                        break block5;
+                        break;
                     }
                     case MISSIONARY_START: {
                         this.createAnimation("animation.ellie.missionary_start", false, event);
-                        break block5;
+                        break;
                     }
                     case MISSIONARY_SLOW: {
                         this.createAnimation("animation.ellie.missionary_slow", true, event);
-                        break block5;
+                        break;
                     }
                     case MISSIONARY_FAST: {
                         this.createAnimation("animation.ellie.missionary_fast", true, event);
-                        break block5;
+                        break;
                     }
                     case MISSIONARY_CUM: {
                         this.createAnimation("animation.ellie.missionary_cum", false, event);
-                        break block5;
+                        break;
                     }
                     case CARRY_INTRO: {
                         this.createAnimation("animation.ellie.carry_intro", false, event);
-                        break block5;
+                        break;
                     }
                     case CARRY_SLOW: {
                         this.createAnimation("animation.ellie.carry_slow" + this.ap, true, event);
-                        break block5;
+                        break;
                     }
                     case CARRY_FAST: {
                         this.createAnimation("animation.ellie.carry_fast", true, event);
-                        break block5;
+                        break;
                     }
                     case CARRY_CUM: {
                         this.createAnimation("animation.ellie.carry_cum", true, event);
@@ -665,6 +665,7 @@ extends PlayerGirl {
                 case "sexUI": {
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.showUI();
+
                 }
             }
         };

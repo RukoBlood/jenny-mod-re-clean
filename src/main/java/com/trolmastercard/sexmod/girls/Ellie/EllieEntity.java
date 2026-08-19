@@ -707,6 +707,7 @@ public class EllieEntity extends Fighter implements IEllie {
                     }
                     case CARRY_CUM: {
                         this.createAnimation("animation.ellie.carry_cum", true, event);
+                        break;
                     }
                 }
         }
@@ -966,6 +967,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 case "carry_fastDone": {
                     if (!this.isControlledByLocalPlayer() || HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.CARRY_SLOW);
+                    break;
                 }
             }
         };

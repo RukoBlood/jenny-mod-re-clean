@@ -128,7 +128,7 @@ public class PlayerBee extends PlayerGirl {
 
     @Override
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        block4 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "movement": {
                 if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.bee.null", true, event);
@@ -141,38 +141,39 @@ public class PlayerBee extends PlayerGirl {
                 switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.bee.null", false, event);
-                        break block4;
+                        break;
                     }
                     case CITIZEN_START: {
                         this.createAnimation("animation.bee.sex_start", false, event);
-                        break block4;
+                        break;
                     }
                     case CITIZEN_SLOW: {
                         this.createAnimation("animation.bee.sex_slow", true, event);
-                        break block4;
+                        break;
                     }
                     case CITIZEN_FAST: {
                         this.createAnimation("animation.bee.sex_fast", true, event);
-                        break block4;
+                        break;
                     }
                     case CITIZEN_CUM: {
                         this.createAnimation("animation.bee.sex_cum", false, event);
-                        break block4;
+                        break;
                     }
                     case THROW_PEARL: {
                         this.createAnimation("animation.bee.throw_pearl", true, event);
-                        break block4;
+                        break;
                     }
                     case ATTACK: {
                         this.createAnimation("animation.bee.attack" + this.nextAttack, false, event);
-                        break block4;
+                        break;
                     }
                     case BOW: {
                         this.createAnimation("animation.bee.bowcharge", false, event);
-                        break block4;
+                        break;
                     }
                     case RIDE: {
                         this.createAnimation("animation.bee.ride", true, event);
+                        break;
                     }
                 }
             }
@@ -242,6 +243,7 @@ public class PlayerBee extends PlayerGirl {
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     this.resetCameraAndPhysics();
+                    break;
                 }
             }
         };

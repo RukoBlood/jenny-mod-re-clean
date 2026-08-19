@@ -663,7 +663,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        block5 : switch (event.getController().getName()) {
+        switch (event.getController().getName()) {
             case "eyes": {
                 if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.cat.null", true, event);
@@ -697,84 +697,84 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 switch (this.getCurrentAction()) {
                     case NULL: {
                         this.createAnimation("animation.cat.null", true, event);
-                        break block5;
+                        break;
                     }
                     case ATTACK: {
                         this.createAnimation("animation.cat.attack" + this.nextAttack, false, event);
-                        break block5;
+                        break;
                     }
                     case RIDE: 
                     case SIT: {
                         this.createAnimation("animation.cat.sit", true, event);
-                        break block5;
+                        break;
                     }
                     case BOW: {
                         this.createAnimation("animation.cat.bowcharge", false, event);
-                        break block5;
+                        break;
                     }
                     case THROW_PEARL: {
                         this.createAnimation("animation.cat.throwpearl", true, event);
-                        break block5;
+                        break;
                     }
                     case DOWNED: {
                         this.createAnimation("animation.cat.downed", true, event);
-                        break block5;
+                        break;
                     }
                     case FISHING_START: {
                         this.createAnimation("animation.cat.start_fishing", false, event);
-                        break block5;
+                        break;
                     }
                     case FISHING_IDLE: {
                         this.createAnimation("animation.cat.idle_fishing", true, event);
-                        break block5;
+                        break;
                     }
                     case FISHING_EAT: {
                         this.createAnimation("animation.cat.eat_fishing", false, event);
-                        break block5;
+                        break;
                     }
                     case FISHING_THROW_AWAY: {
                         this.createAnimation("animation.cat.throw_away", false, event);
-                        break block5;
+                        break;
                     }
                     case PAYMENT: {
                         this.createAnimation("animation.cat.payment", false, event);
-                        break block5;
+                        break;
                     }
                     case TOUCH_BOOBS_INTRO: {
                         this.createAnimation("animation.cat.touch_boobs_intro", false, event);
-                        break block5;
+                        break;
                     }
                     case TOUCH_BOOBS_SLOW: {
                         this.createAnimation("animation.cat.touch_boobs_slow" + (this.ae ? "1" : ""), true, event);
-                        break block5;
+                        break;
                     }
                     case TOUCH_BOOBS_FAST: {
                         this.createAnimation("animation.cat.touch_boobs_fast", true, event);
-                        break block5;
+                        break;
                     }
                     case TOUCH_BOOBS_CUM: {
                         this.createAnimation("animation.cat.touch_boobs_cum", false, event);
-                        break block5;
+                        break;
                     }
                     case WAIT_CAT: {
                         this.createAnimation("animation.cat.wait", false, event);
-                        break block5;
+                        break;
                     }
                     case COWGIRL_SITTING_INTRO: {
                         this.createAnimation("animation.cat.sitting_intro", false, event);
-                        break block5;
+                        break;
                     }
                     case COWGIRL_SITTING_SLOW: {
                         this.createAnimation("animation.cat.sitting_slow", true, event);
-                        break block5;
+                        break;
                     }
                     case COWGIRL_SITTING_FAST: {
                         this.createAnimation("animation.cat.sitting_fast", true, event);
-                        break block5;
+                        break;
                     }
                     case COWGIRL_SITTING_CUM: {
                         this.createAnimation("animation.cat.sitting_cum", false, event);
-                        break block5;
+                        break;
                     }
                     case HEAD_PAT: {
                         this.createAnimation("animation.cat.head_pat", true, event);
