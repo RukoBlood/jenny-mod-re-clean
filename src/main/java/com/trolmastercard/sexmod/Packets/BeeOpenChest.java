@@ -49,8 +49,7 @@ implements IMessage {
         ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
     }
 
-    public static class a_inner288
-    implements IMessageHandler<BeeOpenChest, IMessage> {
+    public static class a_inner288 implements IMessageHandler<BeeOpenChest, IMessage> {
         public IMessage a(BeeOpenChest f3_class2872, MessageContext messageContext) {
             if (!f3_class2872.b) {
                 System.out.println("received an invalid message @BeeOpenChest :(");
@@ -72,10 +71,6 @@ implements IMessage {
                 @Override
         public IMessage onMessage(BeeOpenChest iMessage, MessageContext messageContext) {
             return this.a((BeeOpenChest)iMessage, messageContext);
-        }
-
-        private static RuntimeException a(RuntimeException runtimeException) {
-            return runtimeException;
         }
     }
 }

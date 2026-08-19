@@ -13,6 +13,7 @@ import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.companion.CompanionPearl;
 import com.trolmastercard.sexmod.companion.fighter.DamageCalculation;
 import com.trolmastercard.sexmod.companion.fighter.FighterCompanion;
+import com.trolmastercard.sexmod.deprecated.NYIWinchesterItem.NYIWinchesterItem;
 import com.trolmastercard.sexmod.events.*;
 import com.trolmastercard.sexmod.gender_change.RenderPlayerGirl;
 import com.trolmastercard.sexmod.gender_change.SexPromptManager;

@@ -4,7 +4,7 @@
  * Could not load the following classes:
  *  net.minecraftforge.common.MinecraftForge
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.deprecated.NYIWinchesterItem;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;

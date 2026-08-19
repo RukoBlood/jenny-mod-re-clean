@@ -8,13 +8,14 @@
  *  javax.vecmath.Vector4f
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.deprecated.NYIWinchesterItem;
 
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+import com.trolmastercard.sexmod.BoneDeformProcessor;
 import com.trolmastercard.sexmod.events.DebugMode;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.item.ItemStack;
@@ -47,9 +48,9 @@ public class NYIWinchesterRenderer extends GeoItemRenderer<NYIWinchesterItem> {
         MATRIX_STACK.moveToPivot(geoCube);
         MATRIX_STACK.rotate(geoCube);
         MATRIX_STACK.moveBackFromPivot(geoCube);
-        for (GeoQuad geoQuad : geoCube.quads) {
-            if (geoQuad == null) continue;
-            Vector3f vector3f = new Vector3f((float)geoQuad.normal.getX(), (float)geoQuad.normal.getY(), (float)geoQuad.normal.getZ());
+        for (GeoQuad quad : geoCube.quads) {
+            if (quad == null) continue;
+            Vector3f vector3f = new Vector3f((float)quad.normal.getX(), (float)quad.normal.getY(), (float)quad.normal.getZ());
             MATRIX_STACK.getNormalMatrix().transform((Tuple3f)vector3f);
             if ((geoCube.size.y == 0.0f || geoCube.size.z == 0.0f) && vector3f.getX() < 0.0f) {
                 vector3f.x *= -1.0f;
@@ -61,7 +62,7 @@ public class NYIWinchesterRenderer extends GeoItemRenderer<NYIWinchesterItem> {
                 vector3f.z *= -1.0f;
             }
             Vec3d vec3d = DebugMode.devDebugFloats[0] == 0.0f ? BoneDeformProcessor.calculatePhysicsVector(new Vec3d(f, f2, f3), vector3f, a) : new Vec3d(f, f2, f3);
-            for (GeoVertex geoVertex : geoQuad.vertices) {
+            for (GeoVertex geoVertex : quad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
                 MATRIX_STACK.getModelMatrix().transform((Tuple4f)vector4f);
                 bufferBuilder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex(geoVertex.textureU, geoVertex.textureV).color((float)vec3d.x, (float)vec3d.y, (float)vec3d.z, f4).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
