@@ -232,7 +232,7 @@ public class LampItem extends Item implements IAnimatable {
     }
 
     Vec3d a(EntityPlayer entityPlayer) {
-        return entityPlayer.getPositionVector().add(VectorMath.rotate(new Vec3d(0.0, 0.0, 2.0), entityPlayer.rotationYawHead));
+        return entityPlayer.getPositionVector().add(VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 2.0), entityPlayer.rotationYawHead));
     }
 
     @Override

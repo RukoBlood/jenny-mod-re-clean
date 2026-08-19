@@ -247,7 +247,7 @@ public class EllieEntity extends Fighter implements IEllie {
             return;
         }
         float yaw = this.getYawRotation();
-        Vec3d pos = this.getTargetPosition().add(VectorMath.rotate(new Vec3d(0.0, 2.5625f - player.getEyeHeight(), -0.3125), 180.0f + yaw));
+        Vec3d pos = this.getTargetPosition().add(VectorMath.rotateByYaw(new Vec3d(0.0, 2.5625f - player.getEyeHeight(), -0.3125), 180.0f + yaw));
         player.setPositionAndUpdate(pos.x, pos.y, pos.z);
     }
 
@@ -313,7 +313,7 @@ public class EllieEntity extends Fighter implements IEllie {
             player.noClip = true;
             pos = this.getTargetPosition();
             player.rotationYaw = this.getYawRotation();
-            vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.1), player.rotationYaw);
+            vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.1), player.rotationYaw);
             pos = pos.add(vec3d);
             player.setPositionAndUpdate(pos.x, pos.y, pos.z);
             PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
@@ -334,7 +334,7 @@ public class EllieEntity extends Fighter implements IEllie {
             player.noClip = true;
             pos = this.getTargetPosition();
             player.rotationYaw = this.getYawRotation() + 180.0f;
-            vec3d = VectorMath.rotate(new Vec3d(0.0, 1.0 - (double)player.eyeHeight, -1.8125), player.rotationYaw);
+            vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 1.0 - (double)player.eyeHeight, -1.8125), player.rotationYaw);
             pos = pos.add(vec3d);
             player.setPositionAndUpdate(pos.x, pos.y, pos.z);
             PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
@@ -497,7 +497,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 } else {
                     entityPlayer.setNoGravity(true);
                     entityPlayer.noClip = true;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, -0.5), entityPlayer.rotationYaw);
+                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, -0.5), entityPlayer.rotationYaw);
                     Vec3d vec3d2 = vec3d.add(entityPlayer.getPositionVector());
                     this.setTargetPosition(vec3d2);
                     this.setYawRotation(entityPlayer.rotationYaw);

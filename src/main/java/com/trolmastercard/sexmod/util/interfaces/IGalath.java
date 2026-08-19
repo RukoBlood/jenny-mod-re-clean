@@ -10,7 +10,7 @@ public interface IGalath {
 
     public boolean isWingsAnimated();
 
-    public boolean isWingsVisible();
+    public boolean areWingsAnimated();
 
     public boolean isHuggingManglelie();
 }

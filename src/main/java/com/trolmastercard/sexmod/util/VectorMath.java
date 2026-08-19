@@ -32,10 +32,10 @@ public class VectorMath {
     }
 
     public static Vec3d RotateY(double x, double y, double z, float yaw) {
-        return VectorMath.rotate(new Vec3d(x, y, z), yaw);
+        return VectorMath.rotateByYaw(new Vec3d(x, y, z), yaw);
     }
 
-    public static Vec3d rotate(Vec3d vec, float yaw) {
+    public static Vec3d rotateByYaw(Vec3d vec, float yaw) {
         return VectorMath.rotate(vec, 0.0f, yaw);
     }
 

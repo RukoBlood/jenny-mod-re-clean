@@ -17,7 +17,6 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4f;
 
-import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.girls.base.*;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;

@@ -353,7 +353,7 @@ public class FighterCompanion extends CompanionBase {
             return;
         }
         Vec3d vec3d = new Vec3d(0.0, 0.0, 0.1f);
-        vec3d = VectorMath.rotate(vec3d, this.girl.rotationYaw);
+        vec3d = VectorMath.rotateByYaw(vec3d, this.girl.rotationYaw);
         this.girl.motionX = vec3d.x;
         this.girl.motionZ = vec3d.z;
     }

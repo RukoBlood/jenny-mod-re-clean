@@ -72,9 +72,9 @@ extends PlayerGirl {
     @Override
     public void onGuiActionSelected(String actionName, UUID partnerUUID) {
         if ("Face fuck".equals(actionName)) {
-            this.bindPlayerPartner(partnerUUID);
+            this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.CARRY_INTRO);
-            this.initActionState(this.getOutfitIndex(), Action.CARRY_INTRO);
+            this.sendActionPacket(this.getOutfitIndex(), Action.CARRY_INTRO);
         }
     }
 
@@ -114,7 +114,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         PlayerEllie.openInventoryGui(player, this, new String[]{"Face fuck"}, false);
         return true;
     }

@@ -41,13 +41,12 @@ public class SexUI extends Gui {
         h = true;
     }
 
-    public static void a(boolean bl) {
-        if (shouldBeRendered) {
-            return;
+    public static void setHornyMeterVisible(boolean bl) {
+        if (!shouldBeRendered) {
+            SexUI.resetCumPercentage();
+            shouldBeRendered = true;
+            h = bl;
         }
-        SexUI.resetCumPercentage();
-        shouldBeRendered = true;
-        h = bl;
     }
 
     public static void hide() {

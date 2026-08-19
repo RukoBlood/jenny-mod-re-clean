@@ -215,7 +215,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
     }
 
     void updateWingsVisibility(GirlEntity girl) {
-        this.getAnimationProcessor().getBone("wings").setHidden(!((IGalath)((Object)girl)).isWingsVisible());
+        this.getAnimationProcessor().getBone("wings").setHidden(!((IGalath)((Object)girl)).areWingsAnimated());
     }
 
     void updateOutfitBonesVisibility(GirlEntity girl) {

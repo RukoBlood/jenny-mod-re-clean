@@ -61,7 +61,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean shouldRenderArmor() {
+    public boolean canBeInteracted() {
         return false;
     }
 
@@ -79,18 +79,18 @@ extends PlayerGirl {
     public void onGuiActionSelected(String actionName, UUID partnerUUID) {
         if ("action.names.deepthroat".equals(actionName)) {
             this.setCurrentAction(Action.DEEPTHROAT_START);
-            this.initActionState(this.getOutfitIndex(), Action.DEEPTHROAT_START);
-            this.bindPlayerPartner(partnerUUID);
+            this.sendActionPacket(this.getOutfitIndex(), Action.DEEPTHROAT_START);
+            this.teleportPlayerToGirl(partnerUUID);
         }
         if ("Reverse cowgirl".equals(actionName)) {
             this.setCurrentAction(Action.REVERSE_COWGIRL_START);
-            this.initActionState(0, Action.REVERSE_COWGIRL_START);
-            this.bindPlayerPartner(partnerUUID);
+            this.sendActionPacket(0, Action.REVERSE_COWGIRL_START);
+            this.teleportPlayerToGirl(partnerUUID);
         }
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         PlayerAllie.openInventoryGui(player, this, new String[]{"action.names.deepthroat", "Reverse cowgirl"}, false);
         return true;
     }
@@ -129,7 +129,7 @@ extends PlayerGirl {
         }
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
         if (entityPlayer != null && this.as == null) {
-            this.c(true);
+            this.handleOwnerUUID(true);
         }
         this.as = entityPlayer;
     }
@@ -155,12 +155,12 @@ extends PlayerGirl {
 
     @Override
     public void spawnHitboxHelper() {
-        this.c(true);
+        this.handleOwnerUUID(true);
     }
 
     @Override
     public void void_y() {
-        this.c(false);
+        this.handleOwnerUUID(false);
     }
 
     @Override

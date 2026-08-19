@@ -164,7 +164,7 @@ public enum GalathFlightData {
             Random random = galath.getRNG();
             boolean bl = galath.getDataManager().get(GalathEntity.ay);
             if (galath.getDataManager().get(GalathEntity.bN)) {
-                headAnchor = pos.add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(GalathEntity.bz) : GalathEntity.bz, 180.0f + galath.renderYawOffset));
+                headAnchor = pos.add(VectorMath.rotateByYaw(bl ? VectorMath.MirrorXZ(GalathEntity.bz) : GalathEntity.bz, 180.0f + galath.renderYawOffset));
                 aim = targetPos.subtract(headAnchor).normalize();
                 aim = new Vec3d(aim.x + random.nextDouble() * (double) 0.3f, aim.y + random.nextDouble() * (double) 0.3f, aim.z + random.nextDouble() * (double) 0.3f);
                 aim = aim.normalize();
@@ -174,7 +174,7 @@ public enum GalathFlightData {
                 galath.world.spawnEntity(energyBallEntity);
             }
             if (galath.getDataManager().get(GalathEntity.b7)) {
-                headAnchor = pos.add(VectorMath.rotate(bl ? VectorMath.MirrorXZ(GalathEntity.bC) : GalathEntity.bC, 180.0f + galath.renderYawOffset));
+                headAnchor = pos.add(VectorMath.rotateByYaw(bl ? VectorMath.MirrorXZ(GalathEntity.bC) : GalathEntity.bC, 180.0f + galath.renderYawOffset));
                 aim = targetPos.subtract(headAnchor).normalize();
                 aim = new Vec3d(aim.x + random.nextDouble() * (double) 0.3f, aim.y + random.nextDouble() * (double) 0.3f, aim.z + random.nextDouble() * (double) 0.3f);
                 aim = aim.normalize();
@@ -211,14 +211,14 @@ public enum GalathFlightData {
             Vector2d delta2 = new Vector2d(eyePos.x - galath.posX, eyePos.z - galath.posZ);
             double d = TrigMath.sinDegrees(Math.atan2(delta2.a, delta2.b)) - 90.0;
             galath.setYawRotation((float)d);
-            Vec3d forward = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), (float)(d + 180.0));
+            Vec3d forward = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 3.0), (float)(d + 180.0));
             Vec3d from = galath.getAnchorTargetPosition();
             Vec3d to = eyePos.add(forward);
             float progress = (float)(attackProgress - 24) / 8.0f;
             Vec3d Lerped = ReferenceAndRotationHelper.LerpVec3d(from, to, (double)progress);
             galath.setTargetPosition(Lerped);
         } else if (ThreadNames.isValueInBounds((double)attackProgress, 32.0, 54.0)) {
-            Vec3d behind = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), galath.getYawRotation().floatValue() + 180.0f);
+            Vec3d behind = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 1.5), galath.getYawRotation().floatValue() + 180.0f);
             Vec3d targetPos2 = target.getPositionVector().add(behind);
             galath.setTargetPosition(targetPos2);
             GalathDamageSource damageSource = new GalathDamageSource(galath);
@@ -279,7 +279,7 @@ public enum GalathFlightData {
                 if (!player.isDead && player.onGround && GirlEntity.getGirlByUUID(player.getPersistentID(), true) == null) {
                     playerPos = player.getPositionVector();
                     toPlayer = dir.subtract(playerPos);
-                    Vec3d rotated = VectorMath.rotate(toPlayer, galath.getYawRotation());
+                    Vec3d rotated = VectorMath.rotateByYaw(toPlayer, galath.getYawRotation());
                     dist = Math.abs(rotated.x);
                     if (!(dist > 0.65f)) {
                         for (EntityWitherSkeleton skeleton : galath.witherSkeletons) {

@@ -184,14 +184,14 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             itemStack.interactWithEntity(entityPlayer, this, enumHand);
             return true;
         }
-        if (this.world.isRemote && !this.openGuiForPlayer(entityPlayer)) {
+        if (this.world.isRemote && !this.openInteractionMenu(entityPlayer)) {
             this.sendLocalClientMessage(I18n.format("bia.dialogue.busy", new Object[0]));
         }
         return true;
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         if (this.getInteractionPlayerUUID() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.openInventoryGui(player, this, stringArray, true);

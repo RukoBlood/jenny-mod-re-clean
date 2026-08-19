@@ -602,7 +602,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         return false;
     }
 

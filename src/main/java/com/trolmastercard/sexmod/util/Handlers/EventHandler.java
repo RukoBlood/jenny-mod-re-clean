@@ -109,7 +109,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new ClothingGui.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new CustomModel.a_inner95());
         MinecraftForge.EVENT_BUS.register((Object)new EscapeMinigameUI());
-        MinecraftForge.EVENT_BUS.register((Object)new ParticlesManager());
+        MinecraftForge.EVENT_BUS.register((Object)new CummyEntity());
         MinecraftForge.EVENT_BUS.register((Object)new GalathFlightUI());
     }
 

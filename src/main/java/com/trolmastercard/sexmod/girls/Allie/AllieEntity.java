@@ -151,12 +151,12 @@ extends GirlEntity {
 
     @SideOnly(value=Side.CLIENT)
     void void_c() {
-        this.openGuiForPlayer(Minecraft.getMinecraft().player);
+        this.openInteractionMenu(Minecraft.getMinecraft().player);
         this.P = false;
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         this.R = false;
         String[] stringArray = new String[]{"action.names.makemerichallie", "action.names.deepthroat", "Reverse cowgirl"};
         AllieEntity.openInventoryGui(player, this, stringArray, false);
@@ -347,7 +347,7 @@ extends GirlEntity {
                     this.sendLocalClientMessage(I18n.format("allie.dialogue.summon8", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_HUH, new int[0]);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.openGuiForPlayer(this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID()));
+                    this.openInteractionMenu(this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID()));
                     break;
                 }
                 case "summonDone": {
@@ -457,7 +457,7 @@ extends GirlEntity {
                 case "summon_normalDone": {
                     this.setCurrentAction(Action.SUMMON_NORMAL_WAIT);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.openGuiForPlayer(Minecraft.getMinecraft().player);
+                    this.openInteractionMenu(Minecraft.getMinecraft().player);
                     break;
                 }
                 case "deepthroat_normal_prepareMSG1": {

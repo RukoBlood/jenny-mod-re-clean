@@ -396,7 +396,7 @@ extends GirlEntity {
 
         Float headYaw = GalathEntity.getAimYaw(galath, 0.0f);
         float yaw = headYaw == null ? galath.rotationYawHead : headYaw;
-        Vec3d vec3d2 = VectorMath.rotate(diff, yaw);
+        Vec3d vec3d2 = VectorMath.rotateByYaw(diff, yaw);
         return vec3d2.z < 0.0;
     }
 
@@ -593,7 +593,7 @@ extends GirlEntity {
     }
 
     boolean isVectorRightOfMommy(Vec3d vec, GalathEntity galath, float partialTicks) {
-        Vec3d rotated = VectorMath.rotate(vec, ReferenceAndRotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks));
+        Vec3d rotated = VectorMath.rotateByYaw(vec, ReferenceAndRotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks));
         return rotated.x > 0.35;
     }
 
@@ -760,9 +760,9 @@ extends GirlEntity {
             GalathEntity galath = this.getMommyGalath(false);
             if (galath != null) {
                 galath.resetCameraAndPhysics();
-                ParticlesManager.spawnSexParticles(galath);
+                CummyEntity.spawnSexParticles(galath);
             }
-            ParticlesManager.spawnSexParticles(this);
+            CummyEntity.spawnSexParticles(this);
             return true;
         }
 
@@ -912,7 +912,7 @@ extends GirlEntity {
                     this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
                 }
                 case "doubleSemen": {
-                    ParticlesManager.a(new DynamicTrailRenderer(10, girl -> {
+                    CummyEntity.registerTrail(new DynamicTrailRenderer(10, girl -> {
                         Vec3d vec3d = girl.getBoneWorldPosition("semenEmitter");
                         Vec3d vec3d2 = girl.getBoneWorldPosition("semenDir");
                         return vec3d.subtract(vec3d2).normalize();

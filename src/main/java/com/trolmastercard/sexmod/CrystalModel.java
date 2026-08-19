@@ -8,11 +8,11 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 
-public class e8_class231 extends ModelBase {
+public class CrystalModel extends ModelBase {
     final private ModelRenderer b;
     final private ModelRenderer a = new ModelRenderer(this, "glass");
 
-    public e8_class231() {
+    public CrystalModel() {
         this.a.setTextureOffset(0, 0).addBox(-4.0f, -4.0f, -4.0f, 8, 8, 8);
         this.b = new ModelRenderer(this, "cube");
         this.b.setTextureOffset(32, 0).addBox(-4.0f, -4.0f, -4.0f, 8, 8, 8);

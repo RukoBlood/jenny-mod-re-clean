@@ -128,22 +128,22 @@ implements IGoblin {
     @Override
     public void onGuiActionSelected(String actionName, UUID partnerUUID) {
         if ("anal".equals(actionName)) {
-            this.bindPlayerPartner(partnerUUID);
+            this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.NELSON_INTRO);
-            this.initActionState(this.getOutfitIndex(), Action.NELSON_INTRO);
+            this.sendActionPacket(this.getOutfitIndex(), Action.NELSON_INTRO);
             this.setOutfitIndex(0);
         }
         if ("paizuri".equals(actionName)) {
-            this.bindPlayerPartner(partnerUUID);
+            this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.PAIZURI_START);
-            this.initActionState(this.getOutfitIndex(), Action.PAIZURI_START);
+            this.sendActionPacket(this.getOutfitIndex(), Action.PAIZURI_START);
             this.setOutfitIndex(0);
         }
     }
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         Minecraft.getMinecraft().displayGuiScreen(new FighterUI(this, player, new String[]{"anal", "paizuri"}, null, false));
         return true;
     }
@@ -315,7 +315,7 @@ implements IGoblin {
         } else if (fp_class3242 != Action.START_THROWING) {
             vec3d2 = vec3d2.subtract(0.0, 2.0, 0.0);
         }
-        vec3d2 = VectorMath.rotate(vec3d2, f2 + f3);
+        vec3d2 = VectorMath.rotateByYaw(vec3d2, f2 + f3);
         return vec3d2;
     }
 

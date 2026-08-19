@@ -38,12 +38,12 @@ public class PlayerBee extends PlayerGirl {
 
     @Override
     public void spawnHitboxHelper() {
-        this.c(true);
+        this.handleOwnerUUID(true);
     }
 
     @Override
     public void void_y() {
-        this.c(false);
+        this.handleOwnerUUID(false);
     }
 
     @Override
@@ -68,10 +68,10 @@ public class PlayerBee extends PlayerGirl {
 
     @Override
     public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        this.initActionState(0, Action.CITIZEN_START);
+        this.sendActionPacket(0, Action.CITIZEN_START);
         this.setOutfitIndex(0);
         this.setCurrentAction(Action.CITIZEN_START);
-        this.bindPlayerPartner(partnerUUID);
+        this.teleportPlayerToGirl(partnerUUID);
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(partnerUUID);
         if (entityPlayer == null) {
             return;
@@ -81,7 +81,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         PlayerBee.openInventoryGui(player, this, new String[]{"action.names.sex"}, false);
         return true;
     }
@@ -100,7 +100,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public boolean shouldRenderArmor() {
+    public boolean canBeInteracted() {
         return false;
     }
 

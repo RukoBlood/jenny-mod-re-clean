@@ -30,7 +30,6 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -100,7 +99,7 @@ public class DragonStaffGUI extends GuiScreen {
     }
 
     void triggerAreaRender() {
-        DragonStaffRenderer.a();
+        DragonStaffRenderer.toggleStaffRendering();
     }
 
     void executeResourceHarvestTask() {
@@ -129,7 +128,7 @@ public class DragonStaffGUI extends GuiScreen {
         if (!DIGGABLE_MATERIALS.contains(material)) {
             return null;
         }
-        if (((Entity)player).getPosition().getY() > this.targetPos.getY()) {
+        if (player.getPosition().getY() > this.targetPos.getY()) {
             return null;
         }
         BlockPos currentCheckPos = this.targetPos;
@@ -182,7 +181,7 @@ public class DragonStaffGUI extends GuiScreen {
         GlStateManager.scale(1.0f + this.weightBottomRight * 0.5f, 1.0f + this.weightBottomRight * 0.5f, 1.0f);
         this.drawTexturedModalRect(-2.0f - offsetDistance + this.weightBottomRight * 15.0f, -2.0f - offsetDistance + this.weightBottomRight * 15.0f, 0, 0, 64, 64);
         this.drawRenderZoneIcon(offsetDistance);
-        if (DragonStaffRenderer.b()) {
+        if (DragonStaffRenderer.isRenderingStaff()) {
             this.drawTexturedModalRect(-2.0f - offsetDistance + this.weightBottomRight * 15.0f, -2.0f - offsetDistance + this.weightBottomRight * 15.0f, 128, 64, 64, 64);
         }
         GlStateManager.popMatrix();

@@ -817,8 +817,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 this.energyBallHitboxLeft.isActive = true;
                 this.energyBallHitboxRight.isActive = true;
                 boolean reset = this.entityDataManager.get(ay);
-                Vec3d vec3d = this.getPositionVector().add(VectorMath.rotate(reset ? VectorMath.MirrorXZ(bz) : bz, 180.0f + this.renderYawOffset));
-                Vec3d vec3d2 = this.getPositionVector().add(VectorMath.rotate(reset ? VectorMath.MirrorXZ(bC) : bC, 180.0f + this.renderYawOffset));
+                Vec3d vec3d = this.getPositionVector().add(VectorMath.rotateByYaw(reset ? VectorMath.MirrorXZ(bz) : bz, 180.0f + this.renderYawOffset));
+                Vec3d vec3d2 = this.getPositionVector().add(VectorMath.rotateByYaw(reset ? VectorMath.MirrorXZ(bC) : bC, 180.0f + this.renderYawOffset));
                 this.energyBallHitboxLeft.setLocationAndAngles(vec3d.x, vec3d.y, vec3d.z, this.renderYawOffset, 0.0f);
                 this.energyBallHitboxRight.setLocationAndAngles(vec3d2.x, vec3d2.y, vec3d2.z, this.renderYawOffset, 0.0f);
                 this.energyBallHitboxLeft.onUpdate();
@@ -846,7 +846,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         this.b4 = this.a9;
         this.a_ = this.bg;
         Vec3d delta = this.predicatedPosition.subtract(this.position);
-        Vec3d rotated = VectorMath.rotate(delta, this.renderYawOffset + 180.0f);
+        Vec3d rotated = VectorMath.rotateByYaw(delta, this.renderYawOffset + 180.0f);
         this.a9 = TrigMath.toRadians(ThreadNames.clamp(rotated.z * 40.0, -50.0, 50.0));
         this.bg = TrigMath.toRadians(ThreadNames.clamp(rotated.x * 40.0, -50.0, 50.0));
     }
@@ -1368,7 +1368,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     void setFlying(boolean flying) {
         EntityPlayer player = this.getPlayerEntity();
         if (player != null) {
-            Vec3d pos = flying ? new Vec3d(-0.5, 0.5f - player.getEyeHeight(), 0.4f).add(this.getTargetPosition()) : VectorMath.rotate(new Vec3d(0.5, 0.5f - player.getEyeHeight(), 0.4f), this.getYawRotation()).add(this.getTargetPosition());
+            Vec3d pos = flying ? new Vec3d(-0.5, 0.5f - player.getEyeHeight(), 0.4f).add(this.getTargetPosition()) : VectorMath.rotateByYaw(new Vec3d(0.5, 0.5f - player.getEyeHeight(), 0.4f), this.getYawRotation()).add(this.getTargetPosition());
             player.setPositionAndUpdate(pos.x, pos.y, pos.z);
         }
     }
@@ -2026,7 +2026,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     @Override
-    public boolean isWingsVisible() {
+    public boolean areWingsAnimated() {
         switch (this.getCurrentAction()) {
             case CORRUPT_SLOW: 
             case CORRUPT_FAST: 
@@ -2458,7 +2458,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 case "enableRapeUI": {
                     if (!this.isControlledByLocalPlayer()) break;
                     if (this.hasMasterOAlgo()) {
-                        SexUI.a(false);
+                        SexUI.setHornyMeterVisible(false);
                         break;
                     }
                     EscapeMinigameUI.StartMinigame();
@@ -2499,7 +2499,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "clearcum": {
-                    ParticlesManager.spawnSexParticles(this);
+                    CummyEntity.spawnSexParticles(this);
                     break;
                 }
                 case "setCamCorrupt": {
@@ -2509,7 +2509,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     this.corruptIntroActive = true;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     float f = this.getYawRotation().floatValue() + 220.0f;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.getYawRotation().floatValue()).add(this.getTargetPosition());
+                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.getYawRotation().floatValue()).add(this.getTargetPosition());
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
                     SexUI.showUI();
                     break;
@@ -2521,7 +2521,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 }
                 case "masterbateCumming": {
                     if (!FutaCommand.enabled) break;
-                    ParticlesManager.a(new DynamicTrailRenderer(90, girlEntity -> {
+                    CummyEntity.registerTrail(new DynamicTrailRenderer(90, girlEntity -> {
                         Vec3d vec3d = girlEntity.getBoneWorldPosition("futaCockTip");
                         Vec3d vec3d2 = girlEntity.getBoneWorldPosition("futaCockTipDirHelp");
                         return vec3d.subtract(vec3d2).normalize();
@@ -2529,12 +2529,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "creampie": {
-                    ParticlesManager.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
+                    CummyEntity.registerTrail(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
                     // TODO fallthrough looks intentional
                 }
                 case "creampieGalath": {
                     if (FutaCommand.enabled) {
-                        ParticlesManager.a(new DynamicTrailRenderer(130, em_class2582 -> {
+                        CummyEntity.registerTrail(new DynamicTrailRenderer(130, em_class2582 -> {
                             Vec3d vec3d = em_class2582.getBoneWorldPosition("futaCockTip");
                             Vec3d vec3d2 = em_class2582.getBoneWorldPosition("futaCockTipDirHelp");
                             return vec3d.subtract(vec3d2).normalize();

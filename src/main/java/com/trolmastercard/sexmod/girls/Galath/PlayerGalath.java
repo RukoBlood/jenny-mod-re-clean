@@ -80,11 +80,9 @@ implements IGalath {
     protected Action getCumAction(Action action) {
         if (action == Action.CORRUPT_FAST || action == Action.CORRUPT_SLOW) {
             return Action.CORRUPT_CUM;
+        } else {
+            return action == Action.RAPE_ON_GOING ? Action.RAPE_CUM : null;
         }
-        if (action == Action.RAPE_ON_GOING) {
-            return Action.RAPE_CUM;
-        }
-        return null;
     }
 
     @Override
@@ -93,47 +91,43 @@ implements IGalath {
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        if ("cowgirl".equals(actionName)) {
-            this.bindPlayerPartner(partnerUUID);
+    public void onGuiActionSelected(String command, UUID uuid) {
+        if ("cowgirl".equals(command)) {
+            this.teleportPlayerToGirl(uuid);
             this.setCurrentAction(Action.RAPE_INTRO);
-            this.initActionState(this.getOutfitIndex(), Action.RAPE_INTRO);
-            return;
+            this.sendActionPacket(this.getOutfitIndex(), Action.RAPE_INTRO);
+
         }
-        if ("mating press".equals(actionName)) {
-            this.bindPlayerPartner(partnerUUID);
+        else if ("mating press".equals(command)) {
+            this.teleportPlayerToGirl(uuid);
             this.setCurrentAction(Action.CORRUPT_SLOW);
-            this.initActionState(this.getOutfitIndex(), Action.CORRUPT_SLOW);
-            this.void_a();
-            return;
+            this.sendActionPacket(this.getOutfitIndex(), Action.CORRUPT_SLOW);
+            this.handleGalathPlayerOwner();
+
         }
     }
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.getCurrentAction();
-        if (fp_class3243 == Action.CORRUPT_CUM && (action == Action.CORRUPT_FAST || action == Action.CORRUPT_SLOW)) {
-            return;
+        Action currentAction = this.getCurrentAction();
+        if (currentAction != Action.CORRUPT_CUM || (action != Action.CORRUPT_FAST && action != Action.CORRUPT_SLOW)) {
+            if (currentAction != Action.RAPE_CUM || action != Action.RAPE_ON_GOING) {
+                if (currentAction != Action.RAPE_CUM || action != Action.RAPE_CUM_IDLE) {
+                    if (action == Action.CORRUPT_SLOW) {
+                        this.as = false;
+                    }
+                    super.setCurrentAction(action);
+                }
+            }
         }
-        if (fp_class3243 == Action.RAPE_CUM && action == Action.RAPE_ON_GOING) {
-            return;
-        }
-        if (fp_class3243 == Action.RAPE_CUM && action == Action.RAPE_CUM_IDLE) {
-            return;
-        }
-        if (action == Action.CORRUPT_SLOW) {
-            this.as = false;
-        }
-        super.setCurrentAction(action);
     }
 
-    void void_a() {
-        EntityPlayer entityPlayer = this.getPlayerEntity();
-        if (entityPlayer == null) {
-            return;
+    void handleGalathPlayerOwner() {
+        EntityPlayer player = this.getPlayerEntity();
+        if (player != null) {
+            Vec3d pos = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5f - player.getEyeHeight(), 0.4f), this.getYawRotation()).add(this.getTargetPosition());
+            player.setPositionAndUpdate(pos.x, pos.y, pos.z);
         }
-        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayer.getEyeHeight(), 0.4f), this.getYawRotation().floatValue()).add(this.getTargetPosition());
-        entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
     @Override
@@ -142,13 +136,13 @@ implements IGalath {
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
-        PlayerGalath.openInventoryGui(player, this, new String[]{"cowgirl", "mating press", "ride"}, false);
+    public boolean openInteractionMenu(EntityPlayer player) {
+        openInventoryGui(player, this, new String[]{"cowgirl", "mating press", "ride"}, false);
         return true;
     }
 
     @Override
-    public boolean shouldRenderArmor() {
+    public boolean canBeInteracted() {
         return false;
     }
 
@@ -168,44 +162,41 @@ implements IGalath {
     }
 
     @Override
-    public boolean isWingsVisible() {
+    public boolean areWingsAnimated() {
         switch (this.getCurrentAction()) {
             case CORRUPT_CUM:
             case CORRUPT_FAST:
             case CORRUPT_SLOW:
-            case COWGIRLCUM: {
+            case COWGIRLCUM:
                 return false;
-            }
+            default:
+                return true;
         }
-        return true;
+        //return true;
     }
 
     @Override
     public void spawnHitboxHelper() {
-        this.c(true);
+        this.handleOwnerUUID(true);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        this.void_b();
+        this.handleCumState();
         if (this.world.isRemote) {
-            this.void_d();
+            this.handlePlayerAction();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_d() {
-        if (!this.isControlledByLocalPlayer()) {
-            return;
+    void handlePlayerAction() {
+        if (this.isControlledByLocalPlayer() && this.getCurrentAction() == Action.RAPE_INTRO) {
+            SexUI.setHornyMeterVisible(false);
         }
-        if (this.getCurrentAction() != Action.RAPE_INTRO) {
-            return;
-        }
-        SexUI.a(false);
     }
 
-    void void_b() {
+    void handleCumState() {
         switch (this.getCurrentAction()) {
             case CORRUPT_CUM:
             case CORRUPT_FAST:
@@ -218,120 +209,106 @@ implements IGalath {
                 this.ap = true;
                 return;
             }
+            default:
+                this.ap = false;
         }
-        this.ap = false;
+        //this.ap = false;
     }
 
-    boolean boolean_g() {
-        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
-        if (entityPlayer == null) {
-            return false;
-        }
-        return this.world.getBlockState(entityPlayer.getPosition().up().up()).getBlock() != Blocks.AIR;
+    boolean hasNoGalathOwner() {
+        EntityPlayer player = this.getOwnerPlayerEntity();
+        return player != null && this.world.getBlockState(player.getPosition().up().up()).getBlock() != Blocks.AIR;
     }
 
     @Override
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        block5 : switch (event.getController().getName()) {
-            case "eyes": {
+        switch (event.getController().getName()) {
+            case "eyes":
                 if (this.getCurrentAction() != Action.NULL || !this.getCurrentAction().autoBlink) {
                     this.createAnimation("animation.galath.null", true, event);
-                    break;
+                } else {
+                    this.createAnimation("animation.galath.blink", true, event);
                 }
-                this.createAnimation("animation.galath.blink", true, event);
                 break;
-            }
-            case "movement": {
+            case "movement":
                 this.movementController.setAnimationSpeed(1.0);
                 if (this.getCurrentAction() != Action.NULL) {
                     this.createAnimation("animation.galath.null", true, event);
-                    break;
                 }
-                if (this.isPlayerRiding) {
+                else if (this.isPlayerRiding) {
                     this.createAnimation("animation.galath.sit", true, event);
-                    break;
                 }
-                if (!this.isPlayerOnGround) {
+                else if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.galath.controlled_flight", true, event);
-                    break;
                 }
-                if (Math.abs(this.ao.x) + Math.abs(this.ao.y) == 0.0f) {
-                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchidle" : "animation.galath.idle", true, event);
-                    break;
+                else if (Math.abs(this.ao.x) + Math.abs(this.ao.y) == 0.0f) {
+                    this.createAnimation(this.hasNoGalathOwner() ? "animation.galath.crouchidle" : "animation.galath.idle", true, event);
                 }
-                if (this.isPlayerSprinting) {
+                else if (this.isPlayerSprinting) {
                     this.movementController.setAnimationSpeed(1.5);
-                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.run", true, event);
-                    break;
+                    this.createAnimation(this.hasNoGalathOwner() ? "animation.galath.crouchwalk" : "animation.galath.run", true, event);
                 }
-                if (this.ao.y >= -0.1f) {
+                else if (this.ao.y >= -0.1f) {
                     this.movementController.setAnimationSpeed(2.0);
-                    this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.walk", true, event);
-                    break;
+                    this.createAnimation(this.hasNoGalathOwner() ? "animation.galath.crouchwalk" : "animation.galath.walk", true, event);
+                } else {
+                    this.movementController.setAnimationSpeed(1.5);
+                    this.createAnimation(this.hasNoGalathOwner() ? "animation.galath.crouchwalk" : "animation.galath.backwards_walk", true, event);
                 }
-                this.movementController.setAnimationSpeed(1.5);
-                this.createAnimation(this.boolean_g() ? "animation.galath.crouchwalk" : "animation.galath.backwards_walk", true, event);
                 break;
-            }
-            case "action": {
+            case "action":
                 switch (this.getCurrentAction()) {
-                    case NULL: {
+                    case NULL:
                         return PlayState.STOP;
-                    }
-                    case STRIP: {
+                    case STRIP:
                         this.createAnimation("animation.galath.strip", true, event);
-                        break block5;
-                    }
-                    case ATTACK: {
+                        break ;
+                    case ATTACK:
                         this.createAnimation("animation.galath.attack" + this.nextAttack, true, event);
-                        break block5;
-                    }
-                    case BOW: {
+                        break ;
+                    case BOW:
                         this.createAnimation("animation.galath.bowcharge", true, event);
-                        break block5;
-                    }
+                        break ;
                     case RIDE:
-                    case SIT: {
+                    case SIT:
                         this.createAnimation("animation.galath.sit", true, event);
-                        break block5;
-                    }
+                        break ;
                     case RAPE_INTRO: {
                         this.createAnimation("animation.galath.rape_intro", true, event);
-                        break block5;
+                        break ;
                     }
                     case RAPE_ON_GOING: {
                         this.createAnimation("animation.galath.rape" + this.ar, true, event);
-                        break block5;
+                        break ;
                     }
                     case RAPE_CUM: {
                         this.createAnimation("animation.galath.rape_cum", true, event);
-                        break block5;
+                        break ;
                     }
                     case RAPE_CUM_IDLE: {
                         this.createAnimation("animation.galath.rape_cum_idle", true, event);
-                        break block5;
+                        break ;
                     }
                     case CORRUPT_FAST: {
                         this.createAnimation("animation.galath.corrupt_" + (this.as ? "hard" : "soft"), true, event);
-                        break block5;
+                        break ;
                     }
                     case CORRUPT_SLOW: {
                         this.createAnimation("animation.galath.corrupt_slow", true, event);
-                        break block5;
+                        break ;
                     }
                     case CORRUPT_INTRO: {
                         this.createAnimation("animation.galath.corrupt_intro", true, event);
-                        break block5;
+                        break ;
                     }
                     case CORRUPT_CUM: {
                         this.createAnimation("animation.galath.corrupt_cum", true, event);
-                        break block5;
+                        break ;
                     }
                     case CONTROLLED_FLIGHT: {
                         this.createAnimation("animation.galath.controlled_flight", true, event);
                     }
                 }
-            }
         }
         return PlayState.CONTINUE;
     }
@@ -343,8 +320,9 @@ implements IGalath {
         this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "attackDone": {
-                    if (++this.nextAttack != 3) break;
-                    this.nextAttack = 0;
+                    if (++this.nextAttack == 3) {
+                        this.nextAttack = 0;
+                    }
                     break;
                 }
                 case "cum": {
@@ -361,57 +339,64 @@ implements IGalath {
                 }
                 case "setNude": {
                     this.ap = true;
-                    Vec3d vec3d = this.getPositionVector();
-                    Vec3d vec3d2 = this.getCachedBoneOffset("slipR").add(vec3d);
-                    Vec3d vec3d3 = this.getCachedBoneOffset("slipL").add(vec3d);
-                    Vec3d vec3d4 = this.getCachedBoneOffset("turnable").add(vec3d);
-                    this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d2.x, vec3d2.y, vec3d2.z, 0.0, 0.0, 0.0, new int[0]);
-                    this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d3.x, vec3d3.y, vec3d3.z, 0.0, 0.0, 0.0, new int[0]);
-                    this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d4.x, vec3d4.y, vec3d4.z, 0.0, 0.0, 0.0, new int[0]);
+                    Vec3d pos = this.getPositionVector();
+                    Vec3d slipRPos = this.getCachedBoneOffset("slipR").add(pos);
+                    Vec3d slipLPos = this.getCachedBoneOffset("slipL").add(pos);
+                    Vec3d turnablePos = this.getCachedBoneOffset("turnable").add(pos);
+                    this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, slipRPos.x, slipRPos.y, slipRPos.z, 0.0, 0.0, 0.0);
+                    this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, slipLPos.x, slipLPos.y, slipLPos.z, 0.0, 0.0, 0.0);
+                    this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, turnablePos.x, turnablePos.y, turnablePos.z, 0.0, 0.0, 0.0);
                     break;
                 }
                 case "rapeIntroDone": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    this.setCurrentAction(Action.RAPE_ON_GOING);
+                    if (this.isControlledByLocalPlayer()) {
+                        this.setCurrentAction(Action.RAPE_ON_GOING);
+                    }
                     break;
                 }
                 case "rape_switch": {
                     Random random = this.getRNG();
-                    int n = this.ar;
+                    int oldState = this.ar;
+
                     do {
                         this.ar = random.nextInt(3);
-                    } while (this.ar == n);
+                    } while (this.ar == oldState);
+
                     break;
                 }
                 case "poundRape": {
                     this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
-                    if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.addCumPercentage(0.03f);
+                    if (this.isControlledByLocalPlayer()) {
+                        SexUI.addCumPercentage(0.03f);
+                    }
                     break;
                 }
                 case "enableRapeUI": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.a(false);
+                    if (this.isControlledByLocalPlayer()) {
+                        SexUI.setHornyMeterVisible(false);
+                    }
                     break;
                 }
                 case "reloadRenderer": {
-                    if (!this.isControlledByLocalPlayer()) {
-                        return;
+                    if (this.isControlledByLocalPlayer()) {
+                        Minecraft mc = Minecraft.getMinecraft();
+                        if (mc.gameSettings.thirdPersonView != 0) {
+                            mc.renderGlobal.loadRenderers();
+                        }
                     }
-                    Minecraft minecraft = Minecraft.getMinecraft();
-                    if (minecraft.gameSettings.thirdPersonView == 0) break;
-                    minecraft.renderGlobal.loadRenderers();
                     break;
                 }
                 case "corruptSwitch": {
-                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.setCurrentAction(Action.CORRUPT_FAST);
+                    if (this.isControlledByLocalPlayer() && HandlePlayerMovement.isThrusting) {
+                        this.setCurrentAction(Action.CORRUPT_FAST);
+                    }
                     break;
                 }
                 case "corrupt_hard": {
-                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.as = true;
-                    this.resetAnimationControllerOffset();
+                    if (this.isControlledByLocalPlayer() && HandlePlayerMovement.isThrusting) {
+                        this.as = true;
+                        this.resetAnimationControllerOffset();
+                    }
                     break;
                 }
                 case "corrupt_hard_end": {
@@ -424,7 +409,7 @@ implements IGalath {
                     break;
                 }
                 case "clearcum": {
-                    ParticlesManager.spawnSexParticles(this);
+                    CummyEntity.spawnSexParticles(this);
                 }
                 case "reset": {
                     if (!this.isControlledByLocalPlayer()) break;
@@ -432,49 +417,53 @@ implements IGalath {
                     break;
                 }
                 case "setCamCorrupt": {
-                    if (!this.isControlledByLocalPlayer()) {
-                        return;
+                    if (this.isControlledByLocalPlayer()) {
+                        this.aq = true;
+                        EntityPlayerSP player = Minecraft.getMinecraft().player;
+                        float yaw = this.getYawRotation() + 220.0f;
+                        Vec3d pos = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5f - player.getEyeHeight(), 0.4f), this.getYawRotation()).add(this.getTargetPosition());
+                        PackageHandler.INSTANCE.sendToServer((IMessage) new TeleportPlayer(player.getPersistentID().toString(), pos, yaw, 15.0f));
+                        SexUI.showUI();
                     }
-                    this.aq = true;
-                    EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    float f = this.getYawRotation().floatValue() + 220.0f;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.getYawRotation().floatValue()).add(this.getTargetPosition());
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
-                    SexUI.showUI();
                     break;
                 }
                 case "enableBoyCam": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    this.aq = false;
+                    if (this.isControlledByLocalPlayer()) {
+                        this.aq = false;
+                    }
                     break;
                 }
                 case "creampie": {
-                    ParticlesManager.a(new DynamicTrailRenderer(130, em_class2582 -> {
-                        Vec3d vec3d = em_class2582.getBoneWorldPosition("futaCockTip");
-                        Vec3d vec3d2 = em_class2582.getBoneWorldPosition("futaCockTipDirHelp");
-                        return vec3d.subtract(vec3d2).normalize();
-                    }, em_class2582 -> em_class2582.getCachedBoneOffset("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
-                    ParticlesManager.a(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotate(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
+                    CummyEntity.registerTrail(new DynamicTrailRenderer(130, girl -> {
+                        Vec3d cockTipPos = girl.getBoneWorldPosition("futaCockTip");
+                        Vec3d tipDir = girl.getBoneWorldPosition("futaCockTipDirHelp");
+                        return cockTipPos.subtract(tipDir).normalize();
+                    }, girl -> girl.getCachedBoneOffset("futaCockTip").add(girl.getTargetPosition()), this, 0.3f, 0.3f));
+                    CummyEntity.registerTrail(new DynamicTrailRenderer(100, girl -> VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation()),
+                            girl -> girl.getCachedBoneOffset("creampiePos").add(girl.getTargetPosition()), this, 0.6f, 0.5f));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": 
                 case "blackScreen": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.run();
+                    if (this.isControlledByLocalPlayer()) {
+                        BlackScreenUI.run();
+                    }
                     break;
                 }
                 case "flapControlled": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    GalathFlightUI.showUI();
-                    this.playSoundAroundHer(SoundsHandler.MISC_FLAP);
-                    Minecraft minecraft = Minecraft.getMinecraft();
-                    EntityPlayerSP entityPlayerSP = minecraft.player;
-                    MovementInput movementInput = entityPlayerSP.movementInput;
-                    Vec2f vec2f = movementInput.getMoveVector();
-                    if (vec2f.x == 0.0f && vec2f.y == 0.0f) break;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(-vec2f.x, 0.0, vec2f.y), ReferenceAndRotationHelper.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), ReferenceAndRotationHelper.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new UpdateVelocity(vec3d, this.girlID()));
+                    if (this.isControlledByLocalPlayer()) {
+                        GalathFlightUI.showUI();
+                        this.playSoundAroundHer(SoundsHandler.MISC_FLAP);
+                        Minecraft mc = Minecraft.getMinecraft();
+                        EntityPlayerSP player = mc.player;
+                        MovementInput input = player.movementInput;
+                        Vec2f moveVec = input.getMoveVector();
+                        if (moveVec.x != 0.0f || moveVec.y != 0.0f) {
+                            Vec3d vel = VectorMath.rotate(new Vec3d(-moveVec.x, 0.0, moveVec.y), ReferenceAndRotationHelper.LerpFloat(player.prevRotationPitch, player.rotationPitch, mc.getRenderPartialTicks()), ReferenceAndRotationHelper.LerpFloat(player.prevRotationYawHead, player.rotationYawHead, mc.getRenderPartialTicks()));
+                            PackageHandler.INSTANCE.sendToServer((IMessage) new UpdateVelocity(vel, this.girlID()));
+                        }
+                    }
                     break;
                 }
                 case "clap": {

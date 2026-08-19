@@ -474,7 +474,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             if (this.hasMaster() && ((String)this.entityDataManager.get(MASTER)).equals(entityPlayer.getPersistentID().toString())) {
                 this.a(SoundsHandler.GIRLS_KOBOLD_MASTER);
             }
-            this.openGuiForPlayer(entityPlayer);
+            this.openInteractionMenu(entityPlayer);
         } else {
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             this.getNavigator().clearPath();
@@ -493,7 +493,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         if (this.hasMaster() && player.getPersistentID().toString().equals(this.entityDataManager.get(MASTER))) {
             Minecraft.getMinecraft().displayGuiScreen(new FighterUI(this, player, new String[]{"anal", "oral", "mating"}, null, false));
             return true;
@@ -2835,14 +2835,14 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 case "blowjobStartMSG1": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
+                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
+                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
@@ -2907,7 +2907,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 case "analStartCam": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
+                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
                     break;
                 }
@@ -2997,7 +2997,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
-                    vec3d = VectorMath.rotate(vec3d, this.getYawRotation().floatValue() + 180.0f);
+                    vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 10.0f));
                     break;
@@ -3032,7 +3032,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
-                    vec3d = VectorMath.rotate(vec3d, this.getYawRotation() + 180.0f);
+                    vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
                     PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 70.0f));
                     break;

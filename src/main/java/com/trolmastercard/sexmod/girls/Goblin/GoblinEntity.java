@@ -1906,9 +1906,9 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
         data.addAnimationController(this.eyesController);
     }
 
-    static EntityDataManager access$000(GoblinEntity goblinEntity) {
-        return goblinEntity.entityDataManager;
-    }
+//    static EntityDataManager access$000(GoblinEntity goblinEntity) {
+//        return goblinEntity.entityDataManager;
+//    }
 
     public static class EventHandler {
         static Minecraft mc = null;

@@ -203,7 +203,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         }
 
         if (ThreadNames.isValueInBounds((double)attackProgress, 24.0, 32.0)) {
-            Vec3d backOffset = VectorMath.rotate(new Vec3d(0.0, 0.0, 3.0), entity.getYawRotation() + 180.0f);
+            Vec3d backOffset = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 3.0), entity.getYawRotation() + 180.0f);
             Vec3d anchorPos = entity.getAnchorTargetPosition();
             Vec3d destinationPos = targetInterpolatedPos.add(0.0, target.getEyeHeight(), 0.0).add(backOffset);
             float progress = ((float) GalathRenderer.mc.world.getTotalWorldTime() + partialTicks - (float)entity.dashStartWorldTime) / (float)(entity.dashEndWorldTime - entity.dashStartWorldTime);
@@ -211,7 +211,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
         }
 
         if (ThreadNames.isValueInBounds((double)attackProgress, 32.0, 54.0)) {
-            Vec3d closeOffset = VectorMath.rotate(new Vec3d(0.0, 0.0, 1.5), entity.getYawRotation() + 180.0f);
+            Vec3d closeOffset = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 1.5), entity.getYawRotation() + 180.0f);
             return targetInterpolatedPos.add(closeOffset);
         }
 
@@ -322,7 +322,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
     }
 
     static void renderWingsMesh(GirlEntity girl, BufferBuilder buffer, Tessellator tessellator) {
-        if (!((IGalath)((Object)girl)).isWingsVisible()) {
+        if (!((IGalath)((Object)girl)).areWingsAnimated()) {
             return;
         }
         mc.getTextureManager().bindTexture(GalathModel.GALATH_TEXTURE);
@@ -471,7 +471,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
                 Vec3d targetPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)partialTicks);
                 Vec3d diff = galathPos.subtract(targetPos);
 
-                float rotatedZ = (float) VectorMath.rotate((Vec3d)diff, (float)((GalathEntity)this.renderEntity).renderYawOffset).z;
+                float rotatedZ = (float) VectorMath.rotateByYaw((Vec3d)diff, (float)((GalathEntity)this.renderEntity).renderYawOffset).z;
                 float pitchAngle = (float)Math.atan2(diff.y, rotatedZ);
                 break;
             }
@@ -519,7 +519,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModel
                 if (((GalathEntity)this.renderEntity).getCurrentAction() != Action.RAPE_CHARGE || (target = ((GalathEntity)this.renderEntity).getAttackTarget()) == null) break;
                 float yaw = ((GalathEntity)this.renderEntity).renderYawOffset;
                 Vec3d relTargetPos = target.getPositionVector().subtract(((GalathEntity)this.renderEntity).getPositionVector());
-                relTargetPos = VectorMath.rotate(relTargetPos, yaw);
+                relTargetPos = VectorMath.rotateByYaw(relTargetPos, yaw);
                 double clampedX = -ThreadNames.clamp(relTargetPos.x, -1.0, 1.0);
                 bone.setRotationZ(bone.getRotationZ() + TrigMath.toRadians(45.0 * clampedX));
             }

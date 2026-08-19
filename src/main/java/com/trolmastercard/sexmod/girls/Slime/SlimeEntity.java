@@ -196,7 +196,7 @@ public class SlimeEntity extends GirlEntity {
             return;
         }
         Vec3d offset = this.getPositionVector();
-        Vec3d targetPos = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation());
+        Vec3d targetPos = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation());
         offset = offset.add(targetPos);
         clientPlayer.setPosition(offset.x, offset.y, offset.z);
         clientPlayer.setVelocity(0.0, 0.0, 0.0);
@@ -257,7 +257,7 @@ public class SlimeEntity extends GirlEntity {
         this.setInteractionPlayerUUID(player.getPersistentID());
         player.rotationYaw = this.getYawRotation();
 
-        Vec3d offset = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation());
+        Vec3d offset = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.65f), this.getYawRotation());
         player.setPosition(this.posX + offset.x, this.posY, this.posZ + offset.z);
         if (this.getCurrentAction() == Action.WAITDOGGY) {
             this.setCurrentAction(Action.DOGGYSTART);
@@ -313,7 +313,7 @@ public class SlimeEntity extends GirlEntity {
         this.rotationYaw = targetYaw = this.entityDataManager.get(TARGET_YAW);
         this.prevRotationYaw = targetYaw;
         Vec3d jumpVelocity = new Vec3d(0.0, 0.0, 0.7f);
-        jumpVelocity = VectorMath.rotate(jumpVelocity, targetYaw);
+        jumpVelocity = VectorMath.rotateByYaw(jumpVelocity, targetYaw);
         this.motionX = jumpVelocity.x;
         this.motionZ = jumpVelocity.z;
         this.jumpTicks = 0;

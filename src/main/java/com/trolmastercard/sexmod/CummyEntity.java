@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(value=Side.CLIENT)
-public class ParticlesManager {
+public class CummyEntity {
     final static ResourceLocation CUMMY_TEXTURE = new ResourceLocation("sexmod", "textures/cummy.png");
     static Minecraft minecraft = Minecraft.getMinecraft();
     static List<DynamicTrailRenderer> a = new ArrayList<DynamicTrailRenderer>();
@@ -37,14 +37,14 @@ public class ParticlesManager {
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void a(RenderWorldLastEvent renderWorldLastEvent) {
-        ParticlesManager.minecraft.renderEngine.bindTexture(CUMMY_TEXTURE);
+        CummyEntity.minecraft.renderEngine.bindTexture(CUMMY_TEXTURE);
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         float f = renderWorldLastEvent.getPartialTicks();
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
-        if (ParticlesManager.minecraft.player == null) {
+        if (CummyEntity.minecraft.player == null) {
             return;
         }
         for (DynamicTrailRenderer ep_class2632 : a) {
@@ -65,7 +65,7 @@ public class ParticlesManager {
         }
     }
 
-    public static void a(DynamicTrailRenderer ep_class2632) {
+    public static void registerTrail(DynamicTrailRenderer ep_class2632) {
         a.add(ep_class2632);
     }
 

@@ -85,7 +85,7 @@ public class PlayerGirlEvents {
         if (playerGirl == null) {
             return;
         }
-        if (!playerGirl.shouldRenderArmor()) {
+        if (!playerGirl.canBeInteracted()) {
             return;
         }
         if (!WorldUtils.checkBedBlock(world, pos, event.getHitVec(), event.getFace(), player)) {
@@ -208,7 +208,7 @@ public class PlayerGirlEvents {
             return;
         }
         if (targetPlayerGirl.canOpenGUI()) {
-            targetPlayerGirl.openGuiForPlayer(Minecraft.getMinecraft().player);
+            targetPlayerGirl.openInteractionMenu(Minecraft.getMinecraft().player);
         }
     }
 
@@ -235,7 +235,7 @@ public class PlayerGirlEvents {
         }
         if (localPlayerGirl.canOpenGUI()) {
             localPlayerGirl.guiPending = false;
-            localPlayerGirl.openGuiForPlayer(targetPlayer);
+            localPlayerGirl.openInteractionMenu(targetPlayer);
         }
     }
 

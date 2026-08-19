@@ -185,7 +185,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (super.processInteract(entityPlayer, enumHand)) {
             return true;
         }
-        if (this.world.isRemote && !this.openGuiForPlayer(entityPlayer)) {
+        if (this.world.isRemote && !this.openInteractionMenu(entityPlayer)) {
             this.sendLocalClientMessage(I18n.format("jenny.dialogue.busy", new Object[0]));
         }
         return true;
@@ -200,7 +200,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         if (this.getInteractionPlayerUUID() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
             String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
             if (this.entityDataManager.get(Y).booleanValue()) {
@@ -306,7 +306,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (entityPlayer == null) {
             return;
         }
-        Vec3d vec3d = VectorMath.rotate(new Vec3d(0.0, 0.0, 0.2), this.getYawRotation().floatValue() + 180.0f);
+        Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.2), this.getYawRotation().floatValue() + 180.0f);
         entityPlayer.setPositionAndUpdate(entityPlayer.posX + vec3d.x, entityPlayer.posY, entityPlayer.posZ + vec3d.z);
     }
 

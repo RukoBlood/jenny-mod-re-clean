@@ -55,7 +55,7 @@ public class PlayerSlime extends PlayerGirl {
     }
 
     @Override
-    public boolean shouldRenderArmor() {
+    public boolean canBeInteracted() {
         return false;
     }
 
@@ -77,14 +77,14 @@ public class PlayerSlime extends PlayerGirl {
     @Override
     public void onGuiActionSelected(String actionName, UUID partnerUUID) {
         if ("action.names.blowjob".equals(actionName)) {
-            this.initActionState(0, Action.SUCKBLOWJOB);
+            this.sendActionPacket(0, Action.SUCKBLOWJOB);
             this.setCurrentAction(Action.SUCKBLOWJOB);
-            this.bindPlayerPartner(partnerUUID);
+            this.teleportPlayerToGirl(partnerUUID);
         }
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         PlayerSlime.openInventoryGui(player, this, new String[]{"action.names.blowjob"}, false);
         return true;
     }

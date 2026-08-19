@@ -84,9 +84,9 @@ extends PlayerGirl {
     @Override
     public void onGuiActionSelected(String actionName, UUID partnerUUID) {
         if ("action.names.headpat".equals(actionName)) {
-            this.bindPlayerPartner(partnerUUID);
+            this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.HEAD_PAT);
-            this.initActionState(this.getOutfitIndex(), Action.HEAD_PAT);
+            this.sendActionPacket(this.getOutfitIndex(), Action.HEAD_PAT);
         }
     }
 
@@ -116,7 +116,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         GirlEntity.openInventoryGui(player, this, new String[]{"action.names.headpat"}, false);
         return true;
     }

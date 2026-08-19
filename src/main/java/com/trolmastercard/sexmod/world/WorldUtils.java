@@ -86,7 +86,7 @@ public class WorldUtils {
         } else {
             targetDirection = new Vec3d(targetDirection.x, targetDirection.y, -targetDirection.z);
             float lerpedYaw = -ReferenceAndRotationHelper.LerpFloat(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
-            targetDirection = VectorMath.rotate(targetDirection, lerpedYaw);
+            targetDirection = VectorMath.rotateByYaw(targetDirection, lerpedYaw);
         }
         return targetDirection.normalize();
     }

@@ -262,7 +262,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         return false;
     }
 

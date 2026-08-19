@@ -119,7 +119,7 @@ public abstract class PlayerGirl extends Fighter {
         return new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY - 0.0, this.posZ, 50.0);
     }
 
-    public void initActionState(int n, Action action) {
+    public void sendActionPacket(int n, Action action) {
         PackageHandler.INSTANCE.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.getTargetNetworkPoint());
     }
 
@@ -140,7 +140,7 @@ public abstract class PlayerGirl extends Fighter {
         return false;
     }
 
-    public boolean shouldRenderArmor() {
+    public boolean canBeInteracted() {
         return true;
     }
 
@@ -246,7 +246,7 @@ public abstract class PlayerGirl extends Fighter {
         return !this.boolean_f() || minecraft.gameSettings.thirdPersonView != 0;
     }
 
-    protected void c(boolean bl) {
+    protected void handleOwnerUUID(boolean bl) {
         if (!ag) {
             return;
         }
@@ -314,7 +314,7 @@ public abstract class PlayerGirl extends Fighter {
         return new Vec3d(this.posX, this.posY - 0.0, this.posZ);
     }
 
-    protected void bindPlayerPartner(UUID uUID) {
+    protected void teleportPlayerToGirl(UUID uUID) {
         EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID(uUID);
         EntityPlayerMP entityPlayerMP2 = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(OWNER).get());
         PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
@@ -533,6 +533,7 @@ public abstract class PlayerGirl extends Fighter {
     public void void_y() {
     }
 
+    //TODO: is this a hitbox helper??
     public void spawnHitboxHelper() {
     }
 

@@ -84,7 +84,7 @@ public class GalathGeometryRender {
             v[7] = new Vec3d(eo.x, -eo.y, 0.0);
         }
         for (i = 0; i < v.length; ++i) {
-            v[i] = VectorMath.rotate(v[i], partialTicks);
+            v[i] = VectorMath.rotateByYaw(v[i], partialTicks);
         }
         for (i = 0; i < 4; ++i) {
             v[i] = v[i].add(startPos);
@@ -153,7 +153,7 @@ public class GalathGeometryRender {
         };
 
         for (i = 0; i < v.length; ++i) {
-            v[i] = VectorMath.rotate(v[i], partialTicks);
+            v[i] = VectorMath.rotateByYaw(v[i], partialTicks);
         }
         for (i = 0; i < 4; ++i) {
             v[i] = VectorMath.rotateEuler(v[i], 0.0f, rotY, rotZ);

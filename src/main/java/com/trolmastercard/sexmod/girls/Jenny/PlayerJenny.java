@@ -100,13 +100,13 @@ public class PlayerJenny extends PlayerGirl {
         if ("action.names.boobjob".equals(actionName)) {
             this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.PAIZURI_START);
-            this.initActionState(0, Action.PAIZURI_START);
-            this.bindPlayerPartner(partnerUUID);
+            this.sendActionPacket(0, Action.PAIZURI_START);
+            this.teleportPlayerToGirl(partnerUUID);
         }
         if ("action.names.blowjob".equals(actionName)) {
             this.setCurrentAction(Action.STARTBLOWJOB);
-            this.initActionState(this.getOutfitIndex(), Action.PAIZURI_START);
-            this.bindPlayerPartner(partnerUUID);
+            this.sendActionPacket(this.getOutfitIndex(), Action.PAIZURI_START);
+            this.teleportPlayerToGirl(partnerUUID);
         }
     }
 
@@ -133,7 +133,7 @@ public class PlayerJenny extends PlayerGirl {
     }
 
     @Override
-    public boolean openGuiForPlayer(EntityPlayer player) {
+    public boolean openInteractionMenu(EntityPlayer player) {
         GirlEntity.openInventoryGui(player, this, new String[]{"action.names.blowjob", "action.names.boobjob"}, false);
         return true;
     }
