@@ -4,7 +4,7 @@
 ---
 # Jenny mod reverse engineering (And Cleaning up) (TMC 1.1.0 version)
 
-Created by Palkaline, edited by me. Currently i rename come classes, because half of it are still uses reverse engineered gibberish.
+Created by Palkaline, Remapped by Rukoblood
 
 ## Fortunate news.
 One guy (RealCrystalNight) fully reverse engineered Jenny mod's code.
@@ -19,8 +19,16 @@ Initial goals of this project
 - FOSS!
 - Clean up code
 
+## Tools, AI and mods that i used to reverse engineer this Mod
+
+- Giga IDE CE 2025.1
+- Konloch's bytecode viewer 2.13.2
+- Google Gemini (free tier, no antigravity, no ai plus/pro).
+- SchnurriTV's Jenny Mod build v1.5.2
+
 ## Building and/or running
 gradlew build
+
 if successful - gradlew RunClient
 
 ## Obfuscation
@@ -144,9 +152,9 @@ The most likely bugs are:
 - Referencing incorrect method, same signature.
   - Static method resolution is strange to me... you learn something new!
 
-##Bugs (ME)
+## Bugs (ME)
 
-Current state of the mod - я сломаль
+Current state of the mod - still broken stuff.
 
 
 ## Modifications from source jar
@@ -173,10 +181,11 @@ Current state of the mod - я сломаль
   I feel like there is a better supported way to implement this... again, see comments...
 
 ## TODO (ME)
-- Fix girls bugs
-- Refactor something
-- 
+- Fix girls bugs, including critical ones
+- Rename methods and fields in classes
+- Fix code that palkaline didn't fixed, because he abandoned this project.
   
 ## References
 
 - See: https://github.com/hfgufjkgjkfbg/Minecraft-Sex-Mod-Jenny-1.12.2-Forge
+- See: https://github.com/ReverseEngineeringEnthusiasts/Jenny-Mod-Fapcraft
