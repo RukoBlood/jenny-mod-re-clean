@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.girls.Galath;
+package com.trolmastercard.sexmod.girls.Galath.GalathCoin;
 
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;

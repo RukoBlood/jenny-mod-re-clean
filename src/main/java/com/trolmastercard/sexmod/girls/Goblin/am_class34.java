@@ -13,7 +13,7 @@ import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.IGoblin;
+import com.trolmastercard.sexmod.util.interfaces.IGoblin;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;

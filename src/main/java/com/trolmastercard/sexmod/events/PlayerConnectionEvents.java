@@ -57,7 +57,7 @@ public class PlayerConnectionEvents {
         }
 
         PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), playerMP);
-        PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(GalathMangTracker.c(playerMP.getPersistentID())), playerMP);
+        PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(GalathMangTracker.hasOwner(playerMP.getPersistentID())), playerMP);
 
         for (ItemStack stack : playerMP.inventory.mainInventory) {
             if (stack.getItem() != LampItem.LAMP_ITEM || !stack.hasTagCompound()) continue;

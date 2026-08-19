@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.interfaces.IGirlAnimGeoModel;
+import com.trolmastercard.sexmod.util.interfaces.IGirlBoneInfo;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -26,7 +26,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.CheckReturnValue;
 
-public abstract class GirlModel<T extends GirlEntity> extends IGirlAnimGeoModel<T> implements ModelBones {
+public abstract class GirlModel<T extends GirlEntity> extends GirlAnimGeoModel<T> implements IGirlBoneInfo {
     final static public List<String> BRA_STRING_BONES = Arrays.asList("braStringMidStartR", "braStringMidMid1R", "braStringMidMid2R", "braStringMidMid3R", "braStringMidEndR", "braStringBackR", "braStringRightEndR", "braStringRightStartR", "braStringRightL", "braStringMidMid1L", "braStringMidMid2L", "braStringMidMid3L", "braStringMidEndL", "braStringBackL", "braStringLeftEndL", "braStringLeftStartL", "braStringMidStartL", "braStringRightR");
     final static public List<String> CAMERA_PLACEMENTS = Arrays.asList("boyCam", "girlCam");
     static public boolean enableModelCache = true;

@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.SendBlocks;
+import com.trolmastercard.sexmod.companion.TargetNearestKoboldGoal;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;

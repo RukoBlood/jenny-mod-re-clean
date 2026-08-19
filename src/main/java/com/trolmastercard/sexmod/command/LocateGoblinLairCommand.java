@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.command;
 
 import java.util.ConcurrentModificationException;
 
@@ -16,8 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
-public class LocateGoblinLairCommand
-extends CommandBase {
+public class LocateGoblinLairCommand extends CommandBase {
     final static public LocateGoblinLairCommand LOCATE_GOBLIN_LAIR_COMMAND = new LocateGoblinLairCommand();
 
     @Override

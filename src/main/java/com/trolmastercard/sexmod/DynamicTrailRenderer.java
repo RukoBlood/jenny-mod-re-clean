@@ -43,8 +43,8 @@ public class DynamicTrailRenderer {
         Vec3d lastNodePos;
         if (this.segments.size() < this.maxSegmentsCount) {
             for (int i = 0; i < BATCH_SIZE; ++i) {
-                lastNodePos = this.sourcePositionProvider.a(this.ownerEntity);
-                this.segments.add(new TrailSegment(mc.world, this.targetPositionProvider.a(this.ownerEntity), new Vec3d(lastNodePos.x + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius), lastNodePos.y + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius), lastNodePos.z + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius))));
+                lastNodePos = this.sourcePositionProvider.getPosition(this.ownerEntity);
+                this.segments.add(new TrailSegment(mc.world, this.targetPositionProvider.getTargetPosition(this.ownerEntity), new Vec3d(lastNodePos.x + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius), lastNodePos.y + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius), lastNodePos.z + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius))));
             }
         }
         GlStateManager.disableCull();
@@ -69,7 +69,7 @@ public class DynamicTrailRenderer {
         GlStateManager.enableCull();
     }
 
-    void onTick() {
+    void updateTrails() {
         for (TrailSegment segment : this.segments) {
             segment.onUpdate();
         }

@@ -88,12 +88,12 @@ extends ItemFishingRod {
             worldIn.playSound(null, luna.posX, luna.posY, luna.posZ, SoundEvents.ENTITY_BOBBER_THROW, SoundCategory.NEUTRAL, 0.5f, 0.4f / (itemRand.nextFloat() * 0.4f + 0.8f));
             if (!worldIn.isRemote) {
                 int luckBonus = EnchantmentHelper.getFishingLuckBonus(heldItem);
-                LunaHookEntity.nextAngler = luna;
+                LunaHookEntity.ownerLuna = luna;
                 double distance = luna.getPositionVector().distanceTo(new Vec3d(luna.chosenFishingSpot.getX(), luna.chosenFishingSpot.getY(), luna.chosenFishingSpot.getZ()));
                 LunaHookEntity entityfishhook = new LunaHookEntity(worldIn, luna, distance * LunaEntity.ap);
                 int speedBonus = EnchantmentHelper.getFishingSpeedBonus(heldItem);
                 if (speedBonus > 0) {
-                    entityfishhook.setLureSpeed(speedBonus);
+                    entityfishhook.setFishingLevel(speedBonus);
                 }
                 if (luckBonus > 0) {
                     entityfishhook.setLuck(luckBonus);

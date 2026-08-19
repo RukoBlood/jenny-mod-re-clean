@@ -206,7 +206,7 @@ extends PlayerGirl {
         if (fp_class3242 == Action.ANAL_WAIT) {
             if (!this.world.isRemote) {
                 this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
+                Vec3d vec3d = this.getTargetPosition().add(VectorMath.rotateByYaw(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.isControlledByLocalPlayer()) {
                 SexUI.showUI();
@@ -219,13 +219,13 @@ extends PlayerGirl {
             this.setOutfitIndex(0);
             this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
             Vec3d vec3d = this.getTargetPosition();
-            Vec3d vec3d2 = vec3d.add(VectorMath.RotateY(0.0, 0.0, 1.0, f));
+            Vec3d vec3d2 = vec3d.add(VectorMath.rotateByYaw(0.0, 0.0, 1.0, f));
             this.setTargetPosition(vec3d2);
             EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
             if (entityPlayer2 != null) {
                 entityPlayer2.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
             }
-            Vec3d vec3d3 = vec3d.add(VectorMath.RotateY(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
+            Vec3d vec3d3 = vec3d.add(VectorMath.rotateByYaw(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
             entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
             this.setAnchored(true);
         }

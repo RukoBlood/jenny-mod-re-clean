@@ -34,15 +34,14 @@ public class f4_class289 {
             return;
         }
         String string = itemStack.getDisplayName();
-        if (string.isEmpty()) {
-            return;
+        if (!string.isEmpty()) {
+            ((GirlEntity) entity).setCustomNameOverride(string);
+            if (!entityPlayer.capabilities.isCreativeMode) {
+                itemStack.shrink(1);
+            }
+            entityInteractSpecific.setCanceled(true);
+            entityInteractSpecific.setResult(Event.Result.DENY);
         }
-        ((GirlEntity)entity).setCustomNameOverride(string);
-        if (!entityPlayer.capabilities.isCreativeMode) {
-            itemStack.shrink(1);
-        }
-        entityInteractSpecific.setCanceled(true);
-        entityInteractSpecific.setResult(Event.Result.DENY);
     }
 }
 

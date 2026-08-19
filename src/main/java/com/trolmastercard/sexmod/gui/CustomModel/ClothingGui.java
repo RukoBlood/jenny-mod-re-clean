@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import com.trolmastercard.sexmod.CustomPartCategory;
 import com.trolmastercard.sexmod.CustomPartListScrollList;
 import com.trolmastercard.sexmod.Packets.UploadModelString;
-import com.trolmastercard.sexmod.Point2D;
+import com.trolmastercard.sexmod.util.Point2D;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;

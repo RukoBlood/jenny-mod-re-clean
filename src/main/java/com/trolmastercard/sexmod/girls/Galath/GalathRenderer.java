@@ -13,13 +13,14 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.girls.Galath.GalathCoin.GalathCoinRenderer;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieModel;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieRenderer;
 import com.trolmastercard.sexmod.util.*;
-import com.trolmastercard.sexmod.util.interfaces.IModelBoneFilter;
+import com.trolmastercard.sexmod.util.interfaces.IGirlRenderer;
 import com.trolmastercard.sexmod.util.interfaces.IGalath;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
@@ -44,7 +45,7 @@ import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 //da_class171
-public class GalathRenderer extends GirlRenderer<GalathEntity> implements IModelBoneFilter {
+public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlRenderer {
     final static public int WING_VERTICES_COUNT = 14;
     final static public HashSet<String> BLACKLISTED_BONES = new HashSet<String>(){
         {

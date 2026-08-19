@@ -96,17 +96,15 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.getCurrentAction();
-        if (fp_class3243 == Action.ANAL_CUM || fp_class3243 == Action.PRONE_DOGGY_CUM) {
+        Action currentAction = this.getCurrentAction();
+        if (currentAction == Action.ANAL_CUM || currentAction == Action.PRONE_DOGGY_CUM) {
             this.entityDataManager.set(GIRL_HAND_STATES, "");
         }
-        if (fp_class3243 == Action.ANAL_CUM && (action == Action.ANAL_FAST || action == Action.ANAL_SLOW)) {
-            return;
+        if (currentAction != Action.ANAL_CUM || (action != Action.ANAL_FAST && action != Action.ANAL_SLOW)) {
+            if (currentAction != Action.PRONE_DOGGY_CUM || (action != Action.PRONE_DOGGY_HARD && action != Action.PRONE_DOGGY_SOFT)) {
+                super.setCurrentAction(action);
+            }
         }
-        if (fp_class3243 == Action.PRONE_DOGGY_CUM && (action == Action.PRONE_DOGGY_HARD || action == Action.PRONE_DOGGY_SOFT)) {
-            return;
-        }
-        super.setCurrentAction(action);
     }
 
     @Override
@@ -259,7 +257,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (fp_class3242 == Action.ANAL_WAIT) {
             if (!this.world.isRemote) {
                 this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.getTargetPosition().add(VectorMath.RotateY(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
+                Vec3d vec3d = this.getTargetPosition().add(VectorMath.rotateByYaw(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
                 entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
             } else if (this.isControlledByLocalPlayer()) {
                 SexUI.showUI();
@@ -272,9 +270,9 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             this.setOutfitIndex(0);
             this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
             Vec3d vec3d = this.getTargetPosition();
-            Vec3d vec3d2 = vec3d.add(VectorMath.RotateY(0.0, 0.0, 1.0, f));
+            Vec3d vec3d2 = vec3d.add(VectorMath.rotateByYaw(0.0, 0.0, 1.0, f));
             this.setTargetPosition(vec3d2);
-            Vec3d vec3d3 = vec3d.add(VectorMath.RotateY(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
+            Vec3d vec3d3 = vec3d.add(VectorMath.rotateByYaw(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
             entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
             this.setAnchored(true);
         }
@@ -491,11 +489,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.setCurrentAction(Action.HEAD_PAT);
                 break;
             }
-            case "doggy": {
-                this.resetCameraAndPhysics();
-                PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
-                return;
-            }//И где собственно код??? TODO: Код запилить
+            case "doggy":
             case "anal": {
                 this.resetCameraAndPhysics();
                 PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));

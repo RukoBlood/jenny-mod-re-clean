@@ -4,7 +4,7 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.command;
 
 import com.trolmastercard.sexmod.Packets.RequestServerModelAvailability;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
@@ -16,8 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class ReloadCustomModelsCommand
-extends CommandBase {
+public class ReloadCustomModelsCommand extends CommandBase {
     final static public ReloadCustomModelsCommand RELOAD_CUSTOM_MODELS_COMMAND = new ReloadCustomModelsCommand();
 
     @Override

@@ -44,9 +44,11 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.gui.g7_class352;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.Point2D;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IEllie;
+import com.trolmastercard.sexmod.util.interfaces.IKobold;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
@@ -111,9 +113,9 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
 // ff_class308
-public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInventory, dr_class199 {
+public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInventory, IKobold {
     final static public EyeAndKoboldColor COLOR = EyeAndKoboldColor.PURPLE;
-    final static public float Y = 0.25f;
+    final static public float SCALE = 0.25f;
     final static int ar = 20;
     final static int ag = 2;
     final static int aG = 30;
@@ -136,7 +138,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     final static double aH = 0.7;
     final static int aa = 142;
     final static public DataParameter<Float> aE = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.FLOAT).getSerializer().createKey(122);
-    final static public DataParameter<String> T = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.STRING).getSerializer().createKey(123);
+    final static public DataParameter<String> KOBOLD_NAME = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.STRING).getSerializer().createKey(123);
     final static public DataParameter<Boolean> aC = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(124);
     final static public DataParameter<Boolean> aZ = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(125);
     final static public DataParameter<String> aU = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.STRING).getSerializer().createKey(126);
@@ -368,7 +370,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     @Override
     public String getGirlName() {
-        return this.entityDataManager.get(T);
+        return this.entityDataManager.get(KOBOLD_NAME);
     }
 
     @Override
@@ -393,7 +395,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         this.entityDataManager.register(CURRENT_ACTION, COLOR.name());
         this.entityDataManager.register(aL, Optional.absent());
         this.entityDataManager.register(aE, Float.valueOf(0.0f));
-        this.entityDataManager.register(T, KoboldNames.values()[this.getRNG().nextInt(KoboldNames.values().length)].toString());
+        this.entityDataManager.register(KOBOLD_NAME, KoboldNames.values()[this.getRNG().nextInt(KoboldNames.values().length)].toString());
         this.entityDataManager.register(aC, false);
         this.entityDataManager.register(aZ, false);
         this.entityDataManager.register(aU, "null");
@@ -438,7 +440,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             itemStack = entityPlayer.getHeldItem(EnumHand.OFF_HAND);
         }
         if (itemStack.getItem().equals(Items.NAME_TAG) && entityPlayer.getPersistentID().toString().equals(this.entityDataManager.get(MASTER))) {
-            this.entityDataManager.set(T, itemStack.getDisplayName());
+            this.entityDataManager.set(KOBOLD_NAME, itemStack.getDisplayName());
             itemStack.shrink(1);
             return true;
         }
@@ -874,7 +876,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         if (Math.abs(this.motionX) + Math.abs(this.motionZ) > 0.01) {
             return false;
         }
-        return !this.boolean_a();
+        return !this.IsBlockedByCeiling();
     }
 
     void void_d() {
@@ -1076,7 +1078,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             this.R = this.world.getBlockState(blockPos2.add(0, -1, 0));
             this.aX = this.world.getBlockState(blockPos2);
             this.world.setBlockState(blockPos2.add(0, -1, 0), Blocks.NETHERRACK.getDefaultState());
-            this.world.setBlockState(blockPos2, Fire.FIRE.getDefaultState());
+            this.world.setBlockState(blockPos2, SexFire.FIRE.getDefaultState());
             KoboldManager.setTribeHomePos(uUID, blockPos2);
         }
         if (blockPos == null) {
@@ -2504,7 +2506,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         nbt.setInteger("eyeColorY", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getY());
         nbt.setInteger("eyeColorZ", ((BlockPos)this.entityDataManager.get(ACTION_TARGET_POS)).getZ());
         nbt.setString("model", (String)this.entityDataManager.get(APPEARANCE_DNA));
-        nbt.setString("name", this.entityDataManager.get(T));
+        nbt.setString("name", this.entityDataManager.get(KOBOLD_NAME));
         nbt.setString("master", (String)this.entityDataManager.get(MASTER));
         nbt.setTag("inventory", this.X.serializeNBT());
         nbt.setString("bodyColor", (String)this.entityDataManager.get(CURRENT_ACTION));
@@ -2529,7 +2531,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             this.entityDataManager.set(ACTION_TARGET_POS, blockPos);
         }
         this.entityDataManager.set(aE, nbt.getFloat("body_size"));
-        this.entityDataManager.set(T, nbt.getString("name"));
+        this.entityDataManager.set(KOBOLD_NAME, nbt.getString("name"));
         this.entityDataManager.set(MASTER, nbt.getString("master"));
         this.X.deserializeNBT(nbt.getCompoundTag("inventory"));
         String string2 = nbt.getString("bodyColor");
@@ -2557,7 +2559,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     @Override
-    public boolean boolean_a() {
+    public boolean IsBlockedByCeiling() {
         if (this.isLocallyRegistered()) {
             return false;
         }
@@ -2694,7 +2696,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                         this.rotationYaw = this.rotationYawHead;
                         double d2 = 1.0 + (double)(f * 2.0f);
                         this.movementController.setAnimationSpeed(d2);
-                        if (this.boolean_a()) {
+                        if (this.IsBlockedByCeiling()) {
                             this.createAnimation("animation.kobold.crouch_walk", true, event);
                             break;
                         }
@@ -2712,7 +2714,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     this.createAnimation("animation.kobold.fly", true, event);
                     break;
                 }
-                if (this.boolean_a()) {
+                if (this.IsBlockedByCeiling()) {
                     this.createAnimation("animation.kobold.crouch_idle", true, event);
                     break;
                 }

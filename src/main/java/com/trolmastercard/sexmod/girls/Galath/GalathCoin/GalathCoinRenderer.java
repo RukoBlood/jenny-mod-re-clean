@@ -8,12 +8,13 @@
  *  javax.vecmath.Vector4f
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod.girls.Galath;
+package com.trolmastercard.sexmod.girls.Galath.GalathCoin;
 
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
+import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
 import net.minecraft.client.Minecraft;
@@ -71,7 +72,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
         Tessellator.getInstance().draw();
         float f6 = this.a(f);
         this.d = this.a();
-        if (!GalathMangTracker.f) {
+        if (!GalathMangTracker.debugEnabled) {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, f6, f6);
             GL11.glDisable(2896);
         }
@@ -100,7 +101,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
         if (l3 != 0L) {
             return this.b(l, l3, f);
         }
-        if (GalathMangTracker.f) {
+        if (GalathMangTracker.debugEnabled) {
             return 120.0f;
         }
         return this.b(f);
@@ -142,7 +143,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
         if (l3 != 0L) {
             return this.a(l3, l);
         }
-        if (GalathMangTracker.f) {
+        if (GalathMangTracker.debugEnabled) {
             return f;
         }
         return e;

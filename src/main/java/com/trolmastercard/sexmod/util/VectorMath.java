@@ -31,7 +31,7 @@ public class VectorMath {
         );
     }
 
-    public static Vec3d RotateY(double x, double y, double z, float yaw) {
+    public static Vec3d rotateByYaw(double x, double y, double z, float yaw) {
         return VectorMath.rotateByYaw(new Vec3d(x, y, z), yaw);
     }
 

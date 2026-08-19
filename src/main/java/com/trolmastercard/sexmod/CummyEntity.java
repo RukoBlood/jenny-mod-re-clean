@@ -31,55 +31,53 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(value=Side.CLIENT)
 public class CummyEntity {
     final static ResourceLocation CUMMY_TEXTURE = new ResourceLocation("sexmod", "textures/cummy.png");
-    static Minecraft minecraft = Minecraft.getMinecraft();
-    static List<DynamicTrailRenderer> a = new ArrayList<DynamicTrailRenderer>();
+    static Minecraft mc = Minecraft.getMinecraft();
+    static List<DynamicTrailRenderer> trailRenderers = new ArrayList<DynamicTrailRenderer>();
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(RenderWorldLastEvent renderWorldLastEvent) {
-        CummyEntity.minecraft.renderEngine.bindTexture(CUMMY_TEXTURE);
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        CummyEntity.mc.renderEngine.bindTexture(CUMMY_TEXTURE);
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-        float f = renderWorldLastEvent.getPartialTicks();
+        BufferBuilder buffer = tessellator.getBuffer();
+        float partialTicks = event.getPartialTicks();
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
-        if (CummyEntity.minecraft.player == null) {
-            return;
+        if (CummyEntity.mc.player != null) {
+            for (DynamicTrailRenderer trailRenderer : trailRenderers) {
+                trailRenderer.renderTrail(mc, tessellator, buffer, partialTicks);
+            }
+            GlStateManager.enableDepth();
+            GlStateManager.enableLighting();
         }
-        for (DynamicTrailRenderer ep_class2632 : a) {
-            ep_class2632.renderTrail(minecraft, tessellator, bufferBuilder, f);
-        }
-        GlStateManager.enableDepth();
-        GlStateManager.enableLighting();
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(TickEvent.ClientTickEvent clientTickEvent) {
-        if (clientTickEvent.phase == TickEvent.Phase.END) {
-            return;
-        }
-        for (DynamicTrailRenderer ep_class2632 : a) {
-            ep_class2632.onTick();
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            for (DynamicTrailRenderer trailRenderer : trailRenderers) {
+                trailRenderer.updateTrails();
+            }
         }
     }
 
-    public static void registerTrail(DynamicTrailRenderer ep_class2632) {
-        a.add(ep_class2632);
+    public static void registerTrail(DynamicTrailRenderer renderer) {
+        trailRenderers.add(renderer);
     }
 
-    public static void a(int n, IPositionProvider ar_class412, ITargetProvider b8_class692, GirlEntity em_class2582, float f, float f2) {
-        a.add(new DynamicTrailRenderer(n, ar_class412, b8_class692, em_class2582, f, f2));
+    public static void createTrail(int maxSegmentsCount, IPositionProvider positionProvider, ITargetProvider targetProvider, GirlEntity girl, float randomnessRadus, float maxDistance) {
+        trailRenderers.add(new DynamicTrailRenderer(maxSegmentsCount, positionProvider, targetProvider, girl, randomnessRadus, maxDistance));
     }
 
     public static void spawnSexParticles(@Nonnull GirlEntity girl) {
-        ArrayList<DynamicTrailRenderer> arrayList = new ArrayList<DynamicTrailRenderer>();
-        for (DynamicTrailRenderer ep_class2632 : a) {
-            if (!ep_class2632.ownerEntity.girlID().equals(girl.girlID())) continue;
-            arrayList.add(ep_class2632);
+        ArrayList<DynamicTrailRenderer> renderers = new ArrayList<DynamicTrailRenderer>();
+        for (DynamicTrailRenderer renderer : trailRenderers) {
+            if (!renderer.ownerEntity.girlID().equals(girl.girlID())) continue;
+            renderers.add(renderer);
         }
-        a.removeAll(arrayList);
+        trailRenderers.removeAll(renderers);
     }
 }
 

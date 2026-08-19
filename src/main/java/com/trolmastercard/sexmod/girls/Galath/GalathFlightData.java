@@ -5,7 +5,7 @@
  *  net.minecraftforge.fml.common.network.NetworkRegistry$TargetPoint
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.girls.Galath;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,10 +16,9 @@ import java.util.Random;
 import com.trolmastercard.sexmod.Packets.ResetController;
 import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesPacket2;
+import com.trolmastercard.sexmod.girls.Galath.EnergyBall.EnergyBallEntity;
+import com.trolmastercard.sexmod.util.Vector2d;
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.girls.Galath.EnergyBallEntity;
-import com.trolmastercard.sexmod.girls.Galath.GalathDamageSource;
-import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
@@ -196,7 +195,7 @@ public enum GalathFlightData {
         galath.setFlightTargetPos(pos);
         Vec3d targetPos = galath.getAttackTarget().getPositionVector();
         Vector2d delta = new Vector2d(targetPos.x - pos.x, targetPos.z - pos.z);
-        double yaw = TrigMath.sinDegrees(Math.atan2(delta.a, delta.b)) - 90.0;
+        double yaw = TrigMath.sinDegrees(Math.atan2(delta.y, delta.x)) - 90.0;
         galath.setAnchored(true);
         galath.setTargetPosition(pos);
         galath.setYawRotation((float)yaw);
@@ -209,7 +208,7 @@ public enum GalathFlightData {
         if (ThreadNames.isValueInBounds((double)attackProgress, 24.0, 32.0)) {
             Vec3d eyePos = target.getPositionVector().add(0.0, target.getEyeHeight(), 0.0);
             Vector2d delta2 = new Vector2d(eyePos.x - galath.posX, eyePos.z - galath.posZ);
-            double d = TrigMath.sinDegrees(Math.atan2(delta2.a, delta2.b)) - 90.0;
+            double d = TrigMath.sinDegrees(Math.atan2(delta2.y, delta2.x)) - 90.0;
             galath.setYawRotation((float)d);
             Vec3d forward = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 3.0), (float)(d + 180.0));
             Vec3d from = galath.getAnchorTargetPosition();

@@ -483,8 +483,10 @@ implements IGalath {
                     break;
                 }
                 case "sexui": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.showUI();
+                    if (this.isControlledByLocalPlayer()) {
+                        SexUI.showUI();
+                    }
+                    break;
                 }
             }
         });

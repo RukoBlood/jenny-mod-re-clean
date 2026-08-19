@@ -14,6 +14,8 @@ import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.girls.Ellie.*;
 import com.trolmastercard.sexmod.girls.Galath.*;
+import com.trolmastercard.sexmod.girls.Galath.EnergyBall.EnergyBallEntity;
+import com.trolmastercard.sexmod.girls.Galath.EnergyBall.EnergyBallRenderer;
 import com.trolmastercard.sexmod.girls.Goblin.*;
 import com.trolmastercard.sexmod.girls.Jenny.*;
 import com.trolmastercard.sexmod.girls.Kobold.*;

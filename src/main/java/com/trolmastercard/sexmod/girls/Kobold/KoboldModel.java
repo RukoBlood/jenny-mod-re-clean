@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.world.FakeWorld;
-import com.trolmastercard.sexmod.dr_class199;
+import com.trolmastercard.sexmod.util.interfaces.IKobold;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlModel;
@@ -238,7 +238,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         }
         switch (girl.getCurrentAction()) {
             case NULL: {
-                if (Math.abs(girl.prevPosX - girl.posX) + Math.abs(girl.prevPosZ - girl.posZ) < 0.0 || girl.onGround && Math.abs(Math.abs(girl.prevPosY) - Math.abs(girl.posY)) > (double)0.1f || !((dr_class199)((Object) girl)).boolean_a()) break;
+                if (Math.abs(girl.prevPosX - girl.posX) + Math.abs(girl.prevPosZ - girl.posZ) < 0.0 || girl.onGround && Math.abs(Math.abs(girl.prevPosY) - Math.abs(girl.posY)) > (double)0.1f || !((IKobold)((Object) girl)).IsBlockedByCeiling()) break;
             }
             default: {
                 return;

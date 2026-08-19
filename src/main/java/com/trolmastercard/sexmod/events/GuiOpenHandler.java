@@ -13,11 +13,11 @@ import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class bq_class93 {
+public class GuiOpenHandler {
     @SubscribeEvent
-    public void a(GuiOpenEvent event) {
+    public void onOpenGui(GuiOpenEvent event) {
         if (event.getGui() instanceof GuiMainMenu || event.getGui() instanceof GuiMultiplayer) {
-            PlayerGirl.Z.clear();
+            PlayerGirl.playerGirlList.clear();
             PlayerGirl.playerGirlUUIDHashtable.clear();
         }
     }

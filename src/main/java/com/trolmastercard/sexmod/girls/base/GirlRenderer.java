@@ -41,7 +41,7 @@ import com.trolmastercard.sexmod.girls.Custom.CustomModelRenderer;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.*;
-import com.trolmastercard.sexmod.util.interfaces.IModelBoneFilter;
+import com.trolmastercard.sexmod.util.interfaces.IGirlRenderer;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -98,7 +98,7 @@ import software.bernie.shadowed.eliotlash.mclib.utils.Interpolations;
 
 //d__class169
 // 'd_'
-public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends GeoEntityRenderer<T> implements IModelBoneFilter {
+public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends GeoEntityRenderer<T> implements IGirlRenderer {
     final static protected ResourceLocation LINE = new ResourceLocation("sexmod", "textures/line.png");
     final static float m = 1.5f;
     protected double leashYOffset;

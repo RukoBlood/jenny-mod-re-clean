@@ -90,18 +90,19 @@ public class AllieWorldData extends WorldSavedData {
 
     private NBTTagCompound serializePlayerNames(HashMap<PlayerGirlEntity, String> names) {
         NBTTagCompound playerNBT = new NBTTagCompound();
-        for (Map.Entry<PlayerGirlEntity, String> entry : names.entrySet()) {
-            playerNBT.setString(entry.getKey().name(), entry.getValue());
+        for (Map.Entry<PlayerGirlEntity, String> name : names.entrySet()) {
+            playerNBT.setString(name.getKey().name(), name.getValue());
         }
         return playerNBT;
     }
 
-    private HashMap<PlayerGirlEntity, String> deserializePlayerNames(NBTTagCompound playerNBT) {
+    private HashMap<PlayerGirlEntity, String> deserializePlayerNames(NBTTagCompound nbt) {
         HashMap<PlayerGirlEntity, String> hashMap = new HashMap<PlayerGirlEntity, String>();
         for (PlayerGirlEntity pg : PlayerGirlEntity.values()) {
-            String customName = playerNBT.getString(pg.name());
-            if (customName.isEmpty()) continue;
-            hashMap.put(pg, customName);
+            String customName = nbt.getString(pg.name());
+            if (!customName.isEmpty()) {
+                hashMap.put(pg, customName);
+            }
         }
         return hashMap;
     }

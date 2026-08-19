@@ -44,7 +44,7 @@ extends Render<LunaHookEntity> {
     public void doRender(LunaHookEntity gi_class3702, double d, double d2, double d3, float f, float f2) {
         Object object;
         Object object2;
-        LunaEntity eb_class2362 = gi_class3702.g();
+        LunaEntity eb_class2362 = gi_class3702.getOwnerLuna();
         if (eb_class2362 == null || this.renderOutlines || eb_class2362.throwBackPercentage == 1.0f) {
             return;
         }

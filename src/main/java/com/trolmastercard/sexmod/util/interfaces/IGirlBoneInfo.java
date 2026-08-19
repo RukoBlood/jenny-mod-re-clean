@@ -1,9 +1,9 @@
 /*
  * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
  */
-package com.trolmastercard.sexmod.girls.base;
+package com.trolmastercard.sexmod.util.interfaces;
 
-public interface ModelBones {
+public interface IGirlBoneInfo {
     default public String[] HeadArmor() {
         return new String[0];
     }

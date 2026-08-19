@@ -19,8 +19,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class Fire extends BlockFire {
-    final static public Block FIRE = new Fire();
+/*
+* SexFire block
+* Inert fire block that doesn't spread and burns
+* Used by the galath
+*/
+
+public class SexFire extends BlockFire {
+    final static public Block FIRE = new SexFire();
 
     @Override
     public void updateTick(World world, BlockPos blockPos, IBlockState iBlockState, Random random) {
@@ -29,7 +35,7 @@ public class Fire extends BlockFire {
     public static void RegisterFire() {
         FIRE.setRegistryName("sexmod", "fire");
         FIRE.setTranslationKey("fire");
-        MinecraftForge.EVENT_BUS.register(Fire.class);
+        MinecraftForge.EVENT_BUS.register(SexFire.class);
     }
 
     @SubscribeEvent

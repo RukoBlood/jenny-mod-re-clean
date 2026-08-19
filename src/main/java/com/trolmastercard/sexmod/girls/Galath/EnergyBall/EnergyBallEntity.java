@@ -4,11 +4,12 @@
  * Could not load the following classes:
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod.girls.Galath;
+package com.trolmastercard.sexmod.girls.Galath.EnergyBall;
 
 import java.util.List;
 import java.util.Random;
 
+import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesPacket2;
 import com.trolmastercard.sexmod.util.TrigMath;

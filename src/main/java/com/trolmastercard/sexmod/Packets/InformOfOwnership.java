@@ -44,7 +44,7 @@ implements IMessage {
                 System.out.println("received an invalid message @InformOfOwnership :(");
                 return null;
             }
-            GalathMangTracker.f = gf_class3642.b;
+            GalathMangTracker.debugEnabled = gf_class3642.b;
             return null;
         }
 

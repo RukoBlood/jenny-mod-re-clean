@@ -5,7 +5,7 @@
  *  com.google.common.base.Predicate
  *  javax.annotation.Nullable
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.companion;
 
 import com.google.common.base.Predicate;
 

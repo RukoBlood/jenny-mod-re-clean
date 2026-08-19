@@ -35,6 +35,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
+import com.trolmastercard.sexmod.util.interfaces.IGoblin;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;

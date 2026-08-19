@@ -4,7 +4,7 @@
  * Could not load the following classes:
  *  net.minecraftforge.client.IClientCommand
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.command;
 
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import net.minecraft.command.CommandBase;

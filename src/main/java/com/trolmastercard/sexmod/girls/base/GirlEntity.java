@@ -51,6 +51,7 @@ import com.trolmastercard.sexmod.util.ClientServerCheck;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.Point2D;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.world.WorldUtils;

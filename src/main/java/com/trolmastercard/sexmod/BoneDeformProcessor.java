@@ -13,7 +13,7 @@ import javax.vecmath.Vector3f;
 
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
-import com.trolmastercard.sexmod.util.interfaces.IModelBoneFilter;
+import com.trolmastercard.sexmod.util.interfaces.IGirlRenderer;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
@@ -32,10 +32,10 @@ public class BoneDeformProcessor {
             this.add("fuckhole");
         }
     };
-    static protected HashMap<IModelBoneFilter, HashMap<String, Boolean>> filterResultCache = new HashMap();
+    static protected HashMap<IGirlRenderer, HashMap<String, Boolean>> filterResultCache = new HashMap();
     static public Vec3d globalInfluenceVector;
 
-    static boolean checkAndCacheBoneApproval(IModelBoneFilter filter, GeoBone bone) {
+    static boolean checkAndCacheBoneApproval(IGirlRenderer filter, GeoBone bone) {
         HashMap<String, Boolean> boneMap = filterResultCache.get(filter);
         if (boneMap == null) {
             boneMap = new HashMap();
@@ -54,11 +54,8 @@ public class BoneDeformProcessor {
         return cachedResult;
     }
 
-    public static Vec3d applyBoneDeformation(IModelBoneFilter filter, GeoBone bone, Vec3d originPos, Vector3f rotation) {
-        if (!BoneDeformProcessor.checkAndCacheBoneApproval(filter, bone)) {
-            return originPos;
-        }
-        return BoneDeformProcessor.calculatePhysicsVector(originPos, rotation, globalInfluenceVector);
+    public static Vec3d applyBoneDeformation(IGirlRenderer filter, GeoBone bone, Vec3d originPos, Vector3f rotation) {
+        return !BoneDeformProcessor.checkAndCacheBoneApproval(filter, bone) ? originPos : BoneDeformProcessor.calculatePhysicsVector(originPos, rotation, globalInfluenceVector);
     }
 
     public static Vec3d calculatePhysicsVector(Vec3d origin, Vector3f rotation, Vec3d influende) {
@@ -71,7 +68,7 @@ public class BoneDeformProcessor {
         globalInfluenceVector = WorldUtils.getLightDirectionVector(entity, partialTicks);
     }
 
-    public static void preWarmFilterCache(List<IBone> boneList, HashSet<String> blacklistedBones, IModelBoneFilter filter) {
+    public static void preWarmFilterCache(List<IBone> boneList, HashSet<String> blacklistedBones, IGirlRenderer filter) {
         if (filterResultCache.get(filter) != null) {
             return;
         }

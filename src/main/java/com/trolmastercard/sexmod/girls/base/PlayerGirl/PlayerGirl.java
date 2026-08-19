@@ -78,14 +78,14 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     static public Hashtable<UUID, PlayerGirl> playerGirlUUIDHashtable = new Hashtable();
-    static public List<PlayerGirl> Z = new ArrayList<PlayerGirl>();
+    static public List<PlayerGirl> playerGirlList = new ArrayList<PlayerGirl>();
     int an = -1;
     public boolean guiPending = true;
 
     protected PlayerGirl(World world) {
         super(world);
         this.setSize(0.01f, 0.01f);
-        Z.add(this);
+        playerGirlList.add(this);
     }
 
     protected PlayerGirl(World worldIn, UUID player) {
@@ -539,13 +539,13 @@ public abstract class PlayerGirl extends Fighter {
 
     public static void tryPuttingGirlsInTable() {
         ArrayList<PlayerGirl> arrayList = new ArrayList<PlayerGirl>();
-        for (PlayerGirl ei_class2512 : Z) {
+        for (PlayerGirl ei_class2512 : playerGirlList) {
             if (ei_class2512.getOwnerUserUUID() == null) continue;
             playerGirlUUIDHashtable.put(ei_class2512.getOwnerUserUUID(), ei_class2512);
             arrayList.add(ei_class2512);
         }
         for (PlayerGirl ei_class2512 : arrayList) {
-            Z.remove(ei_class2512);
+            playerGirlList.remove(ei_class2512);
         }
         PlayerGirl.void_t();
     }
@@ -591,7 +591,7 @@ public abstract class PlayerGirl extends Fighter {
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         this.entityDataManager.set(OWNER, Optional.of(UUID.fromString(nbt.getString("owner"))));
-        Z.add(this);
+        playerGirlList.add(this);
     }
 
     @Override

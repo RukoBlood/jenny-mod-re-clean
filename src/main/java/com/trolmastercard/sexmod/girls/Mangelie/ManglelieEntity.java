@@ -14,6 +14,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.companion.AvoidPlayerGoal;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
@@ -22,11 +23,8 @@ import com.trolmastercard.sexmod.girls.Galath.GalathMobTarget;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
+import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
-import com.trolmastercard.sexmod.util.ThreadNames;
-import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -118,7 +116,7 @@ extends GirlEntity {
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        this.tasks.addTask(1, new bt_class99(this, 20.0f, 1.0, 1.2));
+        this.tasks.addTask(1, new AvoidPlayerGoal(this, 20.0f, 1.0, 1.2));
     }
 
     @Override
@@ -135,7 +133,7 @@ extends GirlEntity {
     }
 
     @Nullable
-    public UUID getMommyUUID() {
+    public UUID getCorruptPlayerUUID() {
         String uuidStr = this.entityDataManager.get(MOMMY_UUID_DATA);
         if (uuidStr.isEmpty()) {
             return null;
@@ -156,7 +154,7 @@ extends GirlEntity {
     @Nullable
     public GalathEntity getMommyGalath(boolean isServer) {
         //GirlEntity girl;
-        UUID uUID = this.getMommyUUID();
+        UUID uUID = this.getCorruptPlayerUUID();
         if (uUID == null) {
             return null;
         }
@@ -209,7 +207,7 @@ extends GirlEntity {
     }
 
     void validateWildStatus() {
-        if (this.getMommyUUID() != null) {
+        if (this.getCorruptPlayerUUID() != null) {
             this.isWild = false;
         }
         if (this.isWild) {
@@ -303,14 +301,14 @@ extends GirlEntity {
     }
 
     void updatePhysicsState() {
-        boolean attached = this.getMommyUUID() != null;
+        boolean attached = this.getCorruptPlayerUUID() != null;
         this.setNoGravity(attached);
         this.noClip = attached;
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return this.getMommyUUID() == null;
+        return this.getCorruptPlayerUUID() == null;
     }
 
     @Override
@@ -535,7 +533,7 @@ extends GirlEntity {
         if (this.isAttachedToMommy()) {
             return;
         }
-        if (this.getMommyUUID() != null) {
+        if (this.getCorruptPlayerUUID() != null) {
             return;
         }
 
@@ -667,7 +665,7 @@ extends GirlEntity {
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        UUID uUID = this.getMommyUUID();
+        UUID uUID = this.getCorruptPlayerUUID();
         nbt.setString(NBT_MOMMY_KEY, uUID == null ? "" : uUID.toString());
         nbt.setBoolean("sexmod:iswild", this.isWild);
         if (this.isDespawnedLocal) {
@@ -916,7 +914,7 @@ extends GirlEntity {
                         Vec3d vec3d = girl.getBoneWorldPosition("semenEmitter");
                         Vec3d vec3d2 = girl.getBoneWorldPosition("semenDir");
                         return vec3d.subtract(vec3d2).normalize();
-                    }, em_class2582 -> em_class2582.getCachedBoneOffset("semenEmitter").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
+                    }, girl -> girl.getCachedBoneOffset("semenEmitter").add(girl.getTargetPosition()), this, 0.3f, 0.3f));
                     break;
                 }
                 case "blackScreen": {

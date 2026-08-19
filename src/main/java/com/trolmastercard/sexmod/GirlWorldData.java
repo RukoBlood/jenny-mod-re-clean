@@ -54,7 +54,7 @@ public class GirlWorldData extends WorldSavedData {
             return c.get(uUID2);
         }
         if (girl instanceof ManglelieEntity) {
-            UUID uUID = GalathMangTracker.getManglelieOwnerId(((ManglelieEntity)girl).getMommyUUID());
+            UUID uUID = GalathMangTracker.getManglelieOwnerId(((ManglelieEntity)girl).getCorruptPlayerUUID());
             return b.get(uUID == null ? girl.girlID() : uUID);
         }
         return null;
@@ -71,7 +71,7 @@ public class GirlWorldData extends WorldSavedData {
             return;
         }
         if (em_class2582 instanceof ManglelieEntity) {
-            UUID uUID = GalathMangTracker.getManglelieOwnerId(((ManglelieEntity)em_class2582).getMommyUUID());
+            UUID uUID = GalathMangTracker.getManglelieOwnerId(((ManglelieEntity)em_class2582).getCorruptPlayerUUID());
             b.put(uUID == null ? em_class2582.girlID() : uUID, em_class2582.getCustomModelCode());
         }
     }

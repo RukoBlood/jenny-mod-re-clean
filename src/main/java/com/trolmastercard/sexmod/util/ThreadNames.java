@@ -113,8 +113,8 @@ public class ThreadNames {
         new Thread(() -> {
             try {
                 Thread.sleep(ms);
-            } catch (Exception exception) {
-                exception.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             task.run();
         }, (ClientServerCheck.getInstance() ? "server sexmod thread " : "client sexmod thread ") + randomUUID).start();

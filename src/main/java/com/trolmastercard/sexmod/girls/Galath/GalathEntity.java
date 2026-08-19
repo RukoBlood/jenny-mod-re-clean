@@ -29,9 +29,12 @@ import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.*;
 import com.trolmastercard.sexmod.Packets.*;
+import com.trolmastercard.sexmod.command.FutaCommand;
 import com.trolmastercard.sexmod.companion.DoorInteractAIGoal;
 import com.trolmastercard.sexmod.companion.fighter.WatchClosestGirlGoal;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
+import com.trolmastercard.sexmod.girls.Galath.EnergyBall.EnergyBallEntity;
+import com.trolmastercard.sexmod.girls.Galath.GalathCoin.GalathCoin;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
@@ -2520,25 +2523,25 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "masterbateCumming": {
-                    if (!FutaCommand.enabled) break;
-                    CummyEntity.registerTrail(new DynamicTrailRenderer(90, girlEntity -> {
-                        Vec3d vec3d = girlEntity.getBoneWorldPosition("futaCockTip");
-                        Vec3d vec3d2 = girlEntity.getBoneWorldPosition("futaCockTipDirHelp");
+                    if (!FutaCommand.ENABLED) break;
+                    CummyEntity.registerTrail(new DynamicTrailRenderer(90, girl -> {
+                        Vec3d vec3d = girl.getBoneWorldPosition("futaCockTip");
+                        Vec3d vec3d2 = girl.getBoneWorldPosition("futaCockTipDirHelp");
                         return vec3d.subtract(vec3d2).normalize();
-                    }, em_class2582 -> em_class2582.getCachedBoneOffset("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
+                    }, girl -> girl.getCachedBoneOffset("futaCockTip").add(girl.getTargetPosition()), this, 0.3f, 0.3f));
                     break;
                 }
                 case "creampie": {
-                    CummyEntity.registerTrail(new DynamicTrailRenderer(100, em_class2582 -> VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation().floatValue()), em_class2582 -> em_class2582.getCachedBoneOffset("creampiePos").add(em_class2582.getTargetPosition()), this, 0.6f, 0.5f));
+                    CummyEntity.registerTrail(new DynamicTrailRenderer(100, girl -> VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation()), girl -> girl.getCachedBoneOffset("creampiePos").add(girl.getTargetPosition()), this, 0.6f, 0.5f));
                     // TODO fallthrough looks intentional
                 }
                 case "creampieGalath": {
-                    if (FutaCommand.enabled) {
-                        CummyEntity.registerTrail(new DynamicTrailRenderer(130, em_class2582 -> {
-                            Vec3d vec3d = em_class2582.getBoneWorldPosition("futaCockTip");
-                            Vec3d vec3d2 = em_class2582.getBoneWorldPosition("futaCockTipDirHelp");
+                    if (FutaCommand.ENABLED) {
+                        CummyEntity.registerTrail(new DynamicTrailRenderer(130, girl -> {
+                            Vec3d vec3d = girl.getBoneWorldPosition("futaCockTip");
+                            Vec3d vec3d2 = girl.getBoneWorldPosition("futaCockTipDirHelp");
                             return vec3d.subtract(vec3d2).normalize();
-                        }, em_class2582 -> em_class2582.getCachedBoneOffset("futaCockTip").add(em_class2582.getTargetPosition()), this, 0.3f, 0.3f));
+                        }, girl -> girl.getCachedBoneOffset("futaCockTip").add(girl.getTargetPosition()), this, 0.3f, 0.3f));
                     }
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
@@ -2616,7 +2619,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         data.addAnimationController(this.movementController);
     }
 
-    public static class EventHandLer {
+    public static class EventHandler {
         boolean hasRidingPlayer(GalathEntity galath) {
             return galath.getRidingPlayer() != null;
         }

@@ -166,13 +166,9 @@ extends PlayerGirlRenderer {
         this.z = entityPlayer.posZ;
     }
 
-    private static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-
-    public static class a_inner205 {
+    public static class EventHandler {
         @SubscribeEvent
-        public void a(TickEvent.ClientTickEvent clientTickEvent) {
+        public void onClientTick(TickEvent.ClientTickEvent event) {
             for (PlayerAllieRenderer renderer : J) {
                 renderer.void_a();
             }

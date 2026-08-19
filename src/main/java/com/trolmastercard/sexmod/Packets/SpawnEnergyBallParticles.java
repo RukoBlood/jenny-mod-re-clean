@@ -10,7 +10,7 @@
  */
 package com.trolmastercard.sexmod.Packets;
 
-import com.trolmastercard.sexmod.girls.Galath.GalathCoin;
+import com.trolmastercard.sexmod.girls.Galath.GalathCoin.GalathCoin;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import io.netty.buffer.ByteBuf;

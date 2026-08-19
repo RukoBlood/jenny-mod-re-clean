@@ -15,6 +15,9 @@ package com.trolmastercard.sexmod.proxy;
 import java.io.IOException;
 
 import com.trolmastercard.sexmod.*;
+import com.trolmastercard.sexmod.command.FutaCommand;
+import com.trolmastercard.sexmod.command.SetModelCodeCommand;
+import com.trolmastercard.sexmod.command.WhitelistServerModelsCommand;
 import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.GuiHandler;

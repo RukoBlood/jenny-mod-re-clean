@@ -5,7 +5,7 @@
  *  net.minecraftforge.client.IClientCommand
  *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.command;
 
 import com.trolmastercard.sexmod.Packets.UploadModelString;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;

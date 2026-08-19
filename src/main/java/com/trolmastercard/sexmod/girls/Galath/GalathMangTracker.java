@@ -37,7 +37,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import org.apache.logging.log4j.Level;
 
 public class GalathMangTracker extends WorldSavedData {
-    static public boolean f = true;
+    static public boolean debugEnabled = true;
     final static public float c = 60.0f;
     final static public String e = "sexmod:galath_owner_ship";
     final static public String d = "sexmod:ownershipdata";
@@ -111,7 +111,7 @@ public class GalathMangTracker extends WorldSavedData {
         }
     }
 
-    public static boolean c(UUID uUID) {
+    public static boolean hasOwner(UUID uUID) {
         return h.c(uUID) != null;
     }
 

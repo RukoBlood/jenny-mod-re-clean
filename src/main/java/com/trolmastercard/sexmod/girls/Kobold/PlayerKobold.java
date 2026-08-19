@@ -24,6 +24,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
+import com.trolmastercard.sexmod.util.interfaces.IKobold;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
@@ -51,7 +52,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 import software.bernie.geckolib3.util.MatrixStack;
 
-public class PlayerKobold extends ew_class277 implements dr_class199 {
+public class PlayerKobold extends ew_class277 implements IKobold {
     final static public EyeAndKoboldColor aw = EyeAndKoboldColor.PURPLE;
     final static public DataParameter<Float> aA = EntityDataManager.createKey(PlayerKobold.class, DataSerializers.FLOAT).getSerializer().createKey(122);
     boolean aB = false;
@@ -196,7 +197,7 @@ public class PlayerKobold extends ew_class277 implements dr_class199 {
     }
 
     @Override
-    public boolean boolean_a() {
+    public boolean IsBlockedByCeiling() {
         Block block = this.world.getBlockState(this.getPosition().add(0, 1, 0)).getBlock();
         return !block.isPassable(this.world, this.getPosition().add(0, 1, 0));
     }

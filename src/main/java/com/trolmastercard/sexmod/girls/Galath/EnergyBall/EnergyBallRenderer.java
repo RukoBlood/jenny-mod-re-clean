@@ -5,7 +5,7 @@
  *  javax.annotation.Nullable
  *  org.lwjgl.opengl.GL11
  */
-package com.trolmastercard.sexmod.girls.Galath;
+package com.trolmastercard.sexmod.girls.Galath.EnergyBall;
 
 import com.trolmastercard.sexmod.util.ColorRGBA;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;

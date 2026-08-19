@@ -16,7 +16,7 @@ import com.trolmastercard.sexmod.girls.Bia.PlayerBia;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.Ellie.EllieEntity;
 import com.trolmastercard.sexmod.girls.Ellie.PlayerEllie;
-import com.trolmastercard.sexmod.girls.Galath.EnergyBallEntity;
+import com.trolmastercard.sexmod.girls.Galath.EnergyBall.EnergyBallEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.PlayerGalath;
 import com.trolmastercard.sexmod.girls.Goblin.GoblinEntity;

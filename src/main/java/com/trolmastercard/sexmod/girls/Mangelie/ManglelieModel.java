@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.girls.Mangelie;
 
 import javax.annotation.Nonnull;
 
-import com.trolmastercard.sexmod.Utils;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;

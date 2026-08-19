@@ -30,9 +30,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.MatrixStack;
 //cy
-public class CustomModelEntity
-extends EntityLivingBase
-implements IAnimatable {
+public class CustomModelEntity extends EntityLivingBase implements IAnimatable {
     final static float e = 11000.0f;
     final static public DataParameter<String> a = EntityDataManager.createKey(CustomModelEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
     final static public DataParameter<String> b = EntityDataManager.createKey(CustomModelEntity.class, DataSerializers.STRING).getSerializer().createKey(102);

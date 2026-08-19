@@ -208,7 +208,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         Minecraft.getMinecraft().displayGuiScreen(new FighterUI(girlEntity, entityPlayer, stringArray, itemStackArray, true));
     }
 
-    public void b(ItemStack itemStack) {
+    public void setHeldItemStack(ItemStack itemStack) {
         this.entityDataManager.set(CAUGHT_ITEM, itemStack);
     }
 
@@ -427,7 +427,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if ((float)this.hunger < 1200.0f) {
             return;
         }
-        if (this.fishEntity != null && this.fishEntity.d == 15) {
+        if (this.fishEntity != null && this.fishEntity.lureTimer == 15) {
             ((LunaRod)this.ao.getItem()).onItemRightClick(this.world, this, EnumHand.MAIN_HAND);
             this.al = this.world.getTotalWorldTime() + 20L;
             object = this.entityDataManager.get(CAUGHT_ITEM);
@@ -465,7 +465,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         this.au = this.getNavigator().getPath();
     }
 
-    public void void_o() {
+    public void addCaughtItem() {
         this.an.add(this.chosenFishingSpot);
         this.void_q();
     }

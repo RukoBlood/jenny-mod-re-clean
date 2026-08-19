@@ -4,7 +4,7 @@
  * Could not load the following classes:
  *  javax.annotation.Nullable
  */
-package com.trolmastercard.sexmod;
+package com.trolmastercard.sexmod.util.interfaces;
 
 import com.trolmastercard.sexmod.girls.base.Action;
 

@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.*;
-import com.trolmastercard.sexmod.Utils;
+import com.trolmastercard.sexmod.util.Utils;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathGeometryRender;
@@ -395,9 +395,9 @@ extends GirlRenderer<ManglelieEntity> {
         tessellator.draw();
     }
 
-    public boolean isBoneAllowed(HashSet hashSet, GeoBone geoBone) {
-        while (geoBone.parent != null) {
-            String string = geoBone.getName();
+    public boolean isBoneAllowed(HashSet hashSet, GeoBone bone) {
+        while (bone.parent != null) {
+            String string = bone.getName();
             if (string.contains("clothBoob")) {
                 return true;
             }
@@ -407,7 +407,7 @@ extends GirlRenderer<ManglelieEntity> {
             if (string.startsWith("armor")) {
                 return false;
             }
-            geoBone = geoBone.parent;
+            bone = bone.parent;
         }
         return true;
     }

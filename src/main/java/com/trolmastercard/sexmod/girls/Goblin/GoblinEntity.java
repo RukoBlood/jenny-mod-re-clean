@@ -43,6 +43,8 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.Point2D;
+import com.trolmastercard.sexmod.util.interfaces.IGoblin;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;

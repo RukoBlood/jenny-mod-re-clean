@@ -9,7 +9,7 @@
  */
 package com.trolmastercard.sexmod.Packets;
 
-import com.trolmastercard.sexmod.girls.Galath.EnergyBallEntity;
+import com.trolmastercard.sexmod.girls.Galath.EnergyBall.EnergyBallEntity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

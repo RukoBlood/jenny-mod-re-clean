@@ -7,7 +7,7 @@
  */
 package com.trolmastercard.sexmod.gui.Galath;
 
-import com.trolmastercard.sexmod.FlightUITextureBounds;
+import com.trolmastercard.sexmod.util.FlightUITextureBounds;
 import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.util.ThreadNames;
 import net.minecraft.client.Minecraft;
