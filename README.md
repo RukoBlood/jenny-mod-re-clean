@@ -24,7 +24,7 @@ Initial goals of this project
 - Giga IDE CE 2025.1
 - Konloch's bytecode viewer 2.13.2
 - Google Gemini (free tier, no antigravity, no ai plus/pro).
-- SchnurriTV's Jenny Mod build v1.5.2
+- SchnurriTV's Jenny Mod build v1.5.2 (As unobfuscated bytecode reference for class, field and methods names.)
 
 ## Building and/or running
 gradlew build
