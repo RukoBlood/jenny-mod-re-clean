@@ -103,8 +103,8 @@ implements IAnimatable {
         if (this.f == null) {
             this.f = UUID.randomUUID();
         }
-        KoboldEntity ff_class3082 = KoboldEntity.a(this.world, this.f);
-        KoboldManager.addMemberToTribe(this.f, ff_class3082);
+        KoboldEntity ff_class3082 = KoboldEntity.createKobold(this.world, this.f);
+        KoboldManager.addTribeMember(this.f, ff_class3082);
         UUID uUID = KoboldManager.getTribeMasterUUID(this.f);
         if (uUID != null) {
             ff_class3082.getDataManager().set(GirlEntity.MASTER, uUID.toString());
@@ -112,13 +112,13 @@ implements IAnimatable {
         List<KoboldEntity> list = KoboldManager.getTribeMembersList(this.f);
         String string = null;
         for (KoboldEntity ff_class3083 : list) {
-            String string2 = ff_class3083.getDataManager().get(KoboldEntity.aU);
+            String string2 = ff_class3083.getDataManager().get(KoboldEntity.TRIBE_NAME);
             if ("".equals(string2)) continue;
             string = string2;
             break;
         }
         if (string != null) {
-            ff_class3082.getDataManager().set(KoboldEntity.aU, string);
+            ff_class3082.getDataManager().set(KoboldEntity.TRIBE_NAME, string);
         }
         ff_class3082.setPosition(0.5 + this.posX, this.posY, 0.5 + this.posZ);
         this.world.spawnEntity(ff_class3082);

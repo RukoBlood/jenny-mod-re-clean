@@ -100,7 +100,7 @@ public class GetTribeUIValues implements IMessage {
                 HashSet<Object> hashSet = new HashSet<Object>();
                 for (KoboldEntity koboldEntity : list) {
                     if (koboldEntity.isDead || hashSet.contains(object = koboldEntity.girlID())) continue;
-                    if (koboldEntity.aA) {
+                    if (koboldEntity.editedColorManually) {
                         koboldColor = EyeAndKoboldColor.safeValueOf(koboldEntity.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION)).getWoolMeta();
                     }
                     arrayList.add(new Vector4d(koboldEntity.posX, koboldEntity.posY, koboldEntity.posZ, (double)koboldColor));

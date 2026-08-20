@@ -21,7 +21,7 @@ import com.trolmastercard.sexmod.girls.Goblin.GoblinRenderer;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldRenderer;
-import com.trolmastercard.sexmod.girls.Kobold.KoboldTaskInfo;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldTask;
 import com.trolmastercard.sexmod.girls.Goblin.PlayerGoblinRenderer;
 import com.trolmastercard.sexmod.girls.Kobold.PlayerKoboldRenderer;
 import net.minecraft.client.Minecraft;
@@ -235,9 +235,9 @@ public class DebugMode {
         UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
 
         if (tribeID != null) {
-            Collection<KoboldTaskInfo> tribeTasks = KoboldManager.getTribeTasks(tribeID);
+            Collection<KoboldTask> tribeTasks = KoboldManager.getTribeTasks(tribeID);
             if (tribeTasks != null && !tribeTasks.isEmpty()) {
-                for (KoboldTaskInfo task : tribeTasks) {
+                for (KoboldTask task : tribeTasks) {
                     if (task == null) {
                         System.out.println("[DebugMode] task: [NULL TASK OBJECT]");
                         continue;

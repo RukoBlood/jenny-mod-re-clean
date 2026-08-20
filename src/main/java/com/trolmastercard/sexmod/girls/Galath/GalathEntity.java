@@ -1149,7 +1149,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
 
                         if (Math.sqrt(this.bG.distanceSq(this.getPosition())) > 2.0) {
                             this.getNavigator().tryMoveToXYZ(this.bG.getX(), this.bG.getY(), this.bG.getZ(), 0.35f);
-                            this.applyCustomPathNodeVelocity();
+                            this.tickPathVelocity();
                         } else {
                             ++this.aC;
                         }

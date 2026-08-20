@@ -24,7 +24,7 @@ import org.lwjgl.opengl.GL11;
 
 //ea.class
 //goblin related UI
-public class GalathScreen extends GuiScreen {
+public class GoblinUI extends GuiScreen {
     final static float j = 100.0f;
     final static float c = 15.0f;
     final static float k = 5.0f;
@@ -39,7 +39,7 @@ public class GalathScreen extends GuiScreen {
     GirlEntity girl;
     boolean isGoblin = false;
 
-    public GalathScreen(GirlEntity girl) {
+    public GoblinUI(GirlEntity girl) {
         this.girl = girl;
         this.isGoblin = girl instanceof GoblinEntity;
     }

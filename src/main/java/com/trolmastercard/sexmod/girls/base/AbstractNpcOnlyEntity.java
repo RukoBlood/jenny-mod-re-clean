@@ -52,23 +52,23 @@ public abstract class AbstractNpcOnlyEntity extends GirlEntity {
             return;
         }
         if (!(this.lastCachedDNA.equals(liveDNA) && this.lastCachedAction.equals(liveAction) && this.lastCachedTargetPos.equals(liveTargetPos))) {
-            this.onDataWatcherUpdate();
+            this.clearBoneColors();
         }
         this.lastCachedAction = liveAction;
         this.lastCachedDNA = liveDNA;
         this.lastCachedTargetPos = liveTargetPos;
     }
 
-    protected abstract void onDataWatcherUpdate();
+    protected abstract void clearBoneColors();
 
     protected abstract String generateAppearanceDNA(StringBuilder dnaBuilder);
 
-    public static void appendPaddedNumber2(StringBuilder dnaBuilder, int value) {
+    public static void appendPaddedNumberWithFixedValue(StringBuilder builder, int value) {
         if (value < 10) {
-            dnaBuilder.append(0);
+            builder.append(0);
         }
-        dnaBuilder.append(value);
-        dnaBuilder.append("-");
+        builder.append(value);
+        builder.append("-");
     }
 
     public static void appendPaddedNumber(StringBuilder stringBuilder, int bound) {
@@ -80,7 +80,7 @@ public abstract class AbstractNpcOnlyEntity extends GirlEntity {
         stringBuilder.append("-");
     }
 
-    public static void appendGaussianBodyGene(StringBuilder dnaBuilder) {
+    public static void appendRandomGene(StringBuilder dnaBuilder) {
         double randDouble = ReferenceAndRotationHelper.RANDOM.nextDouble();
         double gaussianVal = Math.pow(Math.E, -Math.pow(-2.5 + 5.0 * randDouble, 2.0));
         String formattedString = String.format("%.2f", gaussianVal);
@@ -92,7 +92,7 @@ public abstract class AbstractNpcOnlyEntity extends GirlEntity {
         dnaBuilder.append(formattedString).append("-");
     }
 
-    public static void appendRandomGeneExclusive(StringBuilder dnaBuilder, int bound) {
+    public static void appendPaddedLetter(StringBuilder dnaBuilder, int bound) {
         int randomVal = ReferenceAndRotationHelper.RANDOM.nextInt(bound);
         if (randomVal < 10) {
             dnaBuilder.append(0);

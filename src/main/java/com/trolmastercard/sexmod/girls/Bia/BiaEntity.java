@@ -137,7 +137,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     this.setTargetPosition(this.getFrontOffsetVector());
                 }
                 this.setNoGravity(false);
-                Vec3d vec3d = ReferenceAndRotationHelper.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
+                Vec3d vec3d = ReferenceAndRotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
             }
         }

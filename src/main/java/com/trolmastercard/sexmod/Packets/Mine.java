@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packets;
 
-import com.trolmastercard.sexmod.girls.Kobold.KoboldTaskInfo;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldTask;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
@@ -87,7 +87,7 @@ public class Mine implements IMessage {
                     ((EntityPlayer)entityPlayerMP).sendStatusMessage(new TextComponentString("This area contains Bedrock and cannot be mined"), true);
                     return;
                 }
-                KoboldTaskInfo bs_class972 = new KoboldTaskInfo(e6_class2262.a, KoboldTaskInfo.KoboldTask.MINE, hashSet, e6_class2262.b);
+                KoboldTask bs_class972 = new KoboldTask(e6_class2262.a, KoboldTask.KoboldTasks.MINE, hashSet, e6_class2262.b);
                 KoboldManager.addTaskToTribe(uUID, bs_class972);
                 PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
             });

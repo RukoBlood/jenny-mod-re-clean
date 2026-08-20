@@ -38,7 +38,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
-import com.trolmastercard.sexmod.gui.GalathScreen;
+import com.trolmastercard.sexmod.gui.GoblinUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
@@ -203,7 +203,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
     }
 
     @Override
-    protected void onDataWatcherUpdate() {
+    protected void clearBoneColors() {
         GoblinRenderer.clearBoneColors();
     }
 
@@ -297,13 +297,13 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
         GoblinEntity.appendPaddedNumber(builder, 3);
         GoblinEntity.appendPaddedNumber(builder, 2);
         GoblinEntity.appendPaddedNumber(builder, 2);
-        GoblinEntity.appendPaddedNumber2(builder, 7);
-        GoblinEntity.appendPaddedNumber2(builder, 7);
+        GoblinEntity.appendPaddedNumberWithFixedValue(builder, 7);
+        GoblinEntity.appendPaddedNumberWithFixedValue(builder, 7);
         GoblinEntity.appendPaddedNumber(builder, 5);
         GoblinEntity.appendPaddedNumber(builder, HairColor.values().length - 1);
         GoblinEntity.appendPaddedNumber(builder, SkinColor.values().length - 1);
         GoblinEntity.appendPaddedNumber(builder, EyeColor.values().length - 1);
-        GoblinEntity.appendPaddedNumber2(builder, 1);
+        GoblinEntity.appendPaddedNumberWithFixedValue(builder, 1);
         return builder.toString();
     }
 
@@ -318,7 +318,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
         GoblinEntity.appendPaddedNumber(dnaBuilder, HairColor.values().length - 1);
         GoblinEntity.appendPaddedNumber(dnaBuilder, SkinColor.values().length - 1);
         GoblinEntity.appendPaddedNumber(dnaBuilder, EyeColor.values().length - 1);
-        GoblinEntity.appendPaddedNumber2(dnaBuilder, 0);
+        GoblinEntity.appendPaddedNumberWithFixedValue(dnaBuilder, 0);
         return dnaBuilder.toString();
     }
 
@@ -386,9 +386,9 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
     public void setCustomPartList(List<Integer> parts) {
         StringBuilder builder = new StringBuilder();
         for (int partID : parts) {
-            GoblinEntity.appendPaddedNumber2(builder, partID);
+            GoblinEntity.appendPaddedNumberWithFixedValue(builder, partID);
         }
-        GoblinEntity.appendPaddedNumber2(builder, Integer.parseInt(GoblinEntity.getModelCodeParts(this)[9]));
+        GoblinEntity.appendPaddedNumberWithFixedValue(builder, Integer.parseInt(GoblinEntity.getModelCodeParts(this)[9]));
 
         this.entityDataManager.set(APPEARANCE_DNA, builder.toString());
         if (Main.proxy instanceof ClientProxy) {
@@ -401,9 +401,9 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
             StringBuilder builder = new StringBuilder();
             for (Map.Entry entry : this.customPartsData) {
                 int partID = (Integer) ((Map.Entry) entry.getValue()).getValue();
-                GoblinEntity.appendPaddedNumber2(builder, partID);
+                GoblinEntity.appendPaddedNumberWithFixedValue(builder, partID);
             }
-            GoblinEntity.appendPaddedNumber2(builder, Integer.parseInt(GoblinEntity.getModelCodeParts(this)[9]));
+            GoblinEntity.appendPaddedNumberWithFixedValue(builder, Integer.parseInt(GoblinEntity.getModelCodeParts(this)[9]));
             this.entityDataManager.set(APPEARANCE_DNA, builder.toString());
             GoblinRenderer.clearBoneColors();
         }
@@ -417,9 +417,9 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
         GoblinEntity.appendPaddedNumber(builder, 7);
         GoblinEntity.appendPaddedNumber(builder, 5);
         GoblinEntity.appendPaddedNumber(builder, HairColor.values().length - 1);
-        GoblinEntity.appendPaddedNumber2(builder, partIndex);
+        GoblinEntity.appendPaddedNumberWithFixedValue(builder, partIndex);
         GoblinEntity.appendPaddedNumber(builder, EyeColor.values().length - 1);
-        GoblinEntity.appendPaddedNumber2(builder, 0);
+        GoblinEntity.appendPaddedNumberWithFixedValue(builder, 0);
         return builder.toString();
     }
 
@@ -606,7 +606,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                         }
                         if (Math.sqrt(this.guardPost.distanceSq(this.getPosition())) > 2.0) {
                             this.getNavigator().tryMoveToXYZ(this.guardPost.getX(), this.guardPost.getY(), this.guardPost.getZ(), 0.3f);
-                            this.applyCustomPathNodeVelocity();
+                            this.tickPathVelocity();
                         } else {
                             ++this.guardPostTicks;
                         }
@@ -1991,7 +1991,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
             if (mc == null) {
                 mc = Minecraft.getMinecraft(); //why ts assigns minecraft onlyin onKeyInput
             }
-            if (!(EventHandler.mc.currentScreen instanceof GalathScreen)) {
+            if (!(EventHandler.mc.currentScreen instanceof GoblinUI)) {
                 if (ClientProxy.keyBindings[0].isPressed()) {
                     GirlEntity interactingGirl = null;
                     UUID uUID = Minecraft.getMinecraft().player.getPersistentID();
@@ -2003,7 +2003,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                     }
                     if (interactingGirl != null) {
                         if (interactingGirl.getCurrentAction() == Action.SHOULDER_IDLE) {
-                            Minecraft.getMinecraft().displayGuiScreen(new GalathScreen(interactingGirl));
+                            Minecraft.getMinecraft().displayGuiScreen(new GoblinUI(interactingGirl));
                         }
                     }
                 }

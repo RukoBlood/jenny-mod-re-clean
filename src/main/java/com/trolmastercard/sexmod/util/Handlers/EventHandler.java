@@ -71,7 +71,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register((Object)new LunaEntity.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new GirlBedInteraction());
         MinecraftForge.EVENT_BUS.register((Object) SexFire.FIRE);
-        MinecraftForge.EVENT_BUS.register((Object)new KoboldEntity.c_inner311());
+        MinecraftForge.EVENT_BUS.register((Object)new KoboldEntity.EventHandler());
         MinecraftForge.EVENT_BUS.register((Object)new DragonStaffItem.a_inner408());
         MinecraftForge.EVENT_BUS.register((Object)new KoboldManager.KoboldSavedData("tribes"));
         MinecraftForge.EVENT_BUS.register((Object)new KoboldEggItem());

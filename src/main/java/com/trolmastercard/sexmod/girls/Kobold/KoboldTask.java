@@ -15,21 +15,21 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class KoboldTaskInfo {
+public class KoboldTask {
     final static public int MAX_WORLD_RADIUS = 30;
     BlockPos originPos;
-    KoboldTask taskType;
+    KoboldTasks taskType;
     HashSet<BlockPos> targetBlocks;
     List<KoboldEntity> assignedWorkers = new ArrayList<KoboldEntity>();
     EnumFacing facing = EnumFacing.NORTH;
 
-    public KoboldTaskInfo(BlockPos originPos, KoboldTask taskType, HashSet<BlockPos> targetBlocks) {
+    public KoboldTask(BlockPos originPos, KoboldTasks taskType, HashSet<BlockPos> targetBlocks) {
         this.originPos = originPos;
         this.taskType = taskType;
         this.targetBlocks = targetBlocks;
     }
 
-    public KoboldTaskInfo(BlockPos originPos, KoboldTask taskType, HashSet<BlockPos> targetBlocks, EnumFacing facing) {
+    public KoboldTask(BlockPos originPos, KoboldTasks taskType, HashSet<BlockPos> targetBlocks, EnumFacing facing) {
         this.originPos = originPos;
         this.taskType = taskType;
         this.targetBlocks = targetBlocks;
@@ -44,7 +44,7 @@ public class KoboldTaskInfo {
         return this.originPos;
     }
 
-    public KoboldTask getTaskType() {
+    public KoboldTasks getTaskType() {
         return this.taskType;
     }
 
@@ -74,7 +74,7 @@ public class KoboldTaskInfo {
         return this.targetBlocks.contains(pos);
     }
 
-    public boolean assignWorker(KoboldEntity kobold) {
+    public boolean addWorker(KoboldEntity kobold) {
         if (this.taskType.getMaxWorkers() <= this.assignedWorkers.size()) {
             return false;
         }
@@ -151,7 +151,7 @@ public class KoboldTaskInfo {
 //        return treeBlocks;
 //    }
 
-    public static HashSet<BlockPos> createTreeFellingTask(World world, BlockPos startPos, UUID tribeUUID) {
+    public static HashSet<BlockPos> findConnectedBlocks(World world, BlockPos startPos, UUID tribeUUID) {
         // Поиск самого нижнего блока ствола
         BlockPos basePos = startPos;
         while (!isBaseLog(world, basePos)) {
@@ -184,11 +184,11 @@ public class KoboldTaskInfo {
 
         // Фильтрация блоков, которые уже задействованы в других задачах племени
         HashSet<BlockPos> alreadyClaimedBlocks = new HashSet<>();
-        Collection<KoboldTaskInfo> existingTasks = KoboldManager.getTribeTasks(tribeUUID);
+        Collection<com.trolmastercard.sexmod.girls.Kobold.KoboldTask> existingTasks = KoboldManager.getTribeTasks(tribeUUID);
 
         if (existingTasks != null) {
             for (BlockPos pos : treeBlocks) {
-                for (KoboldTaskInfo task : existingTasks) {
+                for (com.trolmastercard.sexmod.girls.Kobold.KoboldTask task : existingTasks) {
                     if (task.getTargetBlocks().contains(pos)) {
                         alreadyClaimedBlocks.add(pos);
                         break;
@@ -199,7 +199,7 @@ public class KoboldTaskInfo {
         treeBlocks.removeAll(alreadyClaimedBlocks);
 
         // Регистрируем новую задачу в менеджер племени
-        KoboldTaskInfo newTask = new KoboldTaskInfo(basePos, KoboldTask.FALL_TREE, treeBlocks);
+        com.trolmastercard.sexmod.girls.Kobold.KoboldTask newTask = new com.trolmastercard.sexmod.girls.Kobold.KoboldTask(basePos, KoboldTasks.FALL_TREE, treeBlocks);
         KoboldManager.addTaskToTribe(tribeUUID, newTask);
 
         return treeBlocks;
@@ -216,7 +216,7 @@ public class KoboldTaskInfo {
     }
 
     static HashSet<BlockPos> findConnectedLogs(World world, BlockPos blockPos) {
-        return KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos, new HashSet<BlockPos>());
+        return com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos, new HashSet<BlockPos>());
     }
 
     static HashSet<BlockPos> findConnectedLogsRecursive(World world, BlockPos blockPos, HashSet<BlockPos> visited) {
@@ -225,66 +225,66 @@ public class KoboldTaskInfo {
         }
         visited.add(blockPos);
         if (world.getBlockState(blockPos.add(1, 0, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 0, 0), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, 0), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 0), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 0), visited));
         }
         if (world.getBlockState(blockPos.add(0, 0, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 0, 1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 0, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 0, -1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 0, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 0, 1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 0, -1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 0, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 0, -1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 1, 0), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 1, 0), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 0), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 1, 1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(0, 1, -1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, -1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 1, 1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 1, -1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, -1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(KoboldTaskInfo.findConnectedLogsRecursive(world, blockPos.add(1, 1, -1), visited));
+            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, -1), visited));
         }
         return visited;
     }
 
-    public static enum KoboldTask {
+    public static enum KoboldTasks {
         FALL_TREE(1),
         MINE(3);
 
         final int maxWorkers;
 
-        private KoboldTask(int value) {
+        private KoboldTasks(int value) {
             this.maxWorkers = value;
         }
 

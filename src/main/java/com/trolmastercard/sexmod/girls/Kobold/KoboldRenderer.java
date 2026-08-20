@@ -134,7 +134,7 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
     @Override
     protected void renderNameTag(double x, double y, double z) {
         EntityDataManager entityDataManager = ((KoboldEntity)this.renderEntity).getDataManager();
-        String string = entityDataManager.get(KoboldEntity.aU);
+        String string = entityDataManager.get(KoboldEntity.TRIBE_NAME);
         if ("null".equals(string)) {
             super.renderNameTag(x, y, z);
             return;

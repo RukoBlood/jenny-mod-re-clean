@@ -73,7 +73,7 @@ implements IMessage {
                     if (object2.hasMaster()) continue;
                     EntityDataManager entityDataManager = object2.getDataManager();
                     entityDataManager.set(GirlEntity.MASTER, msg.a.toString());
-                    entityDataManager.set(KoboldEntity.aU, msg.b);
+                    entityDataManager.set(KoboldEntity.TRIBE_NAME, msg.b);
                     eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
                 }
                 if (eyeAndKoboldColor_ == null) {

@@ -174,7 +174,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.rotationYaw = this.getYawRotation().floatValue();
                 this.setTargetPosition(this.getFrontOffsetVector());
                 this.setNoGravity(false);
-                Vec3d object = ReferenceAndRotationHelper.a(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
+                Vec3d object = ReferenceAndRotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
                 this.setPosition(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
             }
         }

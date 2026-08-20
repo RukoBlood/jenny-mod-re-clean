@@ -224,7 +224,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, HairColor.values().length - 1);
         AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, SkinColor.values().length - 1);
         AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, EyeColor.values().length - 1);
-        AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, 0);
+        AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, 0);
         return stringBuilder.toString();
     }
 
@@ -571,9 +571,9 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     public void setCustomPartList(List<Integer> list) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int n : list) {
-            AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, n);
+            AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, n);
         }
-        AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, 1);
+        AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, 1);
         this.entityDataManager.set(at, stringBuilder.toString());
     }
 

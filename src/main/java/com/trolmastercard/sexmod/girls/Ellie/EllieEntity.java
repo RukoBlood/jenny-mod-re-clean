@@ -398,7 +398,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 int yaw = (Integer) this.am[1];
                 if (sitPos.distanceTo(this.getPositionVector()) > 1.0) {
                     this.getNavigator().tryMoveToXYZ(sitPos.x, sitPos.y, sitPos.z, 0.35f);
-                    this.applyCustomPathNodeVelocity();
+                    this.tickPathVelocity();
                     return;
                 } else {
                     this.setTargetPosition(sitPos);

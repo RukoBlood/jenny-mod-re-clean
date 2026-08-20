@@ -48,7 +48,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
         if (!girl.isLocallyRegistered() && girl instanceof KoboldEntity) {
             animationProcessor.getBone("crown").setHidden(girl.getDataManager().get(KoboldEntity.aZ) == false);
-            animationProcessor.getBone("egg").setHidden(!((KoboldEntity) girl).Q);
+            animationProcessor.getBone("egg").setHidden(!((KoboldEntity) girl).isRenderEgg);
         } else {
             animationProcessor.getBone("crown").setHidden(true);
             animationProcessor.getBone("egg").setHidden(true);
@@ -81,7 +81,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         if (em_class2582.actionController.getAnimationState() != AnimationState.Transitioning) {
             return;
         }
-        float f = em_class2582.getDataManager().get(KoboldEntity.aE);
+        float f = em_class2582.getDataManager().get(KoboldEntity.SIZE);
         f = 0.25f - f;
         switch (em_class2582.getCurrentAction()) {
             case SUCKBLOWJOB_BLINK: 

@@ -23,12 +23,12 @@ public class ReferenceAndRotationHelper {
     static public Vec3d k = Vec3d.ZERO;
 
     //looks like penismath.class now merged into reference class
-    public static Vec3d a(Vec3d vec3d, Vec3d vec3d2, int n) {
-        if (n == 0) {
-            return vec3d2;
+    public static Vec3d lerpVec3d(Vec3d start, Vec3d end, int step) {
+        if (step == 0) {
+            return end;
         }
-        Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        return vec3d.add(vec3d3.x / (double)n, vec3d3.y / (double)n, vec3d3.z / (double)n);
+        Vec3d vec3d3 = end.subtract(start);
+        return start.add(vec3d3.x / (double)step, vec3d3.y / (double)step, vec3d3.z / (double)step);
     }
 
     public static double LerpDouble(double start, double end, double step) {

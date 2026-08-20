@@ -579,7 +579,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    protected void applyCustomPathNodeVelocity() {
+    protected void tickPathVelocity() {
         Path path = this.getNavigator().getPath();
         if (path == null || this.onGround || this.isInWater()) {
             return;
@@ -766,10 +766,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
     //end of deobfuscation step #3
 
-    protected List<BlockPos> a(BlockPos blockPos, Class clazz, int n, int n2, @Nullable HashSet<Biome> hashSet) {
+    protected List<BlockPos> findBlocksInRadius(BlockPos pos, Class blockClass, int n, int n2, @Nullable HashSet<Biome> biomes) {
         int n3 = 1;
         int n4 = -1;
-        BlockPos blockPos2 = blockPos;
+        BlockPos blockPos2 = pos;
         ArrayList<BlockPos> arrayList = new ArrayList<BlockPos>();
         while (n3 < n) {
             for (int i = 0; i < 2; ++i) {
@@ -779,14 +779,14 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
                 for (n6 = 0; n6 < n3; ++n6) {
                     blockPos2 = blockPos2.add(0, 0, n4);
                     for (n5 = -n2; n5 < n2 + 1; ++n5) {
-                        if (!clazz.isInstance(this.world.getBlockState(blockPos2.add(0, n5, n4)).getBlock()) || hashSet != null && !hashSet.contains(this.world.getBiome(blockPos2.add(n4, n5, 0)))) continue;
+                        if (!blockClass.isInstance(this.world.getBlockState(blockPos2.add(0, n5, n4)).getBlock()) || biomes != null && !biomes.contains(this.world.getBiome(blockPos2.add(n4, n5, 0)))) continue;
                         arrayList.add(blockPos2.add(0, n5, n4));
                     }
                 }
                 for (n6 = 0; n6 < n3; ++n6) {
                     blockPos2 = blockPos2.add(n4, 0, 0);
                     for (n5 = -n2; n5 < n2 + 1; ++n5) {
-                        if (!clazz.isInstance(this.world.getBlockState(blockPos2.add(n4, n5, 0)).getBlock()) || hashSet != null && !hashSet.contains(this.world.getBiome(blockPos2.add(n4, n5, 0)))) continue;
+                        if (!blockClass.isInstance(this.world.getBlockState(blockPos2.add(n4, n5, 0)).getBlock()) || biomes != null && !biomes.contains(this.world.getBiome(blockPos2.add(n4, n5, 0)))) continue;
                         arrayList.add(blockPos2.add(n4, n5, 0));
                     }
                 }
@@ -1401,7 +1401,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (int n : list) {
-            AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, n);
+            AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, n);
         }
         this.entityDataManager.set(AbstractNpcOnlyEntity.APPEARANCE_DNA, stringBuilder.toString());
     }
@@ -1434,15 +1434,15 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     // TODO clash downstream
     public static List<Integer> h(UUID uUID) {
         GirlEntity em_class2582 = Main.proxy instanceof ClientProxy ? GirlEntity.getClientGirlEntity(uUID) : GirlEntity.getServerGirlEntity(uUID);
-        ArrayList<Integer> arrayList = new ArrayList<Integer>(em_class2582.L());
+        ArrayList<Integer> arrayList = new ArrayList<Integer>(em_class2582.getBasePartIdList());
         if (em_class2582 instanceof AbstractNpcOnlyEntity || em_class2582 instanceof WorkerPlayerEntity) {
             arrayList.addAll(GirlEntity.c(em_class2582.getDataManager().get(AbstractNpcOnlyEntity.APPEARANCE_DNA)));
         }
         return arrayList;
     }
 
-    public ArrayList<Integer> L() {
-        return new ArrayList<Integer>();
+    public ArrayList<Integer> getBasePartIdList() {
+        return new ArrayList<>();
     }
 
     public List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> d(UUID uUID) {

@@ -103,7 +103,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     continue;
                 }
                 default: {
-                    AbstractNpcOnlyEntity.appendPaddedNumber2(stringBuilder, n);
+                    AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, n);
                 }
             }
         }
@@ -114,7 +114,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     }
 
     @Override
-    public ArrayList<Integer> L() {
+    public ArrayList<Integer> getBasePartIdList() {
         ArrayList<Integer> arrayList = new ArrayList<Integer>();
         arrayList.add(Math.round(this.entityDataManager.get(aA).floatValue() * 100.0f / 0.25f));
         arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf((String)this.entityDataManager.get(as))));
@@ -124,10 +124,10 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
 
     @Override
     protected String a(StringBuilder stringBuilder) {
-        AbstractNpcOnlyEntity.appendRandomGeneExclusive(stringBuilder, 8);
-        AbstractNpcOnlyEntity.appendRandomGeneExclusive(stringBuilder, 3);
-        AbstractNpcOnlyEntity.appendGaussianBodyGene(stringBuilder);
-        AbstractNpcOnlyEntity.appendGaussianBodyGene(stringBuilder);
+        AbstractNpcOnlyEntity.appendPaddedLetter(stringBuilder, 8);
+        AbstractNpcOnlyEntity.appendPaddedLetter(stringBuilder, 3);
+        AbstractNpcOnlyEntity.appendRandomGene(stringBuilder);
+        AbstractNpcOnlyEntity.appendRandomGene(stringBuilder);
         AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
         AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
         AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 1);
@@ -280,7 +280,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        float f = 0.25f - this.getDataManager().get(KoboldEntity.aE).floatValue();
+        float f = 0.25f - this.getDataManager().get(KoboldEntity.SIZE).floatValue();
         GeckoLibCache.getInstance().parser.setValue("size", f);
         switch (event.getController().getName()) {
             case "eyes": {

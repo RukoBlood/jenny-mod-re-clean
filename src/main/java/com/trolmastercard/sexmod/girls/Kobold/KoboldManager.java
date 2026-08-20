@@ -91,12 +91,12 @@ public class KoboldManager {
         float[] scales = new float[4];
         scales[0] = 0.25f;
         for (int i = 1; i < scales.length; ++i) {
-            scales[i] = KoboldEntity.float_j();
+            scales[i] = KoboldEntity.getRandomThrowDelay();
         }
 
         ArrayList<KoboldEntity> members = new ArrayList<KoboldEntity>();
         for (float scale : scales) {
-            KoboldEntity kobold = KoboldEntity.a(world, tribeUUID, scale);
+            KoboldEntity kobold = KoboldEntity.createKoboldWithSpeed(world, tribeUUID, scale);
             members.add(kobold);
         }
 
@@ -184,7 +184,7 @@ public class KoboldManager {
         tribe.leader = kobold;
     }
 
-    public static void addMemberToTribe(UUID tribeUUID, KoboldEntity kobold) {
+    public static void addTribeMember(UUID tribeUUID, KoboldEntity kobold) {
         KoboldSavedData.KoboldTribe tribe = tribesMap.get(tribeUUID);
         if (tribe == null) {
             System.out.println("tribe of UUID " + tribeUUID.toString() + " not found uwu");
@@ -192,8 +192,8 @@ public class KoboldManager {
         }
         tribe.addMember(kobold);
         tribesMap.replace(tribeUUID, tribe);
-        kobold.getDataManager().set(KoboldEntity.aL, Optional.of(tribeUUID));
-        if (!kobold.aA) {
+        kobold.getDataManager().set(KoboldEntity.TRIBE_ID, Optional.of(tribeUUID));
+        if (!kobold.editedColorManually) {
             kobold.getDataManager().set(KoboldEntity.CURRENT_ACTION, tribe.color.toString());
         }
     }
@@ -227,7 +227,7 @@ public class KoboldManager {
                 }
             }
         }
-        for (KoboldTaskInfo task : tribe.tasks) {
+        for (KoboldTask task : tribe.tasks) {
             task.removeWorker(kobold);
         }
         if (!tribe.members.isEmpty()) {
@@ -242,7 +242,7 @@ public class KoboldManager {
             HashSet<BlockPos> tribeBlocks = new HashSet<BlockPos>();
             tribeBlocks.addAll(tribe.chests);
             tribeBlocks.addAll(tribe.beds);
-            for (KoboldTaskInfo task : tribe.tasks) {
+            for (KoboldTask task : tribe.tasks) {
                 tribeBlocks.addAll(task.targetBlocks);
             }
             PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(tribeBlocks, false), (EntityPlayerMP) master);
@@ -260,7 +260,7 @@ public class KoboldManager {
         return tribe.leader;
     }
 
-    public static boolean isTribeLeader(UUID uUID, KoboldEntity kobold) {
+    public static boolean isTribeMember(UUID uUID, KoboldEntity kobold) {
         KoboldSavedData.KoboldTribe tribe = tribesMap.get(uUID);
         if (tribe == null) {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
@@ -341,7 +341,7 @@ public class KoboldManager {
         tribe.chests.remove(pos);
     }
 
-    public static HashSet<BlockPos> removeTaskAndGetBlocks(UUID uUID, KoboldTaskInfo task) {
+    public static HashSet<BlockPos> removeTaskAndGetBlocks(UUID uUID, KoboldTask task) {
         KoboldSavedData.KoboldTribe tribe = tribesMap.get(uUID);
         if (tribe == null) {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
@@ -360,8 +360,8 @@ public class KoboldManager {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
             return new HashSet<BlockPos>();
         }
-        KoboldTaskInfo task = null;
-        for (KoboldTaskInfo tasks : tribe.tasks) {
+        KoboldTask task = null;
+        for (KoboldTask tasks : tribe.tasks) {
             if (!tasks.targetBlocks.contains(pos)) continue;
             task = tasks;
             break;
@@ -369,7 +369,7 @@ public class KoboldManager {
         return KoboldManager.removeTaskAndGetBlocks(uUID, task);
     }
 
-    public static void addTaskToTribe(UUID uUID, KoboldTaskInfo task) {
+    public static void addTaskToTribe(UUID uUID, KoboldTask task) {
         KoboldSavedData.KoboldTribe tribe = tribesMap.get(uUID);
         if (tribe == null) {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
@@ -384,8 +384,8 @@ public class KoboldManager {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
             return;
         }
-        KoboldTaskInfo targetTask = null;
-        for (KoboldTaskInfo task : tribe.tasks) {
+        KoboldTask targetTask = null;
+        for (KoboldTask task : tribe.tasks) {
             if (!task.hasWorker(worker)) continue;
             targetTask = task;
         }
@@ -397,7 +397,7 @@ public class KoboldManager {
     }
 
     @Nullable
-    public static Collection<KoboldTaskInfo> getTribeTasks(@Nullable UUID uUID) {
+    public static Collection<KoboldTask> getTribeTasks(@Nullable UUID uUID) {
         KoboldSavedData.KoboldTribe tribe = tribesMap.get(uUID);
         if (tribe == null) {
             System.out.println("tribe of UUID " + uUID + " not found uwu");
@@ -479,7 +479,7 @@ public class KoboldManager {
         tribe.addTarget(target);
     }
 
-    public static void removeTribeTarget(UUID uUID, EntityLivingBase target) {
+    public static void removeCombatant(UUID uUID, EntityLivingBase target) {
         KoboldSavedData.KoboldTribe tribe = tribesMap.get(uUID);
         if (tribe == null) {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
@@ -560,7 +560,7 @@ public class KoboldManager {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
             return allBlocks;
         }
-        for (KoboldTaskInfo task : tribe.tasks) {
+        for (KoboldTask task : tribe.tasks) {
             allBlocks.addAll(task.targetBlocks);
         }
         allBlocks.addAll(tribe.chests);
@@ -1009,7 +1009,7 @@ public class KoboldManager {
                     while (true) {
                         String blockStr = this.popNbtString(tribeUUID.toString() + taskIdx + "block" + blockIdx, nbt);
                         if (blockStr.isEmpty()) {
-                            KoboldManager.addTaskToTribe(tribeUUID, new KoboldTaskInfo(taskPos, KoboldTaskInfo.KoboldTask.valueOf(taskKindStr), taskBlocks, facing));
+                            KoboldManager.addTaskToTribe(tribeUUID, new KoboldTask(taskPos, KoboldTask.KoboldTasks.valueOf(taskKindStr), taskBlocks, facing));
                             ++taskIdx;
                             break;
                         }
@@ -1078,7 +1078,7 @@ public class KoboldManager {
 
                 int taskIdx = 0;
 
-                for (KoboldTaskInfo task : tribe.tasks) {
+                for (KoboldTask task : tribe.tasks) {
                     nbt.setString(tribeId.toString() + taskIdx + "taskKind", task.taskType.toString());
                     nbt.setString(tribeId.toString() + taskIdx + "pos", task.originPos.getX() + "|" + task.originPos.getY() + "|" + task.originPos.getZ());
                     nbt.setString(tribeId.toString() + taskIdx + "facing", task.facing.getName());
@@ -1178,7 +1178,7 @@ public class KoboldManager {
             public EyeAndKoboldColor color;
             public TribeState state = TribeState.REST;
             public BlockPos homePos = null;
-            public Collection<KoboldTaskInfo> tasks = new ArrayList<KoboldTaskInfo>();
+            public Collection<KoboldTask> tasks = new ArrayList<KoboldTask>();
             public HashSet<EntityLivingBase> targets = new HashSet();
             public HashSet<BlockPos> chests = new HashSet();
             public HashSet<BlockPos> beds = new HashSet();
@@ -1206,7 +1206,7 @@ public class KoboldManager {
                 return this.masterUUID;
             }
 
-            public void removeTask(KoboldTaskInfo task) {
+            public void removeTask(KoboldTask task) {
                 if (!this.tasks.contains(task)) {
                     return;
                 }
@@ -1269,7 +1269,7 @@ public class KoboldManager {
                 this.homePos = blockPos;
             }
 
-            public void addTask(KoboldTaskInfo task) {
+            public void addTask(KoboldTask task) {
                 this.tasks.add(task);
             }
 
@@ -1310,8 +1310,8 @@ public class KoboldManager {
                         candidate = member;
                         continue;
                     }
-                    float scale1 = candidate.getDataManager().get(KoboldEntity.aE);
-                    float scale2 = member.getDataManager().get(KoboldEntity.aE);
+                    float scale1 = candidate.getDataManager().get(KoboldEntity.SIZE);
+                    float scale2 = member.getDataManager().get(KoboldEntity.SIZE);
                     if (!(scale2 < scale1)) continue;
                     candidate = member;
                 }

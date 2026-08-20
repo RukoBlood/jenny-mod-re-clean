@@ -10,7 +10,7 @@
  */
 package com.trolmastercard.sexmod.Packets;
 
-import com.trolmastercard.sexmod.girls.Kobold.KoboldTaskInfo;
+import com.trolmastercard.sexmod.girls.Kobold.KoboldTask;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import io.netty.buffer.ByteBuf;
@@ -75,7 +75,7 @@ implements IMessage {
                 }
                 World world = entityPlayerMP.world;
                 BlockPos blockPos = this.a(world, fc_class3022.a);
-                HashSet<BlockPos> hashSet = KoboldTaskInfo.createTreeFellingTask(world, blockPos, uUID);
+                HashSet<BlockPos> hashSet = KoboldTask.findConnectedBlocks(world, blockPos, uUID);
                 PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
             });
             return null;
