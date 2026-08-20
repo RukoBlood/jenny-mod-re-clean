@@ -43,9 +43,7 @@ import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlayerGalath
-extends PlayerGirl
-implements IGalath {
+public class PlayerGalath extends PlayerGirl implements IGalath {
     boolean ap = false;
     int ar = 0;
     boolean as = false;

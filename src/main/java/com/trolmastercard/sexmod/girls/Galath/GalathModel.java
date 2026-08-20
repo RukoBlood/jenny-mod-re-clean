@@ -85,7 +85,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
         this.updateRapeChargeBodyRotation(girl);
         //this.f(em_class2582); // TODO fix
         //assert(false);
-        this.updateSwordAttackBodyOffset(girl);
+        this.updateSwordAttackBodyOffset(girl); //fixed
         this.updateKnockoutFlightPose(girl);
         this.updateOutfitBonesVisibility(girl);
         this.updateWingsVisibility(girl);
@@ -215,7 +215,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
     }
 
     void updateWingsVisibility(GirlEntity girl) {
-        this.getAnimationProcessor().getBone("wings").setHidden(!((IGalath)((Object)girl)).areWingsAnimated());
+        this.getAnimationProcessor().getBone("wings").setHidden(!((IGalath) girl).areWingsAnimated());
     }
 
     void updateOutfitBonesVisibility(GirlEntity girl) {

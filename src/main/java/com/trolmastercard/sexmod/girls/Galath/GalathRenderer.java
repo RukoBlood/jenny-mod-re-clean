@@ -323,21 +323,20 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
     }
 
     static void renderWingsMesh(GirlEntity girl, BufferBuilder buffer, Tessellator tessellator) {
-        if (!((IGalath)((Object)girl)).areWingsAnimated()) {
-            return;
+        if (((IGalath) girl).areWingsAnimated()) {
+            mc.getTextureManager().bindTexture(GalathModel.GALATH_TEXTURE);
+
+            Vec3d[] rightWingVertices = new Vec3d[WING_VERTICES_COUNT];
+            Vec3d[] leftWingVertices = new Vec3d[WING_VERTICES_COUNT];
+
+            for (int i = 0; i < 14; ++i) {
+                rightWingVertices[i] = girl.getCachedBoneOffset("wingRV" + i);
+                leftWingVertices[i] = girl.getCachedBoneOffset("wingLV" + i);
+            }
+
+            GalathRenderer.renderWingTrianglesAndQuads(buffer, tessellator, rightWingVertices);
+            GalathRenderer.renderWingTrianglesAndQuads(buffer, tessellator, leftWingVertices);
         }
-        mc.getTextureManager().bindTexture(GalathModel.GALATH_TEXTURE);
-
-        Vec3d[] rightWingVertices = new Vec3d[WING_VERTICES_COUNT];
-        Vec3d[] leftWingVertices = new Vec3d[WING_VERTICES_COUNT];
-
-        for (int i = 0; i < 14; ++i) {
-            rightWingVertices[i] = girl.getCachedBoneOffset("wingRV" + i);
-            leftWingVertices[i] = girl.getCachedBoneOffset("wingLV" + i);
-        }
-
-        GalathRenderer.renderWingTrianglesAndQuads(buffer, tessellator, rightWingVertices);
-        GalathRenderer.renderWingTrianglesAndQuads(buffer, tessellator, leftWingVertices);
     }
 
     static void renderWingTrianglesAndQuads(BufferBuilder buffer, Tessellator tessellator, Vec3d[] v) {
@@ -363,7 +362,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
     }
 
     @Override
-    protected void processModelSkeleton(GeoModel model, BufferBuilder buffer, GalathEntity entity, float r, float g, float b, float a, float partialTicks) {
+    protected void renderModelBuffer(GeoModel model, BufferBuilder buffer, GalathEntity entity, float r, float g, float b, float a, float partialTicks) {
         GeoBone rootBone = model.topLevelBones.get(0);
         GeoBone bodyBone = null;
         GeoBone coinBone = null;

@@ -261,7 +261,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         this.onRenderSetup();
         BoneDeformProcessor.preWarmFilterCache(((GirlEntity)entity).getAnimationProcessor().getModelRendererList(), this.getBlacklistedBoneNames(), this);
         BoneDeformProcessor.updateGlobalInfluence(entity, partialTicks);
-        this.processModelSkeleton(model, buffer, entity, r, g, b, a, partialTicks);
+        this.renderModelBuffer(model, buffer, entity, r, g, b, a, partialTicks);
         this.renderAfter(entity, partialTicks, r, g, b, a);
         GlStateManager.disableRescaleNormal();
         GlStateManager.enableCull();
@@ -271,7 +271,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     // TODO
     //  does this override anything?
     //  it doesnt look like it...
-    protected void processModelSkeleton(GeoModel model, BufferBuilder buffer, T entity, float r, float g, float b, float a, float partialTicks) {
+    protected void renderModelBuffer(GeoModel model, BufferBuilder buffer, T entity, float r, float g, float b, float a, float partialTicks) {
         GeoBone steveSkinBone = null;
         for (GeoBone bone : model.topLevelBones) {
             if (bone.getName().equals("steve")) {

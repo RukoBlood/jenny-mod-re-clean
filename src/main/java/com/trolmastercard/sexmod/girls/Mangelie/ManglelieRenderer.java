@@ -346,9 +346,9 @@ extends GirlRenderer<ManglelieEntity> {
     }
 
     @Override
-    protected void processModelSkeleton(GeoModel model, BufferBuilder buffer, ManglelieEntity entity, float r, float g, float b, float a, float partialTicks) {
+    protected void renderModelBuffer(GeoModel model, BufferBuilder buffer, ManglelieEntity entity, float r, float g, float b, float a, float partialTicks) {
         if (!ManglelieModel.isThreesomeAction(entity)) {
-            super.processModelSkeleton(model, buffer, entity, r, g, b, a, partialTicks);
+            super.renderModelBuffer(model, buffer, entity, r, g, b, a, partialTicks);
             return;
         }
         GeoBone geoBone = model.topLevelBones.get(0);

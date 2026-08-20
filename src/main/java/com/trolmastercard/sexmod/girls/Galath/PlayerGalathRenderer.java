@@ -33,12 +33,11 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class PlayerGalathRenderer
-extends PlayerGirlRenderer {
-    final static HashSet<String> z = new HashSet<String>(Arrays.asList("kneeL", "kneeR", "shinL", "shinR", "armorHelmet", "sockL", "sockR", "braBoobL", "braBoobR", "armorNippleR", "armorNippleL", "slip", "turnable", "static"));
+public class PlayerGalathRenderer extends PlayerGirlRenderer {
+    final static HashSet<String> BLACKLISTED_BONES = new HashSet<String>(Arrays.asList("kneeL", "kneeR", "shinL", "shinR", "armorHelmet", "sockL", "sockR", "braBoobL", "braBoobR", "armorNippleR", "armorNippleL", "slip", "turnable", "static"));
 
-    public PlayerGalathRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
-        super(renderManager, animatedGeoModel);
+    public PlayerGalathRenderer(RenderManager manager, AnimatedGeoModel model) {
+        super(manager, model);
     }
 
     @Nullable
@@ -46,7 +45,7 @@ extends PlayerGirlRenderer {
         if (entity.world instanceof FakeWorld) {
             return null;
         }
-        if (((IGalath)((Object) entity)).isWingsAnimated()) {
+        if (((IGalath) entity).isWingsAnimated()) {
             return null;
         }
         return GalathRenderer.OVERLAY_COLOR_NONE;
@@ -54,7 +53,7 @@ extends PlayerGirlRenderer {
 
     @Override
     public HashSet<String> getBlacklistedBoneNames() {
-        HashSet<String> hashSet = GalathRenderer.BLACKLISTED_BONES;
+        //HashSet<String> hashSet = GalathRenderer.BLACKLISTED_BONES; this hashet never used
         GalathRenderer.BLACKLISTED_BONES.addAll(BoneDeformProcessor.EXCLUDED_MESH_BONES);
         return GalathRenderer.BLACKLISTED_BONES;
     }
@@ -103,25 +102,25 @@ extends PlayerGirlRenderer {
 
     @Override
     protected Vector4f calculateBoneArmorColor(String boneName, float r, float g, float b) {
-        if (!z.contains(boneName)) {
+        if (!BLACKLISTED_BONES.contains(boneName)) {
             return this.getBaseColorVector(r, g, b);
         }
         if ("armorHelmet".equals(boneName)) {
             return super.calculateBoneArmorColor(boneName, r, g, b);
         }
-        ItemStack itemStack = ItemStack.EMPTY;
+        ItemStack stack = ItemStack.EMPTY;
         switch (boneName) {
             case "braBoobL": 
             case "braBoobR": 
             case "armorNippleR": 
             case "armorNippleL": {
-                itemStack = this.renderEntity.getDataManager().get(Fighter.CHEST_SLOT);
+                stack = this.renderEntity.getDataManager().get(Fighter.CHEST_SLOT);
                 break;
             }
             case "turnable": 
             case "static": 
             case "slip": {
-                itemStack = this.renderEntity.getDataManager().get(Fighter.LEGS_SLOT);
+                stack = this.renderEntity.getDataManager().get(Fighter.LEGS_SLOT);
                 break;
             }
             case "shinL": 
@@ -130,14 +129,14 @@ extends PlayerGirlRenderer {
             case "sockR": 
             case "kneeL": 
             case "kneeR": {
-                itemStack = this.renderEntity.getDataManager().get(Fighter.BOOTS_SLOT);
+                stack = this.renderEntity.getDataManager().get(Fighter.BOOTS_SLOT);
             }
         }
-        if (!(itemStack.getItem() instanceof ItemArmor)) {
+        if (!(stack.getItem() instanceof ItemArmor)) {
             return this.getBaseColorVector(r, g, b);
         }
-        Object object = (ItemArmor)itemStack.getItem();
-        switch (((ItemArmor)object).getArmorMaterial()) {
+        ItemArmor armor = (ItemArmor) stack.getItem();
+        switch (armor.getArmorMaterial()) {
             default: {
                 return new Vector4f(r, g, b, -0.1875f);
             }
@@ -150,35 +149,36 @@ extends PlayerGirlRenderer {
             }
             case LEATHER: 
         }
-        int n = ((ItemArmor)object).getColor(itemStack);
-        float f4 = (float)(n >> 16 & 0xFF) / 255.0f;
-        float f5 = (float)(n >> 8 & 0xFF) / 255.0f;
-        float f6 = (float)(n & 0xFF) / 255.0f;
-        return new Vector4f(r *= f4, g *= f5, b *= f6, -0.09375f);
+        int colorInt = armor.getColor(stack);
+        float colorRed = (float)(colorInt >> 16 & 0xFF) / 255.0f;
+        float colorGreen = (float)(colorInt >> 8 & 0xFF) / 255.0f;
+        float colorBlue = (float)(colorInt & 0xFF) / 255.0f;
+        return new Vector4f(r *= colorRed, g *= colorGreen, b *= colorBlue, -0.09375f);
     }
 
-    protected void processModelSkeleton(GeoModel model, BufferBuilder buffer, GirlEntity entity, float r, float g, float b, float a, float partialTicks) {
-        GeoBone geoBone = model.topLevelBones.get(0);
-        GeoBone geoBone2 = null;
-        GeoBone geoBone3 = null;
-        for (GeoBone child : geoBone.childBones) {
+    protected void renderModelBuffer(GeoModel model, BufferBuilder buffer, GirlEntity entity, float r, float g, float b, float a, float partialTicks) {
+        GeoBone bone = model.topLevelBones.get(0);
+        GeoBone bodyBone = null;
+        GeoBone headBone = null;
+
+        for (GeoBone child : bone.childBones) {
             switch (child.getName()) {
                 case "steve": {
-                    geoBone3 = child;
+                    headBone = child;
                     break;
                 }
                 case "body": {
-                    geoBone2 = child;
+                    bodyBone = child;
                 }
             }
         }
         MATRIX_STACK.push();
-        MATRIX_STACK.translate(geoBone);
-        MATRIX_STACK.moveToPivot(geoBone);
-        MATRIX_STACK.rotate(geoBone);
-        MATRIX_STACK.scale(geoBone);
-        MATRIX_STACK.moveBackFromPivot(geoBone);
-        this.renderRecursively(buffer, geoBone2, r, g, b, a);
+        MATRIX_STACK.translate(bone);
+        MATRIX_STACK.moveToPivot(bone);
+        MATRIX_STACK.rotate(bone);
+        MATRIX_STACK.scale(bone);
+        MATRIX_STACK.moveBackFromPivot(bone);
+        this.renderRecursively(buffer, bodyBone, r, g, b, a);
         Tessellator.getInstance().draw();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         try {
@@ -186,7 +186,7 @@ extends PlayerGirlRenderer {
         } catch (IOException iOException) {
             iOException.printStackTrace();
         }
-        this.renderRecursively(buffer, geoBone3, r, g, b, this.renderEntity.getRenderScaleFactor());
+        this.renderRecursively(buffer, headBone, r, g, b, this.renderEntity.getRenderScaleFactor());
         Tessellator.getInstance().draw();
         MATRIX_STACK.pop();
     }
