@@ -99,7 +99,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (CustomModel.isModelDisabled(modelName)) {
             return false;
         }
-        if (CustomModel.getGlobalModelOverride() != null) {
+        if (CustomModel.getCustomModelsKey() != null) {
             return true;
         }
         UUID girlUUID = entity.getGirlUUID();
@@ -181,7 +181,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
             return;
         }
         entity.matrixStack = new MatrixStack();
-        CustomModel.ModelData modelData = CustomModel.getModelData(entity.getModelName());
+        CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(entity.getModelName());
         this.currentEntity = entity;
         this.currentModelData = modelData;
         this.updateLighting(modelData, entity, partialTicks);
@@ -200,7 +200,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (girl == null) {
             return;
         }
-        if (modelData != null && !modelData.isAlwaysVisible() && girl.getOutfitIndex() == 0) {
+        if (modelData != null && !modelData.isDisabled() && girl.getOutfitIndex() == 0) {
             return;
         }
 
@@ -346,12 +346,12 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (entity.isItemModel) {
             return entity.itemModelData.boneName;
         }
-        CustomModel.ModelData modelData = CustomModel.getModelData(entity.getModelName());
+        CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(entity.getModelName());
         if (modelData == null) {
             return null;
         }
         if (CustomPartCategory.CUSTOM_BONE.equals((Object)modelData.getCategory())) {
-            return modelData.getCustomBoneName();
+            return modelData.getModelName();
         }
         return modelData.getCategory().boneName;
     }

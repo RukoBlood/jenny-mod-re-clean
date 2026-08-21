@@ -18,7 +18,7 @@ public class CrossModel extends AnimatedGeoModel<CustomModelEntity> {
         if (entity.isItemModel) {
             return new ResourceLocation("sexmod", "geo/cross.geo.json");
         }
-        return CustomModel.k(entity.getModelName());
+        return CustomModel.getModelResource(entity.getModelName());
     }
 
     @Override
@@ -26,7 +26,7 @@ public class CrossModel extends AnimatedGeoModel<CustomModelEntity> {
         if (entity.isItemModel) {
             return new ResourceLocation("sexmod", "textures/cross.png");
         }
-        return CustomModel.c(entity.getModelName());
+        return CustomModel.getTextureResource(entity.getModelName());
     }
 
     @Override

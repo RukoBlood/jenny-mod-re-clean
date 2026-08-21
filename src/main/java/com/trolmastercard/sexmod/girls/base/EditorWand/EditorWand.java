@@ -97,7 +97,7 @@ public class EditorWand extends Item {
             return;
         }
         if (CustomModel.isGlobalRenderingDisabled) {
-            boolean bl = CustomModel.isGlobalRenderingDisabled = 0 != CustomModel.b(true);
+            boolean bl = CustomModel.isGlobalRenderingDisabled = 0 != CustomModel.getModelCount(true);
             if (CustomModel.isGlobalRenderingDisabled) {
                 return;
             }

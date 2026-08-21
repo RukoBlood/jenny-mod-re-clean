@@ -101,7 +101,7 @@ public class ClothingGui extends GuiScreen {
         int customBoneCount = 0;
 
         for (String partName : this.previewGirl.getCustomPartsSet()) {
-            CustomPartCategory category = CustomModel.e(partName);
+            CustomPartCategory category = CustomModel.getClothingType(partName);
             if (CustomPartCategory.CUSTOM_BONE.equals((Object)category)) {
                 ++customBoneCount;
             }
@@ -155,7 +155,7 @@ public class ClothingGui extends GuiScreen {
     public static Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> createCustomBoneEntry(GirlEntity girl) {
         ArrayList<String> arrayList = new ArrayList<String>();
         arrayList.add("cross");
-        arrayList.addAll(CustomModel.a(girl).get((Object) CustomPartCategory.CUSTOM_BONE));
+        arrayList.addAll(CustomModel.getModelTypes(girl).get((Object) CustomPartCategory.CUSTOM_BONE));
         return new AbstractMap.SimpleEntry<CustomPartCategory, Map.Entry<List<String>, Integer>>(CustomPartCategory.CUSTOM_BONE, new AbstractMap.SimpleEntry<>(arrayList, 0));
     }
 
@@ -173,7 +173,7 @@ public class ClothingGui extends GuiScreen {
             activeCategories.add(new AbstractMap.SimpleEntry<>(category, new AbstractMap.SimpleEntry<>(defaultList, 0)));
         }
 
-        for (Map.Entry modelEntry : CustomModel.a(this.previewGirl).entrySet()) {
+        for (Map.Entry modelEntry : CustomModel.getModelTypes(this.previewGirl).entrySet()) {
             Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> targetEntry = null;
 
             for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry : activeCategories) {
@@ -228,7 +228,7 @@ public class ClothingGui extends GuiScreen {
         int btnY = this.guiCenterY - 20;
 
         this.drawTexturedModalRect(btnX, btnY, 100, this.isHovered(mouseX, mouseY, btnX, btnY, btnX + 20, btnY + 20) ? 40 : 20, 20, 20);
-        if (CustomModel.getGlobalModelOverride() == null) {
+        if (CustomModel.getCustomModelsKey() == null) {
             this.drawSideButtons(btnX, mouseX, mouseY);
         }
         this.renderEntityInGui(this.guiCenterX, this.guiCenterY, this.guiScale, this.previewGirl, 1.2345679f);
@@ -403,7 +403,7 @@ public class ClothingGui extends GuiScreen {
             this.saveAndClose();
         }
 
-        if (CustomModel.getGlobalModelOverride() != null) {
+        if (CustomModel.getCustomModelsKey() != null) {
             return;
         }
 
@@ -411,7 +411,7 @@ public class ClothingGui extends GuiScreen {
         if (this.isHovered(mouseX, mouseY, btnX, btnY, btnX + 20, btnY + 20)) {
             this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
             this.mc.player.closeScreen();
-            int errCode = CustomModel.b(true);
+            int errCode = CustomModel.getModelCount(true);
 
             if (errCode != 0) {
                 CustomModel.isGlobalRenderingDisabled = true;
@@ -425,7 +425,7 @@ public class ClothingGui extends GuiScreen {
         }
 
         if (this.isHovered(mouseX, mouseY, btnX, btnY -= 20, btnX + 20, btnY + 20)) {
-            Desktop.getDesktop().open(new File(CustomModel.d()));
+            Desktop.getDesktop().open(new File(CustomModel.getGlobalModelOverride()));
             return;
         }
 
@@ -571,7 +571,7 @@ public class ClothingGui extends GuiScreen {
             return;
         }
 
-        boolean canOpen = CustomModel.getGlobalModelOverride() == null || CustomModel.b();
+        boolean canOpen = CustomModel.getCustomModelsKey() == null || CustomModel.isGlobalRenderingDisabled();
 
         if (!canOpen) {
             mc.player.sendStatusMessage(new TextComponentString("You have to whitelist the server to use its custom models. " + (Object)((Object)TextFormatting.YELLOW) + "/whitelistserver"), true);
@@ -591,7 +591,7 @@ public class ClothingGui extends GuiScreen {
                 return;
             }
             if (CustomModel.isGlobalRenderingDisabled) {
-                CustomModel.isGlobalRenderingDisabled = 0 != CustomModel.b(true);
+                CustomModel.isGlobalRenderingDisabled = 0 != CustomModel.getModelCount(true);
                 if (CustomModel.isGlobalRenderingDisabled) {
                     return;
                 }

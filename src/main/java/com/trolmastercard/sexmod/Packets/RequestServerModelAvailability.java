@@ -43,7 +43,7 @@ implements IMessage {
             this.a = true;
             return;
         }
-        if (!CustomModel.b()) {
+        if (!CustomModel.isGlobalRenderingDisabled()) {
             return;
         }
         try {
@@ -77,7 +77,7 @@ implements IMessage {
                 return null;
             }
             if (messageContext.side.isClient()) {
-                if (!CustomModel.b()) {
+                if (!CustomModel.isGlobalRenderingDisabled()) {
                     return null;
                 }
                 ArrayList<String> arrayList = new ArrayList<String>();
@@ -87,14 +87,14 @@ implements IMessage {
                         arrayList.add(string);
                         continue;
                     }
-                    float f = CustomModel.i(string);
+                    float f = CustomModel.getModelZOffset(string);
                     float f2 = entry.getValue().floatValue();
                     if (!(f2 > f)) continue;
                     arrayList.add(string);
                 }
                 return new DownloadServerModel(arrayList);
             }
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PackageHandler.INSTANCE.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.e()), messageContext.getServerHandler().player));
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PackageHandler.INSTANCE.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.getModelScales()), messageContext.getServerHandler().player));
             return null;
         }
 

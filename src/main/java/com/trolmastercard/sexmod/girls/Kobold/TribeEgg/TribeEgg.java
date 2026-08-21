@@ -68,13 +68,13 @@ public class TribeEgg extends Item {
     }
 
     @SubscribeEvent
-    public static void a(RegistryEvent.Register<Item> register) {
+    public static void RegisterItem(RegistryEvent.Register<Item> register) {
         register.getRegistry().register(TRIBE_EGG);
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public static void a(ModelRegistryEvent event) {
+    public static void resourceLocation(ModelRegistryEvent event) {
         ModelLoader.setCustomModelResourceLocation(TRIBE_EGG, 0, new ModelResourceLocation("sexmod:tribe_egg"));
     }
 }

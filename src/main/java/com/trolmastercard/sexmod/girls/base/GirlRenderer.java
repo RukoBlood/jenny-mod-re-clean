@@ -231,9 +231,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         HashSet<String> rawParts = isSpecialState != false ? ClothingGui.getSelectedPartsSet() : ((GirlEntity)this.renderEntity).getCustomPartsSet();
         HashSet<String> validatedBones = new HashSet<String>();
         for (String partKey : rawParts) {
-            CustomModel.ModelData modelPart = CustomModel.getModelData(partKey);
-            if (modelPart == null || !modelPart.isAlwaysVisible() && isDressed) continue;
-            validatedBones.addAll(modelPart.h());
+            CustomModel.ModelData modelPart = CustomModel.getModelDataForGirl(partKey);
+            if (modelPart == null || !modelPart.isDisabled() && isDressed) continue;
+            validatedBones.addAll(modelPart.getCustomPartBones());
         }
         return validatedBones;
     }

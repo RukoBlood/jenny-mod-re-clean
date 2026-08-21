@@ -40,14 +40,14 @@ public class WhitelistServerModelsCommand extends CommandBase implements IClient
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         boolean argument;
-        String override = CustomModel.getGlobalModelOverride();
+        String override = CustomModel.getCustomModelsKey();
 
         if (override == null) {
             sender.sendMessage(new TextComponentString((Object)((Object)TextFormatting.YELLOW) + "This is a multiplayer feature only"));
             return;
         }
 
-        if (CustomModel.l(override)) {
+        if (CustomModel.isModelWhitelisted(override)) {
             sender.sendMessage(new TextComponentString((Object)((Object)TextFormatting.GREEN) + "Server is already whitelisted :)"));
             return;
         }
@@ -59,9 +59,9 @@ public class WhitelistServerModelsCommand extends CommandBase implements IClient
             sender.sendMessage(new TextComponentString((Object)((Object)TextFormatting.GREEN) + "/whitelistserver confirm"));
             return;
         }
-        CustomModel.h(override);
+        CustomModel.initWhitelistFile(override);
         sender.sendMessage(new TextComponentString((Object)((Object)TextFormatting.GREEN) + "confirmed :)"));
-        CustomModel.a();
+        CustomModel.reloadCustomModels();
     }
 }
 

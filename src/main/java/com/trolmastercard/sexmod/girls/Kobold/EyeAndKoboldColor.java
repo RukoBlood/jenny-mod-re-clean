@@ -52,16 +52,18 @@ public enum EyeAndKoboldColor {
 
     public static EyeAndKoboldColor safeValueOf(Vec3i vec3i) {
         for (EyeAndKoboldColor color : EyeAndKoboldColor.values()) {
-            if (!vec3i.equals(color.getMainColor())) continue;
-            return color;
+            if (vec3i.equals(color.getMainColor())) {
+                return color;
+            }
         }
         return KoboldEntity.COLOR;
     }
 
     public static EyeAndKoboldColor getColorByWoolId(int id) {
         for (EyeAndKoboldColor color : EyeAndKoboldColor.values()) {
-            if (color.getWoolMeta() != id) continue;
-            return color;
+            if (color.getWoolMeta() == id) {
+                return color;
+            }
         }
         return KoboldEntity.COLOR;
     }

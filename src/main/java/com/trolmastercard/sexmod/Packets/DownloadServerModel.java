@@ -67,7 +67,7 @@ implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         if (Main.proxy instanceof ClientProxy) {
-            if (!CustomModel.b()) {
+            if (!CustomModel.isGlobalRenderingDisabled()) {
                 return;
             }
             this.e = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
@@ -128,7 +128,7 @@ implements IMessage {
 
         @SideOnly(value=Side.CLIENT)
         void a() {
-            Minecraft.getMinecraft().addScheduledTask(() -> CustomModel.b(true));
+            Minecraft.getMinecraft().addScheduledTask(() -> CustomModel.getModelCount(true));
         }
 
         public IMessage a(DownloadServerModel cu_class1462, MessageContext messageContext) {
@@ -137,7 +137,7 @@ implements IMessage {
                 return null;
             }
             if (messageContext.side.isClient()) {
-                if (!CustomModel.b()) {
+                if (!CustomModel.isGlobalRenderingDisabled()) {
                     return null;
                 }
                 String string = cu_class1462.e;

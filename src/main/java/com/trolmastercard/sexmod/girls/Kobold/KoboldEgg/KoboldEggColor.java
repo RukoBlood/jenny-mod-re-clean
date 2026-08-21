@@ -10,8 +10,7 @@ import net.minecraft.util.math.Vec3i;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
-public class KoboldEggColor
-extends GeoItemRenderer<KoboldEggItem> {
+public class KoboldEggColor extends GeoItemRenderer<KoboldEggItem> {
     ItemStack a = null;
 
     public KoboldEggColor() {

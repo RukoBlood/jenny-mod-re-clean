@@ -109,7 +109,7 @@ public class CustomPartListScrollList extends GuiListExtended {
         }
 
         this.entries.sort(Comparator.comparingInt(entry -> CATEGORY_ORDER.indexOf(entry.category)));
-        List<String> boneModels = CustomModel.a(this.parentGUI.previewGirl).get((Object) CustomPartCategory.CUSTOM_BONE);
+        List<String> boneModels = CustomModel.getModelTypes(this.parentGUI.previewGirl).get((Object) CustomPartCategory.CUSTOM_BONE);
         boneModels.add(0, "cross");
         this.entries.add(new PartListEntry(customBoneCount > 1));
         this.updateTopPadding();
@@ -304,10 +304,10 @@ public class CustomPartListScrollList extends GuiListExtended {
             
             GirlEntity previewGirl = CustomPartListScrollList.this.parentGUI.getPreviewGirl();
             CustomModelEntity modelEntity = this.selectedIndex == 0 ? CustomModelEntity.a(CustomPartListScrollList.this.mc.world, previewGirl.girlID(), this.category) : new CustomModelEntity(previewGirl.world, previewGirl.girlID(), this.modelList.get(this.selectedIndex));
-            CustomModel.ModelData modelData = CustomModel.getModelData(modelEntity.getModelName());
+            CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(modelEntity.getModelName());
 
-            float scaleFactor = modelEntity.isItemModel || modelData == null ? 1.0f : modelData.d();
-            int yOffset = modelData == null ? 0 : (int)(-modelData.g());
+            float scaleFactor = modelEntity.isItemModel || modelData == null ? 1.0f : modelData.getScale();
+            int yOffset = modelData == null ? 0 : (int)(-modelData.getXOffset());
 
             CustomPartListScrollList.this.parentGUI.renderCustomModel(currentX, y + 10 + (modelEntity.isItemModel ? 0 : 6) + yOffset, 30.0f * scaleFactor, modelEntity);
             if (this.selectedIndex != 0) {
@@ -329,7 +329,7 @@ public class CustomPartListScrollList extends GuiListExtended {
             this.drawString(truncatedModelName, currentX, y + 10);
             int nameWidth = currentX += this.fontRenderer.getStringWidth(CustomPartListScrollList.TRUNCATE_TEMPLATE);
             int authorX = currentX;
-            String authorName = CustomModel.d(fullModelName);
+            String authorName = CustomModel.getModelCode(fullModelName);
             String truncatedAuthorName = authorName.length() > CustomPartListScrollList.TRUNCATE_TEMPLATE.length()
                     ? authorName.substring(0, CustomPartListScrollList.TRUNCATE_TEMPLATE.length() - 3) + "..."
                     : authorName;
@@ -437,7 +437,7 @@ public class CustomPartListScrollList extends GuiListExtended {
 
                 ArrayList<String> arrayList = new ArrayList<String>();
                 arrayList.add("cross");
-                arrayList.addAll(CustomModel.a(CustomPartListScrollList.this.parentGUI.previewGirl).get((Object) CustomPartCategory.CUSTOM_BONE));
+                arrayList.addAll(CustomModel.getModelTypes(CustomPartListScrollList.this.parentGUI.previewGirl).get((Object) CustomPartCategory.CUSTOM_BONE));
                 ClothingGui.activeCategories.add(ClothingGui.createCustomBoneEntry(CustomPartListScrollList.this.parentGUI.previewGirl));
             }
             if (!this.canRemoveBone) {
