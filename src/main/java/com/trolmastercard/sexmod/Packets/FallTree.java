@@ -17,7 +17,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
 import java.util.UUID;
 import net.minecraft.block.BlockLog;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -29,9 +28,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class FallTree
-implements IMessage {
-    Boolean b = false;
+public class FallTree implements IMessage {
+    Boolean isVaild = false;
     BlockPos a;
 
     public FallTree() {
@@ -43,7 +41,7 @@ implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         this.a = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
-        this.b = true;
+        this.isVaild = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -52,34 +50,7 @@ implements IMessage {
         byteBuf.writeInt(this.a.getZ());
     }
 
-    public static class a_inner303
-    implements IMessageHandler<FallTree, IMessage> {
-        public IMessage a(FallTree fc_class3022, MessageContext messageContext) {
-            if (!fc_class3022.b.booleanValue() || !messageContext.side.equals((Object)Side.SERVER)) {
-                System.out.println("received an invalid Message @FallTree :(");
-                return null;
-            }
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                int n;
-                EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
-                UUID uUID = KoboldManager.findTribeIdWith(entityPlayerMP.getPersistentID());
-                if (uUID == null) {
-                    System.out.println("not tribe for player");
-                    return;
-                }
-                int n2 = KoboldManager.getTribeMemberCount(uUID);
-                if (n2 > (n = (int)Math.floor((double) KoboldManager.getTribeBeds(uUID).size() / 2.0))) {
-                    ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("Ur Tribe will only work for you, if %severyone%s of them has a %sbed", new Object[]{TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED})));
-                    ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("%s%d/%d Beds", new Object[]{TextFormatting.YELLOW, n, n2})));
-                    return;
-                }
-                World world = entityPlayerMP.world;
-                BlockPos blockPos = this.a(world, fc_class3022.a);
-                HashSet<BlockPos> hashSet = KoboldTask.findConnectedBlocks(world, blockPos, uUID);
-                PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
-            });
-            return null;
-        }
+    public static class Handler implements IMessageHandler<FallTree, IMessage> {
 
         BlockPos a(World world, BlockPos blockPos) {
             if (world.getBlockState(blockPos.add(0, -1, 0)).getBlock() instanceof BlockLog) {
@@ -112,9 +83,32 @@ implements IMessage {
             return blockPos;
         }
 
-                @Override
-        public IMessage onMessage(FallTree iMessage, MessageContext messageContext) {
-            return this.a((FallTree)iMessage, messageContext);
+        @Override
+        public IMessage onMessage(FallTree msg, MessageContext ctx) {
+            if (!msg.isVaild || !ctx.side.equals(Side.SERVER)) {
+                System.out.println("received an invalid Message @FallTree :(");
+                return null;
+            }
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+                EntityPlayerMP player = ctx.getServerHandler().player;
+                UUID uUID = KoboldManager.findTribeIdWith(player.getPersistentID());
+                if (uUID == null) {
+                    System.out.println("not tribe for player");
+                } else {
+                    int memberCount = KoboldManager.getTribeMemberCount(uUID);
+                    int bedsCount = (int) Math.floor((double) KoboldManager.getTribeBeds(uUID).size() / 2.0);
+                    if (memberCount > bedsCount) {
+                        player.sendMessage(new TextComponentString(String.format("Ur Tribe will only work for you, if %severyone%s of them has a %sbed", TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED)));
+                        player.sendMessage(new TextComponentString(String.format("%s%d/%d Beds", TextFormatting.YELLOW, bedsCount, memberCount)));
+                    } else {
+                        World world = player.world;
+                        BlockPos blockPos = this.a(world, msg.a);
+                        HashSet<BlockPos> hashSet = KoboldTask.findConnectedBlocks(world, blockPos, uUID);
+                        PackageHandler.INSTANCE.sendTo(new SendBlocks(hashSet, true), ctx.getServerHandler().player);
+                    }
+                }
+            });
+            return null;
         }
     }
 }

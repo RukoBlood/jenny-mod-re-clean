@@ -22,9 +22,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class RemoveItems
-implements IMessage {
-    boolean c = false;
+public class RemoveItems implements IMessage {
+    boolean isValid = false;
     UUID a;
     ItemStack b;
 
@@ -37,38 +36,33 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.b = ByteBufUtils.readItemStack((ByteBuf)byteBuf);
-        this.c = true;
+        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.b = ByteBufUtils.readItemStack(byteBuf);
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
-        ByteBufUtils.writeItemStack((ByteBuf)byteBuf, (ItemStack)this.b);
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+        ByteBufUtils.writeItemStack(byteBuf, this.b);
     }
 
-    public static class a_inner424
-    implements IMessageHandler<RemoveItems, IMessage> {
-        public IMessage a(RemoveItems t_class4232, MessageContext messageContext) {
-            if (!t_class4232.c || messageContext.side != Side.SERVER) {
+    public static class Handler implements IMessageHandler<RemoveItems, IMessage> {
+        @Override
+        public IMessage onMessage(RemoveItems msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("recieved an unvalid message @RemoveItems :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                InventoryPlayer inventoryPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID((UUID)t_class4232.a).inventory;
+                InventoryPlayer inventoryPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(msg.a).inventory;
                 for (int i = 0; i < inventoryPlayer.getSizeInventory(); ++i) {
                     ItemStack itemStack = inventoryPlayer.getStackInSlot(i);
-                    if (!itemStack.getItem().equals(t_class4232.b.getItem())) continue;
-                    itemStack.shrink(t_class4232.b.getCount());
+                    if (!itemStack.getItem().equals(msg.b.getItem())) continue;
+                    itemStack.shrink(msg.b.getCount());
                     break;
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(RemoveItems iMessage, MessageContext messageContext) {
-            return this.a((RemoveItems)iMessage, messageContext);
         }
     }
 }

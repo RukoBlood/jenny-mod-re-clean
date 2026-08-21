@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class GalathRapePounce
 implements IMessage {
-    boolean a = false;
+    boolean isValid = false;
     boolean b;
 
     public GalathRapePounce() {
@@ -33,32 +33,27 @@ implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         this.b = byteBuf.readBoolean();
-        this.a = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         byteBuf.writeBoolean(this.b);
     }
 
-    public static class a_inner357
-    implements IMessageHandler<GalathRapePounce, IMessage> {
-        public IMessage a(GalathRapePounce g__class3562, MessageContext messageContext) {
-            if (!g__class3562.a || !messageContext.side.equals((Object)Side.SERVER)) {
+    public static class Handler implements IMessageHandler<GalathRapePounce, IMessage> {
+        @Override
+        public IMessage onMessage(GalathRapePounce msg, MessageContext ctx) {
+            if (!msg.isValid || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid message @GalathRapePounce :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                GirlEntity em_class2582 = GirlEntity.getActiveSceneInfo(messageContext.getServerHandler().player.getPersistentID());
-                if (em_class2582 instanceof GalathEntity) {
-                    ((GalathEntity)em_class2582).handleRapeAction(g__class3562.b);
+                GirlEntity girl = GirlEntity.getActiveSceneInfo(ctx.getServerHandler().player.getPersistentID());
+                if (girl instanceof GalathEntity) {
+                    ((GalathEntity)girl).handleRapeAction(msg.b);
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(GalathRapePounce iMessage, MessageContext messageContext) {
-            return this.a((GalathRapePounce)iMessage, messageContext);
         }
     }
 }

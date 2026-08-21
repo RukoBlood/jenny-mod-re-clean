@@ -47,52 +47,47 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.d = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.b = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
+        this.d = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.b = ByteBufUtils.readUTF8String(byteBuf);
         this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.d.toString());
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b);
+        ByteBufUtils.writeUTF8String(byteBuf, this.d.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b);
     }
 
-    public static class a_inner355
-    implements IMessageHandler<ClaimTribe, IMessage> {
-        public IMessage a(ClaimTribe msg, MessageContext ctx) {
+    public static class Handler implements IMessageHandler<ClaimTribe, IMessage> {
+        @Override
+        public IMessage onMessage(ClaimTribe msg, MessageContext ctx) {
             if (!msg.valid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @ClaimTribe :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 List<KoboldEntity> list = KoboldManager.getTribeMembersList(msg.d);
-                EyeAndKoboldColor eyeAndKoboldColor_ = null;
-                for (KoboldEntity object2 : list) {
-                    if (object2.hasMaster()) continue;
-                    EntityDataManager entityDataManager = object2.getDataManager();
-                    entityDataManager.set(GirlEntity.MASTER, msg.a.toString());
-                    entityDataManager.set(KoboldEntity.TRIBE_NAME, msg.b);
-                    eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
+                EyeAndKoboldColor color = null;
+                for (KoboldEntity kobold : list) {
+                    if (!kobold.hasMaster()) {
+                        EntityDataManager entityDataManager = kobold.getDataManager();
+                        entityDataManager.set(GirlEntity.MASTER, msg.a.toString());
+                        entityDataManager.set(KoboldEntity.TRIBE_NAME, msg.b);
+                        color = EyeAndKoboldColor.valueOf(entityDataManager.get(KoboldEntity.CURRENT_ACTION));
+                    }
                 }
-                if (eyeAndKoboldColor_ == null) {
-                    return;
+                if (color != null) {
+                    PlayerList playerList = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+                    String playerName = ctx.getServerHandler().player.getName();
+                    for (EntityPlayer player : playerList.getPlayers()) {
+                        player.sendMessage(new TextComponentString(String.format("%s formed the " + color.getTextColor() + "%s " + TextFormatting.WHITE + "Tribe", playerName, msg.b)));
+                    }
+                    KoboldManager.setTribeAlerted(msg.d, true);
+                    KoboldManager.setTribeMaster(msg.d, ctx.getServerHandler().player.getPersistentID());
                 }
-                PlayerList playerList = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
-                String string = ctx.getServerHandler().player.getName();
-                for (EntityPlayer entityPlayer : playerList.getPlayers()) {
-                    entityPlayer.sendMessage(new TextComponentString(String.format("%s formed the " + (Object)((Object) eyeAndKoboldColor_.getTextColor()) + "%s " + (Object)((Object)TextFormatting.WHITE) + "Tribe", string, msg.b)));
-                }
-                KoboldManager.setTribeAlerted(msg.d, true);
-                KoboldManager.setTribeMaster(msg.d, ctx.getServerHandler().player.getPersistentID());
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(ClaimTribe iMessage, MessageContext messageContext) {
-            return this.a((ClaimTribe)iMessage, messageContext);
         }
     }
 }

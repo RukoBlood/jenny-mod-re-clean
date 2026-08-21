@@ -18,8 +18,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
 import java.util.UUID;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -35,7 +33,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class Mine implements IMessage {
-    boolean c = false;
+    boolean isValid = false;
     BlockPos a;
     EnumFacing b;
 
@@ -49,51 +47,18 @@ public class Mine implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         this.a = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
-        this.b = EnumFacing.byName(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.c = true;
+        this.b = EnumFacing.byName(ByteBufUtils.readUTF8String(byteBuf));
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         byteBuf.writeInt(this.a.getX());
         byteBuf.writeInt(this.a.getY());
         byteBuf.writeInt(this.a.getZ());
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.getName());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b.getName());
     }
 
-    public static class a_inner227 implements IMessageHandler<Mine, IMessage> {
-        public IMessage a(Mine e6_class2262, MessageContext messageContext) {
-            if (!e6_class2262.c || !messageContext.side.equals((Object)Side.SERVER)) {
-                System.out.println("received an invalid Message @Mine :(");
-                return null;
-            }
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                int n;
-                EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
-                UUID uUID = KoboldManager.findTribeIdWith(entityPlayerMP.getPersistentID());
-                if (uUID == null) {
-                    return;
-                }
-                int n2 = KoboldManager.getTribeMemberCount(uUID);
-                if (n2 > (n = (int)Math.floor((double) KoboldManager.getTribeBeds(uUID).size() / 2.0))) {
-                    ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("sUr Tribe will only work for you, if %severyone%s of them has a %sbed", new Object[]{TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED})));
-                    ((Entity)entityPlayerMP).sendMessage(new TextComponentString(String.format("%s%d/%d Beds", new Object[]{TextFormatting.YELLOW, n, n2})));
-                    return;
-                }
-                HashSet<BlockPos> hashSet = this.a(e6_class2262.a, e6_class2262.b);
-                World world = messageContext.getServerHandler().player.world;
-                for (BlockPos blockPos : hashSet) {
-                    IBlockState iBlockState = world.getBlockState(blockPos);
-                    if (!(iBlockState.getBlock().getBlockHardness(iBlockState, world, blockPos) < 0.0f)) continue;
-                    ((EntityPlayer)entityPlayerMP).sendStatusMessage(new TextComponentString("This area contains Bedrock and cannot be mined"), true);
-                    return;
-                }
-                KoboldTask bs_class972 = new KoboldTask(e6_class2262.a, KoboldTask.KoboldTasks.MINE, hashSet, e6_class2262.b);
-                KoboldManager.addTaskToTribe(uUID, bs_class972);
-                PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, true), messageContext.getServerHandler().player);
-            });
-            return null;
-        }
-
+    public static class Handler implements IMessageHandler<Mine, IMessage> {
         HashSet<BlockPos> a(BlockPos blockPos, EnumFacing enumFacing) {
             HashSet<BlockPos> hashSet = new HashSet<BlockPos>();
             BlockPos blockPos2 = blockPos;
@@ -117,9 +82,39 @@ public class Mine implements IMessage {
             return new BlockPos(vec3i.getZ(), vec3i.getY(), -vec3i.getX());
         }
 
-                @Override
-        public IMessage onMessage(Mine iMessage, MessageContext messageContext) {
-            return this.a((Mine)iMessage, messageContext);
+        @Override
+        public IMessage onMessage(Mine msg, MessageContext ctx) {
+            if (!msg.isValid || !ctx.side.equals(Side.SERVER)) {
+                System.out.println("received an invalid Message @Mine :(");
+                return null;
+            }
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
+                int n;
+                EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
+                UUID uUID = KoboldManager.findTribeIdWith(entityPlayerMP.getPersistentID());
+                if (uUID == null) {
+                    return;
+                }
+                int n2 = KoboldManager.getTribeMemberCount(uUID);
+                if (n2 > (n = (int)Math.floor((double) KoboldManager.getTribeBeds(uUID).size() / 2.0))) {
+                    entityPlayerMP.sendMessage(new TextComponentString(String.format("sUr Tribe will only work for you, if %severyone%s of them has a %sbed", TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED)));
+                    entityPlayerMP.sendMessage(new TextComponentString(String.format("%s%d/%d Beds", TextFormatting.YELLOW, n, n2)));
+                    return;
+                }
+                HashSet<BlockPos> hashSet = this.a(msg.a, msg.b);
+                World world = ctx.getServerHandler().player.world;
+                for (BlockPos blockPos : hashSet) {
+                    IBlockState iBlockState = world.getBlockState(blockPos);
+                    if (iBlockState.getBlock().getBlockHardness(iBlockState, world, blockPos) < 0.0f) {
+                        entityPlayerMP.sendStatusMessage(new TextComponentString("This area contains Bedrock and cannot be mined"), true);
+                        return;
+                    }
+                }
+                KoboldTask bs_class972 = new KoboldTask(msg.a, KoboldTask.KoboldTasks.MINE, hashSet, msg.b);
+                KoboldManager.addTaskToTribe(uUID, bs_class972);
+                PackageHandler.INSTANCE.sendTo(new SendBlocks(hashSet, true), ctx.getServerHandler().player);
+            });
+            return null;
         }
     }
 }

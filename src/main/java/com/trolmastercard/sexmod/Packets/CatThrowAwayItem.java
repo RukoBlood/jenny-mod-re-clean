@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CatThrowAwayItem
 implements IMessage {
-    boolean a = false;
+    boolean isValid = false;
     UUID b;
 
     public CatThrowAwayItem() {
@@ -36,35 +36,32 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.a = true;
+        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
     }
 
-    public static class a_inner198
-    implements IMessageHandler<CatThrowAwayItem, IMessage> {
-        public IMessage a(CatThrowAwayItem dq_class1972, MessageContext messageContext) {
-            if (!dq_class1972.a || !messageContext.side.equals((Object)Side.SERVER)) {
+    public static class Handler implements IMessageHandler<CatThrowAwayItem, IMessage> {
+
+        @Override
+        public IMessage onMessage(CatThrowAwayItem msg, MessageContext ctx) {
+            if (!msg.isValid || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid message @CatThrowAwayItem :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(dq_class1972.b);
-                for (GirlEntity em_class2582 : arrayList) {
-                    if (em_class2582.world.isRemote || !(em_class2582 instanceof LunaEntity)) continue;
-                    LunaEntity eb_class2362 = (LunaEntity)em_class2582;
-                    eb_class2362.void_j();
+                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.b);
+                for (GirlEntity girl : girls) {
+                    if (!girl.world.isRemote && girl instanceof LunaEntity) {
+                        LunaEntity luna = (LunaEntity) girl;
+                        luna.void_j();
+                    }
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(CatThrowAwayItem iMessage, MessageContext messageContext) {
-            return this.a((CatThrowAwayItem)iMessage, messageContext);
         }
     }
 }

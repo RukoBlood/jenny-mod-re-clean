@@ -21,9 +21,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ForcePlayerGirlUpdate
-implements IMessage {
-    boolean d = false;
+public class ForcePlayerGirlUpdate implements IMessage {
+    boolean isValid = false;
     UUID c;
     int b;
     Action a;
@@ -31,44 +30,40 @@ implements IMessage {
     public ForcePlayerGirlUpdate() {
     }
 
-    public ForcePlayerGirlUpdate(UUID uUID, int n, Action fp_class3242) {
+    public ForcePlayerGirlUpdate(UUID uUID, int n, Action action) {
         this.c = uUID;
         this.b = n;
-        this.a = fp_class3242;
+        this.a = action;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.b = byteBuf.readInt();
-        this.a = Action.valueOf(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.d = true;
+        this.a = Action.valueOf(ByteBufUtils.readUTF8String(byteBuf));
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
         byteBuf.writeInt(this.b);
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
     }
 
-    public static class a_inner362
-    implements IMessageHandler<ForcePlayerGirlUpdate, IMessage> {
-        public IMessage a(ForcePlayerGirlUpdate gd_class3612, MessageContext messageContext) {
-            if (!gd_class3612.d || !messageContext.side.equals((Object)Side.CLIENT)) {
+    public static class Handler implements IMessageHandler<ForcePlayerGirlUpdate, IMessage> {
+
+        @Override
+        public IMessage onMessage(ForcePlayerGirlUpdate msg, MessageContext ctx) {
+            if (!msg.isValid || !ctx.side.equals(Side.CLIENT)) {
                 System.out.println("received an invalid message @ForcePlayerGirlUpdate :(");
                 return null;
             }
-            PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(gd_class3612.c);
-            if (ei_class2512 == null) {
+            PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(msg.c);
+            if (playerGirl == null) {
                 return null;
             }
-            ei_class2512.getDataManager().set(GirlEntity.CUR_ACTION, gd_class3612.a.toString());
-            ei_class2512.getDataManager().set(GirlEntity.OUTFIT_INDEX, gd_class3612.b);
+            playerGirl.getDataManager().set(GirlEntity.CUR_ACTION, msg.a.toString());
+            playerGirl.getDataManager().set(GirlEntity.OUTFIT_INDEX, msg.b);
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(ForcePlayerGirlUpdate iMessage, MessageContext messageContext) {
-            return this.a((ForcePlayerGirlUpdate)iMessage, messageContext);
         }
     }
 }

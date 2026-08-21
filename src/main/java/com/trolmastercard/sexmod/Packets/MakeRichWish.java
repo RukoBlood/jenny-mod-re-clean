@@ -23,9 +23,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MakeRichWish
-implements IMessage {
-    boolean b;
+public class MakeRichWish implements IMessage {
+    boolean isValid;
     Vec3d a;
 
     public MakeRichWish() {
@@ -37,7 +36,7 @@ implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         this.a = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
-        this.b = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -46,28 +45,23 @@ implements IMessage {
         byteBuf.writeDouble(this.a.z);
     }
 
-    public static class a_inner104
-    implements IMessageHandler<MakeRichWish, IMessage> {
-        public IMessage a(MakeRichWish bw_class1032, MessageContext messageContext) {
-            if (!bw_class1032.b || messageContext.side != Side.SERVER) {
+    public static class Handler implements IMessageHandler<MakeRichWish, IMessage> {
+        @Override
+        public IMessage onMessage(MakeRichWish msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @MakeRichWish :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                World world = messageContext.getServerHandler().player.world;
-                EntityItem entityItem = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.DIAMOND, Reference.RANDOM.nextInt(2) + 1));
-                EntityItem entityItem2 = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.EMERALD, Reference.RANDOM.nextInt(2) + 1));
-                EntityItem entityItem3 = new EntityItem(world, bw_class1032.a.x, bw_class1032.a.y, bw_class1032.a.z, new ItemStack(Items.GOLD_INGOT, Reference.RANDOM.nextInt(2) + 1));
+                World world = ctx.getServerHandler().player.world;
+                EntityItem entityItem = new EntityItem(world, msg.a.x, msg.a.y, msg.a.z, new ItemStack(Items.DIAMOND, Reference.RANDOM.nextInt(2) + 1));
+                EntityItem entityItem2 = new EntityItem(world, msg.a.x, msg.a.y, msg.a.z, new ItemStack(Items.EMERALD, Reference.RANDOM.nextInt(2) + 1));
+                EntityItem entityItem3 = new EntityItem(world, msg.a.x, msg.a.y, msg.a.z, new ItemStack(Items.GOLD_INGOT, Reference.RANDOM.nextInt(2) + 1));
                 world.spawnEntity(entityItem);
                 world.spawnEntity(entityItem2);
                 world.spawnEntity(entityItem3);
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(MakeRichWish iMessage, MessageContext messageContext) {
-            return this.a((MakeRichWish)iMessage, messageContext);
         }
     }
 }

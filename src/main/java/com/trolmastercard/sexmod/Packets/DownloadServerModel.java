@@ -37,10 +37,10 @@ import org.apache.commons.io.FileUtils;
 
 public class DownloadServerModel
 implements IMessage {
-    boolean d;
+    boolean isValid;
     List<String> c = new ArrayList<String>();
     byte[] b;
-    b_inner148 f;
+    FileTypes f;
     String e;
     int a = 0;
 
@@ -51,7 +51,7 @@ implements IMessage {
         this.c = list;
     }
 
-    public DownloadServerModel(byte[] byArray, b_inner148 b_inner1482, String string) {
+    public DownloadServerModel(byte[] byArray, FileTypes b_inner1482, String string) {
         this.b = byArray;
         this.f = b_inner1482;
         this.e = string;
@@ -70,55 +70,54 @@ implements IMessage {
             if (!CustomModel.isGlobalRenderingDisabled()) {
                 return;
             }
-            this.e = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
-            this.f = b_inner148.valueOf(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+            this.e = ByteBufUtils.readUTF8String(byteBuf);
+            this.f = FileTypes.valueOf(ByteBufUtils.readUTF8String(byteBuf));
             this.a = byteBuf.readInt();
             int n = byteBuf.readInt();
             this.b = new byte[n];
             for (int i = 0; i < n; ++i) {
                 this.b[i] = byteBuf.readByte();
             }
-            this.d = true;
+            this.isValid = true;
             return;
         }
         int n = byteBuf.readInt();
         for (int i = 0; i < n; ++i) {
-            this.c.add(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+            this.c.add(ByteBufUtils.readUTF8String(byteBuf));
         }
-        this.d = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         if (Main.proxy instanceof ClientProxy) {
             byteBuf.writeInt(this.c.size());
             for (String string : this.c) {
-                ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)string);
+                ByteBufUtils.writeUTF8String(byteBuf, string);
             }
             return;
         }
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.e);
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.f.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.e);
+        ByteBufUtils.writeUTF8String(byteBuf, this.f.toString());
         byteBuf.writeInt(this.a);
         byteBuf.writeInt(this.b.length);
         for (byte by : this.b) {
-            byteBuf.writeByte((int)by);
+            byteBuf.writeByte(by);
         }
     }
 
-    public static enum b_inner148 {
+    public enum FileTypes {
         CFG(".cfg"),
         PNG(".png"),
         GEO(".geo.json");
 
         public String ending;
 
-        private b_inner148(String string2) {
-            this.ending = string2;
+        FileTypes(String ending) {
+            this.ending = ending;
         }
     }
 
-    public static class a_inner147
-    implements IMessageHandler<DownloadServerModel, IMessage> {
+    public static class Handler implements IMessageHandler<DownloadServerModel, IMessage> {
         static int a = 0;
 
         @SideOnly(value=Side.CLIENT)
@@ -131,18 +130,19 @@ implements IMessage {
             Minecraft.getMinecraft().addScheduledTask(() -> CustomModel.getModelCount(true));
         }
 
-        public IMessage a(DownloadServerModel cu_class1462, MessageContext messageContext) {
-            if (!cu_class1462.d) {
+        @Override
+        public IMessage onMessage(DownloadServerModel msg, MessageContext ctx) {
+            if (!msg.isValid) {
                 System.out.println("received an invalid Message @DownloadServerModel :(");
                 return null;
             }
-            if (messageContext.side.isClient()) {
+            if (ctx.side.isClient()) {
                 if (!CustomModel.isGlobalRenderingDisabled()) {
                     return null;
                 }
-                String string = cu_class1462.e;
-                b_inner148 b_inner1482 = cu_class1462.f;
-                byte[] byArray = cu_class1462.b;
+                String string = msg.e;
+                FileTypes b_inner1482 = msg.f;
+                byte[] byArray = msg.b;
                 String string2 = CustomModel.getCurrentGroup() + "/" + string;
                 File file = new File(string2);
                 file.mkdirs();
@@ -172,17 +172,17 @@ implements IMessage {
                     iOException.printStackTrace();
                 }
                 int n = 0;
-                int n2 = b_inner148.values().length;
-                for (b_inner148 b_inner1483 : b_inner148.values()) {
+                int n2 = FileTypes.values().length;
+                for (FileTypes b_inner1483 : FileTypes.values()) {
                     if (!new File(string2 + "/" + string + b_inner1483.ending).exists()) continue;
                     ++n;
                 }
                 if (n == n2) {
-                    this.a(String.format("%sSuccessfully downloaded the custom model '%s%s%s'!", new Object[]{TextFormatting.GREEN, TextFormatting.YELLOW, string, TextFormatting.GREEN}));
+                    this.a(String.format("%sSuccessfully downloaded the custom model '%s%s%s'!", TextFormatting.GREEN, TextFormatting.YELLOW, string, TextFormatting.GREEN));
                 } else {
-                    this.a(String.format("%sdownloading custom model '%s%s%s' (%s/%s)...", new Object[]{TextFormatting.GRAY, TextFormatting.YELLOW, string, TextFormatting.GRAY, n, n2}));
+                    this.a(String.format("%sdownloading custom model '%s%s%s' (%s/%s)...", TextFormatting.GRAY, TextFormatting.YELLOW, string, TextFormatting.GRAY, n, n2));
                 }
-                if (++a < cu_class1462.a) {
+                if (++a < msg.a) {
                     return null;
                 }
                 a = 0;
@@ -191,11 +191,11 @@ implements IMessage {
             }
             MinecraftServer minecraftServer = FMLCommonHandler.instance().getMinecraftServerInstance();
             minecraftServer.addScheduledTask(() -> {
-                List<String> list = cu_class1462.c;
+                List<String> list = msg.c;
                 ArrayList<DownloadServerModel> arrayList = new ArrayList<DownloadServerModel>();
                 for (String object : list) {
                     String string = "sexmod_custom_models/" + object;
-                    for (b_inner148 b_inner1482 : b_inner148.values()) {
+                    for (FileTypes b_inner1482 : FileTypes.values()) {
                         File file = new File(string + "/" + object + b_inner1482.ending);
                         if (!file.exists()) {
                             System.out.println(file.getAbsolutePath() + " doesnt exist lol");
@@ -203,7 +203,7 @@ implements IMessage {
                         }
                         byte[] byArray = null;
                         try {
-                            byArray = FileUtils.readFileToByteArray((File)file);
+                            byArray = FileUtils.readFileToByteArray(file);
                         } catch (IOException iOException) {
                             throw new RuntimeException(iOException);
                         }
@@ -214,15 +214,10 @@ implements IMessage {
                 int n = arrayList.size();
                 for (DownloadServerModel cu_class1463 : arrayList) {
                     cu_class1463.a(n);
-                    minecraftServer.addScheduledTask(() -> PackageHandler.INSTANCE.sendTo((IMessage)cu_class1463, messageContext.getServerHandler().player));
+                    minecraftServer.addScheduledTask(() -> PackageHandler.INSTANCE.sendTo(cu_class1463, ctx.getServerHandler().player));
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(DownloadServerModel iMessage, MessageContext messageContext) {
-            return this.a((DownloadServerModel)iMessage, messageContext);
         }
     }
 }

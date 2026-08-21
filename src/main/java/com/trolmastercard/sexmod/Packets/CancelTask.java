@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CancelTask
 implements IMessage {
-    boolean a = false;
+    boolean isValid = false;
     BlockPos b;
 
     public CancelTask() {
@@ -36,7 +36,7 @@ implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         this.b = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
-        this.a = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -45,30 +45,25 @@ implements IMessage {
         byteBuf.writeInt(this.b.getZ());
     }
 
-    public static class a_inner45
-    implements IMessageHandler<CancelTask, IMessage> {
-        public IMessage a(CancelTask au_class442, MessageContext messageContext) {
-            if (!au_class442.a || !messageContext.side.equals((Object)Side.SERVER)) {
+    public static class handler implements IMessageHandler<CancelTask, IMessage> {
+        @Override
+        public IMessage onMessage(CancelTask msg, MessageContext ctx) {
+            if (!msg.isValid || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid Message @CancelTask :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                UUID uUID = KoboldManager.findTribeIdWith(messageContext.getServerHandler().player.getPersistentID());
+                UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
                 if (uUID == null) {
                     return;
                 }
-                HashSet<BlockPos> hashSet = KoboldManager.removeTaskByBlockPos(uUID, au_class442.b);
+                HashSet<BlockPos> hashSet = KoboldManager.removeTaskByBlockPos(uUID, msg.b);
                 if (hashSet.isEmpty()) {
                     return;
                 }
-                PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, false), messageContext.getServerHandler().player);
+                PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, false), ctx.getServerHandler().player);
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(CancelTask iMessage, MessageContext messageContext) {
-            return this.a((CancelTask)iMessage, messageContext);
         }
     }
 }

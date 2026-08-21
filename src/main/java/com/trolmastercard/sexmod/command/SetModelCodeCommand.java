@@ -68,24 +68,24 @@ public class SetModelCodeCommand extends CommandBase implements IClientCommand {
         {
             RayTraceResult result = Minecraft.getMinecraft().objectMouseOver;
             if ((girl = this.checkEntity(result)) == null) {
-                ((EntityPlayer) entityPlayerSP).sendStatusMessage(new TextComponentString("You gotta transform into the girl you want to apply the model-code to"), true);
+                entityPlayerSP.sendStatusMessage(new TextComponentString("You gotta transform into the girl you want to apply the model-code to"), true);
                 return;
             }
         }
         if (string2.isEmpty()) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, girl.girlID()));
-            ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
+            PackageHandler.INSTANCE.sendToServer(new UploadModelString(string, girl.girlID()));
+            entityPlayerSP.sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
             return;
         }
-        PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, girl.girlID(), GirlEntity.decodePartIdList(string2)));
-        ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
+        PackageHandler.INSTANCE.sendToServer(new UploadModelString(string, girl.girlID(), GirlEntity.decodePartIdList(string2)));
+        entityPlayerSP.sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
     }
 
     String showModelCode(GirlEntity girl) {
         if (girl instanceof PlayerGirl) {
-            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + ThreadNames.CapitalizeString(PlayerGirlEntity.getGirlType(girl).toString());
+            return TextFormatting.YELLOW + "applied model code to your player-" + ThreadNames.CapitalizeString(PlayerGirlEntity.getGirlType(girl).toString());
         }
-        return (Object)((Object)TextFormatting.YELLOW) + "applied model code to this " + girl.getGirlName();
+        return TextFormatting.YELLOW + "applied model code to this " + girl.getGirlName();
     }
 
     @SideOnly(value=Side.CLIENT)

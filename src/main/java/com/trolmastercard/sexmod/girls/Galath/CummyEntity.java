@@ -32,7 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class CummyEntity {
     final static ResourceLocation CUMMY_TEXTURE = new ResourceLocation("sexmod", "textures/cummy.png");
     static Minecraft mc = Minecraft.getMinecraft();
-    static List<DynamicTrailRenderer> trailRenderers = new ArrayList<DynamicTrailRenderer>();
+    static List<DynamicTrailRenderer> trailRenderers = new ArrayList<>();
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
@@ -67,15 +67,16 @@ public class CummyEntity {
         trailRenderers.add(renderer);
     }
 
-    public static void createTrail(int maxSegmentsCount, IPositionProvider positionProvider, ITargetProvider targetProvider, GirlEntity girl, float randomnessRadus, float maxDistance) {
-        trailRenderers.add(new DynamicTrailRenderer(maxSegmentsCount, positionProvider, targetProvider, girl, randomnessRadus, maxDistance));
+    public static void createTrail(int maxSegmentsCount, IPositionProvider positionProvider, ITargetProvider targetProvider, GirlEntity girl, float randomnessRadius, float maxDistance) {
+        trailRenderers.add(new DynamicTrailRenderer(maxSegmentsCount, positionProvider, targetProvider, girl, randomnessRadius, maxDistance));
     }
 
     public static void spawnSexParticles(@Nonnull GirlEntity girl) {
-        ArrayList<DynamicTrailRenderer> renderers = new ArrayList<DynamicTrailRenderer>();
+        ArrayList<DynamicTrailRenderer> renderers = new ArrayList<>();
         for (DynamicTrailRenderer renderer : trailRenderers) {
-            if (!renderer.ownerEntity.girlID().equals(girl.girlID())) continue;
-            renderers.add(renderer);
+            if (renderer.ownerEntity.girlID().equals(girl.girlID())) {
+                renderers.add(renderer);
+            }
         }
         trailRenderers.removeAll(renderers);
     }

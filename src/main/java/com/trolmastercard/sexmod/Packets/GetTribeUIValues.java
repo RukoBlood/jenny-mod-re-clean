@@ -34,7 +34,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class GetTribeUIValues implements IMessage {
-    boolean a = false;
+    boolean isValid = false;
     boolean b;
     List<Vector4d> c;
 
@@ -49,16 +49,16 @@ public class GetTribeUIValues implements IMessage {
     }
 
     static GetTribeUIValues a() {
-        return new GetTribeUIValues(false, new ArrayList<Vector4d>());
+        return new GetTribeUIValues(false, new ArrayList<>());
     }
 
     public void fromBytes(ByteBuf byteBuf) {
         this.b = byteBuf.readBoolean();
         int n = byteBuf.readInt();
         for (int i = 0; i < n; ++i) {
-            this.c.add(new Vector4d((double)byteBuf.readInt(), (double)byteBuf.readInt(), (double)byteBuf.readInt(), (double)byteBuf.readInt()));
+            this.c.add(new Vector4d(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt()));
         }
-        this.a = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -74,8 +74,9 @@ public class GetTribeUIValues implements IMessage {
 
     public static class Handler
     implements IMessageHandler<GetTribeUIValues, IMessage> {
-        public IMessage a(GetTribeUIValues msg, MessageContext ctx) {
-            if (!msg.a) {
+        @Override
+        public IMessage onMessage(GetTribeUIValues msg, MessageContext ctx) {
+            if (!msg.isValid) {
                 System.out.println("received an invalid message @GetTribeUIValues :(");
                 return null;
             }
@@ -88,7 +89,7 @@ public class GetTribeUIValues implements IMessage {
                 Object object;
                 UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
                 if (uUID == null) {
-                    PackageHandler.INSTANCE.sendTo((IMessage) GetTribeUIValues.a(), ctx.getServerHandler().player);
+                    PackageHandler.INSTANCE.sendTo(GetTribeUIValues.a(), ctx.getServerHandler().player);
                     return;
                 }
                 boolean bl = KoboldManager.isTribeAlerted(uUID);
@@ -103,22 +104,17 @@ public class GetTribeUIValues implements IMessage {
                     if (koboldEntity.editedColorManually) {
                         koboldColor = EyeAndKoboldColor.safeValueOf(koboldEntity.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION)).getWoolMeta();
                     }
-                    arrayList.add(new Vector4d(koboldEntity.posX, koboldEntity.posY, koboldEntity.posZ, (double)koboldColor));
+                    arrayList.add(new Vector4d(koboldEntity.posX, koboldEntity.posY, koboldEntity.posZ, koboldColor));
                     hashSet.add(object);
                 }
                 for (Map.Entry entry : hashMap.entrySet()) {
                     if (hashSet.contains(entry.getKey())) continue;
-                    object = (BlockPos)entry.getValue();
-                    arrayList.add(new Vector4d((double)((Vec3i)object).getX(), (double)((Vec3i)object).getY(), (double)((Vec3i)object).getZ(), (double)koboldColor));
+                    object = entry.getValue();
+                    arrayList.add(new Vector4d(((Vec3i)object).getX(), ((Vec3i)object).getY(), ((Vec3i)object).getZ(), koboldColor));
                 }
-                PackageHandler.INSTANCE.sendTo((IMessage)new GetTribeUIValues(bl, arrayList), entityPlayerMP);
+                PackageHandler.INSTANCE.sendTo(new GetTribeUIValues(bl, arrayList), entityPlayerMP);
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(GetTribeUIValues iMessage, MessageContext messageContext) {
-            return this.a((GetTribeUIValues)iMessage, messageContext);
         }
     }
 }

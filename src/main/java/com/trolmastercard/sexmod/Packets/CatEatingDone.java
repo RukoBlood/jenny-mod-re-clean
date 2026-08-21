@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CatEatingDone
 implements IMessage {
-    boolean a = false;
+    boolean isValid = false;
     UUID b;
 
     public CatEatingDone() {
@@ -36,23 +36,23 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.a = true;
+        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
     }
 
-    public static class a_inner374
-    implements IMessageHandler<CatEatingDone, IMessage> {
-        public IMessage a(CatEatingDone gk_class3732, MessageContext messageContext) {
-            if (!gk_class3732.a || !messageContext.side.equals((Object)Side.SERVER)) {
+    public static class Handler implements IMessageHandler<CatEatingDone, IMessage> {
+        @Override
+        public IMessage onMessage(CatEatingDone msg, MessageContext ctx) {
+            if (!msg.isValid || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid message @CatEatingDone :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(gk_class3732.b);
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.b);
                 for (GirlEntity em_class2582 : arrayList) {
                     if (em_class2582.world.isRemote || !(em_class2582 instanceof LunaEntity)) continue;
                     LunaEntity eb_class2362 = (LunaEntity)em_class2582;
@@ -60,11 +60,6 @@ implements IMessage {
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(CatEatingDone iMessage, MessageContext messageContext) {
-            return this.a((CatEatingDone)iMessage, messageContext);
         }
     }
 }

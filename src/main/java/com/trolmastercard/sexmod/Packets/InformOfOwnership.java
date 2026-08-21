@@ -37,20 +37,15 @@ implements IMessage {
         byteBuf.writeBoolean(this.b);
     }
 
-    public static class Handler
-    implements IMessageHandler<InformOfOwnership, IMessage> {
-        public IMessage a(InformOfOwnership gf_class3642, MessageContext messageContext) {
-            if (!gf_class3642.a || !messageContext.side.equals((Object)Side.CLIENT)) {
+    public static class Handler implements IMessageHandler<InformOfOwnership, IMessage> {
+        @Override
+        public IMessage onMessage(InformOfOwnership msg, MessageContext ctx) {
+            if (!msg.a || !ctx.side.equals(Side.CLIENT)) {
                 System.out.println("received an invalid message @InformOfOwnership :(");
                 return null;
             }
-            GalathMangTracker.debugEnabled = gf_class3642.b;
+            GalathMangTracker.debugEnabled = msg.b;
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(InformOfOwnership iMessage, MessageContext messageContext) {
-            return this.a((InformOfOwnership)iMessage, messageContext);
         }
     }
 }

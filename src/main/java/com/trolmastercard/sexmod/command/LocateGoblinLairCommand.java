@@ -33,7 +33,7 @@ public class LocateGoblinLairCommand extends CommandBase {
     public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] stringArray) throws CommandException {
         Entity entity = iCommandSender.getCommandSenderEntity();
         if (entity != null && entity.dimension != 0) {
-            iCommandSender.sendMessage(new TextComponentString((Object) ((Object) TextFormatting.YELLOW) + "goblin lairs don't exist in the " + (entity.dimension == -1 ? (Object) ((Object) TextFormatting.RED) + "Nether" : (Object) ((Object) TextFormatting.DARK_PURPLE) + "End")));
+            iCommandSender.sendMessage(new TextComponentString(TextFormatting.YELLOW + "goblin lairs don't exist in the " + (entity.dimension == -1 ? TextFormatting.RED + "Nether" : TextFormatting.DARK_PURPLE + "End")));
             return;
         }
         Entity entity2 = null;
@@ -50,11 +50,11 @@ public class LocateGoblinLairCommand extends CommandBase {
             entity2 = e3_class2192;
         }
         if (entity2 == null) {
-            iCommandSender.sendMessage(new TextComponentString((Object) ((Object) TextFormatting.RED) + "No nearby goblin lair found uwu"));
+            iCommandSender.sendMessage(new TextComponentString(TextFormatting.RED + "No nearby goblin lair found uwu"));
             return;
         }
         BlockPos blockPos = entity2.getPosition();
-        iCommandSender.sendMessage(new TextComponentString(String.format("%sgoblin lair found at %s%s %s%s %s%s", new Object[]{TextFormatting.YELLOW, TextFormatting.RED, blockPos.getX(), TextFormatting.GREEN, blockPos.getY(), TextFormatting.BLUE, blockPos.getZ()})));
+        iCommandSender.sendMessage(new TextComponentString(String.format("%sgoblin lair found at %s%s %s%s %s%s", TextFormatting.YELLOW, TextFormatting.RED, blockPos.getX(), TextFormatting.GREEN, blockPos.getY(), TextFormatting.BLUE, blockPos.getZ())));
     }
 }
 

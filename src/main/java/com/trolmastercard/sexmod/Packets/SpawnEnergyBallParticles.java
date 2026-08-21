@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class SpawnEnergyBallParticles implements IMessage {
-    boolean c = false;
+    boolean isValid = false;
     UUID a;
     UUID b;
 
@@ -36,42 +36,37 @@ public class SpawnEnergyBallParticles implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         try {
-            this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+            this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         } catch (Exception exception) {
             this.a = null;
         }
         try {
-            this.b = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+            this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         } catch (Exception exception) {
             this.b = null;
         }
-        this.c = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)(this.a == null ? "trol was here" : this.a.toString()));
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)(this.b == null ? "trol was here" : this.b.toString()));
+        ByteBufUtils.writeUTF8String(byteBuf, this.a == null ? "trol was here" : this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b == null ? "trol was here" : this.b.toString());
     }
 
-    public static class Handler
-    implements IMessageHandler<SpawnEnergyBallParticles, IMessage> {
-        public IMessage a(SpawnEnergyBallParticles ab_class212, MessageContext messageContext) {
-            if (!ab_class212.c || !messageContext.side.equals((Object)Side.CLIENT)) {
+    public static class Handler implements IMessageHandler<SpawnEnergyBallParticles, IMessage> {
+        @Override
+        public IMessage onMessage(SpawnEnergyBallParticles msg, MessageContext ctx) {
+            if (!msg.isValid || !ctx.side.equals(Side.CLIENT)) {
                 System.out.println("received an invalid message @SpawnEnergyBallParticles :(");
                 return null;
             }
-            GirlEntity em_class2582 = GirlEntity.getClientGirlEntity(ab_class212.a);
-            if (!(em_class2582 instanceof GalathEntity)) {
+            GirlEntity girl = GirlEntity.getClientGirlEntity(msg.a);
+            if (!(girl instanceof GalathEntity)) {
                 System.out.println("doesnt exit");
                 return null;
             }
-            GalathCoin.summonGalathFor(ab_class212.b, (GalathEntity)em_class2582);
+            GalathCoin.summonGalathFor(msg.b, (GalathEntity)girl);
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SpawnEnergyBallParticles iMessage, MessageContext messageContext) {
-            return this.a((SpawnEnergyBallParticles)iMessage, messageContext);
         }
     }
 }

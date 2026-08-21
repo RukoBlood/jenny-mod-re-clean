@@ -38,34 +38,29 @@ public class PlayerAction implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.c = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
     }
 
-    public static class Handler
-    implements IMessageHandler<PlayerAction, IMessage> {
-        public IMessage execute(PlayerAction bo_class902, MessageContext messageContext) {
-            if (!bo_class902.c || messageContext.side != Side.SERVER) {
+    public static class Handler implements IMessageHandler<PlayerAction, IMessage> {
+        @Override
+        public IMessage onMessage(PlayerAction msg, MessageContext ctx) {
+            if (!msg.c || ctx.side != Side.SERVER) {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
-                    if (em_class2582.world.isRemote || !em_class2582.girlID().equals(bo_class902.a)) continue;
-                    ((EntityPlayerMP)em_class2582.world.getPlayerEntityByUUID(bo_class902.b)).openGui(Main.instance, 0, em_class2582.world, em_class2582.getPosition().getX(), em_class2582.getPosition().getY(), em_class2582.getPosition().getZ());
+                for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+                    if (girl.world.isRemote || !girl.girlID().equals(msg.a)) continue;
+                    girl.world.getPlayerEntityByUUID(msg.b).openGui(Main.instance, 0, girl.world, girl.getPosition().getX(), girl.getPosition().getY(), girl.getPosition().getZ());
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(PlayerAction iMessage, MessageContext messageContext) {
-            return this.execute((PlayerAction)iMessage, messageContext);
         }
     }
 }

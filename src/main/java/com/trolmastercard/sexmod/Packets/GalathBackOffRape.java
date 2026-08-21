@@ -30,8 +30,9 @@ public class GalathBackOffRape implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<GalathBackOffRape, IMessage> {
-        public IMessage execute(GalathBackOffRape msg, MessageContext ctx) {
-            if (!msg.valid || !ctx.side.equals((Object)Side.SERVER)) {
+        @Override
+        public IMessage onMessage(GalathBackOffRape msg, MessageContext ctx) {
+            if (!msg.valid || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid Message @GalathBackOffRape :(");
                 return null;
             }
@@ -42,11 +43,6 @@ public class GalathBackOffRape implements IMessage {
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(GalathBackOffRape iMessage, MessageContext messageContext) {
-            return this.execute((GalathBackOffRape)iMessage, messageContext);
         }
     }
 }

@@ -39,7 +39,7 @@ extends PlayerGirlRenderer {
         switch (this.renderEntity.getCurrentAction()) {
             case FISHING_IDLE: 
             case FISHING_START: {
-                ItemStack itemStack2 = ((LunaEntity)this.renderEntity).ao;
+                ItemStack itemStack2 = ((LunaEntity)this.renderEntity).lunaRod;
                 this.renderEntity.setHeldItem(EnumHand.MAIN_HAND, itemStack2);
                 return itemStack2;
             }

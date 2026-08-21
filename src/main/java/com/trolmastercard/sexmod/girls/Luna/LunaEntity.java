@@ -79,7 +79,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     static public double ap = 0.01;
-    public ItemStack ao = new ItemStack(LunaRod.LUNA_ROD);
+    public ItemStack lunaRod = new ItemStack(LunaRod.LUNA_ROD);
     final static public DataParameter<Float> TARGET_DISTANCE;
     final static public DataParameter<ItemStack> FISHING_ROD;
     final static public DataParameter<Boolean> IS_FISHING;
@@ -153,7 +153,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     public void SetHome() {
         this.sendChatMessage("Love it here owo");
-        this.playRandomSound(SoundsHandler.GIRLS_LUNA_OWO, new int[0]);
+        this.playRandomSound(SoundsHandler.GIRLS_LUNA_OWO);
     }
 
     @Override
@@ -190,7 +190,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             return true;
         }
         if (this.world.isRemote && !this.openInteractionMenu(entityPlayer)) {
-            this.sendChatMessage(I18n.format("bia.dialogue.busy", new Object[0]));
+            this.sendChatMessage(I18n.format("bia.dialogue.busy"));
         }
         return true;
     }
@@ -199,7 +199,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     public boolean openInteractionMenu(EntityPlayer player) {
         String[] LunaActions = new String[]{"action.names.sex", "action.names.touchboobs", "action.names.headpat"};
         ItemStack[] itemStackArray = new ItemStack[]{new ItemStack(Items.FISH, 3, 0), new ItemStack(Items.FISH, 2, 1), null};
-        LunaEntity.CreateGUI(player, (GirlEntity)this, LunaActions, itemStackArray);
+        LunaEntity.CreateGUI(player, this, LunaActions, itemStackArray);
         return true;
     }
 
@@ -257,7 +257,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             if (this.getPositionVector().equals(this.getTargetPosition()) || this.aw > 40) {
                 this.isPreparingTalk = false;
                 this.aw = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.doAction();
@@ -273,7 +273,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     void void_d() {
-        ItemStack itemStack = this.ao;
+        ItemStack itemStack = this.lunaRod;
         ItemStack itemStack2 = this.entityDataManager.get(FISHING_ROD);
         if (itemStack2.equals(ItemStack.EMPTY)) {
             return;
@@ -285,7 +285,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (Action.WAIT_CAT.equals((Object)this.getCurrentAction())) {
+        if (Action.WAIT_CAT.equals(this.getCurrentAction())) {
             this.void_f();
         } else {
             this.ab = 0;
@@ -337,8 +337,8 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         this.ar = true;
         BlockPos blockPos = this.getNearestBed(this.getPosition());
         if (blockPos == null) {
-            this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
-            PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
+            this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
+            PackageHandler.INSTANCE.sendToAllAround(new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
         } else {
             Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
@@ -351,13 +351,13 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     n = i;
                     continue;
                 }
-                double d = this.getPosition().distanceSq(vec3d.add((Vec3d)vec3dArrayArray[n][0]).x, vec3d.add((Vec3d)vec3dArrayArray[n][0]).y, vec3d.add((Vec3d)vec3dArrayArray[n][0]).z);
-                double d2 = this.getPosition().distanceSq(vec3d.add((Vec3d)vec3dArrayArray[i][0]).x, vec3d.add((Vec3d)vec3dArrayArray[i][0]).y, vec3d.add((Vec3d)vec3dArrayArray[i][0]).z);
+                double d = this.getPosition().distanceSq(vec3d.add(vec3dArrayArray[n][0]).x, vec3d.add(vec3dArrayArray[n][0]).y, vec3d.add(vec3dArrayArray[n][0]).z);
+                double d2 = this.getPosition().distanceSq(vec3d.add(vec3dArrayArray[i][0]).x, vec3d.add(vec3dArrayArray[i][0]).y, vec3d.add(vec3dArrayArray[i][0]).z);
                 if (!(d2 < d)) continue;
                 n = i;
             }
             if (n == -1) {
-                this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
                 this.sendChatMessage("Heh.. the bed is obscured.. but I already ate the fish so nya~ hehe");
                 return;
             }
@@ -428,7 +428,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             return;
         }
         if (this.fishEntity != null && this.fishEntity.lureTimer == 15) {
-            ((LunaRod)this.ao.getItem()).onItemRightClick(this.world, this, EnumHand.MAIN_HAND);
+            ((LunaRod)this.lunaRod.getItem()).onItemRightClick(this.world, this, EnumHand.MAIN_HAND);
             this.al = this.world.getTotalWorldTime() + 20L;
             object = this.entityDataManager.get(CAUGHT_ITEM);
             if (object != ItemStack.EMPTY) {
@@ -604,7 +604,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
 
     @Override
     protected void doAction() {
-        switch ((String)this.entityDataManager.get(GIRL_HAND_STATES)) {
+        switch (this.entityDataManager.get(GIRL_HAND_STATES)) {
             case "touch_boobs": {
                 if (this.getCurrentAction() != Action.PAYMENT) {
                     this.setCurrentAction(Action.PAYMENT);
@@ -617,8 +617,8 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 if (this.getCurrentAction() != Action.PAYMENT) {
                     this.setCurrentAction(Action.PAYMENT);
                 } else {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new ResetGirl(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
                 }
                 return;
             }
@@ -635,7 +635,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
 
     @Override
     protected void playHurtSound(DamageSource damageSource) {
-        this.playRandomSound(SoundsHandler.GIRLS_LUNA_OUU, new int[0]);
+        this.playRandomSound(SoundsHandler.GIRLS_LUNA_OUU);
     }
 
     @Override
@@ -811,7 +811,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "start_fishingDone": {
@@ -821,7 +821,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "rod_shoot": {
                     if (!this.isLocalPlayerNearby()) break;
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new CatActivateFishing(this.girlID()));
+                    PackageHandler.INSTANCE.sendToServer(new CatActivateFishing(this.girlID()));
                     break;
                 }
                 case "eat": {
@@ -840,7 +840,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "eatingDone": {
                     if (this.isLocalPlayerNearby()) {
-                        PackageHandler.INSTANCE.sendToServer((IMessage)new CatEatingDone(this.girlID()));
+                        PackageHandler.INSTANCE.sendToServer(new CatEatingDone(this.girlID()));
                         this.setCurrentAction(Action.NULL);
                     }
                     this.fishSizePercentage = 1.0f;
@@ -849,7 +849,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "throw_away": {
                     if (this.isLocalPlayerNearby()) {
-                        PackageHandler.INSTANCE.sendToServer((IMessage)new CatThrowAwayItem(this.girlID()));
+                        PackageHandler.INSTANCE.sendToServer(new CatThrowAwayItem(this.girlID()));
                     }
                     this.fishSizePercentage = 1.0f;
                     this.throwBackPercentage = 0.0f;
@@ -866,7 +866,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "paymentMSG2": {
                     this.sendChatMessage("huh~?");
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "paymentMSG3": {
@@ -878,7 +878,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "paymentMSG4": {
                     this.sendChatMessage("tankuuuu owowowo");
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_OWO, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_OWO);
                     break;
                 }
                 case "paymentDone": {
@@ -890,11 +890,11 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "breath": 
                 case "rod_breath": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING);
                     break;
                 }
                 case "happyOh": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HAPPYOH, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HAPPYOH);
                     break;
                 }
                 case "cutenya3": {
@@ -906,29 +906,29 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "huh": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "hmph": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HMPH, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HMPH);
                     break;
                 }
                 case "hehe": 
                 case "giggle": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
                 case "singing": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_SINGING, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_SINGING);
                     break;
                 }
                 case "touch_boobsMSG1": {
                     this.sendChatMessage("comon~ touch me hihi~");
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
                 case "touch": {
-                    this.playRandomSound(SoundsHandler.MISC_TOUCH, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_TOUCH);
                     break;
                 }
                 case "jump": {
@@ -936,7 +936,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "horninya": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA);
                     break;
                 }
                 case "horninya2": 
@@ -1014,7 +1014,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "call_playerMSG1": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     this.sendChatMessage("come here - big guy hehe~");
                     break;
                 }
@@ -1023,7 +1023,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "sitting_introMSG1": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     this.sendChatMessage("hehe~");
                     break;
                 }
@@ -1075,11 +1075,11 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "headpatMSG1": {
                     this.sendChatMessage("huh?~");
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_MMM, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_MMM);
                     break;
                 }
                 case "headpatMSG3": {

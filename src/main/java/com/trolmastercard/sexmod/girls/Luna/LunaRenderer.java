@@ -42,7 +42,7 @@ public class LunaRenderer extends GirlRenderer {
         switch (this.renderEntity.getCurrentAction()) {
             case FISHING_IDLE: 
             case FISHING_START: {
-                ItemStack itemStack2 = ((LunaEntity)this.renderEntity).ao;
+                ItemStack itemStack2 = ((LunaEntity)this.renderEntity).lunaRod;
                 ItemStack itemStack3 = this.renderEntity.getDataManager().get(LunaEntity.FISHING_ROD);
                 if (itemStack3.equals(ItemStack.EMPTY)) {
                     return itemStack2;
