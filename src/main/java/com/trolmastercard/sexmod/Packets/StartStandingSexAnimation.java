@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class StartStandingSexAnimation
 implements IMessage {
-    boolean c;
+    boolean isValid;
     UUID a;
     UUID b;
     String d;
@@ -39,47 +39,42 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.d = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
-        this.c = true;
+        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.d = ByteBufUtils.readUTF8String(byteBuf);
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.toString());
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.d);
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.d);
     }
 
-    public static class a_inner274
-    implements IMessageHandler<StartStandingSexAnimation, IMessage> {
-        public IMessage a(StartStandingSexAnimation eu_class2732, MessageContext messageContext) {
-            if (!eu_class2732.c || messageContext.side != Side.SERVER) {
+    public static class Handler implements IMessageHandler<StartStandingSexAnimation, IMessage> {
+        @Override
+        public IMessage onMessage(StartStandingSexAnimation msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @StartStandingSexAnimation :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(eu_class2732.a);
-                if (ei_class2512 == null) {
-                    return;
-                }
-                if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()) {
-                    for (GirlEntity em_class2582 : GirlEntity.getGirlEntityList()) {
-                        if (!(em_class2582 instanceof PlayerGirl)) continue;
-                        ei_class2512 = (PlayerGirl) em_class2582;
-                        if (ei_class2512.world.isRemote || !ei_class2512.getOwnerUserUUID().equals(eu_class2732.a))
-                            continue;
-                        break;
+                PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(msg.a);
+                if (playerGirl != null) {
+                    if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()) {
+                        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+                            if (girl instanceof PlayerGirl) {
+                                playerGirl = (PlayerGirl) girl;
+                                if (!playerGirl.world.isRemote && playerGirl.getOwnerUserUUID().equals(msg.a)) {
+                                    break;
+                                }
+                            }
+                        }
                     }
+                    playerGirl.handleOwnerCommand(msg.d, msg.b);
                 }
-                ei_class2512.handleOwnerCommand(eu_class2732.d, eu_class2732.b);
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(StartStandingSexAnimation iMessage, MessageContext messageContext) {
-            return this.a((StartStandingSexAnimation)iMessage, messageContext);
         }
     }
 }

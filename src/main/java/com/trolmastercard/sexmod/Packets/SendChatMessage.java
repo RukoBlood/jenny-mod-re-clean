@@ -21,12 +21,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class SendChatMessage
-implements IMessage {
+public class SendChatMessage implements IMessage {
     boolean b;
     String a;
     int d;
@@ -52,12 +52,11 @@ implements IMessage {
             }
             this.a = new String(byArray);
             this.d = byteBuf.readInt();
-            this.c = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+            this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
             this.b = true;
-        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+        } catch (IndexOutOfBoundsException e) {
             this.b = false;
             System.out.println("couldn't read bytes @SendChatMessage :(");
-            return;
         }
     }
 
@@ -65,13 +64,13 @@ implements IMessage {
         byteBuf.writeInt(this.a.getBytes().length);
         byteBuf.writeBytes(this.a.getBytes());
         byteBuf.writeInt(this.d);
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
     }
 
 
-    public static class Handler
-    implements IMessageHandler<SendChatMessage, IMessage> {
-        public IMessage a(SendChatMessage msg, MessageContext ctx) {
+    public static class Handler implements IMessageHandler<SendChatMessage, IMessage> {
+        @Override
+        public IMessage onMessage(SendChatMessage msg, MessageContext ctx) {
             if (!msg.b) {
                 System.out.println("recieved an unvalid message @SendChatMessage :(");
                 return null;
@@ -81,15 +80,10 @@ implements IMessage {
             } else {
                 FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                     Vec3d vec3d = GirlEntity.girlList(msg.c).get(0).getPreviousPosition();
-                    PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage(msg.a, msg.d, msg.c), new net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint(msg.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
+                    PackageHandler.INSTANCE.sendToAllAround(new SendChatMessage(msg.a, msg.d, msg.c), new NetworkRegistry.TargetPoint(msg.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
                 });
             }
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SendChatMessage iMessage, MessageContext messageContext) {
-            return this.a((SendChatMessage)iMessage, messageContext);
         }
     }
 }

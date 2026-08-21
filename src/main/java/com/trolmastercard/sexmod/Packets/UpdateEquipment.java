@@ -20,41 +20,38 @@ public class UpdateEquipment implements IMessage {
     public UpdateEquipment() {
     }
 
-    public UpdateEquipment(UUID uUID, NBTTagCompound nBTTagCompound) {
+    public UpdateEquipment(UUID uUID, NBTTagCompound nbt) {
         this.c = uUID;
-        this.b = nBTTagCompound;
+        this.b = nbt;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.b = ByteBufUtils.readTag((ByteBuf)byteBuf);
+        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.b = ByteBufUtils.readTag(byteBuf);
         this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
-        ByteBufUtils.writeTag((ByteBuf)byteBuf, (NBTTagCompound)this.b);
+        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
+        ByteBufUtils.writeTag(byteBuf, this.b);
     }
 
     public static class Handler implements IMessageHandler<UpdateEquipment, IMessage> {
-        public IMessage a(UpdateEquipment msg, MessageContext ctx) {
+        @Override
+        public IMessage onMessage(UpdateEquipment msg, MessageContext ctx) {
             if (!msg.valid) {
                 System.out.println("received an invalid message @UpdateEquipment :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.c);
-                for (GirlEntity em_class2582 : arrayList) {
-                    if (!(em_class2582 instanceof Fighter)) continue;
-                    ((Fighter)em_class2582).inventory.deserializeNBT(msg.b);
+                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.c);
+                for (GirlEntity girl : girls) {
+                    if (girl instanceof Fighter) {
+                        ((Fighter) girl).inventory.deserializeNBT(msg.b);
+                    }
                 }
             });
             return null;
-        }
-
-        @Override
-        public IMessage onMessage(UpdateEquipment iMessage, MessageContext messageContext) {
-            return this.a((UpdateEquipment)iMessage, messageContext);
         }
     }
 }

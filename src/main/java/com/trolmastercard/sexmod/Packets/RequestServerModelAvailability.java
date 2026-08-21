@@ -48,12 +48,12 @@ implements IMessage {
         }
         try {
             n = byteBuf.readInt();
-        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+        } catch (IndexOutOfBoundsException e) {
             this.a = true;
             return;
         }
         for (int i = 0; i < n; ++i) {
-            this.b.put(ByteBufUtils.readUTF8String((ByteBuf)byteBuf), Float.valueOf(byteBuf.readFloat()));
+            this.b.put(ByteBufUtils.readUTF8String(byteBuf), byteBuf.readFloat());
         }
         this.a = true;
     }
@@ -64,43 +64,38 @@ implements IMessage {
         }
         byteBuf.writeInt(this.b.size());
         for (Map.Entry<String, Float> entry : this.b.entrySet()) {
-            ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)entry.getKey());
-            byteBuf.writeFloat(entry.getValue().floatValue());
+            ByteBufUtils.writeUTF8String(byteBuf, entry.getKey());
+            byteBuf.writeFloat(entry.getValue());
         }
     }
 
-    public static class a_inner351
-    implements IMessageHandler<RequestServerModelAvailability, IMessage> {
-        public IMessage a(RequestServerModelAvailability g6_class3502, MessageContext messageContext) {
-            if (!g6_class3502.a) {
+    public static class Handler implements IMessageHandler<RequestServerModelAvailability, IMessage> {
+        @Override
+        public IMessage onMessage(RequestServerModelAvailability msg, MessageContext ctx) {
+            if (!msg.a) {
                 System.out.println("received an invalid Message @RequestServerModelAvailability :(");
                 return null;
             }
-            if (messageContext.side.isClient()) {
+            if (ctx.side.isClient()) {
                 if (!CustomModel.isGlobalRenderingDisabled()) {
                     return null;
                 }
-                ArrayList<String> arrayList = new ArrayList<String>();
-                for (Map.Entry<String, Float> entry : g6_class3502.b.entrySet()) {
+                ArrayList<String> arrayList = new ArrayList<>();
+                for (Map.Entry<String, Float> entry : msg.b.entrySet()) {
                     String string = entry.getKey();
                     if (!CustomModel.isModelDisabled(string)) {
                         arrayList.add(string);
                         continue;
                     }
                     float f = CustomModel.getModelZOffset(string);
-                    float f2 = entry.getValue().floatValue();
+                    float f2 = entry.getValue();
                     if (!(f2 > f)) continue;
                     arrayList.add(string);
                 }
                 return new DownloadServerModel(arrayList);
             }
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PackageHandler.INSTANCE.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.getModelScales()), messageContext.getServerHandler().player));
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PackageHandler.INSTANCE.sendTo(new RequestServerModelAvailability(CustomModel.getModelScales()), ctx.getServerHandler().player));
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(RequestServerModelAvailability iMessage, MessageContext messageContext) {
-            return this.a((RequestServerModelAvailability)iMessage, messageContext);
         }
     }
 }

@@ -19,44 +19,41 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class SetPlayerMovement implements IMessage {
-    boolean messageValid;
+    boolean isValid;
     boolean setActive;
 
     public SetPlayerMovement(boolean bl) {
         this.setActive = bl;
-        this.messageValid = true;
+        this.isValid = true;
     }
 
     public SetPlayerMovement() {
-        this.messageValid = false;
+        this.isValid = false;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
         this.setActive = byteBuf.readBoolean();
-        this.messageValid = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         byteBuf.writeBoolean(this.setActive);
-        this.messageValid = true;
+        this.isValid = true;
     }
 
     public static class Handler implements IMessageHandler<SetPlayerMovement, IMessage> {
-        public IMessage onMessageMain(SetPlayerMovement message, MessageContext ctx) {
-            if (!message.messageValid || ctx.side != Side.CLIENT) {
+        @Override
+        public IMessage onMessage(SetPlayerMovement msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.CLIENT) {
                 System.out.println("received an invalid message @SetPlayerMovement :(");
                 return null;
             }
-            HandlePlayerMovement.setMovementLock(message.setActive);
+            HandlePlayerMovement.setMovementLock(msg.setActive);
             Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
-            if (message.setActive) {
+            if (msg.setActive) {
                 SexUI.hide();
             }
             return null;
-        }
-        @Override
-        public IMessage onMessage(SetPlayerMovement iMessage, MessageContext messageContext) {
-            return this.onMessageMain((SetPlayerMovement)iMessage, messageContext);
         }
     }
 }

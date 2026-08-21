@@ -33,7 +33,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -129,7 +128,7 @@ extends EntityLiving {
 
     void a(double d, double d2, double d3) {
         Random random = this.getRNG();
-        this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, d + random.nextDouble() * (double)0.3f, d2 + 0.25 + random.nextDouble() * (double)0.3f, d3 + random.nextDouble() * (double)0.3f, 0.0, 0.0, 0.0, new int[0]);
+        this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, d + random.nextDouble() * (double)0.3f, d2 + 0.25 + random.nextDouble() * (double)0.3f, d3 + random.nextDouble() * (double)0.3f, 0.0, 0.0, 0.0);
     }
 
     void b() {
@@ -152,7 +151,7 @@ extends EntityLiving {
         entityWitherSkeleton.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.STONE_SWORD));
         entityWitherSkeleton.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
         this.world.spawnEntity(entityWitherSkeleton);
-        PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesPacket2(vec3d, true), (Entity)this);
+        PackageHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(vec3d, true), this);
         this.f.witherSkeletons.add(entityWitherSkeleton);
     }
 
@@ -182,7 +181,7 @@ extends EntityLiving {
             double d6 = d2 * (double)0.15f;
             double d7 = vec3d.y;
             double d8 = random.nextDouble() * (double)0.15f;
-            worldClient.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d3, d7, d5, d4, d8, d6, new int[0]);
+            worldClient.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d3, d7, d5, d4, d8, d6);
             f2 += f;
         }
     }
@@ -192,9 +191,9 @@ extends EntityLiving {
         WorldClient worldClient = Minecraft.getMinecraft().world;
         Random random = Reference.RANDOM;
         for (int i = 0; i < 100; ++i) {
-            worldClient.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, new int[0]);
+            worldClient.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f);
         }
-        ((World)worldClient).playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.MISC_SHATTER[0], SoundCategory.AMBIENT, 0.7f, 1.0f, false);
+        worldClient.playSound(vec3d.x, vec3d.y, vec3d.z, SoundsHandler.MISC_SHATTER[0], SoundCategory.AMBIENT, 0.7f, 1.0f, false);
     }
 
     @Override
@@ -208,7 +207,7 @@ extends EntityLiving {
         if (!this.world.isRemote && "arrow".equals(damageSource.damageType)) {
             this.setHealth(0.0f);
             this.i = false;
-            PackageHandler.INSTANCE.sendToAllTracking((IMessage)new SpawnEnergyBallParticlesPacket2(this.getPositionVector(), false), (Entity)this);
+            PackageHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(this.getPositionVector(), false), this);
             Entity entity = damageSource.getImmediateSource();
             if (entity != null) {
                 this.world.removeEntity(entity);

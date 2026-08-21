@@ -61,11 +61,11 @@ public class SpawnEnergyBallParticles implements IMessage {
                 return null;
             }
             GirlEntity girl = GirlEntity.getClientGirlEntity(msg.a);
-            if (!(girl instanceof GalathEntity)) {
+            if (girl instanceof GalathEntity) {
+                GalathCoin.summonGalathFor(msg.b, (GalathEntity) girl);
+            } else {
                 System.out.println("doesnt exit");
-                return null;
             }
-            GalathCoin.summonGalathFor(msg.b, (GalathEntity)girl);
             return null;
         }
     }

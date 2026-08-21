@@ -32,113 +32,108 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class ResetGirl
-implements IMessage {
-    boolean b;
-    UUID c;
+public class ResetGirl implements IMessage {
+    boolean isValid;
+    UUID girlId;
     boolean a;
 
     public ResetGirl() {
-        this.b = false;
+        this.isValid = false;
     }
 
     public ResetGirl(UUID uUID) {
-        this.c = uUID;
+        this.girlId = uUID;
         this.a = false;
-        this.b = true;
+        this.isValid = true;
     }
 
     public ResetGirl(UUID uUID, boolean bl) {
-        this.c = uUID;
+        this.girlId = uUID;
         this.a = bl;
-        this.b = true;
+        this.isValid = true;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.a = byteBuf.readBoolean();
-        this.b = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
         byteBuf.writeBoolean(this.a);
-        this.b = true;
+        this.isValid = true;
     }
 
-    public static class EventHandler
-    implements IMessageHandler<ResetGirl, IMessage> {
-        public static void resetGirl(GirlEntity em_class2582) {
+    public static class EventHandler implements IMessageHandler<ResetGirl, IMessage> {
+        public static void resetGirl(GirlEntity girl) {
             Object object;
             Object object2;
-            em_class2582.reInitTasks();
-            if (em_class2582 instanceof PlayerGirl && em_class2582.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID()) != null) {
-                PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(em_class2582.dimension).getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID()));
-                em_class2582.getDataManager().set(GirlEntity.OUTFIT_INDEX, 1);
-                object2 = em_class2582.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID());
+            girl.reInitTasks();
+            if (girl instanceof PlayerGirl && girl.world.getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID()) != null) {
+                PackageHandler.INSTANCE.sendTo(new SetPlayerMovement(true), (EntityPlayerMP)FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(girl.dimension).getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID()));
+                girl.getDataManager().set(GirlEntity.OUTFIT_INDEX, 1);
+                object2 = girl.world.getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID());
                 ((EntityPlayer)object2).capabilities.isFlying = false;
                 ((Entity)object2).setNoGravity(false);
                 ((EntityPlayer)object2).noClip = false;
-                em_class2582.setAnchored(false);
-                em_class2582.setCurrentAction(Action.NULL);
-                if (em_class2582.getInteractionPlayerUUID() != null && (object = em_class2582.world.getPlayerEntityByUUID(em_class2582.getInteractionPlayerUUID())) != null) {
+                girl.setAnchored(false);
+                girl.setCurrentAction(Action.NULL);
+                if (girl.getInteractionPlayerUUID() != null && (object = girl.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID())) != null) {
                     ((EntityPlayer)object).capabilities.isFlying = false;
                     ((Entity)object).setNoGravity(false);
                     ((EntityPlayer)object).noClip = false;
                 }
             }
-            em_class2582.setAnchored(false);
-            em_class2582.setInteractionPlayerUUID((UUID)null);
-            em_class2582.cameraOriginPos = null;
-            em_class2582.setNoGravity(false);
-            em_class2582.noClip = false;
-            object2 = em_class2582.world;
-            object = em_class2582.getPositionVector();
+            girl.setAnchored(false);
+            girl.setInteractionPlayerUUID(null);
+            girl.cameraOriginPos = null;
+            girl.setNoGravity(false);
+            girl.noClip = false;
+            object2 = girl.world;
+            object = girl.getPositionVector();
             while (((World)object2).getBlockState(new BlockPos(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z)).getBlock() != Blocks.AIR) {
                 object = ((Vec3d)object).add(0.0, 1.0, 0.0);
             }
-            em_class2582.setPositionAndUpdate(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
+            girl.setPositionAndUpdate(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
         }
 
-        public static void resetGirls(EntityPlayerMP entityPlayerMP) {
-            if (entityPlayerMP == null) {
-                return;
+        public static void resetGirls(EntityPlayerMP player) {
+            if (player != null) {
+                World world = player.world;
+                Vec3d vec3d = player.getPositionVector();
+                while (world.getBlockState(new BlockPos(vec3d.x, vec3d.y, vec3d.z)).getBlock() != Blocks.AIR) {
+                    vec3d = vec3d.add(0.0, 1.0, 0.0);
+                }
+                player.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
+                player.setInvisible(false);
+                player.noClip = false;
+                player.setNoGravity(false);
+                player.capabilities.isFlying = false;
+                PackageHandler.INSTANCE.sendTo(new SetPlayerMovement(true), player);
             }
-            World world = entityPlayerMP.world;
-            Vec3d vec3d = entityPlayerMP.getPositionVector();
-            while (world.getBlockState(new BlockPos(vec3d.x, vec3d.y, vec3d.z)).getBlock() != Blocks.AIR) {
-                vec3d = vec3d.add(0.0, 1.0, 0.0);
-            }
-            entityPlayerMP.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-            entityPlayerMP.setInvisible(false);
-            entityPlayerMP.noClip = false;
-            entityPlayerMP.setNoGravity(false);
-            entityPlayerMP.capabilities.isFlying = false;
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
         }
 
-        public IMessage a(ResetGirl s_class4212, MessageContext messageContext) {
-            if (!s_class4212.b || messageContext.side != Side.SERVER) {
+        @Override
+        public IMessage onMessage(ResetGirl msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("recieved an unvalid message @ResetGirl :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(s_class4212.c);
-                for (GirlEntity em_class2582 : arrayList) {
-                    if (em_class2582.world.isRemote) continue;
-                    if (em_class2582.getInteractionPlayerUUID() != null) {
-                        EventHandler.resetGirls(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(em_class2582.getInteractionPlayerUUID()));
+                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.girlId);
+                for (GirlEntity girl : girls) {
+                    if (!girl.world.isRemote) {
+                        if (girl.getInteractionPlayerUUID() != null) {
+                            EventHandler.resetGirls(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(girl.getInteractionPlayerUUID()));
+                        }
+                        if (!msg.a) {
+                            EventHandler.resetGirl(girl);
+                        }
                     }
-                    if (s_class4212.a) continue;
-                    EventHandler.resetGirl(em_class2582);
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(ResetGirl iMessage, MessageContext messageContext) {
-            return this.a((ResetGirl)iMessage, messageContext);
         }
     }
 }

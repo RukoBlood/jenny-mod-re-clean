@@ -27,9 +27,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class SendBlocks
-implements IMessage {
-    boolean b = false;
+public class SendBlocks implements IMessage {
+    boolean isValid = false;
     HashSet<BlockPos> c = new HashSet();
     boolean a;
 
@@ -52,7 +51,7 @@ implements IMessage {
         for (int i = 0; i < n; ++i) {
             this.c.add(new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt()));
         }
-        this.b = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -65,32 +64,32 @@ implements IMessage {
         }
     }
 
-    public static class Handler
-    implements IMessageHandler<SendBlocks, IMessage> {
-        public IMessage a(SendBlocks h6_class3972, MessageContext messageContext) {
-            if (!h6_class3972.b) {
+    public static class Handler implements IMessageHandler<SendBlocks, IMessage> {
+        @Override
+        public IMessage onMessage(SendBlocks msg, MessageContext ctx) {
+            if (!msg.isValid) {
                 System.out.println("received an invalid Message @SendBlocks :(");
                 return null;
             }
-            if (messageContext.side.isClient()) {
-                if (h6_class3972.a) {
-                    StructureMarkerRenderer.AddList(h6_class3972.c);
+            if (ctx.side.isClient()) {
+                if (msg.a) {
+                    StructureMarkerRenderer.AddList(msg.c);
                 } else {
-                    StructureMarkerRenderer.CleanList(h6_class3972.c);
+                    StructureMarkerRenderer.CleanList(msg.c);
                 }
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                UUID uUID = messageContext.getServerHandler().player.getPersistentID();
+                UUID uUID = ctx.getServerHandler().player.getPersistentID();
                 UUID uUID2 = KoboldManager.findTribeIdWith(uUID);
                 if (uUID2 == null) {
                     return;
                 }
-                if (h6_class3972.c.size() != 1) {
+                if (msg.c.size() != 1) {
                     return;
                 }
-                World world = messageContext.getServerHandler().player.world;
-                for (BlockPos blockPos : h6_class3972.c) {
+                World world = ctx.getServerHandler().player.world;
+                for (BlockPos blockPos : msg.c) {
                     Object object;
                     IBlockState iBlockState = world.getBlockState(blockPos);
                     BlockPos blockPos2 = null;
@@ -99,23 +98,23 @@ implements IMessage {
                     }
                     if (iBlockState.getBlock() instanceof BlockChest) {
                         object = ((BlockChest)iBlockState.getBlock()).chestType;
-                        if (world.getBlockState(blockPos.north()).getBlock() instanceof BlockChest && ((Enum)object).equals((Object)((BlockChest)world.getBlockState((BlockPos)blockPos.north()).getBlock()).chestType)) {
+                        if (world.getBlockState(blockPos.north()).getBlock() instanceof BlockChest && object.equals(((BlockChest)world.getBlockState(blockPos.north()).getBlock()).chestType)) {
                             blockPos2 = blockPos.north();
                         }
-                        if (world.getBlockState(blockPos.east()).getBlock() instanceof BlockChest && ((Enum)object).equals((Object)((BlockChest)world.getBlockState((BlockPos)blockPos.east()).getBlock()).chestType)) {
+                        if (world.getBlockState(blockPos.east()).getBlock() instanceof BlockChest && object.equals(((BlockChest)world.getBlockState(blockPos.east()).getBlock()).chestType)) {
                             blockPos2 = blockPos.east();
                         }
-                        if (world.getBlockState(blockPos.south()).getBlock() instanceof BlockChest && ((Enum)object).equals((Object)((BlockChest)world.getBlockState((BlockPos)blockPos.south()).getBlock()).chestType)) {
+                        if (world.getBlockState(blockPos.south()).getBlock() instanceof BlockChest && object.equals(((BlockChest)world.getBlockState(blockPos.south()).getBlock()).chestType)) {
                             blockPos2 = blockPos.south();
                         }
-                        if (world.getBlockState(blockPos.west()).getBlock() instanceof BlockChest && ((Enum)object).equals((Object)((BlockChest)world.getBlockState((BlockPos)blockPos.west()).getBlock()).chestType)) {
+                        if (world.getBlockState(blockPos.west()).getBlock() instanceof BlockChest && object.equals(((BlockChest)world.getBlockState(blockPos.west()).getBlock()).chestType)) {
                             blockPos2 = blockPos.west();
                         }
                     }
                     if (blockPos2 == null && iBlockState.getBlock() instanceof BlockBed) {
                         return;
                     }
-                    if (h6_class3972.a) {
+                    if (msg.a) {
                         if (iBlockState.getBlock() instanceof BlockBed) {
                             KoboldManager.registerBed(uUID2, blockPos);
                             KoboldManager.registerBed(uUID2, blockPos2);
@@ -135,15 +134,10 @@ implements IMessage {
                     if (blockPos2 != null) {
                         ((HashSet)object).add(blockPos2);
                     }
-                    PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks((HashSet<BlockPos>)object, h6_class3972.a), messageContext.getServerHandler().player);
+                    PackageHandler.INSTANCE.sendTo(new SendBlocks((HashSet<BlockPos>)object, msg.a), ctx.getServerHandler().player);
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SendBlocks iMessage, MessageContext messageContext) {
-            return this.a((SendBlocks)iMessage, messageContext);
         }
     }
 }

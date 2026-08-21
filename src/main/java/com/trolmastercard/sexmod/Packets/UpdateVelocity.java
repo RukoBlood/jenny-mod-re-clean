@@ -23,8 +23,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class UpdateVelocity
-implements IMessage {
+public class UpdateVelocity implements IMessage {
     boolean c = false;
     Vec3d b;
     UUID a;
@@ -39,7 +38,7 @@ implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         this.b = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.c = true;
     }
 
@@ -47,32 +46,26 @@ implements IMessage {
         byteBuf.writeDouble(this.b.x);
         byteBuf.writeDouble(this.b.y);
         byteBuf.writeDouble(this.b.z);
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
     }
 
-    public static class a_inner145
-    implements IMessageHandler<UpdateVelocity, IMessage> {
-        public IMessage a(UpdateVelocity msg, MessageContext ctx) {
-            if (!msg.c || !ctx.side.equals((Object)Side.SERVER)) {
+    public static class Handler implements IMessageHandler<UpdateVelocity, IMessage> {
+        @Override
+        public IMessage onMessage(UpdateVelocity msg, MessageContext ctx) {
+            if (!msg.c || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid message @UpdateVelocity :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                GirlEntity girlEntity = GirlEntity.getServerGirlEntity(msg.a);
-                if (!(girlEntity instanceof GalathEntity)) {
-                    return;
-                }
-                GalathEntity galathEntity = (GalathEntity)girlEntity;
-                if (ctx.getServerHandler().player.equals(galathEntity.getRidingPlayer())) {
-                    galathEntity.applyVelocityDelta(msg.b);
+                GirlEntity girl = GirlEntity.getServerGirlEntity(msg.a);
+                if (girl instanceof GalathEntity) {
+                    GalathEntity galath = (GalathEntity) girl;
+                    if (ctx.getServerHandler().player.equals(galath.getRidingPlayer())) {
+                        galath.applyVelocityDelta(msg.b);
+                    }
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(UpdateVelocity iMessage, MessageContext messageContext) {
-            return this.a((UpdateVelocity)iMessage, messageContext);
         }
     }
 }

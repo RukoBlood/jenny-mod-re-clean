@@ -17,8 +17,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class SetPlayerCam
-implements IMessage {
+public class SetPlayerCam implements IMessage {
     boolean d = false;
     float a;
     float b;
@@ -46,32 +45,27 @@ implements IMessage {
         byteBuf.writeInt(this.c);
     }
 
-    public static class Handler
-    implements IMessageHandler<SetPlayerCam, IMessage> {
-        public IMessage a(SetPlayerCam aq_class392, MessageContext messageContext) {
-            if (!aq_class392.d || messageContext.side != Side.CLIENT) {
+    public static class Handler implements IMessageHandler<SetPlayerCam, IMessage> {
+        @Override
+        public IMessage onMessage(SetPlayerCam msg, MessageContext ctx) {
+            if (!msg.d || ctx.side != Side.CLIENT) {
                 System.out.println("received an invalid message @SetPlayerCam :(");
                 return null;
             }
             System.out.println(Thread.currentThread().getName());
             Minecraft minecraft = Minecraft.getMinecraft();
             minecraft.addScheduledTask(() -> {
-                minecraft.gameSettings.thirdPersonView = aq_class392.c;
+                minecraft.gameSettings.thirdPersonView = msg.c;
                 EntityPlayerSP entityPlayerSP = minecraft.player;
-                entityPlayerSP.rotationYaw = aq_class392.b;
-                entityPlayerSP.prevRotationYaw = aq_class392.b;
-                entityPlayerSP.prevRotationYawHead = aq_class392.b;
-                entityPlayerSP.rotationYawHead = aq_class392.b;
-                entityPlayerSP.renderYawOffset = aq_class392.b;
-                entityPlayerSP.rotationPitch = aq_class392.a;
-                entityPlayerSP.prevRotationPitch = aq_class392.a;
+                entityPlayerSP.rotationYaw = msg.b;
+                entityPlayerSP.prevRotationYaw = msg.b;
+                entityPlayerSP.prevRotationYawHead = msg.b;
+                entityPlayerSP.rotationYawHead = msg.b;
+                entityPlayerSP.renderYawOffset = msg.b;
+                entityPlayerSP.rotationPitch = msg.a;
+                entityPlayerSP.prevRotationPitch = msg.a;
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SetPlayerCam iMessage, MessageContext messageContext) {
-            return this.a((SetPlayerCam)iMessage, messageContext);
         }
     }
 }

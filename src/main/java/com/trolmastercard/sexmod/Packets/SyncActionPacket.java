@@ -25,16 +25,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class SyncActionPacket
-implements IMessage {
-    boolean c;
+public class SyncActionPacket implements IMessage {
+    boolean isValid;
     UUID a;
     boolean b;
     boolean d;
     UUID e = null;
 
     public SyncActionPacket() {
-        this.c = false;
+        this.isValid = false;
     }
 
     public SyncActionPacket(UUID uUID, UUID uUID2, boolean bl, boolean bl2) {
@@ -42,23 +41,23 @@ implements IMessage {
         this.b = bl;
         this.e = uUID2;
         this.d = bl2;
-        this.c = true;
+        this.isValid = true;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.b = byteBuf.readBoolean();
         this.d = byteBuf.readBoolean();
-        String string = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
+        String string = ByteBufUtils.readUTF8String(byteBuf);
         this.e = string.equals("null") ? null : UUID.fromString(string);
-        this.c = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
         byteBuf.writeBoolean(this.b);
         byteBuf.writeBoolean(this.d);
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)(this.e == null ? "null" : this.e.toString()));
+        ByteBufUtils.writeUTF8String(byteBuf, this.e == null ? "null" : this.e.toString());
     }
 
     public static class Handler implements IMessageHandler<SyncActionPacket, IMessage> {
@@ -80,27 +79,21 @@ implements IMessage {
                     girl.setTargetPosition(girl.getFrontOffsetVector());
                 }
                 girl.snapPlayerToPosition(girl.getInteractionPlayerUUID());
-                if (!bl) {
-                    return;
+                if (bl) {
+                    if (girl instanceof IEllie) {
+                        IEllie ellie = (IEllie) girl;
+                        ellie.setDismounted();
+                    }
                 }
-                if (!(girl instanceof IEllie)) {
-                    return;
-                }
-                IEllie bh_class822 = (IEllie) ((Object) girl);
-                bh_class822.setDismounted();
             }
         }
 
-        public IMessage a(SyncActionPacket dc_class1742, MessageContext messageContext) {
-            if (dc_class1742.c && messageContext.side == Side.SERVER) {
-                FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> Handler.execute(dc_class1742.a, dc_class1742.e, dc_class1742.b, dc_class1742.d));
+        @Override
+        public IMessage onMessage(SyncActionPacket msg, MessageContext ctx) {
+            if (msg.isValid && ctx.side == Side.SERVER) {
+                FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> Handler.execute(msg.a, msg.e, msg.b, msg.d));
             }
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SyncActionPacket iMessage, MessageContext messageContext) {
-            return this.a((SyncActionPacket)iMessage, messageContext);
         }
     }
 }

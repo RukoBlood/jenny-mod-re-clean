@@ -32,30 +32,25 @@ implements IMessage {
     public void toBytes(ByteBuf byteBuf) {
     }
 
-    public static class Handler
-    implements IMessageHandler<RequestRiding, IMessage> {
-        public IMessage a(RequestRiding msg, MessageContext ctx) {
-            if (!msg.valid || !ctx.side.equals((Object)Side.SERVER)) {
+    public static class Handler implements IMessageHandler<RequestRiding, IMessage> {
+        @Override
+        public IMessage onMessage(RequestRiding msg, MessageContext ctx) {
+            if (!msg.valid || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid message @RequestRiding :(");
                 return null;
             }
             EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
             UUID uUID = GalathMangTracker.getOwnerOf(entityPlayerMP);
-            GirlEntity em_class2582 = GirlEntity.getServerGirlEntity(uUID);
-            if (em_class2582 == null) {
+            GirlEntity girl = GirlEntity.getServerGirlEntity(uUID);
+            if (girl == null) {
                 return null;
             }
-            ((Entity)entityPlayerMP).startRiding(em_class2582, true);
-            em_class2582.setCurrentAction(Action.CONTROLLED_FLIGHT);
-            em_class2582.setInteractionPlayer(entityPlayerMP);
-            em_class2582.motionY = 0.25;
-            entityPlayerMP.world.getChunk(em_class2582.getPosition()).removeEntity(em_class2582);
+            entityPlayerMP.startRiding(girl, true);
+            girl.setCurrentAction(Action.CONTROLLED_FLIGHT);
+            girl.setInteractionPlayer(entityPlayerMP);
+            girl.motionY = 0.25;
+            entityPlayerMP.world.getChunk(girl.getPosition()).removeEntity(girl);
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(RequestRiding iMessage, MessageContext messageContext) {
-            return this.a((RequestRiding)iMessage, messageContext);
         }
     }
 }

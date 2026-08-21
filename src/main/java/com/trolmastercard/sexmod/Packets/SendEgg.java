@@ -34,21 +34,22 @@ public class SendEgg implements IMessage {
     public void toBytes(ByteBuf byteBuf) {
     }
 
-    public static class a_inner434
-    implements IMessageHandler<SendEgg, IMessage> {
-        public IMessage a(SendEgg z_class4332, MessageContext messageContext) {
-            if (!z_class4332.a || !messageContext.side.equals((Object)Side.SERVER)) {
+    public static class Handler implements IMessageHandler<SendEgg, IMessage> {
+
+        @Override
+        public IMessage onMessage(SendEgg msg, MessageContext ctx) {
+            if (!msg.a || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid Message @SendEgg :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
+                EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
                 UUID uUID = KoboldManager.findTribeIdWith(entityPlayerMP.getPersistentID());
                 if (uUID == null) {
                     return;
                 }
-                EyeAndKoboldColor eyeAndKoboldColor_ = KoboldManager.getTribeColor(uUID);
-                ItemStack itemStack = new ItemStack(KoboldEggItem.KOBOLD_EGG, 1, eyeAndKoboldColor_.getWoolMeta());
+                EyeAndKoboldColor color = KoboldManager.getTribeColor(uUID);
+                ItemStack itemStack = new ItemStack(KoboldEggItem.KOBOLD_EGG, 1, color.getWoolMeta());
                 NBTTagCompound nBTTagCompound = itemStack.getTagCompound();
                 if (nBTTagCompound == null) {
                     nBTTagCompound = new NBTTagCompound();
@@ -58,11 +59,6 @@ public class SendEgg implements IMessage {
                 entityPlayerMP.inventory.addItemStackToInventory(itemStack);
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SendEgg iMessage, MessageContext messageContext) {
-            return this.a((SendEgg)iMessage, messageContext);
         }
     }
 }

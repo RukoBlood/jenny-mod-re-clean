@@ -21,9 +21,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class SpawnParticle
-implements IMessage {
-    boolean d = false;
+public class SpawnParticle implements IMessage {
+    boolean isValid = false;
     UUID c;
     String b;
     int a;
@@ -44,38 +43,34 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.b = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
+        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.b = ByteBufUtils.readUTF8String(byteBuf);
         this.a = byteBuf.readInt();
-        this.d = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b);
+        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b);
         byteBuf.writeInt(this.a);
     }
 
-    public static class a_inner261
-    implements IMessageHandler<SpawnParticle, IMessage> {
-        public IMessage a(SpawnParticle en_class2602, MessageContext messageContext) {
-            if (!en_class2602.d || !messageContext.side.equals((Object)Side.CLIENT)) {
+    public static class Handler implements IMessageHandler<SpawnParticle, IMessage> {
+        @Override
+        public IMessage onMessage(SpawnParticle msg, MessageContext ctx) {
+            if (!msg.isValid || !ctx.side.equals(Side.CLIENT)) {
                 System.out.println("received an invalid message @SpawnParticle :(");
                 return null;
             }
-            ArrayList<GirlEntity> arrayList = GirlEntity.girlList(en_class2602.c);
-            for (GirlEntity em_class2582 : arrayList) {
-                if (!em_class2582.world.isRemote) continue;
-                for (int i = 0; i < en_class2602.a; ++i) {
-                    GirlEntity.spawnParticlesAround(EnumParticleTypes.getByName(en_class2602.b), em_class2582);
+            ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.c);
+            for (GirlEntity girl : girls) {
+                if (girl.world.isRemote) {
+                    for (int i = 0; i < msg.a; ++i) {
+                        GirlEntity.spawnParticlesAround(EnumParticleTypes.getByName(msg.b), girl);
+                    }
                 }
             }
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SpawnParticle iMessage, MessageContext messageContext) {
-            return this.a((SpawnParticle)iMessage, messageContext);
         }
     }
 }

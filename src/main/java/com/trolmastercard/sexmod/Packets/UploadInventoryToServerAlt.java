@@ -35,34 +35,29 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.a = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
     }
 
-    public static class a_inner155
-    implements IMessageHandler<UploadInventoryToServerAlt, IMessage> {
-        public IMessage a(UploadInventoryToServerAlt cz_class1542, MessageContext messageContext) {
-            if (!cz_class1542.a || messageContext.side != Side.SERVER) {
+    public static class Handler implements IMessageHandler<UploadInventoryToServerAlt, IMessage> {
+        @Override
+        public IMessage onMessage(UploadInventoryToServerAlt msg, MessageContext ctx) {
+            if (!msg.a || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @UploadInventoryToServer :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(cz_class1542.b);
-                for (GirlEntity em_class2582 : arrayList) {
-                    if (em_class2582.world.isRemote) continue;
-                    em_class2582.world.removeEntity(em_class2582);
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.b);
+                for (GirlEntity girl : arrayList) {
+                    if (girl.world.isRemote) continue;
+                    girl.world.removeEntity(girl);
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(UploadInventoryToServerAlt iMessage, MessageContext messageContext) {
-            return this.a((UploadInventoryToServerAlt)iMessage, messageContext);
         }
     }
 }

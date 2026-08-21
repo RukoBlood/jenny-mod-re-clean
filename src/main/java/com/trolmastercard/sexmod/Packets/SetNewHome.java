@@ -37,40 +37,35 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.a = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
         this.b = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
         byteBuf.writeDouble(this.a.x);
         byteBuf.writeDouble(this.a.y);
         byteBuf.writeDouble(this.a.z);
     }
 
-    public static class a_inner14
-    implements IMessageHandler<SetNewHome, IMessage> {
-        public IMessage a(SetNewHome a6_class132, MessageContext messageContext) {
-            if (!a6_class132.b) {
+    public static class Handler implements IMessageHandler<SetNewHome, IMessage> {
+        @Override
+        public IMessage onMessage(SetNewHome msg, MessageContext ctx) {
+            if (!msg.b) {
                 System.out.println("received an invalid message @SetNewHome :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(a6_class132.c);
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.c);
                 if (arrayList.isEmpty()) {
                     return;
                 }
                 for (GirlEntity em_class2582 : arrayList) {
-                    em_class2582.homeCoords = new Vec3d(a6_class132.a.x, Math.floor(a6_class132.a.y), a6_class132.a.z);
+                    em_class2582.homeCoords = new Vec3d(msg.a.x, Math.floor(msg.a.y), msg.a.z);
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SetNewHome iMessage, MessageContext messageContext) {
-            return this.a((SetNewHome)iMessage, messageContext);
         }
     }
 }

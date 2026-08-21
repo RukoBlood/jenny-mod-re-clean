@@ -28,7 +28,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class SendCompanionHome implements IMessage {
-    boolean b;
+    boolean isValid;
     UUID a;
 
     public SendCompanionHome() {
@@ -39,22 +39,23 @@ public class SendCompanionHome implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.b = true;
+        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
     }
 
     public static class Handler implements IMessageHandler<SendCompanionHome, IMessage> {
-        public IMessage a(SendCompanionHome gg_class3662, MessageContext messageContext) {
-            if (!gg_class3662.b || messageContext.side != Side.SERVER) {
+        @Override
+        public IMessage onMessage(SendCompanionHome msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @SendCompanionHome :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(gg_class3662.a);
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.a);
                 for (GirlEntity girlEntity : arrayList) {
                     if (girlEntity.world.isRemote) continue;
                     if (girlEntity.getCurrentAction() != Action.THROW_PEARL) {
@@ -74,7 +75,7 @@ public class SendCompanionHome implements IMessage {
                     }
                     WorldServer worldServer = (WorldServer)girlEntity.world;
                     for (int i = 0; i < 32; ++i) {
-                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girlEntity.posX, girlEntity.posY + Reference.RANDOM.nextDouble() * 2.0, girlEntity.posZ, 32, 0.2, 0.2, 0.2, Reference.RANDOM.nextGaussian(), new int[0]);
+                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girlEntity.posX, girlEntity.posY + Reference.RANDOM.nextDouble() * 2.0, girlEntity.posZ, 32, 0.2, 0.2, 0.2, Reference.RANDOM.nextGaussian());
                     }
                     girlEntity.setPosition(girlEntity.homeCoords.x, girlEntity.homeCoords.y, girlEntity.homeCoords.z);
                     girlEntity.activePearl = null;
@@ -84,11 +85,6 @@ public class SendCompanionHome implements IMessage {
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SendCompanionHome iMessage, MessageContext messageContext) {
-            return this.a(iMessage, messageContext);
         }
     }
 }

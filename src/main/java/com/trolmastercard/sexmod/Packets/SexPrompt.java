@@ -43,34 +43,35 @@ public class SexPrompt implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String((ByteBuf)byteBuf));
+        this.c = ByteBufUtils.readUTF8String(byteBuf);
+        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.d = byteBuf.readBoolean();
         this.e = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.c);
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.b.toString());
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.c);
+        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
         byteBuf.writeBoolean(this.d);
     }
 
     public static class Handler implements IMessageHandler<SexPrompt, IMessage> {
-        public IMessage a(SexPrompt g4_class3472, MessageContext messageContext) {
-            if (!g4_class3472.e) {
+        @Override
+        public IMessage onMessage(SexPrompt msg, MessageContext ctx) {
+            if (!msg.e) {
                 System.out.println("received an invalid message @SexPrompt :(");
                 return null;
             }
-            if (messageContext.side.equals((Object)Side.CLIENT)) {
-                SexPromptManager.INSTANCE.setNewActivePrompt(new SexPromptManager.SexPrompt(g4_class3472.c, g4_class3472.b, g4_class3472.a, g4_class3472.d));
+            if (ctx.side.equals(Side.CLIENT)) {
+                SexPromptManager.INSTANCE.setNewActivePrompt(new SexPromptManager.SexPrompt(msg.c, msg.b, msg.a, msg.d));
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                World world = messageContext.getServerHandler().player.world;
-                EntityPlayer entityPlayer = world.getPlayerEntityByUUID(g4_class3472.a);
-                EntityPlayer entityPlayer2 = world.getPlayerEntityByUUID(g4_class3472.b);
+                World world = ctx.getServerHandler().player.world;
+                EntityPlayer entityPlayer = world.getPlayerEntityByUUID(msg.a);
+                EntityPlayer entityPlayer2 = world.getPlayerEntityByUUID(msg.b);
                 if (entityPlayer == null) {
                     System.out.println("Sex prompt invalid -> female player not found");
                     return;
@@ -79,14 +80,9 @@ public class SexPrompt implements IMessage {
                     System.out.println("Sex prompt invalid -> male player not found");
                     return;
                 }
-                PackageHandler.INSTANCE.sendTo((IMessage)new SexPrompt(g4_class3472.c, g4_class3472.b, g4_class3472.a, g4_class3472.d), (EntityPlayerMP)(g4_class3472.d ? entityPlayer : entityPlayer2));
+                PackageHandler.INSTANCE.sendTo(new SexPrompt(msg.c, msg.b, msg.a, msg.d), (EntityPlayerMP)(msg.d ? entityPlayer : entityPlayer2));
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SexPrompt iMessage, MessageContext messageContext) {
-            return this.a((SexPrompt)iMessage, messageContext);
         }
     }
 }

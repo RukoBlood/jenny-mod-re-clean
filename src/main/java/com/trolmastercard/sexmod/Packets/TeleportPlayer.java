@@ -61,7 +61,7 @@ public class TeleportPlayer implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.PlayerUUID = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
+        this.PlayerUUID = ByteBufUtils.readUTF8String(byteBuf);
         this.pos = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
         this.yaw = byteBuf.readFloat();
         this.pitch = byteBuf.readFloat();
@@ -69,7 +69,7 @@ public class TeleportPlayer implements IMessage {
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.PlayerUUID);
+        ByteBufUtils.writeUTF8String(byteBuf, this.PlayerUUID);
         byteBuf.writeDouble(this.pos.x);
         byteBuf.writeDouble(this.pos.y);
         byteBuf.writeDouble(this.pos.z);
@@ -79,35 +79,31 @@ public class TeleportPlayer implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<TeleportPlayer, IMessage> {
-        public IMessage onMessageMain(TeleportPlayer message, MessageContext ctx) {
-            if (!message.messageValid || ctx.side != Side.SERVER) {
+        @Override
+        public IMessage onMessage(TeleportPlayer msg, MessageContext ctx) {
+            if (!msg.messageValid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @TeleportPlayer :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 try {
-                    System.out.println("teleporting player " + message.PlayerUUID + " to " + message.pos);
-                    EntityPlayerMP entityPlayerMP = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(UUID.fromString(message.PlayerUUID));
-                    message.yaw = MathHelper.wrapDegrees(message.yaw);
-                    message.pitch = MathHelper.wrapDegrees(message.pitch);
-                    entityPlayerMP.setLocationAndAngles(message.pos.x, message.pos.y, message.pos.z, message.yaw, message.pitch);
-                    entityPlayerMP.setRotationYawHead(message.yaw);
+                    System.out.println("teleporting player " + msg.PlayerUUID + " to " + msg.pos);
+                    EntityPlayerMP entityPlayerMP = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(UUID.fromString(msg.PlayerUUID));
+                    msg.yaw = MathHelper.wrapDegrees(msg.yaw);
+                    msg.pitch = MathHelper.wrapDegrees(msg.pitch);
+                    entityPlayerMP.setLocationAndAngles(msg.pos.x, msg.pos.y, msg.pos.z, msg.yaw, msg.pitch);
+                    entityPlayerMP.setRotationYawHead(msg.yaw);
                     entityPlayerMP.motionX = 0.0;
                     entityPlayerMP.motionY = 0.0;
                     entityPlayerMP.motionZ = 0.0;
-                    entityPlayerMP.connection.setPlayerLocation(message.pos.x, message.pos.y, message.pos.z, message.yaw, message.pitch, EnumSet.noneOf(SPacketPlayerPosLook.EnumFlags.class));
+                    entityPlayerMP.connection.setPlayerLocation(msg.pos.x, msg.pos.y, msg.pos.z, msg.yaw, msg.pitch, EnumSet.noneOf(SPacketPlayerPosLook.EnumFlags.class));
                 } catch (Exception exception) {
-                    System.out.println("couldn't find player with UUID: " + message.PlayerUUID);
+                    System.out.println("couldn't find player with UUID: " + msg.PlayerUUID);
                     System.out.println("could only find the following players:");
                     System.out.println(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getFormattedListOfPlayers(true));
                 }
             });
             return null;
-        }
-
-        @Override
-        public IMessage onMessage(TeleportPlayer iMessage, MessageContext messageContext) {
-            return this.onMessageMain((TeleportPlayer)iMessage, messageContext);
         }
     }
 }

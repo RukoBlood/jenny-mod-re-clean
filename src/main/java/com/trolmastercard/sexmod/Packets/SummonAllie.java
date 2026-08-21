@@ -25,46 +25,41 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class SummonAllie
 implements IMessage {
-    boolean a = false;
+    boolean isValid = false;
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
     }
 
-    public static class a_inner81
-    implements IMessageHandler<SummonAllie, IMessage> {
-        public IMessage a(SummonAllie bg_class802, MessageContext messageContext) {
-            if (!bg_class802.a || messageContext.side != Side.SERVER) {
+    public static class Handler implements IMessageHandler<SummonAllie, IMessage> {
+        @Override
+        public IMessage onMessage(SummonAllie msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @SummonAllie :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
+                EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
                 Vec3d vec3d = entityPlayerMP.getPositionVector().add(-Math.sin((double)entityPlayerMP.rotationYawHead * (Math.PI / 180)) * 2.0, 0.0, Math.cos((double)entityPlayerMP.rotationYawHead * (Math.PI / 180)) * 2.0);
-                AllieEntity ev_class2752 = new AllieEntity(entityPlayerMP.world, entityPlayerMP.getHeldItemMainhand());
-                ev_class2752.setInteractionPlayerUUID(entityPlayerMP.getPersistentID());
-                ev_class2752.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, entityPlayerMP.rotationYawHead + 180.0f, entityPlayerMP.rotationPitch);
-                ev_class2752.setTargetPosition(ev_class2752.getPositionVector());
-                ev_class2752.setYawRotation(entityPlayerMP.rotationYawHead + 180.0f);
-                ev_class2752.setNoGravity(true);
-                ev_class2752.noClip = true;
-                entityPlayerMP.world.spawnEntity(ev_class2752);
-                BlockPos blockPos = ev_class2752.getPosition().add(0, -1, 0);
-                if (ev_class2752.world.getBlockState(blockPos).getBlock().equals(Blocks.SAND)) {
-                    ev_class2752.setCurrentAction(Action.SUMMON_SAND);
+                AllieEntity allie = new AllieEntity(entityPlayerMP.world, entityPlayerMP.getHeldItemMainhand());
+                allie.setInteractionPlayerUUID(entityPlayerMP.getPersistentID());
+                allie.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, entityPlayerMP.rotationYawHead + 180.0f, entityPlayerMP.rotationPitch);
+                allie.setTargetPosition(allie.getPositionVector());
+                allie.setYawRotation(entityPlayerMP.rotationYawHead + 180.0f);
+                allie.setNoGravity(true);
+                allie.noClip = true;
+                entityPlayerMP.world.spawnEntity(allie);
+                BlockPos blockPos = allie.getPosition().add(0, -1, 0);
+                if (allie.world.getBlockState(blockPos).getBlock().equals(Blocks.SAND)) {
+                    allie.setCurrentAction(Action.SUMMON_SAND);
                 } else {
-                    ev_class2752.setCurrentAction(ev_class2752.boolean_f() ? Action.SUMMON : Action.SUMMON_NORMAL);
+                    allie.setCurrentAction(allie.boolean_f() ? Action.SUMMON : Action.SUMMON_NORMAL);
                 }
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SummonAllie iMessage, MessageContext messageContext) {
-            return this.a((SummonAllie)iMessage, messageContext);
         }
     }
 }

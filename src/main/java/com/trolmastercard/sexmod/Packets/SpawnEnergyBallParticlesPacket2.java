@@ -43,23 +43,20 @@ public class SpawnEnergyBallParticlesPacket2 implements IMessage {
         byteBuf.writeBoolean(this.c);
     }
 
-    public static class a_inner102 implements IMessageHandler<SpawnEnergyBallParticlesPacket2, IMessage> {
-        public IMessage a(SpawnEnergyBallParticlesPacket2 bv_class1012, MessageContext messageContext) {
-            if (!bv_class1012.b || !messageContext.side.equals((Object)Side.CLIENT)) {
+    public static class Handler implements IMessageHandler<SpawnEnergyBallParticlesPacket2, IMessage> {
+
+        @Override
+        public IMessage onMessage(SpawnEnergyBallParticlesPacket2 msg, MessageContext ctx) {
+            if (!msg.b || !ctx.side.equals(Side.CLIENT)) {
                 System.out.println("received an invalid message @SpawnEnergyBallParticles :(");
                 return null;
             }
-            if (bv_class1012.c) {
-                EnergyBallEntity.a(bv_class1012.a);
+            if (msg.c) {
+                EnergyBallEntity.a(msg.a);
             } else {
-                EnergyBallEntity.c(bv_class1012.a);
+                EnergyBallEntity.c(msg.a);
             }
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(SpawnEnergyBallParticlesPacket2 iMessage, MessageContext messageContext) {
-            return this.a((SpawnEnergyBallParticlesPacket2)iMessage, messageContext);
         }
     }
 }

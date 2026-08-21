@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class UpdatePlayerModel
 implements IMessage {
-    boolean b = false;
+    boolean isValid = false;
     PlayerGirlEntity a;
 
     public UpdatePlayerModel() {
@@ -41,32 +41,32 @@ implements IMessage {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        String string = ByteBufUtils.readUTF8String((ByteBuf)byteBuf);
+        String string = ByteBufUtils.readUTF8String(byteBuf);
         this.a = "player".equals(string) ? null : PlayerGirlEntity.valueOf(string);
-        this.b = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         if (this.a == null) {
-            ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)"player");
+            ByteBufUtils.writeUTF8String(byteBuf, "player");
         } else {
-            ByteBufUtils.writeUTF8String((ByteBuf)byteBuf, (String)this.a.toString());
+            ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
         }
     }
 
-    public static class a_inner72
-    implements IMessageHandler<UpdatePlayerModel, IMessage> {
-        public IMessage a(UpdatePlayerModel b__class712, MessageContext messageContext) {
-            if (!b__class712.b || messageContext.side != Side.SERVER) {
+    public static class Handler implements IMessageHandler<UpdatePlayerModel, IMessage> {
+        @Override
+        public IMessage onMessage(UpdatePlayerModel msg, MessageContext ctx) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @UpdatePlayerModel :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 PlayerGirl playerGirl;
-                PlayerGirlEntity fy_class3352;
-                EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
+                PlayerGirlEntity pgEntity;
+                EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
                 World world = entityPlayerMP.world;
-                UUID uUID = messageContext.getServerHandler().player.getPersistentID();
+                UUID uUID = ctx.getServerHandler().player.getPersistentID();
                 PlayerGirl ei_class2513 = PlayerGirl.getUUIDHashtable(uUID);
                 if (ei_class2513 != null) {
                     for (GirlEntity object2 : GirlEntity.getGirlEntityList()) {
@@ -78,12 +78,12 @@ implements IMessage {
                     GirlEntity.getGirlEntityList().remove(ei_class2513);
                     ei_class2513.setOwnerId(Optional.absent());
                 }
-                if ((fy_class3352 = b__class712.a) == null) {
+                if ((pgEntity = msg.a) == null) {
                     return;
                 }
                 try {
-                    Constructor<? extends PlayerGirl> exception = fy_class3352.playerClass.getConstructor(World.class, UUID.class);
-                    playerGirl = exception.newInstance(world, messageContext.getServerHandler().player.getPersistentID());
+                    Constructor<? extends PlayerGirl> exception = pgEntity.playerClass.getConstructor(World.class, UUID.class);
+                    playerGirl = exception.newInstance(world, ctx.getServerHandler().player.getPersistentID());
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     return;
@@ -98,11 +98,6 @@ implements IMessage {
                 playerGirl.spawnHitboxHelper();
             });
             return null;
-        }
-
-                @Override
-        public IMessage onMessage(UpdatePlayerModel iMessage, MessageContext messageContext) {
-            return this.a(iMessage, messageContext);
         }
     }
 }

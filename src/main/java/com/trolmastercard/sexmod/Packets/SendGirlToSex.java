@@ -24,11 +24,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class SendGirlToSex
 implements IMessage {
-    boolean a;
+    boolean isValid;
     UUID girlID;
 
     public SendGirlToSex() {
-        this.a = false;
+        this.isValid = false;
     }
 
     public SendGirlToSex(UUID uUID) {
@@ -37,19 +37,19 @@ implements IMessage {
 
     public void fromBytes(ByteBuf byteBuf) {
         this.girlID = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.a = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         ByteBufUtils.writeUTF8String(byteBuf, this.girlID.toString());
     }
 
-    public static class a_inner24
-    implements IMessageHandler<SendGirlToSex, IMessage> {
-        // TODO propagate this onMessage inlining to all other packets eventually...
+    public static class Handler implements IMessageHandler<SendGirlToSex, IMessage> {
+        // propagate this onMessage inlining to all other packets eventually...
+        // Yes daddy palkaline
         @Override
         public IMessage onMessage(SendGirlToSex message, MessageContext ctx) {
-            if (message.a) {
+            if (message.isValid) {
                 FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                     ArrayList<GirlEntity> arrayList = GirlEntity.girlList(message.girlID);
                     for (GirlEntity girlEntity : arrayList) {
