@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.interfaces.IGirlBoneInfo;
 import com.trolmastercard.sexmod.world.FakeWorld;
@@ -131,11 +131,11 @@ public abstract class GirlModel<T extends GirlEntity> extends GirlAnimGeoModel<T
 
         double halfY = normalized.y / 2.0 + 0.5;
 
-        float pitch = (float) ReferenceAndRotationHelper.LerpDouble(-180.0, 0.0, halfY);
+        float pitch = (float) RotationHelper.LerpDouble(-180.0, 0.0, halfY);
         if (Float.isNaN(pitch)) {
             pitch = -90.0f;
         }
-        roll = halfY < 0.5 ? 0.0f : (float) ReferenceAndRotationHelper.LerpDouble(0.0, 16.0, -halfY);
+        roll = halfY < 0.5 ? 0.0f : (float) RotationHelper.LerpDouble(0.0, 16.0, -halfY);
         if (Float.isNaN(roll)) {
             roll = 0.0f;
         }

@@ -9,7 +9,7 @@ package com.trolmastercard.sexmod.girls.Luna.FishingRod;
 import javax.annotation.Nullable;
 
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -58,11 +58,11 @@ extends Render<LunaHookEntity> {
             eb_class2362.throwBackPercentage += 60.0f / f3 * 0.01666f * 2.0f;
             eb_class2362.throwBackPercentage = Math.min(1.0f, eb_class2362.throwBackPercentage);
             object2 = Minecraft.getMinecraft().player;
-            Vec3d vec3d = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(((EntityPlayer)object2).lastTickPosX, ((EntityPlayer)object2).lastTickPosY, ((EntityPlayer)object2).lastTickPosZ), ((Entity)object2).getPositionVector(), (double)f2);
+            Vec3d vec3d = RotationHelper.LerpVec3d(new Vec3d(((EntityPlayer)object2).lastTickPosX, ((EntityPlayer)object2).lastTickPosY, ((EntityPlayer)object2).lastTickPosZ), ((Entity)object2).getPositionVector(), (double)f2);
             object = new Vec3d(d, d2, d3);
-            Vec3d vec3d2 = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(eb_class2362.lastTickPosX, eb_class2362.lastTickPosY + 0.875, eb_class2362.lastTickPosZ), eb_class2362.getPositionVector().add(0.0, 0.875, 0.0), (double)f2);
+            Vec3d vec3d2 = RotationHelper.LerpVec3d(new Vec3d(eb_class2362.lastTickPosX, eb_class2362.lastTickPosY + 0.875, eb_class2362.lastTickPosZ), eb_class2362.getPositionVector().add(0.0, 0.875, 0.0), (double)f2);
             vec3d2 = vec3d2.subtract(vec3d);
-            object = ReferenceAndRotationHelper.LerpVec3d((Vec3d)object, vec3d2, (double)eb_class2362.throwBackPercentage);
+            object = RotationHelper.LerpVec3d((Vec3d)object, vec3d2, (double)eb_class2362.throwBackPercentage);
             d = ((Vec3d)object).x;
             d2 = ((Vec3d)object).y;
             d3 = ((Vec3d)object).z;

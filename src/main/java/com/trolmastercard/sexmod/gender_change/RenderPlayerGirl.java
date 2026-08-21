@@ -18,7 +18,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -144,7 +144,7 @@ public class RenderPlayerGirl {
         this.d = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
         Vec3d vec3d = ei_class2512.getCachedBoneOffset("girlCam");
         vec3d = ei_class2512.b(vec3d, event.renderTickTime);
-        vec3d = vec3d.add(ReferenceAndRotationHelper.LerpVec3d(this.d, this.b, (double)event.renderTickTime));
+        vec3d = vec3d.add(RotationHelper.LerpVec3d(this.d, this.b, (double)event.renderTickTime));
         minecraft.player.posX = vec3d.x;
         minecraft.player.posY = vec3d.y - (double)minecraft.player.getEyeHeight();
         minecraft.player.posZ = vec3d.z;
@@ -214,7 +214,7 @@ public class RenderPlayerGirl {
             return;
         }
         Vec3d vec3d = minecraft.player.getPositionVector();
-        Vec3d vec3d2 = ReferenceAndRotationHelper.LerpVec3d(this.d, this.b, (double)event.getPartialTicks());
+        Vec3d vec3d2 = RotationHelper.LerpVec3d(this.d, this.b, (double)event.getPartialTicks());
         Vec3d vec3d3 = vec3d2.subtract(vec3d);
         RenderPlayerGirl.calculate(ei_class2512, minecraft.player, vec3d3.x, vec3d3.y, vec3d3.z, event.getPartialTicks());
         GlStateManager.enableLighting();

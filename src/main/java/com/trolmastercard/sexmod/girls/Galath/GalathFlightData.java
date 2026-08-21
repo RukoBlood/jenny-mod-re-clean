@@ -17,15 +17,11 @@ import com.trolmastercard.sexmod.Packets.ResetController;
 import com.trolmastercard.sexmod.Packets.SetPlayerMovement;
 import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesPacket2;
 import com.trolmastercard.sexmod.girls.Galath.EnergyBall.EnergyBallEntity;
-import com.trolmastercard.sexmod.util.Vector2d;
+import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
-import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.ThreadNames;
-import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.*;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
@@ -110,7 +106,7 @@ public enum GalathFlightData {
         } else {
             galath.flightTargetPosition = candidatePositions.isEmpty()
                     ? new Vec3d(targetPos.add(ThreadNames.getRandomFloat(10.0f, true), ThreadNames.getRandomFloat(10.0f, false), ThreadNames.getRandomFloat(10.0f, true)))
-                    : new Vec3d((Vec3i)candidatePositions.get(ReferenceAndRotationHelper.RANDOM.nextInt(candidatePositions.size())));
+                    : new Vec3d((Vec3i)candidatePositions.get(Reference.RANDOM.nextInt(candidatePositions.size())));
         }
 
         galath.previousPos = null;
@@ -214,7 +210,7 @@ public enum GalathFlightData {
             Vec3d from = galath.getAnchorTargetPosition();
             Vec3d to = eyePos.add(forward);
             float progress = (float)(attackProgress - 24) / 8.0f;
-            Vec3d Lerped = ReferenceAndRotationHelper.LerpVec3d(from, to, (double)progress);
+            Vec3d Lerped = RotationHelper.LerpVec3d(from, to, (double)progress);
             galath.setTargetPosition(Lerped);
         } else if (ThreadNames.isValueInBounds((double)attackProgress, 32.0, 54.0)) {
             Vec3d behind = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 1.5), galath.getYawRotation().floatValue() + 180.0f);
@@ -320,7 +316,7 @@ public enum GalathFlightData {
             if (!isPast && dist < (double) 0.9f) {
                 galath.flightTargetPosition = target.getPositionVector().add(0.0, target.getEyeHeight() / 2.0f, 0.0);
             }
-            dir = isPast ? new Vec3d(ReferenceAndRotationHelper.LerpDouble(to.x, toPlayer.x, Math.min(1.0, dist)), ReferenceAndRotationHelper.LerpDouble(to.y, toPlayer.y, Math.min(1.0, ReferenceAndRotationHelper.EaseInCubic(dist))), ReferenceAndRotationHelper.LerpDouble(to.z, toPlayer.z, Math.min(1.0, dist))) : new Vec3d(ReferenceAndRotationHelper.LerpDouble(from.x, to.x, dist), ReferenceAndRotationHelper.LerpDouble(from.y, to.y, ReferenceAndRotationHelper.EaseOutCubic(dist)), ReferenceAndRotationHelper.LerpDouble(from.z, to.z, dist));
+            dir = isPast ? new Vec3d(RotationHelper.LerpDouble(to.x, toPlayer.x, Math.min(1.0, dist)), RotationHelper.LerpDouble(to.y, toPlayer.y, Math.min(1.0, RotationHelper.EaseInCubic(dist))), RotationHelper.LerpDouble(to.z, toPlayer.z, Math.min(1.0, dist))) : new Vec3d(RotationHelper.LerpDouble(from.x, to.x, dist), RotationHelper.LerpDouble(from.y, to.y, RotationHelper.EaseOutCubic(dist)), RotationHelper.LerpDouble(from.z, to.z, dist));
             galath.setPosition(dir.x, dir.y, dir.z);
             if (isPast) {
                 galath.getDataManager().set(GalathEntity.SPIN_YAW_FACTOR, (float) dist);

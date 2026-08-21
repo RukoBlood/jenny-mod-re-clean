@@ -8,7 +8,7 @@
 package com.trolmastercard.sexmod.girls.Galath.EnergyBall;
 
 import com.trolmastercard.sexmod.util.ColorRGBA;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -50,8 +50,8 @@ public class EnergyBallRenderer extends Render<EnergyBallEntity> {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 0.5f);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
         EntityPlayerSP entityPlayerSP = this.c.player;
-        Vec3d vec3d = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f2);
-        Vec3d vec3d2 = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
+        Vec3d vec3d = RotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f2);
+        Vec3d vec3d2 = RotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         GlStateManager.pushMatrix();
         GlStateManager.translate(vec3d3.x, vec3d3.y, vec3d3.z);
@@ -64,11 +64,11 @@ public class EnergyBallRenderer extends Render<EnergyBallEntity> {
         if (entity.SCALE_1_0 == 1.0) {
             float f3 = (float)this.c.world.getTotalWorldTime() + this.c.getRenderPartialTicks();
             double d4 = 0.5 * Math.sin((double)f3 * 0.5) + 0.5;
-            gv_class3883 = ReferenceAndRotationHelper.LerpColorRGBA(e, b, d4);
-            gv_class3882 = ReferenceAndRotationHelper.LerpColorRGBA(b, e, d4);
+            gv_class3883 = RotationHelper.LerpColorRGBA(e, b, d4);
+            gv_class3882 = RotationHelper.LerpColorRGBA(b, e, d4);
         } else {
-            gv_class3883 = ReferenceAndRotationHelper.LerpColorRGBA(EnergyBallRenderer.d, e, entity.SCALE_1_0);
-            gv_class3882 = ReferenceAndRotationHelper.LerpColorRGBA(EnergyBallRenderer.d, e, entity.SCALE_1_0);
+            gv_class3883 = RotationHelper.LerpColorRGBA(EnergyBallRenderer.d, e, entity.SCALE_1_0);
+            gv_class3882 = RotationHelper.LerpColorRGBA(EnergyBallRenderer.d, e, entity.SCALE_1_0);
         }
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         this.a(bufferBuilder, gv_class3883, 0.0f);

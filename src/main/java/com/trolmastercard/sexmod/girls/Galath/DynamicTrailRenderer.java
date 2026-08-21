@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.interfaces.IPositionProvider;
 import com.trolmastercard.sexmod.util.interfaces.ITargetProvider;
 import net.minecraft.client.Minecraft;
@@ -44,17 +45,17 @@ public class DynamicTrailRenderer {
         if (this.segments.size() < this.maxSegmentsCount) {
             for (int i = 0; i < BATCH_SIZE; ++i) {
                 lastNodePos = this.sourcePositionProvider.getPosition(this.ownerEntity);
-                this.segments.add(new TrailSegment(mc.world, this.targetPositionProvider.getTargetPosition(this.ownerEntity), new Vec3d(lastNodePos.x + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius), lastNodePos.y + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius), lastNodePos.z + (double)((ReferenceAndRotationHelper.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius))));
+                this.segments.add(new TrailSegment(mc.world, this.targetPositionProvider.getTargetPosition(this.ownerEntity), new Vec3d(lastNodePos.x + (double)((Reference.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius), lastNodePos.y + (double)((Reference.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius), lastNodePos.z + (double)((Reference.RANDOM.nextFloat() * 2.0f - 1.0f) * this.randomnessRadius))));
             }
         }
         GlStateManager.disableCull();
         GlStateManager.disableAlpha();
-        Vec3d cameraPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ), mc.player.getPositionVector(), (double)partialTicks);
+        Vec3d cameraPos = RotationHelper.LerpVec3d(new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ), mc.player.getPositionVector(), (double)partialTicks);
         bufferBuilder.begin(9, DefaultVertexFormats.POSITION_COLOR);
         this.sortSegmentsByDistance();
         lastNodePos = null;
         for (TrailSegment segment : this.segments) {
-            Vec3d interpolatedPos = ReferenceAndRotationHelper.LerpVec3d(segment.prevPosition, segment.currentPosition, (double)partialTicks);
+            Vec3d interpolatedPos = RotationHelper.LerpVec3d(segment.prevPosition, segment.currentPosition, (double)partialTicks);
             if (lastNodePos == null) {
                 lastNodePos = interpolatedPos;
             }

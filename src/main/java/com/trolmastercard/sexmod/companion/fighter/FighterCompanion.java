@@ -18,7 +18,7 @@ import com.trolmastercard.sexmod.companion.CompanionBase;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -148,10 +148,10 @@ public class FighterCompanion extends CompanionBase {
             case IDLE: {
                 this.dataManager.set(Fighter.ATTACK_MODE, 0);
                 if (!this.girl.downed) {
-                    if (++this.idlePosChangeTick > 200 + ReferenceAndRotationHelper.RANDOM.nextInt(100)) {
+                    if (++this.idlePosChangeTick > 200 + Reference.RANDOM.nextInt(100)) {
                         this.idlePosChangeTick = 0;
                         Vec3d masterPos = this.master.getPositionVector();
-                        Vec3d idlePos = new Vec3d(masterPos.x + 1.0 + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * 3.0f), masterPos.y, masterPos.z + 1.0 + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * 3.0f));
+                        Vec3d idlePos = new Vec3d(masterPos.x + 1.0 + (double)(Reference.RANDOM.nextFloat() * 3.0f), masterPos.y, masterPos.z + 1.0 + (double)(Reference.RANDOM.nextFloat() * 3.0f));
                         this.navigator.clearPath();
                         this.navigator.tryMoveToXYZ(idlePos.x, idlePos.y, idlePos.z, 0.5);
                     }

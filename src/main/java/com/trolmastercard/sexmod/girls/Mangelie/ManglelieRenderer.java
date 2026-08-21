@@ -200,7 +200,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (f__class2972 == null) {
             return;
         }
-        GlStateManager.rotate(-ReferenceAndRotationHelper.LerpAngleDegrees(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(-RotationHelper.LerpAngleDegrees(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
     }
 
     static boolean a_5(GirlEntity em_class2582) {
@@ -277,7 +277,7 @@ extends GirlRenderer<ManglelieEntity> {
         ItemStack itemStack = new ItemStack(Items.BOW);
         float f = ((ManglelieEntity)this.renderEntity).getAttackProgress(mc.getRenderPartialTicks());
         if (f < 1.0f) {
-            float f2 = (float) ReferenceAndRotationHelper.EaseOutQuart(f);
+            float f2 = (float) RotationHelper.EaseOutQuart(f);
             ((ManglelieEntity)this.renderEntity).setItemUseCount((int)(11.0f * (1.0f - f2) + 71980.0f));
             ((ManglelieEntity)this.renderEntity).setHeldItemOverride(itemStack);
             ((ManglelieEntity)this.renderEntity).setActiveHand(EnumHand.MAIN_HAND);

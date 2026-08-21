@@ -28,7 +28,7 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
@@ -264,7 +264,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             } else {
                 this.rotationYaw = this.getYawRotation().floatValue();
                 this.setNoGravity(false);
-                Vec3d vec3d = ReferenceAndRotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.aw);
+                Vec3d vec3d = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.aw);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
             }
         }

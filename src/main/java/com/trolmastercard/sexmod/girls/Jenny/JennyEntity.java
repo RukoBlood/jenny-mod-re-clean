@@ -22,7 +22,8 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.IEllie;
@@ -174,7 +175,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.rotationYaw = this.getYawRotation().floatValue();
                 this.setTargetPosition(this.getFrontOffsetVector());
                 this.setNoGravity(false);
-                Vec3d object = ReferenceAndRotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
+                Vec3d object = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
                 this.setPosition(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
             }
         }
@@ -696,7 +697,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjiMSG12": {
-                    if (ReferenceAndRotationHelper.RANDOM.nextInt(5) == 0) {
+                    if (Reference.RANDOM.nextInt(5) == 0) {
                         this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_BJMOAN));
                     }
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_LIPSOUND));
@@ -860,9 +861,9 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 case "doggyslowMSG1": {
                     this.aa = false;
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
-                    int n = ReferenceAndRotationHelper.RANDOM.nextInt(4);
+                    int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
+                        n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MMM));
                         } else {
@@ -886,7 +887,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     }
                     ++this.ag;
                     if (this.ag % 2 == 0) {
-                        int n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
+                        int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
                             break;

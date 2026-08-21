@@ -6,23 +6,7 @@ package com.trolmastercard.sexmod.util;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
-import java.util.Random;
-
-public class ReferenceAndRotationHelper {
-    final static public String MOD_ID = "sexmod";
-    final static public String NAME = "Fapcraft";
-    final static public String VERSION = "1.1.0";
-    final static public String CLIENT = "com.trolmastercard.sexmod.proxy.ClientProxy";
-    final static public String COMMON = "com.trolmastercard.sexmod.proxy.CommonProxy";
-    final static public Random RANDOM = new Random();
-    static public int b = 0;
-    static public int i = 0;
-    final static public int a = 4674237;
-    final static public int e = 6281823;
-    static public Vec3d j = Vec3d.ZERO;
-    static public Vec3d k = Vec3d.ZERO;
-
-    //looks like penismath.class now merged into reference class
+public class RotationHelper {
     public static Vec3d lerpVec3d(Vec3d start, Vec3d end, int step) {
         if (step == 0) {
             return end;
@@ -53,7 +37,7 @@ public class ReferenceAndRotationHelper {
     public static float LerpAngleDegrees(float start, float end, double step) {
         double StartRad = Math.toRadians(start);
         double EndRad = Math.toRadians(end);
-        return (float)Math.toDegrees(ReferenceAndRotationHelper.a((float)StartRad, (float)EndRad, step));
+        return (float)Math.toDegrees(RotationHelper.a((float)StartRad, (float)EndRad, step));
     }
 
     public static Vec3d LerpVec3d(Vec3d start, Vec3d end, double step) {

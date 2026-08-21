@@ -37,7 +37,7 @@ import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IGoblin;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -184,7 +184,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         }
         Vec3d vec3d2 = entityPlayer.getPositionVector();
         Vec3d vec3d3 = new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ);
-        return ReferenceAndRotationHelper.LerpVec3d(vec3d3, vec3d2, (double)f);
+        return RotationHelper.LerpVec3d(vec3d3, vec3d2, (double)f);
     }
 
     void void_c(EntityPlayer entityPlayer) {
@@ -305,7 +305,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         if (entityPlayer == null) {
             return vec3d;
         }
-        float f2 = ReferenceAndRotationHelper.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
+        float f2 = RotationHelper.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
         Vec3d vec3d2 = vec3d;
         float f3 = 135.0f;
         Action fp_class3242 = this.getCurrentAction();

@@ -590,7 +590,7 @@ extends GirlEntity {
     }
 
     boolean isVectorRightOfMommy(Vec3d vec, GalathEntity galath, float partialTicks) {
-        Vec3d rotated = VectorMath.rotateByYaw(vec, ReferenceAndRotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks));
+        Vec3d rotated = VectorMath.rotateByYaw(vec, RotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks));
         return rotated.x > 0.35;
     }
 

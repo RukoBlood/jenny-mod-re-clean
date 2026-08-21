@@ -25,7 +25,7 @@ import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.events.HandlePlayerMovement;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -193,7 +193,7 @@ public class LampItem extends Item implements IAnimatable {
         nBTTagCompound.setInteger(inUseTicks, n2 + 1);
         if (n2 > k && n2 < c) {
             double d = (float)(n2 - k) / (float)(c - k);
-            d = ReferenceAndRotationHelper.h(d);
+            d = RotationHelper.h(d);
             vec3d = new Vec3d(0.0, (double)entityPlayer.eyeHeight * (1.0 - d), 0.0);
             WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer).add(vec3d), (int)(d * 150.0), d * 0.75, d);
         }

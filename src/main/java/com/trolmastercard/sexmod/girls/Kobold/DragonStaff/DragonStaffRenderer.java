@@ -19,7 +19,7 @@ import javax.vecmath.Vector4d;
 
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.util.MatrixHelper;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -149,9 +149,9 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
 
     void renderParticles(List<Integer> particleIds, List<Vec3d> particlePositions) {
         for (int i = 0; i < particleIds.size(); ++i) {
-            float headYaw = ReferenceAndRotationHelper.LerpFloat(this.player.prevRotationYawHead, this.player.rotationYawHead, this.mc.getRenderPartialTicks());
-            float headPitch = ReferenceAndRotationHelper.LerpFloat(this.player.prevRotationPitch, this.player.rotationPitch, this.mc.getRenderPartialTicks());
-            Vec3d eyePos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(this.player.prevPosX, this.player.prevPosY + (double)this.player.getEyeHeight(), this.player.prevPosZ), this.player.getPositionVector().add(0.0, this.player.getEyeHeight(), 0.0), (double)this.mc.getRenderPartialTicks());
+            float headYaw = RotationHelper.LerpFloat(this.player.prevRotationYawHead, this.player.rotationYawHead, this.mc.getRenderPartialTicks());
+            float headPitch = RotationHelper.LerpFloat(this.player.prevRotationPitch, this.player.rotationPitch, this.mc.getRenderPartialTicks());
+            Vec3d eyePos = RotationHelper.LerpVec3d(new Vec3d(this.player.prevPosX, this.player.prevPosY + (double)this.player.getEyeHeight(), this.player.prevPosZ), this.player.getPositionVector().add(0.0, this.player.getEyeHeight(), 0.0), (double)this.mc.getRenderPartialTicks());
             Vec3d relative = eyePos.subtract(particlePositions.get(i));
             relative = VectorMath.rotate(relative, -headPitch, headYaw);
 
@@ -170,7 +170,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
         float step = 1.0f / (float)particleIds.size();
         float progress = 0.0f;
         for (int i = 0; i < particleIds.size(); ++i) {
-            this.renderParticleAt(particleIds.get(i), 1.0f - (progress += step), 0.0f + progress, (float) ReferenceAndRotationHelper.LerpDouble((double)0.8f, (double)1.2f, (double)i / (double)particleIds.size()));
+            this.renderParticleAt(particleIds.get(i), 1.0f - (progress += step), 0.0f + progress, (float) RotationHelper.LerpDouble((double)0.8f, (double)1.2f, (double)i / (double)particleIds.size()));
         }
     }
 

@@ -224,8 +224,8 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
                 : ArmTransformState.lerp(this.calculateIdleArmState(galath, armR, armL, lowerArmL, lowerArmR),
                 this.calculateTargetedArmState(manglelie, galath, lowerArmR, lowerArmL, processor),
                 (float)(manglelie.isTargetHandRight
-                        ? ReferenceAndRotationHelper.EaseOutBack(manglelie.ikProgress)
-                        : 1.0 - ReferenceAndRotationHelper.EaseOutBack(manglelie.ikProgress)
+                        ? RotationHelper.EaseOutBack(manglelie.ikProgress)
+                        : 1.0 - RotationHelper.EaseOutBack(manglelie.ikProgress)
                 )
         );
 
@@ -271,11 +271,11 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         Rotation2f lookL = ThreadNames.CalculateLookAngles(armLPos, manglelie.ikTargetPos);
 
         Float headPos = GalathEntity.getAimYaw(galath, partialTicks);
-        float yawHead = headPos == null ? ReferenceAndRotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks) : headPos;
+        float yawHead = headPos == null ? RotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks) : headPos;
         float radYawHead = TrigMath.wrapDegrees(yawHead);
 
         float progressRaw = manglelie.getAttackProgress(partialTicks);
-        float progressQuart = (float) ReferenceAndRotationHelper.EaseOutQuart(Math.min(1.0f, progressRaw));
+        float progressQuart = (float) RotationHelper.EaseOutQuart(Math.min(1.0f, progressRaw));
 
         float factor = 0.0f;
         if (progressQuart == 1.0f) {
@@ -283,9 +283,9 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             factor = Math.max(0.0f, factor - 0.5f) * 2.0f;
         }
 
-        float f9 = (float) ReferenceAndRotationHelper.h(factor); //factorH
+        float f9 = (float) RotationHelper.h(factor); //factorH
 
-        float lerpedRot = TrigMath.wrapDegrees(ReferenceAndRotationHelper.LerpFloat(0.0f, 90.0f, progressQuart));
+        float lerpedRot = TrigMath.wrapDegrees(RotationHelper.LerpFloat(0.0f, 90.0f, progressQuart));
 
         boolean isRightHandDominant = manglelie.isVectorRightOfMommy(manglelie.ikTargetPos, partialTicks);
         if (isRightHandDominant) {
@@ -296,17 +296,17 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             //ArmTransformState.access$200((ArmTransformState)state).z = Reference.LerpFloat(lerpedRot, 0.0f, f9);
 
             state.armRRot = new Vector3fSexmodSpecial(-headOffset + lookR.yaw + TrigMath.wrapDegrees(90.0f), lookR.pitch, 0.0f);
-            state.armLRot = new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.wrapDegrees(90.0f), (float) (lookL.pitch + TrigMath.wrapDegrees(-20.0f) * Math.cos(lookR.pitch + radYawHead) + ReferenceAndRotationHelper.LerpFloat(lerpedRot / 2.0f, 0.0f, f9)), 0.0f);
+            state.armLRot = new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.wrapDegrees(90.0f), (float) (lookL.pitch + TrigMath.wrapDegrees(-20.0f) * Math.cos(lookR.pitch + radYawHead) + RotationHelper.LerpFloat(lerpedRot / 2.0f, 0.0f, f9)), 0.0f);
             state.armLScaleY = 1.0f + Math.abs(Math.abs(lookR.pitch) - Math.abs(radYawHead)) * 0.1909f;
             state.elbowLRotY = TrigMath.wrapDegrees(90.0f);
-            state.lowerArmLRot.z = ReferenceAndRotationHelper.LerpFloat(lerpedRot, 0.0f, f9);
+            state.lowerArmLRot.z = RotationHelper.LerpFloat(lerpedRot, 0.0f, f9);
 
             if ((double)factor > 0.5) {
-                state.lowerArmLRot.x = RAD_35 + (float) ReferenceAndRotationHelper.LerpDouble(RAD_45, 0.0, ReferenceAndRotationHelper.h((factor - 0.5f) * 2.0f));
+                state.lowerArmLRot.x = RAD_35 + (float) RotationHelper.LerpDouble(RAD_45, 0.0, RotationHelper.h((factor - 0.5f) * 2.0f));
                 //ArmTransformState.access$200((ArmTransformState)state).x = RAD_35 + (float) Reference.LerpDouble((double) RAD_45, 0.0, Reference.h((factor - 0.5f) * 2.0f));
             } else if (factor != 0.0f && (double)factor < 0.5) {
                 //ArmTransformState.access$200((ArmTransformState)state).x = RAD_35 + (float) Reference.LerpDouble(0.0, (double) RAD_45, Reference.h(factor * 2.0f));
-                state.lowerArmLRot.x = RAD_35 + (float) ReferenceAndRotationHelper.LerpDouble(0.0, RAD_45, ReferenceAndRotationHelper.h(factor * 2.0f));
+                state.lowerArmLRot.x = RAD_35 + (float) RotationHelper.LerpDouble(0.0, RAD_45, RotationHelper.h(factor * 2.0f));
             }
         } else {
 //            ArmTransformState.access$102(state, new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.toRadians(90.0f), lookL.pitch, 0.0f));
@@ -315,17 +315,17 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
 //            ArmTransformState.access$602(state, TrigMath.toRadians(90.0f));
 //            ArmTransformState.access$300((ArmTransformState)state).z = -Reference.LerpFloat(lerpedRot, 0.0f, f9);
             state.armLRot = new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.wrapDegrees(90.0f), lookL.pitch, 0.0f);
-            state.armRRot = new Vector3fSexmodSpecial(-headOffset + lookR.yaw + TrigMath.wrapDegrees(90.0f), (float) (lookR.pitch + TrigMath.wrapDegrees(20.0f) * Math.cos(lookL.pitch + radYawHead)) - ReferenceAndRotationHelper.LerpFloat(lerpedRot / 2.0f, 0.0f, f9), 0.0f);
+            state.armRRot = new Vector3fSexmodSpecial(-headOffset + lookR.yaw + TrigMath.wrapDegrees(90.0f), (float) (lookR.pitch + TrigMath.wrapDegrees(20.0f) * Math.cos(lookL.pitch + radYawHead)) - RotationHelper.LerpFloat(lerpedRot / 2.0f, 0.0f, f9), 0.0f);
             state.armRScaleY = 1.0f + Math.abs(Math.abs(lookL.pitch) - Math.abs(radYawHead)) * 0.1909f;
             state.elbowRRotY = TrigMath.wrapDegrees(90.0f);
-            state.lowerArmRRot.z = -ReferenceAndRotationHelper.LerpFloat(lerpedRot, 0.0f, f9);
+            state.lowerArmRRot.z = -RotationHelper.LerpFloat(lerpedRot, 0.0f, f9);
 
             if ((double)factor > 0.5) {
                 //ArmTransformState.access$300((ArmTransformState)state).x = RAD_140 + (float) Reference.LerpDouble((double) RAD_45, 0.0, Reference.h((factor - 0.5f) * 2.0f));
-                state.lowerArmRRot.x = RAD_140 + (float) ReferenceAndRotationHelper.LerpDouble(RAD_45, 0.0, ReferenceAndRotationHelper.h((factor - 0.5f) * 2.0f));
+                state.lowerArmRRot.x = RAD_140 + (float) RotationHelper.LerpDouble(RAD_45, 0.0, RotationHelper.h((factor - 0.5f) * 2.0f));
             } else if (factor != 0.0f && (double)factor < 0.5) {
                 //ArmTransformState.access$300((ArmTransformState)state).x = RAD_140 + (float) Reference.LerpDouble(0.0, (double) RAD_45, Reference.h(factor * 2.0f));
-                state.lowerArmRRot.x = RAD_140 + (float) ReferenceAndRotationHelper.LerpDouble(0.0, RAD_45, ReferenceAndRotationHelper.h(factor * 2.0f));
+                state.lowerArmRRot.x = RAD_140 + (float) RotationHelper.LerpDouble(0.0, RAD_45, RotationHelper.h(factor * 2.0f));
             }
         }
         //ArmTransformState.access$000((ArmTransformState)state).y += radYawHead;
@@ -471,14 +471,14 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
 
         static ArmTransformState lerp(ArmTransformState start, ArmTransformState end, float step) {
             ArmTransformState result = new ArmTransformState();
-            result.armRRot = ReferenceAndRotationHelper.LerpVector3f(start.armRRot, end.armRRot, (double)step);
-            result.armLRot = ReferenceAndRotationHelper.LerpVector3f(start.armLRot, end.armLRot, (double)step);
-            result.lowerArmRRot = ReferenceAndRotationHelper.LerpVector3f(start.lowerArmRRot, end.lowerArmRRot, (double)step);
-            result.lowerArmLRot = ReferenceAndRotationHelper.LerpVector3f(start.lowerArmLRot, end.lowerArmLRot, (double)step);
-            result.armRScaleY = ReferenceAndRotationHelper.LerpFloat(start.armRScaleY, end.armRScaleY, step);
-            result.armLScaleY = ReferenceAndRotationHelper.LerpFloat(start.armLScaleY, end.armLScaleY, step);
-            result.elbowLRotY = ReferenceAndRotationHelper.LerpFloat(start.elbowLRotY, end.elbowLRotY, step);
-            result.elbowRRotY = ReferenceAndRotationHelper.LerpFloat(start.elbowRRotY, end.elbowRRotY, step);
+            result.armRRot = RotationHelper.LerpVector3f(start.armRRot, end.armRRot, (double)step);
+            result.armLRot = RotationHelper.LerpVector3f(start.armLRot, end.armLRot, (double)step);
+            result.lowerArmRRot = RotationHelper.LerpVector3f(start.lowerArmRRot, end.lowerArmRRot, (double)step);
+            result.lowerArmLRot = RotationHelper.LerpVector3f(start.lowerArmLRot, end.lowerArmLRot, (double)step);
+            result.armRScaleY = RotationHelper.LerpFloat(start.armRScaleY, end.armRScaleY, step);
+            result.armLScaleY = RotationHelper.LerpFloat(start.armLScaleY, end.armLScaleY, step);
+            result.elbowLRotY = RotationHelper.LerpFloat(start.elbowLRotY, end.elbowLRotY, step);
+            result.elbowRRotY = RotationHelper.LerpFloat(start.elbowRRotY, end.elbowRRotY, step);
             return result;
         }
 

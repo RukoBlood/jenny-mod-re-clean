@@ -16,7 +16,7 @@ import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -114,9 +114,9 @@ public class FighterUI extends GuiScreen {
         if (this.firstTransition == 1.0f) {
             this.secondTransition = Math.min(1.0f, this.secondTransition + this.mc.getTickLength() / 5.0f);
         }
-        int xText = (int) ReferenceAndRotationHelper.LerpFloat(115.0f, 161.0f, this.secondTransition);
-        int xItem = (int) ReferenceAndRotationHelper.LerpFloat(91.0f, 137.0f, this.secondTransition);
-        int x = (int) ReferenceAndRotationHelper.LerpFloat(-30.0f, 120.0f, this.firstTransition);
+        int xText = (int) RotationHelper.LerpFloat(115.0f, 161.0f, this.secondTransition);
+        int xItem = (int) RotationHelper.LerpFloat(91.0f, 137.0f, this.secondTransition);
+        int x = (int) RotationHelper.LerpFloat(-30.0f, 120.0f, this.firstTransition);
         int y = 70;
         int yText = 52;
         int yItem = 68;
@@ -142,7 +142,7 @@ public class FighterUI extends GuiScreen {
     }
 
     void drawEquipment(int mouseX, int mouseY) {
-        int x = (int) ReferenceAndRotationHelper.LerpFloat(-30.0f, 120.0f, this.firstTransition);
+        int x = (int) RotationHelper.LerpFloat(-30.0f, 120.0f, this.firstTransition);
         this.itemRender.renderItemIntoGUI(this.dataManager.get(Fighter.WEAPON), x - 105, 68);
         this.itemRender.renderItemIntoGUI(this.dataManager.get(Fighter.BOW), x - 105, 87);
         this.itemRender.renderItemIntoGUI(this.dataManager.get(Fighter.HELMET_SLOT), x - 105, 109);
@@ -167,8 +167,8 @@ public class FighterUI extends GuiScreen {
                 stringBuilder.append(" ");
             }
             this.mc.renderEngine.bindTexture(girlInventoryGUITexture);
-            this.drawTexturedModalRect(this.extraButtonWidth[i] + buttonX - 18 + (int) ReferenceAndRotationHelper.LerpFloat(0.0f, 23.0f, this.secondTransition), buttonY + 2, this.textureXOffset[i], 0, 16, 16);
-            this.buttonList.add(new GuiButton(i, buttonX + 1, buttonY, (int)(ReferenceAndRotationHelper.LerpFloat(0.0f, 23.0f, this.secondTransition) + (float)this.extraButtonWidth[i]), 20, this.extraButtonWidth[i] <= 14 ? "" : stringBuilder.toString()));
+            this.drawTexturedModalRect(this.extraButtonWidth[i] + buttonX - 18 + (int) RotationHelper.LerpFloat(0.0f, 23.0f, this.secondTransition), buttonY + 2, this.textureXOffset[i], 0, 16, 16);
+            this.buttonList.add(new GuiButton(i, buttonX + 1, buttonY, (int)(RotationHelper.LerpFloat(0.0f, 23.0f, this.secondTransition) + (float)this.extraButtonWidth[i]), 20, this.extraButtonWidth[i] <= 14 ? "" : stringBuilder.toString()));
             buttonY += 30;
         }
         this.mc.renderEngine.bindTexture(girlInventoryGUITexture);

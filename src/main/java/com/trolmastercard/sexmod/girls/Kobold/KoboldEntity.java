@@ -48,7 +48,8 @@ import com.trolmastercard.sexmod.gui.TribeNameScreen;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Point2D;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IEllie;
 import com.trolmastercard.sexmod.util.interfaces.IKobold;
@@ -591,7 +592,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         }
         this.rotationYaw = this.getYawRotation();
         this.setNoGravity(false);
-        Vec3d pos = ReferenceAndRotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.aD);
+        Vec3d pos = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.aD);
         this.setPosition(pos.x, pos.y, pos.z);
         this.setCurrentAction(Action.NULL);
         Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
@@ -1012,7 +1013,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             Vec3d headVec = new Vec3d((float) bedPositions[0].getX() + 0.5f, (double) bedPositions[0].getY() + 0.5625, (float) bedPositions[0].getZ() + 0.5f);
             Vec3d footVec = new Vec3d((float) bedPositions[1].getX() + 0.5f, (double) bedPositions[1].getY() + 0.5625, (float) bedPositions[1].getZ() + 0.5f);
             boolean isVertical = headVec.subtract((Vec3d) footVec).x == 0.0;
-            Vec3d midVec = ReferenceAndRotationHelper.LerpVec3d(headVec, footVec, 0.5);
+            Vec3d midVec = RotationHelper.LerpVec3d(headVec, footVec, 0.5);
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setTargetPosition(midVec);
             this.setYawRotation(isVertical ? 0.0f : 90.0f);
@@ -1146,9 +1147,9 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
         do {
             teleportPos = player.getPosition().add(
-                    ReferenceAndRotationHelper.RANDOM.nextInt(10),
+                    Reference.RANDOM.nextInt(10),
                     0,
-                    ReferenceAndRotationHelper.RANDOM.nextInt(10));
+                    Reference.RANDOM.nextInt(10));
 
         } while (++attempts < 20 && !this.attemptTeleport(teleportPos.getX(), teleportPos.getY(), teleportPos.getZ()));
 
@@ -1440,7 +1441,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
         if (this.aI != null && task.getTargetBlocks().contains(this.aI)) {
             IBlockState blockState = this.world.getBlockState(this.aI);
-            if (!this.canInsertItem(new ItemStack(blockState.getBlock().getItemDropped(blockState, ReferenceAndRotationHelper.RANDOM, 0)))) {
+            if (!this.canInsertItem(new ItemStack(blockState.getBlock().getItemDropped(blockState, Reference.RANDOM, 0)))) {
                 this.ax = true;
                 this.canStoreInventory(uUID, true);
             } else if (this.motionX != 0.0 || this.motionZ != 0.0 || !this.onGround || this.getDistance(this.aI.getX(), this.aI.getY(), this.aI.getZ()) > 3.0 || ++this.aK < 10) {
@@ -2663,7 +2664,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     void playSoundAtVolume(SoundEvent sound, float volume) {
         float shrink = 0.25f - this.entityDataManager.get(SIZE);
         double progress = shrink / 0.25f;
-        float pitch = (float) ReferenceAndRotationHelper.LerpDouble(0.9f, 1.1f, progress);
+        float pitch = (float) RotationHelper.LerpDouble(0.9f, 1.1f, progress);
         this.PlaySoundAtPosition(sound, volume, pitch);
     }
 

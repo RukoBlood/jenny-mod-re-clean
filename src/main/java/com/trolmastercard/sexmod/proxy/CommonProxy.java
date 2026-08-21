@@ -21,7 +21,6 @@ import com.trolmastercard.sexmod.util.Handlers.GuiHandler;
 import com.trolmastercard.sexmod.util.Handlers.*;
 import com.trolmastercard.sexmod.world.ConfigWorldGenHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -29,13 +28,13 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class CommonProxy {
-    public void preInitRegistries(FMLPreInitializationEvent fMLPreInitializationEvent) {
-        GameRegistry.registerWorldGenerator((IWorldGenerator) ConfigWorldGenHandler.Generate(), 0);
+    public void preInitRegistries(FMLPreInitializationEvent event) {
+        GameRegistry.registerWorldGenerator(ConfigWorldGenHandler.Generate(), 0);
         EntityInnit.Register();
         ItemHandler.RegisterItems();
     }
 
-    public void initRegistries(FMLInitializationEvent fMLInitializationEvent) throws IOException {
+    public void initRegistries(FMLInitializationEvent event) throws IOException {
         Main.setConfigs();
         SoundsHandler.RegisterSounds();
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new GuiHandler());
@@ -43,15 +42,14 @@ public class CommonProxy {
         PackageHandler.RegisterMessages();
     }
 
-    public void postInit(FMLPostInitializationEvent fMLPostInitializationEvent) throws IOException {
+    public void postInit(FMLPostInitializationEvent event) throws IOException {
         this.setUpCustomModelsOnServer();
     }
 
     void setUpCustomModelsOnServer() {
-        if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()) {
-            return;
+        if (FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()) {
+            CustomModel.LoadModels(false);
         }
-        CustomModel.LoadModels(false);
     }
 }
 

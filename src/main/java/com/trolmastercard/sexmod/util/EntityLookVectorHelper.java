@@ -11,8 +11,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class EntityLookVectorHelper {
     public static Vec3d getLookVectorTo(Entity entity, EntityPlayer player, float partialTicks) {
-        Vec3d entityPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY + (double)player.getEyeHeight(), entity.lastTickPosZ), entity.getPositionVector().add(0.0, player.getEyeHeight(), 0.0), partialTicks);
-        Vec3d playerPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), partialTicks);
+        Vec3d entityPos = RotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY + (double)player.getEyeHeight(), entity.lastTickPosZ), entity.getPositionVector().add(0.0, player.getEyeHeight(), 0.0), partialTicks);
+        Vec3d playerPos = RotationHelper.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), partialTicks);
         return entityPos.subtract(playerPos);
     }
 
@@ -36,7 +36,7 @@ public class EntityLookVectorHelper {
     }
 
     static Vec3d getLookVectorYaw(Entity entity, float partialTicks) {
-        return ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)partialTicks);
+        return RotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)partialTicks);
     }
 
     public static void setFullbrightLightMap() {

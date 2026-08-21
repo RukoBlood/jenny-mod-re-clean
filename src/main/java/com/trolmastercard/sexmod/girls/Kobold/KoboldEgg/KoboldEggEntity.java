@@ -11,7 +11,7 @@ import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -92,10 +92,10 @@ implements IAnimatable {
 
     void a() {
         for (int i = 0; i < 30; ++i) {
-            float f = (float)(ReferenceAndRotationHelper.RANDOM.nextBoolean() ? 1 : -1) * ReferenceAndRotationHelper.RANDOM.nextFloat();
-            float f2 = (float)(ReferenceAndRotationHelper.RANDOM.nextBoolean() ? 1 : -1) * ReferenceAndRotationHelper.RANDOM.nextFloat();
-            float f3 = (float)(ReferenceAndRotationHelper.RANDOM.nextBoolean() ? 1 : -1) * ReferenceAndRotationHelper.RANDOM.nextFloat();
-            this.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 0.5 + this.posX, 0.5 + this.posY, 0.5 + this.posZ, f, f2, f3, new int[0]);
+            float f = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
+            float f2 = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
+            float f3 = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
+            this.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 0.5 + this.posX, 0.5 + this.posY, 0.5 + this.posZ, f, f2, f3);
         }
         if (this.world.isRemote) {
             return;

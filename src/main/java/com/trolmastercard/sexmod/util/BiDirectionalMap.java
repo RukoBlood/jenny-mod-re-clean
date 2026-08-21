@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-//key is a player
-//value is a galath
 public class BiDirectionalMap<K, V> {
     final private HashMap<K, V> Map = new HashMap();
     final private HashMap<V, K> FlippedMap = new HashMap();

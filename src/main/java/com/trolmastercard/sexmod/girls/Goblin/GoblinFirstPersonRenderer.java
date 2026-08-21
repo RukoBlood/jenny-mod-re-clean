@@ -9,13 +9,12 @@
  */
 package com.trolmastercard.sexmod.girls.Goblin;
 
-import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.util.interfaces.IGoblin;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -53,11 +52,11 @@ public class GoblinFirstPersonRenderer {
         float f = minecraft.player.rotationYaw;
         GoblinRenderer.N = (float) ((double) minecraft.player.movementInput.moveStrafe * GoblinRenderer.G.x);
         GoblinRenderer.N += -(f - GoblinRenderer.H) * 3.0f;
-        GoblinRenderer.N = ReferenceAndRotationHelper.LerpFloat(GoblinRenderer.I, GoblinRenderer.N, 0.1f);
+        GoblinRenderer.N = RotationHelper.LerpFloat(GoblinRenderer.I, GoblinRenderer.N, 0.1f);
         float f2 = -minecraft.player.rotationPitch;
         GoblinRenderer.x = (float) ((double) minecraft.player.movementInput.moveForward * GoblinRenderer.G.z + (double) ((float) minecraft.player.motionY) * GoblinRenderer.G.y);
         GoblinRenderer.x += -(f2 - GoblinRenderer.t) * 3.0f;
-        GoblinRenderer.x = ReferenceAndRotationHelper.LerpFloat(GoblinRenderer.E, GoblinRenderer.x, 0.1f);
+        GoblinRenderer.x = RotationHelper.LerpFloat(GoblinRenderer.E, GoblinRenderer.x, 0.1f);
         GoblinRenderer.getInterpolatedYaw(girlEntity, renderWorldLastEvent.getPartialTicks());
         GoblinRenderer.H = f;
         GoblinRenderer.I = GoblinRenderer.N;

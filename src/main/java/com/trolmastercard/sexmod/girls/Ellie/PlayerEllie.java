@@ -21,8 +21,8 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
@@ -516,7 +516,7 @@ extends PlayerGirl {
                         this.setCurrentAction(Action.COWGIRLSLOW);
                         break;
                     }
-                    if (ReferenceAndRotationHelper.RANDOM.nextInt(4) == 1) break;
+                    if (Reference.RANDOM.nextInt(4) == 1) break;
                     this.actionController.clearAnimationCache();
                     break;
                 }

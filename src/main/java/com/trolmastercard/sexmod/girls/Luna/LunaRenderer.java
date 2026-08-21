@@ -14,7 +14,7 @@ import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import com.trolmastercard.sexmod.util.MatrixHelper;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -73,7 +73,7 @@ public class LunaRenderer extends GirlRenderer {
             case "backHair": {
                 if (this.boolean_a()) break;
                 double d = this.r / TrigMath.wrapDegrees(45.0f);
-                float f = (float) ReferenceAndRotationHelper.LerpDouble(0.0, 0.75, d);
+                float f = (float) RotationHelper.LerpDouble(0.0, 0.75, d);
                 bone.setPositionZ(f);
                 bone.setPositionY(f);
                 bone.setRotationX(-this.r);
@@ -83,7 +83,7 @@ public class LunaRenderer extends GirlRenderer {
             case "sideHairL": {
                 if (this.boolean_a()) break;
                 double d = this.r / TrigMath.wrapDegrees(45.0f);
-                float f = (float) ReferenceAndRotationHelper.LerpDouble(0.0, (double)1.3f, d);
+                float f = (float) RotationHelper.LerpDouble(0.0, (double)1.3f, d);
                 bone.setPositionZ(-f);
                 bone.setPositionY(f);
             }

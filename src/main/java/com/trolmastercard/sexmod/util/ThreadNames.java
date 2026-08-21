@@ -72,7 +72,7 @@ public class ThreadNames {
     }
 
     public static int getRandomSign() {
-        return ReferenceAndRotationHelper.RANDOM.nextBoolean() ? 1 : -1;
+        return Reference.RANDOM.nextBoolean() ? 1 : -1;
     }
 
     public static float clamp(float f, float f2, float f3) {

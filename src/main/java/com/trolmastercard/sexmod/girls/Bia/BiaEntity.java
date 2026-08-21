@@ -21,7 +21,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IBeddableSexGirl;
 import com.trolmastercard.sexmod.util.interfaces.IEllie;
@@ -137,7 +137,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     this.setTargetPosition(this.getFrontOffsetVector());
                 }
                 this.setNoGravity(false);
-                Vec3d vec3d = ReferenceAndRotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
+                Vec3d vec3d = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
                 this.setPosition(vec3d.x, vec3d.y, vec3d.z);
             }
         }

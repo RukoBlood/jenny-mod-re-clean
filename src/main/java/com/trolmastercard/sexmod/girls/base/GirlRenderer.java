@@ -164,7 +164,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     @CheckReturnValue
     public static float getInterpolatedYaw(GirlEntity girl, float partialTicks) {
-        return girl.isAnchored() ? girl.getYawRotation() : ReferenceAndRotationHelper.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, partialTicks);
+        return girl.isAnchored() ? girl.getYawRotation() : RotationHelper.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, partialTicks);
     }
 
     protected void onRenderSetup() {}
@@ -332,8 +332,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         //TODO: is this crashes?
         assert mount != null;
         Vec3d lookVec = mount.getLookVec();
-        Vec3d ownerInterp = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(owner.lastTickPosX, owner.lastTickPosY, owner.lastTickPosZ), owner.getPositionVector(), (double)partialTicks);
-        Vec3d clientInterp = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(playerClient.lastTickPosX, playerClient.lastTickPosY, playerClient.lastTickPosZ), playerClient.getPositionVector(), (double)partialTicks);
+        Vec3d ownerInterp = RotationHelper.LerpVec3d(new Vec3d(owner.lastTickPosX, owner.lastTickPosY, owner.lastTickPosZ), owner.getPositionVector(), (double)partialTicks);
+        Vec3d clientInterp = RotationHelper.LerpVec3d(new Vec3d(playerClient.lastTickPosX, playerClient.lastTickPosY, playerClient.lastTickPosZ), playerClient.getPositionVector(), (double)partialTicks);
         clientInterp = ownerInterp.subtract(clientInterp);
         ((GirlEntity)this.renderEntity).renderYawOffset = mount.renderYawOffset;
         return new Vec3d(clientInterp.x + lookVec.x * -0.5, clientInterp.y + (double)0.15f, clientInterp.z + lookVec.z * -0.5);
@@ -367,7 +367,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         }
 
         if (!(entity instanceof PlayerGirl) || !((PlayerGirl)entity).boolean_f() || GirlRenderer.mc.gameSettings.thirdPersonView == 0) {
-            Vec3d clientPlayerPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(GirlRenderer.mc.player.lastTickPosX, GirlRenderer.mc.player.lastTickPosY, GirlRenderer.mc.player.lastTickPosZ), GirlRenderer.mc.player.getPositionVector(), (double)partialTicks);
+            Vec3d clientPlayerPos = RotationHelper.LerpVec3d(new Vec3d(GirlRenderer.mc.player.lastTickPosX, GirlRenderer.mc.player.lastTickPosY, GirlRenderer.mc.player.lastTickPosZ), GirlRenderer.mc.player.getPositionVector(), (double)partialTicks);
             basePos = ((GirlEntity)entity).getTargetPosition().subtract(clientPlayerPos);
         }
         ((GirlEntity)entity).rotationYaw = yaw = ((GirlEntity) entity).getYawRotation();
@@ -533,8 +533,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GlStateManager.translate(0.0, 0.01, 0.0);
         Entity resolvedEntity = this.resolveTargetEntity(girl);
 
-        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : ReferenceAndRotationHelper.LerpVec3d(new Vec3d(resolvedEntity.lastTickPosX, resolvedEntity.lastTickPosY, resolvedEntity.lastTickPosZ), resolvedEntity.getPositionVector(), (double)partialTicks);
-        Vec3d interpClient = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)partialTicks);
+        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : RotationHelper.LerpVec3d(new Vec3d(resolvedEntity.lastTickPosX, resolvedEntity.lastTickPosY, resolvedEntity.lastTickPosZ), resolvedEntity.getPositionVector(), (double)partialTicks);
+        Vec3d interpClient = RotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)partialTicks);
         Vec3d relativeVector = interpTarget.subtract(interpClient);
         GlStateManager.translate(relativeVector.x, relativeVector.y, relativeVector.z);
         mc.getTextureManager().bindTexture(LINE);
@@ -547,12 +547,12 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     protected static float calculateLineThickness(GirlEntity girl, float partialTicks, float min, float max) {
         EntityPlayerSP player = GirlRenderer.mc.player;
         Entity target = ((GirlRenderer) mc.getRenderManager().getEntityRenderObject(girl)).resolveTargetEntity(girl);
-        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : ReferenceAndRotationHelper.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
-        Vec3d interpClient = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), (double)partialTicks);
+        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : RotationHelper.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
+        Vec3d interpClient = RotationHelper.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), (double)partialTicks);
         Vec3d cameraPos = ActiveRenderInfo.getCameraPosition().add(interpClient);
         float distance = (float)cameraPos.distanceTo(interpTarget);
         float ratio = Math.abs(distance) / 5.0f;
-        return ReferenceAndRotationHelper.LerpFloat(max, min, ThreadNames.clamp(ratio, 0.0f, 1.0f));
+        return RotationHelper.LerpFloat(max, min, ThreadNames.clamp(ratio, 0.0f, 1.0f));
     }
 
     protected void drawOverlayLines(Tessellator tessellator, BufferBuilder buffer, GirlEntity girl, Vector3fSexmodSpecial rgb, float thickness) {
@@ -636,8 +636,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         d2 -= (1.6 - (double)girl.height) * 0.5;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        double d4 = (double) ReferenceAndRotationHelper.LerpFloat(entity.prevRotationYaw, entity.rotationYaw, f * 0.5f) * 0.01745329238474369;
-        double d5 = (double) ReferenceAndRotationHelper.LerpFloat(entity.prevRotationPitch, entity.rotationPitch, f * 0.5f) * 0.01745329238474369;
+        double d4 = (double) RotationHelper.LerpFloat(entity.prevRotationYaw, entity.rotationYaw, f * 0.5f) * 0.01745329238474369;
+        double d5 = (double) RotationHelper.LerpFloat(entity.prevRotationPitch, entity.rotationPitch, f * 0.5f) * 0.01745329238474369;
         double d6 = Math.cos(d4);
         double d7 = Math.sin(d4);
         double d8 = Math.sin(d5);
@@ -647,15 +647,15 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             d8 = -1.0;
         }
         double d9 = Math.cos(d5);
-        double d10 = ReferenceAndRotationHelper.LerpDouble(entity.prevPosX, entity.posX, (double)f) - d6 * 0.7 - d7 * 0.5 * d9;
-        double d11 = ReferenceAndRotationHelper.LerpDouble(entity.prevPosY + (double)entity.getEyeHeight() * 0.7, entity.posY + (double)entity.getEyeHeight() * 0.7, (double)f) - d8 * 0.5 - 0.25;
-        double d12 = ReferenceAndRotationHelper.LerpDouble(entity.prevPosZ, entity.posZ, (double)f) - d7 * 0.7 + d6 * 0.5 * d9;
-        double d13 = (double) ReferenceAndRotationHelper.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, f) * 0.01745329238474369 + 1.5707963267948966;
+        double d10 = RotationHelper.LerpDouble(entity.prevPosX, entity.posX, (double)f) - d6 * 0.7 - d7 * 0.5 * d9;
+        double d11 = RotationHelper.LerpDouble(entity.prevPosY + (double)entity.getEyeHeight() * 0.7, entity.posY + (double)entity.getEyeHeight() * 0.7, (double)f) - d8 * 0.5 - 0.25;
+        double d12 = RotationHelper.LerpDouble(entity.prevPosZ, entity.posZ, (double)f) - d7 * 0.7 + d6 * 0.5 * d9;
+        double d13 = (double) RotationHelper.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, f) * 0.01745329238474369 + 1.5707963267948966;
         d6 = Math.cos(d13) * (double)girl.width * 0.4;
         d7 = Math.sin(d13) * (double)girl.width * 0.4;
-        double d14 = ReferenceAndRotationHelper.LerpDouble(girl.prevPosX, girl.posX, (double)f) + d6;
-        double d15 = ReferenceAndRotationHelper.LerpDouble(girl.prevPosY, girl.posY, (double)f);
-        double d16 = ReferenceAndRotationHelper.LerpDouble(girl.prevPosZ, girl.posZ, (double)f) + d7;
+        double d14 = RotationHelper.LerpDouble(girl.prevPosX, girl.posX, (double)f) + d6;
+        double d15 = RotationHelper.LerpDouble(girl.prevPosY, girl.posY, (double)f);
+        double d16 = RotationHelper.LerpDouble(girl.prevPosZ, girl.posZ, (double)f) + d7;
         d += d6;
         d3 += d7;
         double d17 = (float)(d10 - d14);

@@ -578,7 +578,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 DragonBreathParticle.BREATH_SCALE = 0.5f;
 
                 for (float t = 0.0f; t < 1.0f; t += 0.2f) {
-                    Vec3d lerped = ReferenceAndRotationHelper.LerpVec3d(weaponPos, offhandPos, (double) t);
+                    Vec3d lerped = RotationHelper.LerpVec3d(weaponPos, offhandPos, (double) t);
                     Minecraft.getMinecraft().effectRenderer.addEffect(new DragonBreathParticle(this.world, lerped.x, lerped.y, lerped.z));
                 }
             }
@@ -787,7 +787,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 Random random = this.getRNG();
 
                 for (float t = 0.0f; t < 1.0f; t += step) {
-                    Vec3d lerped = ReferenceAndRotationHelper.LerpVec3d(startPos, endPos, (double) t);
+                    Vec3d lerped = RotationHelper.LerpVec3d(startPos, endPos, (double) t);
 
                     for (int i = 0; i < 3; ++i) {
                         this.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, lerped.x + random.nextDouble() * 0.25 * (double) (random.nextBoolean() ? 1 : -1), lerped.y + random.nextDouble() * 0.25 * (double) (random.nextBoolean() ? 1 : -1), lerped.z + random.nextDouble() * 0.25 * (double) (random.nextBoolean() ? 1 : -1), 0.0, 0.0, 0.0, new int[0]);
@@ -1043,7 +1043,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         BlockPos teleportPos;
         int attempts = 0;
         do {
-            teleportPos = player.getPosition().add(ReferenceAndRotationHelper.RANDOM.nextInt(4), 0, ReferenceAndRotationHelper.RANDOM.nextInt(4));
+            teleportPos = player.getPosition().add(Reference.RANDOM.nextInt(4), 0, Reference.RANDOM.nextInt(4));
         } while (++attempts < 20 && !this.attemptTeleport(teleportPos.getX(), teleportPos.getY(), teleportPos.getZ()));
 
         if (attempts >= 20) {
@@ -1924,8 +1924,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             return null;
         }
 
-        Vec3d targetPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
-        Vec3d selfPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(galath.lastTickPosX, galath.lastTickPosY, galath.lastTickPosZ), galath.getPositionVector(), (double)partialTicks);
+        Vec3d targetPos = RotationHelper.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
+        Vec3d selfPos = RotationHelper.LerpVec3d(new Vec3d(galath.lastTickPosX, galath.lastTickPosY, galath.lastTickPosZ), galath.getPositionVector(), (double)partialTicks);
         Vec3d delta = targetPos.subtract(selfPos);
         galath.renderYawOffset = yaw = (float) TrigMath.sinDegrees(Math.atan2(delta.z, delta.x)) - 90.0f;
         galath.prevRenderYawOffset = yaw;
@@ -2571,7 +2571,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     MovementInput movementInput = entityPlayerSP.movementInput;
                     Vec2f vec2f = movementInput.getMoveVector();
                     if (vec2f.x == 0.0f && vec2f.y == 0.0f) break;
-                    Vec3d vec3d = VectorMath.rotate(new Vec3d(-vec2f.x, 0.0, vec2f.y), ReferenceAndRotationHelper.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), ReferenceAndRotationHelper.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
+                    Vec3d vec3d = VectorMath.rotate(new Vec3d(-vec2f.x, 0.0, vec2f.y), RotationHelper.LerpFloat(entityPlayerSP.prevRotationPitch, entityPlayerSP.rotationPitch, minecraft.getRenderPartialTicks()), RotationHelper.LerpFloat(entityPlayerSP.prevRotationYawHead, entityPlayerSP.rotationYawHead, minecraft.getRenderPartialTicks()));
                     PackageHandler.INSTANCE.sendToServer((IMessage)new UpdateVelocity(vec3d, this.girlID()));
                     break;
                 }
@@ -2733,7 +2733,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 Vec3d offset;
                 double progress;
                 if (girl instanceof GalathEntity && girl.world.isRemote && girl.getCurrentAction() == Action.SUMMON_SKELETON && !((progress = (double) ((GalathEntity) girl).ad) < 9.0) && !(progress > 30.0)) {
-                    Vec3d basePos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(girl.lastTickPosX, girl.lastTickPosY, girl.lastTickPosZ), girl.getPositionVector(), (double) partialTicks);
+                    Vec3d basePos = RotationHelper.LerpVec3d(new Vec3d(girl.lastTickPosX, girl.lastTickPosY, girl.lastTickPosZ), girl.getPositionVector(), (double) partialTicks);
                     double scale = (progress - 9.0) / 21.0;
                     if (girl.getDataManager().get(bN)) {
                         offset = girl.getCachedBoneOffset("energyBallR");

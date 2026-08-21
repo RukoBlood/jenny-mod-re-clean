@@ -25,7 +25,7 @@ import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IKobold;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -429,7 +429,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     void b(SoundEvent soundEvent, float f) {
         float f2 = 0.25f - this.entityDataManager.get(aA).floatValue();
         double d = f2 / 0.25f;
-        float f3 = (float) ReferenceAndRotationHelper.LerpDouble((double)0.9f, (double)1.1f, d);
+        float f3 = (float) RotationHelper.LerpDouble((double)0.9f, (double)1.1f, d);
         this.PlaySoundAtPosition(soundEvent, f, f3);
     }
 

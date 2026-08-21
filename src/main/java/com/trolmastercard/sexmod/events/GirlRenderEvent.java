@@ -15,7 +15,7 @@ import java.util.UUID;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -106,7 +106,7 @@ public class GirlRenderEvent {
         }
         this.origPos = mc.player.getPositionVector();
         this.origLastTickPos = new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ);
-        Vec3d targetCameraPos = girlEntity.isAnchored() ? girlEntity.getCachedBoneOffset("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.getCachedBoneOffset("boyCam").add(ReferenceAndRotationHelper.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
+        Vec3d targetCameraPos = girlEntity.isAnchored() ? girlEntity.getCachedBoneOffset("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.getCachedBoneOffset("boyCam").add(RotationHelper.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
         mc.player.posX = targetCameraPos.x;
         mc.player.posY = targetCameraPos.y - (double)mc.player.getEyeHeight();
         mc.player.posZ = targetCameraPos.z;

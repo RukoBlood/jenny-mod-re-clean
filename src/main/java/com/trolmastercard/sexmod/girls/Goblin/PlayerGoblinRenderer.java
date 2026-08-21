@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -239,7 +239,7 @@ public class PlayerGoblinRenderer extends WorkerPlayerRenderer {
             }
         } else if (this.C) {
             GoblinRenderer.a(partialTicks);
-            object = new Vec3d(ReferenceAndRotationHelper.LerpFloat(-0.1f, 0.2f, PlayerGoblinRenderer.mc.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
+            object = new Vec3d(RotationHelper.LerpFloat(-0.1f, 0.2f, PlayerGoblinRenderer.mc.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
             object = GoblinEntity.rotateVectorYaw((Vec3d)object, PlayerGoblinRenderer.mc.player.rotationYaw);
             x = ((Vec3d)object).x;
             y = ((Vec3d)object).y;

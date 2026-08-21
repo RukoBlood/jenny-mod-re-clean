@@ -196,7 +196,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             return null;
         }
 
-        Vec3d targetInterpolatedPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(target.prevPosX, target.prevPosY, target.prevPosZ), target.getPositionVector(), partialTicks);
+        Vec3d targetInterpolatedPos = RotationHelper.LerpVec3d(new Vec3d(target.prevPosX, target.prevPosY, target.prevPosZ), target.getPositionVector(), partialTicks);
 
         if (attackProgress == 24.0f && entity.dashStartWorldTime == -1L) {
             entity.dashStartWorldTime = GalathRenderer.mc.world.getTotalWorldTime();
@@ -208,7 +208,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             Vec3d anchorPos = entity.getAnchorTargetPosition();
             Vec3d destinationPos = targetInterpolatedPos.add(0.0, target.getEyeHeight(), 0.0).add(backOffset);
             float progress = ((float) GalathRenderer.mc.world.getTotalWorldTime() + partialTicks - (float)entity.dashStartWorldTime) / (float)(entity.dashEndWorldTime - entity.dashStartWorldTime);
-            return ReferenceAndRotationHelper.LerpVec3d(anchorPos, destinationPos, (double)progress);
+            return RotationHelper.LerpVec3d(anchorPos, destinationPos, (double)progress);
         }
 
         if (ThreadNames.isValueInBounds((double)attackProgress, 32.0, 54.0)) {
@@ -234,7 +234,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
         GlStateManager.disableCull();
         GlStateManager.disableLighting();
 
-        GalathRenderer.renderHairStrands(girl, buffer, tessellator, ReferenceAndRotationHelper.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, partialTicks));
+        GalathRenderer.renderHairStrands(girl, buffer, tessellator, RotationHelper.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, partialTicks));
         GalathRenderer.renderFloatingStars(girl, buffer, tessellator, partialTicks);
         GalathRenderer.renderWingsMesh(girl, buffer, tessellator);
 
@@ -467,8 +467,8 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
                 if (action != Action.FLY && action != Action.ATTACK_SWORD || (entityLivingBase = ((GalathEntity)this.renderEntity).getAttackTarget()) == null) break;
                 float partialTicks = mc.getRenderPartialTicks();
 
-                Vec3d galathPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(((GalathEntity)this.renderEntity).lastTickPosX, ((GalathEntity)this.renderEntity).lastTickPosY, ((GalathEntity)this.renderEntity).lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)partialTicks);
-                Vec3d targetPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)partialTicks);
+                Vec3d galathPos = RotationHelper.LerpVec3d(new Vec3d(((GalathEntity)this.renderEntity).lastTickPosX, ((GalathEntity)this.renderEntity).lastTickPosY, ((GalathEntity)this.renderEntity).lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)partialTicks);
+                Vec3d targetPos = RotationHelper.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)partialTicks);
                 Vec3d diff = galathPos.subtract(targetPos);
 
                 float rotatedZ = (float) VectorMath.rotateByYaw((Vec3d)diff, (float)((GalathEntity)this.renderEntity).renderYawOffset).z;
@@ -643,8 +643,8 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             return;
         }
         ProceduralRibbonGenerator.RibbonSettings settings = LICKING_RIBBON_SETTINGS.getSettings();
-        settings.LengthStep = ReferenceAndRotationHelper.LerpFloat(GalathRenderer.LICKING_RIBBON_SETTINGS.LengthStep, 0.0f, interpolateFactor);
-        settings.initialOffset = ReferenceAndRotationHelper.LerpFloat(GalathRenderer.LICKING_RIBBON_SETTINGS.initialOffset, 0.0f, interpolateFactor);
+        settings.LengthStep = RotationHelper.LerpFloat(GalathRenderer.LICKING_RIBBON_SETTINGS.LengthStep, 0.0f, interpolateFactor);
+        settings.initialOffset = RotationHelper.LerpFloat(GalathRenderer.LICKING_RIBBON_SETTINGS.initialOffset, 0.0f, interpolateFactor);
         this.renderRibbonAtBone(buffer, bone, settings);
     }
 
@@ -693,9 +693,9 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
 
         float currentTick = ThreadNames.clamp((float) Action.GIVE_COIN.ticksPlaying[1] + partialTicks, 105.0f, 125.0f);
         float progress = (currentTick - 105.0f) / 20.0f;
-        float lightmapCoords = ReferenceAndRotationHelper.LerpFloat(120.0f, 240.0f, progress);
+        float lightmapCoords = RotationHelper.LerpFloat(120.0f, 240.0f, progress);
 
-        Vector3fSexmodSpecial coinColor = ReferenceAndRotationHelper.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, (double)progress);
+        Vector3fSexmodSpecial coinColor = RotationHelper.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, (double)progress);
 
         float lastLightX = OpenGlHelper.lastBrightnessX;
         float lastLightY = OpenGlHelper.lastBrightnessY;

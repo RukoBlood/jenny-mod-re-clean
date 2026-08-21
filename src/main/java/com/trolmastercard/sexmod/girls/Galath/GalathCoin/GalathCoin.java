@@ -25,7 +25,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -181,7 +181,7 @@ public class GalathCoin extends Item implements IAnimatable {
                     Vec3d eyePos = player.getPositionVector().add(0.0, player.getEyeHeight(), 0.0);
                     Vec3d coinPos = eyePos.add(VectorMath.rotateByYaw((float) (player.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double) (-0.01f + player.rotationPitch * 0.0015f), 0.0, player.renderYawOffset));
                     float progress = (float) (now - startTime - 1000L) / 2000.0f;
-                    Vec3d lerpedPos = ReferenceAndRotationHelper.LerpVec3d(targetPos, coinPos, (double) progress);
+                    Vec3d lerpedPos = RotationHelper.LerpVec3d(targetPos, coinPos, (double) progress);
                     DragonBreathParticle.BREATH_SCALE = 0.2f;
                     Minecraft.getMinecraft().effectRenderer.addEffect(new DragonBreathParticle(player.world, lerpedPos.x, lerpedPos.y, lerpedPos.z));
                 }
@@ -203,7 +203,7 @@ public class GalathCoin extends Item implements IAnimatable {
             Vec3d coinPos = eyePos.add(VectorMath.rotateByYaw((float) (player.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double) (-0.01f + player.rotationPitch * 0.0015f), 0.0, player.renderYawOffset));
             Vec3d summonPos = eyePos.add(player.getLookVec().normalize().scale(2.0));
             float progress = (float) (now - startTime - 1000L) / 2000.0f;
-            Vec3d lerpedPos = ReferenceAndRotationHelper.LerpVec3d(coinPos, summonPos, (double) progress);
+            Vec3d lerpedPos = RotationHelper.LerpVec3d(coinPos, summonPos, (double) progress);
             DragonBreathParticle.BREATH_SCALE = 0.2f;
             Minecraft.getMinecraft().effectRenderer.addEffect(new DragonBreathParticle(player.world, lerpedPos.x, lerpedPos.y, lerpedPos.z));
         }

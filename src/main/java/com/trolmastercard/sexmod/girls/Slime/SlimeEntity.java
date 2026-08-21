@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
@@ -338,7 +338,7 @@ public class SlimeEntity extends GirlEntity {
     }
 
     float getRandomYaw() {
-        return ReferenceAndRotationHelper.RANDOM.nextFloat() * 360.0f;
+        return Reference.RANDOM.nextFloat() * 360.0f;
     }
 
     @Override
@@ -460,7 +460,7 @@ public class SlimeEntity extends GirlEntity {
                     break;
                 }
                 case "bjiMSG12": {
-                    if (ReferenceAndRotationHelper.RANDOM.nextInt(5) == 0) {
+                    if (Reference.RANDOM.nextInt(5) == 0) {
                         this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
                     this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
@@ -556,9 +556,9 @@ public class SlimeEntity extends GirlEntity {
                 }
                 case "doggyslowMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
-                    int n = ReferenceAndRotationHelper.RANDOM.nextInt(4);
+                    int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
+                        n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                         } else {
@@ -578,7 +578,7 @@ public class SlimeEntity extends GirlEntity {
                     }
                     ++this.performJump;
                     if (this.performJump % 2 == 0) {
-                        int n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
+                        int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP);
                             break;

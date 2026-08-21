@@ -17,7 +17,8 @@ import com.trolmastercard.sexmod.Packets.SendCompanionHome;
 import com.trolmastercard.sexmod.Packets.SetNewHome;
 import com.trolmastercard.sexmod.Packets.PlayerAction;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.monster.EntityMob;
@@ -109,7 +110,7 @@ public abstract class Fighter extends GirlEntity {
                 List<EntityMob> mobs = this.world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(new BlockPos(this.posX - 7.0, this.posY - 1.0, this.posZ - 7.0), new BlockPos(this.posX + 7.0, this.posY + 1.0, this.posZ + 7.0)));
                 int healAmount = mobs.isEmpty() ? 4 : 1;
                 this.heal((float) healAmount);
-                ((WorldServer)this.world).spawnParticle(EnumParticleTypes.HEART, false, this.posX, this.posY + 1.0 + ReferenceAndRotationHelper.RANDOM.nextDouble(), this.posZ, healAmount, 1.0, 1.0, 1.0, ReferenceAndRotationHelper.RANDOM.nextGaussian(), new int[0]);
+                ((WorldServer)this.world).spawnParticle(EnumParticleTypes.HEART, false, this.posX, this.posY + 1.0 + Reference.RANDOM.nextDouble(), this.posZ, healAmount, 1.0, 1.0, 1.0, Reference.RANDOM.nextGaussian(), new int[0]);
             }
         }
         if (this.downed && !this.hasMaster()) {

@@ -47,13 +47,10 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerEntity;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
-import com.trolmastercard.sexmod.util.ClientServerCheck;
-import com.trolmastercard.sexmod.util.CustomPartCategory;
+import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
-import com.trolmastercard.sexmod.util.Point2D;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
@@ -1217,10 +1214,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public static void spawnParticlesAround(EnumParticleTypes particle, GirlEntity girl) {
-        double vx = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
-        double vy = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
-        double vz = ReferenceAndRotationHelper.RANDOM.nextGaussian() * 0.02;
-        girl.world.spawnParticle(particle, girl.posX + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, girl.posY + 0.5 + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * girl.height), girl.posZ + (double)(ReferenceAndRotationHelper.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, vx, vy, vz, new int[0]);
+        double vx = Reference.RANDOM.nextGaussian() * 0.02;
+        double vy = Reference.RANDOM.nextGaussian() * 0.02;
+        double vz = Reference.RANDOM.nextGaussian() * 0.02;
+        girl.world.spawnParticle(particle, girl.posX + (double)(Reference.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, girl.posY + 0.5 + (double)(Reference.RANDOM.nextFloat() * girl.height), girl.posZ + (double)(Reference.RANDOM.nextFloat() * girl.width * 2.0f) - (double)girl.width, vx, vy, vz);
     }
 
     public static void spawnParticlesAround(EnumParticleTypes particle, GirlEntity girl, int times) {
@@ -1289,7 +1286,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (this.isAnchored()) {
             ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(this.getYawRotation())));
         } else if (applyYaw) {
-            ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(ReferenceAndRotationHelper.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
+            ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(RotationHelper.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
         }
 
         for (GeoBone ancestor : boneHierarchy) {

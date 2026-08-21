@@ -15,7 +15,7 @@ import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.Vector3fSexmodSpecial;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -113,7 +113,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
             return 120.0f;
         }
         if (f2 <= 3000.0f) {
-            return ReferenceAndRotationHelper.LerpFloat(120.0f, 240.0f, (f2 - 1000.0f) / 2000.0f);
+            return RotationHelper.LerpFloat(120.0f, 240.0f, (f2 - 1000.0f) / 2000.0f);
         }
         return 240.0f;
     }
@@ -124,7 +124,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
             return 240.0f;
         }
         if (f2 <= 3000.0f) {
-            return ReferenceAndRotationHelper.LerpFloat(240.0f, 120.0f, (f2 - 1000.0f) / 2000.0f);
+            return RotationHelper.LerpFloat(240.0f, 120.0f, (f2 - 1000.0f) / 2000.0f);
         }
         return 120.0f;
     }
@@ -155,7 +155,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
             return GalathCoinRenderer.f;
         }
         if (f <= 3000.0f) {
-            return ReferenceAndRotationHelper.LerpVector3f(GalathCoinRenderer.f, e, (double)((f - 1000.0f) / 2000.0f));
+            return RotationHelper.LerpVector3f(GalathCoinRenderer.f, e, (double)((f - 1000.0f) / 2000.0f));
         }
         return e;
     }
@@ -166,7 +166,7 @@ public class GalathCoinRenderer extends GeoItemRenderer<GalathCoin> {
             return e;
         }
         if (f <= 3000.0f) {
-            return ReferenceAndRotationHelper.LerpVector3f(e, GalathCoinRenderer.f, (double)((f - 1000.0f) / 2000.0f));
+            return RotationHelper.LerpVector3f(e, GalathCoinRenderer.f, (double)((f - 1000.0f) / 2000.0f));
         }
         return GalathCoinRenderer.f;
     }

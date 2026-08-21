@@ -26,7 +26,7 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
 import com.trolmastercard.sexmod.util.CustomPartCategory;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.util.anim.BoneDeformProcessor;
@@ -275,10 +275,10 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
             entity.posX = targetEntity.posX;
             entity.posY = targetEntity.posY;
             entity.posZ = targetEntity.posZ;
-            targetPos = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(targetEntity.lastTickPosX, targetEntity.lastTickPosY, targetEntity.lastTickPosZ), targetEntity.getPositionVector(), (double)partialTicks);
+            targetPos = RotationHelper.LerpVec3d(new Vec3d(targetEntity.lastTickPosX, targetEntity.lastTickPosY, targetEntity.lastTickPosZ), targetEntity.getPositionVector(), (double)partialTicks);
         }
         EntityPlayerSP object = mc.player;
-        Vec3d vec3d2 = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)partialTicks);
+        Vec3d vec3d2 = RotationHelper.LerpVec3d(new Vec3d(((EntityPlayer)object).lastTickPosX, ((EntityPlayer)object).lastTickPosY, ((EntityPlayer)object).lastTickPosZ), ((Entity)object).getPositionVector(), (double)partialTicks);
         return targetPos.subtract(vec3d2);
     }
 

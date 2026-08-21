@@ -16,7 +16,7 @@ import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.girls.Custom.CustomModelEntity;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.util.CustomPartCategory;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -360,7 +360,7 @@ public class CustomPartListScrollList extends GuiListExtended {
             int sliderMinX = x += 4;
             int sliderMaxX = x + 67; //x + 71 - 4
             float progress = this.calculateSliderProgress(y, sliderMinX, sliderMaxX, mouseX, mouseY, globalIndex);
-            int handleX = (int) ReferenceAndRotationHelper.LerpFloat((float)sliderMinX, (float)sliderMaxX, progress);
+            int handleX = (int) RotationHelper.LerpFloat((float)sliderMinX, (float)sliderMaxX, progress);
             CustomPartListScrollList.this.parentGUI.drawTexturedModalRect(handleX, y, this.isHovered(mouseX, mouseY, handleX, y, handleX + 4, y + 20) ? 223 : 219, 20, 4, 20);
             CustomPartListScrollList.this.parentGUI.previewGirl.a(globalIndex, (int)(progress * 100.0f));
         }

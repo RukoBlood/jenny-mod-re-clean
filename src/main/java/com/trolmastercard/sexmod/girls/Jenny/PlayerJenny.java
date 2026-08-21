@@ -19,8 +19,8 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
+import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -457,7 +457,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG12": {
-                    if (ReferenceAndRotationHelper.RANDOM.nextInt(5) == 0) {
+                    if (Reference.RANDOM.nextInt(5) == 0) {
                         this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_BJMOAN));
                     }
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_LIPSOUND));
@@ -594,9 +594,9 @@ public class PlayerJenny extends PlayerGirl {
                 case "doggyslowMSG1": {
                     this.ar = false;
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
-                    int n = ReferenceAndRotationHelper.RANDOM.nextInt(4);
+                    int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
-                        n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
+                        n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MMM));
                         } else {
@@ -620,7 +620,7 @@ public class PlayerJenny extends PlayerGirl {
                     }
                     ++this.aq;
                     if (this.aq % 2 == 0) {
-                        int n = ReferenceAndRotationHelper.RANDOM.nextInt(2);
+                        int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
                             break;

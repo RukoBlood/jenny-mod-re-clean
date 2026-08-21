@@ -12,9 +12,10 @@ import java.util.Random;
 import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesPacket2;
+import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
@@ -122,7 +123,7 @@ extends EntityLiving {
     }
 
     void a() {
-        this.a(ReferenceAndRotationHelper.LerpDouble(this.lastTickPosX, this.posX, 0.5), ReferenceAndRotationHelper.LerpDouble(this.lastTickPosY, this.posY, 0.5), ReferenceAndRotationHelper.LerpDouble(this.lastTickPosZ, this.posZ, 0.5));
+        this.a(RotationHelper.LerpDouble(this.lastTickPosX, this.posX, 0.5), RotationHelper.LerpDouble(this.lastTickPosY, this.posY, 0.5), RotationHelper.LerpDouble(this.lastTickPosZ, this.posZ, 0.5));
         this.a(this.posX, this.posY, this.posZ);
     }
 
@@ -170,7 +171,7 @@ extends EntityLiving {
     public static void a(Vec3d vec3d) {
         WorldClient worldClient = Minecraft.getMinecraft().world;
         float f = TrigMath.wrapDegrees(1.8f);
-        Random random = ReferenceAndRotationHelper.RANDOM;
+        Random random = Reference.RANDOM;
         float f2 = 0.0f;
         while ((double)f2 < Math.PI * 2) {
             double d = Math.sin(f2);
@@ -189,7 +190,7 @@ extends EntityLiving {
     @SideOnly(value=Side.CLIENT)
     public static void c(Vec3d vec3d) {
         WorldClient worldClient = Minecraft.getMinecraft().world;
-        Random random = ReferenceAndRotationHelper.RANDOM;
+        Random random = Reference.RANDOM;
         for (int i = 0; i < 100; ++i) {
             worldClient.spawnParticle(EnumParticleTypes.DRAGON_BREATH, vec3d.x, vec3d.y, vec3d.z, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, random.nextDouble() * (double)0.15f, new int[0]);
         }

@@ -17,7 +17,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.VectorMath;
 import net.minecraft.block.Block;
@@ -85,7 +86,7 @@ public class WorldUtils {
             targetDirection = new Vec3d(0.2, 0.8, 0.0);
         } else {
             targetDirection = new Vec3d(targetDirection.x, targetDirection.y, -targetDirection.z);
-            float lerpedYaw = -ReferenceAndRotationHelper.LerpFloat(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
+            float lerpedYaw = -RotationHelper.LerpFloat(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
             targetDirection = VectorMath.rotateByYaw(targetDirection, lerpedYaw);
         }
         return targetDirection.normalize();
@@ -134,7 +135,7 @@ public class WorldUtils {
             double angle = Math.PI * 2 * (double)progress;
             double posX = Math.sin(angle);
             double posZ = Math.cos(angle);
-            world.spawnParticle(particleTypes, center.x + (posX *= radius), center.y, center.z + (posZ *= radius), 0.0, (double) ReferenceAndRotationHelper.RANDOM.nextFloat() * speedY, 0.0, new int[0]);
+            world.spawnParticle(particleTypes, center.x + (posX *= radius), center.y, center.z + (posZ *= radius), 0.0, (double) Reference.RANDOM.nextFloat() * speedY, 0.0, new int[0]);
         }
     }
 

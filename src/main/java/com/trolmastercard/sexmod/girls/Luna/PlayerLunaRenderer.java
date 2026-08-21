@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -64,7 +64,7 @@ extends PlayerGirlRenderer {
             case "backHair": {
                 if (this.boolean_b() || !(this.z > 0.0f)) break;
                 double d = this.z / TrigMath.wrapDegrees(45.0f);
-                float f = (float) ReferenceAndRotationHelper.LerpDouble(0.0, 0.75, d);
+                float f = (float) RotationHelper.LerpDouble(0.0, 0.75, d);
                 geoBone.setPositionZ(f);
                 geoBone.setPositionY(f);
                 geoBone.setRotationX(-this.z);

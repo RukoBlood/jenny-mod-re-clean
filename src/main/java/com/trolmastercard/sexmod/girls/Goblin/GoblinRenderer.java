@@ -19,7 +19,7 @@ import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.girls.base.*;
 import com.trolmastercard.sexmod.girls.base.AbstractNpcOnlyEntity;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.world.FakeWorld;
@@ -211,7 +211,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
             }
         } else if (this.u) {
             GoblinRenderer.a(partialTicks);
-            object = new Vec3d(ReferenceAndRotationHelper.LerpFloat(-0.1f, 0.2f, GoblinRenderer.minecraft.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
+            object = new Vec3d(RotationHelper.LerpFloat(-0.1f, 0.2f, GoblinRenderer.minecraft.gameSettings.fovSetting / 110.0f), 0.0, 0.0);
             object = GoblinEntity.rotateVectorYaw((Vec3d)object, GoblinRenderer.minecraft.player.rotationYaw);
             x = ((Vec3d)object).x;
             y = ((Vec3d)object).y;
@@ -277,16 +277,16 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
         if (entityPlayer == null) {
             return Vec3d.ZERO;
         }
-        Vec3d vec3d = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entityPlayer.prevPosX, entityPlayer.prevPosY, entityPlayer.prevPosZ), entityPlayer.getPositionVector(), (double)f);
-        Vec3d vec3d2 = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(GoblinRenderer.minecraft.player.prevPosX, GoblinRenderer.minecraft.player.prevPosY, GoblinRenderer.minecraft.player.prevPosZ), GoblinRenderer.minecraft.player.getPositionVector(), (double)f);
+        Vec3d vec3d = RotationHelper.LerpVec3d(new Vec3d(entityPlayer.prevPosX, entityPlayer.prevPosY, entityPlayer.prevPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d2 = RotationHelper.LerpVec3d(new Vec3d(GoblinRenderer.minecraft.player.prevPosX, GoblinRenderer.minecraft.player.prevPosY, GoblinRenderer.minecraft.player.prevPosZ), GoblinRenderer.minecraft.player.getPositionVector(), (double)f);
         return vec3d.subtract(vec3d2);
     }
 
     public static Vector4f a_0(EntityPlayer entityPlayer, float f) {
         EntityPlayerSP entityPlayerSP = GoblinRenderer.minecraft.player;
-        float f2 = ReferenceAndRotationHelper.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
-        Vec3d vec3d = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
-        Vec3d vec3d2 = ReferenceAndRotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
+        float f2 = RotationHelper.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
+        Vec3d vec3d = RotationHelper.LerpVec3d(new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ), entityPlayer.getPositionVector(), (double)f);
+        Vec3d vec3d2 = RotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         return new Vector4f((float)vec3d3.x, (float)vec3d3.y, (float)vec3d3.z, f2);
     }

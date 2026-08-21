@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import com.trolmastercard.sexmod.Main;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -163,7 +163,7 @@ public class SoundsHandler {
         lastRandomSound.putIfAbsent(soundArray[0], -69);
         int trys = 0;
         do {
-            random = ReferenceAndRotationHelper.RANDOM.nextInt(soundArray.length);
+            random = Reference.RANDOM.nextInt(soundArray.length);
         } while (++trys < 10 && random == lastRandomSound.get(soundArray[0]));
         lastRandomSound.replace(soundArray[0], random);
         return soundArray[random];

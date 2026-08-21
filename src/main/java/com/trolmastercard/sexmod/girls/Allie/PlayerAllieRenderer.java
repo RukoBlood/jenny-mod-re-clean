@@ -14,7 +14,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -129,8 +129,8 @@ extends PlayerGirlRenderer {
         this.I = vec2f.x * 8.0f;
         this.G = ThreadNames.clamp(this.G, -1.68f, 1.68f);
         this.I = ThreadNames.clamp(this.I, -1.68f, 1.68f);
-        this.G = ReferenceAndRotationHelper.LerpFloat(this.F, this.G, this.partialTicks);
-        this.I = ReferenceAndRotationHelper.LerpFloat(this.B, this.I, this.partialTicks);
+        this.G = RotationHelper.LerpFloat(this.F, this.G, this.partialTicks);
+        this.I = RotationHelper.LerpFloat(this.B, this.I, this.partialTicks);
         geoBone.setRotationX(f + this.G * f3);
         geoBone.setRotationZ(f2 + this.I * f3);
     }
@@ -140,9 +140,9 @@ extends PlayerGirlRenderer {
         double d2 = this.z - this.D;
         this.L = (Math.abs(d) + Math.abs(d2)) * 5.0;
         this.L = ThreadNames.clamp((float)this.L, 0.0f, 1.0f);
-        geoBone.setPositionY((float) ReferenceAndRotationHelper.a(5.0, 0.0, ReferenceAndRotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks)));
+        geoBone.setPositionY((float) RotationHelper.a(5.0, 0.0, RotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks)));
         if (this.currentGirl instanceof PlayerAllie) {
-            ((PlayerAllie)this.currentGirl).aq = (float) ReferenceAndRotationHelper.a((double)0.3f, 0.0, ReferenceAndRotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks));
+            ((PlayerAllie)this.currentGirl).aq = (float) RotationHelper.a((double)0.3f, 0.0, RotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks));
         }
     }
 

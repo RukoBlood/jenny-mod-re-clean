@@ -16,7 +16,7 @@ import java.util.Random;
 
 import com.trolmastercard.sexmod.Packets.GalathBackOffRape;
 import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -127,18 +127,18 @@ public class EscapeMinigameUI extends Gui {
         int height = event.getResolution().getScaledHeight();
         float partialTicks = event.getPartialTicks();
         mc.getTextureManager().bindTexture(ESCAPE_MINIGAME_UI);
-        double easeOffset = isClosing ? 1.0 - ReferenceAndRotationHelper.EaseInBack((EscapeMinigameUI.closingTicks + partialTicks) / INTRO_OUTRO_DURATION) : Math.min(1.0, ReferenceAndRotationHelper.EaseOutBack((activeTasks + partialTicks) / INTRO_OUTRO_DURATION));
+        double easeOffset = isClosing ? 1.0 - RotationHelper.EaseInBack((EscapeMinigameUI.closingTicks + partialTicks) / INTRO_OUTRO_DURATION) : Math.min(1.0, RotationHelper.EaseOutBack((activeTasks + partialTicks) / INTRO_OUTRO_DURATION));
         int targetY = height + 385;
         GlStateManager.pushMatrix();
         GlStateManager.scale(UI_SCALE, UI_SCALE, UI_SCALE);
         GlStateManager.translate(485.0f, 0.0f, 0.0f);
         int SpawnY = 4 * height;
-        this.drawTexturedModalRect(width / 2 - 87, (int) ReferenceAndRotationHelper.LerpDouble((double)SpawnY, (double)targetY, easeOffset), 0, 104, 174, 48);
-        this.drawTexturedModalRect((int)((float)width / 2.0f - 78.0f), (int) ReferenceAndRotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.A ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
-        this.drawTexturedModalRect((int)((float)width / 2.0f - 26.0f), (int) ReferenceAndRotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 2*BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.S ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
-        this.drawTexturedModalRect((int)((float)width / 2.0f + 26.0f), (int) ReferenceAndRotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 3*BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.D ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
-        this.drawTexturedModalRect((int)((float)width / 2.0f - 26.0f), (int) ReferenceAndRotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 0, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.W ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
-        this.drawTexturedModalRect(width / 2 - 87 + 8, (int) ReferenceAndRotationHelper.LerpDouble((double)(SpawnY - 8), (double)(targetY + 8), easeOffset), 8, 152, (int)(158.0f * escapeProgress), 32);
+        this.drawTexturedModalRect(width / 2 - 87, (int) RotationHelper.LerpDouble((double)SpawnY, (double)targetY, easeOffset), 0, 104, 174, 48);
+        this.drawTexturedModalRect((int)((float)width / 2.0f - 78.0f), (int) RotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.A ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
+        this.drawTexturedModalRect((int)((float)width / 2.0f - 26.0f), (int) RotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 2*BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.S ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
+        this.drawTexturedModalRect((int)((float)width / 2.0f + 26.0f), (int) RotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 3*BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.D ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
+        this.drawTexturedModalRect((int)((float)width / 2.0f - 26.0f), (int) RotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 0, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.W ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
+        this.drawTexturedModalRect(width / 2 - 87 + 8, (int) RotationHelper.LerpDouble((double)(SpawnY - 8), (double)(targetY + 8), easeOffset), 8, 152, (int)(158.0f * escapeProgress), 32);
         GlStateManager.popMatrix();
     }
 

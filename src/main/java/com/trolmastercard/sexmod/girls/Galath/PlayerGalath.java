@@ -24,7 +24,7 @@ import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.Vector4d;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.interfaces.IGalath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -457,7 +457,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                         MovementInput input = player.movementInput;
                         Vec2f moveVec = input.getMoveVector();
                         if (moveVec.x != 0.0f || moveVec.y != 0.0f) {
-                            Vec3d vel = VectorMath.rotate(new Vec3d(-moveVec.x, 0.0, moveVec.y), ReferenceAndRotationHelper.LerpFloat(player.prevRotationPitch, player.rotationPitch, mc.getRenderPartialTicks()), ReferenceAndRotationHelper.LerpFloat(player.prevRotationYawHead, player.rotationYawHead, mc.getRenderPartialTicks()));
+                            Vec3d vel = VectorMath.rotate(new Vec3d(-moveVec.x, 0.0, moveVec.y), RotationHelper.LerpFloat(player.prevRotationPitch, player.rotationPitch, mc.getRenderPartialTicks()), RotationHelper.LerpFloat(player.prevRotationYawHead, player.rotationYawHead, mc.getRenderPartialTicks()));
                             PackageHandler.INSTANCE.sendToServer((IMessage) new UpdateVelocity(vel, this.girlID()));
                         }
                     }

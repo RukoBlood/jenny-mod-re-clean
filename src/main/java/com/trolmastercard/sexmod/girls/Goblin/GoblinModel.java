@@ -9,7 +9,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.GirlModel;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.util.interfaces.IGoblin;
@@ -161,7 +161,7 @@ extends GirlModel<GirlEntity> {
         if (entityPlayer == null) {
             return;
         }
-        float f = ReferenceAndRotationHelper.LerpFloat(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
+        float f = RotationHelper.LerpFloat(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
         float f2 = entityPlayer.limbSwing;
         float f3 = (float)Math.sin(f2);
         IBone iBone = animationProcessor.getBone("LeftLeg");

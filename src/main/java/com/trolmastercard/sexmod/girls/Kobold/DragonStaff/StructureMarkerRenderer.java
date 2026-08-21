@@ -12,7 +12,8 @@ package com.trolmastercard.sexmod.girls.Kobold.DragonStaff;
 
 import java.util.HashSet;
 
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.RotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
@@ -60,7 +61,7 @@ public class StructureMarkerRenderer {
     public static void Render() {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        Vec3d vec3d = ReferenceAndRotationHelper.LerpVec3d(ReferenceAndRotationHelper.k, ReferenceAndRotationHelper.j, (double) minecraft.getRenderPartialTicks());
+        Vec3d vec3d = RotationHelper.LerpVec3d(Reference.k, Reference.j, minecraft.getRenderPartialTicks());
         GlStateManager.pushMatrix();
         GlStateManager.disableCull();
         GlStateManager.disableDepth();
@@ -150,8 +151,8 @@ public class StructureMarkerRenderer {
         if (playerSP == null) {
             return;
         }
-        ReferenceAndRotationHelper.k = ReferenceAndRotationHelper.j;
-        ReferenceAndRotationHelper.j = playerSP.getPositionVector();
+        Reference.k = Reference.j;
+        Reference.j = playerSP.getPositionVector();
     }
 }
 

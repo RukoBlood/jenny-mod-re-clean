@@ -14,7 +14,7 @@ package com.trolmastercard.sexmod.Packets;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.companion.CompanionPearl;
-import com.trolmastercard.sexmod.util.ReferenceAndRotationHelper;
+import com.trolmastercard.sexmod.util.Reference;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -74,7 +74,7 @@ public class SendCompanionHome implements IMessage {
                     }
                     WorldServer worldServer = (WorldServer)girlEntity.world;
                     for (int i = 0; i < 32; ++i) {
-                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girlEntity.posX, girlEntity.posY + ReferenceAndRotationHelper.RANDOM.nextDouble() * 2.0, girlEntity.posZ, 32, 0.2, 0.2, 0.2, ReferenceAndRotationHelper.RANDOM.nextGaussian(), new int[0]);
+                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girlEntity.posX, girlEntity.posY + Reference.RANDOM.nextDouble() * 2.0, girlEntity.posZ, 32, 0.2, 0.2, 0.2, Reference.RANDOM.nextGaussian(), new int[0]);
                     }
                     girlEntity.setPosition(girlEntity.homeCoords.x, girlEntity.homeCoords.y, girlEntity.homeCoords.z);
                     girlEntity.activePearl = null;
@@ -88,7 +88,7 @@ public class SendCompanionHome implements IMessage {
 
                 @Override
         public IMessage onMessage(SendCompanionHome iMessage, MessageContext messageContext) {
-            return this.a((SendCompanionHome)iMessage, messageContext);
+            return this.a(iMessage, messageContext);
         }
     }
 }
