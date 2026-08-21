@@ -42,7 +42,7 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public void void_y() {
+    public void onTickClient() {
         this.handleOwnerUUID(false);
     }
 
@@ -57,17 +57,17 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getHandRenderer(int n) {
+    public IRenderer getHandModelRenderer(int index) {
         return new BeeLimb();
     }
 
     @Override
-    public String HandTexture(int n) {
+    public String getHandTexture(int index) {
         return "textures/entity/bee/hand.png";
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
+    public void handleOwnerCommand(String command, UUID partnerUUID) {
         this.sendActionPacket(0, Action.CITIZEN_START);
         this.setOutfitIndex(0);
         this.setCurrentAction(Action.CITIZEN_START);
@@ -121,8 +121,8 @@ public class PlayerBee extends PlayerGirl {
     }
 
     @Override
-    public void ResetNPCTasks() {
-        super.ResetNPCTasks();
+    public void reInitTasks() {
+        super.reInitTasks();
         this.setOutfitIndex(1);
     }
 
@@ -194,7 +194,7 @@ public class PlayerBee extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    if (!this.getClosestPlayerID() || this.getCurrentAction() != Action.THROW_PEARL) break;
+                    if (!this.isLocalPlayerNearby() || this.getCurrentAction() != Action.THROW_PEARL) break;
                     PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
@@ -230,7 +230,7 @@ public class PlayerBee extends PlayerGirl {
                     break;
                 }
                 case "sex_cumMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 2.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 2.0f);
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     break;
                 }

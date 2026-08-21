@@ -85,7 +85,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         this.isSneaking = playerGirl.isPlayerSneaking;
         this.currentGirl = (PlayerGirl) entity;
         this.partialTicks = partialTicks;
-        playerGirl.syncWithPlayerProperties(owner);
+        playerGirl.syncArmor(owner);
         if (this.shouldRenderNameTag(owner, entity)) {
             this.renderLivingLabel(entity, owner.getName(), x, y + (double)playerGirl.getScaleFactor(), z, 300);
         }
@@ -98,7 +98,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
             return girl;
         }
         PlayerGirl girlOwned = (PlayerGirl)girl;
-        EntityPlayer owner = girlOwned.getOwnerPlayerEntity();
+        EntityPlayer owner = girlOwned.getOwnerPlayer();
         if (owner == null) {
             return girl;
         }
@@ -209,7 +209,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
     }
 
     boolean shouldHideHeadInFirstPerson() {
-        if (!((PlayerGirl)this.renderEntity).boolean_f()) {
+        if (!((PlayerGirl)this.renderEntity).hasOwnerUUID()) {
             return false;
         }
         if (PlayerGirlRenderer.mc.gameSettings.thirdPersonView != 0) {
@@ -259,12 +259,12 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
             this.renderEntity.setItemUseCount(Math.round(-this.bowPullProgress * 20.0f + (float)stack.getMaxItemUseDuration()));
             this.renderEntity.setHeldItemOverride(stack);
             this.renderEntity.setActiveHand(EnumHand.MAIN_HAND);
-            this.renderEntity.W();
+            this.renderEntity.setHandActiveState();
         } else {
             this.bowPullProgress = 0.0f;
             this.renderEntity.setItemUseCount(0);
             this.renderEntity.setHeldItemOverride(ItemStack.EMPTY);
-            this.renderEntity.W();
+            this.renderEntity.setHandActiveState();
         }
         this.applyItemPostRotation(isLeftHand, stack);
         GlStateManager.scale(0.75f, 0.75f, 0.75f);

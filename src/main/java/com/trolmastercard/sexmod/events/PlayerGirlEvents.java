@@ -152,7 +152,7 @@ public class PlayerGirlEvents {
         playerGirl.setTargetPosition(new Vec3d((double)nearestPos.getX() + 0.5, (float)nearestPos.getY() + 0.0f, (double)nearestPos.getZ() + 0.5));
         playerGirl.setYawRotation(player.rotationYaw);
         playerGirl.getDataManager().set(GirlEntity.IS_ANCHORED, true);
-        playerGirl.u_();
+        playerGirl.handleInteraction();
     }
 
     double getDistance(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -204,10 +204,10 @@ public class PlayerGirlEvents {
             ((EntityPlayer)clientPlayer).sendStatusMessage(new TextComponentString("no lesbo yet owo"), true);
             return;
         }
-        if (!targetPlayerGirl.canInteract()) {
+        if (!targetPlayerGirl.isPlayerGirl()) {
             return;
         }
-        if (targetPlayerGirl.canOpenGUI()) {
+        if (targetPlayerGirl.canOpenInteractionMenu()) {
             targetPlayerGirl.openInteractionMenu(Minecraft.getMinecraft().player);
         }
     }
@@ -233,7 +233,7 @@ public class PlayerGirlEvents {
             targetPlayer.sendStatusMessage(new TextComponentString("no lesbo yet owo"), true);
             return;
         }
-        if (localPlayerGirl.canOpenGUI()) {
+        if (localPlayerGirl.canOpenInteractionMenu()) {
             localPlayerGirl.guiPending = false;
             localPlayerGirl.openInteractionMenu(targetPlayer);
         }

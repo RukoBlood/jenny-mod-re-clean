@@ -58,14 +58,14 @@ public abstract class WorkerPlayerEntity extends PlayerGirl {
             this.ar = true;
             return;
         }
-        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer = this.getOwnerPlayer();
         if (entityPlayer == null) {
             return;
         }
-        String string = entityPlayer.getEntityData().getString("sexmod:GirlSpecific" + (Object)((Object) PlayerGirlEntity.fromGirl(this)));
+        String string = entityPlayer.getEntityData().getString("sexmod:GirlSpecific" + (Object)((Object) PlayerGirlEntity.getGirlType(this)));
         this.ar = false;
         if (!string.isEmpty()) {
-            this.setCustomPartList(WorkerPlayerEntity.c(string));
+            this.setCustomPartList(WorkerPlayerEntity.decodePartIdList(string));
         }
     }
 

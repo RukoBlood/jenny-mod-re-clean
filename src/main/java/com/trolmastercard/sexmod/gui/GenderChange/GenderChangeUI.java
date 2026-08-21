@@ -45,7 +45,7 @@ public class GenderChangeUI extends GuiScreen {
                 this.entities.add(girl);
                 String string = hashMap.get((Object)entity);
                 if (string == null) continue;
-                girl.setCustomPartList(GirlEntity.c(string));
+                girl.setCustomPartList(GirlEntity.decodePartIdList(string));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -72,7 +72,7 @@ public class GenderChangeUI extends GuiScreen {
             this.i = this.entities.size() - 1;
         }
         if (button.id == 0) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.fromGirl(this.entities.get(this.i))));
+            PackageHandler.INSTANCE.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.getGirlType(this.entities.get(this.i))));
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             ((EntityPlayer)player).closeScreen();
             player.eyeHeight = player.getDefaultEyeHeight();

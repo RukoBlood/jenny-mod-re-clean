@@ -57,11 +57,11 @@ extends PlayerGirl {
     }
 
     @Override
-    public void u_() {
+    public void handleInteraction() {
     }
 
     @Override
-    public boolean boolean_a(String string) {
+    public boolean handleActionRequest(String string) {
         if ("anal".equals(string)) {
             this.setCurrentAction(Action.ANAL_PREPARE);
             this.setOutfitIndex(0);
@@ -82,8 +82,8 @@ extends PlayerGirl {
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        if ("action.names.headpat".equals(actionName)) {
+    public void handleOwnerCommand(String command, UUID partnerUUID) {
+        if ("action.names.headpat".equals(command)) {
             this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.HEAD_PAT);
             this.sendActionPacket(this.getOutfitIndex(), Action.HEAD_PAT);
@@ -91,22 +91,22 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getHandRenderer(int n) {
+    public IRenderer getHandModelRenderer(int index) {
         return new BiaHand();
     }
 
     @Override
-    public String HandTexture(int n) {
+    public String getHandTexture(int index) {
         return "textures/entity/bia/hand.png";
     }
 
     @Override
-    public float getLeftArmRotation() {
+    public float getLeftArmAngle() {
         return 35.0f;
     }
 
     @Override
-    public float getRightArmRotation() {
+    public float getRightArmAngle() {
         return 140.0f;
     }
 
@@ -221,7 +221,7 @@ extends PlayerGirl {
             Vec3d vec3d = this.getTargetPosition();
             Vec3d vec3d2 = vec3d.add(VectorMath.rotateByYaw(0.0, 0.0, 1.0, f));
             this.setTargetPosition(vec3d2);
-            EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
+            EntityPlayer entityPlayer2 = this.getOwnerPlayer();
             if (entityPlayer2 != null) {
                 entityPlayer2.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
             }
@@ -425,37 +425,37 @@ extends PlayerGirl {
                     break;
                 }
                 case "talk_hornyMSG1": {
-                    this.sendLocalClientMessage("Heyaaa~");
+                    this.sendChatMessage("Heyaaa~");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HEY[3]);
                     break;
                 }
                 case "talk_hornyMSG2": {
-                    this.sendLocalClientMessage("I am Hornyyyyy~");
+                    this.sendChatMessage("I am Hornyyyyy~");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[2]);
                     break;
                 }
                 case "talk_hornyMSG3": {
-                    this.sendLocalClientMessage("So...");
+                    this.sendChatMessage("So...");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "talk_hornyMSG4": {
-                    this.sendLocalClientMessage("Are we gonna have some fun nyaa?");
+                    this.sendChatMessage("Are we gonna have some fun nyaa?");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
                 case "talk_responseMSG1": {
-                    this.sendLocalClientMessage("Huh?!...");
+                    this.sendChatMessage("Huh?!...");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[2]);
                     break;
                 }
                 case "talk_responseMSG2": {
-                    this.sendLocalClientMessage("I... uhm...");
+                    this.sendChatMessage("I... uhm...");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[1]);
                     break;
                 }
                 case "talk_responseMSG3": {
-                    this.sendLocalClientMessage("yes~");
+                    this.sendChatMessage("yes~");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[0]);
                     break;
                 }
@@ -465,7 +465,7 @@ extends PlayerGirl {
                         this.setCurrentAction(Action.STRIP);
                         break;
                     }
-                    this.U();
+                    this.doAction();
                     break;
                 }
                 case "anal_prepareMSG1": {
@@ -494,7 +494,7 @@ extends PlayerGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.5f);
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
@@ -503,7 +503,7 @@ extends PlayerGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.5f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.5f);
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_AHH));
                     break;
                 }
@@ -534,33 +534,33 @@ extends PlayerGirl {
                     break;
                 }
                 case "headpatMSG1": {
-                    this.sendLocalClientMessage("Ooh headpats!");
+                    this.sendChatMessage("Ooh headpats!");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.sendLocalClientMessage("Hmmm.... :D");
+                    this.sendChatMessage("Hmmm.... :D");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[0]);
                     break;
                 }
                 case "headpatMSG3": {
-                    this.sendLocalClientMessage("huh...?");
+                    this.sendChatMessage("huh...?");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
                 case "headpatMSG4": {
-                    this.sendLocalClientMessage("Tanku hehe");
+                    this.sendChatMessage("Tanku hehe");
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[1]);
                     break;
                 }
                 case "headpatDone": {
-                    if (!this.getClosestPlayerID()) break;
+                    if (!this.isLocalPlayerNearby()) break;
                     this.resetCameraAndPhysics();
                     break;
                 }
                 case "sitdownMSG1": {
-                    this.sendLocalClientMessage("come here big boy~");
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_BIA_BREATH);
+                    this.sendChatMessage("come here big boy~");
+                    this.playRandomSound(SoundsHandler.GIRLS_BIA_BREATH);
                     break;
                 }
                 case "sitdownDone": {
@@ -574,11 +574,11 @@ extends PlayerGirl {
                     break;
                 }
                 case "pound": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "doggyMoan": {
-                    this.playSoundAroundHer(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_BIA_AHH : SoundsHandler.GIRLS_BIA_MMM);
+                    this.playRandomSound(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_BIA_AHH : SoundsHandler.GIRLS_BIA_MMM);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
@@ -594,7 +594,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_INSERTS, 6.0f);
                     break;
                 }
                 case "orgasm1": {

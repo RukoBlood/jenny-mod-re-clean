@@ -182,8 +182,8 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
     }
 
     @Override
-    public void ResetNPCTasks() {
-        super.ResetNPCTasks();
+    public void reInitTasks() {
+        super.reInitTasks();
         this.setOwnerUUID(null);
         this.noClip = false;
         this.setNoGravity(false);
@@ -1648,28 +1648,28 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "catchEh": {
-                    this.sendLocalClientMessage("ehh..");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("ehh..");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchAkward": {
-                    this.sendLocalClientMessage("awkward..");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("awkward..");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchWell": {
-                    this.sendLocalClientMessage("well...");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("well...");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchRather": {
-                    this.sendLocalClientMessage("would you rather have this stupid... thing?");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("would you rather have this stupid... thing?");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchMe": {
-                    this.sendLocalClientMessage("...or use me?~");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("...or use me?~");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchDone": {
@@ -1685,18 +1685,18 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                     break;
                 }
                 case "paizuriChoice": {
-                    this.sendLocalClientMessage("good choice!~");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("good choice!~");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriBoth": {
-                    this.sendLocalClientMessage("...for both of us!");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("...for both of us!");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizruiUse": {
-                    this.sendLocalClientMessage("now use me like a fuck toy!~");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("now use me like a fuck toy!~");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriSwitch": {
@@ -1705,11 +1705,11 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                     break;
                 }
                 case "touch": {
-                    this.PlaySound(SoundsHandler.MISC_TOUCH, 3.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_TOUCH, 3.0f);
                     break;
                 }
                 case "pound": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
@@ -1735,7 +1735,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                     break;
                 }
                 case "smallPound": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, 0.25f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_POUNDING, 0.25f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -1757,7 +1757,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                     break;
                 }
                 case "cumSound": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "jumpCam": {
@@ -1777,18 +1777,18 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                         minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                         minecraft.gameSettings.thirdPersonView = 0;
                     }
-                    this.sendLocalClientMessage("hmm...");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("hmm...");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingFound": {
-                    this.sendLocalClientMessage("guess we found a worthy breeding partner!");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("guess we found a worthy breeding partner!");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingEnough": {
-                    this.sendLocalClientMessage("Eh.. go pin him down, before he runs off!");
-                    this.PlaySound(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("Eh.. go pin him down, before he runs off!");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingCam2": {
@@ -1828,7 +1828,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "breeding_intro_3Done": {
@@ -1948,7 +1948,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                 GoblinEntity goblin;
                 if (!girl.world.isRemote && girl instanceof GoblinEntity && uUID.equals((goblin = (GoblinEntity) girl).getOwnerUUID())) {
                     String modelCode = goblin.getCustomModelCode();
-                    String partCode = goblin.java_lang_String_F();
+                    String partCode = goblin.getCustomPartListCode();
                     existing = goblin;
                     existing.setOwnerUUID((UUID) null);
                     existing.setInteractionPlayerUUID((UUID) null);

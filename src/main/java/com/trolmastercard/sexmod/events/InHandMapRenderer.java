@@ -46,15 +46,15 @@ public class InHandMapRenderer {
     @SubscribeEvent
     public void onRenderingSpecificHandEvent(RenderSpecificHandEvent event) {
         //Object object;
-        PlayerGirl.tryPuttingGirlsInTable();
+        PlayerGirl.rebuildPlayerGirlTableFromWorld();
         PlayerGirl state = PlayerGirl.getUUIDHashtable(Minecraft.getMinecraft().player.getPersistentID());
         if (state == null) {
             return;
         }
         int activeHandIndex = state.getOutfitIndex();
-        this.handModelRenderer = state.getHandRenderer(activeHandIndex);
-        this.texture = new ResourceLocation("sexmod", state.HandTexture(activeHandIndex));
-        this.handColor = state.net_minecraft_util_math_Vec3i_b(activeHandIndex);
+        this.handModelRenderer = state.getHandModelRenderer(activeHandIndex);
+        this.texture = new ResourceLocation("sexmod", state.getHandTexture(activeHandIndex));
+        this.handColor = state.getHandColor(activeHandIndex);
         if (this.handModelRenderer == null) {
             System.out.println("HAND IS NULL uwu did you forget to assign this girl a hand owo?");
             return;

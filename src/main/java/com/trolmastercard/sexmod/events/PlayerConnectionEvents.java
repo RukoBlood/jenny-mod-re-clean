@@ -70,7 +70,7 @@ public class PlayerConnectionEvents {
             PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(tribeBlocks, true), playerMP);
         }
 
-        PlayerGirl.tryPuttingGirlsInTable();
+        PlayerGirl.rebuildPlayerGirlTableFromWorld();
         PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(event.player.getPersistentID());
 
         World serverWorld = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
@@ -128,7 +128,7 @@ public class PlayerConnectionEvents {
         EntityPlayer player = event.player;
         for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
             if (girl instanceof PlayerGirl) {
-                ((PlayerGirl)girl).detachPartner(player);
+                ((PlayerGirl)girl).onOwnerInteract(player);
             }
             if (girl.getInteractionPlayerUUID() == null) continue;
             if (girl.getInteractionPlayerUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID().equals(player.getUniqueID())) {

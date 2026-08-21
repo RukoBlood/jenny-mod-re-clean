@@ -366,7 +366,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             return basePos;
         }
 
-        if (!(entity instanceof PlayerGirl) || !((PlayerGirl)entity).boolean_f() || GirlRenderer.mc.gameSettings.thirdPersonView == 0) {
+        if (!(entity instanceof PlayerGirl) || !((PlayerGirl)entity).hasOwnerUUID() || GirlRenderer.mc.gameSettings.thirdPersonView == 0) {
             Vec3d clientPlayerPos = RotationHelper.LerpVec3d(new Vec3d(GirlRenderer.mc.player.lastTickPosX, GirlRenderer.mc.player.lastTickPosY, GirlRenderer.mc.player.lastTickPosZ), GirlRenderer.mc.player.getPositionVector(), (double)partialTicks);
             basePos = ((GirlEntity)entity).getTargetPosition().subtract(clientPlayerPos);
         }

@@ -58,12 +58,12 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
     }
 
     @Override
-    public IRenderer getHandRenderer(int n) {
+    public IRenderer getHandModelRenderer(int index) {
         return new GalathHand();
     }
 
     @Override
-    public String HandTexture(int n) {
+    public String getHandTexture(int index) {
         return "textures/entity/galath/hand.png";
     }
 
@@ -88,7 +88,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
     }
 
     @Override
-    public void onGuiActionSelected(String command, UUID uuid) {
+    public void handleOwnerCommand(String command, UUID uuid) {
         if ("cowgirl".equals(command)) {
             this.teleportPlayerToGirl(uuid);
             this.setCurrentAction(Action.RAPE_INTRO);
@@ -213,7 +213,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
     }
 
     boolean hasNoGalathOwner() {
-        EntityPlayer player = this.getOwnerPlayerEntity();
+        EntityPlayer player = this.getOwnerPlayer();
         return player != null && this.world.getBlockState(player.getPosition().up().up()).getBlock() != Blocks.AIR;
     }
 
@@ -323,15 +323,15 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "pound": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "flap": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_FLAP);
+                    this.playRandomSound(SoundsHandler.MISC_FLAP);
                     break;
                 }
                 case "setNude": {
@@ -362,7 +362,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                     break;
                 }
                 case "poundRape": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.03f);
                     }
@@ -438,7 +438,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                     }, girl -> girl.getCachedBoneOffset("futaCockTip").add(girl.getTargetPosition()), this, 0.3f, 0.3f));
                     CummyEntity.registerTrail(new DynamicTrailRenderer(100, girl -> VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation()),
                             girl -> girl.getCachedBoneOffset("creampiePos").add(girl.getTargetPosition()), this, 0.6f, 0.5f));
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": 
@@ -451,7 +451,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                 case "flapControlled": {
                     if (this.isControlledByLocalPlayer()) {
                         GalathFlightUI.showUI();
-                        this.playSoundAroundHer(SoundsHandler.MISC_FLAP);
+                        this.playRandomSound(SoundsHandler.MISC_FLAP);
                         Minecraft mc = Minecraft.getMinecraft();
                         EntityPlayerSP player = mc.player;
                         MovementInput input = player.movementInput;
@@ -464,7 +464,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                     break;
                 }
                 case "clap": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_CLAP);
+                    this.playRandomSound(SoundsHandler.MISC_CLAP);
                     break;
                 }
                 case "energysound": {

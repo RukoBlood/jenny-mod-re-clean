@@ -58,31 +58,31 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getHandRenderer(int n) {
+    public IRenderer getHandModelRenderer(int index) {
         return new LunaHand();
     }
 
     @Override
-    public String HandTexture(int n) {
+    public String getHandTexture(int index) {
         return "textures/entity/cat/hand.png";
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        if ("action.names.touchboobs".equals(actionName)) {
+    public void handleOwnerCommand(String command, UUID partnerUUID) {
+        if ("action.names.touchboobs".equals(command)) {
             this.sendActionPacket(0, Action.TOUCH_BOOBS_INTRO);
             this.setCurrentAction(Action.TOUCH_BOOBS_INTRO);
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.teleportPlayerToGirl(partnerUUID);
         }
-        if ("action.names.headpat".equals(actionName)) {
+        if ("action.names.headpat".equals(command)) {
             this.setCurrentAction(Action.HEAD_PAT);
             this.teleportPlayerToGirl(partnerUUID);
         }
     }
 
     @Override
-    public void u_() {
+    public void handleInteraction() {
         this.setCurrentAction(Action.WAIT_CAT);
     }
 
@@ -340,41 +340,41 @@ extends PlayerGirl {
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.getInteractionPlayerUUID(), "Here, I know u like fish and yea.. these are for you");
+                    this.sendChatMessageToPlayer(this.getInteractionPlayerUUID(), "Here, I know u like fish and yea.. these are for you");
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "paymentMSG2": {
-                    this.sendLocalClientMessage("huh~?");
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HUH);
+                    this.sendChatMessage("huh~?");
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "paymentMSG3": {
-                    this.sendLocalClientMessage("nyyyaaaa~ :D");
+                    this.sendChatMessage("nyyyaaaa~ :D");
                     int[] nArray = new int[]{1, 7, 10, 11};
                     int n = nArray[this.getRNG().nextInt(nArray.length)];
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_CUTENYA[n]);
                     break;
                 }
                 case "paymentMSG4": {
-                    this.sendLocalClientMessage("tankuuuu owowowo");
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_OWO);
+                    this.sendChatMessage("tankuuuu owowowo");
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_OWO);
                     break;
                 }
                 case "paymentDone": {
-                    if (this.getClosestPlayerID()) {
-                        this.U();
+                    if (this.isLocalPlayerNearby()) {
+                        this.doAction();
                     }
                     this.scaleFactor = 1.0f;
                     break;
                 }
                 case "breath": 
                 case "rod_breath": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_LIGHTBREATHING);
                     break;
                 }
                 case "happyOh": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HAPPYOH);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HAPPYOH);
                     break;
                 }
                 case "cutenya3": {
@@ -386,44 +386,44 @@ extends PlayerGirl {
                     break;
                 }
                 case "huh": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HUH);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "hmph": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HMPH);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HMPH);
                     break;
                 }
                 case "hehe": 
                 case "giggle": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_GIGGLE);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
                 case "singing": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_SINGING);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_SINGING);
                     break;
                 }
                 case "touch_boobsMSG1": {
-                    this.sendLocalClientMessage("comon~ touch me hihi~");
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_GIGGLE);
+                    this.sendChatMessage("comon~ touch me hihi~");
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
                     break;
                 }
                 case "touch": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_TOUCH);
+                    this.playRandomSound(SoundsHandler.MISC_TOUCH);
                     break;
                 }
                 case "jump": {
-                    this.PlaySound(SoundsHandler.MISC_JUMP[0], 0.2f);
+                    this.playSoundAtVolume(SoundsHandler.MISC_JUMP[0], 0.2f);
                     break;
                 }
                 case "horninya": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HORNINYA);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HORNINYA);
                     break;
                 }
                 case "horninya2": 
                 case "touch_boobs_cumMSG3": 
                 case "sitting_cumMSG1": {
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[1]);
-                    this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 5.0f);
+                    this.playSoundAtVolume(SoundsHandler.MISC_CUMINFLATION[0], 5.0f);
                     break;
                 }
                 case "moan": {
@@ -494,8 +494,8 @@ extends PlayerGirl {
                     break;
                 }
                 case "call_playerMSG1": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_GIGGLE);
-                    this.sendLocalClientMessage("come here - big guy hehe~");
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
+                    this.sendChatMessage("come here - big guy hehe~");
                     break;
                 }
                 case "pounding": {
@@ -503,8 +503,8 @@ extends PlayerGirl {
                     break;
                 }
                 case "sitting_introMSG1": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_GIGGLE);
-                    this.sendLocalClientMessage("hehe~");
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
+                    this.sendChatMessage("hehe~");
                     break;
                 }
                 case "sitting_introDone": {
@@ -554,16 +554,16 @@ extends PlayerGirl {
                     break;
                 }
                 case "headpatMSG1": {
-                    this.sendLocalClientMessage("huh?~");
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_HUH);
+                    this.sendChatMessage("huh?~");
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_HUH);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_LUNA_MMM);
+                    this.playRandomSound(SoundsHandler.GIRLS_LUNA_MMM);
                     break;
                 }
                 case "headpatMSG3": {
-                    this.sendLocalClientMessage("nya~");
+                    this.sendChatMessage("nya~");
                     this.PlaySound(SoundsHandler.GIRLS_LUNA_HORNINYA[0]);
                 }
             }

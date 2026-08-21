@@ -37,7 +37,7 @@ public class HandlePlayerMovement {
             return;
         }
         if (HandlePlayerMovement.movement.jump) {
-            PlayerGirl.void_i();
+            PlayerGirl.resetPlayerGirlCamera();
         }
         if (HandlePlayerMovement.movement.sneak) {
             GirlEntity.triggerFastSexAction(Minecraft.getMinecraft().player.getPersistentID());

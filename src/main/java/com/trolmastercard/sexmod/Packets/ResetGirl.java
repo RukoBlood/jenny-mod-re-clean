@@ -71,7 +71,7 @@ implements IMessage {
         public static void resetGirl(GirlEntity em_class2582) {
             Object object;
             Object object2;
-            em_class2582.ResetNPCTasks();
+            em_class2582.reInitTasks();
             if (em_class2582 instanceof PlayerGirl && em_class2582.world.getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID()) != null) {
                 PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(em_class2582.dimension).getPlayerEntityByUUID(((PlayerGirl)em_class2582).getOwnerUserUUID()));
                 em_class2582.getDataManager().set(GirlEntity.OUTFIT_INDEX, 1);
@@ -89,7 +89,7 @@ implements IMessage {
             }
             em_class2582.setAnchored(false);
             em_class2582.setInteractionPlayerUUID((UUID)null);
-            em_class2582.playerCameraOffsetPos = null;
+            em_class2582.cameraOriginPos = null;
             em_class2582.setNoGravity(false);
             em_class2582.noClip = false;
             object2 = em_class2582.world;

@@ -93,7 +93,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Level;
@@ -121,7 +120,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public EntityAIWanderAvoidWater aiWander;
     public WatchClosestGirlGoal watchClosestGirlGoal;
     static public HashSet<GirlEntity> GLOBAL_GIRL_CACHE = new HashSet();
-    public Vec3d playerCameraOffsetPos;
+    public Vec3d cameraOriginPos;
     protected float cameraYaw;
     protected EntityDataManager entityDataManager;
     public PathNavigate pathNavigator;
@@ -135,15 +134,15 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     final static public DataParameter<String> MASTER;
     final static public DataParameter<Boolean> IS_ANCHORED;
     final static public DataParameter<String> TARGET_POS;
-    final static public DataParameter<Float> YAW_ROTATION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.FLOAT).getSerializer().createKey(107);
-    final static public DataParameter<String> GIRL_ID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(106);
-    final static public DataParameter<Integer> OUTFIT_INDEX = EntityDataManager.createKey(GirlEntity.class, DataSerializers.VARINT).getSerializer().createKey(105);
-    final static public DataParameter<String> CUR_ACTION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(104);
-    final static public DataParameter<String> GIRL_HAND_STATES = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(103);
-    final static public DataParameter<String> INTERACTION_PARTNER_UUID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
-    final static public DataParameter<String> WALK_SPEED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
-    final static public DataParameter<String> CUSTOM_MODEL_KEY = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(100);
-    final static public DataParameter<String> CUSTOM_NAME = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(99);
+    final static public DataParameter<Float> YAW_ROTATION;
+    final static public DataParameter<String> GIRL_ID;
+    final static public DataParameter<Integer> OUTFIT_INDEX;
+    final static public DataParameter<String> CUR_ACTION;
+    final static public DataParameter<String> GIRL_HAND_STATES;
+    final static public DataParameter<String> INTERACTION_PARTNER_UUID;
+    final static public DataParameter<String> WALK_SPEED;
+    final static public DataParameter<String> CUSTOM_MODEL_KEY;
+    final static public DataParameter<String> CUSTOM_NAME;
 
     final static protected List<Item> TEMPTATION_ITEMS = Arrays.asList(Items.EMERALD, Items.DIAMOND, Items.GOLD_INGOT, Items.ENDER_PEARL);
 
@@ -152,14 +151,22 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public AnimationController eyesController;
     HashMap<String, Pair<Integer, Integer>> animationVariantMap = new HashMap();
     AnimationProcessor<?> cachedAnimationProcessor = null;
-    public List<String> boneTrackingList = new ArrayList<String>();
+    public List<String> boneTrackingList = new ArrayList<>();
     protected List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> customPartsData = null;
 
     static {
         MASTER = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(110);
         IS_ANCHORED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(109);
         TARGET_POS = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(108);
-
+        YAW_ROTATION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.FLOAT).getSerializer().createKey(107);
+        GIRL_ID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(106);
+        OUTFIT_INDEX = EntityDataManager.createKey(GirlEntity.class, DataSerializers.VARINT).getSerializer().createKey(105);
+        CUR_ACTION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(104);
+        GIRL_HAND_STATES = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(103);
+        INTERACTION_PARTNER_UUID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
+        WALK_SPEED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
+        CUSTOM_MODEL_KEY = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(100);
+        CUSTOM_NAME = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(99);
     }
 
     public void setWalkSpeed(WalkSpeed walkSpeed) {
@@ -192,19 +199,16 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public void setCurrentAction(Action action) {
         Action previousAction = this.getCurrentAction();
-        if (previousAction == action) {
-            return;
+        if (previousAction != action) {
+            if (action != Action.ATTACK || previousAction == Action.NULL) {//Action targetAction = action == null ? Action.NULL : action;
+                if (this.world.isRemote) {
+                    this.changeDataParameterFromClient("currentAction", action.toString());
+                } else {
+                    previousAction.ticksPlaying = new int[]{0, 0};
+                    this.entityDataManager.set(CUR_ACTION, action.toString());
+                }
+            }
         }
-        if (action == Action.ATTACK && previousAction != Action.NULL) {
-            return;
-        }
-        Action targetAction = action == null ? Action.NULL : action;
-        if (this.world.isRemote) {
-            this.changeDataParameterFromClient("currentAction", action.toString());
-            return;
-        }
-        previousAction.ticksPlaying = new int[]{0, 0};
-        this.entityDataManager.set(CUR_ACTION, action.toString());
     }
 
     public int getOutfitIndex() {
@@ -238,11 +242,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    public static void girlPlaySound(GirlEntity girl, SoundEvent sound, boolean positional3D) {
+    public static void girlPlaySound(GirlEntity girl, SoundEvent sound, boolean atPlayer) {
         Vec3d origin = girl.getPositionVector();
         for (EntityPlayer player : WorldUtils.getPlayersTrackingEntity(girl)) {
             Vec3d playPos;
-            if (!positional3D) {
+            if (!atPlayer) {
                 playPos = origin;
             } else {
                 Vec3d playerPos = player.getPositionVector();
@@ -284,7 +288,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public void setInteractionPlayerUUID(UUID uuid) {
         if (this.world.isRemote) {
-            this.changeDataParameterFromClient("playerSheHasSexWith", uuid == null ? (String) null : uuid.toString());
+            this.changeDataParameterFromClient("playerSheHasSexWith", uuid == null ? null : uuid.toString());
             return;
         }
         this.entityDataManager.set(INTERACTION_PARTNER_UUID, uuid == null ? "null" : uuid.toString());
@@ -354,12 +358,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected void initAnimationControllers() {
-        this.actionController = new AnimationController<GirlEntity>(this, "action", 0.0f, this::predicate);
-        this.movementController = new AnimationController<GirlEntity>(this, "movement", 5.0f, this::predicate);
-        this.eyesController = new AnimationController<GirlEntity>(this, "eyes", 10.0f, this::predicate);
-
-        // TODO not sure where to insert sound keyframe inserter, or how to even add custom insertions in Java for geckolib
-
+        this.actionController = new AnimationController<>(this, "action", 0.0f, this::predicate);
+        this.movementController = new AnimationController<>(this, "movement", 5.0f, this::predicate);
+        this.eyesController = new AnimationController<>(this, "eyes", 10.0f, this::predicate);
     }
 
     @Override
@@ -398,22 +399,23 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (!ClientServerCheck.getInstance()) {
             return GirlEntity.getClientGirls();
         }
+
         WorldServer[] worlds = FMLCommonHandler.instance().getMinecraftServerInstance().worlds;
         if (worlds.length == 0) {
-            return new ArrayList<GirlEntity>();
+            return new ArrayList<>();
         }
-        ArrayList<GirlEntity> list = new ArrayList<GirlEntity>();
+        ArrayList<GirlEntity> girls = new ArrayList<>();
         for (WorldServer world : worlds) {
-            list.addAll(world.getEntities(GirlEntity.class, girl -> true));
+            girls.addAll(world.getEntities(GirlEntity.class, girl -> true));
         }
-        return list;
+        return girls;
     }
 
     @SideOnly(value=Side.CLIENT)
     private static List<GirlEntity> getClientGirls() {
         WorldClient clientWorld = Minecraft.getMinecraft().world;
         if (clientWorld == null) {
-            return new ArrayList<GirlEntity>();
+            return new ArrayList<>();
         }
         return clientWorld.getEntities(GirlEntity.class, girl -> true);
     }
@@ -435,7 +437,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
         this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
+        this.tasks.addTask(2, new EntityAITempt(this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new DoorInteractAIGoal(this));
         this.tasks.addTask(5, this.watchClosestGirlGoal);
         this.tasks.addTask(5, this.aiWander);
@@ -448,7 +450,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         nbt.setDouble("homeZ", this.homeCoords.z);
         nbt.setString("girlID", this.entityDataManager.get(GIRL_ID));
         String customName = this.getCustomName();
-        if (!"".equals(customName)) {
+        if (!customName.isEmpty()) {
             nbt.setString("sexmod:customname", customName);
         }
         if (this.supportsCustomModels()) {
@@ -458,7 +460,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     protected boolean supportsCustomModels() {
-        return GirlEntity.isValidGirl((Entity)this);
+        return GirlEntity.isValidGirl(this);
     }
 
     @Override
@@ -471,24 +473,23 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             this.setCustomNameOverride(customName);
         }
 
-        if ((uuidStr = nbt.getString("girlID")).isEmpty()) {
-            return;
-        }
-        UUID uUID = UUID.fromString(uuidStr);
-        boolean isDuplicate = false;
-        for (GirlEntity girl : GirlEntity.girlList(uUID)) {
-            if (girl.world.isRemote || girl == this || girl.isDead || !girl.isAddedToWorld()) continue;
-            isDuplicate = true;
-            break;
-        }
-        if (isDuplicate) {
-            Main.LOGGER.log(Level.WARN, String.format("got a duped %s with id '%s'. Deleted her", this.getGirlName(), uUID));
-            this.world.removeEntity(this);
-            return;
-        }
-        this.entityDataManager.set(GIRL_ID, uUID.toString());
-        if (this.supportsCustomModels()) {
-            this.setCustomModelCode(nbt.getString("sexmod:customModel"));
+        if (!(uuidStr = nbt.getString("girlID")).isEmpty()) {
+            UUID uUID = UUID.fromString(uuidStr);
+            boolean isDuplicate = false;
+            for (GirlEntity girl : GirlEntity.girlList(uUID)) {
+                if (girl.world.isRemote || girl == this || girl.isDead || !girl.isAddedToWorld()) continue;
+                isDuplicate = true;
+                break;
+            }
+            if (isDuplicate) {
+                Main.LOGGER.log(Level.WARN, String.format("got a duped %s with id '%s'. Deleted her", this.getGirlName(), uUID));
+                this.world.removeEntity(this);
+                return;
+            }
+            this.entityDataManager.set(GIRL_ID, uUID.toString());
+            if (this.supportsCustomModels()) {
+                this.setCustomModelCode(nbt.getString("sexmod:customModel"));
+            }
         }
     }
 
@@ -529,75 +530,68 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        this.updateActionTicks();
+        this.tickFollowUpTransitions();
     }
 
     protected void updateCustomModelParts() {
-        if (!CustomModel.isLoaded) {
-            return;
-        }
-        HashSet<String> activeParts = this.getCustomPartsSet();
-        PlayerGirlEntity playerGirl = PlayerGirlEntity.fromGirl(this);
-        HashSet<String> partsToRemove = new HashSet<String>();
-        String currentGroup = CustomModel.getCurrentGroup();
-        for (String part : activeParts) {
-            if (!CustomModel.getPartName(part, currentGroup).isEmpty()) {
+        if (CustomModel.isLoaded) {
+            HashSet<String> activeParts = this.getCustomPartsSet();
+            PlayerGirlEntity playerGirl = PlayerGirlEntity.getGirlType(this);
+            HashSet<String> partsToRemove = new HashSet<String>();
+            String currentGroup = CustomModel.getCurrentGroup();
+            for (String part : activeParts) {
+                if (!CustomModel.getPartName(part, currentGroup).isEmpty()) {
+                    partsToRemove.add(part);
+                    continue;
+                }
+                HashSet<PlayerGirlEntity> allowedEntities = CustomModel.getAllowedEntities(part);
+                if (allowedEntities == null) {
+                    partsToRemove.add(part);
+                    continue;
+                }
+                if (allowedEntities.isEmpty() || allowedEntities.contains(playerGirl)) continue;
                 partsToRemove.add(part);
-                continue;
             }
-            HashSet<PlayerGirlEntity> allowedEntities = CustomModel.getAllowedEntities(part);
-            if (allowedEntities == null) {
-                partsToRemove.add(part);
-                continue;
+            if (partsToRemove.isEmpty()) {
+                return;
             }
-            if (allowedEntities.isEmpty() || allowedEntities.contains((Object)playerGirl)) continue;
-            partsToRemove.add(part);
+            activeParts.removeAll(partsToRemove);
+            this.setCustomModelCode(GirlEntity.serializePartsSet(activeParts));
         }
-        if (partsToRemove.isEmpty()) {
-            return;
-        }
-        activeParts.removeAll(partsToRemove);
-        this.setCustomModelCode(GirlEntity.serializePartsSet(activeParts));
     }
     //end of deobfuscation #2
 
-    protected void updateActionTicks() {
+    protected void tickFollowUpTransitions() {
         Action action = this.getCurrentAction();
         int sideIndex = this.world.isRemote ? 1 : 0;
         action.ticksPlaying[sideIndex] = action.ticksPlaying[sideIndex] + 1;
-        if (action.ticksPlaying[sideIndex] < action.length) {
-            return;
-        }
-        if (action.followUp == null) {
-            return;
-        }
-        if (!this.world.isRemote) {
-            this.setCurrentAction(action.followUp);
+        if (action.ticksPlaying[sideIndex] >= action.length) {
+            if (action.followUp != null) {
+                if (!this.world.isRemote) {
+                    this.setCurrentAction(action.followUp);
+                }
+            }
         }
     }
 
     protected void tickPathVelocity() {
         Path path = this.getNavigator().getPath();
-        if (path == null || this.onGround || this.isInWater()) {
-            return;
+        if (path != null && !this.onGround && !this.isInWater()) {
+            int currentIndex = path.getCurrentPathIndex();
+            int totalLength = path.getCurrentPathLength();
+            if (totalLength != currentIndex && totalLength - 1 != currentIndex) {
+                PathPoint currentPoint = path.getPathPointFromIndex(currentIndex);
+                PathPoint nextPoint = path.getPathPointFromIndex(currentIndex + 1);
+                Vec3d delta = new Vec3d(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y, nextPoint.z - currentPoint.z);
+                this.motionX = delta.x / 7.0;
+                this.motionZ = delta.z / 7.0;
+            }
+
         }
 
-        int currentIndex = path.getCurrentPathIndex();
-        int totalLength = path.getCurrentPathLength();
-        if (totalLength == currentIndex || totalLength - 1 == currentIndex) {
-            return;
-        }
-
-        PathPoint currentPoint = path.getPathPointFromIndex(currentIndex);
-        PathPoint nextPoint = path.getPathPointFromIndex(currentIndex + 1);
-        Vec3d delta = new Vec3d(nextPoint.x - currentPoint.x, nextPoint.y - currentPoint.y, nextPoint.z - currentPoint.z);
-        this.motionX = delta.x / 7.0;
-        this.motionZ = delta.z / 7.0;
     }
 
-    //TODO: wth is void_g
-    //DOTO: DefaultStuff
-    public void ResetNPCTasks() {
+    public void reInitTasks() {
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -636,7 +630,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return new Vec3d(girl.prevPosX, girl.prevPosY, girl.prevPosZ);
     }
 
-    public GirlEntity com_trolmastercard_sexmod_em_class258_af() {
+    public GirlEntity getSelf() {
         return this;
     }
 
@@ -673,7 +667,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     protected void triggerActionSync(boolean param1, boolean param2, UUID playerUUID) {
         if (this.world.isRemote) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), playerUUID, param1, param2));
+            PackageHandler.INSTANCE.sendToServer(new SyncActionPacket(this.girlID(), playerUUID, param1, param2));
         } else {
             SyncActionPacket.Handler.execute(this.girlID(), playerUUID, param1, param2);
         }
@@ -684,8 +678,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             return null;
         }
         for (GirlEntity girl : GirlEntity.girlList(uUID)) {
-            if (!girl.world.isRemote) continue;
-            return girl;
+            if (girl.world.isRemote) {
+                return girl;
+            }
         }
         return null;
     }
@@ -695,25 +690,27 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             return null;
         }
         for (GirlEntity girl : GirlEntity.girlList(uUID)) {
-            if (girl.world.isRemote) continue;
-            return girl;
+            if (!girl.world.isRemote) {
+                return girl;
+            }
         }
         return null;
     }
 
     // TODO clashes with KoboldEntity 'void g(UUID)'
     public static ArrayList<GirlEntity> girlList(UUID uUID) {
-        ArrayList<GirlEntity> list = new ArrayList<GirlEntity>();
+        ArrayList<GirlEntity> girls = new ArrayList<GirlEntity>();
         try {
             for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
-                if (girl == null || !girl.girlID().equals(uUID)) continue;
-                list.add(girl);
+                if (girl != null && girl.girlID().equals(uUID)) {
+                    girls.add(girl);
+                }
             }
         } catch (ConcurrentModificationException e) {
-            System.out.println("had a ConcurrentModificationException while cycling through the girl list... hopefully nothin borke owo");
+            System.out.println("had a ConcurrentModificationException while cycling through the girl list... hopefully nothin borke owo"); //how the fuck this can break
             e.printStackTrace();
         }
-        return list;
+        return girls;
     }
 
     protected BlockPos getNearestBed(BlockPos pos) {
@@ -724,11 +721,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return this.findNearestStructureBlock(pos, radius, Blocks.BED, 22, 3, null);
     }
 
-    public void W() {
+    public void setHandActiveState() {
         this.entityDataManager.set(HAND_STATES, Byte.valueOf("1"));
     }
 
-    public void K() {
+    public void clearHandActiveState() {
         this.entityDataManager.set(HAND_STATES, Byte.valueOf("0"));
     }
 
@@ -841,12 +838,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected void createAnimation(String animName, boolean looped, AnimationEvent event, boolean bl2) {
-        if (!bl2 && Action.isActionComplete(this, event.getPartialTick()) && this.handleActionAnimationOverrides(this.getCurrentAction(), animName, HandlePlayerMovement.isThrusting, event)) {
-            return;
+        if (bl2 || !Action.isActionComplete(this, event.getPartialTick()) || !this.handleActionAnimationOverrides(this.getCurrentAction(), animName, HandlePlayerMovement.isThrusting, event)) {
+            ILoopType.EDefaultLoopTypes loopTypes = looped ? ILoopType.EDefaultLoopTypes.LOOP : ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME;
+            event.getController().setAnimation(new AnimationBuilder().addAnimation(animName, loopTypes));
+            event.getController().transitionLengthTicks = 0.0;
         }
-        ILoopType.EDefaultLoopTypes eDefaultLoopTypes = looped ? ILoopType.EDefaultLoopTypes.LOOP : ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME;
-        event.getController().setAnimation(new AnimationBuilder().addAnimation(animName, eDefaultLoopTypes));
-        event.getController().transitionLengthTicks = 0.0;
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -857,40 +853,39 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     protected void playRandomizedAnimation(String baseAnimNade, int maxVariants, float chance, AnimationEvent event, boolean disableThrustOverride) {
 
-        if (!disableThrustOverride
-                && Action.isActionComplete(this, event.getPartialTick())
-                && this.handleActionAnimationOverrides(this.getCurrentAction(), baseAnimNade, HandlePlayerMovement.isThrusting, event)
+        if (disableThrustOverride
+                || !Action.isActionComplete(this, event.getPartialTick())
+                || !this.handleActionAnimationOverrides(this.getCurrentAction(), baseAnimNade, HandlePlayerMovement.isThrusting, event)
         ) {
-            return;
+            AnimationController controller = event.getController();
+            Pair state = this.animationVariantMap.get(baseAnimNade);
+            if (state == null) {
+                state = Pair.of((Object) 0, (Object) 0);
+            }
+            int currentVariant = (Integer) state.first();
+            int previousVariant = (Integer) state.second();
+
+            if (!Action.isActionComplete(this, event.getPartialTick())) {
+                event.getController().setAnimation(new AnimationBuilder().addAnimation(
+                                currentVariant == 0
+                                        ? baseAnimNade
+                                        : baseAnimNade + currentVariant, ILoopType.EDefaultLoopTypes.LOOP
+                        )
+                );
+                event.getController().transitionLengthTicks = 0.0;
+                return;
+            }
+
+            int nextVariant = this.pickRandomVariantIndex(currentVariant, previousVariant, maxVariants, chance);
+            controller.setAnimation(new AnimationBuilder().addAnimation(
+                    nextVariant == 0
+                            ? baseAnimNade
+                            : baseAnimNade + nextVariant, ILoopType.EDefaultLoopTypes.LOOP));
+
+            controller.transitionLengthTicks = 0.0;
+            this.animationVariantMap.put(baseAnimNade, Pair.of(nextVariant, (nextVariant == 0 ? previousVariant : nextVariant)));
         }
 
-        AnimationController controller = event.getController();
-        Pair state = this.animationVariantMap.get(baseAnimNade);
-        if (state == null) {
-            state = Pair.of((Object)0, (Object)0);
-        }
-        int currentVariant = (Integer)state.first();
-        int previousVariant = (Integer)state.second();
-
-        if (!Action.isActionComplete(this, event.getPartialTick())) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation(
-                            currentVariant == 0
-                                    ? baseAnimNade
-                                    : baseAnimNade + currentVariant, ILoopType.EDefaultLoopTypes.LOOP
-                            )
-                    );
-            event.getController().transitionLengthTicks = 0.0;
-            return;
-        }
-
-        int nextVariant = this.pickRandomVariantIndex(currentVariant, previousVariant, maxVariants, chance);
-        controller.setAnimation(new AnimationBuilder().addAnimation(
-                nextVariant == 0
-                        ? baseAnimNade
-                        : baseAnimNade + nextVariant, ILoopType.EDefaultLoopTypes.LOOP));
-
-        controller.transitionLengthTicks = 0.0;
-        this.animationVariantMap.put(baseAnimNade, Pair.of(nextVariant, (nextVariant == 0 ? previousVariant : nextVariant)));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -921,7 +916,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     protected void resetGirlState() {
         if (this.world.isRemote && this.isControlledByLocalPlayer()) {
-            this.playerCameraOffsetPos = null;
+            this.cameraOriginPos = null;
             PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID(), true));
         } else if (!this.world.isRemote) {
             ResetGirl.EventHandler.resetGirls((EntityPlayerMP)this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID()));
@@ -941,7 +936,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public static GirlEntity getGirlByUUID(@Nonnull UUID uUID) {
-        return GirlEntity.getGirlByUUID(uUID, (Boolean) null);
+        return GirlEntity.getGirlByUUID(uUID, null);
     }
 
     public static GirlEntity getGirlByUUID(@Nonnull UUID uUID, Boolean isServerSide) {
@@ -964,10 +959,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public static GirlEntity getActiveSceneInfo(@Nonnull UUID uUID) {
         boolean bl = FMLCommonHandler.instance().getMinecraftServerInstance() == null;
         for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
-            boolean bl2;
-            if (girl.isDead || (bl2 = girl.world.isRemote) != bl || !uUID.equals(girl.getInteractionPlayerUUID()))
-                continue;
-            return girl;
+            if (!girl.isDead && girl.world.isRemote == bl && uUID.equals(girl.getInteractionPlayerUUID())) {
+                return girl;
+            }
         }
         return null;
     }
@@ -977,13 +971,13 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public void ac() {
+    public void AcSomeUnknownClass() {
     }
 
     public void resetCameraAndPhysics() {
-        this.playerCameraOffsetPos = null;
+        this.cameraOriginPos = null;
         this.setNoGravity(false);
-        this.setCurrentAction((Action)null);
+        this.setCurrentAction(null);
         if (this.world.isRemote) {
             this.resetLocalPlayerClientState();
         }
@@ -994,7 +988,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (this.isControlledByLocalPlayer()) {
             HandlePlayerMovement.setMovementLock(true);
             Minecraft.getMinecraft().player.setInvisible(false);
-            PackageHandler.INSTANCE.sendToServer((IMessage)new ResetGirl(this.girlID()));
+            PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
         }
     }
 
@@ -1026,7 +1020,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public void resetAnimationControllerOffset() {
         this.resetAnimationControllerTicks();
-        PackageHandler.INSTANCE.sendToServer((IMessage)new ResetController(this.girlID()));
+        PackageHandler.INSTANCE.sendToServer(new ResetController(this.girlID()));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1052,18 +1046,18 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
 
         EntityPlayer player = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
-        if (this.playerCameraOffsetPos == null) {
+        if (this.cameraOriginPos == null) {
             assert player != null;
-            this.playerCameraOffsetPos = player.getPositionVector();
+            this.cameraOriginPos = player.getPositionVector();
         }
 
-        Vec3d newPos = this.playerCameraOffsetPos;
+        Vec3d newPos = this.cameraOriginPos;
         newPos = newPos.add(-Math.sin((double)(this.cameraYaw + 90.0f) * (Math.PI / 180)) * x, 0.0, Math.cos((double)(this.cameraYaw + 90.0f) * (Math.PI / 180)) * x);
         newPos = newPos.add(0.0, y, 0.0);
         newPos = newPos.add(-Math.sin((double)this.cameraYaw * (Math.PI / 180)) * z, 0.0, Math.cos((double)this.cameraYaw * (Math.PI / 180)) * z);
         if (this.world.isRemote) {
             assert player != null;
-            PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(player.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
+            PackageHandler.INSTANCE.sendToServer(new TeleportPlayer(player.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
             return;
         }
 
@@ -1084,7 +1078,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return clientPlayer.getPersistentID().equals(this.getInteractionPlayerUUID()) || clientPlayer.getUniqueID().equals(this.getInteractionPlayerUUID());
     }
 
-    protected void U() {
+    protected void doAction() {
     }
 
     public void setCustomNameOverride(String name) {
@@ -1114,39 +1108,40 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public void sendGirlChatMessage(String text) {
         if (!this.world.isRemote) {
-            PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PackageHandler.INSTANCE.sendToAllAround(new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
         } else if (this.isControlledByLocalPlayer()) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()));
+            PackageHandler.INSTANCE.sendToServer(new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()));
         }
     }
 
-    protected void b(String string, boolean bl) {
-        if (!bl) {
-            this.sendGirlChatMessage(string);
+    protected void broadcastChatAround(String message, boolean toAll) {
+        if (!toAll) {
+            this.sendGirlChatMessage(message);
         }
+
         if (!this.world.isRemote) {
-            PackageHandler.INSTANCE.sendToAllAround((IMessage)new SendChatMessage(string, this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
-            return;
-        }
-        if (this.isControlledByLocalPlayer()) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SendChatMessage(string, this.dimension, this.girlID()));
-        }
-    }
-
-    protected void sendLocalClientMessage(String string) {
-        if (this.world.isRemote) {
-            Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("<%s> %s", this.getDisplayNameText(), string)));
+            PackageHandler.INSTANCE.sendToAllAround(new SendChatMessage(message, this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+        } else {
+            if (this.isControlledByLocalPlayer()) {
+                PackageHandler.INSTANCE.sendToServer(new SendChatMessage(message, this.dimension, this.girlID()));
+            }
         }
     }
 
-    protected void a(UUID uUID, String string) {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            System.out.println("Player with UUID " + uUID.toString() + " not found");
-            return;
-        }
+    protected void sendChatMessage(String message) {
         if (this.world.isRemote) {
-            Minecraft.getMinecraft().player.sendMessage(new TextComponentString("<" + entityPlayer.getName() + "> " + string));
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("<%s> %s", this.getDisplayNameText(), message)));
+        }
+    }
+
+    protected void sendChatMessageToPlayer(UUID playerId, String message) {
+        EntityPlayer player = this.world.getPlayerEntityByUUID(playerId);
+        if (player == null) {
+            System.out.println("Player with UUID " + playerId + " not found");
+        } else {
+            if (this.world.isRemote) {
+                Minecraft.getMinecraft().player.sendMessage(new TextComponentString("<" + player.getName() + "> " + message));
+            }
         }
     }
 
@@ -1158,7 +1153,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.PlaySoundAtPosition(sound, 1.0f, 1.0f);
     }
 
-    public void PlaySound(SoundEvent[] soundEventArray, int ... nArray) {
+    public void playRandomSound(SoundEvent[] soundEventArray, int ... nArray) {
         if (nArray.length == 0) {
             this.PlaySound(soundEventArray[this.getRNG().nextInt(soundEventArray.length)]);
             return;
@@ -1166,22 +1161,16 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.PlaySoundAtPosition(soundEventArray[nArray[this.getRNG().nextInt(nArray.length)]], 1.0f, 1.0f);
     }
 
-    public void PlaySound(SoundEvent[] sounds, float volume) {
+    public void playRandomSoundAtVolume(SoundEvent[] sounds, float volume) {
         this.PlaySoundAtPosition(sounds[this.getRNG().nextInt(sounds.length)], volume, 1.0f);
     }
 
-    public void PlaySound(SoundEvent sound, float volume) {
+    public void playSoundAtVolume(SoundEvent sound, float volume) {
         this.PlaySoundAtPosition(sound, volume, 1.0f);
     }
 
     public static boolean isValidGirl(Entity entity) {
-        if (entity == null) {
-            return false;
-        }
-        if (!(entity instanceof GirlEntity)) {
-            return false;
-        }
-        return !(entity instanceof PlayerGirl);
+        return entity instanceof GirlEntity && !(entity instanceof PlayerGirl);
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1190,12 +1179,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public boolean getClosestPlayerID() {
+    public boolean isLocalPlayerNearby() {
         EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 50.0);
-        if (entityPlayer == null) {
-            return false;
-        }
-        return entityPlayer.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID());
+        return entityPlayer != null && entityPlayer.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID());
     }
 
     public Vec3d getFrontOffsetVector() {
@@ -1241,18 +1227,18 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     protected SoundEvent getAmbientSound() {
         if (this.getRNG().nextInt(10000) == 0) {
             if (this.world.isRemote && Minecraft.getMinecraft().player.getPositionVector().distanceTo(this.getPositionVector()) < 10.0) {
-                this.sendLocalClientMessage("whopa");
+                this.sendChatMessage("whopa");
             }
             return SoundsHandler.random(SoundsHandler.MISC_FART); //Why fart?
         }
         return null;
     }
 
-    public float getLeftArmRotation() {
+    public float getLeftArmAngle() {
         return 0.0f;
     }
 
-    public float getRightArmRotation() {
+    public float getRightArmAngle() {
         return 0.0f;
     }
 
@@ -1284,23 +1270,23 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
         MatrixStack matrixStack = new MatrixStack();
         if (this.isAnchored()) {
-            ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(this.getYawRotation())));
+            matrixStack.rotateY((float)(-Math.toRadians(this.getYawRotation())));
         } else if (applyYaw) {
-            ((MatrixStack)matrixStack).rotateY((float)(-Math.toRadians(RotationHelper.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
+            matrixStack.rotateY((float)(-Math.toRadians(RotationHelper.LerpFloat(this.prevRenderYawOffset, this.renderYawOffset, Minecraft.getMinecraft().getRenderPartialTicks()))));
         }
 
         for (GeoBone ancestor : boneHierarchy) {
-            ((MatrixStack)matrixStack).translate(ancestor);
-            ((MatrixStack)matrixStack).moveToPivot(ancestor);
-            ((MatrixStack)matrixStack).rotate(ancestor);
-            ((MatrixStack)matrixStack).scale(ancestor);
-            ((MatrixStack)matrixStack).moveBackFromPivot(ancestor);
+            matrixStack.translate(ancestor);
+            matrixStack.moveToPivot(ancestor);
+            matrixStack.rotate(ancestor);
+            matrixStack.scale(ancestor);
+            matrixStack.moveBackFromPivot(ancestor);
         }
-        ((MatrixStack)matrixStack).translate(geoBone);
-        ((MatrixStack)matrixStack).moveToPivot(geoBone);
-        ((MatrixStack)matrixStack).rotate(geoBone);
-        ((MatrixStack)matrixStack).scale(geoBone);
-        matrixStack = this.applyAdditionalMatrixTransformations((MatrixStack)matrixStack);
+        matrixStack.translate(geoBone);
+        matrixStack.moveToPivot(geoBone);
+        matrixStack.rotate(geoBone);
+        matrixStack.scale(geoBone);
+        matrixStack = this.applyAdditionalMatrixTransformations(matrixStack);
         return matrixStack;
     }
 
@@ -1379,12 +1365,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @CheckReturnValue
-    public boolean h(int n) {
+    public boolean isPartEnabled(int n) {
         ArrayList<Integer> arrayList = this.getCustomPartIdList();
         if (arrayList.size() - 1 < n) {
             return false;
         }
-        return (Integer)arrayList.get(n) == 101;
+        return arrayList.get(n) == 101;
     }
 
     @CheckReturnValue
@@ -1403,37 +1389,32 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.set(AbstractNpcOnlyEntity.APPEARANCE_DNA, stringBuilder.toString());
     }
 
-    public String java_lang_String_F() {
-        if (this instanceof AbstractNpcOnlyEntity || this instanceof WorkerPlayerEntity) {
-            return this.entityDataManager.get(AbstractNpcOnlyEntity.APPEARANCE_DNA);
-        }
-        return "";
+    public String getCustomPartListCode() {
+        return this instanceof AbstractNpcOnlyEntity || this instanceof WorkerPlayerEntity ? this.entityDataManager.get(AbstractNpcOnlyEntity.APPEARANCE_DNA) : "";
     }
 
-    public static String c(List<Integer> list) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int n : list) {
-            stringBuilder.append(n);
-            stringBuilder.append("-");
+    public static String encodePartIdList(List<Integer> parts) {
+        StringBuilder sb = new StringBuilder();
+        for (int part : parts) {
+            sb.append(part);
+            sb.append("-");
         }
-        return stringBuilder.toString();
+        return sb.toString();
     }
 
-    public static List<Integer> c(String string) {
-        String[] stringArray;
-        ArrayList<Integer> arrayList = new ArrayList<Integer>();
-        for (String string2 : stringArray = string.split("-")) {
-            arrayList.add(Integer.parseInt(string2));
+    public static List<Integer> decodePartIdList(String tokens) {
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+        for (String token : tokens.split("-")) {
+            ids.add(Integer.parseInt(token));
         }
-        return arrayList;
+        return ids;
     }
 
-    // TODO clash downstream
-    public static List<Integer> h(UUID uUID) {
+    public static List<Integer> getAllPartIdsForGirl(UUID uUID) {
         GirlEntity em_class2582 = Main.proxy instanceof ClientProxy ? GirlEntity.getClientGirlEntity(uUID) : GirlEntity.getServerGirlEntity(uUID);
         ArrayList<Integer> arrayList = new ArrayList<Integer>(em_class2582.getBasePartIdList());
         if (em_class2582 instanceof AbstractNpcOnlyEntity || em_class2582 instanceof WorkerPlayerEntity) {
-            arrayList.addAll(GirlEntity.c(em_class2582.getDataManager().get(AbstractNpcOnlyEntity.APPEARANCE_DNA)));
+            arrayList.addAll(GirlEntity.decodePartIdList(em_class2582.getDataManager().get(AbstractNpcOnlyEntity.APPEARANCE_DNA)));
         }
         return arrayList;
     }
@@ -1442,44 +1423,40 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return new ArrayList<>();
     }
 
-    public List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> d(UUID uUID) {
+    public List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> buildCustomPartsData(UUID uUID) {
         if (this.customPartsData != null) {
             return this.customPartsData;
         }
-        ArrayList<Integer> arrayList = this.getCustomPartIdList();
-        if (arrayList.isEmpty()) {
+        ArrayList<Integer> parts = this.getCustomPartIdList();
+        if (parts.isEmpty()) {
             this.customPartsData = new ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>>();
             return this.customPartsData;
         }
-        ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> arrayList2 = new ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>>();
-        List<Integer> list = GirlEntity.h(uUID);
-        for (int i = 0; i < arrayList.size(); ++i) {
+        ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> data = new ArrayList<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>>();
+        List<Integer> allParts = GirlEntity.getAllPartIdsForGirl(uUID);
+        for (int i = 0; i < parts.size(); ++i) {
             //arrayList2.add(new AbstractMap.SimpleEntry(
             //        gw_class389.GIRL_SPECIFIC,
             //        new AbstractMap.SimpleEntry(this.e((Integer)var2.get(var5)), var4.get(var5))));
 
-            arrayList2.add(
-                    new AbstractMap.SimpleEntry<>(
-                                    CustomPartCategory.GIRL_SPECIFIC, new AbstractMap.SimpleEntry<>(this.e(arrayList.get(i)), list.get(i))));
+            data.add(
+                    new AbstractMap.SimpleEntry<>(CustomPartCategory.GIRL_SPECIFIC,
+                            new AbstractMap.SimpleEntry<>(this.getPartNames(parts.get(i)), allParts.get(i))));
         }
-        this.customPartsData = arrayList2;
-        return arrayList2;
+        this.customPartsData = data;
+        return data;
     }
 
-    public void b(List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> list) {
+    public void setCustomPartsData(List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> list) {
         this.customPartsData = list;
     }
 
-    public void a(int n, int n2) {
-        if (this.customPartsData == null) {
-            return;
+    public void setCustomPartsValue(int index, int value) {
+        if (this.customPartsData != null && this.customPartsData.size() - 1 >= index) {
+            Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry = this.customPartsData.get(index);
+            entry.getValue().setValue(value);
+            this.customPartsData.set(index, entry);
         }
-        if (this.customPartsData.size() - 1 < n) {
-            return;
-        }
-        Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry = this.customPartsData.get(n);
-        entry.getValue().setValue(n2);
-        this.customPartsData.set(n, entry);
     }
 
     public void setCustomPartListCode(String string) {
@@ -1488,7 +1465,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
-    private List<String> e(int n) {
+    private List<String> getPartNames(int n) {
         ArrayList<String> arrayList = new ArrayList<String>();
         for (int i = 0; i < n; ++i) {
             arrayList.add("");
@@ -1514,10 +1491,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     public static String serializePartsSet(HashSet<String> hashSet) {
-        if (hashSet == null) {
-            return "";
-        }
-        if (hashSet.isEmpty()) {
+        if (hashSet == null || hashSet.isEmpty()) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
@@ -1544,10 +1518,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return true;
     }
 
-    public static enum WalkSpeed {
+    public enum WalkSpeed {
         WALK,
         FAST_WALK,
-        RUN;
+        RUN
     }
 }
 

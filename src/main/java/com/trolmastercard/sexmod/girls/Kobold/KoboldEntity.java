@@ -521,7 +521,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void ac() {
+    public void AcSomeUnknownClass() {
         if (this.az) {
             this.az = false;
         } else {
@@ -587,7 +587,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             this.noClip = true;
             this.setNoGravity(true);
             this.getNavigator().clearPath();
-            this.U();
+            this.doAction();
             return true;
         }
         this.rotationYaw = this.getYawRotation();
@@ -736,7 +736,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                                     float dist = this.getDistance(entityPlayer);
                                     if (dist < 2.0f && this.nearestDistance > 2.0f) {
                                         this.playSound(SoundsHandler.random(SoundsHandler.GIRLS_KOBOLD_HEYMASTER));
-                                        this.sendLocalClientMessage("Hey master!");
+                                        this.sendChatMessage("Hey master!");
                                         aV = this.world.getTotalWorldTime();
                                     }
                                     this.nearestDistance = dist;
@@ -800,7 +800,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     @Override
-    protected void U() {
+    protected void doAction() {
         //boolean condition;
         String handState = this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES);
         boolean hasHornyPotion = this.getActivePotionEffect(HornyPotion.HORNY_POTION) != null;
@@ -2661,7 +2661,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         return false;
     }
 
-    void playSoundAtVolume(SoundEvent sound, float volume) {
+    void playSoundAtVolumeKoboldSpecific(SoundEvent sound, float volume) {
         float shrink = 0.25f - this.entityDataManager.get(SIZE);
         double progress = shrink / 0.25f;
         float pitch = (float) RotationHelper.LerpDouble(0.9f, 1.1f, progress);
@@ -2669,7 +2669,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     void playSound(SoundEvent sound) {
-        this.playSoundAtVolume(sound, 1.0f);
+        this.playSoundAtVolumeKoboldSpecific(sound, 1.0f);
     }
 
     void playRandomSounds(SoundEvent[] sounds) {
@@ -2677,7 +2677,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     void playRandomSound(SoundEvent[] sounds, float volume) {
-        this.playSoundAtVolume(sounds[this.getRNG().nextInt(sounds.length)], volume);
+        this.playSoundAtVolumeKoboldSpecific(sounds[this.getRNG().nextInt(sounds.length)], volume);
     }
 
     @Override
@@ -2832,12 +2832,12 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.getInteractionPlayerUUID(), "I'd like to use ur services owo");
-                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
+                    this.sendChatMessageToPlayer(this.getInteractionPlayerUUID(), "I'd like to use ur services owo");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "plob": {
-                    this.PlaySound(SoundsHandler.MISC_PLOB, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_PLOB, new int[0]);
                     break;
                 }
                 case "blackScreen": {
@@ -2847,7 +2847,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 }
                 case "paymentDone": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.U();
+                    this.doAction();
                     break;
                 }
                 case "blowjobStartMSG1": {
@@ -2866,15 +2866,15 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 }
                 case "lipsound": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
+                        this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
                     } else {
-                        this.PlaySound(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
+                        this.playRandomSoundAtVolume(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
                     }
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "touch": {
-                    this.PlaySound(SoundsHandler.MISC_TOUCH, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_TOUCH, new int[0]);
                     break;
                 }
                 case "blowjobStartDone": {
@@ -2902,11 +2902,11 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     break;
                 }
                 case "cumLoud": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "cumQuiet": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
                     break;
                 }
                 case "analCumDone": 
@@ -2930,7 +2930,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     break;
                 }
                 case "pounding": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
                     break;
                 }
                 case "analFastRapid": {
@@ -2957,7 +2957,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle": {
@@ -3056,13 +3056,13 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     break;
                 }
                 case "cumMsg": {
-                    this.sendLocalClientMessage("I.. hope I am satisfying you sir");
+                    this.sendChatMessage("I.. hope I am satisfying you sir");
                     this.playSound(SoundsHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
                     break;
                 }
                 case "renderEgg": {
                     this.isRenderEgg = true;
-                    this.PlaySound(SoundsHandler.MISC_PLOB, 0.5f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_PLOB, 0.5f);
                     break;
                 }
                 case "mating_press_cumDone": {

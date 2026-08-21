@@ -77,7 +77,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     }
 
     @Override
-    public AxisAlignedBB getPlayerBB(EntityPlayer entityPlayer) {
+    public AxisAlignedBB getPlayerCollisionBox(EntityPlayer entityPlayer) {
         float f = 0.6f;
         float f2 = 0.9f;
         float f3 = f / 2.0f;
@@ -167,20 +167,20 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        if ("anal".equals(actionName)) {
+    public void handleOwnerCommand(String command, UUID partnerUUID) {
+        if ("anal".equals(command)) {
             this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.KOBOLD_ANAL_START);
             this.sendActionPacket(this.getOutfitIndex(), Action.KOBOLD_ANAL_START);
             this.setOutfitIndex(0);
         }
-        if ("oral".equals(actionName)) {
+        if ("oral".equals(command)) {
             this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.STARTBLOWJOB);
             this.sendActionPacket(this.getOutfitIndex(), Action.STARTBLOWJOB);
             this.setOutfitIndex(0);
         }
-        if ("mating".equals(actionName)) {
+        if ("mating".equals(command)) {
             this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.MATING_PRESS_START);
             this.sendActionPacket(this.getOutfitIndex(), Action.MATING_PRESS_START);
@@ -215,22 +215,22 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     }
 
     @Override
-    public IRenderer getHandRenderer(int n) {
+    public IRenderer getHandModelRenderer(int index) {
         return new KoboldHand();
     }
 
     @Override
-    public String HandTexture(int n) {
+    public String getHandTexture(int index) {
         return "textures/entity/kobold/hand.png";
     }
 
     @Override
-    public Vec3i net_minecraft_util_math_Vec3i_b(int n) {
+    public Vec3i getHandColor(int index) {
         try {
-            return EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(as)).getMainColor();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return super.net_minecraft_util_math_Vec3i_b(n);
+            return EyeAndKoboldColor.valueOf(this.entityDataManager.get(as)).getMainColor();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return super.getHandColor(index);
         }
     }
 
@@ -447,12 +447,12 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     break;
                 }
                 case "paymentMSG1": {
-                    this.a(this.getInteractionPlayerUUID(), "I'd like to use ur services owo");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessageToPlayer(this.getInteractionPlayerUUID(), "I'd like to use ur services owo");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "plob": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "blackScreen": {
@@ -462,7 +462,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                 }
                 case "paymentDone": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.U();
+                    this.doAction();
                     break;
                 }
                 case "blowjobStartMSG1": {
@@ -481,15 +481,15 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                 }
                 case "lipsound": {
                     if (this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
+                        this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ALLIE_LIPSOUND, 1.5f);
                     } else {
-                        this.PlaySound(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
+                        this.playRandomSoundAtVolume(SoundsHandler.GIRLS_JENNY_LIPSOUND, 1.5f);
                     }
                     SexUI.addCumPercentage(0.02f);
                     break;
                 }
                 case "touch": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_TOUCH);
+                    this.playRandomSound(SoundsHandler.MISC_TOUCH);
                     break;
                 }
                 case "blowjobStartDone": {
@@ -517,11 +517,11 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     break;
                 }
                 case "cumLoud": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "cumQuiet": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 1.5f);
                     break;
                 }
                 case "analCumDone": 
@@ -545,7 +545,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     break;
                 }
                 case "pounding": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "analFastRapid": {
@@ -573,7 +573,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle": {
@@ -672,7 +672,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     break;
                 }
                 case "cumMsg": {
-                    this.sendLocalClientMessage("I.. hope I am satisfying you sir");
+                    this.sendChatMessage("I.. hope I am satisfying you sir");
                     this.b(SoundsHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
                     break;
                 }

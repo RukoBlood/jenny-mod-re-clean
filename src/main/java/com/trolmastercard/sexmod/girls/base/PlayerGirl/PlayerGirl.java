@@ -59,12 +59,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 //ei
 public abstract class PlayerGirl extends Fighter {
-    final static public String aa = "sexmod:CustomModel";
+    final static public String CUSTOM_MODEL_NBT = "sexmod:CustomModel";
     final static public String ae = "sexmod:GirlSpecific";
     final static public float ac = 0.0f;
     final static public int am = 100;
     final static public int Y = 65;
-    static public boolean ag = true;
+    static public boolean ag = true; //TODO: what is ag
     public Vector2f ao = new Vector2f(0.0f, 0.0f);
     public boolean isPlayerSneaking = false;
     public boolean isPlayerSprinting = false;
@@ -79,7 +79,7 @@ public abstract class PlayerGirl extends Fighter {
 
     static public Hashtable<UUID, PlayerGirl> playerGirlUUIDHashtable = new Hashtable();
     static public List<PlayerGirl> playerGirlList = new ArrayList<PlayerGirl>();
-    int an = -1;
+    int stripTimer = -1;
     public boolean guiPending = true;
 
     protected PlayerGirl(World world) {
@@ -123,16 +123,16 @@ public abstract class PlayerGirl extends Fighter {
         PackageHandler.INSTANCE.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.getTargetNetworkPoint());
     }
 
-    public EntityPlayer getPlayerEntity(EntityPlayer player) {
+    public EntityPlayer resolvePlayerEntity(EntityPlayer player) {
         return player;
     }
 
-    public boolean boolean_z() {
+    public boolean isRidingSomething() {
         return true;
     }
 
-    public Vec3d c(Vec3d vec3d, float f) {
-        return vec3d;
+    public Vec3d getOwnerLookVector(Vec3d vec, float partialTicks) {
+        return vec;
     }
 
     @Override
@@ -144,7 +144,7 @@ public abstract class PlayerGirl extends Fighter {
         return true;
     }
 
-    public boolean boolean_q() {
+    public boolean canMountPlayer() {
         return false;
     }
 
@@ -152,11 +152,11 @@ public abstract class PlayerGirl extends Fighter {
     public void beeOpenGUI() {
     }
 
-    public boolean canOpenGUI() {
+    public boolean canOpenInteractionMenu() {
         return true;
     }
 
-    public boolean boolean_a(String string) {
+    public boolean handleActionRequest(String string) {
         return false;
     }
 
@@ -174,16 +174,16 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     // Base
-    public void u_() {
+    public void handleInteraction() {
     }
 
-    public abstract void onGuiActionSelected(String actionName, UUID partnerUUID);
+    public abstract void handleOwnerCommand(String command, UUID partnerUUID);
 
-    public abstract IRenderer getHandRenderer(int var1);
+    public abstract IRenderer getHandModelRenderer(int index);
 
-    public abstract String HandTexture(int var1);
+    public abstract String getHandTexture(int index);
 
-    public Vec3i net_minecraft_util_math_Vec3i_b(int n) {
+    public Vec3i getHandColor(int index) {
         return new Vec3i(255, 255, 255);
     }
 
@@ -197,7 +197,7 @@ public abstract class PlayerGirl extends Fighter {
         return true;
     }
 
-    public boolean boolean_F() {
+    public boolean FAllieBoolean() {
         return false;
     }
 
@@ -208,17 +208,16 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static void void_i() {
-        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(Minecraft.getMinecraft().player.getPersistentID());
-        if (ei_class2512 == null) {
-            return;
+    public static void resetPlayerGirlCamera() {
+        PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(Minecraft.getMinecraft().player.getPersistentID());
+        if (playerGirl != null) {
+            playerGirl.resetCameraAndPhysics();
         }
-        ei_class2512.resetCameraAndPhysics();
     }
 
     @Override
     public void resetCameraAndPhysics() {
-        this.playerCameraOffsetPos = null;
+        this.cameraOriginPos = null;
         this.setNoGravity(false);
         if (this.world.isRemote) {
             this.resetLocalPlayerClientState();
@@ -228,14 +227,14 @@ public abstract class PlayerGirl extends Fighter {
     @Override
     @SideOnly(value=Side.CLIENT)
     protected void resetLocalPlayerClientState() {
-        if (this.isControlledByLocalPlayer() || this.boolean_f()) {
+        if (this.isControlledByLocalPlayer() || this.hasOwnerUUID()) {
             HandlePlayerMovement.setMovementLock(true);
-            EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-            entityPlayerSP.setInvisible(false);
-            entityPlayerSP.setNoGravity(false);
-            entityPlayerSP.noClip = false;
+            EntityPlayerSP player = Minecraft.getMinecraft().player;
+            player.setInvisible(false);
+            player.setNoGravity(false);
+            player.noClip = false;
             this.entityDataManager.set(IS_ANCHORED, false);
-            PackageHandler.INSTANCE.sendToServer((IMessage)new ResetGirl(this.girlID()));
+            PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
         }
     }
 
@@ -243,39 +242,38 @@ public abstract class PlayerGirl extends Fighter {
     @SideOnly(value=Side.CLIENT)
     public boolean hasCustomParts() {
         Minecraft minecraft = Minecraft.getMinecraft();
-        return !this.boolean_f() || minecraft.gameSettings.thirdPersonView != 0;
+        return !this.hasOwnerUUID() || minecraft.gameSettings.thirdPersonView != 0;
     }
 
-    protected void handleOwnerUUID(boolean bl) {
-        if (!ag) {
-            return;
+    protected void handleOwnerUUID(boolean allowFly) {
+        if (ag) {
+            if (this.getOwnerUserUUID() != null) {
+                EntityPlayer player = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
+                if (player != null) {
+                    player.capabilities.allowFlying = allowFly;
+                    if (!allowFly) {
+                        player.capabilities.isFlying = false;
+                    }
+                    player.sendPlayerAbilities();
+                }
+            }
         }
-        if (this.getOwnerUserUUID() == null) {
-            return;
-        }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
-        if (entityPlayer == null) {
-            return;
-        }
-        entityPlayer.capabilities.allowFlying = bl;
-        if (!bl) {
-            entityPlayer.capabilities.isFlying = false;
-        }
-        entityPlayer.sendPlayerAbilities();
     }
 
-    public static boolean boolean_e(UUID uUID) {
-        PlayerGirl.tryPuttingGirlsInTable();
+    public static boolean hasPlayerGirlWithUUID(UUID uUID) {
+        rebuildPlayerGirlTableFromWorld();
+
         for (Map.Entry<UUID, PlayerGirl> entry : playerGirlUUIDHashtable.entrySet()) {
-            UUID uUID2 = entry.getKey();
-            if (!uUID.equals(uUID2)) continue;
-            return true;
+            UUID candidateUUID = entry.getKey();
+            if (uUID.equals(candidateUUID)) {
+                return true;
+            }
         }
         return false;
     }
 
-    public static boolean isOwnerPlayer(EntityPlayer entityPlayer) {
-        return entityPlayer != null && PlayerGirl.boolean_e(entityPlayer.getPersistentID());
+    public static boolean isOwnerPlayer(EntityPlayer player) {
+        return player != null && PlayerGirl.hasPlayerGirlWithUUID(player.getPersistentID());
     }
 
     @Override
@@ -284,30 +282,30 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     protected EntityPlayer getPlayerPartner() {
-        List<EntityPlayer> list = this.world.playerEntities;
-        EntityPlayer entityPlayer = null;
-        for (EntityPlayer entityPlayer2 : list) {
-            if (entityPlayer2.getPersistentID().equals(this.entityDataManager.get(OWNER).get())) continue;
-            if (entityPlayer == null) {
-                entityPlayer = entityPlayer2;
-                continue;
+        List<EntityPlayer> players = this.world.playerEntities;
+        EntityPlayer nearest = null;
+
+        for (EntityPlayer player : players) {
+            if (!player.getPersistentID().equals(this.entityDataManager.get(OWNER).get())) {
+                if (nearest == null) {
+                    nearest = player;
+                } else {
+                    double closestDist = nearest.getDistanceSq(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z);
+                    double dist = player.getDistanceSq(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z);
+                    if (dist < closestDist) {
+                        nearest = player;
+                    }
+                }
             }
-            double d = entityPlayer.getDistanceSq(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z);
-            double d2 = entityPlayer2.getDistanceSq(this.getTargetScenePosition().x, this.getTargetScenePosition().y, this.getTargetScenePosition().z);
-            if (!(d2 < d)) continue;
-            entityPlayer = entityPlayer2;
         }
-        return entityPlayer;
+        return nearest;
     }
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean getClosestPlayerID() {
-        EntityPlayer entityPlayer = this.getPlayerPartner();
-        if (entityPlayer == null) {
-            return false;
-        }
-        return entityPlayer.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID());
+    public boolean isLocalPlayerNearby() {
+        EntityPlayer player = this.getPlayerPartner();
+        return player != null && player.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID());
     }
 
     public Vec3d getTargetScenePosition() {
@@ -315,26 +313,26 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     protected void teleportPlayerToGirl(UUID uUID) {
-        EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID(uUID);
-        EntityPlayerMP entityPlayerMP2 = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(OWNER).get());
-        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
-        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP2);
+        EntityPlayerMP player = (EntityPlayerMP)this.world.getPlayerEntityByUUID(uUID);
+        EntityPlayerMP ownerPlayer = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(OWNER).get());
+        PackageHandler.INSTANCE.sendTo(new SetPlayerMovement(false), player);
+        PackageHandler.INSTANCE.sendTo(new SetPlayerMovement(false), ownerPlayer);
         this.setInteractionPlayerUUID(uUID);
         this.rotationYaw = 0.0f;
         this.rotationYawHead = 0.0f;
-        assert entityPlayerMP != null;
-        entityPlayerMP.rotationYaw = 180.0f;
-        entityPlayerMP.rotationYawHead = 180.0f;
-        entityPlayerMP.setNoGravity(true);
-        entityPlayerMP.noClip = true;
-        Vec3d vec3d = this.getPositionVector();
-        entityPlayerMP.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z + 1.0);
-        entityPlayerMP.capabilities.isFlying = true;
-        assert entityPlayerMP2 != null;
-        entityPlayerMP2.capabilities.isFlying = true;
+        assert player != null;
+        player.rotationYaw = 180.0f;
+        player.rotationYawHead = 180.0f;
+        player.setNoGravity(true);
+        player.noClip = true;
+        Vec3d pos = this.getPositionVector();
+        player.setPositionAndUpdate(pos.x, pos.y, pos.z + 1.0);
+        player.capabilities.isFlying = true;
+        assert ownerPlayer != null;
+        ownerPlayer.capabilities.isFlying = true;
         this.snapPlayerToPosition(uUID);
         this.entityDataManager.set(IS_ANCHORED, true);
-        this.setTargetPosition(vec3d);
+        this.setTargetPosition(pos);
         this.setYawRotation(0.0f);
     }
 
@@ -343,7 +341,7 @@ public abstract class PlayerGirl extends Fighter {
         super.playStepSound(blockPos, block);
     }
 
-    public AxisAlignedBB getPlayerBB(EntityPlayer player) {
+    public AxisAlignedBB getPlayerCollisionBox(EntityPlayer player) {
         return player.getEntityBoundingBox();
     }
 
@@ -352,239 +350,229 @@ public abstract class PlayerGirl extends Fighter {
         this.noClip = true;
         this.setNoGravity(true);
         super.onUpdate();
-        this.D_();
-        if (!this.world.isRemote) {
-            return;
-        }
-        if (this.boolean_f()) {
-            SexPromptManager.INSTANCE.tick();
+        this.updateStripSequence();
+        if (this.world.isRemote) {
+            if (this.hasOwnerUUID()) {
+                SexPromptManager.INSTANCE.tick();
+            }
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_h() {
+    void updateEyeHeight() {
         Minecraft.getMinecraft().player.eyeHeight = this.getEyeHeight();
     }
 
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_f() {
-        if (!this.entityDataManager.get(OWNER).isPresent()) {
-            return false;
-        }
-        return ((UUID)this.entityDataManager.get(OWNER).get()).equals(Minecraft.getMinecraft().player.getPersistentID());
+    public boolean hasOwnerUUID() {
+        return this.entityDataManager.get(OWNER).isPresent() && this.entityDataManager.get(OWNER).get().equals(Minecraft.getMinecraft().player.getPersistentID());
     }
 
-    public boolean boolean_E() {
+    public boolean EGoblinIsOwnerUUIDNotNull() {
         return false;
     }
 
-    void void_d(EntityPlayer entityPlayer) {
-        NBTTagCompound nBTTagCompound = entityPlayer.getEntityData();
-        String string = nBTTagCompound.getString(aa + (Object)((Object) PlayerGirlEntity.fromGirl(this)));
-        this.setCustomModelCode(string);
+    void saveOwnerData(EntityPlayer entityPlayer) {
+        NBTTagCompound nbt = entityPlayer.getEntityData();
+        String modelCode = nbt.getString(CUSTOM_MODEL_NBT + PlayerGirlEntity.getGirlType(this));
+        this.setCustomModelCode(modelCode);
     }
 
     @Override
     public void updateAITasks() {
         //Object object;
-        PlayerGirl.tryPuttingGirlsInTable();
-        this.updateActionTicks();
+        rebuildPlayerGirlTableFromWorld();
+        this.tickFollowUpTransitions();
         this.updateCustomModelParts();
         UUID uUID = this.getOwnerUserUUID();
-        if (uUID == null) {
-            return;
-        }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            this.setPositionAndUpdate(this.posX, 0.0, this.posZ);
-            return;
-        }
-        this.void_d(entityPlayer);
-        if (this.isAnchored()) {
-            Vec3d object = this.getTargetPosition();
-            this.setPositionAndUpdate(object.x, object.y, object.z);
-        } else {
-            this.setPositionAndUpdate(entityPlayer.posX, entityPlayer.posY + 0.0, entityPlayer.posZ);
-        }
-        Action object = this.getCurrentAction();
-        if (object == Action.NULL && entityPlayer.isSwingInProgress) {
-            this.setCurrentAction(Action.ATTACK);
-        }
-        if (object == Action.ATTACK && !entityPlayer.isSwingInProgress) {
-            this.setCurrentAction(Action.NULL);
+        if (uUID != null) {
+            EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+            if (player == null) {
+                this.setPositionAndUpdate(this.posX, 0.0, this.posZ);
+            } else {
+                this.saveOwnerData(player);
+                if (this.isAnchored()) {
+                    Vec3d targetPos = this.getTargetPosition();
+                    this.setPositionAndUpdate(targetPos.x, targetPos.y, targetPos.z);
+                } else {
+                    this.setPositionAndUpdate(player.posX, player.posY + 0.0, player.posZ);
+                }
+                Action action = this.getCurrentAction();
+                if (action == Action.NULL && player.isSwingInProgress) {
+                    this.setCurrentAction(Action.ATTACK);
+                }
+                if (action == Action.ATTACK && !player.isSwingInProgress) {
+                    this.setCurrentAction(Action.NULL);
+                }
+            }
         }
     }
 
-    // TODO clashes
-    void D_() {
-        if (this.an == -1) {
-            return;
+    void updateStripSequence() {
+        if (this.stripTimer != -1) {
+            ++this.stripTimer;
+            if (!this.world.isRemote && this.stripTimer == 65) {
+                this.setOutfitIndex(this.getOutfitIndex() == 0 ? 1 : 0);
+            }
+            if (this.stripTimer >= 100) {
+                if (this.getCurrentAction() == Action.STRIP) {
+                    if (this.world.isRemote) {
+                        this.handleClientOwner();
+                    } else {
+                        this.setCurrentAction(Action.NULL);
+                    }
+                }
+            }
         }
-        ++this.an;
-        if (!this.world.isRemote && this.an == 65) {
-            this.setOutfitIndex(this.getOutfitIndex() == 0 ? 1 : 0);
-        }
-        if (this.an < 100) {
-            return;
-        }
-        if (this.getCurrentAction() != Action.STRIP) {
-            return;
-        }
-        if (this.world.isRemote) {
-            this.void_n();
-            return;
-        }
-        this.setCurrentAction(Action.NULL);
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_n() {
-        if (this.boolean_f()) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            minecraft.gameSettings.thirdPersonView = 0;
-            minecraft.entityRenderer.loadEntityShader(minecraft.getRenderViewEntity());
+    void handleClientOwner() {
+        if (this.hasOwnerUUID()) {
+            Minecraft mc = Minecraft.getMinecraft();
+            mc.gameSettings.thirdPersonView = 0;
+            mc.entityRenderer.loadEntityShader(mc.getRenderViewEntity());
             HandlePlayerMovement.setMovementLock(true);
         }
     }
 
-    public boolean boolean_o() {
+    public boolean isSceneActive() {
         return this.isAnchored();
     }
 
-    public Vec3d b(Vec3d vec3d, float f) {
-        return vec3d;
+    //Goblin only
+    public Vec3d getOwnerAimVector(Vec3d vec, float partialTicks) {
+        return vec;
     }
 
-    public boolean a(Action fp_class3242, EntityPlayer entityPlayer) {
+    public boolean canPerformAction(Action action, EntityPlayer player) {
         return false;
     }
 
-    public boolean canInteract() {
+    public boolean isPlayerGirl() {
         return true;
     }
 
-    public void detachPartner(EntityPlayer entityPlayer) {
+    public void onOwnerInteract(EntityPlayer player) {
     }
 
     @Override
     public void setCurrentAction(Action action) {
         if (!this.world.isRemote && action == Action.NULL && this.isAnchored()) {
             System.out.println("prevented a potential animation break");
-            return;
+        } else {
+            if (action == Action.STRIP) {
+                this.stripTimer = this.world.isRemote ? 5 : 0;
+            }
+            super.setCurrentAction(action);
         }
-        if (action == Action.STRIP) {
-            this.an = this.world.isRemote ? 5 : 0;
-        }
-        super.setCurrentAction(action);
     }
 
-    void syncWithPlayerProperties(EntityPlayer entityPlayer) {
+    void syncArmor(EntityPlayer player) {
         this.entityDataManager.set(HELMET_SLOT, ItemStack.EMPTY);
         this.entityDataManager.set(CHEST_SLOT, ItemStack.EMPTY);
         this.entityDataManager.set(LEGS_SLOT, ItemStack.EMPTY);
         this.entityDataManager.set(BOOTS_SLOT, ItemStack.EMPTY);
-        for (ItemStack itemStack : entityPlayer.getArmorInventoryList()) {
-            if (itemStack.getItem() instanceof ItemElytra) {
-                this.entityDataManager.set(CHEST_SLOT, itemStack);
-                continue;
-            }
-            if (!(itemStack.getItem() instanceof ItemArmor)) continue;
-            ItemArmor itemArmor = (ItemArmor)itemStack.getItem();
-            switch (itemArmor.getEquipmentSlot()) {
-                case HEAD: {
-                    this.entityDataManager.set(HELMET_SLOT, itemStack);
-                    break;
-                }
-                case CHEST: {
-                    this.entityDataManager.set(CHEST_SLOT, itemStack);
-                    break;
-                }
-                case LEGS: {
-                    this.entityDataManager.set(LEGS_SLOT, itemStack);
-                    break;
-                }
-                case FEET: {
-                    this.entityDataManager.set(BOOTS_SLOT, itemStack);
+
+        for (ItemStack stack : player.getArmorInventoryList()) {
+            if (stack.getItem() instanceof ItemElytra) {
+                this.entityDataManager.set(CHEST_SLOT, stack);
+            } else {
+                if (stack.getItem() instanceof ItemArmor) {
+                    ItemArmor itemArmor = (ItemArmor) stack.getItem();
+                    switch (itemArmor.getEquipmentSlot()) {
+                        case HEAD: {
+                            this.entityDataManager.set(HELMET_SLOT, stack);
+                            break;
+                        }
+                        case CHEST: {
+                            this.entityDataManager.set(CHEST_SLOT, stack);
+                            break;
+                        }
+                        case LEGS: {
+                            this.entityDataManager.set(LEGS_SLOT, stack);
+                            break;
+                        }
+                        case FEET: {
+                            this.entityDataManager.set(BOOTS_SLOT, stack);
+                        }
+                    }
                 }
             }
         }
     }
 
     public UUID getOwnerUserUUID() {
-        if (this.entityDataManager.get(OWNER).isPresent()) {
-            return (UUID)this.entityDataManager.get(OWNER).get();
-        }
-        return null;
+        return this.entityDataManager.get(OWNER).isPresent() ? this.entityDataManager.get(OWNER).get() : null;
     }
 
     @Nullable
-    public EntityPlayer getOwnerPlayerEntity() {
+    public EntityPlayer getOwnerPlayer() {
         UUID uUID = this.getOwnerUserUUID();
-        if (uUID == null) {
-            return null;
-        }
-        return this.world.getPlayerEntityByUUID(uUID);
+        return uUID == null ? null : this.world.getPlayerEntityByUUID(uUID);
     }
 
-    public void a(Optional<UUID> optional) {
+    public void setOwnerId(Optional<UUID> optional) {
         this.entityDataManager.set(OWNER, optional);
     }
 
-    public void void_y() {
+    public void onTickClient() {
     }
 
     //TODO: is this a hitbox helper??
     public void spawnHitboxHelper() {
     }
 
-    public static void tryPuttingGirlsInTable() {
-        ArrayList<PlayerGirl> arrayList = new ArrayList<PlayerGirl>();
-        for (PlayerGirl ei_class2512 : playerGirlList) {
-            if (ei_class2512.getOwnerUserUUID() == null) continue;
-            playerGirlUUIDHashtable.put(ei_class2512.getOwnerUserUUID(), ei_class2512);
-            arrayList.add(ei_class2512);
+    public static void rebuildPlayerGirlTableFromWorld() {
+        ArrayList<PlayerGirl> toRemove = new ArrayList<PlayerGirl>();
+
+        for (PlayerGirl playerGirl : playerGirlList) {
+            if (playerGirl.getOwnerUserUUID() != null) {
+                playerGirlUUIDHashtable.put(playerGirl.getOwnerUserUUID(), playerGirl);
+                toRemove.add(playerGirl);
+            }
         }
-        for (PlayerGirl ei_class2512 : arrayList) {
-            playerGirlList.remove(ei_class2512);
+        for (PlayerGirl playerGirl : toRemove) {
+            playerGirlList.remove(playerGirl);
         }
-        PlayerGirl.void_t();
+
+        rebuildPlayerGirlTableInternal();
     }
 
-    static void void_t() {
-        ArrayList<UUID> arrayList = new ArrayList<UUID>();
-        for (Map.Entry<UUID, PlayerGirl> object : playerGirlUUIDHashtable.entrySet()) {
-            if (!object.getValue().isDead) continue;
-            arrayList.add(object.getKey());
+    static void rebuildPlayerGirlTableInternal() {
+        ArrayList<UUID> toRemove = new ArrayList<UUID>();
+
+        for (Map.Entry<UUID, PlayerGirl> entry : playerGirlUUIDHashtable.entrySet()) {
+            if (entry.getValue().isDead) {
+                toRemove.add(entry.getKey());
+            }
         }
-        for (UUID uUID : arrayList) {
+        for (UUID uUID : toRemove) {
             playerGirlUUIDHashtable.remove(uUID);
         }
     }
 
-    protected boolean boolean_c(UUID uUID) {
+    protected boolean isOwnerUUID(UUID uUID) {
         if (uUID == null) {
             return false;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(uUID);
-        return ei_class2512 != null;
+
+        PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(uUID);
+        return playerGirl != null;
     }
 
     @Override
-    public void doAction(String actionName, UUID player) {
-        if (this.boolean_a(actionName)) {
-            return;
+    public void doAction(String action, UUID player) {
+        if (!this.handleActionRequest(action) && this.entityDataManager.get(OWNER).isPresent()) {
+            PackageHandler.INSTANCE.sendToServer(new SexPrompt(action, player, this.entityDataManager.get(OWNER).get(), this.guiPending));
+            this.guiPending = true;
         }
-        if (!this.entityDataManager.get(OWNER).isPresent()) {
-            return;
-        }
-        PackageHandler.INSTANCE.sendToServer((IMessage)new SexPrompt(actionName, player, (UUID)this.entityDataManager.get(OWNER).get(), this.guiPending));
-        this.guiPending = true;
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
-        nbt.setString("owner", ((UUID)this.entityDataManager.get(OWNER).get()).toString());
+        nbt.setString("owner", this.entityDataManager.get(OWNER).get().toString());
     }
 
     @Override
@@ -596,11 +584,11 @@ public abstract class PlayerGirl extends Fighter {
 
     @Override
     public void PlaySoundAtPosition(SoundEvent sound, float volume, float pitch) {
-        Vec3d vec3d = this.getTargetScenePosition();
+        Vec3d pos = this.getTargetScenePosition();
         if (this.world.isRemote) {
-            this.world.playSound(vec3d.x, vec3d.y, vec3d.z, sound, SoundCategory.NEUTRAL, volume, pitch, false);
+            this.world.playSound(pos.x, pos.y, pos.z, sound, SoundCategory.NEUTRAL, volume, pitch, false);
         } else {
-            this.world.playSound(null, new BlockPos(vec3d.x, vec3d.y, vec3d.z), sound, SoundCategory.PLAYERS, volume, pitch);
+            this.world.playSound(null, new BlockPos(pos.x, pos.y, pos.z), sound, SoundCategory.PLAYERS, volume, pitch);
         }
     }
 
@@ -609,17 +597,17 @@ public abstract class PlayerGirl extends Fighter {
         this.PlaySoundAtPosition(sound, 1.0f, 1.0f);
     }
 
-    public void playSoundAroundHer(SoundEvent[] soundEventArray) {
+    public void playRandomSound(SoundEvent[] soundEventArray) {
         this.PlaySoundAtPosition(soundEventArray[this.getRNG().nextInt(soundEventArray.length)], 1.0f, 1.0f);
     }
 
     @Override
-    public void PlaySound(SoundEvent sound, float volume) {
+    public void playSoundAtVolume(SoundEvent sound, float volume) {
         this.PlaySoundAtPosition(sound, volume, 1.0f);
     }
 
     @Override
-    protected void U() {
+    protected void doAction() {
     }
 }
 

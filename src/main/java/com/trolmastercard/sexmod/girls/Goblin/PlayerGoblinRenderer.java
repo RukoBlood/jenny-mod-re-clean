@@ -297,7 +297,7 @@ public class PlayerGoblinRenderer extends WorkerPlayerRenderer {
         if (uUID == null || PlayerGoblinRenderer.mc.gameSettings.thirdPersonView == 0 && entityPlayerSP.getPersistentID().equals(uUID)) {
             return null;
         }
-        EntityPlayer entityPlayer = eq_class2642.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer = eq_class2642.getOwnerPlayer();
         if (entityPlayer == null) {
             return null;
         }

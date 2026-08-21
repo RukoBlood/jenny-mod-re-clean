@@ -87,8 +87,8 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         this.armBonesMap.put("customLowerArmL", "lowerArmL");
         this.armBonesMap.put("customArmR", "armR");
         this.armBonesMap.put("customLowerArmR", "lowerArmR");
-        this.boneRotationSuppliers.put("lowerArmR", girl -> TrigMath.wrapDegrees(girl.getRightArmRotation()));
-        this.boneRotationSuppliers.put("lowerArmL", girl -> TrigMath.wrapDegrees(girl.getLeftArmRotation()));
+        this.boneRotationSuppliers.put("lowerArmR", girl -> TrigMath.wrapDegrees(girl.getRightArmAngle()));
+        this.boneRotationSuppliers.put("lowerArmL", girl -> TrigMath.wrapDegrees(girl.getLeftArmAngle()));
     }
 
     boolean validateAndCleanModel(CustomModelEntity entity) {

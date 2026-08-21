@@ -72,7 +72,7 @@ implements IMessage {
                         break;
                     }
                 }
-                ei_class2512.onGuiActionSelected(eu_class2732.d, eu_class2732.b);
+                ei_class2512.handleOwnerCommand(eu_class2732.d, eu_class2732.b);
             });
             return null;
         }

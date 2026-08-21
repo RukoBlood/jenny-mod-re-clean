@@ -362,7 +362,7 @@ public class CustomPartListScrollList extends GuiListExtended {
             float progress = this.calculateSliderProgress(y, sliderMinX, sliderMaxX, mouseX, mouseY, globalIndex);
             int handleX = (int) RotationHelper.LerpFloat((float)sliderMinX, (float)sliderMaxX, progress);
             CustomPartListScrollList.this.parentGUI.drawTexturedModalRect(handleX, y, this.isHovered(mouseX, mouseY, handleX, y, handleX + 4, y + 20) ? 223 : 219, 20, 4, 20);
-            CustomPartListScrollList.this.parentGUI.previewGirl.a(globalIndex, (int)(progress * 100.0f));
+            CustomPartListScrollList.this.parentGUI.previewGirl.setCustomPartsValue(globalIndex, (int)(progress * 100.0f));
         }
 
         float calculateSliderProgress(int y, int minX, int maxX, int mouseX, int mouseY, int globalIndex) {
@@ -386,12 +386,12 @@ public class CustomPartListScrollList extends GuiListExtended {
 
         float getSliderProgressValue(int globalIndex) {
             Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry =
-                    CustomPartListScrollList.this.parentGUI.previewGirl.d(CustomPartListScrollList.this.parentGUI.ID).get(globalIndex);
+                    CustomPartListScrollList.this.parentGUI.previewGirl.buildCustomPartsData(CustomPartListScrollList.this.parentGUI.ID).get(globalIndex);
             return (float) entry.getValue().getValue() / 100.0f;
         }
 
         void renderGirlSpecificSlot(int y, int mouseX, int mouseY, int globalIndex) {
-            boolean isSliderActive = CustomPartListScrollList.this.parentGUI.previewGirl.h(globalIndex);
+            boolean isSliderActive = CustomPartListScrollList.this.parentGUI.previewGirl.isPartEnabled(globalIndex);
             CustomPartListScrollList.this.mc.renderEngine.bindTexture(ClothingGui.CLOTHING_ICONS_TEX);
 
             if (isSliderActive) {
@@ -459,7 +459,7 @@ public class CustomPartListScrollList extends GuiListExtended {
         }
 
         void handleGirlSpecificClick(int relativeX, int relativeY) {
-            if (!CustomPartListScrollList.this.parentGUI.previewGirl.h(relativeY)) {
+            if (!CustomPartListScrollList.this.parentGUI.previewGirl.isPartEnabled(relativeY)) {
                 this.handleCategoryCycleClick(relativeX, relativeY);
             }
         }

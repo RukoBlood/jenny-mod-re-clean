@@ -78,8 +78,8 @@ public class EllieEntity extends Fighter implements IEllie {
 
     @Override
     public void SetHome() {
-        this.sendLocalClientMessage("Okay, I will be residing here then..");
-        this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[0], 6.0f);
+        this.sendChatMessage("Okay, I will be residing here then..");
+        this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HUH[0], 6.0f);
     }
 
     @Override
@@ -148,15 +148,15 @@ public class EllieEntity extends Fighter implements IEllie {
     @Override
     public void goHome() {
         super.goHome();
-        this.sendLocalClientMessage("stay safe darling~");
-        this.PlaySound(SoundsHandler.GIRLS_ELLIE_SIGH[1], 6.0f);
+        this.sendChatMessage("stay safe darling~");
+        this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_SIGH[1], 6.0f);
     }
 
     @Override
-    public void doAction(String string, UUID player) {
-        super.doAction(string, player);
+    public void doAction(String action, UUID player) {
+        super.doAction(action, player);
         this.aq = true;
-        switch (string) {
+        switch (action) {
             case "action.names.missionary": {
                 this.setCurrentAction(Action.HUGSELECTED);
                 this.changeDataParameterFromClient("animationFollowUp", "Missionary");
@@ -289,7 +289,7 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     @Override
-    protected void U() {
+    protected void doAction() {
         Vec3d vec3d;
         Vec3d pos;
 //        EntityPlayer player;
@@ -343,7 +343,7 @@ public class EllieEntity extends Fighter implements IEllie {
 
     void handleStandTimer() {
         if (--this.af == 0) {
-            this.U();
+            this.doAction();
         }
     }
 
@@ -416,8 +416,8 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     @Override
-    public void ResetNPCTasks() {
-        super.ResetNPCTasks();
+    public void reInitTasks() {
+        super.reInitTasks();
         this.yFlag = -1;
     }
 
@@ -723,7 +723,7 @@ public class EllieEntity extends Fighter implements IEllie {
         AnimationController.ISoundListener soundListener = sound -> {
             switch (sound.sound) {
                 case "becomeNude": {
-                    if (this.getClosestPlayerID()) {
+                    if (this.isLocalPlayerNearby()) {
                         this.changeDataParameterFromClient("currentModel", (Integer) this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
                         break;
                     }
@@ -732,27 +732,27 @@ public class EllieEntity extends Fighter implements IEllie {
                 case "stripDone": {
                     this.setCurrentAction((Action)null);
                     this.resetCameraAndPhysics();
-                    this.U();
+                    this.doAction();
                     break;
                 }
                 case "hugMSG2": {
                     this.sendGirlChatMessage("Hmm...");
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
                     break;
                 }
                 case "hugMSG3": {
                     this.sendGirlChatMessage("Hey!");
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[1], 1.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HUH[1], 1.0f);
                     break;
                 }
                 case "hugMSG4": {
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_MOMMYHORNY, 0.5f);
+                    this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ELLIE_MOMMYHORNY, 0.5f);
                     break;
                 }
                 case "hugMSG5": {
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[1], 6.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HUH[1], 6.0f);
                     break;
                 }
                 case "hugDone": {
@@ -764,35 +764,35 @@ public class EllieEntity extends Fighter implements IEllie {
                 }
                 case "hugselectedMSG1": {
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
                     break;
                 }
                 case "hugselectedMSG2": {
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
                     if (!this.isControlledByLocalPlayer()) break;
                     HandlePlayerMovement.setMovementLock(true);
                     break;
                 }
                 case "sitdownMSG1": {
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_COMETOMOMMY, 0.5f);
-                    if (!this.getClosestPlayerID()) break;
+                    this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ELLIE_COMETOMOMMY, 0.5f);
+                    if (!this.isLocalPlayerNearby()) break;
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
                     break;
                 }
                 case "cowgirlStartMSG0": {
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 6.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 6.0f);
                     break;
                 }
                 case "cowgirlStartMSG1": {
-                    if (!this.getClosestPlayerID()) break;
-                    this.sendLocalClientMessage(I18n.format("ellie.dialogue.like", new Object[0]));
+                    if (!this.isLocalPlayerNearby()) break;
+                    this.sendChatMessage(I18n.format("ellie.dialogue.like", new Object[0]));
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "cowgirlStartMSG2": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -807,9 +807,9 @@ public class EllieEntity extends Fighter implements IEllie {
                     if (this.aj) {
                         this.aj = false;
                     } else {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
@@ -820,23 +820,23 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "cowgirlfastdomMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.2);
                     break;
                 }
                 case "cowgirlcumMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG2": {
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG3": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG4": {
@@ -846,9 +846,9 @@ public class EllieEntity extends Fighter implements IEllie {
                 }
                 case "cowgirlcumMSG5": 
                 case "missionary_cumMSG2": {
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GOODBOY, 0.5f);
+                    this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GOODBOY, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.sendLocalClientMessage(I18n.format("ellie.dialogue.goodboy", new Object[0]));
+                    this.sendChatMessage(I18n.format("ellie.dialogue.goodboy", new Object[0]));
                     break;
                 }
                 case "cowgirlcumMSG6": 
@@ -880,16 +880,16 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "openSexUi": {
-                    if (!this.getClosestPlayerID()) break;
+                    if (!this.isLocalPlayerNearby()) break;
                     SexUI.showUI();
                     break;
                 }
                 case "missionary_slowMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() && this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
                     } else {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
@@ -898,9 +898,9 @@ public class EllieEntity extends Fighter implements IEllie {
                 case "missionary_fastMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() || this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_MOAN), 6.0f);
                     } else {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.05);
@@ -927,32 +927,32 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "missionary_cumMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     break;
                 }
                 case "carry_introMSG1": {
-                    this.sendLocalClientMessage("I'm hungry..");
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH, 6.0f);
+                    this.sendChatMessage("I'm hungry..");
+                    this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HMPH, 6.0f);
                     break;
                 }
                 case "carry_introMSG2": {
-                    this.sendLocalClientMessage("heh~");
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
+                    this.sendChatMessage("heh~");
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
                     break;
                 }
                 case "lipsound": {
-                    this.PlaySound(SoundsHandler.GIRLS_ALLIE_LIPSOUND, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND, new int[0]);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
                     break;
                 }
                 case "pound": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;

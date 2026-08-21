@@ -287,7 +287,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    protected void U() {
+    protected void doAction() {
     }
 
     @Override
@@ -359,7 +359,7 @@ public class BeeEntity extends Supporter {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "pearl": {
-                    if (!this.getClosestPlayerID() || this.getCurrentAction() != Action.THROW_PEARL) break;
+                    if (!this.isLocalPlayerNearby() || this.getCurrentAction() != Action.THROW_PEARL) break;
                     PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
@@ -390,7 +390,7 @@ public class BeeEntity extends Supporter {
                     break;
                 }
                 case "sex_cumMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 2.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 2.0f);
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     break;
                 }

@@ -152,7 +152,7 @@ public class SlimeEntity extends GirlEntity {
     }
 
     @Override
-    public void ResetNPCTasks() {
+    public void reInitTasks() {
         this.entityDataManager.set(HornyLevel, 0);
         this.entityDataManager.set(OUTFIT_INDEX, 1);
     }
@@ -427,13 +427,13 @@ public class SlimeEntity extends GirlEntity {
         AnimationController.ISoundListener soundListener  = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "undress": {
-                    if (!this.getClosestPlayerID()) break;
+                    if (!this.isLocalPlayerNearby()) break;
                     this.changeDataParameterFromClient("currentModel", "0");
                     this.setCurrentAction(Action.NULL);
                     break;
                 }
                 case "dress": {
-                    if (!this.getClosestPlayerID()) break;
+                    if (!this.isLocalPlayerNearby()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 1);
                     this.setCurrentAction((Action)null);
                     this.resetCameraAndPhysics();
@@ -454,16 +454,16 @@ public class SlimeEntity extends GirlEntity {
                     break;
                 }
                 case "bjiMSG11": {
-                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
+                    this.playSoundAtVolume(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjiMSG12": {
                     if (Reference.RANDOM.nextInt(5) == 0) {
-                        this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
+                        this.playSoundAtVolume(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
-                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
+                    this.playSoundAtVolume(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -536,15 +536,15 @@ public class SlimeEntity extends GirlEntity {
                     break;
                 }
                 case "doggystartMSG3": {
-                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.25f);
+                    this.playSoundAtVolume(SoundEvents.ENTITY_SLIME_SQUISH, 0.25f);
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     break;
                 }
@@ -555,7 +555,7 @@ public class SlimeEntity extends GirlEntity {
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
@@ -572,7 +572,7 @@ public class SlimeEntity extends GirlEntity {
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04);
                     }
@@ -594,8 +594,8 @@ public class SlimeEntity extends GirlEntity {
                     break;
                 }
                 case "doggycumMSG1": {
-                    this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.playSoundAtVolume(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                     break;
                 }

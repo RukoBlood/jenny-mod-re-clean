@@ -124,7 +124,7 @@ extends GirlRenderer<ManglelieEntity> {
             return false;
         }
         if (f__class2972.isDead) {
-            f8_class2932.setMommyUUID((UUID)null);
+            f8_class2932.setMommyUUID(null);
             return false;
         }
         return f__class2972.isHuggingManglelie();
@@ -200,7 +200,7 @@ extends GirlRenderer<ManglelieEntity> {
         if (f__class2972 == null) {
             return;
         }
-        GlStateManager.rotate(-RotationHelper.LerpAngleDegrees(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, (double)f), 0.0f, 1.0f, 0.0f);
+        GlStateManager.rotate(-RotationHelper.LerpAngleDegrees(em_class2582.prevRenderYawOffset, em_class2582.renderYawOffset, f), 0.0f, 1.0f, 0.0f);
     }
 
     static boolean a_5(GirlEntity em_class2582) {
@@ -246,14 +246,14 @@ extends GirlRenderer<ManglelieEntity> {
     @Override
     protected void onBoneProcessing(BufferBuilder buffer, String boneName, GeoBone bone) {
         ManglelieRenderer.a(this.renderEntity, boneName, bone, false);
-        Entity entity = ((ManglelieEntity)this.renderEntity).getTargetEntity();
+        Entity entity = this.renderEntity.getTargetEntity();
         if (entity == null) {
             return;
         }
-        if ("weapon".equals(boneName) && ((ManglelieEntity)this.renderEntity).checkRelativeHandPosition(entity, mc.getRenderPartialTicks())) {
+        if ("weapon".equals(boneName) && this.renderEntity.checkRelativeHandPosition(entity, mc.getRenderPartialTicks())) {
             this.a(buffer, bone, true);
         }
-        if ("offhand".equals(boneName) && !((ManglelieEntity)this.renderEntity).checkRelativeHandPosition(entity, mc.getRenderPartialTicks())) {
+        if ("offhand".equals(boneName) && !this.renderEntity.checkRelativeHandPosition(entity, mc.getRenderPartialTicks())) {
             this.a(buffer, bone, false);
         }
     }
@@ -263,7 +263,7 @@ extends GirlRenderer<ManglelieEntity> {
         GlStateManager.pushMatrix();
         Tessellator.getInstance().draw();
         MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, geoBone);
-        GL11.glEnable(2896);
+        GL11.glEnable(0xb50);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         if (bl) {
@@ -275,16 +275,16 @@ extends GirlRenderer<ManglelieEntity> {
         }
         GlStateManager.scale(0.7, 0.7, 0.7);
         ItemStack itemStack = new ItemStack(Items.BOW);
-        float f = ((ManglelieEntity)this.renderEntity).getAttackProgress(mc.getRenderPartialTicks());
+        float f = this.renderEntity.getAttackProgress(mc.getRenderPartialTicks());
         if (f < 1.0f) {
             float f2 = (float) RotationHelper.EaseOutQuart(f);
-            ((ManglelieEntity)this.renderEntity).setItemUseCount((int)(11.0f * (1.0f - f2) + 71980.0f));
-            ((ManglelieEntity)this.renderEntity).setHeldItemOverride(itemStack);
-            ((ManglelieEntity)this.renderEntity).setActiveHand(EnumHand.MAIN_HAND);
-            ((ManglelieEntity)this.renderEntity).W();
+            this.renderEntity.setItemUseCount((int)(11.0f * (1.0f - f2) + 71980.0f));
+            this.renderEntity.setHeldItemOverride(itemStack);
+            this.renderEntity.setActiveHand(EnumHand.MAIN_HAND);
+            this.renderEntity.setHandActiveState();
         } else {
-            ((ManglelieEntity)this.renderEntity).setHeldItemOverride(ItemStack.EMPTY);
-            ((ManglelieEntity)this.renderEntity).K();
+            this.renderEntity.setHeldItemOverride(ItemStack.EMPTY);
+            this.renderEntity.clearHandActiveState();
         }
         itemRenderer.renderItem(this.renderEntity, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
@@ -302,7 +302,7 @@ extends GirlRenderer<ManglelieEntity> {
             return;
         }
         int n = ManglelieRenderer.a(string);
-        if (ThreadNames.isValueInBounds((double)n, 17.0, 35.0)) {
+        if (ThreadNames.isValueInBounds(n, 17.0, 35.0)) {
             if (mc.isGamePaused()) {
                 return;
             }
@@ -315,7 +315,7 @@ extends GirlRenderer<ManglelieEntity> {
             }
             geoBone.setPositionY(geoBone.getPositionY() + f * 0.01f);
         }
-        if (ThreadNames.isValueInBounds((double)n, 1.0, 11.0)) {
+        if (ThreadNames.isValueInBounds(n, 1.0, 11.0)) {
             if (!string.endsWith("1")) {
                 return;
             }

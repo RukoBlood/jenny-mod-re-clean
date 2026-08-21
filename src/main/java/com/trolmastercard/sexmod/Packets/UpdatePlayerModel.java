@@ -18,7 +18,6 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import io.netty.buffer.ByteBuf;
 import java.lang.reflect.Constructor;
-import java.util.ConcurrentModificationException;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -63,7 +62,7 @@ implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                PlayerGirl ei_class2512;
+                PlayerGirl playerGirl;
                 PlayerGirlEntity fy_class3352;
                 EntityPlayerMP entityPlayerMP = messageContext.getServerHandler().player;
                 World world = entityPlayerMP.world;
@@ -74,36 +73,36 @@ implements IMessage {
                         if (object2.world.isRemote || !object2.girlID().equals(ei_class2513.girlID())) continue;
                         world.removeEntity(object2);
                     }
-                    ei_class2513.void_y();
+                    ei_class2513.onTickClient();
                     PlayerGirl.playerGirlUUIDHashtable.remove(uUID);
                     GirlEntity.getGirlEntityList().remove(ei_class2513);
-                    ei_class2513.a(Optional.absent());
+                    ei_class2513.setOwnerId(Optional.absent());
                 }
                 if ((fy_class3352 = b__class712.a) == null) {
                     return;
                 }
                 try {
                     Constructor<? extends PlayerGirl> exception = fy_class3352.playerClass.getConstructor(World.class, UUID.class);
-                    ei_class2512 = exception.newInstance(world, messageContext.getServerHandler().player.getPersistentID());
+                    playerGirl = exception.newInstance(world, messageContext.getServerHandler().player.getPersistentID());
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     return;
                 }
-                ei_class2512.setNoGravity(true);
-                ei_class2512.noClip = true;
-                ei_class2512.motionX = 0.0;
-                ei_class2512.motionY = 0.0;
-                ei_class2512.motionZ = 0.0;
-                ei_class2512.setPosition(entityPlayerMP.posX, entityPlayerMP.posY + 69.0, entityPlayerMP.posZ);
-                world.spawnEntity(ei_class2512);
-                ei_class2512.spawnHitboxHelper();
+                playerGirl.setNoGravity(true);
+                playerGirl.noClip = true;
+                playerGirl.motionX = 0.0;
+                playerGirl.motionY = 0.0;
+                playerGirl.motionZ = 0.0;
+                playerGirl.setPosition(entityPlayerMP.posX, entityPlayerMP.posY + 69.0, entityPlayerMP.posZ);
+                world.spawnEntity(playerGirl);
+                playerGirl.spawnHitboxHelper();
             });
             return null;
         }
 
                 @Override
         public IMessage onMessage(UpdatePlayerModel iMessage, MessageContext messageContext) {
-            return this.a((UpdatePlayerModel)iMessage, messageContext);
+            return this.a(iMessage, messageContext);
         }
     }
 }

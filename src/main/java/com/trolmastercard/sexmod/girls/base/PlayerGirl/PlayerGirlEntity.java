@@ -88,7 +88,7 @@ public enum PlayerGirlEntity {
         return JENNY;
     }
 
-    public static PlayerGirlEntity fromGirl(Entity entity) {
+    public static PlayerGirlEntity getGirlType(Entity entity) {
         if (!(entity instanceof GirlEntity)) {
             return null;
         }

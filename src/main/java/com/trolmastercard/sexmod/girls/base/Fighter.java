@@ -127,20 +127,20 @@ public abstract class Fighter extends GirlEntity {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void doAction(String actionName, UUID player) {
-        if ("action.names.followme".equals(actionName)) {
+    public void doAction(String action, UUID player) {
+        if ("action.names.followme".equals(action)) {
             this.changeDataParameterFromClient("master", player.toString());
-        } else if ("action.names.stopfollowme".equals(actionName)) {
+        } else if ("action.names.stopfollowme".equals(action)) {
             this.goHome();
-        } else if ("action.names.equipment".equals(actionName)) {
+        } else if ("action.names.equipment".equals(action)) {
             EntityPlayerSP playerEntity = Minecraft.getMinecraft().player;
-            PackageHandler.INSTANCE.sendToServer((IMessage)new PlayerAction(this.girlID(), playerEntity.getPersistentID()));
-        } else if ("action.names.gohome".equals(actionName)) {
+            PackageHandler.INSTANCE.sendToServer(new PlayerAction(this.girlID(), playerEntity.getPersistentID()));
+        } else if ("action.names.gohome".equals(action)) {
             this.goHome();
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
-        } else if ("action.names.setnewhome".equals(actionName)) {
+            PackageHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
+        } else if ("action.names.setnewhome".equals(action)) {
             this.SetHome();
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SetNewHome(this.girlID(), new Vec3d(this.getPosition())));
+            PackageHandler.INSTANCE.sendToServer(new SetNewHome(this.girlID(), new Vec3d(this.getPosition())));
         }
     }
 
@@ -156,12 +156,14 @@ public abstract class Fighter extends GirlEntity {
         this.inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
     }
 
-    public boolean hasCapability(Capability<?> capability, EnumFacing enumFacing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, enumFacing);
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
-    public <T> T getCapability(Capability<T> capability, EnumFacing enumFacing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) this.inventory : super.getCapability(capability, enumFacing);
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) this.inventory : super.getCapability(capability, facing);
     }
 }
 

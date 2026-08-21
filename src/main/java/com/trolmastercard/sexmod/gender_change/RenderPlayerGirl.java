@@ -47,7 +47,7 @@ public class RenderPlayerGirl {
         if (event.getPartialRenderTick() == DONT_RENDER_WITH_THIS_PARTIALTICK) {
             return;
         }
-        PlayerGirl.tryPuttingGirlsInTable();
+        PlayerGirl.rebuildPlayerGirlTableFromWorld();
         PlayerGirl girl = PlayerGirl.getUUIDHashtable(event.getEntityPlayer().getPersistentID());
         if (girl == null) {
             return;
@@ -59,36 +59,35 @@ public class RenderPlayerGirl {
     @SideOnly(value=Side.CLIENT)
     public static void calculate(PlayerGirl playerGirl, EntityPlayer player, double d, double d2, double d3, float f) {
         Minecraft mc = Minecraft.getMinecraft();
-        if ((player = playerGirl.getPlayerEntity(player)).isInvisibleToPlayer(mc.player) && !playerGirl.boolean_E()) {
-            return;
+        if (!(player = playerGirl.resolvePlayerEntity(player)).isInvisibleToPlayer(mc.player) || playerGirl.EGoblinIsOwnerUUIDNotNull()) {
+            RenderManager renderManager = mc.getRenderManager();
+            playerGirl.rotationYaw = player.rotationYaw;
+            playerGirl.prevRotationYawHead = player.prevRotationYawHead;
+            playerGirl.rotationYawHead = player.rotationYawHead;
+            playerGirl.prevRotationPitch = player.prevRotationPitch;
+            playerGirl.rotationPitch = player.rotationPitch;
+            playerGirl.prevRotationYaw = player.prevRotationYaw;
+            playerGirl.prevPosX = player.prevPosX;
+            playerGirl.prevPosY = player.prevPosY;
+            playerGirl.prevPosZ = player.prevPosZ;
+            playerGirl.lastTickPosX = player.lastTickPosX;
+            playerGirl.lastTickPosY = player.lastTickPosY;
+            playerGirl.lastTickPosZ = player.lastTickPosZ;
+            playerGirl.renderYawOffset = player.renderYawOffset;
+            playerGirl.prevRenderYawOffset = player.prevRenderYawOffset;
+            playerGirl.isPlayerSneaking = player.isSneaking();
+            playerGirl.isPlayerSprinting = player.isSprinting();
+            playerGirl.isPlayerRiding = player.isRiding();
+            playerGirl.isPlayerOnGround = player.onGround;
+            playerGirl.isUsingItem = player.getItemInUseCount() != 0;
+            double d4 = player.lastTickPosX - player.posX;
+            double d5 = player.posZ - player.lastTickPosZ;
+            double d6 = Math.PI / 180 * (double) player.rotationYaw;
+            playerGirl.ao = new Vector2f((float) (d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float) (d4 * Math.sin(d6) + d5 * Math.cos(d6)));
+            float f2 = playerGirl.isRidingSomething() ? RenderPlayerGirl.manageActions(playerGirl, player) : 0.0f;
+            PlayerGirlRenderer.forceRenderNextFrame = true;
+            renderManager.renderEntity(playerGirl, d, d2 + (double) f2, d3, 90.0f, f, false);
         }
-        RenderManager renderManager = mc.getRenderManager();
-        playerGirl.rotationYaw = player.rotationYaw;
-        playerGirl.prevRotationYawHead = player.prevRotationYawHead;
-        playerGirl.rotationYawHead = player.rotationYawHead;
-        playerGirl.prevRotationPitch = player.prevRotationPitch;
-        playerGirl.rotationPitch = player.rotationPitch;
-        playerGirl.prevRotationYaw = player.prevRotationYaw;
-        playerGirl.prevPosX = player.prevPosX;
-        playerGirl.prevPosY = player.prevPosY;
-        playerGirl.prevPosZ = player.prevPosZ;
-        playerGirl.lastTickPosX = player.lastTickPosX;
-        playerGirl.lastTickPosY = player.lastTickPosY;
-        playerGirl.lastTickPosZ = player.lastTickPosZ;
-        playerGirl.renderYawOffset = player.renderYawOffset;
-        playerGirl.prevRenderYawOffset = player.prevRenderYawOffset;
-        playerGirl.isPlayerSneaking = player.isSneaking();
-        playerGirl.isPlayerSprinting = player.isSprinting();
-        playerGirl.isPlayerRiding = player.isRiding();
-        playerGirl.isPlayerOnGround = player.onGround;
-        playerGirl.isUsingItem = player.getItemInUseCount() != 0;
-        double d4 = player.lastTickPosX - player.posX;
-        double d5 = player.posZ - player.lastTickPosZ;
-        double d6 = Math.PI / 180 * (double)player.rotationYaw;
-        playerGirl.ao = new Vector2f((float)(d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float)(d4 * Math.sin(d6) + d5 * Math.cos(d6)));
-        float f2 = playerGirl.boolean_z() ? RenderPlayerGirl.manageActions(playerGirl, player) : 0.0f;
-        PlayerGirlRenderer.forceRenderNextFrame = true;
-        renderManager.renderEntity(playerGirl, d, d2 + (double)f2, d3, 90.0f, f, false);
     }
 
     static float manageActions(PlayerGirl girl, EntityPlayer player) {
@@ -137,13 +136,13 @@ public class RenderPlayerGirl {
         if (ei_class2512 == null) {
             return;
         }
-        if (!ei_class2512.boolean_o()) {
+        if (!ei_class2512.isSceneActive()) {
             return;
         }
         this.b = minecraft.player.getPositionVector();
         this.d = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
         Vec3d vec3d = ei_class2512.getCachedBoneOffset("girlCam");
-        vec3d = ei_class2512.b(vec3d, event.renderTickTime);
+        vec3d = ei_class2512.getOwnerAimVector(vec3d, event.renderTickTime);
         vec3d = vec3d.add(RotationHelper.LerpVec3d(this.d, this.b, (double)event.renderTickTime));
         minecraft.player.posX = vec3d.x;
         minecraft.player.posY = vec3d.y - (double)minecraft.player.getEyeHeight();
@@ -153,7 +152,7 @@ public class RenderPlayerGirl {
         minecraft.player.lastTickPosZ = vec3d.z;
         Action fp_class3242 = ei_class2512.getCurrentAction();
         float f = ei_class2512.getYawRotation();
-        if (ei_class2512.a(fp_class3242, minecraft.player)) {
+        if (ei_class2512.canPerformAction(fp_class3242, minecraft.player)) {
             return;
         }
         if (fp_class3242.flipGirlYaw) {
@@ -188,7 +187,7 @@ public class RenderPlayerGirl {
         if (ei_class2512 == null) {
             return;
         }
-        if (!ei_class2512.boolean_F()) {
+        if (!ei_class2512.FAllieBoolean()) {
             return;
         }
         if (!ei_class2512.isAnchored()) {

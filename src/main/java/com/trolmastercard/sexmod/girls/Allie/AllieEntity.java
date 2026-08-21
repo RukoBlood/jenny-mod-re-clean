@@ -106,7 +106,7 @@ extends GirlEntity {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void ac() {
+    public void AcSomeUnknownClass() {
         if (!this.R) {
             this.P = true;
         }
@@ -312,41 +312,41 @@ extends GirlEntity {
         AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "summonMSG1": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.summon1", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ALLIE_SCAWY[0], 0.5f);
+                    this.sendChatMessage(I18n.format("allie.dialogue.summon1", new Object[0]));
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ALLIE_SCAWY[0], 0.5f);
                     break;
                 }
                 case "summonMSG2": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.summon2", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.summon2", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_GIGGLE[this.getRNG().nextInt(4)]);
                     break;
                 }
                 case "summonMSG3": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.summon3", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.summon3", new Object[0]));
                     break;
                 }
                 case "summonMSG4": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.summon4", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.summon4", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_LIGHTBREATHING[2]);
                     break;
                 }
                 case "summonMSG5": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.summon5", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.summon5", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_HMPH[4]);
                     break;
                 }
                 case "summonMSG6": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.summon6", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.summon6", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_GIGGLE[3]);
                     break;
                 }
                 case "summonMSG7": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.summon7", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.summon7", new Object[0]));
                     break;
                 }
                 case "summonMSG8": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.summon8", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ALLIE_HUH, new int[0]);
+                    this.sendChatMessage(I18n.format("allie.dialogue.summon8", new Object[0]));
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_HUH, new int[0]);
                     if (!this.isControlledByLocalPlayer()) break;
                     this.openInteractionMenu(this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID()));
                     break;
@@ -356,17 +356,17 @@ extends GirlEntity {
                     break;
                 }
                 case "deepthroat_prepareMSG1": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.hihi", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ALLIE_GIGGLE, new int[0]);
+                    this.sendChatMessage(I18n.format("allie.dialogue.hihi", new Object[0]));
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_GIGGLE, new int[0]);
                     break;
                 }
                 case "deepthroat_prepareMSG2": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.boys", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.boys", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_SIGH[0]);
                     break;
                 }
                 case "scream": {
-                    this.PlaySound(SoundsHandler.MISC_SCREAM, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_SCREAM, new int[0]);
                     break;
                 }
                 case "blackscreen": {
@@ -418,7 +418,7 @@ extends GirlEntity {
                 case "deepthroat_cumMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_MOAN));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 1.5f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 1.5f);
                     break;
                 }
                 case "cowgirl_cumDone": 
@@ -429,30 +429,30 @@ extends GirlEntity {
                     break;
                 }
                 case "summon_normalMSG1": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.sup", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.sup", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_GIGGLE[this.getRNG().nextInt(4)]);
                     break;
                 }
                 case "summon_normalMSG2": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.youhave", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.youhave", new Object[0]));
                     break;
                 }
                 case "summon_normalMSG3": {
                     if (this.entityDataManager.get(itemStack).getTagCompound().getInteger("sexmodUses") == 2) {
-                        this.sendLocalClientMessage(I18n.format("allie.dialogue.2wishes", new Object[0]));
+                        this.sendChatMessage(I18n.format("allie.dialogue.2wishes", new Object[0]));
                     } else {
-                        this.sendLocalClientMessage(I18n.format("allie.dialogue.1wish", new Object[0]));
+                        this.sendChatMessage(I18n.format("allie.dialogue.1wish", new Object[0]));
                     }
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_HMPH[4]);
                     break;
                 }
                 case "summon_normalMSG4": {
-                    this.sendLocalClientMessage("So...");
+                    this.sendChatMessage("So...");
                     break;
                 }
                 case "summon_normalMSG5": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.tellme", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ALLIE_HUH, new int[0]);
+                    this.sendChatMessage(I18n.format("allie.dialogue.tellme", new Object[0]));
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_HUH, new int[0]);
                     break;
                 }
                 case "summon_normalDone": {
@@ -462,12 +462,12 @@ extends GirlEntity {
                     break;
                 }
                 case "deepthroat_normal_prepareMSG1": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.alright", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.alright", new Object[0]));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_GIGGLE));
                     break;
                 }
                 case "rich_MSG1": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.wishgranted", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.wishgranted", new Object[0]));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_PLOB));
                     if (!this.isControlledByLocalPlayer()) break;
                     PackageHandler.INSTANCE.sendToServer((IMessage)new MakeRichWish(this.getPositionVector()));
@@ -478,25 +478,25 @@ extends GirlEntity {
                     break;
                 }
                 case "summon_sandMSG1": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.nooo", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.nooo", new Object[0]));
                     this.PlaySound(SoundsHandler.GIRLS_ALLIE_SCAWY[2]);
                     break;
                 }
                 case "summon_sandMSG2": {
-                    if (!this.getClosestPlayerID()) break;
-                    this.b(I18n.format("allie.dialogue.phobia", new Object[0]), true);
+                    if (!this.isLocalPlayerNearby()) break;
+                    this.broadcastChatAround(I18n.format("allie.dialogue.phobia", new Object[0]), true);
                     break;
                 }
                 case "giggle": {
-                    this.PlaySound(SoundsHandler.GIRLS_ALLIE_GIGGLE, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_GIGGLE, new int[0]);
                     break;
                 }
                 case "pounding": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
                     break;
                 }
                 case "moan": {
-                    this.PlaySound(SoundsHandler.GIRLS_ALLIE_MOAN, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_MOAN, new int[0]);
                     break;
                 }
                 case "mmm": {
@@ -504,7 +504,7 @@ extends GirlEntity {
                     break;
                 }
                 case "slide": {
-                    this.PlaySound(SoundsHandler.MISC_SLIDE, 0, 1, 4, 6);
+                    this.playRandomSound(SoundsHandler.MISC_SLIDE, 0, 1, 4, 6);
                     break;
                 }
                 case "slowMoan": {
@@ -554,11 +554,11 @@ extends GirlEntity {
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_INSERTS, 6.0f);
                     break;
                 }
                 case "aftermoan": {
-                    this.PlaySound(SoundsHandler.GIRLS_ALLIE_AFTERSESSIONMOAN, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_AFTERSESSIONMOAN, new int[0]);
                 }
             }
         };

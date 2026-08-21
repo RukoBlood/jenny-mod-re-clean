@@ -65,13 +65,13 @@ extends PlayerGirl {
     }
 
     @Override
-    public void u_() {
+    public void handleInteraction() {
         this.setCurrentAction(Action.SITDOWN);
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        if ("Face fuck".equals(actionName)) {
+    public void handleOwnerCommand(String command, UUID partnerUUID) {
+        if ("Face fuck".equals(command)) {
             this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.CARRY_INTRO);
             this.sendActionPacket(this.getOutfitIndex(), Action.CARRY_INTRO);
@@ -79,37 +79,37 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getHandRenderer(int n) {
+    public IRenderer getHandModelRenderer(int index) {
         return new EllieLimb();
     }
 
     @Override
-    public String HandTexture(int n) {
-        if (n == 0) {
+    public String getHandTexture(int index) {
+        if (index == 0) {
             return "textures/entity/ellie/hand_nude.png";
         }
         return "textures/entity/ellie/hand.png";
     }
 
     @Override
-    public boolean canOpenGUI() {
+    public boolean canOpenInteractionMenu() {
         return true;
     }
 
     @Override
-    public void doAction(String actionName, UUID player) {
-        if ("action.names.cowgirl".equals(actionName)) {
+    public void doAction(String action, UUID player) {
+        if ("action.names.cowgirl".equals(action)) {
             this.changeDataParameterFromClient("animationFollowUp", "Cowgirl");
             return;
         }
-        if ("action.names.missionary".equals(actionName)) {
+        if ("action.names.missionary".equals(action)) {
             this.changeDataParameterFromClient("animationFollowUp", "Missionary");
             return;
         }
         if (!((Optional)this.entityDataManager.get(OWNER)).isPresent()) {
             return;
         }
-        PackageHandler.INSTANCE.sendToServer((IMessage)new SexPrompt(actionName, player, (UUID)((Optional)this.entityDataManager.get(OWNER)).get(), this.guiPending));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new SexPrompt(action, player, (UUID)((Optional)this.entityDataManager.get(OWNER)).get(), this.guiPending));
         this.guiPending = true;
     }
 
@@ -208,7 +208,7 @@ extends PlayerGirl {
     }
 
     boolean a_14() {
-        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer = this.getOwnerPlayer();
         if (entityPlayer == null) {
             return false;
         }
@@ -390,7 +390,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "dashReady": {
-                    if (!this.getClosestPlayerID()) break;
+                    if (!this.isLocalPlayerNearby()) break;
                     break;
                 }
                 case "dashDone": {
@@ -411,22 +411,22 @@ extends PlayerGirl {
                 }
                 case "hugMSG2": {
                     this.sendGirlChatMessage("Hmm...");
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH[3], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HMPH[3], 3.0f);
                     break;
                 }
                 case "hugMSG3": {
                     this.sendGirlChatMessage("Hey!");
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_AHH[2], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_AHH[2], 3.0f);
                     break;
                 }
                 case "hugMSG4": {
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[0], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[0], 3.0f);
                     break;
                 }
                 case "hugMSG5": {
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HUH[1], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HUH[1], 3.0f);
                     break;
                 }
                 case "hugDone": {
@@ -438,16 +438,16 @@ extends PlayerGirl {
                 }
                 case "hugselectedMSG1": {
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_MMM[0], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_MMM[0], 3.0f);
                     break;
                 }
                 case "hugselectedMSG2": {
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
                     break;
                 }
                 case "hugselectedDone": {
-                    if (!this.getClosestPlayerID()) break;
+                    if (!this.isLocalPlayerNearby()) break;
                     Vec3d vec3d = this.getPositionVector();
                     vec3d = vec3d.add(-Math.sin((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279, 0.0, Math.cos((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279);
                     vec3d = vec3d.add(-Math.sin((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579, 0.0, Math.cos((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579);
@@ -459,13 +459,13 @@ extends PlayerGirl {
                     break;
                 }
                 case "sitdownMSG1": {
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
-                    if (!this.getClosestPlayerID()) break;
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
+                    if (!this.isLocalPlayerNearby()) break;
                     this.sendGirlChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
                     break;
                 }
                 case "sitdownDone": {
-                    if (!this.boolean_f()) break;
+                    if (!this.hasOwnerUUID()) break;
                     this.setCurrentAction(Action.SITDOWNIDLE);
                     this.void_c(this.world.getPlayerEntityByUUID(this.getOwnerUserUUID()));
                     break;
@@ -477,18 +477,18 @@ extends PlayerGirl {
                     break;
                 }
                 case "cowgirlStartMSG0": {
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
                     break;
                 }
                 case "cowgirlStartMSG1": {
-                    if (!this.getClosestPlayerID()) break;
-                    this.sendLocalClientMessage(I18n.format("ellie.dialogue.like", new Object[0]));
+                    if (!this.isLocalPlayerNearby()) break;
+                    this.sendChatMessage(I18n.format("ellie.dialogue.like", new Object[0]));
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "cowgirlStartMSG2": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -503,9 +503,9 @@ extends PlayerGirl {
                     if (this.aq) {
                         this.aq = false;
                     } else {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
@@ -521,23 +521,23 @@ extends PlayerGirl {
                     break;
                 }
                 case "cowgirlfastdomMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.2);
                     break;
                 }
                 case "cowgirlcumMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG2": {
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_MOAN[5], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG3": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     break;
                 }
                 case "cowgirlcumMSG4": {
@@ -547,9 +547,9 @@ extends PlayerGirl {
                 }
                 case "cowgirlcumMSG5": 
                 case "missionary_cumMSG2": {
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.sendLocalClientMessage(I18n.format("ellie.dialogue.goodboy", new Object[0]));
+                    this.sendChatMessage(I18n.format("ellie.dialogue.goodboy", new Object[0]));
                     break;
                 }
                 case "cowgirlcumMSG6": {
@@ -582,9 +582,9 @@ extends PlayerGirl {
                 case "missionary_slowMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() && this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_MOAN), 3.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_MOAN), 3.0f);
                     } else {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
@@ -593,9 +593,9 @@ extends PlayerGirl {
                 case "missionary_fastMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING));
                     if (this.getRNG().nextBoolean() || this.getRNG().nextBoolean()) {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_MOAN), 3.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_MOAN), 3.0f);
                     } else {
-                        this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
+                        this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.05);
@@ -620,32 +620,32 @@ extends PlayerGirl {
                     break;
                 }
                 case "missionary_cumMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     break;
                 }
                 case "carry_introMSG1": {
-                    this.sendLocalClientMessage("I'm hungry..");
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_HMPH, 6.0f);
+                    this.sendChatMessage("I'm hungry..");
+                    this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HMPH, 6.0f);
                     break;
                 }
                 case "carry_introMSG2": {
-                    this.sendLocalClientMessage("heh~");
-                    this.PlaySound(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
+                    this.sendChatMessage("heh~");
+                    this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
                     break;
                 }
                 case "lipsound": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_ALLIE_LIPSOUND);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
-                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "pound": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;

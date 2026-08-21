@@ -97,20 +97,20 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @Override
-    public IRenderer getHandRenderer(int n) {
+    public IRenderer getHandModelRenderer(int index) {
         return new KoboldHand();
     }
 
     @Override
-    public String HandTexture(int n) {
+    public String getHandTexture(int index) {
         return "textures/entity/kobold/hand.png";
     }
 
     @Override
-    public Vec3i net_minecraft_util_math_Vec3i_b(int n) {
+    public Vec3i getHandColor(int index) {
         String[] stringArray = PlayerGoblin.java_lang_String_arr_a(this);
         if (stringArray.length < 8) {
-            return super.net_minecraft_util_math_Vec3i_b(n);
+            return super.getHandColor(index);
         }
         return SkinColor.values()[Integer.parseInt(stringArray[7])].getColor();
     }
@@ -126,14 +126,14 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        if ("anal".equals(actionName)) {
+    public void handleOwnerCommand(String command, UUID partnerUUID) {
+        if ("anal".equals(command)) {
             this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.NELSON_INTRO);
             this.sendActionPacket(this.getOutfitIndex(), Action.NELSON_INTRO);
             this.setOutfitIndex(0);
         }
-        if ("paizuri".equals(actionName)) {
+        if ("paizuri".equals(command)) {
             this.teleportPlayerToGirl(partnerUUID);
             this.setCurrentAction(Action.PAIZURI_START);
             this.sendActionPacket(this.getOutfitIndex(), Action.PAIZURI_START);
@@ -149,7 +149,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @Override
-    public EntityPlayer getPlayerEntity(EntityPlayer entityPlayer) {
+    public EntityPlayer resolvePlayerEntity(EntityPlayer entityPlayer) {
         UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
             return entityPlayer;
@@ -167,24 +167,24 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @Override
-    public boolean boolean_z() {
+    public boolean isRidingSomething() {
         UUID uUID = this.getOwnerUUID();
         return uUID == null;
     }
 
     @Override
-    public Vec3d c(Vec3d vec3d, float f) {
+    public Vec3d getOwnerLookVector(Vec3d vec, float partialTicks) {
         UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
-            return vec3d;
+            return vec;
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            return vec3d;
+        EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+        if (player == null) {
+            return vec;
         }
-        Vec3d vec3d2 = entityPlayer.getPositionVector();
-        Vec3d vec3d3 = new Vec3d(entityPlayer.lastTickPosX, entityPlayer.lastTickPosY, entityPlayer.lastTickPosZ);
-        return RotationHelper.LerpVec3d(vec3d3, vec3d2, (double)f);
+        Vec3d pos = player.getPositionVector();
+        Vec3d lastTickPos = new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ);
+        return RotationHelper.LerpVec3d(lastTickPos, pos, partialTicks);
     }
 
     void void_c(EntityPlayer entityPlayer) {
@@ -201,7 +201,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         this.setOwnerUUID(entityPlayer.getPersistentID());
         this.setCurrentAction(Action.PICK_UP);
         this.setHeldPlayerDistance(45);
-        EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer2 = this.getOwnerPlayer();
         if (entityPlayer2 == null) {
             return;
         }
@@ -262,12 +262,12 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @Override
-    public boolean boolean_o() {
+    public boolean isSceneActive() {
         return this.isAnchored() || this.getOwnerUUID() != null;
     }
 
     @Override
-    public boolean a(Action fp_class3242, EntityPlayer entityPlayer) {
+    public boolean canPerformAction(Action action, EntityPlayer player) {
         float f;
         UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
@@ -277,40 +277,40 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         if (entityPlayer2 == null) {
             return false;
         }
-        float f2 = entityPlayer.rotationYaw;
-        float f3 = fp_class3242 == Action.PICK_UP ? 180.0f : 0.0f;
+        float f2 = player.rotationYaw;
+        float f3 = action == Action.PICK_UP ? 180.0f : 0.0f;
         float f4 = entityPlayer2.rotationYaw - 90.0f + f3;
         float f5 = entityPlayer2.rotationYaw + 90.0f + f3;
         if (f2 < f4) {
-            entityPlayer.rotationYaw = f4;
+            player.rotationYaw = f4;
         }
         if (f2 > f5) {
-            entityPlayer.rotationYaw = f5;
+            player.rotationYaw = f5;
         }
-        float f6 = entityPlayer.rotationPitch;
-        float f7 = f = fp_class3242 == Action.PICK_UP ? 0.0f : 37.5f;
+        float f6 = player.rotationPitch;
+        float f7 = f = action == Action.PICK_UP ? 0.0f : 37.5f;
         if (f6 > f) {
-            entityPlayer.rotationPitch = f;
+            player.rotationPitch = f;
         }
         return true;
     }
 
     @Override
-    public Vec3d b(Vec3d vec3d, float f) {
+    public Vec3d getOwnerAimVector(Vec3d vec, float partialTicks) {
         UUID uUID = this.getOwnerUUID();
         if (uUID == null) {
-            return vec3d;
+            return vec;
         }
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
         if (entityPlayer == null) {
-            return vec3d;
+            return vec;
         }
-        float f2 = RotationHelper.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, f);
-        Vec3d vec3d2 = vec3d;
+        float f2 = RotationHelper.LerpFloat(entityPlayer.prevRenderYawOffset, entityPlayer.renderYawOffset, partialTicks);
+        Vec3d vec3d2 = vec;
         float f3 = 135.0f;
         Action fp_class3242 = this.getCurrentAction();
         if (fp_class3242 == Action.PICK_UP) {
-            vec3d2 = new Vec3d(vec3d.x, vec3d.y, -vec3d.z);
+            vec3d2 = new Vec3d(vec.x, vec.y, -vec.z);
             f3 += 40.0f;
         } else if (fp_class3242 != Action.START_THROWING) {
             vec3d2 = vec3d2.subtract(0.0, 2.0, 0.0);
@@ -321,7 +321,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
 
     @SideOnly(value=Side.CLIENT)
     void void_f() {
-        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer = this.getOwnerPlayer();
         if (entityPlayer == null) {
             return;
         }
@@ -350,7 +350,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @Override
-    public boolean boolean_E() {
+    public boolean EGoblinIsOwnerUUIDNotNull() {
         return this.getOwnerUUID() != null;
     }
 
@@ -370,7 +370,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         if (entityPlayer == null) {
             return;
         }
-        EntityPlayer entityPlayer2 = this.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer2 = this.getOwnerPlayer();
         if (entityPlayer2 == null) {
             return;
         }
@@ -386,7 +386,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
             return;
         }
         eq_class2642.setThrowProgress(++n);
-        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer = this.getOwnerPlayer();
         if (entityPlayer == null) {
             return;
         }
@@ -394,7 +394,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
             Vec3d vec3d = GoblinEntity.getGoblinThrowPos(this);
             float f = GoblinEntity.getGoblinThrowHeight(this);
             float f2 = GoblinEntity.getGoblinThrowDistance(this);
-            if (this.world.isRemote && this.boolean_f()) {
+            if (this.world.isRemote && this.hasOwnerUUID()) {
                 HandlePlayerMovement.setMovementLock(true);
             }
             Vec3d vec3d2 = GoblinEntity.rotateVectorPitchYaw(new Vec3d(0.0, 0.0, 1.5), f, f2);
@@ -438,7 +438,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         if (this.getCurrentAction() != Action.THROWN) {
             return;
         }
-        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer = this.getOwnerPlayer();
         if (entityPlayer == null) {
             return;
         }
@@ -527,14 +527,14 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @Override
-    public void ResetNPCTasks() {
-        super.ResetNPCTasks();
+    public void reInitTasks() {
+        super.reInitTasks();
         this.entityDataManager.set(aA, false);
         if (this.getOwnerUUID() == null) {
             return;
         }
         this.setOwnerUUID((UUID)null);
-        EntityPlayer entityPlayer = this.getOwnerPlayerEntity();
+        EntityPlayer entityPlayer = this.getOwnerPlayer();
         if (entityPlayer == null) {
             return;
         }
@@ -654,12 +654,12 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @Override
-    public boolean canInteract() {
+    public boolean isPlayerGirl() {
         return this.getOwnerUUID() == null;
     }
 
     @Override
-    public void detachPartner(EntityPlayer entityPlayer) {
+    public void onOwnerInteract(EntityPlayer entityPlayer) {
         if (!entityPlayer.getPersistentID().equals(this.getOwnerUUID())) {
             return;
         }
@@ -887,28 +887,28 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     break;
                 }
                 case "catchEh": {
-                    this.sendLocalClientMessage("ehh..");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("ehh..");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchAkward": {
-                    this.sendLocalClientMessage("awkward..");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("awkward..");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchWell": {
-                    this.sendLocalClientMessage("well...");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("well...");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchRather": {
-                    this.sendLocalClientMessage("would you rather have this stupid... thing?");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("would you rather have this stupid... thing?");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchMe": {
-                    this.sendLocalClientMessage("...or use me?~");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("...or use me?~");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "catchDone": {
@@ -924,18 +924,18 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     break;
                 }
                 case "paizuriChoice": {
-                    this.sendLocalClientMessage("good choice!~");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("good choice!~");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriBoth": {
-                    this.sendLocalClientMessage("...for both of us!");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("...for both of us!");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizruiUse": {
-                    this.sendLocalClientMessage("now use me like a fuck toy!~");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("now use me like a fuck toy!~");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "paizuriSwitch": {
@@ -944,11 +944,11 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     break;
                 }
                 case "touch": {
-                    this.PlaySound(SoundsHandler.MISC_TOUCH, 3.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_TOUCH, 3.0f);
                     break;
                 }
                 case "pound": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04f);
                     break;
@@ -975,7 +975,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     break;
                 }
                 case "smallPound": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, 0.25f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_POUNDING, 0.25f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02f);
                     break;
@@ -993,7 +993,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     break;
                 }
                 case "cumSound": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 3.0f);
                     break;
                 }
                 case "jumpCam": {
@@ -1013,18 +1013,18 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                         minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                         minecraft.gameSettings.thirdPersonView = 0;
                     }
-                    this.sendLocalClientMessage("hmm...");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("hmm...");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingFound": {
-                    this.sendLocalClientMessage("guess we found a worthy breeding partner!");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("guess we found a worthy breeding partner!");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingEnough": {
-                    this.sendLocalClientMessage("Eh.. go pin him down, before he runs off!");
-                    this.playSoundAroundHer(SoundsHandler.MISC_PLOB);
+                    this.sendChatMessage("Eh.. go pin him down, before he runs off!");
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "breedingCam2": {
@@ -1064,7 +1064,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "breeding_intro_3Done": {

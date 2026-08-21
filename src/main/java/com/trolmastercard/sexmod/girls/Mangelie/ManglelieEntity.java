@@ -719,7 +719,7 @@ extends GirlEntity {
     }
 
     @Override
-    public void ResetNPCTasks() {
+    public void reInitTasks() {
         if (this.isAttachedToMommy()) {
             this.setCurrentAction(Action.RIDE_MOMMY_HEAD);
             this.setYawRotation(0.0f);
@@ -882,7 +882,7 @@ extends GirlEntity {
         this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "pound": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -905,8 +905,8 @@ extends GirlEntity {
                     break;
                 }
                 case "doubleSemen0": {
-                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
                 }
                 case "doubleSemen": {
                     CummyEntity.registerTrail(new DynamicTrailRenderer(10, girl -> {

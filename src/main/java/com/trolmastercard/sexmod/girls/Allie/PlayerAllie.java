@@ -66,23 +66,23 @@ extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getHandRenderer(int n) {
+    public IRenderer getHandModelRenderer(int index) {
         return new AllieLimb();
     }
 
     @Override
-    public String HandTexture(int n) {
+    public String getHandTexture(int index) {
         return "textures/entity/allie/hand.png";
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        if ("action.names.deepthroat".equals(actionName)) {
+    public void handleOwnerCommand(String command, UUID partnerUUID) {
+        if ("action.names.deepthroat".equals(command)) {
             this.setCurrentAction(Action.DEEPTHROAT_START);
             this.sendActionPacket(this.getOutfitIndex(), Action.DEEPTHROAT_START);
             this.teleportPlayerToGirl(partnerUUID);
         }
-        if ("Reverse cowgirl".equals(actionName)) {
+        if ("Reverse cowgirl".equals(command)) {
             this.setCurrentAction(Action.REVERSE_COWGIRL_START);
             this.sendActionPacket(0, Action.REVERSE_COWGIRL_START);
             this.teleportPlayerToGirl(partnerUUID);
@@ -107,7 +107,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean boolean_F() {
+    public boolean FAllieBoolean() {
         switch (this.getCurrentAction()) {
             case ALLIE_PREPARE_NORMAL:
             case DEEPTHROAT_START:
@@ -159,7 +159,7 @@ extends PlayerGirl {
     }
 
     @Override
-    public void void_y() {
+    public void onTickClient() {
         this.handleOwnerUUID(false);
     }
 
@@ -198,12 +198,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_prepareMSG1": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.hihi", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.hihi", new Object[0]));
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "deepthroat_prepareMSG2": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.boys", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.boys", new Object[0]));
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
@@ -246,7 +246,7 @@ extends PlayerGirl {
                 }
                 case "deepthroat_cumMSG1": {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_LIPSOUND));
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 1.5f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_CUMINFLATION), 1.5f);
                     break;
                 }
                 case "cowgirl_cumDone": 
@@ -256,20 +256,20 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_normal_prepareMSG1": {
-                    this.sendLocalClientMessage(I18n.format("allie.dialogue.alright", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.alright", new Object[0]));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_PLOB));
                     break;
                 }
                 case "giggle": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_ALLIE_GIGGLE);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_GIGGLE);
                     break;
                 }
                 case "pounding": {
-                    this.playSoundAroundHer(SoundsHandler.MISC_POUNDING);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "moan": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_ALLIE_MOAN);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_MOAN);
                     break;
                 }
                 case "mmm": {
@@ -277,7 +277,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "slide": {
-                    this.PlaySound(SoundsHandler.MISC_SLIDE, 0, 1, 4, 6);
+                    this.playRandomSound(SoundsHandler.MISC_SLIDE, 0, 1, 4, 6);
                     break;
                 }
                 case "slowMoan": {
@@ -327,11 +327,11 @@ extends PlayerGirl {
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_INSERTS, 6.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_INSERTS, 6.0f);
                     break;
                 }
                 case "aftermoan": {
-                    this.playSoundAroundHer(SoundsHandler.GIRLS_ALLIE_AFTERSESSIONMOAN);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_AFTERSESSIONMOAN);
                 }
             }
         };

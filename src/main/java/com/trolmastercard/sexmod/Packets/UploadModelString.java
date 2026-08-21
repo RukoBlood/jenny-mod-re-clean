@@ -91,10 +91,10 @@ public class UploadModelString implements IMessage {
                 if (ei_class2512 == null) {
                     return;
                 }
-                PlayerGirlEntity fy_class3352 = PlayerGirlEntity.fromGirl(ei_class2512);
+                PlayerGirlEntity fy_class3352 = PlayerGirlEntity.getGirlType(ei_class2512);
                 nBTTagCompound.setString("sexmod:CustomModel" + fy_class3352.toString(), msg.modelCode);
                 if (bl && bl2) {
-                    nBTTagCompound.setString("sexmod:GirlSpecific" + fy_class3352.toString(), GirlEntity.c(msg.partIds));
+                    nBTTagCompound.setString("sexmod:GirlSpecific" + fy_class3352.toString(), GirlEntity.encodePartIdList(msg.partIds));
                 }
             });
             return null;

@@ -131,7 +131,7 @@ public class EditorWand extends Item {
         }
         GirlEntity em_class2582 = (GirlEntity)entity;
         String string = em_class2582.getCustomModelCode();
-        String string2 = GirlEntity.c(GirlEntity.h(em_class2582.girlID()));
+        String string2 = GirlEntity.encodePartIdList(GirlEntity.getAllPartIdsForGirl(em_class2582.girlID()));
         entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{em_class2582.getGirlName(), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
         ThreadNames.copyToClipboard(String.format("%s$%s", string, string2));
@@ -169,8 +169,8 @@ public class EditorWand extends Item {
             return true;
         }
         String string = ei_class2512.getCustomModelCode();
-        String string2 = GirlEntity.c(GirlEntity.h(ei_class2512.girlID()));
-        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{ThreadNames.CapitalizeString(PlayerGirlEntity.fromGirl(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
+        String string2 = GirlEntity.encodePartIdList(GirlEntity.getAllPartIdsForGirl(ei_class2512.girlID()));
+        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{ThreadNames.CapitalizeString(PlayerGirlEntity.getGirlType(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
         entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
         ThreadNames.copyToClipboard(String.format("%s$%s", string, string2));
         return true;

@@ -1795,10 +1795,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
 
         if (!GalathCoin.GALATH_COIN.equals(player.getHeldItem(EnumHand.OFF_HAND).getItem()) && !GalathCoin.GALATH_COIN.equals(player.getHeldItem(EnumHand.MAIN_HAND).getItem())) {
-            this.PlaySound(SoundsHandler.GIRLS_GALATH_HUH, new int[0]);
+            this.playRandomSound(SoundsHandler.GIRLS_GALATH_HUH, new int[0]);
             String[] options = !player.onGround ? new String[]{"ride"} : (this.getManglelieUUID(false) == null ? new String[]{"cowgirl", "anal", "ride"} : new String[]{"cowgirl", "anal", "threesome", "ride"});
             if (this.world.isRemote) {
-                GalathEntity.openInventoryGui(player, this.com_trolmastercard_sexmod_em_class258_af(), options, false);
+                GalathEntity.openInventoryGui(player, this.getSelf(), options, false);
             }
             return true;
         } else {
@@ -1937,7 +1937,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             if (!(this.getHealth() - damage <= 0.0f)) {
                 long now = System.currentTimeMillis();
                 if (now >= this.bc + 1000L) {
-                    this.PlaySound(SoundsHandler.GIRLS_GALATH_UUH);
+                    this.playRandomSound(SoundsHandler.GIRLS_GALATH_UUH);
                     this.bc = now;
                 }
             }
@@ -1987,7 +1987,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     @Override
-    public void ResetNPCTasks() {
+    public void reInitTasks() {
         this.setTargetEntity((EntityLivingBase)null);
         this.aH();
     }
@@ -2329,11 +2329,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             switch (sound.sound) {
                 case "goodTiming": {
                     this.PlaySound(SoundsHandler.GIRLS_GALATH_DIALOG[4]);
-                    this.sendLocalClientMessage("Good timing boy~");
+                    this.sendChatMessage("Good timing boy~");
                     break;
                 }
                 case "huh": {
-                    this.PlaySound(SoundsHandler.GIRLS_GALATH_HUH, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_GALATH_HUH, new int[0]);
                     break;
                 }
                 case "giggle": {
@@ -2346,11 +2346,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "moan": {
-                    this.PlaySound(SoundsHandler.GIRLS_GALATH_MOAN, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_GALATH_MOAN, new int[0]);
                     break;
                 }
                 case "breath": {
-                    this.PlaySound(SoundsHandler.GIRLS_GALATH_BREATHING, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_GALATH_BREATHING, new int[0]);
                     break;
                 }
                 case "dialog5": {
@@ -2359,9 +2359,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 }
                 case "switchmoan": {
                     if (this.a6) {
-                        this.PlaySound(SoundsHandler.GIRLS_GALATH_BREATHING, new int[0]);
+                        this.playRandomSound(SoundsHandler.GIRLS_GALATH_BREATHING, new int[0]);
                     } else {
-                        this.PlaySound(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_GALATH_MOAN : SoundsHandler.GIRLS_GALATH_AHH, new int[0]);
+                        this.playRandomSound(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_GALATH_MOAN : SoundsHandler.GIRLS_GALATH_AHH, new int[0]);
                     }
                     this.a6 = !this.a6;
                     break;
@@ -2372,15 +2372,15 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "strongcharge": {
-                    this.PlaySound(SoundsHandler.GIRLS_GALATH_STRONGCHARGE, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_GALATH_STRONGCHARGE, new int[0]);
                     break;
                 }
                 case "hmph": {
-                    this.PlaySound(SoundsHandler.GIRLS_GALATH_HMPH, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_GALATH_HMPH, new int[0]);
                     break;
                 }
                 case "cum": {
-                    this.PlaySound(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
+                    this.playRandomSoundAtVolume(SoundsHandler.MISC_SMALLINSERTS, 2.0f);
                     break;
                 }
                 case "giggle0": {
@@ -2388,11 +2388,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "orgasm": {
-                    this.PlaySound(SoundsHandler.GIRLS_GALATH_ORGASM, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_GALATH_ORGASM, new int[0]);
                     break;
                 }
                 case "pound": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
                     break;
                 }
                 case "flap": {
@@ -2446,7 +2446,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "poundRape": {
-                    this.PlaySound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
                     if (!this.isControlledByLocalPlayer()) break;
                     if (this.hasMasterOAlgo()) {
                         SexUI.addCumPercentage(0.03f);
@@ -2545,7 +2545,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                             return vec3d.subtract(vec3d2).normalize();
                         }, girl -> girl.getCachedBoneOffset("futaCockTip").add(girl.getTargetPosition()), this, 0.3f, 0.3f));
                     }
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 3.0f);
                     break;
                 }
                 case "blackScreenTamed": {
@@ -2565,7 +2565,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 case "flapControlled": {
                     if (!this.isControlledByLocalPlayer()) break;
                     GalathFlightUI.showUI();
-                    this.PlaySound(SoundsHandler.MISC_FLAP, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_FLAP, new int[0]);
                     Minecraft minecraft = Minecraft.getMinecraft();
                     EntityPlayerSP entityPlayerSP = minecraft.player;
                     MovementInput movementInput = entityPlayerSP.movementInput;
@@ -2576,7 +2576,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "clap": {
-                    this.PlaySound(SoundsHandler.MISC_CLAP, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_CLAP, new int[0]);
                     break;
                 }
                 case "energysound": {

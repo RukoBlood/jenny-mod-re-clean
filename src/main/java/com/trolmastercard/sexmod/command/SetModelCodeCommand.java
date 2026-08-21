@@ -77,13 +77,13 @@ public class SetModelCodeCommand extends CommandBase implements IClientCommand {
             ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
             return;
         }
-        PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, girl.girlID(), GirlEntity.c(string2)));
+        PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(string, girl.girlID(), GirlEntity.decodePartIdList(string2)));
         ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
     }
 
     String showModelCode(GirlEntity girl) {
         if (girl instanceof PlayerGirl) {
-            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + ThreadNames.CapitalizeString(PlayerGirlEntity.fromGirl(girl).toString());
+            return (Object)((Object)TextFormatting.YELLOW) + "applied model code to your player-" + ThreadNames.CapitalizeString(PlayerGirlEntity.getGirlType(girl).toString());
         }
         return (Object)((Object)TextFormatting.YELLOW) + "applied model code to this " + girl.getGirlName();
     }

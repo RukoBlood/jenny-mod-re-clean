@@ -81,7 +81,7 @@ public class ClothingGui extends GuiScreen {
         this.mc = Minecraft.getMinecraft();
         this.ID = targetGirl.girlID();
 
-        PlayerGirlEntity playerGirlEnum = PlayerGirlEntity.fromGirl(targetGirl);
+        PlayerGirlEntity playerGirlEnum = PlayerGirlEntity.getGirlType(targetGirl);
         if (playerGirlEnum == null) {
             playerGirlEnum = PlayerGirlEntity.JENNY;
         }
@@ -161,7 +161,7 @@ public class ClothingGui extends GuiScreen {
 
     void initPartCategories() {
         activeCategories.clear();
-        List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> girlCategories = this.previewGirl.d(this.ID);
+        List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> girlCategories = this.previewGirl.buildCustomPartsData(this.ID);
         this.customCategoryCount = girlCategories.size();
         activeCategories.addAll(girlCategories);
 
@@ -346,7 +346,7 @@ public class ClothingGui extends GuiScreen {
             if (entry2.getKey() != CustomPartCategory.GIRL_SPECIFIC) continue;
             entries.add(entry2);
         }
-        this.previewGirl.b(entries);
+        this.previewGirl.setCustomPartsData(entries);
     }
 
     public void renderCustomModel(int x, int y, float scale, CustomModelEntity entity) {

@@ -484,7 +484,7 @@ public class CustomModel {
             object = (ModelData)entry.getValue();
             CustomPartCategory gw_class3892 = ((ModelData)object).category;
             List<String> list = hashMap.get((Object)gw_class3892);
-            if (!((ModelData)object).g.isEmpty() && !((ModelData)object).g.contains((Object) PlayerGirlEntity.fromGirl(em_class2582))) continue;
+            if (!((ModelData)object).g.isEmpty() && !((ModelData)object).g.contains((Object) PlayerGirlEntity.getGirlType(em_class2582))) continue;
             list.add(string);
             hashMap.put(gw_class3892, list);
         }

@@ -64,18 +64,18 @@ public class PlayerSlime extends PlayerGirl {
     }
 
     @Override
-    public IRenderer getHandRenderer(int limbIndex) {
+    public IRenderer getHandModelRenderer(int index) {
         return new SlimeHand();
     }
 
     @Override
-    public String HandTexture(int handIndex) {
+    public String getHandTexture(int index) {
         return "textures/entity/slime/hand.png";
     }
 
     @Override
-    public void onGuiActionSelected(String actionName, UUID partnerUUID) {
-        if ("action.names.blowjob".equals(actionName)) {
+    public void handleOwnerCommand(String command, UUID partnerUUID) {
+        if ("action.names.blowjob".equals(command)) {
             this.sendActionPacket(0, Action.SUCKBLOWJOB);
             this.setCurrentAction(Action.SUCKBLOWJOB);
             this.teleportPlayerToGirl(partnerUUID);
@@ -283,13 +283,13 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "undress": {
-                    if (!this.getClosestPlayerID()) break;
+                    if (!this.isLocalPlayerNearby()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 0);
                     this.resetCameraAndPhysics();
                     break;
                 }
                 case "dress": {
-                    if (!this.getClosestPlayerID()) break;
+                    if (!this.isLocalPlayerNearby()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 1);
                     this.setCurrentAction((Action)null);
                     this.resetCameraAndPhysics();
@@ -306,16 +306,16 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "bjiMSG11": {
-                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
+                    this.playSoundAtVolume(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "bjiMSG12": {
                     if (Reference.RANDOM.nextInt(5) == 0) {
-                        this.PlaySound(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
+                        this.playSoundAtVolume(SoundEvents.ENTITY_SLIME_JUMP, 0.5f);
                     }
-                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
+                    this.playSoundAtVolume(SoundEvents.ENTITY_SLIME_SQUISH, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -392,17 +392,17 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggystartMSG3": {
-                    this.PlaySound(SoundEvents.ENTITY_SLIME_SQUISH, 0.25f);
+                    this.playSoundAtVolume(SoundEvents.ENTITY_SLIME_SQUISH, 0.25f);
                     break;
                 }
                 case "doggystartMSG4": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_SMALLINSERTS), 1.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "doggystartMSG5": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     this.PlaySound(SoundEvents.BLOCK_SLIME_HIT);
                     break;
                 }
@@ -413,7 +413,7 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
                         n = Reference.RANDOM.nextInt(2);
@@ -430,7 +430,7 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggyfastMSG1": {
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.75f);
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
@@ -452,8 +452,8 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggycumMSG1": {
-                    this.PlaySound(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
-                    this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 2.0f);
+                    this.playSoundAtVolume(SoundsHandler.MISC_CUMINFLATION[0], 4.0f);
+                    this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 2.0f);
                     this.PlaySound(SoundEvents.ENTITY_SLIME_DEATH);
                 }
             }
