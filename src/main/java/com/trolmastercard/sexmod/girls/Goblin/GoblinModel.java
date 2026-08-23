@@ -78,7 +78,7 @@ extends GirlModel<GirlEntity> {
         AnimationProcessor animationProcessor = this.getAnimationProcessor();
         boolean bl = girl instanceof GoblinEntity;
         IBone iBone = animationProcessor.getBone("preggy");
-        iBone.setHidden(girl.getDataManager().get(GoblinEntity.aV) == false);
+        iBone.setHidden(!girl.getDataManager().get(GoblinEntity.IS_PREGNANT));
         IBone iBone2 = animationProcessor.getBone("body");
         IBone iBone3 = animationProcessor.getBone("head");
         Action fp_class3242 = girl.getCurrentAction();

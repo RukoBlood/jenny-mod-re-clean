@@ -231,14 +231,14 @@ public class ConfigWorldGenHandler extends WorldSavedData implements IWorldGener
         BlockPos origin = new BlockPos(x, y, z);
         ArrayList<BlockPos> spots = new ArrayList<>();
 
-        for(int x2 = 0; x2 <= GoblinEntity.ah.getX(); ++x2) {
-            for(int y2 = -1; y2 <= GoblinEntity.ah.getY(); ++y2) {
-                for(int z2 = 0; z2 <= GoblinEntity.ah.getZ(); ++z2) {
+        for(int x2 = 0; x2 <= GoblinEntity.BREEDING_AREA_SIZE.getX(); ++x2) {
+            for(int y2 = -1; y2 <= GoblinEntity.BREEDING_AREA_SIZE.getY(); ++y2) {
+                for(int z2 = 0; z2 <= GoblinEntity.BREEDING_AREA_SIZE.getZ(); ++z2) {
                     BlockPos pos = origin.add(x2, y2, z2);
                     Material mat = world.getBlockState(pos).getMaterial();
                     boolean solid = mat.isSolid();
-                    if (solid || (y2 != -1 && y2 != GoblinEntity.ah.getY())) {
-                        if ((x2 == 0 || x2 == GoblinEntity.ah.getX() || z2 == 0 || z2 == GoblinEntity.ah.getZ()) && y2 == 0 && world.isAirBlock(pos) && world.isAirBlock(pos.up())) {
+                    if (solid || (y2 != -1 && y2 != GoblinEntity.BREEDING_AREA_SIZE.getY())) {
+                        if ((x2 == 0 || x2 == GoblinEntity.BREEDING_AREA_SIZE.getX() || z2 == 0 || z2 == GoblinEntity.BREEDING_AREA_SIZE.getZ()) && y2 == 0 && world.isAirBlock(pos) && world.isAirBlock(pos.up())) {
                             spots.add(pos);
                         }
                     }
@@ -265,21 +265,21 @@ public class ConfigWorldGenHandler extends WorldSavedData implements IWorldGener
                 Vec3d offsetPos;
                 if (candidate.getZ() == -6) {
                     rotation = Rotation.NONE;
-                    offsetPos = GoblinEntity.aB;
+                    offsetPos = GoblinEntity.OFFSET_SOUTH;
                     yaw = 180.0F;
                 } else if (candidate.getX() == 5) {
                     rotation = Rotation.CLOCKWISE_90;
-                    offsetPos = GoblinEntity.ao;
-                    offset = new Vec3i(GoblinEntity.ah.getX() - 1, 0, 0);
+                    offsetPos = GoblinEntity.OFFSET_WEST;
+                    offset = new Vec3i(GoblinEntity.BREEDING_AREA_SIZE.getX() - 1, 0, 0);
                     yaw = -90.0F;
                 } else if (candidate.getZ() == 5) {
                     rotation = Rotation.CLOCKWISE_180;
-                    offsetPos = GoblinEntity.aM;
-                    offset = new Vec3i(GoblinEntity.ah.getX() - 1, 0, GoblinEntity.ah.getZ() - 1);
+                    offsetPos = GoblinEntity.OFFSET_NORTH;
+                    offset = new Vec3i(GoblinEntity.BREEDING_AREA_SIZE.getX() - 1, 0, GoblinEntity.BREEDING_AREA_SIZE.getZ() - 1);
                 } else {
                     rotation = Rotation.COUNTERCLOCKWISE_90;
                     offsetPos = GoblinEntity.THROW_OFFSET_U;
-                    offset = new Vec3i(0, 0, GoblinEntity.ah.getZ() - 1);
+                    offset = new Vec3i(0, 0, GoblinEntity.BREEDING_AREA_SIZE.getZ() - 1);
                     yaw = 90.0F;
                 }
 
