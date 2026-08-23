@@ -137,7 +137,7 @@ public class EllieEntity extends Fighter implements IEllie {
             EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
             return true;
         }
-        if ((Integer)this.entityDataManager.get(OUTFIT_INDEX) == 0) {
+        if (this.entityDataManager.get(OUTFIT_INDEX) == 0) {
             EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.dressup"}, true);
             return true;
         }
@@ -218,7 +218,7 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     void showHornyMeter() {
-        if (SexUI.getShouldBeRendered()) {
+        if (SexUI.isSexUIVisible()) {
             return;
         }
         if (this.getCurrentAction() != Action.CARRY_SLOW) {
@@ -294,7 +294,7 @@ public class EllieEntity extends Fighter implements IEllie {
         Vec3d pos;
 //        EntityPlayer player;
         UUID uUID;
-        String handState = (String)this.entityDataManager.get(GIRL_HAND_STATES);
+        String handState = this.entityDataManager.get(GIRL_HAND_STATES);
         if ("Missionary".equals(handState)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.MISSIONARY_START);
@@ -316,7 +316,7 @@ public class EllieEntity extends Fighter implements IEllie {
             vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.1), player.rotationYaw);
             pos = pos.add(vec3d);
             player.setPositionAndUpdate(pos.x, pos.y, pos.z);
-            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
+            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP)player);
         }
         if ("cowgirl".equals(handState)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
@@ -337,7 +337,7 @@ public class EllieEntity extends Fighter implements IEllie {
             vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 1.0 - (double)player.eyeHeight, -1.8125), player.rotationYaw);
             pos = pos.add(vec3d);
             player.setPositionAndUpdate(pos.x, pos.y, pos.z);
-            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
+            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP)player);
         }
     }
 
@@ -387,7 +387,6 @@ public class EllieEntity extends Fighter implements IEllie {
                 this.world.playSound(null, this.getPosition(), SoundsHandler.GIRLS_ELLIE_SIGH[0], SoundCategory.NEUTRAL, 6.0f, 1.0f);
                 this.resetGirlState();
                 this.resetSitScale();
-                return;
             }else {
                 EntityPlayer player = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
                 if (player != null) {
@@ -399,7 +398,6 @@ public class EllieEntity extends Fighter implements IEllie {
                 if (sitPos.distanceTo(this.getPositionVector()) > 1.0) {
                     this.getNavigator().tryMoveToXYZ(sitPos.x, sitPos.y, sitPos.z, 0.35f);
                     this.tickPathVelocity();
-                    return;
                 } else {
                     this.setTargetPosition(sitPos);
                     this.setYawRotation(yaw);
@@ -440,7 +438,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 return null;
             }
 
-            bedVec = new Vec3d(bedPos.getX(), bedPos.getY(), ((Vec3i)bedPos).getZ());
+            bedVec = new Vec3d(bedPos.getX(), bedPos.getY(), bedPos.getZ());
             for (int i = 0; i < offsets.length; ++i) {
                 Vec3d offsetVec = bedVec.add(offsets[i][1]);
                 Block block = this.world.getBlockState(new BlockPos(offsetVec.x, offsetVec.y, offsetVec.z)).getBlock();
@@ -451,8 +449,8 @@ public class EllieEntity extends Fighter implements IEllie {
                         bestIndex = i;
                         continue;
                     }
-                    double bestDist = this.getPosition().distanceSq(bedVec.add((Vec3d) offsets[bestIndex][0]).x, bedVec.add((Vec3d) offsets[bestIndex][0]).y, bedVec.add((Vec3d) offsets[bestIndex][0]).z);
-                    double dist = this.getPosition().distanceSq(bedVec.add((Vec3d) offsets[i][0]).x, bedVec.add((Vec3d) offsets[i][0]).y, bedVec.add((Vec3d) offsets[i][0]).z);
+                    double bestDist = this.getPosition().distanceSq(bedVec.add(offsets[bestIndex][0]).x, bedVec.add(offsets[bestIndex][0]).y, bedVec.add(offsets[bestIndex][0]).z);
+                    double dist = this.getPosition().distanceSq(bedVec.add(offsets[i][0]).x, bedVec.add(offsets[i][0]).y, bedVec.add(offsets[i][0]).z);
                     if (dist < bestDist) {
                         bestIndex = i;
                     }
@@ -478,7 +476,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 this.zFlag = 16;
                 this.setNoGravity(true);
                 this.noClip = true;
-                PacketHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(false), (EntityPlayerMP) player);
+                PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP) player);
                 this.tasks.removeTask(this.aiWander);
                 this.tasks.removeTask(this.watchClosestGirlGoal);
             }
@@ -511,7 +509,7 @@ public class EllieEntity extends Fighter implements IEllie {
     void resetSitScale() {
         this.entityDataManager.set(IS_ANCHORED, false);
         this.setCurrentAction(Action.NULL);
-        this.setInteractionPlayerUUID((UUID)null);
+        this.setInteractionPlayerUUID(null);
         this.noClip = false;
         this.setNoGravity(false);
         this.ah = false;
@@ -724,13 +722,13 @@ public class EllieEntity extends Fighter implements IEllie {
             switch (sound.sound) {
                 case "becomeNude": {
                     if (this.isLocalPlayerNearby()) {
-                        this.changeDataParameterFromClient("currentModel", (Integer) this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
+                        this.changeDataParameterFromClient("currentModel", this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
                         break;
                     }
                     break;
                 }
                 case "stripDone": {
-                    this.setCurrentAction((Action)null);
+                    this.setCurrentAction(null);
                     this.resetCameraAndPhysics();
                     this.doSubAction();
                     break;
@@ -746,12 +744,12 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "hugMSG4": {
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.mommyhorny"));
                     this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ELLIE_MOMMYHORNY, 0.5f);
                     break;
                 }
                 case "hugMSG5": {
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.whattodo"));
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HUH[1], 6.0f);
                     break;
                 }
@@ -763,12 +761,12 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "hugselectedMSG1": {
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.iknow"));
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HMPH[3], 6.0f);
                     break;
                 }
                 case "hugselectedMSG2": {
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.followmedarling"));
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 6.0f);
                     if (!this.isControlledByLocalPlayer()) break;
                     HandlePlayerMovement.setMovementLock(true);
@@ -777,7 +775,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 case "sitdownMSG1": {
                     this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ELLIE_COMETOMOMMY, 0.5f);
                     if (!this.isLocalPlayerNearby()) break;
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.cometomommy"));
                     break;
                 }
                 case "cowgirlStartMSG0": {
@@ -786,7 +784,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 }
                 case "cowgirlStartMSG1": {
                     if (!this.isLocalPlayerNearby()) break;
-                    this.sendChatMessage(I18n.format("ellie.dialogue.like", new Object[0]));
+                    this.sendChatMessage(I18n.format("ellie.dialogue.like"));
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -848,7 +846,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 case "missionary_cumMSG2": {
                     this.playRandomSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GOODBOY, 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.sendChatMessage(I18n.format("ellie.dialogue.goodboy", new Object[0]));
+                    this.sendChatMessage(I18n.format("ellie.dialogue.goodboy"));
                     break;
                 }
                 case "cowgirlcumMSG6": 
@@ -876,7 +874,7 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "pearl": {
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "openSexUi": {
@@ -941,18 +939,18 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "lipsound": {
-                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_ALLIE_LIPSOUND);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
                 }
                 case "cum": {
                     this.playRandomSoundAtVolume(SoundsHandler.MISC_INSERTS, 6.0f);
-                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "pound": {
-                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
@@ -977,8 +975,8 @@ public class EllieEntity extends Fighter implements IEllie {
         data.addAnimationController(this.eyesController);
     }
 
-//    private static RuntimeException ZelixClassMaster(RuntimeException zelixClassMaster) {
-//        return zelixClassMaster;
+//    private static RuntimeException ZelixKlassMaster(RuntimeException zelixKlassMaster) {
+//        return zelixKlassMaster;
 //    }
 }
 

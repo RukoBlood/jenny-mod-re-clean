@@ -443,7 +443,7 @@ public class SlimeEntity extends GirlEntity {
                     break;
                 }
                 case "sexUiOn": {
-                    if (!this.isControlledByLocalPlayer() || SexUI.shouldBeRendered) break;
+                    if (!this.isControlledByLocalPlayer() || SexUI.isVisible) break;
                     SexUI.showUI();
                     break;
                 }

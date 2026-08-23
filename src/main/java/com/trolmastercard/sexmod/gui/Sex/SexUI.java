@@ -24,44 +24,43 @@ import org.lwjgl.opengl.GL11;
 public class SexUI extends Gui {
     static ResourceLocation buttons = new ResourceLocation("sexmod", "textures/gui/buttons.png");
     static ResourceLocation hornyMeter = new ResourceLocation("sexmod", "textures/gui/hornymeter.png");
-    static public boolean shouldBeRendered = false;
+    static public boolean isVisible = false; //Bugfix??
     static public double cumPercentage;
     static double drawCumPercentage;
     static float transitionStep;
     static float cumStep;
     static boolean keepSpacePressed;
-    static boolean h;
+    static boolean displayState;
 
     public static void showUI() {
-        if (shouldBeRendered) {
-            return;
+        if (!isVisible) {
+            resetCumPercentage();
+            isVisible = true;
+            displayState = true;
         }
-        SexUI.resetCumPercentage();
-        shouldBeRendered = true;
-        h = true;
     }
 
-    public static void setHornyMeterVisible(boolean bl) {
-        if (!shouldBeRendered) {
+    public static void setHornyMeterVisible(boolean visible) {
+        if (!isVisible) {
             SexUI.resetCumPercentage();
-            shouldBeRendered = true;
-            h = bl;
+            isVisible = true;
+            displayState = visible;
         }
     }
 
     public static void hide() {
         SexUI.resetCumPercentage();
-        shouldBeRendered = false;
-        h = true;
+        isVisible = false;
+        displayState = true;
     }
 
-    public static boolean getShouldBeRendered() {
-        return shouldBeRendered;
+    public static boolean isSexUIVisible() {
+        return isVisible;
     }
 
     @SubscribeEvent
-    public void RenderUI(RenderGameOverlayEvent event) {
-        if (shouldBeRendered && event.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
+    public void onRenderGameOverlay(RenderGameOverlayEvent event) {
+        if (isVisible && event.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
             int height;
             Minecraft minecraft = Minecraft.getMinecraft();
             transitionStep = transitionStep < 1.0f ? (transitionStep += minecraft.getTickLength() / 25.0f) : 1.0f;
@@ -75,7 +74,7 @@ public class SexUI extends Gui {
                 height = keepSpacePressed ? 54 : 0;
                 this.drawTexturedModalRect(240, 160, 0, 108 + height, 256, 52);
             }
-            if (h && !keepSpacePressed) {
+            if (displayState && !keepSpacePressed) {
                 height = HandlePlayerMovement.isThrusting ? 54 : 0;
                 this.drawTexturedModalRect((int) RotationHelper.LerpFloat(-200.0f, 98.0f, transitionStep), 405, 0, height, 158, 54);
             }
@@ -98,8 +97,8 @@ public class SexUI extends Gui {
         }
     }
 
-    public static void addCumPercentage(double d) {
-        cumPercentage = (cumPercentage += d) > 1.0 ? 1.0 : cumPercentage;
+    public static void addCumPercentage(double value) {
+        cumPercentage = (cumPercentage += value) > 1.0 ? 1.0 : cumPercentage;
     }
 
     public static void resetCumPercentage() {
@@ -112,7 +111,7 @@ public class SexUI extends Gui {
         transitionStep = 0.0f;
         cumStep  = 0.0f;
         keepSpacePressed = false;
-        h = true;
+        displayState = true;
     }
 }
 
