@@ -86,7 +86,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     public void SetHome() {
         this.sendChatMessage("I am living here now nya~");
-        this.playRandomSound(SoundsHandler.GIRLS_BIA_BREATH, new int[0]);
+        this.playRandomSound(SoundsHandler.GIRLS_BIA_BREATH);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             if (this.getPositionVector().equals(this.getTargetPosition()) || this.ag > 40) {
                 this.Y = false;
                 this.ag = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.doAction();
@@ -183,15 +183,15 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             return true;
         }
         if (this.world.isRemote && !this.openInteractionMenu(entityPlayer)) {
-            this.sendChatMessage(I18n.format("bia.dialogue.busy", new Object[0]));
+            this.sendChatMessage(I18n.format("bia.dialogue.busy"));
         }
         return true;
     }
 
     @Override
     public boolean openInteractionMenu(EntityPlayer player) {
-        if (this.getInteractionPlayerUUID() == null && (!this.hasMaster() || ((String)this.entityDataManager.get(MASTER)).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
-            String[] stringArray = new String[]{(Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
+        if (this.getInteractionPlayerUUID() == null && (!this.hasMaster() || this.entityDataManager.get(MASTER).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
+            String[] stringArray = new String[]{this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
             BiaEntity.openInventoryGui(player, this, stringArray, true);
             return true;
         }
@@ -360,7 +360,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         }
         if (blockPos == null || n == 50) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
+            this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight"));
             return null;
         }
         this.tasks.removeTask(this.aiWander);
@@ -376,18 +376,18 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 n2 = i;
                 continue;
             }
-            double d = this.getPosition().distanceSq(vec3d.add((Vec3d)this.ad[n2][0]).x, vec3d.add((Vec3d)this.ad[n2][0]).y, vec3d.add((Vec3d)this.ad[n2][0]).z);
-            double d2 = this.getPosition().distanceSq(vec3d.add((Vec3d)this.ad[i][0]).x, vec3d.add((Vec3d)this.ad[i][0]).y, vec3d.add((Vec3d)this.ad[i][0]).z);
+            double d = this.getPosition().distanceSq(vec3d.add(this.ad[n2][0]).x, vec3d.add(this.ad[n2][0]).y, vec3d.add(this.ad[n2][0]).z);
+            double d2 = this.getPosition().distanceSq(vec3d.add(this.ad[i][0]).x, vec3d.add(this.ad[i][0]).y, vec3d.add(this.ad[i][0]).z);
             if (!(d2 < d)) continue;
             n2 = i;
         }
         if (n2 == -1) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
+            this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight"));
             return null;
         }
         Vec3d vec3d4 = vec3d.add(this.ad[n2][0]);
-        return new Vector4d(vec3d4.x, vec3d4.y, vec3d4.z, (double)this.ai[n2]);
+        return new Vector4d(vec3d4.x, vec3d4.y, vec3d4.z, this.ai[n2]);
     }
 
     boolean boolean_a(BlockPos blockPos) {
@@ -410,7 +410,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         BlockPos blockPos = this.getNearestBed(this.getPosition());
         if (blockPos == null) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight", new Object[0]));
+            this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight"));
             return null;
         }
         this.tasks.removeTask(this.aiWander);
@@ -424,24 +424,24 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 n = i;
                 continue;
             }
-            double d = this.getPosition().distanceSq(vec3d.add((Vec3d)this.ad[n][0]).x, vec3d.add((Vec3d)this.ad[n][0]).y, vec3d.add((Vec3d)this.ad[n][0]).z);
-            double d2 = this.getPosition().distanceSq(vec3d.add((Vec3d)this.ad[i][0]).x, vec3d.add((Vec3d)this.ad[i][0]).y, vec3d.add((Vec3d)this.ad[i][0]).z);
+            double d = this.getPosition().distanceSq(vec3d.add(this.ad[n][0]).x, vec3d.add(this.ad[n][0]).y, vec3d.add(this.ad[n][0]).z);
+            double d2 = this.getPosition().distanceSq(vec3d.add(this.ad[i][0]).x, vec3d.add(this.ad[i][0]).y, vec3d.add(this.ad[i][0]).z);
             if (!(d2 < d)) continue;
             n = i;
         }
         if (n == -1) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.sendChatMessage(I18n.format("jenny.dialogue.bedobscured", new Object[0]));
+            this.sendChatMessage(I18n.format("jenny.dialogue.bedobscured"));
             return null;
         }
         Vec3d vec3d3 = vec3d.add(this.ad[n][0]);
-        return new Vector4d(vec3d3.x, vec3d3.y, vec3d3.z, (double)this.ai[n]);
+        return new Vector4d(vec3d3.x, vec3d3.y, vec3d3.z, this.ai[n]);
     }
 
     @Override
     public void goToSexBed() {
         Vector4d vector4d;
-        String string = (String)this.entityDataManager.get(GIRL_HAND_STATES);
+        String string = this.entityDataManager.get(GIRL_HAND_STATES);
         Vector4d vector4d2 = vector4d = string.equals("anal") ? this.javax_vecmath_Vector4d_b() : this.javax_vecmath_Vector4d_a();
         if (vector4d == null) {
             return;
@@ -688,7 +688,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "becomeNude": {
                     if (!this.isLocalPlayerNearby()) break;
-                    this.changeDataParameterFromClient("currentModel", (Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
+                    this.changeDataParameterFromClient("currentModel", this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "0" : "1");
                     break;
                 }
                 case "stripDone": {
@@ -697,7 +697,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "stripMSG1": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.hihi", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.hihi"));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
@@ -707,26 +707,26 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "pearl": {
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "talk_hornyMSG1": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.heya", new Object[0]));
-                    this.playRandomSound(SoundsHandler.GIRLS_BIA_HEY, new int[0]);
+                    this.sendChatMessage(I18n.format("bia.dialogue.heya"));
+                    this.playRandomSound(SoundsHandler.GIRLS_BIA_HEY);
                     break;
                 }
                 case "talk_hornyMSG2": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.horny", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.horny"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[2]);
                     break;
                 }
                 case "talk_hornyMSG3": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.so", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.so"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "talk_hornyMSG4": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.fun", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.fun"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
@@ -737,17 +737,17 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "talk_responseMSG1": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.huh", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.huh"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[2]);
                     break;
                 }
                 case "talk_responseMSG2": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.iuhm", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.iuhm"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[1]);
                     break;
                 }
                 case "talk_responseMSG3": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.yes", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.yes"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[0]);
                     break;
                 }
@@ -818,22 +818,22 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "headpatMSG1": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.headpats", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.headpats"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[0]);
                     break;
                 }
                 case "headpatMSG2": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.hmm", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.hmm"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[0]);
                     break;
                 }
                 case "headpatMSG3": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.huh2", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.huh2"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_HUH[0]);
                     break;
                 }
                 case "headpatMSG4": {
-                    this.sendChatMessage(I18n.format("bia.dialogue.thankyou", new Object[0]));
+                    this.sendChatMessage(I18n.format("bia.dialogue.thankyou"));
                     this.PlaySound(SoundsHandler.GIRLS_BIA_GIGGLE[1]);
                     break;
                 }
@@ -843,7 +843,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "sitdownMSG1": {
                     this.sendChatMessage("come here big boy~");
-                    this.playRandomSound(SoundsHandler.GIRLS_BIA_BREATH, new int[0]);
+                    this.playRandomSound(SoundsHandler.GIRLS_BIA_BREATH);
                     break;
                 }
                 case "sitdownDone": {
@@ -857,11 +857,11 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "pound": {
-                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "doggyMoan": {
-                    this.playRandomSound(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_BIA_AHH : SoundsHandler.GIRLS_BIA_MMM, new int[0]);
+                    this.playRandomSound(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_BIA_AHH : SoundsHandler.GIRLS_BIA_MMM);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.04);
                     break;
