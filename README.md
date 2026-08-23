@@ -122,10 +122,6 @@ Ordered by severity
 ## Regex
 
 Useful patterns below:
-
-- Generic stripped onMessage repopulation:
-  - Find: `((?:public|protected|private)?\s*IMessage\s+onMessage\s*\(\s*)IMessage(\s+\w+\s*,\s*MessageContext\s+\w+\s*\)\s*\{\s*return\s+[\w.]+\s*\(\s*\(\s*)([\w.]+)(\s*\)\s*\w+\s*,\s*\w+\s*\)\s*;\s*\})`
-  - Replace: `@Override\n$1$3$2$3$4`
 - Finding calls to arbitrary method, ie `ad`:
   - `(void |\.)ad\(\)`
 - <details>
@@ -140,6 +136,9 @@ No longer needed:
 - Exception wrapping obfuscation (pass-and-return)
     - Find: `throw ([\w\d]+)\.([\w\d]+)\(([\w\d]+)\);`
     - Replace: `throw $3;`
+- Generic stripped onMessage repopulation:
+  - Find: `((?:public|protected|private)?\s*IMessage\s+onMessage\s*\(\s*)IMessage(\s+\w+\s*,\s*MessageContext\s+\w+\s*\)\s*\{\s*return\s+[\w.]+\s*\(\s*\(\s*)([\w.]+)(\s*\)\s*\w+\s*,\s*\w+\s*\)\s*;\s*\})`
+  - Replace: `@Override\n$1$3$2$3$4`
 
 ## Bugs (Palkaline)
 
@@ -155,6 +154,8 @@ The most likely bugs are:
 ## Bugs (ME)
 
 Current state of the mod - still broken stuff.
+
+But some bugs got fixed
 
 
 ## Modifications from source jar
