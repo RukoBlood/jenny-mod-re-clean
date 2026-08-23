@@ -14,7 +14,7 @@ import java.util.List;
 import com.trolmastercard.sexmod.Packets.UpdatePlayerModel;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
@@ -72,7 +72,7 @@ public class GenderChangeUI extends GuiScreen {
             this.i = this.entities.size() - 1;
         }
         if (button.id == 0) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.getGirlType(this.entities.get(this.i))));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.getGirlType(this.entities.get(this.i))));
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             ((EntityPlayer)player).closeScreen();
             player.eyeHeight = player.getDefaultEyeHeight();

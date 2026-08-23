@@ -178,11 +178,11 @@ public class GalathModel extends GirlModel<GirlEntity> {
                 float pitchAngle = (float) TrigMath.sinDegrees(Math.atan2(targetOffset.y, Math.sqrt(targetOffset.x * targetOffset.x + targetOffset.z * targetOffset.z)));
 
                 double totalDistance = Math.abs(targetOffset.x) + Math.abs(targetOffset.y) + Math.abs(targetOffset.z);
-                double calculatedPitch = totalDistance * 7.0 + -20.0;
-                double calculatedArmPitch = totalDistance * 5.0 + -20.0;
+                double calculatedPitch = totalDistance * 7.0 - 20.0;
+                double calculatedArmPitch = totalDistance * 5.0 - 20.0;
 
                 parser.setValue("pitch", calculatedPitch + (double) pitchAngle - 80.0);
-                parser.setValue("armpitch", calculatedArmPitch + (double) pitchAngle + -110.0);
+                parser.setValue("armpitch", calculatedArmPitch + (double) pitchAngle - 110.0);
                 parser.setValue("armyaw", relativeYaw + 80.0f);
                 parser.setValue("yaw", relativeYaw + 90.0f);
             }
@@ -215,7 +215,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
         IBone braBoobR = animationProcessor.getBone("braBoobR");
         IBone slip = animationProcessor.getBone("slip");
 
-        boolean hasWings = ((IGalath)((Object)girl)).isWingsAnimated();
+        boolean hasWings = ((IGalath) girl).isWingsAnimated();
         boolean isLickingOrSitting = Action.isAnyAction(girl, Action.PUSSY_LICKING, Action.MASTERBATE_SITTING, Action.MASTERBATE_SITTING_CUM);
         if (nippleR != null) {
             if (braBoobL != null) {
@@ -344,8 +344,8 @@ public class GalathModel extends GirlModel<GirlEntity> {
         float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
         IBone iBone = this.getAnimationProcessor().getBone("rotationTool");
         Vector4d stateHolder = ((IGalath) girl).getFlightData();
-        iBone.setRotationX((float) RotationHelper.LerpDouble(stateHolder.prevPitch + (double)extraPitch, stateHolder.pitch + (double)extraPitch, (double)partialTicks));
-        iBone.setRotationZ((float) RotationHelper.LerpDouble(stateHolder.prevRoll, stateHolder.roll, (double)partialTicks));
+        iBone.setRotationX((float) RotationHelper.LerpDouble(stateHolder.prevPitch + (double)extraPitch, stateHolder.pitch + (double)extraPitch, partialTicks));
+        iBone.setRotationZ((float) RotationHelper.LerpDouble(stateHolder.prevRoll, stateHolder.roll, partialTicks));
     }
 
     @Override

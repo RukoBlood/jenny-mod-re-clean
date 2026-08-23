@@ -12,7 +12,7 @@
 package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -62,7 +62,7 @@ public class ResetController implements IMessage {
                 girl.getCurrentAction().ticksPlaying = new int[]{0, 0};
                 for (EntityPlayerMP entityPlayerMP : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
                     if (uUID.equals(entityPlayerMP.getPersistentID()) || !(entityPlayerMP.getDistance(girl) < 100.0f)) continue;
-                    PackageHandler.INSTANCE.sendTo(new ResetController(msg.a), entityPlayerMP);
+                    PacketHandler.INSTANCE.sendTo(new ResetController(msg.a), entityPlayerMP);
                 }
                 return null;
             }

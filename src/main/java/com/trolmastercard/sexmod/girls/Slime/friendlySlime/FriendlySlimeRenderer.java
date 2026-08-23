@@ -27,7 +27,6 @@ public class FriendlySlimeRenderer extends RenderLiving<FriendlySlimeEntity> {
     // preRenderCallback
     @Override
     protected void preRenderCallback(FriendlySlimeEntity entity, float f) {
-        float f2 = 0.999f;
         GlStateManager.scale(0.999f, 0.999f, 0.999f);
         float f3 = entity.h();
         float f4 = (entity.h + (entity.e - entity.h) * f) / (f3 * 0.5f + 1.0f);

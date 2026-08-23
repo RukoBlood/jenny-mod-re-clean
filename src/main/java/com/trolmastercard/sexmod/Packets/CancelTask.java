@@ -11,7 +11,7 @@
 package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
 import java.util.UUID;
@@ -61,7 +61,7 @@ implements IMessage {
                 if (hashSet.isEmpty()) {
                     return;
                 }
-                PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, false), ctx.getServerHandler().player);
+                PacketHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, false), ctx.getServerHandler().player);
             });
             return null;
         }

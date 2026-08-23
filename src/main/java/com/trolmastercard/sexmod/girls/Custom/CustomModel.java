@@ -37,7 +37,7 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.CustomPartCategory;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
@@ -96,7 +96,7 @@ public class CustomModel {
     }
 
     public static void reloadCustomModels() {
-        PackageHandler.INSTANCE.sendToServer(new RequestServerModelAvailability());
+        PacketHandler.INSTANCE.sendToServer(new RequestServerModelAvailability());
     }
 
     @SideOnly(value=Side.CLIENT)

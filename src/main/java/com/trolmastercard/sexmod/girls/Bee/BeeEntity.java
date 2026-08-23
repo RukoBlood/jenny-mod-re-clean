@@ -20,7 +20,7 @@ import com.trolmastercard.sexmod.girls.base.Supporter;
 import com.trolmastercard.sexmod.gui.Menu.SupporterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.client.Minecraft;
@@ -174,7 +174,7 @@ public class BeeEntity extends Supporter {
             this.setTargetPosition(this.getFrontOffsetVector());
             this.setYawRotation(closestPlayer.rotationYaw - 180.0f);
             this.pathNavigator.clearPath();
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)closestPlayer);
+            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)closestPlayer);
             this.setCurrentAction(Action.CITIZEN_START);
             Vec3d forward = this.getFrontOffsetVector(0.2);
             closestPlayer.setPositionAndUpdate(forward.x, forward.y, forward.z);
@@ -360,7 +360,7 @@ public class BeeEntity extends Supporter {
             switch (soundKeyframeEvent.sound) {
                 case "pearl": {
                     if (!this.isLocalPlayerNearby() || this.getCurrentAction() != Action.THROW_PEARL) break;
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "resetCumPercentage": {

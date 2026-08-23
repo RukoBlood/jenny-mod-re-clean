@@ -13,7 +13,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import com.trolmastercard.sexmod.Packets.StartStandingSexAnimation;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,7 +84,7 @@ public class SexPromptManager {
     }
 
     void startSex(String animationID, UUID receiver, UUID sender) {
-        PackageHandler.INSTANCE.sendToServer((IMessage)new StartStandingSexAnimation(receiver, sender, animationID));
+        PacketHandler.INSTANCE.sendToServer((IMessage)new StartStandingSexAnimation(receiver, sender, animationID));
     }
 
     public static class SexPrompt {

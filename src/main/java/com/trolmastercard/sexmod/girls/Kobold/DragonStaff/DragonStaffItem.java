@@ -18,7 +18,7 @@ package com.trolmastercard.sexmod.girls.Kobold.DragonStaff;
 import com.trolmastercard.sexmod.Packets.GetTribeUIValues;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.gui.DragonStaffUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
@@ -39,7 +39,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -74,7 +73,7 @@ public class DragonStaffItem extends Item implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public static void a(ModelRegistryEvent modelRegistryEvent) {
-        ModelLoader.setCustomModelResourceLocation((Item) DRAGON_STAFF, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:dragon_staff"));
+        ModelLoader.setCustomModelResourceLocation(DRAGON_STAFF, 0, new ModelResourceLocation("sexmod:dragon_staff"));
         DRAGON_STAFF.setTileEntityItemStackRenderer(new DragonStaffRenderer());
     }
 
@@ -107,7 +106,7 @@ public class DragonStaffItem extends Item implements IAnimatable {
         @SideOnly(value=Side.CLIENT)
         void a() {
             Minecraft.getMinecraft().displayGuiScreen(new DragonStaffUI());
-            PackageHandler.INSTANCE.sendToServer((IMessage)new GetTribeUIValues());
+            PacketHandler.INSTANCE.sendToServer(new GetTribeUIValues());
         }
 
         @SubscribeEvent

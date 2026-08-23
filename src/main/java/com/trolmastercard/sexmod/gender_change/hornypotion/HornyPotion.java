@@ -12,7 +12,7 @@
 package com.trolmastercard.sexmod.gender_change.hornypotion;
 
 import com.trolmastercard.sexmod.Packets.GenderChangePacket;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
@@ -74,7 +74,7 @@ public class HornyPotion extends Potion {
             return;
         }
         player.removePotionEffect(HORNY_POTION);
-        PackageHandler.INSTANCE.sendTo((IMessage)new GenderChangePacket(player), (EntityPlayerMP)player);
+        PacketHandler.INSTANCE.sendTo((IMessage)new GenderChangePacket(player), (EntityPlayerMP)player);
     }
 
     @SubscribeEvent

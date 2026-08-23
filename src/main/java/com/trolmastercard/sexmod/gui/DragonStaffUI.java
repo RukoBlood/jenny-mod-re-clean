@@ -18,7 +18,7 @@ import com.trolmastercard.sexmod.girls.Kobold.DragonStaff.DragonStaffRenderer;
 import com.trolmastercard.sexmod.Packets.*;
 import com.trolmastercard.sexmod.util.ThreadNames;
 import com.trolmastercard.sexmod.girls.Kobold.DragonStaff.StructureMarkerRenderer;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
@@ -90,12 +90,12 @@ public class DragonStaffUI extends GuiScreen {
     void executeBaseObjectInteraction() {
         IBlockState block = this.mc.world.getBlockState(this.targetPos);
         if (block.getBlock() instanceof BlockBed || block.getBlock() instanceof BlockChest) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SendBlocks(this.targetPos, !StructureMarkerRenderer.a(this.targetPos)));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new SendBlocks(this.targetPos, !StructureMarkerRenderer.a(this.targetPos)));
         }
     }
 
     void toggleTribeFollowMode() {
-        PackageHandler.INSTANCE.sendToServer((IMessage)new SetTribeFollowMode(!isTribeFollowing));
+        PacketHandler.INSTANCE.sendToServer((IMessage)new SetTribeFollowMode(!isTribeFollowing));
     }
 
     void triggerAreaRender() {
@@ -107,17 +107,17 @@ public class DragonStaffUI extends GuiScreen {
         Block block = this.targetBlockState.getBlock();
         if (block instanceof BlockLog) {
             if (StructureMarkerRenderer.a(this.targetPos)) {
-                PackageHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
+                PacketHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
                 return;
             }
-            PackageHandler.INSTANCE.sendToServer((IMessage)new FallTree(this.targetPos));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new FallTree(this.targetPos));
         }
         if ((mineParams = this.validateAndCalculateMiningZone()) != null) {
             if (StructureMarkerRenderer.a(this.targetPos)) {
-                PackageHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
+                PacketHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
                 return;
             }
-            PackageHandler.INSTANCE.sendToServer((IMessage)new Mine((BlockPos)mineParams[0], (EnumFacing)mineParams[1]));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new Mine((BlockPos)mineParams[0], (EnumFacing)mineParams[1]));
         }
     }
 

@@ -19,7 +19,7 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
@@ -109,7 +109,7 @@ extends PlayerGirl {
         if (!((Optional)this.entityDataManager.get(OWNER)).isPresent()) {
             return;
         }
-        PackageHandler.INSTANCE.sendToServer((IMessage)new SexPrompt(action, player, (UUID)((Optional)this.entityDataManager.get(OWNER)).get(), this.guiPending));
+        PacketHandler.INSTANCE.sendToServer((IMessage)new SexPrompt(action, player, (UUID)((Optional)this.entityDataManager.get(OWNER)).get(), this.guiPending));
         this.guiPending = true;
     }
 
@@ -184,8 +184,8 @@ extends PlayerGirl {
             this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)((Optional)this.entityDataManager.get(OWNER)).get());
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
+            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayerMP.capabilities.isFlying = true;
             entityPlayer.capabilities.isFlying = true;
@@ -406,7 +406,7 @@ extends PlayerGirl {
                 case "hugMSG1": {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     if (!entityPlayerSP.getPersistentID().equals(this.getInteractionPlayerUUID()) && !entityPlayerSP.getUniqueID().equals(this.getInteractionPlayerUUID())) break;
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getUniqueID().toString(), entityPlayerSP.getPositionVector(), entityPlayerSP.rotationYaw - 80.0f, entityPlayerSP.rotationPitch));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getUniqueID().toString(), entityPlayerSP.getPositionVector(), entityPlayerSP.rotationYaw - 80.0f, entityPlayerSP.rotationPitch));
                     break;
                 }
                 case "hugMSG2": {
@@ -452,9 +452,9 @@ extends PlayerGirl {
                     vec3d = vec3d.add(-Math.sin((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279, 0.0, Math.cos((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279);
                     vec3d = vec3d.add(-Math.sin((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579, 0.0, Math.cos((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579);
                     String string = vec3d.x + "f" + vec3d.y + "f" + vec3d.z + "f";
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girlID(), "targetPos", string));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girlID(), "targetPos", string));
                     this.resetCameraAndPhysics();
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
                     this.setCurrentAction(Action.NULL);
                     break;
                 }
@@ -571,7 +571,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "openSexUi": {

@@ -26,7 +26,7 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.ThreadNames;
@@ -68,7 +68,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -338,7 +337,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         BlockPos blockPos = this.getNearestBed(this.getPosition());
         if (blockPos == null) {
             this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
-            PackageHandler.INSTANCE.sendToAllAround(new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
+            PacketHandler.INSTANCE.sendToAllAround(new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
         } else {
             Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             int[] nArray = new int[]{0, 180, -90, 90};
@@ -617,8 +616,8 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 if (this.getCurrentAction() != Action.PAYMENT) {
                     this.setCurrentAction(Action.PAYMENT);
                 } else {
-                    PackageHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
-                    PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
                 }
                 return;
             }
@@ -811,7 +810,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "start_fishingDone": {
@@ -821,7 +820,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "rod_shoot": {
                     if (!this.isLocalPlayerNearby()) break;
-                    PackageHandler.INSTANCE.sendToServer(new CatActivateFishing(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new CatActivateFishing(this.girlID()));
                     break;
                 }
                 case "eat": {
@@ -840,7 +839,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "eatingDone": {
                     if (this.isLocalPlayerNearby()) {
-                        PackageHandler.INSTANCE.sendToServer(new CatEatingDone(this.girlID()));
+                        PacketHandler.INSTANCE.sendToServer(new CatEatingDone(this.girlID()));
                         this.setCurrentAction(Action.NULL);
                     }
                     this.fishSizePercentage = 1.0f;
@@ -849,7 +848,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "throw_away": {
                     if (this.isLocalPlayerNearby()) {
-                        PackageHandler.INSTANCE.sendToServer(new CatThrowAwayItem(this.girlID()));
+                        PacketHandler.INSTANCE.sendToServer(new CatThrowAwayItem(this.girlID()));
                     }
                     this.fishSizePercentage = 1.0f;
                     this.throwBackPercentage = 0.0f;

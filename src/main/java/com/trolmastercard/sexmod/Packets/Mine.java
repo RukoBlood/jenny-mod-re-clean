@@ -13,7 +13,7 @@ package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.girls.Kobold.KoboldTask;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
 import java.util.UUID;
@@ -112,7 +112,7 @@ public class Mine implements IMessage {
                 }
                 KoboldTask bs_class972 = new KoboldTask(msg.a, KoboldTask.KoboldTasks.MINE, hashSet, msg.b);
                 KoboldManager.addTaskToTribe(uUID, bs_class972);
-                PackageHandler.INSTANCE.sendTo(new SendBlocks(hashSet, true), ctx.getServerHandler().player);
+                PacketHandler.INSTANCE.sendTo(new SendBlocks(hashSet, true), ctx.getServerHandler().player);
             });
             return null;
         }

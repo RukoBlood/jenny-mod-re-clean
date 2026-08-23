@@ -278,13 +278,13 @@ public class KoboldTask {
         return visited;
     }
 
-    public static enum KoboldTasks {
+    public enum KoboldTasks {
         FALL_TREE(1),
         MINE(3);
 
         final int maxWorkers;
 
-        private KoboldTasks(int value) {
+        KoboldTasks(int value) {
             this.maxWorkers = value;
         }
 

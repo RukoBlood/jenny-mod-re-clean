@@ -39,7 +39,7 @@ public class CommonProxy {
         SoundsHandler.RegisterSounds();
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new GuiHandler());
         EventHandler.Register(false);
-        PackageHandler.RegisterMessages();
+        PacketHandler.RegisterMessages();
     }
 
     public void postInit(FMLPostInitializationEvent event) throws IOException {

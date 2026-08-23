@@ -14,7 +14,7 @@ package com.trolmastercard.sexmod.Packets;
 import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +94,7 @@ implements IMessage {
                 }
                 return new DownloadServerModel(arrayList);
             }
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PackageHandler.INSTANCE.sendTo(new RequestServerModelAvailability(CustomModel.getModelScales()), ctx.getServerHandler().player));
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> PacketHandler.INSTANCE.sendTo(new RequestServerModelAvailability(CustomModel.getModelScales()), ctx.getServerHandler().player));
             return null;
         }
     }

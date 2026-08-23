@@ -30,7 +30,7 @@ public class PathUtils {
 
     public static boolean isPathIntersecting(Path path, BlockPos[] targetPositions) {
         int pathLength = path.getCurrentPathLength();
-        ArrayList<PathPoint> pathPoints = new ArrayList<PathPoint>();
+        ArrayList<PathPoint> pathPoints = new ArrayList<>();
         for (int i = 0; i < pathLength; ++i) {
             pathPoints.add(path.getPathPointFromIndex(i));
         }

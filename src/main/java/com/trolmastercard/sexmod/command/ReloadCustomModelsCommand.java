@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.command;
 
 import com.trolmastercard.sexmod.Packets.RequestServerModelAvailability;
 import com.trolmastercard.sexmod.girls.Custom.CustomModel;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -38,7 +38,7 @@ public class ReloadCustomModelsCommand extends CommandBase {
     public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] stringArray) throws CommandException {
         CustomModel.getModelCount(false);
         for (EntityPlayerMP entityPlayerMP : minecraftServer.getPlayerList().getPlayers()) {
-            minecraftServer.addScheduledTask(() -> PackageHandler.INSTANCE.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.getModelScales()), entityPlayerMP));
+            minecraftServer.addScheduledTask(() -> PacketHandler.INSTANCE.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.getModelScales()), entityPlayerMP));
         }
     }
 }

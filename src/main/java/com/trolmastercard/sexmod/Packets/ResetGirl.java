@@ -12,7 +12,7 @@
 package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.girls.base.Action;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import io.netty.buffer.ByteBuf;
@@ -71,7 +71,7 @@ public class ResetGirl implements IMessage {
             Object object2;
             girl.reInitTasks();
             if (girl instanceof PlayerGirl && girl.world.getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID()) != null) {
-                PackageHandler.INSTANCE.sendTo(new SetPlayerMovement(true), (EntityPlayerMP)FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(girl.dimension).getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID()));
+                PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), (EntityPlayerMP)FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(girl.dimension).getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID()));
                 girl.getDataManager().set(GirlEntity.OUTFIT_INDEX, 1);
                 object2 = girl.world.getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID());
                 ((EntityPlayer)object2).capabilities.isFlying = false;
@@ -110,7 +110,7 @@ public class ResetGirl implements IMessage {
                 player.noClip = false;
                 player.setNoGravity(false);
                 player.capabilities.isFlying = false;
-                PackageHandler.INSTANCE.sendTo(new SetPlayerMovement(true), player);
+                PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), player);
             }
         }
 

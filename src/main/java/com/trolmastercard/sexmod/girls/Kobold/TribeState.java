@@ -5,7 +5,7 @@ package com.trolmastercard.sexmod.girls.Kobold;
 
 public enum TribeState {
     ACTIVE,
-    REST;
+    REST
 
 }
 

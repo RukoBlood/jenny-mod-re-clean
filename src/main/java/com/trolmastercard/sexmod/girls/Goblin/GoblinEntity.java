@@ -41,7 +41,7 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.GoblinUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Point2D;
 import com.trolmastercard.sexmod.util.interfaces.IGoblin;
@@ -728,7 +728,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                             player.rotationYaw = yaw;
                             player.rotationPitch = 30.0f;
                             player.setPositionAndUpdate(playerPos.x, playerPos.y, playerPos.z);
-                            PackageHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(true), (EntityPlayerMP) player);
+                            PacketHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(true), (EntityPlayerMP) player);
                             this.sendGirlChatMessage("Thanks to you, my clan is soon going to get a few new members! In return I will bear of one of my guards to serve as your personal Onahole. Choose wisely~");
                         }
                     }
@@ -870,7 +870,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                                 UUID uUID = player.getPersistentID();
                                 Vec3d pos = player.getPositionVector();
                                 float yaw = player.rotationYaw + 180.0f;
-                                PackageHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(false), (EntityPlayerMP) player);
+                                PacketHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(false), (EntityPlayerMP) player);
                                 this.setInteractionPlayerUUID(uUID);
                                 this.setCurrentAction(Action.JUMP_0);
                                 this.setTargetPosition(pos);

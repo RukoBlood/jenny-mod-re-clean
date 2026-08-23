@@ -15,7 +15,7 @@ package com.trolmastercard.sexmod.gui.Galath;
 import java.util.Random;
 
 import com.trolmastercard.sexmod.Packets.GalathBackOffRape;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -97,7 +97,7 @@ public class EscapeMinigameUI extends Gui {
             return;
         }
         hasSentReleasePacket = true;
-        PackageHandler.INSTANCE.sendToServer((IMessage)new GalathBackOffRape());
+        PacketHandler.INSTANCE.sendToServer((IMessage)new GalathBackOffRape());
         EscapeMinigameUI.StartClosingAnimation();
     }
 

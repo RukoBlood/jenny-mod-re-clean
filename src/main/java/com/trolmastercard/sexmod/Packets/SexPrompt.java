@@ -11,7 +11,7 @@
  */
 package com.trolmastercard.sexmod.Packets;
 
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
@@ -80,7 +80,7 @@ public class SexPrompt implements IMessage {
                     System.out.println("Sex prompt invalid -> male player not found");
                     return;
                 }
-                PackageHandler.INSTANCE.sendTo(new SexPrompt(msg.c, msg.b, msg.a, msg.d), (EntityPlayerMP)(msg.d ? entityPlayer : entityPlayer2));
+                PacketHandler.INSTANCE.sendTo(new SexPrompt(msg.c, msg.b, msg.a, msg.d), (EntityPlayerMP)(msg.d ? entityPlayer : entityPlayer2));
             });
             return null;
         }

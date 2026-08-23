@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packets.UploadInventoryToServer;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -52,7 +52,7 @@ public class GirlInventoryUI extends GuiContainer {
             stacks[39] = container.getSlot(3).getStack();
             stacks[40] = container.getSlot(4).getStack();
             stacks[41] = container.getSlot(5).getStack();
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.girl.girlID(), this.PlayerUUID, stacks));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.girl.girlID(), this.PlayerUUID, stacks));
         }
     }
 

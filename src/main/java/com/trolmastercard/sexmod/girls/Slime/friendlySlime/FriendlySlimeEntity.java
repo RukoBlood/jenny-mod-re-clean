@@ -37,8 +37,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 //ay
-public class FriendlySlimeEntity
-extends EntityLiving {
+public class FriendlySlimeEntity extends EntityLiving {
     static public int b = 8400;
     static public List<FriendlySlimeEntity> g = new ArrayList<FriendlySlimeEntity>();
     final static private DataParameter<Integer> d = EntityDataManager.createKey(FriendlySlimeEntity.class, DataSerializers.VARINT).getSerializer().createKey(111);

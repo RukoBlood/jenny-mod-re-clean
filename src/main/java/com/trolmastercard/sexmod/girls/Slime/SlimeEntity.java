@@ -15,7 +15,7 @@ import com.trolmastercard.sexmod.girls.Slime.friendlySlime.FriendlySlimeEntity;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -33,7 +33,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -43,7 +42,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class SlimeEntity extends GirlEntity {
-    final static double Q = (double)0.7f;
+    final static double Q = 0.7f;
     final static float W = 0.9f;
     final static double M = 100.0;
     final static float L = 0.1f;
@@ -164,7 +163,7 @@ public class SlimeEntity extends GirlEntity {
         this.SpawnFriendlySlime();
         if (this.isPotionActive(HornyPotion.HORNY_POTION) && this.slimeMovementState == SlimeActions.IDLE && this.entityDataManager.get(TicksUntilBirth) == -1) {
             this.entityDataManager.set(HornyLevel, 2);
-            if ((Integer)this.entityDataManager.get(OUTFIT_INDEX) == 1) {
+            if (this.entityDataManager.get(OUTFIT_INDEX) == 1) {
                 this.setCurrentAction(Action.UNDRESS);
             }
             this.removePotionEffect(HornyPotion.HORNY_POTION);
@@ -178,7 +177,7 @@ public class SlimeEntity extends GirlEntity {
             this.updateSlimeMovementAndState();
         }
         if (this.entityDataManager.get(HornyLevel) >= 2 && this.ticksExisted % 10 == 0) {
-            SlimeEntity.spawnParticlesAround(EnumParticleTypes.HEART, (GirlEntity)this);
+            SlimeEntity.spawnParticlesAround(EnumParticleTypes.HEART, this);
         }
         if (this.world.isRemote) {
             this.spawnBirthParticlesClient();
@@ -207,7 +206,7 @@ public class SlimeEntity extends GirlEntity {
         if (ticks_birth == -1) {
             return;
         }
-        SlimeEntity.spawnParticlesAround(EnumParticleTypes.SPELL_WITCH, (GirlEntity)this);
+        SlimeEntity.spawnParticlesAround(EnumParticleTypes.SPELL_WITCH, this);
         if (ticks_birth == 0) {
             this.PlaySound(SoundsHandler.MISC_PLOB[0]);
         }
@@ -253,7 +252,7 @@ public class SlimeEntity extends GirlEntity {
         this.noClip = true;
         player.setNoGravity(true);
         player.noClip = true;
-        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
+        PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP)player);
         this.setInteractionPlayerUUID(player.getPersistentID());
         player.rotationYaw = this.getYawRotation();
 
@@ -435,7 +434,7 @@ public class SlimeEntity extends GirlEntity {
                 case "dress": {
                     if (!this.isLocalPlayerNearby()) break;
                     this.entityDataManager.set(OUTFIT_INDEX, 1);
-                    this.setCurrentAction((Action)null);
+                    this.setCurrentAction(null);
                     this.resetCameraAndPhysics();
                     break;
                 }
@@ -621,7 +620,7 @@ public class SlimeEntity extends GirlEntity {
         data.addAnimationController(this.eyesController);
     }
 
-    static enum SlimeActions {
+    enum SlimeActions {
         IDLE("animation.slime.idle"),
         JUMP_START("animation.slime.jumpstart"),
         JUMP_AIR("animation.slime.jumpair"),
@@ -633,7 +632,7 @@ public class SlimeEntity extends GirlEntity {
             return this.animationPath;
         }
 
-        private SlimeActions(String animationPath) {
+        SlimeActions(String animationPath) {
             this.animationPath = animationPath;
         }
     }

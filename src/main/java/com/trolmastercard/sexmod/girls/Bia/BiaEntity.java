@@ -19,7 +19,7 @@ import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -492,7 +492,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             case "doggy":
             case "anal": {
                 this.resetCameraAndPhysics();
-                PackageHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
+                PacketHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
                 return;
             }
         }
@@ -707,7 +707,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "talk_hornyMSG1": {

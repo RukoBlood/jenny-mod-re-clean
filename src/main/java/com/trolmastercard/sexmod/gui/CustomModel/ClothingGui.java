@@ -32,7 +32,7 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -279,7 +279,7 @@ public class ClothingGui extends GuiScreen {
             selectedParts.add(modelName);
         }
 
-        PackageHandler.INSTANCE.sendToServer(
+        PacketHandler.INSTANCE.sendToServer(
                 (IMessage)new UploadModelString(GirlEntity.serializePartsSet(selectedParts), this.ID, girlSpecificIndices)
         );
 

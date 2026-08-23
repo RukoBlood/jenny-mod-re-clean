@@ -40,9 +40,9 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
 
     @Override
     protected Vec3i resolveBoneColor(String boneName) {
-        EntityDataManager entityDataManager = ((KoboldEntity)this.renderEntity).getDataManager();
-        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
-        BlockPos blockPos = (BlockPos)entityDataManager.get(KoboldEntity.ACTION_TARGET_POS);
+        EntityDataManager entityDataManager = this.renderEntity.getDataManager();
+        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf(entityDataManager.get(KoboldEntity.CURRENT_ACTION));
+        BlockPos blockPos = entityDataManager.get(KoboldEntity.ACTION_TARGET_POS);
         if (t.contains(boneName)) {
             return eyeAndKoboldColor_.getMainColor();
         }
@@ -57,15 +57,15 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
 
     @Override
     protected ItemStack getHeldItem(@Nullable ItemStack input) {
-        switch (((KoboldEntity)this.renderEntity).getCurrentAction()) {
+        switch (this.renderEntity.getCurrentAction()) {
             case MINE: {
-                if (((KoboldEntity)this.renderEntity).getDataManager().get(KoboldEntity.at).booleanValue()) {
+                if (this.renderEntity.getDataManager().get(KoboldEntity.at)) {
                     return new ItemStack(Items.IRON_AXE);
                 }
                 return new ItemStack(Items.IRON_PICKAXE);
             }
             case NULL: {
-                if (!((KoboldEntity)this.renderEntity).getDataManager().get(KoboldEntity.aC).booleanValue()) break;
+                if (!this.renderEntity.getDataManager().get(KoboldEntity.aC)) break;
                 return new ItemStack(Items.IRON_SWORD);
             }
             case ATTACK: {
@@ -79,7 +79,7 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
     public void renderCustomBones(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a, double uOffset) {
         String[] stringArray;
         int n;
-        if (((KoboldEntity)this.renderEntity).world instanceof FakeWorld) {
+        if (this.renderEntity.world instanceof FakeWorld) {
             return;
         }
         String string = bone.getName();
@@ -94,20 +94,20 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
 
     @Override
     protected void onRenderSetup() {
-        float f = 0.25f - ((KoboldEntity) this.renderEntity).getDataManager().get(PlayerKobold.aA);
+        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.aA);
         GlStateManager.scale(1.0f - f, 1.0f - f, 1.0f - f);
     }
 
     @Override
     protected void onRenderCleanup() {
-        float f = 0.25f - ((KoboldEntity) this.renderEntity).getDataManager().get(PlayerKobold.aA);
+        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.aA);
         double d = 1.0 / (1.0 - (double)f);
         GlStateManager.scale(d, d, d);
     }
 
     @Override
     protected ItemStack resolveTradePaymentItemStack() {
-        String string = ((KoboldEntity)this.renderEntity).getDataManager().get(GirlEntity.GIRL_HAND_STATES);
+        String string = this.renderEntity.getDataManager().get(GirlEntity.GIRL_HAND_STATES);
         if ("STARTBLOWJOB".equals(string)) {
             return new ItemStack(Items.IRON_PICKAXE);
         }
@@ -133,15 +133,15 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
 
     @Override
     protected void renderNameTag(double x, double y, double z) {
-        EntityDataManager entityDataManager = ((KoboldEntity)this.renderEntity).getDataManager();
+        EntityDataManager entityDataManager = this.renderEntity.getDataManager();
         String string = entityDataManager.get(KoboldEntity.TRIBE_NAME);
         if ("null".equals(string)) {
             super.renderNameTag(x, y, z);
             return;
         }
-        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
-        string = (Object)((Object) eyeAndKoboldColor_.getTextColor()) + " -" + string + "-";
-        this.renderLivingLabel(this.renderEntity, ((KoboldEntity)this.renderEntity).getDisplayNameText() + string, x, y + (double)((KoboldEntity)this.renderEntity).getScaleFactor(), z, 300);
+        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf(entityDataManager.get(KoboldEntity.CURRENT_ACTION));
+        string = eyeAndKoboldColor_.getTextColor() + " -" + string + "-";
+        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText() + string, x, y + (double) this.renderEntity.getScaleFactor(), z, 300);
     }
 }
 

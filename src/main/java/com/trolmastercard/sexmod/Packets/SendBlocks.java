@@ -13,7 +13,7 @@ package com.trolmastercard.sexmod.Packets;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.girls.Kobold.DragonStaff.StructureMarkerRenderer;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
 import java.util.UUID;
@@ -134,7 +134,7 @@ public class SendBlocks implements IMessage {
                     if (blockPos2 != null) {
                         ((HashSet)object).add(blockPos2);
                     }
-                    PackageHandler.INSTANCE.sendTo(new SendBlocks((HashSet<BlockPos>)object, msg.a), ctx.getServerHandler().player);
+                    PacketHandler.INSTANCE.sendTo(new SendBlocks((HashSet<BlockPos>)object, msg.a), ctx.getServerHandler().player);
                 }
             });
             return null;

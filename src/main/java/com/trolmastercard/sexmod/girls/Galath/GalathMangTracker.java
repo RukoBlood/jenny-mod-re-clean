@@ -23,7 +23,7 @@ import com.trolmastercard.sexmod.Main;
 import com.trolmastercard.sexmod.Packets.InformOfOwnership;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.Mangelie.ManglelieEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.BiDirectionalMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,7 +34,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import org.apache.logging.log4j.Level;
 
 public class GalathMangTracker extends WorldSavedData {
@@ -103,7 +102,7 @@ public class GalathMangTracker extends WorldSavedData {
             galath.world.removeEntity(galath);
             OwnerAndGalath.removeByKey(uUID);
             if (player != null) {
-                PackageHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(false), (EntityPlayerMP)player);
+                PacketHandler.INSTANCE.sendTo(new InformOfOwnership(false), (EntityPlayerMP)player);
             }
         }
     }
@@ -177,7 +176,7 @@ public class GalathMangTracker extends WorldSavedData {
             }
             for (EntityPlayer entityPlayer : players) {
                 OwnerAndGalath.removeByKey(entityPlayer.getPersistentID());
-                PackageHandler.INSTANCE.sendTo((IMessage) new InformOfOwnership(false), (EntityPlayerMP) entityPlayer);
+                PacketHandler.INSTANCE.sendTo(new InformOfOwnership(false), (EntityPlayerMP) entityPlayer);
             }
         }
     }

@@ -15,7 +15,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
@@ -134,7 +134,7 @@ public class PlayerSlime extends PlayerGirl {
         if (partner.getPositionVector().distanceTo(this.getTargetScenePosition()) > 1.0) {
             return;
         }
-        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)partner);
+        PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)partner);
         this.setInteractionPlayerUUID(partner.getPersistentID());
         partner.rotationYaw = this.getYawRotation();
         this.cameraYaw = this.getYawRotation();
@@ -379,7 +379,7 @@ public class PlayerSlime extends PlayerGirl {
                     break;
                 }
                 case "doggyGoOnBedDone": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
                     this.setCurrentAction(Action.WAITDOGGY);
                     break;
                 }

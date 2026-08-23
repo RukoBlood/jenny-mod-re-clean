@@ -24,7 +24,7 @@ public enum EyeAndKoboldColor {
     final private int woolMeta;
     final private TextFormatting textColor;
 
-    private EyeAndKoboldColor(int main_R, int main_G, int main_B, int sub_R, int sub_G, int sub_B, int woolData, TextFormatting textFormatting) {
+    EyeAndKoboldColor(int main_R, int main_G, int main_B, int sub_R, int sub_G, int sub_B, int woolData, TextFormatting textFormatting) {
         this.mainColor = new Vec3i(main_R, main_G, main_B);
         this.secondaryColor = new Vec3i(sub_R, sub_G, sub_B);
         this.woolMeta = woolData;

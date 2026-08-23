@@ -31,7 +31,7 @@ import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -120,7 +120,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     public void sendActionPacket(int n, Action action) {
-        PackageHandler.INSTANCE.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.getTargetNetworkPoint());
+        PacketHandler.INSTANCE.sendToAllTracking((IMessage)new ForcePlayerGirlUpdate(this.getOwnerUserUUID(), n, action), this.getTargetNetworkPoint());
     }
 
     public EntityPlayer resolvePlayerEntity(EntityPlayer player) {
@@ -234,7 +234,7 @@ public abstract class PlayerGirl extends Fighter {
             player.setNoGravity(false);
             player.noClip = false;
             this.entityDataManager.set(IS_ANCHORED, false);
-            PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
+            PacketHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
         }
     }
 
@@ -315,8 +315,8 @@ public abstract class PlayerGirl extends Fighter {
     protected void teleportPlayerToGirl(UUID uUID) {
         EntityPlayerMP player = (EntityPlayerMP)this.world.getPlayerEntityByUUID(uUID);
         EntityPlayerMP ownerPlayer = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)this.entityDataManager.get(OWNER).get());
-        PackageHandler.INSTANCE.sendTo(new SetPlayerMovement(false), player);
-        PackageHandler.INSTANCE.sendTo(new SetPlayerMovement(false), ownerPlayer);
+        PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), player);
+        PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), ownerPlayer);
         this.setInteractionPlayerUUID(uUID);
         this.rotationYaw = 0.0f;
         this.rotationYawHead = 0.0f;
@@ -564,7 +564,7 @@ public abstract class PlayerGirl extends Fighter {
     @Override
     public void doAction(String action, UUID player) {
         if (!this.handleActionRequest(action) && this.entityDataManager.get(OWNER).isPresent()) {
-            PackageHandler.INSTANCE.sendToServer(new SexPrompt(action, player, this.entityDataManager.get(OWNER).get(), this.guiPending));
+            PacketHandler.INSTANCE.sendToServer(new SexPrompt(action, player, this.entityDataManager.get(OWNER).get(), this.guiPending));
             this.guiPending = true;
         }
     }

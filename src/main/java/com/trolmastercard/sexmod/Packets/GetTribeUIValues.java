@@ -16,7 +16,7 @@ import com.trolmastercard.sexmod.girls.Kobold.EyeAndKoboldColor;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldEntity;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
 import com.trolmastercard.sexmod.gui.DragonStaffUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +89,7 @@ public class GetTribeUIValues implements IMessage {
                 Object object;
                 UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
                 if (uUID == null) {
-                    PackageHandler.INSTANCE.sendTo(GetTribeUIValues.a(), ctx.getServerHandler().player);
+                    PacketHandler.INSTANCE.sendTo(GetTribeUIValues.a(), ctx.getServerHandler().player);
                     return;
                 }
                 boolean bl = KoboldManager.isTribeAlerted(uUID);
@@ -112,7 +112,7 @@ public class GetTribeUIValues implements IMessage {
                     object = entry.getValue();
                     arrayList.add(new Vector4d(((Vec3i)object).getX(), ((Vec3i)object).getY(), ((Vec3i)object).getZ(), koboldColor));
                 }
-                PackageHandler.INSTANCE.sendTo(new GetTribeUIValues(bl, arrayList), entityPlayerMP);
+                PacketHandler.INSTANCE.sendTo(new GetTribeUIValues(bl, arrayList), entityPlayerMP);
             });
             return null;
         }

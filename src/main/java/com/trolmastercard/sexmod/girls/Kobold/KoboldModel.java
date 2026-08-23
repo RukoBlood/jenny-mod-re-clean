@@ -47,7 +47,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         }
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
         if (!girl.isLocallyRegistered() && girl instanceof KoboldEntity) {
-            animationProcessor.getBone("crown").setHidden(girl.getDataManager().get(KoboldEntity.aZ) == false);
+            animationProcessor.getBone("crown").setHidden(!girl.getDataManager().get(KoboldEntity.aZ));
             animationProcessor.getBone("egg").setHidden(!((KoboldEntity) girl).isRenderEgg);
         } else {
             animationProcessor.getBone("crown").setHidden(true);
@@ -109,7 +109,6 @@ public class KoboldModel extends GirlModel<GirlEntity> {
                 iBone.setPositionX(0.0f);
                 iBone.setPositionY(2.85f);
                 iBone.setPositionZ(-7.0f + f * 4.7f);
-                return;
             }
         }
     }
@@ -238,7 +237,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         }
         switch (girl.getCurrentAction()) {
             case NULL: {
-                if (Math.abs(girl.prevPosX - girl.posX) + Math.abs(girl.prevPosZ - girl.posZ) < 0.0 || girl.onGround && Math.abs(Math.abs(girl.prevPosY) - Math.abs(girl.posY)) > (double)0.1f || !((IKobold)((Object) girl)).IsBlockedByCeiling()) break;
+                if (Math.abs(girl.prevPosX - girl.posX) + Math.abs(girl.prevPosZ - girl.posZ) < 0.0 || girl.onGround && Math.abs(Math.abs(girl.prevPosY) - Math.abs(girl.posY)) > (double)0.1f || !((IKobold) girl).IsBlockedByCeiling()) break;
             }
             default: {
                 return;

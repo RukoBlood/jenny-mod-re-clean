@@ -20,7 +20,7 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerEntity;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IKobold;
@@ -40,7 +40,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -91,7 +90,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
             int n = list.get(i);
             switch (i) {
                 case 0: {
-                    this.entityDataManager.set(aA, Float.valueOf((float)n / 100.0f * 0.25f));
+                    this.entityDataManager.set(aA, (float) n / 100.0f * 0.25f);
                     continue;
                 }
                 case 1: {
@@ -116,9 +115,9 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     @Override
     public ArrayList<Integer> getBasePartIdList() {
         ArrayList<Integer> arrayList = new ArrayList<Integer>();
-        arrayList.add(Math.round(this.entityDataManager.get(aA).floatValue() * 100.0f / 0.25f));
-        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf((String)this.entityDataManager.get(as))));
-        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf((Vec3i)this.entityDataManager.get(au))));
+        arrayList.add(Math.round(this.entityDataManager.get(aA) * 100.0f / 0.25f));
+        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf(this.entityDataManager.get(as))));
+        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf(this.entityDataManager.get(au))));
         return arrayList;
     }
 
@@ -429,7 +428,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     void b(SoundEvent soundEvent, float f) {
         float f2 = 0.25f - this.entityDataManager.get(aA).floatValue();
         double d = f2 / 0.25f;
-        float f3 = (float) RotationHelper.LerpDouble((double)0.9f, (double)1.1f, d);
+        float f3 = (float) RotationHelper.LerpDouble(0.9f, 1.1f, d);
         this.PlaySoundAtPosition(soundEvent, f, f3);
     }
 
@@ -469,14 +468,14 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
                 case "lipsound": {
@@ -541,7 +540,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
                     break;
                 }
                 case "pounding": {
@@ -633,7 +632,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
                     vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 10.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 10.0f));
                     break;
                 }
                 case "mating_press_startDone": {
@@ -668,7 +667,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
                     vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 70.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 70.0f));
                     break;
                 }
                 case "cumMsg": {

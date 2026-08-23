@@ -289,7 +289,7 @@ extends GirlEntity {
         arrow.motionX = direction.x * 4.0;
         arrow.motionY = direction.y * 4.0;
         arrow.motionZ = direction.z * 4.0;
-        GirlEntity.girlPlaySound((GirlEntity)galath, SoundEvents.ENTITY_ARROW_SHOOT, true);
+        GirlEntity.girlPlaySound(galath, SoundEvents.ENTITY_ARROW_SHOOT, true);
         this.world.spawnEntity(arrow);
         this.hasFiredArrow = true;
     }
@@ -472,7 +472,7 @@ extends GirlEntity {
         this.pendingMommyUUID = null;
         if (galath.getCurrentAction() == Action.HUG_MANG) {
             galath.setAnchored(false);
-            galath.setCurrentAction((Action)null);
+            galath.setCurrentAction(null);
         }
     }
 
@@ -488,7 +488,7 @@ extends GirlEntity {
     }
 
     void updatePositionSyncWithMommy() {
-        if (!this.isAttachedToMommy() || Action.isAnyAction((GirlEntity)this, Action.THREESOME_SLOW, Action.THREESOME_CUM, Action.THREESOME_FAST)) {
+        if (!this.isAttachedToMommy() || Action.isAnyAction(this, Action.THREESOME_SLOW, Action.THREESOME_CUM, Action.THREESOME_FAST)) {
             return;
         }
         GalathEntity galath = this.getMommyGalath(true);
@@ -551,7 +551,7 @@ extends GirlEntity {
         }
         if (targetGalath == null) {
             if (this.getCurrentAction() == Action.RUN) {
-                this.setCurrentAction((Action)null);
+                this.setCurrentAction(null);
                 this.getNavigator().clearPath();
             }
             return;
@@ -590,7 +590,7 @@ extends GirlEntity {
     }
 
     boolean isVectorRightOfMommy(Vec3d vec, GalathEntity galath, float partialTicks) {
-        Vec3d rotated = VectorMath.rotateByYaw(vec, RotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks));
+        Vec3d rotated = VectorMath.rotateByYaw(vec, RotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, partialTicks));
         return rotated.x > 0.35;
     }
 
@@ -882,7 +882,7 @@ extends GirlEntity {
         this.actionController.registerSoundListener(soundKeyframeEvent -> {
             switch (soundKeyframeEvent.sound) {
                 case "pound": {
-                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.addCumPercentage(0.02);
                     break;
@@ -906,7 +906,7 @@ extends GirlEntity {
                 }
                 case "doubleSemen0": {
                     this.playRandomSoundAtVolume(SoundsHandler.MISC_INSERTS, 6.0f);
-                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                 }
                 case "doubleSemen": {
                     CummyEntity.registerTrail(new DynamicTrailRenderer(10, girl -> {

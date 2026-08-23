@@ -49,7 +49,7 @@ import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.proxy.ClientProxy;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.world.WorldUtils;
@@ -179,7 +179,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     protected void changeDataParameterFromClient(String paramKey, String paramValue) {
-        PackageHandler.INSTANCE.sendToServer(new ChangeDataParameter(this.girlID(), paramKey, paramValue));
+        PacketHandler.INSTANCE.sendToServer(new ChangeDataParameter(this.girlID(), paramKey, paramValue));
     }
 
     //f
@@ -667,7 +667,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     protected void triggerActionSync(boolean param1, boolean param2, UUID playerUUID) {
         if (this.world.isRemote) {
-            PackageHandler.INSTANCE.sendToServer(new SyncActionPacket(this.girlID(), playerUUID, param1, param2));
+            PacketHandler.INSTANCE.sendToServer(new SyncActionPacket(this.girlID(), playerUUID, param1, param2));
         } else {
             SyncActionPacket.Handler.execute(this.girlID(), playerUUID, param1, param2);
         }
@@ -917,7 +917,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     protected void resetGirlState() {
         if (this.world.isRemote && this.isControlledByLocalPlayer()) {
             this.cameraOriginPos = null;
-            PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID(), true));
+            PacketHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID(), true));
         } else if (!this.world.isRemote) {
             ResetGirl.EventHandler.resetGirls((EntityPlayerMP)this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID()));
         }
@@ -988,7 +988,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         if (this.isControlledByLocalPlayer()) {
             HandlePlayerMovement.setMovementLock(true);
             Minecraft.getMinecraft().player.setInvisible(false);
-            PackageHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
+            PacketHandler.INSTANCE.sendToServer(new ResetGirl(this.girlID()));
         }
     }
 
@@ -1020,7 +1020,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public void resetAnimationControllerOffset() {
         this.resetAnimationControllerTicks();
-        PackageHandler.INSTANCE.sendToServer(new ResetController(this.girlID()));
+        PacketHandler.INSTANCE.sendToServer(new ResetController(this.girlID()));
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -1057,7 +1057,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         newPos = newPos.add(-Math.sin((double)this.cameraYaw * (Math.PI / 180)) * z, 0.0, Math.cos((double)this.cameraYaw * (Math.PI / 180)) * z);
         if (this.world.isRemote) {
             assert player != null;
-            PackageHandler.INSTANCE.sendToServer(new TeleportPlayer(player.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
+            PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(player.getPersistentID().toString(), newPos, this.cameraYaw + yaw, pitch));
             return;
         }
 
@@ -1108,9 +1108,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     public void sendGirlChatMessage(String text) {
         if (!this.world.isRemote) {
-            PackageHandler.INSTANCE.sendToAllAround(new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PacketHandler.INSTANCE.sendToAllAround(new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
         } else if (this.isControlledByLocalPlayer()) {
-            PackageHandler.INSTANCE.sendToServer(new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()));
+            PacketHandler.INSTANCE.sendToServer(new SendChatMessage(String.format("<%s> %s", this.getDisplayNameText(), text), this.dimension, this.girlID()));
         }
     }
 
@@ -1120,10 +1120,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
 
         if (!this.world.isRemote) {
-            PackageHandler.INSTANCE.sendToAllAround(new SendChatMessage(message, this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
+            PacketHandler.INSTANCE.sendToAllAround(new SendChatMessage(message, this.dimension, this.girlID()), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 40.0));
         } else {
             if (this.isControlledByLocalPlayer()) {
-                PackageHandler.INSTANCE.sendToServer(new SendChatMessage(message, this.dimension, this.girlID()));
+                PacketHandler.INSTANCE.sendToServer(new SendChatMessage(message, this.dimension, this.girlID()));
             }
         }
     }

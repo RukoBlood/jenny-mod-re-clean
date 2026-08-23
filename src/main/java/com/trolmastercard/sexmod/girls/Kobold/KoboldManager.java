@@ -32,7 +32,7 @@ import com.trolmastercard.sexmod.Packets.SendBlocks;
 import com.trolmastercard.sexmod.companion.TargetNearestKoboldGoal;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.world.WorldUtils;
 import net.minecraft.block.Block;
@@ -40,7 +40,6 @@ import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.AbstractSkeleton;
 import net.minecraft.entity.monster.EntityMob;
@@ -64,7 +63,6 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class KoboldManager {
     final static int MAX_TRIBE_MEMBERS = 4;
@@ -101,7 +99,7 @@ public class KoboldManager {
         }
 
         EyeAndKoboldColor color = EyeAndKoboldColor.values()[Reference.RANDOM.nextInt(EyeAndKoboldColor.values().length)];
-        KoboldSavedData.KoboldTribe tribe = new KoboldSavedData.KoboldTribe(tribeUUID, color, (KoboldEntity) members.get(0), members);
+        KoboldSavedData.KoboldTribe tribe = new KoboldSavedData.KoboldTribe(tribeUUID, color, members.get(0), members);
         tribesMap.put(tribeUUID, tribe);
 
         int index = 0;
@@ -165,7 +163,7 @@ public class KoboldManager {
             pairPos = blockPos.west();
         }
         if (pairPos == null) {
-            System.out.println("bed @" + blockPos.toString() + " apparently doesn't have another half.. wtf");
+            System.out.println("bed @" + blockPos + " apparently doesn't have another half.. wtf");
             return;
         }
         bedAssignments.put(kobold, new BlockPos[]{blockPos, pairPos});
@@ -245,8 +243,8 @@ public class KoboldManager {
             for (KoboldTask task : tribe.tasks) {
                 tribeBlocks.addAll(task.targetBlocks);
             }
-            PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(tribeBlocks, false), (EntityPlayerMP) master);
-            ((Entity) master).sendMessage(new TextComponentString(String.format("ur %stribe %shas been %seradicated %suwu", new Object[]{TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED, TextFormatting.WHITE})));
+            PacketHandler.INSTANCE.sendTo(new SendBlocks(tribeBlocks, false), (EntityPlayerMP) master);
+            master.sendMessage(new TextComponentString(String.format("ur %stribe %shas been %seradicated %suwu", TextFormatting.RED, TextFormatting.WHITE, TextFormatting.RED, TextFormatting.WHITE)));
         }
     }
 
@@ -648,18 +646,18 @@ public class KoboldManager {
                 return;
             }
 
-            BlockChest.Type type = ((BlockChest) world.getBlockState((BlockPos) pos).getBlock()).chestType;
+            BlockChest.Type type = ((BlockChest) world.getBlockState(pos).getBlock()).chestType;
             BlockPos pairChestPos = null;
-            if (world.getBlockState(pos.north()).getBlock() instanceof BlockChest && type.equals((Object) ((BlockChest) world.getBlockState((BlockPos) pos.north()).getBlock()).chestType)) {
+            if (world.getBlockState(pos.north()).getBlock() instanceof BlockChest && type.equals(((BlockChest) world.getBlockState(pos.north()).getBlock()).chestType)) {
                 pairChestPos = pos.north();
             }
-            if (world.getBlockState(pos.east()).getBlock() instanceof BlockChest && type.equals((Object) ((BlockChest) world.getBlockState((BlockPos) pos.east()).getBlock()).chestType)) {
+            if (world.getBlockState(pos.east()).getBlock() instanceof BlockChest && type.equals(((BlockChest) world.getBlockState(pos.east()).getBlock()).chestType)) {
                 pairChestPos = pos.east();
             }
-            if (world.getBlockState(pos.south()).getBlock() instanceof BlockChest && type.equals((Object) ((BlockChest) world.getBlockState((BlockPos) pos.south()).getBlock()).chestType)) {
+            if (world.getBlockState(pos.south()).getBlock() instanceof BlockChest && type.equals(((BlockChest) world.getBlockState(pos.south()).getBlock()).chestType)) {
                 pairChestPos = pos.south();
             }
-            if (world.getBlockState(pos.west()).getBlock() instanceof BlockChest && type.equals((Object) ((BlockChest) world.getBlockState((BlockPos) pos.west()).getBlock()).chestType)) {
+            if (world.getBlockState(pos.west()).getBlock() instanceof BlockChest && type.equals(((BlockChest) world.getBlockState(pos.west()).getBlock()).chestType)) {
                 pairChestPos = pos.west();
             }
             if (pairChestPos == null) {
@@ -669,13 +667,13 @@ public class KoboldManager {
             //for (Map.Entry entry : ax_class48.access$000().entrySet()) {
             for (Map.Entry<UUID, KoboldTribe> entry : KoboldManager.tribesMap.entrySet()) {
                 EntityPlayerMP masterPlayer;
-                KoboldTribe tribe = (KoboldTribe) entry.getValue();
+                KoboldTribe tribe = entry.getValue();
                 if (!tribe.chests.contains(pairChestPos)) continue;
                 tribe.chests.add(pos);
-                UUID masterUUID = KoboldManager.getTribeMasterUUID((UUID) entry.getKey());
+                UUID masterUUID = KoboldManager.getTribeMasterUUID(entry.getKey());
                 if (masterUUID == null || (masterPlayer = (EntityPlayerMP) world.getPlayerEntityByUUID(masterUUID)) == null)
                     continue;
-                PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(pos, true), masterPlayer);
+                PacketHandler.INSTANCE.sendTo(new SendBlocks(pos, true), masterPlayer);
             }
         }
 
@@ -685,15 +683,15 @@ public class KoboldManager {
             Entity entity = event.getEntity();
             if (entity instanceof EntityZombie) {
                 mob = (EntityZombie) entity;
-                mob.targetTasks.addTask(3, new TargetNearestKoboldGoal((EntityCreature) mob, true, false));
+                mob.targetTasks.addTask(3, new TargetNearestKoboldGoal(mob, true, false));
             }
             if (entity instanceof AbstractSkeleton) {
                 mob = (AbstractSkeleton) entity;
-                ((AbstractSkeleton) mob).targetTasks.addTask(3, new TargetNearestKoboldGoal((EntityCreature) mob, true, false));
+                mob.targetTasks.addTask(3, new TargetNearestKoboldGoal(mob, true, false));
             }
             if (entity instanceof EntitySpider) {
                 mob = (EntitySpider) entity;
-                ((EntitySpider) mob).targetTasks.addTask(3, new TargetNearestKoboldGoal((EntityCreature) mob, true, true));
+                mob.targetTasks.addTask(3, new TargetNearestKoboldGoal(mob, true, true));
             }
         }
 
@@ -715,15 +713,15 @@ public class KoboldManager {
                 //Map.Entry<UUID, a_inner49> entry
                 //for (Map.Entry entry : ax_class48.access$000().entrySet()) {
                 for (Map.Entry<UUID, KoboldTribe> entry : KoboldManager.tribesMap.entrySet()) {
-                    tribe = (KoboldTribe) entry.getValue();
+                    tribe = entry.getValue();
                     if (!tribe.chests.contains(pos)) continue;
 
                     tribe.chests.remove(pos);
-                    masterUUID = KoboldManager.getTribeMasterUUID((UUID) entry.getKey());
+                    masterUUID = KoboldManager.getTribeMasterUUID(entry.getKey());
 
-                    if (masterUUID == null || (masterPlayer = (EntityPlayerMP) world.getPlayerEntityByUUID((UUID) masterUUID)) == null)
+                    if (masterUUID == null || (masterPlayer = world.getPlayerEntityByUUID((UUID) masterUUID)) == null)
                         continue;
-                    PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(pos, false), (EntityPlayerMP) masterPlayer);
+                    PacketHandler.INSTANCE.sendTo(new SendBlocks(pos, false), (EntityPlayerMP) masterPlayer);
                 }
             }
 
@@ -731,21 +729,21 @@ public class KoboldManager {
                 //for (Map.Entry entry : ax_class48.access$000().entrySet()) {
                 for (Map.Entry<UUID, KoboldTribe> entry : KoboldManager.tribesMap.entrySet()) {
                     EntityPlayerMP masterPlayerMessed;
-                    tribe = (KoboldTribe) entry.getValue();
+                    tribe = entry.getValue();
                     if (!tribe.beds.contains(pos)) continue;
 
                     masterUUID = WorldUtils.getBedPairPosition(pos, state);
                     tribe.beds.remove(pos);
                     tribe.beds.remove(masterUUID);
 
-                    masterPlayer = KoboldManager.getTribeMasterUUID((UUID) entry.getKey());
+                    masterPlayer = KoboldManager.getTribeMasterUUID(entry.getKey());
                     if (masterPlayer == null || (masterPlayerMessed = (EntityPlayerMP) world.getPlayerEntityByUUID((UUID) masterPlayer)) == null)
                         continue;
 
                     HashSet<BlockPos> removedBeds = new HashSet<BlockPos>();
                     removedBeds.add(pos);
                     removedBeds.add((BlockPos) masterUUID);
-                    PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(removedBeds, false), masterPlayerMessed);
+                    PacketHandler.INSTANCE.sendTo(new SendBlocks(removedBeds, false), masterPlayerMessed);
                 }
             }
         }
@@ -1028,8 +1026,8 @@ public class KoboldManager {
             int tribeIdx = 0;
 
             for (Map.Entry<UUID, KoboldTribe> entry : KoboldManager.tribesMap.entrySet()) {
-                KoboldTribe tribe = (KoboldTribe) entry.getValue();
-                UUID tribeId = (UUID) entry.getKey();
+                KoboldTribe tribe = entry.getValue();
+                UUID tribeId = entry.getKey();
                 UUID tribeMaster = tribe.getMasterUUID();
                 nbt.setString("tribeId" + tribeIdx, tribeId.toString());
                 nbt.setString("tribeColor" + tribeIdx, tribe.color.toString());
@@ -1044,19 +1042,19 @@ public class KoboldManager {
                     if (!member.isDead) {
                         BlockPos pos = member.getPosition();
                         UUID girlID = member.girlID();
-                        nbt.setString(tribeId.toString() + "member" + memberIdx + "pos", pos.getX() + "|" + pos.getY() + "|" + pos.getZ());
-                        nbt.setString(tribeId.toString() + "member" + memberIdx + "id", girlID.toString());
+                        nbt.setString(tribeId + "member" + memberIdx + "pos", pos.getX() + "|" + pos.getY() + "|" + pos.getZ());
+                        nbt.setString(tribeId + "member" + memberIdx + "id", girlID.toString());
                         savedMembers.add(girlID);
                         ++memberIdx;
                     }
                 }
 
                 for (Map.Entry<UUID, BlockPos> unloadedEntry : tribe.unloadedMembers.entrySet()) {
-                    UUID unloadedID = (UUID) unloadedEntry.getKey();
-                    BlockPos pos = (BlockPos) unloadedEntry.getValue();
+                    UUID unloadedID = unloadedEntry.getKey();
+                    BlockPos pos = unloadedEntry.getValue();
                     if (!savedMembers.contains(unloadedID)) {
-                        nbt.setString(tribeId.toString() + "member" + memberIdx + "pos", pos.getX() + "|" + pos.getY() + "|" + pos.getZ());
-                        nbt.setString(tribeId.toString() + "member" + memberIdx + "id", unloadedID.toString());
+                        nbt.setString(tribeId + "member" + memberIdx + "pos", pos.getX() + "|" + pos.getY() + "|" + pos.getZ());
+                        nbt.setString(tribeId + "member" + memberIdx + "id", unloadedID.toString());
                         savedMembers.add(unloadedID);
                         ++memberIdx;
                     }
@@ -1065,14 +1063,14 @@ public class KoboldManager {
                 int bedIdx = 0;
 
                 for (BlockPos bedPos : tribe.beds) {
-                    nbt.setString(tribeId.toString() + "bed" + bedIdx, bedPos.getX() + "|" + bedPos.getY() + "|" + bedPos.getZ());
+                    nbt.setString(tribeId + "bed" + bedIdx, bedPos.getX() + "|" + bedPos.getY() + "|" + bedPos.getZ());
                     ++bedIdx;
                 }
 
                 int chestIdx = 0;
 
                 for (BlockPos chestPos : tribe.chests) {
-                    nbt.setString(tribeId.toString() + "chest" + chestIdx, chestPos.getX() + "|" + chestPos.getY() + "|" + chestPos.getZ());
+                    nbt.setString(tribeId + "chest" + chestIdx, chestPos.getX() + "|" + chestPos.getY() + "|" + chestPos.getZ());
                     ++chestIdx;
                 }
 
@@ -1222,7 +1220,7 @@ public class KoboldManager {
                 }
                 EntityPlayerMP masterPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(this.masterUUID);
                 if (masterPlayer != null) {
-                    PackageHandler.INSTANCE.sendTo((IMessage) new SendBlocks(task.targetBlocks, false), masterPlayer);
+                    PacketHandler.INSTANCE.sendTo(new SendBlocks(task.targetBlocks, false), masterPlayer);
                 }
             }
 

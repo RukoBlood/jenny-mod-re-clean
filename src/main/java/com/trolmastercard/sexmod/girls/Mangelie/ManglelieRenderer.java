@@ -306,7 +306,7 @@ extends GirlRenderer<ManglelieEntity> {
             if (mc.isGamePaused()) {
                 return;
             }
-            String string3 = string2 = n < 26 ? "cheekL" : "cheekR";
+            string2 = n < 26 ? "cheekL" : "cheekR";
             if (bl) {
                 string2 = string2 + "2";
             }
@@ -319,7 +319,7 @@ extends GirlRenderer<ManglelieEntity> {
             if (!string.endsWith("1")) {
                 return;
             }
-            String string4 = string2 = n < 6 ? "legR" : "legL";
+            string2 = n < 6 ? "legR" : "legL";
             if (bl) {
                 string2 = string2 + "2";
             }

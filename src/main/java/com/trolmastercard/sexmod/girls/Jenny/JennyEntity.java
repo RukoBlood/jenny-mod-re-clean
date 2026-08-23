@@ -20,7 +20,7 @@ import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.RotationHelper;
@@ -137,7 +137,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.cameraOriginPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)object);
+            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)object);
         }
         if (this.Zflag) {
             if (this.getPositionVector().distanceTo(this.getTargetPosition()) < 0.6 || this.ad > 200) {
@@ -399,7 +399,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 this.resetCameraAndPhysics();
                 if (this.world.isRemote) {
-                    PackageHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
                     break;
                 }
                 this.resetGirlState();
@@ -809,7 +809,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "doggyGoOnBedDone": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
                     this.setCurrentAction(Action.WAITDOGGY);
                     break;
                 }
@@ -938,7 +938,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "boobjob_camera": {

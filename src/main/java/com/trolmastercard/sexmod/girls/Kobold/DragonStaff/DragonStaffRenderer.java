@@ -57,7 +57,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
     static HashMap<ItemStack, Vector3f> n = new HashMap();
 
     public DragonStaffRenderer() {
-        super(new KoboldStaffModel());
+        super(new DragonStaffModel());
     }
 
     public static boolean isRenderingStaff() {
@@ -125,7 +125,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
                 this.collectAnimationBones();
             }
             // was 'KoboldStaffModel().a'
-            this.mc.getTextureManager().bindTexture(new KoboldStaffModel().getTextureLocation(null));
+            this.mc.getTextureManager().bindTexture(new DragonStaffModel().getTextureLocation(null));
             buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         }
         super.renderRecursively(buffer, bone, red, green, blue, alpha);

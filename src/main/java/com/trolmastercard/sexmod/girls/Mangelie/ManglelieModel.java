@@ -271,7 +271,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         Rotation2f lookL = ThreadNames.CalculateLookAngles(armLPos, manglelie.ikTargetPos);
 
         Float headPos = GalathEntity.getAimYaw(galath, partialTicks);
-        float yawHead = headPos == null ? RotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, (double)partialTicks) : headPos;
+        float yawHead = headPos == null ? RotationHelper.LerpAngleDegrees(galath.prevRotationYawHead, galath.rotationYawHead, partialTicks) : headPos;
         float radYawHead = TrigMath.wrapDegrees(yawHead);
 
         float progressRaw = manglelie.getAttackProgress(partialTicks);
@@ -397,8 +397,8 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             head.setRotationX(headRotX * 0.666f);
         }
 
-        float diffY = ThreadNames.getAngleDifferences((double)manglelie.T, manglelie.targetHeadYaw);
-        float diffX = ThreadNames.getAngleDifferences((double)manglelie.ai, manglelie.targetHeadPitch);
+        float diffY = ThreadNames.getAngleDifferences(manglelie.T, manglelie.targetHeadYaw);
+        float diffX = ThreadNames.getAngleDifferences(manglelie.ai, manglelie.targetHeadPitch);
 
         float fps = Minecraft.getDebugFPS();
         if (fps == 0.0f) {
@@ -471,10 +471,10 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
 
         static ArmTransformState lerp(ArmTransformState start, ArmTransformState end, float step) {
             ArmTransformState result = new ArmTransformState();
-            result.armRRot = RotationHelper.LerpVector3f(start.armRRot, end.armRRot, (double)step);
-            result.armLRot = RotationHelper.LerpVector3f(start.armLRot, end.armLRot, (double)step);
-            result.lowerArmRRot = RotationHelper.LerpVector3f(start.lowerArmRRot, end.lowerArmRRot, (double)step);
-            result.lowerArmLRot = RotationHelper.LerpVector3f(start.lowerArmLRot, end.lowerArmLRot, (double)step);
+            result.armRRot = RotationHelper.LerpVector3f(start.armRRot, end.armRRot, step);
+            result.armLRot = RotationHelper.LerpVector3f(start.armLRot, end.armLRot, step);
+            result.lowerArmRRot = RotationHelper.LerpVector3f(start.lowerArmRRot, end.lowerArmRRot, step);
+            result.lowerArmLRot = RotationHelper.LerpVector3f(start.lowerArmLRot, end.lowerArmLRot, step);
             result.armRScaleY = RotationHelper.LerpFloat(start.armRScaleY, end.armRScaleY, step);
             result.armLScaleY = RotationHelper.LerpFloat(start.armLScaleY, end.armLScaleY, step);
             result.elbowLRotY = RotationHelper.LerpFloat(start.elbowLRotY, end.elbowLRotY, step);

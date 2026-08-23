@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packets.UploadInventoryToServer;
 import com.trolmastercard.sexmod.girls.Luna.LunaEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -53,7 +53,7 @@ public class LunaInventoryUI extends GuiContainer {
             stacks[40] = container.getSlot(4).getStack();
             stacks[41] = container.getSlot(5).getStack();
             stacks[42] = container.getSlot(6).getStack();
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.lunaEntity.girlID(), this.invID, stacks));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.lunaEntity.girlID(), this.invID, stacks));
         }
     }
 

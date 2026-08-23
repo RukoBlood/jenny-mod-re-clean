@@ -11,7 +11,7 @@ import java.util.UUID;
 import com.trolmastercard.sexmod.Packets.UploadInventoryToServer;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.Menu.GirlContainer;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -75,7 +75,7 @@ public class GirlGUIContainer extends GuiContainer {
             for (int i = 0; i < 27; ++i) {
                 itemStackArray[i + 36] = d4_class1622.getSlot(i).getStack();
             }
-            PackageHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.b.girlID(), this.a, itemStackArray));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.b.girlID(), this.a, itemStackArray));
         }
     }
 }

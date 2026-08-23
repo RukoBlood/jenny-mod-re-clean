@@ -16,9 +16,8 @@ import com.trolmastercard.sexmod.companion.fighter.FighterCompanion;
 import com.trolmastercard.sexmod.Packets.SendCompanionHome;
 import com.trolmastercard.sexmod.Packets.SetNewHome;
 import com.trolmastercard.sexmod.Packets.PlayerAction;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Reference;
-import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.monster.EntityMob;
@@ -36,7 +35,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -134,13 +132,13 @@ public abstract class Fighter extends GirlEntity {
             this.goHome();
         } else if ("action.names.equipment".equals(action)) {
             EntityPlayerSP playerEntity = Minecraft.getMinecraft().player;
-            PackageHandler.INSTANCE.sendToServer(new PlayerAction(this.girlID(), playerEntity.getPersistentID()));
+            PacketHandler.INSTANCE.sendToServer(new PlayerAction(this.girlID(), playerEntity.getPersistentID()));
         } else if ("action.names.gohome".equals(action)) {
             this.goHome();
-            PackageHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
+            PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
         } else if ("action.names.setnewhome".equals(action)) {
             this.SetHome();
-            PackageHandler.INSTANCE.sendToServer(new SetNewHome(this.girlID(), new Vec3d(this.getPosition())));
+            PacketHandler.INSTANCE.sendToServer(new SetNewHome(this.girlID(), new Vec3d(this.getPosition())));
         }
     }
 

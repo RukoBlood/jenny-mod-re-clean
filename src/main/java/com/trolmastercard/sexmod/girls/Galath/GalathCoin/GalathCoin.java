@@ -23,7 +23,7 @@ import com.trolmastercard.sexmod.girls.Galath.GalathEntity;
 import com.trolmastercard.sexmod.girls.Galath.GalathMangTracker;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.VectorMath;
@@ -217,7 +217,7 @@ public class GalathCoin extends Item implements IAnimatable {
             GirlEntity girl = GirlEntity.getServerGirlEntity(ownerUUID);
             if (girl != null) {
                 GalathMangTracker.updateMangleliePartner((GalathEntity) girl);
-                PackageHandler.INSTANCE.sendTo((IMessage) new InformOfOwnership(false), (EntityPlayerMP) player);
+                PacketHandler.INSTANCE.sendTo((IMessage) new InformOfOwnership(false), (EntityPlayerMP) player);
             }
         }
     }

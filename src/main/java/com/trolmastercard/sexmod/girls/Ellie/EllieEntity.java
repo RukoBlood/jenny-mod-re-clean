@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.util.Handlers.LootTableHandler;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IEllie;
@@ -316,7 +316,7 @@ public class EllieEntity extends Fighter implements IEllie {
             vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.1), player.rotationYaw);
             pos = pos.add(vec3d);
             player.setPositionAndUpdate(pos.x, pos.y, pos.z);
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
+            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
         }
         if ("cowgirl".equals(handState)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
@@ -337,7 +337,7 @@ public class EllieEntity extends Fighter implements IEllie {
             vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 1.0 - (double)player.eyeHeight, -1.8125), player.rotationYaw);
             pos = pos.add(vec3d);
             player.setPositionAndUpdate(pos.x, pos.y, pos.z);
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
+            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)player);
         }
     }
 
@@ -478,7 +478,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 this.zFlag = 16;
                 this.setNoGravity(true);
                 this.noClip = true;
-                PackageHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(false), (EntityPlayerMP) player);
+                PacketHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(false), (EntityPlayerMP) player);
                 this.tasks.removeTask(this.aiWander);
                 this.tasks.removeTask(this.watchClosestGirlGoal);
             }
@@ -876,7 +876,7 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "openSexUi": {

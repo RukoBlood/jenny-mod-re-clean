@@ -45,7 +45,7 @@ import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
 import com.trolmastercard.sexmod.gui.TribeNameScreen;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Point2D;
 import com.trolmastercard.sexmod.util.Reference;
@@ -64,7 +64,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -77,7 +76,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -105,7 +103,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -152,7 +149,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     final static public DataParameter<Optional<UUID>> TRIBE_ID = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID).getSerializer().createKey(129);
     final static public int av = 24;
     static public double MAX_HEALTH = 69.0;
-    static public List<Vector4d> aY = new ArrayList<Vector4d>();
+    static public List<Vector4d> aY = new ArrayList<>();
     ItemStackHandler inventory = new ItemStackHandler(27);
     public String as = null;
     boolean az = false;
@@ -264,7 +261,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     @Override
     public ArrayList<Integer> getBasePartIdList() {
-        ArrayList<Integer> parts = new ArrayList<Integer>();
+        ArrayList<Integer> parts = new ArrayList<>();
         parts.add(Math.round(this.entityDataManager.get(SIZE) * 100.0f / 0.25f));
         parts.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf(this.entityDataManager.get(CURRENT_ACTION))));
         parts.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf(this.entityDataManager.get(ACTION_TARGET_POS))));
@@ -413,7 +410,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     protected void initEntityAI() {
         this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAITempt((EntityCreature)this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
+        this.tasks.addTask(2, new EntityAITempt(this, 0.4, false, new HashSet<>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new DoorInteractAIGoal(this));
         this.tasks.addTask(5, this.watchClosestGirlGoal);
     }
@@ -475,16 +472,16 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             if (!aY.isEmpty()) {
                 return true;
             }
-            this.openTribeNameScreen((UUID)tribeIdOpt.get());
+            this.openTribeNameScreen(tribeIdOpt.get());
             return true;
         }
 
-        if (this.hasMaster() && staffStack.getItem() == DragonStaffItem.DRAGON_STAFF && ((String)this.entityDataManager.get(MASTER)).equals(player.getPersistentID().toString())) {
+        if (this.hasMaster() && staffStack.getItem() == DragonStaffItem.DRAGON_STAFF && this.entityDataManager.get(MASTER).equals(player.getPersistentID().toString())) {
             player.openGui(Main.instance, 1, this.world, this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
             return true;
         }
         if (this.world.isRemote) {
-            if (this.hasMaster() && ((String)this.entityDataManager.get(MASTER)).equals(player.getPersistentID().toString())) {
+            if (this.hasMaster() && this.entityDataManager.get(MASTER).equals(player.getPersistentID().toString())) {
                 this.playRandomSounds(SoundsHandler.GIRLS_KOBOLD_MASTER);
             }
             this.openInteractionMenu(player);
@@ -525,7 +522,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         if (this.az) {
             this.az = false;
         } else {
-            this.setInteractionPlayerUUID((UUID) null);
+            this.setInteractionPlayerUUID(null);
             this.changeDataParameterFromClient("shouldbeattargetpos", "false");
         }
     }
@@ -599,7 +596,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         if (!tribeIdOpt.isPresent()) {
             return true;
         }
-        Collection<KoboldTask> tasks = KoboldManager.getTribeTasks((UUID)tribeIdOpt.get());
+        Collection<KoboldTask> tasks = KoboldManager.getTribeTasks(tribeIdOpt.get());
         if (tasks == null) {
             return true;
         }
@@ -642,11 +639,11 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         this.ax = false;
         Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
         if (tribeIdOpt.isPresent()) {
-            this.handleActionCooldown((UUID)tribeIdOpt.get());
-            KoboldManager.updateLeaderIfDead((UUID)tribeIdOpt.get());
+            this.handleActionCooldown(tribeIdOpt.get());
+            KoboldManager.updateLeaderIfDead(tribeIdOpt.get());
             EntityPlayer master = this.getMasterPlayer();
             if (master != null) {
-                KoboldManager.setTribeMaster((UUID)tribeIdOpt.get(), master.getPersistentID());
+                KoboldManager.setTribeMaster(tribeIdOpt.get(), master.getPersistentID());
             }
         }
 
@@ -656,7 +653,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     if (this.getHealth() != this.getMaxHealth() && ++this.a5 >= 100) {
                         this.setHealth(this.getHealth() + 2.0f);
                         this.a5 = 0;
-                        PackageHandler.INSTANCE.sendToAllTracking(new SpawnParticle(this.girlID(), EnumParticleTypes.HEART.getParticleName()), this);
+                        PacketHandler.INSTANCE.sendToAllTracking(new SpawnParticle(this.girlID(), EnumParticleTypes.HEART.getParticleName()), this);
                     }
                 } else {
                     this.a5 = 0;
@@ -754,7 +751,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             if (this.getCurrentAction() != Action.SLEEP) {
                 if (this.entityDataManager.get(ak)) {
                     if (this.hasMaster()) {
-                        EntityPlayer player = this.world.getPlayerEntityByUUID(UUID.fromString((String) this.entityDataManager.get(MASTER)));
+                        EntityPlayer player = this.world.getPlayerEntityByUUID(UUID.fromString(this.entityDataManager.get(MASTER)));
                         if (player != null) {
                             this.handleKoboldOwner(player);
                         }
@@ -925,7 +922,6 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 this.world.setBlockState(homePos.add(0, -1, 0), this.blockBelowState);
             }
         } else {
-            return;
         }
     }
 
@@ -944,7 +940,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     switch (newState) {
                         case REST: {
                             this.handleTaskAssign(uUID);
-                            KoboldManager.setTribeHomePos(uUID, (BlockPos) null);
+                            KoboldManager.setTribeHomePos(uUID, null);
                             this.sendGirlChatMessage("okay resting time owo");
                             break;
                         }
@@ -1012,7 +1008,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         if (bedPositions != null) {
             Vec3d headVec = new Vec3d((float) bedPositions[0].getX() + 0.5f, (double) bedPositions[0].getY() + 0.5625, (float) bedPositions[0].getZ() + 0.5f);
             Vec3d footVec = new Vec3d((float) bedPositions[1].getX() + 0.5f, (double) bedPositions[1].getY() + 0.5625, (float) bedPositions[1].getZ() + 0.5f);
-            boolean isVertical = headVec.subtract((Vec3d) footVec).x == 0.0;
+            boolean isVertical = headVec.subtract(footVec).x == 0.0;
             Vec3d midVec = RotationHelper.LerpVec3d(headVec, footVec, 0.5);
             this.entityDataManager.set(IS_ANCHORED, true);
             this.setTargetPosition(midVec);
@@ -1086,7 +1082,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     void handleHomeRelease(UUID uUID) {
         if (this.hasMaster()) {
-            KoboldManager.setTribeHomePos(uUID, (BlockPos) null);
+            KoboldManager.setTribeHomePos(uUID, null);
             this.handleTaskFollow(uUID);
         } else {
             Collection<KoboldTask> tasks = KoboldManager.getTribeTasks(uUID);
@@ -1403,9 +1399,9 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     void syncTribeBlocks(BlockPos blockPos) {
-        PackageHandler.INSTANCE.sendToAllTracking(new SpawnParticle(this.girlID(), EnumParticleTypes.PORTAL.getParticleName(), 30), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 30.0));
+        PacketHandler.INSTANCE.sendToAllTracking(new SpawnParticle(this.girlID(), EnumParticleTypes.PORTAL.getParticleName(), 30), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 30.0));
         this.setPosition(0.5f + (float)blockPos.getX(), blockPos.getY(), 0.5f + (float)blockPos.getZ());
-        PackageHandler.INSTANCE.sendToAllTracking(new SpawnParticle(this.girlID(), EnumParticleTypes.PORTAL.getParticleName(), 30), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 30.0));
+        PacketHandler.INSTANCE.sendToAllTracking(new SpawnParticle(this.girlID(), EnumParticleTypes.PORTAL.getParticleName(), 30), new NetworkRegistry.TargetPoint(this.dimension, this.posX, this.posY, this.posZ, 30.0));
     }
 
     void handleTribeTasks(UUID tribeId, KoboldTask task) {
@@ -1421,7 +1417,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     task.removeBlocks(this.aI);
                     EntityPlayer master = this.getMasterPlayer();
                     if (master != null) {
-                        PackageHandler.INSTANCE.sendTo(new SendBlocks(this.aI, false), (EntityPlayerMP) master);
+                        PacketHandler.INSTANCE.sendTo(new SendBlocks(this.aI, false), (EntityPlayerMP) master);
                     }
                 }
                 IBlockState blockState = this.world.getBlockState(this.aI);
@@ -1468,7 +1464,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                         if (!noTargets) {
                             player.sendMessage(new TextComponentString(String.format("<%s> It's impossible to mine here...", this.getGirlName())));
                         }
-                        PackageHandler.INSTANCE.sendTo(new SendBlocks(blocks, false), (EntityPlayerMP) player);
+                        PacketHandler.INSTANCE.sendTo(new SendBlocks(blocks, false), (EntityPlayerMP) player);
                         //return;
                     }
                 }
@@ -1797,7 +1793,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     task.addAllBlocks(liquidBlocks);
                     EntityPlayer master = this.getMasterPlayer();
                     if (master != null) {
-                        PackageHandler.INSTANCE.sendTo(new SendBlocks(liquidBlocks, true), (EntityPlayerMP)master);
+                        PacketHandler.INSTANCE.sendTo(new SendBlocks(liquidBlocks, true), (EntityPlayerMP)master);
                     }
                 }
 
@@ -1833,7 +1829,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     if (tribeUuid != null) {
                         EntityPlayer player = this.world.getPlayerEntityByUUID(tribeUuid);
                         if (player != null) {
-                            PackageHandler.INSTANCE.sendTo(new SendBlocks(airBlocks, false), (EntityPlayerMP)player);
+                            PacketHandler.INSTANCE.sendTo(new SendBlocks(airBlocks, false), (EntityPlayerMP)player);
                         }
                     }
                 }
@@ -2214,7 +2210,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             EntityPlayer master = this.getMasterPlayer();
             HashSet<BlockPos> blocks = task.getTargetBlocks();
             if (master != null && !blocks.isEmpty()) {
-                PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(blocks, false), (EntityPlayerMP)master);
+                PacketHandler.INSTANCE.sendTo(new SendBlocks(blocks, false), (EntityPlayerMP)master);
             }
             KoboldManager.removeWorkerTask(tribeId, this);
             return;
@@ -2240,7 +2236,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         EntityPlayer master = this.getMasterPlayer();
         HashSet<BlockPos> blocks = task.getTargetBlocks();
         if (master != null && !blocks.isEmpty()) {
-            PackageHandler.INSTANCE.sendTo((IMessage)new SendBlocks(blocks, false), (EntityPlayerMP)master);
+            PacketHandler.INSTANCE.sendTo(new SendBlocks(blocks, false), (EntityPlayerMP)master);
         }
         KoboldManager.removeWorkerTask(tribeId, this);
     }
@@ -2252,7 +2248,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             --this.cooldownTicks;
             if (this.cooldownTicks <= 0) {
                 if (this.cooldownTicks == 0) {
-                    PackageHandler.INSTANCE.sendToAllAround(new ResetController(this.girlID()), this.getTargetNetworkPoint());
+                    PacketHandler.INSTANCE.sendToAllAround(new ResetController(this.girlID()), this.getTargetNetworkPoint());
                 }
                 if (this.world.getBlockState(pos).getBlock() == Blocks.AIR) {
                     this.navigateToTask(tribeId, task, pos);
@@ -2285,7 +2281,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                                 task.removeAllBlocks(hashSet);
                                 hashSet.add(target);
                                 if (entityPlayer != null) {
-                                    PackageHandler.INSTANCE.sendTo(new SendBlocks(hashSet, false), (EntityPlayerMP) entityPlayer);
+                                    PacketHandler.INSTANCE.sendTo(new SendBlocks(hashSet, false), (EntityPlayerMP) entityPlayer);
                                 }
                                 return;
                             }
@@ -2321,7 +2317,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                         }
 
                         if (!otherBlocks.isEmpty() && entityPlayer != null) {
-                            PackageHandler.INSTANCE.sendTo(new SendBlocks(otherBlocks, false), (EntityPlayerMP) entityPlayer);
+                            PacketHandler.INSTANCE.sendTo(new SendBlocks(otherBlocks, false), (EntityPlayerMP) entityPlayer);
                         }
 
                         int height = 1;
@@ -2420,7 +2416,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 return;
             }
             bestBlock = this.findStandPos((BlockPos)bestBlockVec);
-            this.getNavigator().tryMoveToXYZ((double)((Vec3i)bestBlock).getX() + 0.5, ((Vec3i)bestBlock).getY(), (double)((Vec3i)bestBlock).getZ() + 0.5, 0.35);
+            this.getNavigator().tryMoveToXYZ((double) bestBlock.getX() + 0.5, bestBlock.getY(), (double) bestBlock.getZ() + 0.5, 0.35);
             this.tickPathVelocity();
             return;
         }
@@ -2452,7 +2448,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         }
         Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
         if (tribeIdOpt.isPresent()) {
-            this.entityDataManager.set(CURRENT_ACTION, KoboldManager.getTribeColor((UUID) tribeIdOpt.get()).toString());
+            this.entityDataManager.set(CURRENT_ACTION, KoboldManager.getTribeColor(tribeIdOpt.get()).toString());
         }
     }
 
@@ -2527,7 +2523,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
         if (tribeIdOpt.isPresent()) {
             nbt.setUniqueId("tribeId", tribeIdOpt.get());
-            nbt.setBoolean("isLeader", KoboldManager.isTribeMember((UUID)tribeIdOpt.get(), this));
+            nbt.setBoolean("isLeader", KoboldManager.isTribeMember(tribeIdOpt.get(), this));
             nbt.setString("tribeName", this.entityDataManager.get(TRIBE_NAME));
         }
     }
@@ -2564,7 +2560,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
             this.entityDataManager.set(TRIBE_ID, Optional.of(tribeId));
             if (!KoboldManager.doesTribeExist(tribeId)) {
-                KoboldManager.createTribe(tribeId, EyeAndKoboldColor.valueOf((String)this.entityDataManager.get(CURRENT_ACTION)));
+                KoboldManager.createTribe(tribeId, EyeAndKoboldColor.valueOf(this.entityDataManager.get(CURRENT_ACTION)));
             }
 
             KoboldManager.addTribeMember(tribeId, this);
@@ -2833,11 +2829,11 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 }
                 case "paymentMSG1": {
                     this.sendChatMessageToPlayer(this.getInteractionPlayerUUID(), "I'd like to use ur services owo");
-                    this.playRandomSound(SoundsHandler.MISC_PLOB, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "plob": {
-                    this.playRandomSound(SoundsHandler.MISC_PLOB, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_PLOB);
                     break;
                 }
                 case "blackScreen": {
@@ -2854,14 +2850,14 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
                 case "lipsound": {
@@ -2874,7 +2870,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     break;
                 }
                 case "touch": {
-                    this.playRandomSound(SoundsHandler.MISC_TOUCH, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_TOUCH);
                     break;
                 }
                 case "blowjobStartDone": {
@@ -2926,11 +2922,11 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
                     break;
                 }
                 case "pounding": {
-                    this.playRandomSound(SoundsHandler.MISC_POUNDING, new int[0]);
+                    this.playRandomSound(SoundsHandler.MISC_POUNDING);
                     break;
                 }
                 case "analFastRapid": {
@@ -3017,7 +3013,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
                     vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation().floatValue() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 10.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 10.0f));
                     break;
                 }
                 case "mating_press_startDone": {
@@ -3052,7 +3048,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
                     vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 70.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 70.0f));
                     break;
                 }
                 case "cumMsg": {
@@ -3211,8 +3207,8 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 KoboldEntity kobold;
                 Optional<UUID> tribeOptUuid;
-                if (girl instanceof KoboldEntity && (tribeOptUuid = (kobold = (KoboldEntity) girl).getDataManager().get(TRIBE_ID)).isPresent() && KoboldManager.isTribeMember((UUID) tribeOptUuid.get(), kobold)) {
-                    kobold.teleportToHome((UUID) tribeOptUuid.get());
+                if (girl instanceof KoboldEntity && (tribeOptUuid = (kobold = (KoboldEntity) girl).getDataManager().get(TRIBE_ID)).isPresent() && KoboldManager.isTribeMember(tribeOptUuid.get(), kobold)) {
+                    kobold.teleportToHome(tribeOptUuid.get());
                 }
             }
         }
@@ -3234,7 +3230,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             WorldClient world = Minecraft.getMinecraft().world;
             if (world != null) {
                 if (++this.tickCounter % 20 == 0) {
-                    PackageHandler.INSTANCE.sendToServer(new GetTribeUIValues());
+                    PacketHandler.INSTANCE.sendToServer(new GetTribeUIValues());
                 }
             }
         }

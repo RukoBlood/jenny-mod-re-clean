@@ -6,8 +6,7 @@ package com.trolmastercard.sexmod.girls.Kobold.DragonStaff;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class KoboldStaffModel
-extends AnimatedGeoModel<DragonStaffItem> {
+public class DragonStaffModel extends AnimatedGeoModel<DragonStaffItem> {
     @Override
     public ResourceLocation getModelLocation(DragonStaffItem hy_class4072) {
         return new ResourceLocation("sexmod", "geo/kobold/staff.geo.json");

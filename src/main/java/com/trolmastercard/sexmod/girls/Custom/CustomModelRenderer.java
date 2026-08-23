@@ -25,7 +25,7 @@ import com.trolmastercard.sexmod.girls.base.GirlID;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
 import com.trolmastercard.sexmod.util.CustomPartCategory;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.RotationHelper;
 import com.trolmastercard.sexmod.util.TrigMath;
 import com.trolmastercard.sexmod.util.ThreadNames;
@@ -112,7 +112,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         customParts.remove(modelName);
         String serializedParts = GirlEntity.serializePartsSet(customParts);
 
-        PackageHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(serializedParts, entity.getGirlUUID()));
+        PacketHandler.INSTANCE.sendToServer((IMessage)new UploadModelString(serializedParts, entity.getGirlUUID()));
         return true;
     }
 

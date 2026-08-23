@@ -16,7 +16,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.world.FakeWorld;
 import com.trolmastercard.sexmod.world.WorldUtils;
@@ -31,7 +31,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -117,7 +116,7 @@ extends GirlEntity {
         super.onUpdate();
         if (this.U != 1.0f && this.U != -69.0f && this.U <= 0.0f) {
             if (this.isControlledByLocalPlayer()) {
-                PackageHandler.INSTANCE.sendToServer(new UploadInventoryToServerAlt(this.girlID()));
+                PacketHandler.INSTANCE.sendToServer(new UploadInventoryToServerAlt(this.girlID()));
                 HandlePlayerMovement.setMovementLock(true);
             }
             this.U = -69.0f;
@@ -382,7 +381,7 @@ extends GirlEntity {
                         break;
                     }
                     this.setCurrentAction(Action.DEEPTHROAT_START);
-                    PackageHandler.INSTANCE.sendToServer(new SyncActionPacket(this.girlID(), this.getInteractionPlayerUUID(), false, true));
+                    PacketHandler.INSTANCE.sendToServer(new SyncActionPacket(this.girlID(), this.getInteractionPlayerUUID(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     this.moveCamera(0.0, 0.0, 1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
@@ -425,7 +424,7 @@ extends GirlEntity {
                 case "deepthroat_cumDone": {
                     if (!this.isControlledByLocalPlayer()) break;
                     this.resetCameraAndPhysics();
-                    PackageHandler.INSTANCE.sendToServer(new UploadInventoryToServerAlt(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new UploadInventoryToServerAlt(this.girlID()));
                     break;
                 }
                 case "summon_normalMSG1": {
@@ -470,7 +469,7 @@ extends GirlEntity {
                     this.sendChatMessage(I18n.format("allie.dialogue.wishgranted"));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_PLOB));
                     if (!this.isControlledByLocalPlayer()) break;
-                    PackageHandler.INSTANCE.sendToServer(new MakeRichWish(this.getPositionVector()));
+                    PacketHandler.INSTANCE.sendToServer(new MakeRichWish(this.getPositionVector()));
                     break;
                 }
                 case "disappear": {

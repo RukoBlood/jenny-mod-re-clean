@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import com.trolmastercard.sexmod.Packets.ClaimTribe;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -71,7 +71,7 @@ public class TribeNameScreen extends GuiScreen {
         if (string.isEmpty()) {
             return;
         }
-        PackageHandler.INSTANCE.sendToServer((IMessage)new ClaimTribe(this.koboldID, Minecraft.getMinecraft().player.getPersistentID(), string));
+        PacketHandler.INSTANCE.sendToServer((IMessage)new ClaimTribe(this.koboldID, Minecraft.getMinecraft().player.getPersistentID(), string));
         Minecraft.getMinecraft().player.closeScreen();
     }
 

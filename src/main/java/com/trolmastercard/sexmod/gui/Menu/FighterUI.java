@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import com.trolmastercard.sexmod.Packets.RemoveItems;
 import com.trolmastercard.sexmod.girls.base.Fighter;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
@@ -89,7 +89,7 @@ public class FighterUI extends GuiScreen {
         }
         for (ItemStack itemStack : this.player.inventory.mainInventory) {
             if (!itemStack.getItem().equals(this.prices[button.id - 5].getItem()) || itemStack.getCount() < this.prices[button.id - 5].getCount() || itemStack.getMetadata() != this.prices[button.id - 5].getMetadata()) continue;
-            PackageHandler.INSTANCE.sendToServer((IMessage)new RemoveItems(this.player.getPersistentID(), this.prices[button.id - 5]));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new RemoveItems(this.player.getPersistentID(), this.prices[button.id - 5]));
             this.doAction(button);
             return;
         }

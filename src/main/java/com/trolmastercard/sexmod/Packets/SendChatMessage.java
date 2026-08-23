@@ -13,7 +13,7 @@
 package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
@@ -80,7 +80,7 @@ public class SendChatMessage implements IMessage {
             } else {
                 FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                     Vec3d vec3d = GirlEntity.girlList(msg.c).get(0).getPreviousPosition();
-                    PackageHandler.INSTANCE.sendToAllAround(new SendChatMessage(msg.a, msg.d, msg.c), new NetworkRegistry.TargetPoint(msg.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
+                    PacketHandler.INSTANCE.sendToAllAround(new SendChatMessage(msg.a, msg.d, msg.c), new NetworkRegistry.TargetPoint(msg.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
                 });
             }
             return null;

@@ -18,8 +18,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SkinHelper {
-    //final static public int INT_2 = 3;
-
     @SideOnly(value=Side.CLIENT)
     public static BufferedImage GetPlayerSkin(UUID uUID) throws IOException {
         try {

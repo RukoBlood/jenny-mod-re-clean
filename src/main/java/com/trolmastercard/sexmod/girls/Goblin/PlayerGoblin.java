@@ -32,7 +32,7 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.WorkerPlayerEntity;
 import com.trolmastercard.sexmod.gui.Menu.FighterUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.interfaces.IGoblin;
@@ -210,7 +210,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         if (this.world.isRemote) {
             return;
         }
-        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer2);
+        PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer2);
     }
 
     @Override
@@ -538,7 +538,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         if (entityPlayer == null) {
             return;
         }
-        PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
+        PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
     }
 
     @SideOnly(value=Side.CLIENT)

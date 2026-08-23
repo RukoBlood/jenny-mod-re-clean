@@ -12,7 +12,7 @@ package com.trolmastercard.sexmod.Packets;
 
 import com.trolmastercard.sexmod.girls.Kobold.KoboldTask;
 import com.trolmastercard.sexmod.girls.Kobold.KoboldManager;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.HashSet;
 import java.util.UUID;
@@ -104,7 +104,7 @@ public class FallTree implements IMessage {
                         World world = player.world;
                         BlockPos blockPos = this.a(world, msg.a);
                         HashSet<BlockPos> hashSet = KoboldTask.findConnectedBlocks(world, blockPos, uUID);
-                        PackageHandler.INSTANCE.sendTo(new SendBlocks(hashSet, true), ctx.getServerHandler().player);
+                        PacketHandler.INSTANCE.sendTo(new SendBlocks(hashSet, true), ctx.getServerHandler().player);
                     }
                 }
             });

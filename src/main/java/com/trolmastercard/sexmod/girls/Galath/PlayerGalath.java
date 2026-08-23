@@ -19,7 +19,7 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.Galath.GalathFlightUI;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.VectorMath;
 import com.trolmastercard.sexmod.util.Vector4d;
@@ -419,7 +419,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                         EntityPlayerSP player = Minecraft.getMinecraft().player;
                         float yaw = this.getYawRotation() + 220.0f;
                         Vec3d pos = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5f - player.getEyeHeight(), 0.4f), this.getYawRotation()).add(this.getTargetPosition());
-                        PackageHandler.INSTANCE.sendToServer((IMessage) new TeleportPlayer(player.getPersistentID().toString(), pos, yaw, 15.0f));
+                        PacketHandler.INSTANCE.sendToServer((IMessage) new TeleportPlayer(player.getPersistentID().toString(), pos, yaw, 15.0f));
                         SexUI.showUI();
                     }
                     break;
@@ -458,7 +458,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                         Vec2f moveVec = input.getMoveVector();
                         if (moveVec.x != 0.0f || moveVec.y != 0.0f) {
                             Vec3d vel = VectorMath.rotate(new Vec3d(-moveVec.x, 0.0, moveVec.y), RotationHelper.LerpFloat(player.prevRotationPitch, player.rotationPitch, mc.getRenderPartialTicks()), RotationHelper.LerpFloat(player.prevRotationYawHead, player.rotationYawHead, mc.getRenderPartialTicks()));
-                            PackageHandler.INSTANCE.sendToServer((IMessage) new UpdateVelocity(vel, this.girlID()));
+                            PacketHandler.INSTANCE.sendToServer((IMessage) new UpdateVelocity(vel, this.girlID()));
                         }
                     }
                     break;

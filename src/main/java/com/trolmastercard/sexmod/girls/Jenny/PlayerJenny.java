@@ -17,7 +17,7 @@ import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
@@ -128,7 +128,7 @@ public class PlayerJenny extends PlayerGirl {
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.cameraOriginPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
-            PackageHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
         }
     }
 
@@ -557,7 +557,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggyGoOnBedDone": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
                     this.setCurrentAction(Action.WAITDOGGY);
                     break;
                 }
@@ -659,7 +659,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "boobjob_camera": {

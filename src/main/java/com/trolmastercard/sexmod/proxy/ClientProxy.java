@@ -22,7 +22,7 @@ import com.trolmastercard.sexmod.gender_change.SexPromptManager;
 import com.trolmastercard.sexmod.girls.Galath.DragonBreathParticle;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
 import com.trolmastercard.sexmod.util.Handlers.GuiHandler;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.RenderHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.Handlers.EventHandler;
@@ -65,7 +65,7 @@ public class ClientProxy extends CommonProxy {
         SoundsHandler.RegisterSounds();
         net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler((Object) Main.instance, (IGuiHandler)new GuiHandler(true));
         EventHandler.Register(true);
-        PackageHandler.RegisterMessages();
+        PacketHandler.RegisterMessages();
         Minecraft mc = Minecraft.getMinecraft();
         RenderManager renderManager = mc.getRenderManager();
         FakeWorld fakeWorld = new FakeWorld();

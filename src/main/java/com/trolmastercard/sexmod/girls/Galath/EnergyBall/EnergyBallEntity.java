@@ -14,7 +14,7 @@ import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.Packets.SpawnEnergyBallParticlesPacket2;
 import com.trolmastercard.sexmod.util.Reference;
 import com.trolmastercard.sexmod.util.TrigMath;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.RotationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -151,7 +151,7 @@ extends EntityLiving {
         entityWitherSkeleton.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Items.STONE_SWORD));
         entityWitherSkeleton.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
         this.world.spawnEntity(entityWitherSkeleton);
-        PackageHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(vec3d, true), this);
+        PacketHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(vec3d, true), this);
         this.f.witherSkeletons.add(entityWitherSkeleton);
     }
 
@@ -207,7 +207,7 @@ extends EntityLiving {
         if (!this.world.isRemote && "arrow".equals(damageSource.damageType)) {
             this.setHealth(0.0f);
             this.i = false;
-            PackageHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(this.getPositionVector(), false), this);
+            PacketHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(this.getPositionVector(), false), this);
             Entity entity = damageSource.getImmediateSource();
             if (entity != null) {
                 this.world.removeEntity(entity);

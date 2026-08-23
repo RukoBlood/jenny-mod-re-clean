@@ -20,12 +20,11 @@ import com.trolmastercard.sexmod.girls.Galath.EnergyBall.EnergyBallEntity;
 import com.trolmastercard.sexmod.util.*;
 import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.*;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityWitherSkeleton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,10 +37,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public enum GalathFlightData {
     CHANGE_POSITION(
@@ -49,8 +46,8 @@ public enum GalathFlightData {
         World world = galath.world;
         BlockPos currentPos = galath.getPosition();
         BlockPos targetPos = galath.getAttackTarget().getPosition();
-        ArrayList<BlockPos> candidatePositions = new ArrayList<BlockPos>();
-        HashMap<BlockPos, Integer> positionScores = new HashMap<BlockPos, Integer>();
+        ArrayList<BlockPos> candidatePositions = new ArrayList<>();
+        HashMap<BlockPos, Integer> positionScores = new HashMap<>();
         int maxScore = 0;
         boolean isOnGround = !world.isAirBlock(currentPos.down());
 
@@ -101,18 +98,18 @@ public enum GalathFlightData {
 
         if (!positionScores.isEmpty()) {
             ArrayList<Map.Entry<BlockPos, Integer>> sortedPositions = new ArrayList<>(positionScores.entrySet());
-            sortedPositions.sort((e1, e2) -> ((Integer)e2.getValue()).compareTo((Integer)e1.getValue()));
-            galath.flightTargetPosition = new Vec3d((Vec3i)(sortedPositions.get(ThreadNames.getWeightedRandomInt(sortedPositions.size() - 1))).getKey());
+            sortedPositions.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+            galath.flightTargetPosition = new Vec3d((sortedPositions.get(ThreadNames.getWeightedRandomInt(sortedPositions.size() - 1))).getKey());
         } else {
             galath.flightTargetPosition = candidatePositions.isEmpty()
                     ? new Vec3d(targetPos.add(ThreadNames.getRandomFloat(10.0f, true), ThreadNames.getRandomFloat(10.0f, false), ThreadNames.getRandomFloat(10.0f, true)))
-                    : new Vec3d((Vec3i)candidatePositions.get(Reference.RANDOM.nextInt(candidatePositions.size())));
+                    : new Vec3d(candidatePositions.get(Reference.RANDOM.nextInt(candidatePositions.size())));
         }
 
         galath.previousPos = null;
         galath.setFlyTicks(0);
         galath.setCurrentAction(Action.FLY);
-        PackageHandler.INSTANCE.sendToAllTracking((IMessage)new ResetController(galath.girlID()), (Entity)galath);
+        PacketHandler.INSTANCE.sendToAllTracking(new ResetController(galath.girlID()), galath);
     },
             galath -> {
         Vec3d currentVec = galath.getPositionVector();
@@ -126,7 +123,7 @@ public enum GalathFlightData {
                         Vec3d normalizedDir = direction.normalize();
                         galath.motionX = normalizedDir.x * (double) 0.6f;
                         galath.motionZ = normalizedDir.z * (double) 0.6f;
-                        galath.motionY = ThreadNames.clamp(direction.y * (double) 0.6f, (double) -0.6f, (double) 0.6f);
+                        galath.motionY = ThreadNames.clamp(direction.y * (double) 0.6f, -0.6f, 0.6f);
                     }
 
                 }
@@ -145,7 +142,7 @@ public enum GalathFlightData {
         dataManager.set(GalathEntity.bN, true);
         dataManager.set(GalathEntity.b7, true);
         dataManager.set(GalathEntity.ay, galath.getRNG().nextBoolean());
-        GirlEntity.playRandomSound((GirlEntity)galath, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
+        GirlEntity.playRandomSound(galath, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
     }, galath -> {
         EnergyBallEntity energyBallEntity;
         Vec3d headVel;
@@ -195,13 +192,13 @@ public enum GalathFlightData {
         galath.setAnchored(true);
         galath.setTargetPosition(pos);
         galath.setYawRotation((float)yaw);
-        GirlEntity.playRandomSound((GirlEntity)galath, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
+        GirlEntity.playRandomSound(galath, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
     },
             galath -> {
         EntityLivingBase target = galath.getAttackTarget();
         int attackProgress = galath.getSwordAttackProgress() + 1;
         galath.setSwordAttackProgress(attackProgress);
-        if (ThreadNames.isValueInBounds((double)attackProgress, 24.0, 32.0)) {
+        if (ThreadNames.isValueInBounds(attackProgress, 24.0, 32.0)) {
             Vec3d eyePos = target.getPositionVector().add(0.0, target.getEyeHeight(), 0.0);
             Vector2d delta2 = new Vector2d(eyePos.x - galath.posX, eyePos.z - galath.posZ);
             double d = TrigMath.sinDegrees(Math.atan2(delta2.y, delta2.x)) - 90.0;
@@ -210,10 +207,10 @@ public enum GalathFlightData {
             Vec3d from = galath.getAnchorTargetPosition();
             Vec3d to = eyePos.add(forward);
             float progress = (float)(attackProgress - 24) / 8.0f;
-            Vec3d Lerped = RotationHelper.LerpVec3d(from, to, (double)progress);
+            Vec3d Lerped = RotationHelper.LerpVec3d(from, to, progress);
             galath.setTargetPosition(Lerped);
-        } else if (ThreadNames.isValueInBounds((double)attackProgress, 32.0, 54.0)) {
-            Vec3d behind = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 1.5), galath.getYawRotation().floatValue() + 180.0f);
+        } else if (ThreadNames.isValueInBounds(attackProgress, 32.0, 54.0)) {
+            Vec3d behind = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 1.5), galath.getYawRotation() + 180.0f);
             Vec3d targetPos2 = target.getPositionVector().add(behind);
             galath.setTargetPosition(targetPos2);
             GalathDamageSource damageSource = new GalathDamageSource(galath);
@@ -280,7 +277,7 @@ public enum GalathFlightData {
                         for (EntityWitherSkeleton skeleton : galath.witherSkeletons) {
                             Vec3d skeletonPos = skeleton.getPositionVector();
                             skeleton.world.removeEntity(skeleton);
-                            PackageHandler.INSTANCE.sendToAllTracking((IMessage) new SpawnEnergyBallParticlesPacket2(skeletonPos, true), new NetworkRegistry.TargetPoint(skeleton.dimension, skeletonPos.x, skeletonPos.y, skeletonPos.z, 50.0));
+                            PacketHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(skeletonPos, true), new NetworkRegistry.TargetPoint(skeleton.dimension, skeletonPos.x, skeletonPos.y, skeletonPos.z, 50.0));
                         }
                         galath.witherSkeletons.clear();
                         EntityPlayerMP playerMP = (EntityPlayerMP) player;
@@ -289,9 +286,9 @@ public enum GalathFlightData {
                         galath.setAnchored(true);
                         galath.setCurrentAction(Action.RAPE_INTRO);
                         byte yawByte = (byte) MathHelper.floor((galath.getYawRotation() + 180.0f) * 256.0f / 360.0f); //this is only byte usage that I saw
-                        PackageHandler.INSTANCE.sendTo((IMessage) new SetPlayerMovement(false), playerMP);
+                        PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), playerMP);
                         playerMP.connection.sendPacket(new SPacketEntityVelocity(playerMP.getEntityId(), 0.0, 0.0, 0.0));
-                        playerMP.connection.sendPacket(new SPacketEntity.S16PacketEntityLook(playerMP.getEntityId(), (byte) yawByte, (byte) -14, true));
+                        playerMP.connection.sendPacket(new SPacketEntity.S16PacketEntityLook(playerMP.getEntityId(), yawByte, (byte) -14, true));
                         return;
                     }
                 }
@@ -322,7 +319,6 @@ public enum GalathFlightData {
                 galath.getDataManager().set(GalathEntity.SPIN_YAW_FACTOR, (float) dist);
             }
         } else {
-            return;
         }
     }, galath -> {
         if (galath.getCurrentAction() == Action.RAPE_INTRO) {
@@ -353,7 +349,7 @@ public enum GalathFlightData {
     final public boolean applyAttackCoolDown;
     final public boolean onlyDoThisOnPlayers;
 
-    private GalathFlightData(IGalathStart onStartAction, IGalathFinish isFinishedCondition, IGalathUpdate onUpdateAction, IGalathStop onStopAction, boolean applyAttackCoolDown, IGalathExecute canExecuteAction, boolean onlyDoThisOnPlayers) {
+    GalathFlightData(IGalathStart onStartAction, IGalathFinish isFinishedCondition, IGalathUpdate onUpdateAction, IGalathStop onStopAction, boolean applyAttackCoolDown, IGalathExecute canExecuteAction, boolean onlyDoThisOnPlayers) {
         this.onUpdateAction = onUpdateAction;
         this.onStartAction = onStartAction;
         this.isFinishedCondition = isFinishedCondition;

@@ -58,8 +58,8 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
         EntityPlayerSP entityPlayerSP = this.minecraft.player;
-        Vec3d vec3d = RotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), (double)f2);
-        Vec3d vec3d2 = RotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)f2);
+        Vec3d vec3d = RotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), f2);
+        Vec3d vec3d2 = RotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), f2);
         Vec3d vec3d3 = vec3d.subtract(vec3d2);
         ResourceLocation resourceLocation = this.a(entity, Math.abs(vec3d3.x) + Math.abs(vec3d3.y) + Math.abs(vec3d3.z));
         this.minecraft.renderEngine.bindTexture(resourceLocation);

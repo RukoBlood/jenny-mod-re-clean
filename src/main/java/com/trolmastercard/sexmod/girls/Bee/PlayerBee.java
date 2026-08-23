@@ -14,7 +14,7 @@ import com.trolmastercard.sexmod.girls.base.Action;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.gui.Sex.BlackScreenUI;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.Handlers.SoundsHandler;
 import com.trolmastercard.sexmod.util.interfaces.IRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -195,7 +195,7 @@ public class PlayerBee extends PlayerGirl {
                 }
                 case "pearl": {
                     if (!this.isLocalPlayerNearby() || this.getCurrentAction() != Action.THROW_PEARL) break;
-                    PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "resetCumPercentage": {

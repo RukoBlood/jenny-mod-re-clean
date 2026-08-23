@@ -110,7 +110,7 @@ public class PyrocynicalEntity extends EntityLiving {
     void playDissapearEffects() {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         this.triggerTick = player.ticksExisted;
-        ((EntityPlayer)player).playSound(SoundsHandler.MISC_WEOWEO[3], 1.0f, 1.0f);
+        player.playSound(SoundsHandler.MISC_WEOWEO[3], 1.0f, 1.0f);
     }
 
     double getMaxWanderDistance()    {

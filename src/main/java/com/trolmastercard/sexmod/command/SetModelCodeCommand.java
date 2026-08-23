@@ -11,20 +11,18 @@ import com.trolmastercard.sexmod.Packets.UploadModelString;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirlEntity;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import com.trolmastercard.sexmod.util.ThreadNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.IClientCommand;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -73,11 +71,11 @@ public class SetModelCodeCommand extends CommandBase implements IClientCommand {
             }
         }
         if (string2.isEmpty()) {
-            PackageHandler.INSTANCE.sendToServer(new UploadModelString(string, girl.girlID()));
+            PacketHandler.INSTANCE.sendToServer(new UploadModelString(string, girl.girlID()));
             entityPlayerSP.sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
             return;
         }
-        PackageHandler.INSTANCE.sendToServer(new UploadModelString(string, girl.girlID(), GirlEntity.decodePartIdList(string2)));
+        PacketHandler.INSTANCE.sendToServer(new UploadModelString(string, girl.girlID(), GirlEntity.decodePartIdList(string2)));
         entityPlayerSP.sendStatusMessage(new TextComponentString(this.showModelCode(girl)), true);
     }
 

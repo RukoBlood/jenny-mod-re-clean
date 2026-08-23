@@ -14,7 +14,7 @@ import com.trolmastercard.sexmod.Packets.SendCompanionHome;
 import com.trolmastercard.sexmod.Packets.SetNewHome;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import com.trolmastercard.sexmod.girls.base.Supporter;
-import com.trolmastercard.sexmod.util.Handlers.PackageHandler;
+import com.trolmastercard.sexmod.util.Handlers.PacketHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -63,7 +63,7 @@ public class SupporterUI extends GuiScreen {
         ScaledResolution resolution = new ScaledResolution(this.mc);
         int screenWidth = resolution.getScaledWidth();
         if (this.girl.getDataManager().get(Supporter.HAS_CHEST) && mouseX >= screenWidth / 2 - 20 && mouseX <= screenWidth / 2 + 20 && mouseY >= 20 && mouseY <= 60) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new BeeOpenChest(this.girl.girlID(), this.player.getPersistentID()));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new BeeOpenChest(this.girl.girlID(), this.player.getPersistentID()));
             this.onGuiClosed();
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -74,21 +74,21 @@ public class SupporterUI extends GuiScreen {
         super.actionPerformed(button);
         if (button.id == 0) {
             if (this.isFollowing) {
-                PackageHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girl.girlID(), "master", ""));
+                PacketHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girl.girlID(), "master", ""));
                 this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.sad", new Object[0])));
             } else {
-                PackageHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girl.girlID(), "master", this.player.getPersistentID().toString()));
+                PacketHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girl.girlID(), "master", this.player.getPersistentID().toString()));
                 this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.exited", new Object[0])));
             }
             this.isFollowing = !this.isFollowing;
             this.player.closeScreen();
         }
         if (button.id == 1) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girl.girlID()));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girl.girlID()));
             this.player.closeScreen();
         }
         if (button.id == 2) {
-            PackageHandler.INSTANCE.sendToServer((IMessage)new SetNewHome(this.girl.girlID(), new Vec3d(this.girl.posX, this.girl.posY, this.girl.posZ)));
+            PacketHandler.INSTANCE.sendToServer((IMessage)new SetNewHome(this.girl.girlID(), new Vec3d(this.girl.posX, this.girl.posY, this.girl.posZ)));
             this.player.closeScreen();
             this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.home", new Object[0])));
         }

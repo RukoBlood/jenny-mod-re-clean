@@ -164,21 +164,20 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
 
     void updateRapeChargeYaw(GalathEntity entity) {
         //boolean bl;
-        if (!entity.getDataManager().get(GalathEntity.IS_FLYING_FLAG)) {
-            return;
-        }
-        Vec3d prevPos = new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ);
-        Vec3d motionVec = entity.getPositionVector().subtract(prevPos);
+        if (entity.getDataManager().get(GalathEntity.IS_FLYING_FLAG)) {
+            Vec3d prevPos = new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ);
+            Vec3d motionVec = entity.getPositionVector().subtract(prevPos);
 
-        boolean isStationary = Math.abs(motionVec.x) + Math.abs(motionVec.z) < (double)0.05f;
-        if (isStationary) {
-            entity.renderYawOffset = this.lastRenderYawOffset;
-            entity.prevRenderYawOffset = this.lastRenderYawOffset;
-        } else {
-            float calculatedYaw  = (float)(TrigMath.sinDegrees(Math.atan2(motionVec.z, motionVec.x)) - 90.0);
-            entity.renderYawOffset = calculatedYaw;
-            entity.prevRenderYawOffset = calculatedYaw;
-            this.lastRenderYawOffset = calculatedYaw;
+            boolean isStationary = Math.abs(motionVec.x) + Math.abs(motionVec.z) < (double) 0.05f;
+            if (isStationary) {
+                entity.renderYawOffset = this.lastRenderYawOffset;
+                entity.prevRenderYawOffset = this.lastRenderYawOffset;
+            } else {
+                float calculatedYaw = (float) (TrigMath.sinDegrees(Math.atan2(motionVec.z, motionVec.x)) - 90.0);
+                entity.renderYawOffset = calculatedYaw;
+                entity.prevRenderYawOffset = calculatedYaw;
+                this.lastRenderYawOffset = calculatedYaw;
+            }
         }
     }
 
@@ -203,15 +202,15 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             entity.dashEndWorldTime = entity.dashStartWorldTime + 8L;
         }
 
-        if (ThreadNames.isValueInBounds((double)attackProgress, 24.0, 32.0)) {
+        if (ThreadNames.isValueInBounds(attackProgress, 24.0, 32.0)) {
             Vec3d backOffset = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 3.0), entity.getYawRotation() + 180.0f);
             Vec3d anchorPos = entity.getAnchorTargetPosition();
             Vec3d destinationPos = targetInterpolatedPos.add(0.0, target.getEyeHeight(), 0.0).add(backOffset);
             float progress = ((float) GalathRenderer.mc.world.getTotalWorldTime() + partialTicks - (float)entity.dashStartWorldTime) / (float)(entity.dashEndWorldTime - entity.dashStartWorldTime);
-            return RotationHelper.LerpVec3d(anchorPos, destinationPos, (double)progress);
+            return RotationHelper.LerpVec3d(anchorPos, destinationPos, progress);
         }
 
-        if (ThreadNames.isValueInBounds((double)attackProgress, 32.0, 54.0)) {
+        if (ThreadNames.isValueInBounds(attackProgress, 32.0, 54.0)) {
             Vec3d closeOffset = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 1.5), entity.getYawRotation() + 180.0f);
             return targetInterpolatedPos.add(closeOffset);
         }
@@ -406,12 +405,12 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.renderRecursively(buffer, steveBone, r, g, b, ((GalathEntity)this.renderEntity).getRenderScaleFactor());
+        this.renderRecursively(buffer, steveBone, r, g, b, this.renderEntity.getRenderScaleFactor());
         Tessellator.getInstance().draw();
         if (body2Bone != null) {
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
             Minecraft.getMinecraft().renderEngine.bindTexture(ManglelieModel.TEXTURE_MANGELIE);
-            this.renderRecursively(buffer, body2Bone, r, g, b, ((GalathEntity)this.renderEntity).getRenderScaleFactor());
+            this.renderRecursively(buffer, body2Bone, r, g, b, this.renderEntity.getRenderScaleFactor());
             Tessellator.getInstance().draw();
         }
         MATRIX_STACK.pop();
@@ -422,7 +421,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
         switch (boneName) {
             case "hairBack": {
                 if (mc.isGamePaused()) break;
-                IBone headBone = ((GalathEntity)this.renderEntity).getAnimationProcessor().getBone("head");
+                IBone headBone = this.renderEntity.getAnimationProcessor().getBone("head");
                 float rotX = TrigMath.toDegrees(headBone.getRotationX());
                 if (rotX < 0.0f) {
                     bone.setRotationX(TrigMath.wrapDegrees(-rotX));
@@ -436,7 +435,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             case "hairDownSideL": {
                 //TODO: If it shoud be like that
                 if (mc.isGamePaused()) break;
-                IBone headBone = ((GalathEntity)this.renderEntity).getAnimationProcessor().getBone("head");
+                IBone headBone = this.renderEntity.getAnimationProcessor().getBone("head");
                 float rotX = TrigMath.toDegrees(headBone.getRotationX());
                 if (rotX < 0.0f) {
                     bone.setRotationX(TrigMath.wrapDegrees(-rotX));
@@ -449,7 +448,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             }
             case "hairDownSideR": {
                 if (mc.isGamePaused()) break;
-                IBone headBone = ((GalathEntity)this.renderEntity).getAnimationProcessor().getBone("head");
+                IBone headBone = this.renderEntity.getAnimationProcessor().getBone("head");
                 float rotX = TrigMath.toDegrees(headBone.getRotationX());
                 if (rotX < 0.0f) {
                     bone.setRotationX(TrigMath.wrapDegrees(-rotX / 2.0f));
@@ -463,20 +462,20 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             case "head": {
                 EntityLivingBase entityLivingBase;
                 this.updateHeadBlowjobAnimation(bone);
-                Action action = ((GalathEntity)this.renderEntity).getCurrentAction();
-                if (action != Action.FLY && action != Action.ATTACK_SWORD || (entityLivingBase = ((GalathEntity)this.renderEntity).getAttackTarget()) == null) break;
+                Action action = this.renderEntity.getCurrentAction();
+                if (action != Action.FLY && action != Action.ATTACK_SWORD || (entityLivingBase = this.renderEntity.getAttackTarget()) == null) break;
                 float partialTicks = mc.getRenderPartialTicks();
 
-                Vec3d galathPos = RotationHelper.LerpVec3d(new Vec3d(((GalathEntity)this.renderEntity).lastTickPosX, ((GalathEntity)this.renderEntity).lastTickPosY, ((GalathEntity)this.renderEntity).lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)partialTicks);
-                Vec3d targetPos = RotationHelper.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), ((GalathEntity)this.renderEntity).getPositionVector(), (double)partialTicks);
+                Vec3d galathPos = RotationHelper.LerpVec3d(new Vec3d(this.renderEntity.lastTickPosX, this.renderEntity.lastTickPosY, this.renderEntity.lastTickPosZ), this.renderEntity.getPositionVector(), partialTicks);
+                Vec3d targetPos = RotationHelper.LerpVec3d(new Vec3d(entityLivingBase.lastTickPosX, entityLivingBase.lastTickPosY, entityLivingBase.lastTickPosZ), this.renderEntity.getPositionVector(), partialTicks);
                 Vec3d diff = galathPos.subtract(targetPos);
 
-                float rotatedZ = (float) VectorMath.rotateByYaw((Vec3d)diff, (float)((GalathEntity)this.renderEntity).renderYawOffset).z;
+                float rotatedZ = (float) VectorMath.rotateByYaw(diff, this.renderEntity.renderYawOffset).z;
                 float pitchAngle = (float)Math.atan2(diff.y, rotatedZ);
                 break;
             }
             case "weapon": {
-                if (!((GalathEntity)this.renderEntity).hasSwordEquipped) break;
+                if (!this.renderEntity.hasSwordEquipped) break;
                 GlStateManager.pushMatrix();
                 Tessellator.getInstance().draw();
                 MatrixHelper.bindOpenGLToBone(MATRIX_STACK, bone);
@@ -516,15 +515,15 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             case "armL": 
             case "armR": {
                 EntityLivingBase target;
-                if (((GalathEntity)this.renderEntity).getCurrentAction() != Action.RAPE_CHARGE || (target = ((GalathEntity)this.renderEntity).getAttackTarget()) == null) break;
-                float yaw = ((GalathEntity)this.renderEntity).renderYawOffset;
-                Vec3d relTargetPos = target.getPositionVector().subtract(((GalathEntity)this.renderEntity).getPositionVector());
+                if (this.renderEntity.getCurrentAction() != Action.RAPE_CHARGE || (target = this.renderEntity.getAttackTarget()) == null) break;
+                float yaw = this.renderEntity.renderYawOffset;
+                Vec3d relTargetPos = target.getPositionVector().subtract(this.renderEntity.getPositionVector());
                 relTargetPos = VectorMath.rotateByYaw(relTargetPos, yaw);
                 double clampedX = -ThreadNames.clamp(relTargetPos.x, -1.0, 1.0);
                 bone.setRotationZ(bone.getRotationZ() + TrigMath.toRadians(45.0 * clampedX));
             }
         }
-        if (((GalathEntity)this.renderEntity).isHuggingManglelie()) {
+        if (this.renderEntity.isHuggingManglelie()) {
             ManglelieRenderer.a(this.renderEntity, boneName, bone, true);
         }
     }
@@ -538,10 +537,10 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
     }
 
     void processManglelieTongue(BufferBuilder buffer, GeoBone bone) {
-        if (!Action.isAnyAction(this.renderEntity, Action.MORNING_BLOWJOB_SLOW) && !((GalathEntity)this.renderEntity).isTransformingManglelie) {
+        if (!Action.isAnyAction(this.renderEntity, Action.MORNING_BLOWJOB_SLOW) && !this.renderEntity.isTransformingManglelie) {
             return;
         }
-        float progress = ((GalathEntity)this.renderEntity).isTransformingManglelie ? 1.0f - Math.min(0.29f, Action.getActionTickSeconds(this.renderEntity, mc.getRenderPartialTicks())) / 0.29f : 1.0f;
+        float progress = this.renderEntity.isTransformingManglelie ? 1.0f - Math.min(0.29f, Action.getActionTickSeconds(this.renderEntity, mc.getRenderPartialTicks())) / 0.29f : 1.0f;
         this.renderAnimatedRibbon(buffer, bone, progress);
         this.bindTexture(ManglelieModel.TEXTURE_MANGELIE);
     }
@@ -561,7 +560,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             bone.setRotationZ(bone.getRotationZ() + rotZ);
             return;
         }
-        if (!((GalathEntity)this.renderEntity).isTransformingManglelie) {
+        if (!this.renderEntity.isTransformingManglelie) {
             return;
         }
         float factor = 1.0f - Math.min(0.5f, Action.getActionTickSeconds(this.renderEntity, mc.getRenderPartialTicks())) / 0.5f;
@@ -584,7 +583,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             geoBone.setRotationZ(geoBone.getRotationZ() + rotZ);
             return;
         }
-        if (!((GalathEntity)this.renderEntity).isTransformingManglelie) {
+        if (!this.renderEntity.isTransformingManglelie) {
             return;
         }
         float factor = Math.min(0.5f, Action.getActionTickSeconds(this.renderEntity, mc.getRenderPartialTicks())) / 0.5f;
@@ -633,7 +632,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
     }
 
     void renderLickingRibbon(BufferBuilder buffer, GeoBone bone) {
-        float interpolateFactor = ((GalathEntity)this.renderEntity).getSwordAttackProgres(mc.getRenderPartialTicks());
+        float interpolateFactor = this.renderEntity.getSwordAttackProgres(mc.getRenderPartialTicks());
         if (interpolateFactor == 0.0f) {
             this.renderRibbonAtBone(buffer, bone, LICKING_RIBBON_SETTINGS);
             return;
@@ -695,7 +694,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
         float progress = (currentTick - 105.0f) / 20.0f;
         float lightmapCoords = RotationHelper.LerpFloat(120.0f, 240.0f, progress);
 
-        Vector3fSexmodSpecial coinColor = RotationHelper.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, (double)progress);
+        Vector3fSexmodSpecial coinColor = RotationHelper.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, progress);
 
         float lastLightX = OpenGlHelper.lastBrightnessX;
         float lastLightY = OpenGlHelper.lastBrightnessY;
