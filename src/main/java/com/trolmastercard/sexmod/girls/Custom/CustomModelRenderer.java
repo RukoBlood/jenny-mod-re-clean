@@ -92,7 +92,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
     }
 
     boolean validateAndCleanModel(CustomModelEntity entity) {
-        String modelName = entity.getModelName();
+        String modelName = entity.getModelCode();
         if (entity.isItemModel) {
             return false;
         }
@@ -181,7 +181,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
             return;
         }
         entity.matrixStack = new MatrixStack();
-        CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(entity.getModelName());
+        CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(entity.getModelCode());
         this.currentEntity = entity;
         this.currentModelData = modelData;
         this.updateLighting(modelData, entity, partialTicks);
@@ -346,7 +346,7 @@ public class CustomModelRenderer extends GeoEntityRenderer<CustomModelEntity> {
         if (entity.isItemModel) {
             return entity.itemModelData.boneName;
         }
-        CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(entity.getModelName());
+        CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(entity.getModelCode());
         if (modelData == null) {
             return null;
         }

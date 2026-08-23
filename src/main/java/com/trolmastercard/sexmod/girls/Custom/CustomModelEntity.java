@@ -31,10 +31,10 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.MatrixStack;
 //cy
 public class CustomModelEntity extends EntityLivingBase implements IAnimatable {
-    final static float e = 11000.0f;
-    final static public DataParameter<String> a = EntityDataManager.createKey(CustomModelEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
-    final static public DataParameter<String> b = EntityDataManager.createKey(CustomModelEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
-    AnimationFactory g = new AnimationFactory(this);
+    final static float DESPAWN_DISTANCE = 11000.0f;
+    final static public DataParameter<String> modelCode = EntityDataManager.createKey(CustomModelEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
+    final static public DataParameter<String> modelData = EntityDataManager.createKey(CustomModelEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
+    AnimationFactory factory = new AnimationFactory(this);
     public boolean isItemModel = false;
     public MatrixStack matrixStack = new MatrixStack();
     CustomPartCategory itemModelData = null;
@@ -47,72 +47,63 @@ public class CustomModelEntity extends EntityLivingBase implements IAnimatable {
 
     public CustomModelEntity(World world, UUID uUID, String string) {
         this(world);
-        this.dataManager.set(a, uUID.toString());
-        this.dataManager.set(b, string);
+        this.dataManager.set(modelCode, uUID.toString());
+        this.dataManager.set(modelData, string);
     }
 
-    public static CustomModelEntity a(World world, UUID uUID, CustomPartCategory gw_class3892) {
-        CustomModelEntity cy_class1532 = new CustomModelEntity(world);
-        cy_class1532.getDataManager().set(a, uUID.toString());
-        cy_class1532.isItemModel = true;
-        cy_class1532.itemModelData = gw_class3892;
-        return cy_class1532;
+    public static CustomModelEntity createCustomModelEntity(World world, UUID uUID, CustomPartCategory category) {
+        CustomModelEntity entity = new CustomModelEntity(world);
+        entity.getDataManager().set(modelCode, uUID.toString());
+        entity.isItemModel = true;
+        entity.itemModelData = category;
+        return entity;
     }
 
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(a, "");
-        this.dataManager.register(b, "");
+        this.dataManager.register(modelCode, "");
+        this.dataManager.register(modelData, "");
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        BlockPos blockPos = this.getPosition();
-        Vec3i vec3i = new Vec3i(0.5, 0.5, 0.5);
-        return new AxisAlignedBB(blockPos.subtract(vec3i), blockPos.add(vec3i));
+        BlockPos pos = this.getPosition();
+        Vec3i halfSize = new Vec3i(0.5, 0.5, 0.5);
+        return new AxisAlignedBB(pos.subtract(halfSize), pos.add(halfSize));
     }
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean isInRangeToRender3d(double d, double d2, double d3) {
-        double d4 = this.posX - d;
-        double d5 = this.posY - d2;
-        double d6 = this.posZ - d3;
-        double d7 = d4 * d4 + d5 * d5 + d6 * d6;
-        return this.isInRangeToRenderDist(d7);
+    public boolean isInRangeToRender3d(double x, double y, double z) {
+        double dx = this.posX - x;
+        double dy = this.posY - y;
+        double dz = this.posZ - z;
+        double distSq = dx * dx + dy * dy + dz * dz;
+        return this.isInRangeToRenderDist(distSq);
     }
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public boolean isInRangeToRenderDist(double d) {
-        return d < 11000.0;
+    public boolean isInRangeToRenderDist(double distance) {
+        return distance < 11000.0;
     }
 
     @Nullable
     public UUID getGirlUUID() {
-        String string = this.dataManager.get(a);
-        if (string.isEmpty()) {
-            return null;
-        }
-        return UUID.fromString(string);
+        String code = this.dataManager.get(modelCode);
+        return code.isEmpty() ? null : UUID.fromString(code);
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float f) {
-        if (damageSource != DamageSource.OUT_OF_WORLD) {
-            return false;
-        }
-        return super.attackEntityFrom(damageSource, f);
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        return source == DamageSource.OUT_OF_WORLD && super.attackEntityFrom(source, amount);
     }
 
     @Nullable
-    public String getModelName() {
-        String string = this.dataManager.get(b);
-        if (string.isEmpty()) {
-            return null;
-        }
-        return string;
+    public String getModelCode() {
+        String data = this.dataManager.get(modelData);
+        return data.isEmpty() ? null : data;
     }
 
     @Override
@@ -126,13 +117,13 @@ public class CustomModelEntity extends EntityLivingBase implements IAnimatable {
     }
 
     @Override
-    public void onDeath(DamageSource damageSource) {
-        super.onDeath(damageSource);
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
     }
 
     @Override
     public AnimationFactory getFactory() {
-        return this.g;
+        return this.factory;
     }
 
     @Override
@@ -141,7 +132,7 @@ public class CustomModelEntity extends EntityLivingBase implements IAnimatable {
 
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
-        return new ArrayList<ItemStack>();
+        return new ArrayList<>();
     }
 
     @Override

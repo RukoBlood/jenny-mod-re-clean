@@ -303,8 +303,8 @@ public class CustomPartListScrollList extends GuiListExtended {
             currentX = this.renderArrowButtons(currentX, y, mouseX, mouseY);
             
             GirlEntity previewGirl = CustomPartListScrollList.this.parentGUI.getPreviewGirl();
-            CustomModelEntity modelEntity = this.selectedIndex == 0 ? CustomModelEntity.a(CustomPartListScrollList.this.mc.world, previewGirl.girlID(), this.category) : new CustomModelEntity(previewGirl.world, previewGirl.girlID(), this.modelList.get(this.selectedIndex));
-            CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(modelEntity.getModelName());
+            CustomModelEntity modelEntity = this.selectedIndex == 0 ? CustomModelEntity.createCustomModelEntity(CustomPartListScrollList.this.mc.world, previewGirl.girlID(), this.category) : new CustomModelEntity(previewGirl.world, previewGirl.girlID(), this.modelList.get(this.selectedIndex));
+            CustomModel.ModelData modelData = CustomModel.getModelDataForGirl(modelEntity.getModelCode());
 
             float scaleFactor = modelEntity.isItemModel || modelData == null ? 1.0f : modelData.getScale();
             int yOffset = modelData == null ? 0 : (int)(-modelData.getXOffset());
