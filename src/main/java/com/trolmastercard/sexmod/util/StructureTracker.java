@@ -19,9 +19,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class StructureTracker extends WorldSavedData {
     final static public List<BlockPos> STRUCTURE_POSITIONS = new ArrayList<BlockPos>();
-    final static public List<BlockPos> TEMP_POSITIONS = new ArrayList<BlockPos>();
-    final static String d = "sexmod:galath_spawn_list";
-    final static String a = "sexmod:galath_spawn_list";
+    final static public List<BlockPos> TEMP_POSITIONS = new ArrayList<>();
+    //final static String d = "sexmod:galath_spawn_list";
+    //final static String a = "sexmod:galath_spawn_list";
 
     public StructureTracker() {
         super("sexmod:galath_spawn_list");
@@ -36,14 +36,14 @@ public class StructureTracker extends WorldSavedData {
     }
 
     @SubscribeEvent
-    public void SaveSpawnList(WorldEvent.Save save) {
+    public void onSave(WorldEvent.Save save) {
         World world = save.getWorld();
         world.getMapStorage().setData("sexmod:galath_spawn_list", this);
         this.markDirty();
     }
 
     @SubscribeEvent
-    public void LoadSpawnList(WorldEvent.Load load) {
+    public void onLoad(WorldEvent.Load load) {
         World world = load.getWorld();
         world.getMapStorage().getOrLoadData(StructureTracker.class, "sexmod:galath_spawn_list");
     }
@@ -51,38 +51,38 @@ public class StructureTracker extends WorldSavedData {
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         NBTTagCompound nBTTagCompound2 = nbt.getCompoundTag("sexmod:galath_spawn_list");
-        this.b(nBTTagCompound2, "", STRUCTURE_POSITIONS);
-        this.b(nBTTagCompound2, "mang", TEMP_POSITIONS);
+        this.readNBT(nBTTagCompound2, "", STRUCTURE_POSITIONS);
+        this.readNBT(nBTTagCompound2, "mang", TEMP_POSITIONS);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         NBTTagCompound nBTTagCompound2 = new NBTTagCompound();
-        this.a(nBTTagCompound2, "", STRUCTURE_POSITIONS);
-        this.a(nBTTagCompound2, "mang", TEMP_POSITIONS);
+        this.writeNBT(nBTTagCompound2, "", STRUCTURE_POSITIONS);
+        this.writeNBT(nBTTagCompound2, "mang", TEMP_POSITIONS);
         nbt.setTag("sexmod:galath_spawn_list", nBTTagCompound2);
         return nbt;
     }
 
-    void a(NBTTagCompound nbt, String string, List<BlockPos> positions) {
-        nbt.setInteger("sexmod:pos_amount" + string, positions.size());
-        int n = 0;
+    void writeNBT(NBTTagCompound nbt, String key, List<BlockPos> positions) {
+        nbt.setInteger("sexmod:pos_amount" + key, positions.size());
+        int i = 0;
         for (BlockPos pos : positions) {
-            nbt.setInteger("sexmod:x" + string + n, pos.getX());
-            nbt.setInteger("sexmod:y" + string + n, pos.getY());
-            nbt.setInteger("sexmod:z" + string + n, pos.getZ());
-            ++n;
+            nbt.setInteger("sexmod:x" + key + i, pos.getX());
+            nbt.setInteger("sexmod:y" + key + i, pos.getY());
+            nbt.setInteger("sexmod:z" + key + i, pos.getZ());
+            ++i;
         }
     }
 
-    void b(NBTTagCompound nBTTagCompound, String string, List<BlockPos> list) {
-        list.clear();
-        int n = nBTTagCompound.getInteger("sexmod:pos_amount" + string);
-        for (int i = 0; i < n; ++i) {
-            list.add(new BlockPos(
-                    nBTTagCompound.getInteger("sexmod:x" + string + i),
-                    nBTTagCompound.getInteger("sexmod:y" + string + i),
-                    nBTTagCompound.getInteger("sexmod:z" + string + i)
+    void readNBT(NBTTagCompound nbt, String key, List<BlockPos> positions) {
+        positions.clear();
+        int count = nbt.getInteger("sexmod:pos_amount" + key);
+        for (int i = 0; i < count; ++i) {
+            positions.add(new BlockPos(
+                    nbt.getInteger("sexmod:x" + key + i),
+                    nbt.getInteger("sexmod:y" + key + i),
+                    nbt.getInteger("sexmod:z" + key + i)
             ));
         }
     }
