@@ -23,10 +23,10 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class GirlWorldData extends WorldSavedData {
-    final static String a = "sexmod:static_custom_model_manager";
-    final static String d = "sexmod:static_custom_model_manager";
-    static public HashMap<UUID, String> c = new HashMap();
-    static public HashMap<UUID, String> b = new HashMap();
+    //final static String NBT_1 = "sexmod:static_custom_model_manager";
+    //final static String NBT_2 = "sexmod:static_custom_model_manager";
+    static public HashMap<UUID, String> galath = new HashMap();
+    static public HashMap<UUID, String> manglelie = new HashMap();
 
     public GirlWorldData() {
         super("sexmod:static_custom_model_manager");
@@ -36,100 +36,96 @@ public class GirlWorldData extends WorldSavedData {
         super("sexmod:static_custom_model_manager");
     }
 
-    public static String getCustomModelCode(GirlEntity em_class2582) {
-        String string = GirlWorldData.b(em_class2582);
-        if (string == null) {
-            return "";
-        }
-        return string;
+    public static String getCustomModelCode(GirlEntity girl) {
+        String code = buildModelCode(girl);
+        return code == null ? "" : code;
     }
 
-    private static String b(GirlEntity girl) {
+    private static String buildModelCode(GirlEntity girl) {
+        if (girl instanceof GalathEntity) {
+            UUID girlId = girl.girlID();
+            UUID ownerId = GalathMangTracker.getManglelieOwnerId(girlId);
+            if (ownerId == null) {
+                ownerId = girlId;
+            }
+            return galath.get(ownerId);
+        }
+        if (girl instanceof ManglelieEntity) {
+            UUID uUID = GalathMangTracker.getManglelieOwnerId(((ManglelieEntity)girl).getCorruptPlayerUUID());
+            return manglelie.get(uUID == null ? girl.girlID() : uUID);
+        }
+        return null;
+    }
+
+    public static void setCustomModelCode(GirlEntity girl) {
         if (girl instanceof GalathEntity) {
             UUID uUID = girl.girlID();
             UUID uUID2 = GalathMangTracker.getManglelieOwnerId(uUID);
             if (uUID2 == null) {
                 uUID2 = uUID;
             }
-            return c.get(uUID2);
+            galath.put(uUID2, girl.getCustomModelCode());
+            return;
         }
         if (girl instanceof ManglelieEntity) {
             UUID uUID = GalathMangTracker.getManglelieOwnerId(((ManglelieEntity)girl).getCorruptPlayerUUID());
-            return b.get(uUID == null ? girl.girlID() : uUID);
-        }
-        return null;
-    }
-
-    public static void setCustomModelCode(GirlEntity em_class2582) {
-        if (em_class2582 instanceof GalathEntity) {
-            UUID uUID = em_class2582.girlID();
-            UUID uUID2 = GalathMangTracker.getManglelieOwnerId(uUID);
-            if (uUID2 == null) {
-                uUID2 = uUID;
-            }
-            c.put(uUID2, em_class2582.getCustomModelCode());
-            return;
-        }
-        if (em_class2582 instanceof ManglelieEntity) {
-            UUID uUID = GalathMangTracker.getManglelieOwnerId(((ManglelieEntity)em_class2582).getCorruptPlayerUUID());
-            b.put(uUID == null ? em_class2582.girlID() : uUID, em_class2582.getCustomModelCode());
+            manglelie.put(uUID == null ? girl.girlID() : uUID, girl.getCustomModelCode());
         }
     }
 
     @SubscribeEvent
-    public void a(WorldEvent.Save save) {
-        World world = save.getWorld();
+    public void onSave(WorldEvent.Save event) {
+        World world = event.getWorld();
         world.getMapStorage().setData("sexmod:static_custom_model_manager", this);
         this.markDirty();
     }
 
     @SubscribeEvent
-    public void a(WorldEvent.Load load) {
-        World world = load.getWorld();
+    public void onLoad(WorldEvent.Load event) {
+        World world = event.getWorld();
         world.getMapStorage().getOrLoadData(GirlWorldData.class, "sexmod:static_custom_model_manager");
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nBTTagCompound) {
-        NBTTagCompound nBTTagCompound2 = nBTTagCompound.getCompoundTag("sexmod:static_custom_model_manager");
-        this.a(nBTTagCompound2.getCompoundTag("galath"), c);
-        this.a(nBTTagCompound2.getCompoundTag("mang"), b);
+    public void readFromNBT(NBTTagCompound nbt) {
+        NBTTagCompound tag = nbt.getCompoundTag("sexmod:static_custom_model_manager");
+        this.writeNBT(tag.getCompoundTag("galath"), galath);
+        this.writeNBT(tag.getCompoundTag("mang"), manglelie);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nBTTagCompound) {
-        NBTTagCompound nBTTagCompound2 = new NBTTagCompound();
-        nBTTagCompound2.setTag("galath", this.a(c));
-        nBTTagCompound2.setTag("mang", this.a(b));
-        nBTTagCompound.setTag("sexmod:static_custom_model_manager", nBTTagCompound2);
-        return nBTTagCompound;
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setTag("galath", this.serializeOwnership(galath));
+        tag.setTag("mang", this.serializeOwnership(manglelie));
+        nbt.setTag("sexmod:static_custom_model_manager", tag);
+        return nbt;
     }
 
-    NBTTagCompound a(HashMap<UUID, String> hashMap) {
-        NBTTagCompound nBTTagCompound = new NBTTagCompound();
-        int n = 0;
-        for (Map.Entry<UUID, String> entry : hashMap.entrySet()) {
-            UUID uUID = entry.getKey();
-            nBTTagCompound.setString("UUID" + n, uUID.toString());
-            nBTTagCompound.setString("MODEL" + n, entry.getValue());
-            ++n;
+    NBTTagCompound serializeOwnership(HashMap<UUID, String> ownershipMap) {
+        NBTTagCompound tag = new NBTTagCompound();
+        int i = 0;
+        for (Map.Entry<UUID, String> entries : ownershipMap.entrySet()) {
+            UUID uUID = entries.getKey();
+            tag.setString("UUID" + i, uUID.toString());
+            tag.setString("MODEL" + i, entries.getValue());
+            ++i;
         }
-        return nBTTagCompound;
+        return tag;
     }
 
-    void a(NBTTagCompound nBTTagCompound, HashMap<UUID, String> hashMap) {
-        int n = 0;
-        String string;
-        while (!(string = nBTTagCompound.getString("UUID" + n)).isEmpty()) {
-            hashMap.put(UUID.fromString(string), nBTTagCompound.getString("MODEL" + n));
-            ++n;
+    void writeNBT(NBTTagCompound nbt, HashMap<UUID, String> ownershipMap) {
+        int i = 0;
+        String ids;
+        while (!(ids = nbt.getString("UUID" + i)).isEmpty()) {
+            ownershipMap.put(UUID.fromString(ids), nbt.getString("MODEL" + i));
+            ++i;
         }
-        return;
     }
 
-    public static void a() {
-        c.clear();
-        b.clear();
+    public static void clearAll() {
+        galath.clear();
+        manglelie.clear();
     }
 }
 

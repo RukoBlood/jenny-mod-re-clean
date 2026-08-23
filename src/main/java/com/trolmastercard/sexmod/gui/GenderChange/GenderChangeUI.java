@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 //b5.class
 
 public class GenderChangeUI extends GuiScreen {
-    List<EntityLivingBase> entities = new ArrayList<EntityLivingBase>();
+    List<EntityLivingBase> entities = new ArrayList<>();
     int i = 0;
     static float rot = 0.0f;
 

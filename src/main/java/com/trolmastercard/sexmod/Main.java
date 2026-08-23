@@ -92,7 +92,7 @@ public class Main {
         ConfigWorldGenHandler.Generate().clear();
         GirlID.ClearGirlList();
         CustomModel.isLoaded = false;
-        GirlWorldData.a();
+        GirlWorldData.clearAll();
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             Main.clientReset();
         }
