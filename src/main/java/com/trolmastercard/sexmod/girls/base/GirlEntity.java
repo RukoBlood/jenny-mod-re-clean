@@ -203,7 +203,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             if (action != Action.ATTACK || previousAction == Action.NULL) {
                 Action targetAction = action == null ? Action.NULL : action;
                 if (this.world.isRemote) {
-                    this.changeDataParameterFromClient("currentAction", action.toString());
+                    this.changeDataParameterFromClient("currentAction", targetAction.toString());
                     System.out.printf("GirlEntity: previousAction: %s, targetAction: %s %n", previousAction, targetAction);
                 } else {
                     previousAction.ticksPlaying = new int[]{0, 0};
