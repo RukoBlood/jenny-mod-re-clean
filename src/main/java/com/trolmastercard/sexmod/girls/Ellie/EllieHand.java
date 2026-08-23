@@ -9,12 +9,12 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 //cf.class
-public class EllieLimb extends ModelBase implements IRenderer {
+public class EllieHand extends ModelBase implements IRenderer {
     final private ModelRenderer a;
     final private ModelRenderer b;
     final private ModelRenderer c;
 
-    public EllieLimb() {
+    public EllieHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.a = new ModelRenderer(this);

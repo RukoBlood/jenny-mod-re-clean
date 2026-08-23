@@ -34,9 +34,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -93,10 +91,7 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     boolean isBedBlocked() {
-        if (this.isLocallyRegistered()) {
-            return false;
-        }
-        return this.world.getBlockState(this.getPosition().add(0, 2, 0)).getBlock() != Blocks.AIR;
+        return !this.isLocallyRegistered() && this.world.getBlockState(this.getPosition().add(0, 2, 0)).getBlock() != Blocks.AIR;
     }
 
     @Override
@@ -114,17 +109,17 @@ public class EllieEntity extends Fighter implements IEllie {
         UUID uUID = this.getInteractionPlayerUUID();
         if (uUID == null) {
             this.resetSitScale();
-            return;
+        } else {
+            EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+            if (player == null) {
+                this.resetSitScale();
+            } else {
+                float yaw = player.rotationYaw - 180.0f;
+                this.setYawRotation(yaw);
+                this.setCurrentAction(Action.CARRY_INTRO);
+                this.setAnchored(true);
+            }
         }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            this.resetSitScale();
-            return;
-        }
-        float yaw = entityPlayer.rotationYaw - 180.0f;
-        this.setYawRotation(yaw);
-        this.setCurrentAction(Action.CARRY_INTRO);
-        this.setAnchored(true);
     }
 
     @Override
@@ -132,16 +127,16 @@ public class EllieEntity extends Fighter implements IEllie {
         return this.getCurrentAction() != Action.CARRY_INTRO;
     }
 
-    public boolean canJoinPlayer(EntityPlayer entityPlayer, boolean bl) {
-        if (bl) {
-            EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
+    public boolean canJoinPlayer(EntityPlayer player, boolean dressUp) {
+        if (dressUp) {
+            EllieEntity.openInventoryGui(player, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
             return true;
         }
         if (this.entityDataManager.get(OUTFIT_INDEX) == 0) {
-            EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.dressup"}, true);
+            EllieEntity.openInventoryGui(player, this, new String[]{"action.names.dressup"}, true);
             return true;
         }
-        EllieEntity.openInventoryGui(entityPlayer, this, new String[]{"Face fuck"}, true);
+        EllieEntity.openInventoryGui(player, this, new String[]{"Face fuck"}, true);
         return true;
     }
 
@@ -190,19 +185,16 @@ public class EllieEntity extends Fighter implements IEllie {
         if (action == Action.HUGSELECTED && !this.world.isRemote) {
             this.ai = 79;
         }
-        if (currentAction == Action.MISSIONARY_CUM && (action == Action.MISSIONARY_FAST || action == Action.MISSIONARY_SLOW)) {
-            return;
+        if (currentAction != Action.MISSIONARY_CUM || (action != Action.MISSIONARY_FAST && action != Action.MISSIONARY_SLOW)) {
+            if (currentAction != Action.COWGIRLCUM || (action != Action.COWGIRLSLOW && action != Action.COWGIRLFAST)) {
+                if (currentAction != Action.CARRY_CUM || (action != Action.CARRY_SLOW && action != Action.CARRY_FAST)) {
+                    if (action == Action.CARRY_INTRO) {
+                        this.ak = 0;
+                    }
+                    super.setCurrentAction(action);
+                }
+            }
         }
-        if (currentAction == Action.COWGIRLCUM && (action == Action.COWGIRLSLOW || action == Action.COWGIRLFAST)) {
-            return;
-        }
-        if (currentAction == Action.CARRY_CUM && (action == Action.CARRY_SLOW || action == Action.CARRY_FAST)) {
-            return;
-        }
-        if (action == Action.CARRY_INTRO) {
-            this.ak = 0;
-        }
-        super.setCurrentAction(action);
     }
 
     @Override
@@ -218,52 +210,42 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     void showHornyMeter() {
-        if (SexUI.isSexUIVisible()) {
-            return;
+        if (!SexUI.isSexUIVisible()) {
+            if (this.getCurrentAction() == Action.CARRY_SLOW) {
+                SexUI.showUI();
+            }
         }
-        if (this.getCurrentAction() != Action.CARRY_SLOW) {
-            return;
-        }
-        SexUI.showUI();
     }
 
     void handleSitTimer() {
-        if (this.ak == -1) {
-            return;
+        if (this.ak != -1) {
+            if (++this.ak >= 110) {
+                this.ak = -1;
+                if (this.getCurrentAction() == Action.CARRY_INTRO) {
+                    UUID uUID = this.getInteractionPlayerUUID();
+                    if (uUID != null) {
+                        EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+                        if (player != null) {
+                            float yaw = this.getYawRotation();
+                            Vec3d pos = this.getTargetPosition().add(VectorMath.rotateByYaw(new Vec3d(0.0, 2.5625f - player.getEyeHeight(), -0.3125), 180.0f + yaw));
+                            player.setPositionAndUpdate(pos.x, pos.y, pos.z);
+                        }
+                    }
+                }
+            }
         }
-        if (++this.ak < 110) {
-            return;
-        }
-        this.ak = -1;
-        if (this.getCurrentAction() != Action.CARRY_INTRO) {
-            return;
-        }
-        UUID uUID = this.getInteractionPlayerUUID();
-        if (uUID == null) {
-            return;
-        }
-        EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
-        if (player == null) {
-            return;
-        }
-        float yaw = this.getYawRotation();
-        Vec3d pos = this.getTargetPosition().add(VectorMath.rotateByYaw(new Vec3d(0.0, 2.5625f - player.getEyeHeight(), -0.3125), 180.0f + yaw));
-        player.setPositionAndUpdate(pos.x, pos.y, pos.z);
     }
 
     void handleSitIdle() {
-        if (this.getCurrentAction() != Action.SITDOWNIDLE) {
-            return;
-        }
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
-        if (entityPlayer == null) {
-            return;
-        }
-        if (this.getDistance(entityPlayer) > 1.5f) {
-            return;
-        }
-        if (entityPlayer.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID())) {
-            BlackScreenUI.run();
+        if (this.getCurrentAction() == Action.SITDOWNIDLE) {
+            EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10.0);
+            if (player != null) {
+                if (!(this.getDistance(player) > 1.5f)) {
+                    if (player.getPersistentID().equals(Minecraft.getMinecraft().player.getPersistentID())) {
+                        BlackScreenUI.run();
+                    }
+                }
+            }
         }
     }
 
@@ -299,45 +281,44 @@ public class EllieEntity extends Fighter implements IEllie {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.MISSIONARY_START);
             uUID = this.getInteractionPlayerUUID();
-            if (uUID == null) {
-                return;
+            if (uUID != null) {
+                EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+                if (player == null) {
+                    this.resetCameraAndPhysics();
+                } else {
+                    player.setNoGravity(true);
+                    player.noClip = true;
+                    pos = this.getTargetPosition();
+                    player.rotationYaw = this.getYawRotation();
+                    vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.1), player.rotationYaw);
+                    pos = pos.add(vec3d);
+                    player.setPositionAndUpdate(pos.x, pos.y, pos.z);
+                    PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP) player);
+                }
+
             }
 
-            EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
-            if (player == null) {
-                this.resetCameraAndPhysics();
-                return;
-            }
-
-            player.setNoGravity(true);
-            player.noClip = true;
-            pos = this.getTargetPosition();
-            player.rotationYaw = this.getYawRotation();
-            vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.1), player.rotationYaw);
-            pos = pos.add(vec3d);
-            player.setPositionAndUpdate(pos.x, pos.y, pos.z);
-            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP)player);
         }
+
         if ("cowgirl".equals(handState)) {
             this.entityDataManager.set(OUTFIT_INDEX, 0);
             this.setCurrentAction(Action.COWGIRLSTART);
             uUID = this.getInteractionPlayerUUID();
-            if (uUID == null) {
-                return;
+            if (uUID != null) {
+                EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+                if (player == null) {
+                    this.resetCameraAndPhysics();
+                } else {
+                    player.setNoGravity(true);
+                    player.noClip = true;
+                    pos = this.getTargetPosition();
+                    player.rotationYaw = this.getYawRotation() + 180.0f;
+                    vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 1.0 - (double) player.eyeHeight, -1.8125), player.rotationYaw);
+                    pos = pos.add(vec3d);
+                    player.setPositionAndUpdate(pos.x, pos.y, pos.z);
+                    PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP) player);
+                }
             }
-            EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
-            if (player == null) {
-                this.resetCameraAndPhysics();
-                return;
-            }
-            player.setNoGravity(true);
-            player.noClip = true;
-            pos = this.getTargetPosition();
-            player.rotationYaw = this.getYawRotation() + 180.0f;
-            vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 1.0 - (double)player.eyeHeight, -1.8125), player.rotationYaw);
-            pos = pos.add(vec3d);
-            player.setPositionAndUpdate(pos.x, pos.y, pos.z);
-            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP)player);
         }
     }
 
@@ -349,11 +330,11 @@ public class EllieEntity extends Fighter implements IEllie {
 
     void handleSitTransition() {
         if (this.getCurrentAction() == Action.SITDOWNIDLE && this.af < 0) {
-            EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
-            if (entityPlayer != null) {
-                if (!(this.getDistance(entityPlayer) > 1.5f)) {
+            EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10.0);
+            if (player != null) {
+                if (!(this.getDistance(player) > 1.5f)) {
                     this.af = 20;
-                    this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
+                    this.setInteractionPlayerUUID(player.getPersistentID());
                 }
             }
         }
@@ -447,12 +428,12 @@ public class EllieEntity extends Fighter implements IEllie {
                 if (block == Blocks.AIR && headBlock == Blocks.BED) {
                     if (bestIndex == -1) {
                         bestIndex = i;
-                        continue;
-                    }
-                    double bestDist = this.getPosition().distanceSq(bedVec.add(offsets[bestIndex][0]).x, bedVec.add(offsets[bestIndex][0]).y, bedVec.add(offsets[bestIndex][0]).z);
-                    double dist = this.getPosition().distanceSq(bedVec.add(offsets[i][0]).x, bedVec.add(offsets[i][0]).y, bedVec.add(offsets[i][0]).z);
-                    if (dist < bestDist) {
-                        bestIndex = i;
+                    } else {
+                        double bestDist = this.getPosition().distanceSq(bedVec.add(offsets[bestIndex][0]).x, bedVec.add(offsets[bestIndex][0]).y, bedVec.add(offsets[bestIndex][0]).z);
+                        double dist = this.getPosition().distanceSq(bedVec.add(offsets[i][0]).x, bedVec.add(offsets[i][0]).y, bedVec.add(offsets[i][0]).z);
+                        if (dist < bestDist) {
+                            bestIndex = i;
+                        }
                     }
                 }
             }
@@ -521,10 +502,7 @@ public class EllieEntity extends Fighter implements IEllie {
 
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
-        if (EllieEntity.getActiveSceneInfo(player) != null) {
-            return false;
-        }
-        if (this.getInteractionPlayerUUID() != null) {
+        if (EllieEntity.getActiveSceneInfo(player) != null || this.getInteractionPlayerUUID() != null) {
             return false;
         }
         if (this.world.isRemote) {

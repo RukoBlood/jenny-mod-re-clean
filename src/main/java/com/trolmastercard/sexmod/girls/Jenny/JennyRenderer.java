@@ -7,8 +7,7 @@ import com.trolmastercard.sexmod.girls.base.GirlRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class JennyRenderer
-extends GirlRenderer<JennyEntity> {
+public class JennyRenderer extends GirlRenderer<JennyEntity> {
     public JennyRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel, double d) {
         super(renderManager, animatedGeoModel, d);
     }

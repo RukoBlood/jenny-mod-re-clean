@@ -17,9 +17,8 @@ import net.minecraft.util.math.Vec3d;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 
-public class EllieModel
-extends GirlModel<GirlEntity> {
-    HashMap<Integer, float[]> f = new HashMap<Integer, float[]>(){
+public class EllieModel extends GirlModel<GirlEntity> {
+    HashMap<Integer, float[]> headYawOffsets = new HashMap<Integer, float[]>(){
         {
             this.put(0, new float[]{0.0f, -1.2f, 1.2f});
             this.put(-90, new float[]{2.0f, -71.56f, -68.0f});
@@ -50,40 +49,36 @@ extends GirlModel<GirlEntity> {
 
     @Override
     public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent event) {
-        float f;
-        float f2;
+        float minClamp;
+        float headYaw;
         super.setLivingAnimations(girl, instanceID, event);
-        if (girl.world instanceof FakeWorld) {
-            return;
-        }
-        if (girl instanceof PlayerGirl) {
-            return;
-        }
-        if (girl.getCurrentAction() != Action.SITDOWNIDLE) {
-            return;
-        }
-        EntityPlayer entityPlayer = girl.world.getClosestPlayerToEntity(girl, 15.0);
-        if (entityPlayer == null) {
-            return;
-        }
-        IBone iBone = this.getAnimationProcessor().getBone("head");
-        Vec3d vec3d = girl.getPositionVector().subtract(entityPlayer.getPositionVector());
-        int n2 = Math.round(girl.getYawRotation().floatValue());
-        if (n2 == 180) {
-            f2 = (float)Math.atan2(vec3d.x, vec3d.z) * 1.2f;
-            f2 = f2 > 0.0f ? Math.max(1.5f, Math.min(3.14f, f2)) : Math.max(-3.14f, Math.min(-1.5f, f2));
-            f2 = f2 == 1.5f || f2 == 3.14f || f2 == -3.14f || f2 == -1.5f ? 0.0f : (f2 += 3.0f);
-        } else {
-            f = this.f.get(n2)[1];
-            float f3 = this.f.get(n2)[2];
-            f2 = ((float)(Math.atan2(vec3d.x, vec3d.z) + (double)this.f.get(n2)[0]) + girl.getYawRotation().floatValue()) * 0.8f;
-            if ((f2 = ThreadNames.clamp(f2, f, f3)) == f || f2 == f3) {
-                f2 = 0.0f;
+        if (!(girl.world instanceof FakeWorld)) {
+            if (!(girl instanceof PlayerGirl)) {
+                if (girl.getCurrentAction() == Action.SITDOWNIDLE) {
+                    EntityPlayer player = girl.world.getClosestPlayerToEntity(girl, 15.0);
+                    if (player != null) {
+                        IBone headBone = this.getAnimationProcessor().getBone("head");
+                        Vec3d toPlayer = girl.getPositionVector().subtract(player.getPositionVector());
+                        int facingYaw = Math.round(girl.getYawRotation());
+                        if (facingYaw == 180) {
+                            headYaw = (float) Math.atan2(toPlayer.x, toPlayer.z) * 1.2f;
+                            headYaw = headYaw > 0.0f ? Math.max(1.5f, Math.min(3.14f, headYaw)) : Math.max(-3.14f, Math.min(-1.5f, headYaw));
+                            headYaw = headYaw == 1.5f || headYaw == 3.14f || headYaw == -3.14f || headYaw == -1.5f ? 0.0f : (headYaw += 3.0f);
+                        } else {
+                            minClamp = this.headYawOffsets.get(facingYaw)[1];
+                            float maxClamp = this.headYawOffsets.get(facingYaw)[2];
+                            headYaw = ((float) (Math.atan2(toPlayer.x, toPlayer.z) + (double) this.headYawOffsets.get(facingYaw)[0]) + girl.getYawRotation()) * 0.8f;
+                            if ((headYaw = ThreadNames.clamp(headYaw, minClamp, maxClamp)) == minClamp || headYaw == maxClamp) {
+                                headYaw = 0.0f;
+                            }
+                        }
+                        minClamp = headYaw == 0.0f ? 0.0f : ThreadNames.clamp((float) ((player.posY - girl.posY) * 0.5), -0.75f, 0.75f);
+                        headBone.setRotationY(headYaw);
+                        headBone.setRotationX(minClamp);
+                    }
+                }
             }
         }
-        f = f2 == 0.0f ? 0.0f : ThreadNames.clamp((float)((entityPlayer.posY - girl.posY) * 0.5), -0.75f, 0.75f);
-        iBone.setRotationY(f2);
-        iBone.setRotationX(f);
     }
 
     @Override

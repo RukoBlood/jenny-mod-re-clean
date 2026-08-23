@@ -31,7 +31,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -80,7 +79,7 @@ extends PlayerGirl {
 
     @Override
     public IRenderer getHandModelRenderer(int index) {
-        return new EllieLimb();
+        return new EllieHand();
     }
 
     @Override
@@ -106,10 +105,10 @@ extends PlayerGirl {
             this.changeDataParameterFromClient("animationFollowUp", "Missionary");
             return;
         }
-        if (!((Optional)this.entityDataManager.get(OWNER)).isPresent()) {
+        if (!this.entityDataManager.get(OWNER).isPresent()) {
             return;
         }
-        PacketHandler.INSTANCE.sendToServer((IMessage)new SexPrompt(action, player, (UUID)((Optional)this.entityDataManager.get(OWNER)).get(), this.guiPending));
+        PacketHandler.INSTANCE.sendToServer(new SexPrompt(action, player, (UUID)((Optional)this.entityDataManager.get(OWNER)).get(), this.guiPending));
         this.guiPending = true;
     }
 
@@ -184,8 +183,8 @@ extends PlayerGirl {
             this.entityDataManager.set(GirlEntity.OUTFIT_INDEX, 0);
             this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP)this.world.getPlayerEntityByUUID((UUID)((Optional)this.entityDataManager.get(OWNER)).get());
-            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
-            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), entityPlayerMP);
+            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer);
+            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), entityPlayerMP);
             entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             entityPlayerMP.capabilities.isFlying = true;
             entityPlayer.capabilities.isFlying = true;
@@ -406,7 +405,7 @@ extends PlayerGirl {
                 case "hugMSG1": {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     if (!entityPlayerSP.getPersistentID().equals(this.getInteractionPlayerUUID()) && !entityPlayerSP.getUniqueID().equals(this.getInteractionPlayerUUID())) break;
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new TeleportPlayer(entityPlayerSP.getUniqueID().toString(), entityPlayerSP.getPositionVector(), entityPlayerSP.rotationYaw - 80.0f, entityPlayerSP.rotationPitch));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getUniqueID().toString(), entityPlayerSP.getPositionVector(), entityPlayerSP.rotationYaw - 80.0f, entityPlayerSP.rotationPitch));
                     break;
                 }
                 case "hugMSG2": {
@@ -420,12 +419,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "hugMSG4": {
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.mommyhorny", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.mommyhorny"));
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[0], 3.0f);
                     break;
                 }
                 case "hugMSG5": {
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.whattodo", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.whattodo"));
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_HUH[1], 3.0f);
                     break;
                 }
@@ -437,12 +436,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "hugselectedMSG1": {
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.iknow", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.iknow"));
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_MMM[0], 3.0f);
                     break;
                 }
                 case "hugselectedMSG2": {
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.followmedarling", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.followmedarling"));
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
                     break;
                 }
@@ -452,16 +451,16 @@ extends PlayerGirl {
                     vec3d = vec3d.add(-Math.sin((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279, 0.0, Math.cos((double)(this.rotationYaw + 90.0f) * (Math.PI / 180)) * -0.7803124785423279);
                     vec3d = vec3d.add(-Math.sin((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579, 0.0, Math.cos((double)this.rotationYaw * (Math.PI / 180)) * 0.5296875238418579);
                     String string = vec3d.x + "f" + vec3d.y + "f" + vec3d.z + "f";
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girlID(), "targetPos", string));
+                    PacketHandler.INSTANCE.sendToServer(new ChangeDataParameter(this.girlID(), "targetPos", string));
                     this.resetCameraAndPhysics();
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendGirlToSex(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendGirlToSex(this.girlID()));
                     this.setCurrentAction(Action.NULL);
                     break;
                 }
                 case "sitdownMSG1": {
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[3], 3.0f);
                     if (!this.isLocalPlayerNearby()) break;
-                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.cometomommy", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("ellie.dialogue.cometomommy"));
                     break;
                 }
                 case "sitdownDone": {
@@ -482,7 +481,7 @@ extends PlayerGirl {
                 }
                 case "cowgirlStartMSG1": {
                     if (!this.isLocalPlayerNearby()) break;
-                    this.sendChatMessage(I18n.format("ellie.dialogue.like", new Object[0]));
+                    this.sendChatMessage(I18n.format("ellie.dialogue.like"));
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -549,7 +548,7 @@ extends PlayerGirl {
                 case "missionary_cumMSG2": {
                     this.playSoundAtVolume(SoundsHandler.GIRLS_ELLIE_GIGGLE[4], 3.0f);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.sendChatMessage(I18n.format("ellie.dialogue.goodboy", new Object[0]));
+                    this.sendChatMessage(I18n.format("ellie.dialogue.goodboy"));
                     break;
                 }
                 case "cowgirlcumMSG6": {
@@ -571,7 +570,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "openSexUi": {
