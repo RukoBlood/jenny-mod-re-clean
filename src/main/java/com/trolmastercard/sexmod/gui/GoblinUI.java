@@ -30,12 +30,12 @@ public class GoblinUI extends GuiScreen {
     final static float k = 5.0f;
     final static float l = 0.5f;
     final static float b = 0.5f;
-    final static ResourceLocation i = new ResourceLocation("sexmod", "textures/gui/command.png");
-    float a = 0.0f;
-    float g = 0.0f;
-    float e = 0.0f;
-    float d = 0.0f;
-    float m = 0.0f;
+    final static ResourceLocation GUI_TEXTURE = new ResourceLocation("sexmod", "textures/gui/command.png");
+    float animProgress = 0.0f;
+    float animLeft = 0.0f;
+    float animRight = 0.0f;
+    float animTop = 0.0f;
+    float animBottom = 0.0f;
     GirlEntity girl;
     boolean isGoblin = false;
 
@@ -47,47 +47,44 @@ public class GoblinUI extends GuiScreen {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        if (this.d == 0.0f && this.m == 0.0f && this.g == 0.0f) {
-            return;
-        }
-        if (this.g > 0.0f) {
-            this.c();
-            return;
-        }
-        if (!this.isGoblin) {
-            return;
-        }
-        if (this.d > this.m) {
-            this.a();
-        } else {
-            this.b();
+        if (this.animTop != 0.0f || this.animBottom != 0.0f || this.animLeft != 0.0f) {
+            if (this.animLeft > 0.0f) {
+                this.startGoblinThrow();
+            } else {
+                if (this.isGoblin) {
+                    if (this.animTop > this.animBottom) {
+                        this.throwGoblin();
+                    } else {
+                        this.pickupGoblin();
+                    }
+                }
+            }
         }
     }
 
-    void a() {
+    void throwGoblin() {
         if (this.isGoblin) {
             ((GoblinEntity)this.girl).setThrowTarget(Minecraft.getMinecraft().player.getPersistentID());
         }
     }
 
-    void b() {
+    void pickupGoblin() {
         ((GoblinEntity)this.girl).setPickupTarget(Minecraft.getMinecraft().player.getPersistentID());
     }
 
-    void c() {
-        if (this.girl.getInteractionPlayerUUID() != null) {
-            return;
+    void startGoblinThrow() {
+        if (this.girl.getInteractionPlayerUUID() == null) {
+            this.girl.setCurrentAction(Action.START_THROWING);
         }
-        this.girl.setCurrentAction(Action.START_THROWING);
     }
 
     @Override
     public void handleKeyboardInput() throws IOException {
         if (ClientProxy.keyBindings[0].getKeyCode() == Keyboard.getEventKey() && !Keyboard.getEventKeyState()) {
             Minecraft.getMinecraft().player.closeScreen();
-            return;
+        } else {
+            super.handleKeyboardInput();
         }
-        super.handleKeyboardInput();
     }
 
     @Override
@@ -96,56 +93,56 @@ public class GoblinUI extends GuiScreen {
         GL11.glEnable(3042);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glBlendFunc(770, 771);
-        this.a = Math.min(1.0f, this.a + this.mc.getTickLength() / 5.0f);
-        float f2 = (float) this.a(this.a);
-        float f3 = (1.0f - f2) * 100.0f;
-        this.g += (float) (mouseX < this.width / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.e += (float) (mouseX > this.width / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.d += (float) (mouseY < this.height / 2 - 1 ? 1 : -1) * this.mc.getTickLength();
-        this.m += (float) (mouseY > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
-        this.g = ThreadNames.clamp(this.g, 0.0f, 1.0f);
-        this.e = ThreadNames.clamp(this.e, 0.0f, 1.0f);
-        this.d = ThreadNames.clamp(this.d, 0.0f, 1.0f);
-        this.m = ThreadNames.clamp(this.m, 0.0f, 1.0f);
+
+        this.animProgress = Math.min(1.0f, this.animProgress + this.mc.getTickLength() / 5.0f);
+
+        float scale = (float) this.easeOutBack(this.animProgress);
+        float offset = (1.0f - scale) * 100.0f;
+        this.animLeft += (float) (mouseX < this.width / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.animRight += (float) (mouseX > this.width / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.animTop += (float) (mouseY < this.height / 2 - 1 ? 1 : -1) * this.mc.getTickLength();
+        this.animBottom += (float) (mouseY > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
+        this.animLeft = ThreadNames.clamp(this.animLeft, 0.0f, 1.0f);
+        this.animRight = ThreadNames.clamp(this.animRight, 0.0f, 1.0f);
+        this.animTop = ThreadNames.clamp(this.animTop, 0.0f, 1.0f);
+        this.animBottom = ThreadNames.clamp(this.animBottom, 0.0f, 1.0f);
+
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) this.width / 2.0f, (float) this.height / 2.0f, 0.0f);
-        GlStateManager.scale(f2, f2, f2);
-        this.mc.renderEngine.bindTexture(i);
+        GlStateManager.scale(scale, scale, scale);
+        this.mc.renderEngine.bindTexture(GUI_TEXTURE);
         GlStateManager.pushMatrix();
-        GlStateManager.scale(1.0f + this.g * 0.5f, 1.0f + this.g * 0.5f, 1.0f);
-        this.drawTexturedModalRect(-62.0f + f3 - this.g * 15.0f, f3 - 32.0f, 0, 0, 64, 64);
-        this.drawTexturedModalRect(-62.0f + f3 - this.g * 15.0f, f3 - 32.0f, 64, 128, 64, 64);
+        GlStateManager.scale(1.0f + this.animLeft * 0.5f, 1.0f + this.animLeft * 0.5f, 1.0f);
+        this.drawTexturedModalRect(-62.0f + offset - this.animLeft * 15.0f, offset - 32.0f, 0, 0, 64, 64);
+        this.drawTexturedModalRect(-62.0f + offset - this.animLeft * 15.0f, offset - 32.0f, 64, 128, 64, 64);
         GlStateManager.popMatrix();
-        if (!this.isGoblin) {
-            GlStateManager.popMatrix();
-            GL11.glDisable(3042);
-            return;
-        }
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(1.0f - this.e, 1.0f - this.e, 1.0f);
-        this.drawTexturedModalRect(-2.0f - f3 + this.e * 32.0f, -f3 - 32.0f, 0, 0, 64, 64);
-        this.drawTexturedModalRect(-2.0f - f3 + this.e * 32.0f, -f3 - 32.0f, 0, 128, 64, 64);
-        GlStateManager.popMatrix();
-        if (this.e > 0.0f) {
+        if (this.isGoblin) {
             GlStateManager.pushMatrix();
-            GlStateManager.scale(-1.0f + this.e + 1.0f + this.d * 0.5f, -1.0f + this.e + 1.0f + this.d * 0.5f, 1.0f);
-            this.drawTexturedModalRect(-2.0f - f3 + this.d * 5.0f, -f3 - 64.0f - this.d * 5.0f / 2.0f, 0, 0, 64, 64);
-            this.drawTexturedModalRect(-2.0f - f3 + this.d * 5.0f, -f3 - 64.0f - this.d * 5.0f / 2.0f, 128, 128, 64, 64);
+            GlStateManager.scale(1.0f - this.animRight, 1.0f - this.animRight, 1.0f);
+            this.drawTexturedModalRect(-2.0f - offset + this.animRight * 32.0f, -offset - 32.0f, 0, 0, 64, 64);
+            this.drawTexturedModalRect(-2.0f - offset + this.animRight * 32.0f, -offset - 32.0f, 0, 128, 64, 64);
             GlStateManager.popMatrix();
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(-1.0f + this.e + 1.0f + this.m * 0.5f, -1.0f + this.e + 1.0f + this.m * 0.5f, 1.0f);
-            this.drawTexturedModalRect(-2.0f - f3 + this.m * 5.0f, -f3 + this.m * 5.0f / 2.0f, 0, 0, 64, 64);
-            this.drawTexturedModalRect(-2.0f - f3 + this.m * 5.0f, -f3 + this.m * 5.0f / 2.0f, 192, 128, 64, 64);
-            GlStateManager.popMatrix();
+            if (this.animRight > 0.0f) {
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(-1.0f + this.animRight + 1.0f + this.animTop * 0.5f, -1.0f + this.animRight + 1.0f + this.animTop * 0.5f, 1.0f);
+                this.drawTexturedModalRect(-2.0f - offset + this.animTop * 5.0f, -offset - 64.0f - this.animTop * 5.0f / 2.0f, 0, 0, 64, 64);
+                this.drawTexturedModalRect(-2.0f - offset + this.animTop * 5.0f, -offset - 64.0f - this.animTop * 5.0f / 2.0f, 128, 128, 64, 64);
+                GlStateManager.popMatrix();
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(-1.0f + this.animRight + 1.0f + this.animBottom * 0.5f, -1.0f + this.animRight + 1.0f + this.animBottom * 0.5f, 1.0f);
+                this.drawTexturedModalRect(-2.0f - offset + this.animBottom * 5.0f, -offset + this.animBottom * 5.0f / 2.0f, 0, 0, 64, 64);
+                this.drawTexturedModalRect(-2.0f - offset + this.animBottom * 5.0f, -offset + this.animBottom * 5.0f / 2.0f, 192, 128, 64, 64);
+                GlStateManager.popMatrix();
+            }
         }
         GlStateManager.popMatrix();
         GL11.glDisable(3042);
     }
 
-    double a(double d) {
-        double d2 = 1.70158;
-        double d3 = d2 + 1.0;
-        return 1.0 + d3 * Math.pow(d - 1.0, 3.0) + d2 * Math.pow(d - 1.0, 2.0);
+    double easeOutBack(double t) {
+        double c1 = 1.70158;
+        double c3 = c1 + 1.0;
+        return 1.0 + c3 * Math.pow(t - 1.0, 3.0) + c1 * Math.pow(t - 1.0, 2.0);
     }
 
     @Override

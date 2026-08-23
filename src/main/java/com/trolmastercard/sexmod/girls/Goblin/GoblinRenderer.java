@@ -111,7 +111,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
 
     @Override
     public void render(GeoModel model, GoblinEntity entity, float partialTicks, float r, float g, float b, float a) {
-        super.render(model, entity, partialTicks, r, g, b, entity.ar);
+        super.render(model, entity, partialTicks, r, g, b, entity.opacity);
     }
 
     @Override
@@ -483,7 +483,7 @@ public class GoblinRenderer extends GirlRendererBase<GoblinEntity> {
     protected ItemStack getHeldItem(@Nullable ItemStack input) {
         Action fp_class3242 = ((GoblinEntity)this.renderEntity).getCurrentAction();
         if (fp_class3242 == Action.RUN || fp_class3242 == Action.CATCH) {
-            return ((GoblinEntity)this.renderEntity).getDataManager().get(GoblinEntity.a0);
+            return ((GoblinEntity)this.renderEntity).getDataManager().get(GoblinEntity.HELD_ITEM);
         }
         return input;
     }
