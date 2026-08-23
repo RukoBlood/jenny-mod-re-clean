@@ -14,6 +14,6 @@ public class Reference {
     static public int i = 0;
     final static public int a = 0x4752bd; //unured
     final static public int e = 0x5fda5f; //unused
-    static public Vec3d j = Vec3d.ZERO;
-    static public Vec3d k = Vec3d.ZERO;
+    static public Vec3d cameraPosCurrent = Vec3d.ZERO;
+    static public Vec3d cameraPosPrevious = Vec3d.ZERO;
 }

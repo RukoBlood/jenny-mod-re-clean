@@ -73,9 +73,9 @@ public class SendBlocks implements IMessage {
             }
             if (ctx.side.isClient()) {
                 if (msg.a) {
-                    StructureMarkerRenderer.AddList(msg.c);
+                    StructureMarkerRenderer.addMarkers(msg.c);
                 } else {
-                    StructureMarkerRenderer.CleanList(msg.c);
+                    StructureMarkerRenderer.removeMarkers(msg.c);
                 }
                 return null;
             }

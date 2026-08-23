@@ -107,7 +107,7 @@ public class WorldUtils {
         return new BlockPos(blockPos.getX(), WorldUtils.getHeightAt(world, blockPos.getX(), blockPos.getZ()), blockPos.getZ());
     }
 
-    public static boolean b(World world, BlockPos blockPos) {
+    public static boolean canPlaceStructure(World world, BlockPos blockPos) {
         return WorldUtils.checkBedBlock(world, blockPos, null, null, null);
     }
 

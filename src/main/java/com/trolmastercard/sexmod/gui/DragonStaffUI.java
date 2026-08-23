@@ -34,7 +34,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import org.lwjgl.opengl.GL11;
 
 //j.class
@@ -90,12 +89,12 @@ public class DragonStaffUI extends GuiScreen {
     void executeBaseObjectInteraction() {
         IBlockState block = this.mc.world.getBlockState(this.targetPos);
         if (block.getBlock() instanceof BlockBed || block.getBlock() instanceof BlockChest) {
-            PacketHandler.INSTANCE.sendToServer((IMessage)new SendBlocks(this.targetPos, !StructureMarkerRenderer.a(this.targetPos)));
+            PacketHandler.INSTANCE.sendToServer(new SendBlocks(this.targetPos, !StructureMarkerRenderer.isMarked(this.targetPos)));
         }
     }
 
     void toggleTribeFollowMode() {
-        PacketHandler.INSTANCE.sendToServer((IMessage)new SetTribeFollowMode(!isTribeFollowing));
+        PacketHandler.INSTANCE.sendToServer(new SetTribeFollowMode(!isTribeFollowing));
     }
 
     void triggerAreaRender() {
@@ -106,18 +105,18 @@ public class DragonStaffUI extends GuiScreen {
         Object[] mineParams;
         Block block = this.targetBlockState.getBlock();
         if (block instanceof BlockLog) {
-            if (StructureMarkerRenderer.a(this.targetPos)) {
-                PacketHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
+            if (StructureMarkerRenderer.isMarked(this.targetPos)) {
+                PacketHandler.INSTANCE.sendToServer(new CancelTask(this.targetPos));
                 return;
             }
-            PacketHandler.INSTANCE.sendToServer((IMessage)new FallTree(this.targetPos));
+            PacketHandler.INSTANCE.sendToServer(new FallTree(this.targetPos));
         }
         if ((mineParams = this.validateAndCalculateMiningZone()) != null) {
-            if (StructureMarkerRenderer.a(this.targetPos)) {
-                PacketHandler.INSTANCE.sendToServer((IMessage)new CancelTask(this.targetPos));
+            if (StructureMarkerRenderer.isMarked(this.targetPos)) {
+                PacketHandler.INSTANCE.sendToServer(new CancelTask(this.targetPos));
                 return;
             }
-            PacketHandler.INSTANCE.sendToServer((IMessage)new Mine((BlockPos)mineParams[0], (EnumFacing)mineParams[1]));
+            PacketHandler.INSTANCE.sendToServer(new Mine((BlockPos)mineParams[0], (EnumFacing)mineParams[1]));
         }
     }
 
@@ -150,7 +149,7 @@ public class DragonStaffUI extends GuiScreen {
         GL11.glBlendFunc(770, 771);
         
         this.openAnimationTime = Math.min(1.0f, this.openAnimationTime + this.mc.getTickLength() / 5.0f);
-        float animationScale = (float) this.calculateBackEaseOut((double) this.openAnimationTime);
+        float animationScale = (float) this.calculateBackEaseOut(this.openAnimationTime);
         float offsetDistance = (1.0f - animationScale) * 100.0f;
 
         this.weightBottomLeft += (float) (mouseX < this.width / 2 && mouseY > this.height / 2 ? 1 : -1) * this.mc.getTickLength();
@@ -200,14 +199,14 @@ public class DragonStaffUI extends GuiScreen {
             if (isBed) {
                 this.drawBedIcon(offsetDistance);
             }
-            if (StructureMarkerRenderer.a(this.targetPos)) {
+            if (StructureMarkerRenderer.isMarked(this.targetPos)) {
                 this.drawTexturedModalRect(-62.0f + offsetDistance - this.weightBottomLeft * 15.0f, -2.0f - offsetDistance + this.weightBottomLeft * 15.0f, 128, 64, 64, 64);
             }
             GlStateManager.popMatrix();
         }
 
         boolean isLog = block instanceof BlockLog;
-        boolean bl5 = isDiggable = this.validateAndCalculateMiningZone() != null;
+        isDiggable = this.validateAndCalculateMiningZone() != null;
 
         if (isLog || isDiggable) {
             GlStateManager.pushMatrix();
@@ -219,7 +218,7 @@ public class DragonStaffUI extends GuiScreen {
             if (isDiggable) {
                 this.drawMiningIcon(offsetDistance);
             }
-            if (StructureMarkerRenderer.a(this.targetPos)) {
+            if (StructureMarkerRenderer.isMarked(this.targetPos)) {
                 this.drawTexturedModalRect(-2.0f - offsetDistance + this.weightTopRight * 15.0f, -62.0f + offsetDistance - this.weightTopRight * 15.0f, 128, 64, 64, 64);
             }
             GlStateManager.popMatrix();

@@ -42,35 +42,36 @@ import org.lwjgl.opengl.GL11;
 //Mark related stuff
 //P.S. Dragon Staff related
 public class StructureMarkerRenderer {
-    final static Vec3i e = new Vec3i(255, 0, 0);
-    final static Vec3i g = new Vec3i(0, 255, 0);
-    final static Vec3i d = new Vec3i(0, 0, 255);
+    final static Vec3i COLOR_RED = new Vec3i(255, 0, 0);
+    final static Vec3i COLOR_GREEM = new Vec3i(0, 255, 0);
+    final static Vec3i COLOR_BLUE = new Vec3i(0, 0, 255);
     final static ResourceLocation MARK_TEXTURE = new ResourceLocation("sexmod", "textures/mark.png");
-    static HashSet<BlockPos> markers = new HashSet();
-    static Minecraft minecraft = Minecraft.getMinecraft();
+    static HashSet<BlockPos> markers = new HashSet<>();
+    static Minecraft mc = Minecraft.getMinecraft();
     static TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
     public static void ClearMarkers() {
         markers.clear();
     }
 
-    public static boolean a(BlockPos pos) {
+    public static boolean isMarked(BlockPos pos) {
         return markers.contains(pos);
     }
 
-    public static void Render() {
+    public static void renderMarkers() {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-        Vec3d vec3d = RotationHelper.LerpVec3d(Reference.k, Reference.j, minecraft.getRenderPartialTicks());
+        BufferBuilder buffer = tessellator.getBuffer();
+        Vec3d cameraPos = RotationHelper.LerpVec3d(Reference.cameraPosPrevious, Reference.cameraPosCurrent, mc.getRenderPartialTicks());
         GlStateManager.pushMatrix();
         GlStateManager.disableCull();
         GlStateManager.disableDepth();
         textureManager.bindTexture(MARK_TEXTURE);
-        GlStateManager.translate(-vec3d.x, -vec3d.y, -vec3d.z);
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        for (BlockPos blockPos : markers) {
-            Vec3i vec3i = StructureMarkerRenderer.b(blockPos);
-            StructureMarkerRenderer.a(bufferBuilder, blockPos, vec3i.getX(), vec3i.getY(), vec3i.getZ());
+        GlStateManager.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+
+        for (BlockPos pos : markers) {
+            Vec3i color = getBlockColor(pos);
+            drawMarkerFace(buffer, pos, color.getX(), color.getY(), color.getZ());
         }
         tessellator.draw();
         GlStateManager.enableDepth();
@@ -78,18 +79,12 @@ public class StructureMarkerRenderer {
         GlStateManager.popMatrix();
     }
 
-    static Vec3i b(BlockPos pos) {
+    static Vec3i getBlockColor(BlockPos pos) {
         Block block = Minecraft.getMinecraft().world.getBlockState(pos).getBlock();
-        if (block instanceof BlockBed) {
-            return d;
-        }
-        if (block instanceof BlockChest) {
-            return g;
-        }
-        return e;
+        return block instanceof BlockBed ? COLOR_BLUE : block instanceof BlockChest ? COLOR_GREEM : COLOR_RED;
     }
 
-    static void a(BufferBuilder buf, BlockPos pos, int r, int g, int b) {
+    static void drawMarkerFace(BufferBuilder buf, BlockPos pos, int r, int g, int b) {
         buf.pos(pos.getX(), pos.getY() + 1, pos.getZ()).tex(0.0, 1.0).color(r, g, b, 255).endVertex();
         buf.pos(1 + pos.getX(), pos.getY() + 1, pos.getZ()).tex(1.0, 1.0).color(r, g, b, 255).endVertex();
         buf.pos(1 + pos.getX(), pos.getY(), pos.getZ()).tex(1.0, 0.0).color(r, g, b, 255).endVertex();
@@ -116,24 +111,24 @@ public class StructureMarkerRenderer {
         buf.pos(pos.getX(), pos.getY() + 1, pos.getZ()).tex(0.0, 0.0).color(r, g, b, 255).endVertex();
     }
 
-    public static void AddList(HashSet<BlockPos> list) {
-        markers.addAll(list);
+    public static void addMarkers(HashSet<BlockPos> marks) {
+        markers.addAll(marks);
     }
 
-    public static void CleanList(HashSet<BlockPos> list) {
-        markers.removeAll(list);
+    public static void removeMarkers(HashSet<BlockPos> marks) {
+        markers.removeAll(marks);
     }
 
     @SubscribeEvent
-    public void a(RenderWorldLastEvent event) {
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
         GlStateManager.enableColorMaterial();
         GL11.glDisable(2896);
-        ItemStack itemStack = StructureMarkerRenderer.minecraft.player.getHeldItem(EnumHand.MAIN_HAND);
+        ItemStack itemStack = mc.player.getHeldItem(EnumHand.MAIN_HAND);
         if (itemStack.getItem() != DragonStaffItem.DRAGON_STAFF) {
-            itemStack = StructureMarkerRenderer.minecraft.player.getHeldItem(EnumHand.OFF_HAND);
+            itemStack = mc.player.getHeldItem(EnumHand.OFF_HAND);
         }
         if (itemStack.getItem() == DragonStaffItem.DRAGON_STAFF) {
-            StructureMarkerRenderer.Render();
+            renderMarkers();
         }
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
@@ -143,16 +138,14 @@ public class StructureMarkerRenderer {
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(TickEvent.ClientTickEvent clientTickEvent) {
-        if (clientTickEvent.phase == TickEvent.Phase.START) {
-            return;
+    public void onPlayerTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) {
+            EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
+            if (playerSP != null) {
+                Reference.cameraPosPrevious = Reference.cameraPosCurrent;
+                Reference.cameraPosCurrent = playerSP.getPositionVector();
+            }
         }
-        EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
-        if (playerSP == null) {
-            return;
-        }
-        Reference.k = Reference.j;
-        Reference.j = playerSP.getPositionVector();
     }
 }
 

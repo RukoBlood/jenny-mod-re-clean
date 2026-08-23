@@ -974,9 +974,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     @SideOnly(value=Side.CLIENT)
     public void AcSomeUnknownClass() {
-    }
+    }//TODO Ask gemini to rename this
+    //Or Atomov
 
-    //TODO: Crashes
     public void resetCameraAndPhysics() {
         //System.out.printf("resetCameraAndPhysics %s (remote=%s, action=%s, anchored=%s)%n", this.getDisplayNameText(), this.world.isRemote, this.getCurrentAction(), this.isAnchored());
         this.cameraOriginPos = null;

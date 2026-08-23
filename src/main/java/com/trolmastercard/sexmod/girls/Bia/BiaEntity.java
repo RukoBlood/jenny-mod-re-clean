@@ -51,17 +51,17 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
-    final static int ae = 3;
-    public boolean Y = false;
-    int ag = 0;
-    boolean af = false;
-    int Z = 0;
-    boolean ab = true;
-    int ac = -1;
-    boolean aa = false;
-    final int[] ai = new int[]{0, 180, -90, 90};
-    final Vec3d[][] ad = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.5), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(0.5, 0.0, 1.5), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(-0.5, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0)}, {new Vec3d(1.5, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0)}};
-    int ah = 1;
+    //final static int ae = 3;
+    public boolean dismounted = false;
+    int dismountTicks = 0;
+    boolean isWalkingToBed = false;
+    int bedWalkTicks = 0;
+    boolean isGravityNotInit = true;
+    int pickupCooldown = -1;
+    boolean supressCameraReset = false;
+    final int[] yaws = new int[]{0, 180, -90, 90};
+    final Vec3d[][] positions = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.5), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(0.5, 0.0, 1.5), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(-0.5, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0)}, {new Vec3d(1.5, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0)}};
+    int state = 1;
 
     public BiaEntity(World world) {
         super(world);
@@ -90,7 +90,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
 
     @Override
     public void setDismounted() {
-        this.Y = true;
+        this.dismounted = true;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (currentAction != Action.ANAL_CUM || (action != Action.ANAL_FAST && action != Action.ANAL_SLOW)) {
             if (currentAction != Action.PRONE_DOGGY_CUM || (action != Action.PRONE_DOGGY_HARD && action != Action.PRONE_DOGGY_SOFT)) {
                 super.setCurrentAction(action);
-                System.out.printf("BiaEntity setCurrentAction: actionInput: %s, currentAction: %s %n", action, this.getCurrentAction()); //TODO: test code
+                //System.out.printf("BiaEntity setCurrentAction: actionInput: %s, currentAction: %s %n", action, this.getCurrentAction());
             }
         }
     }
@@ -115,37 +115,37 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     public void updateAITasks() {
         super.updateAITasks();
-        if (this.ab) {
+        if (this.isGravityNotInit) {
             this.setNoGravity(false);
             this.noClip = false;
-            this.ab = false;
+            this.isGravityNotInit = false;
         }
-        if (this.Y) {
-            ++this.ag;
-            if (this.getPositionVector().equals(this.getTargetPosition()) || this.ag > 40) {
-                this.Y = false;
-                this.ag = 0;
+        if (this.dismounted) {
+            ++this.dismountTicks;
+            if (this.getPositionVector().equals(this.getTargetPosition()) || this.dismountTicks > 40) {
+                this.dismounted = false;
+                this.dismountTicks = 0;
                 this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.doSubAction();
             } else {
-                this.rotationYaw = this.getYawRotation().floatValue();
+                this.rotationYaw = this.getYawRotation();
                 try {
                     TARGET_POS.equals(null);
-                } catch (NullPointerException nullPointerException) {
+                } catch (NullPointerException e) {
                     this.setTargetPosition(this.getFrontOffsetVector());
                 }
                 this.setNoGravity(false);
-                Vec3d vec3d = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.ag);
-                this.setPosition(vec3d.x, vec3d.y, vec3d.z);
+                Vec3d lerpPlayer = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.dismountTicks);
+                this.setPosition(lerpPlayer.x, lerpPlayer.y, lerpPlayer.z);
             }
         }
-        if (this.af) {
-            if (this.getPositionVector().distanceTo(this.getTargetPosition()) < 0.6 || this.Z > 200) {
-                this.af = false;
+        if (this.isWalkingToBed) {
+            if (this.getPositionVector().distanceTo(this.getTargetPosition()) < 0.6 || this.bedWalkTicks > 200) {
+                this.isWalkingToBed = false;
                 this.entityDataManager.set(IS_ANCHORED, true);
-                this.Z = 0;
+                this.bedWalkTicks = 0;
                 this.noClip = true;
                 this.setNoGravity(true);
                 this.motionX = 0.0;
@@ -158,8 +158,8 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     this.setCurrentAction(Action.SITDOWN);
                 }
             } else {
-                ++this.Z;
-                if (this.Z == 60 || this.Z == 120) {
+                ++this.bedWalkTicks;
+                if (this.bedWalkTicks == 60 || this.bedWalkTicks == 120) {
                     this.getNavigator().clearPath();
                     this.getNavigator().tryMoveToXYZ(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, 0.35);
                 }
@@ -168,21 +168,23 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer entityPlayer, EnumHand enumHand) {
-        boolean bl;
-        if (super.processInteract(entityPlayer, enumHand)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        //boolean bl;
+        if (super.processInteract(player, hand)) {
             return true;
         }
         if (this.getCurrentAction() == Action.SITDOWNIDLE) {
             return true;
         }
-        ItemStack itemStack = entityPlayer.getHeldItem(enumHand);
-        boolean bl2 = bl = itemStack.getItem() == Items.NAME_TAG;
-        if (bl) {
-            itemStack.interactWithEntity(entityPlayer, this, enumHand);
+
+        ItemStack heldItem = player.getHeldItem(hand);
+        boolean isNameTag = heldItem.getItem() == Items.NAME_TAG;
+
+        if (isNameTag) {
+            heldItem.interactWithEntity(player, this, hand);
             return true;
         }
-        if (this.world.isRemote && !this.openInteractionMenu(entityPlayer)) {
+        if (this.world.isRemote && !this.openInteractionMenu(player)) {
             this.sendChatMessage(I18n.format("bia.dialogue.busy"));
         }
         return true;
@@ -191,23 +193,23 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     public boolean openInteractionMenu(EntityPlayer player) {
         if (this.getInteractionPlayerUUID() == null && (!this.hasMaster() || this.entityDataManager.get(MASTER).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
-            String[] stringArray = new String[]{this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
-            BiaEntity.openInventoryGui(player, this, stringArray, true);
+            String[] options = new String[]{this.entityDataManager.get(OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup", "action.names.talk", "action.names.headpat"};
+            openInventoryGui(player, this, options, true);
             return true;
         }
         return false;
     }
 
-    void void_b(EntityPlayer entityPlayer) {
+    void openBiaInventory(EntityPlayer entityPlayer) {
         BiaEntity.openInventoryGui(entityPlayer, this, new String[]{"action.names.anal", "doggy"}, false);
     }
 
     @Override
     public void AcSomeUnknownClass() {
-        if (this.isAnchored() && !this.aa) {
+        if (this.isAnchored() && !this.supressCameraReset) {
             this.resetCameraAndPhysics();
         }
-        this.aa = false;
+        this.supressCameraReset = false;
     }
 
     @Override
@@ -216,65 +218,64 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.world.isRemote && this.isControlledByLocalPlayer() && this.getCurrentAction() == Action.PRONE_DOGGY_INTRO && !BlackScreenUI.getActive()) {
             SexUI.showUI();
         }
-        this.void_d();
+
+        this.handleAnalState();
     }
 
     @Override
     protected void resetLocalPlayerClientState() {
         super.resetLocalPlayerClientState();
-        this.ac = -1;
+        this.pickupCooldown = -1;
     }
 
-    void void_d() {
-        float f;
-        Action fp_class3242 = this.getCurrentAction();
-        if (fp_class3242 != Action.ANAL_WAIT && fp_class3242 != Action.SITDOWNIDLE) {
-            return;
-        }
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
-        if (entityPlayer == null) {
-            return;
-        }
-        if (entityPlayer.getDistance(this) > 1.0f) {
-            return;
-        }
-        if (this.ac == -1) {
-            if (this.world.isRemote) {
-                BlackScreenUI.run();
-                HandlePlayerMovement.setMovementLock(false);
-            } else {
-                this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
+    void handleAnalState() {
+        float yaw  = this.getYawRotation();
+        Action action = this.getCurrentAction();
+
+        if (action == Action.ANAL_WAIT || action == Action.SITDOWNIDLE) {
+            EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10.0);
+            if (player != null) {
+                if (!(player.getDistance(this) > 1.0f)) {
+                    if (this.pickupCooldown == -1) {
+                        if (this.world.isRemote) {
+                            BlackScreenUI.run();
+                            HandlePlayerMovement.setMovementLock(false);
+                        } else {
+                            this.setInteractionPlayerUUID(player.getPersistentID());
+                        }
+                        this.pickupCooldown = maxAgeInTicks;
+                        return;
+                    }
+
+                    if (--this.pickupCooldown <= 0) {
+                        this.pickupCooldown = -1;
+                        player.noClip = true;
+                        player.setNoGravity(true);
+                        if (action == Action.ANAL_WAIT) {
+                            if (!this.world.isRemote) {
+                                this.setCurrentAction(Action.ANAL_START);
+                                Vec3d pos = this.getTargetPosition().add(VectorMath.rotateByYaw(-0.3, -1.0, -0.5, this.getYawRotation()));
+                                player.setPositionAndUpdate(pos.x, pos.y, pos.z);
+                            } else if (this.isControlledByLocalPlayer()) {
+                                SexUI.showUI();
+                            }
+                            return;
+                        }
+                        player.rotationYaw = yaw;
+                        player.rotationPitch = 60.0f;
+                        if (!this.world.isRemote) {
+                            this.setOutfitIndex(0);
+                            this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
+                            Vec3d targetPos = this.getTargetPosition();
+                            Vec3d followPos = targetPos.add(VectorMath.rotateByYaw(0.0, 0.0, 1.0, yaw));
+                            this.setTargetPosition(followPos);
+                            Vec3d playerPos = targetPos.add(VectorMath.rotateByYaw(0.0, 1.1875 - (double) player.getEyeHeight(), 0.5, yaw));
+                            player.setPositionAndUpdate(playerPos.x, playerPos.y, playerPos.z);
+                            this.setAnchored(true);
+                        }
+                    }
+                }
             }
-            this.ac = maxAgeInTicks;
-            return;
-        }
-        if (--this.ac > 0) {
-            return;
-        }
-        this.ac = -1;
-        entityPlayer.noClip = true;
-        entityPlayer.setNoGravity(true);
-        if (fp_class3242 == Action.ANAL_WAIT) {
-            if (!this.world.isRemote) {
-                this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.getTargetPosition().add(VectorMath.rotateByYaw(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
-                entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-            } else if (this.isControlledByLocalPlayer()) {
-                SexUI.showUI();
-            }
-            return;
-        }
-        entityPlayer.rotationYaw = f = this.getYawRotation().floatValue();
-        entityPlayer.rotationPitch = 60.0f;
-        if (!this.world.isRemote) {
-            this.setOutfitIndex(0);
-            this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
-            Vec3d vec3d = this.getTargetPosition();
-            Vec3d vec3d2 = vec3d.add(VectorMath.rotateByYaw(0.0, 0.0, 1.0, f));
-            this.setTargetPosition(vec3d2);
-            Vec3d vec3d3 = vec3d.add(VectorMath.rotateByYaw(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
-            entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
-            this.setAnchored(true);
         }
     }
 
@@ -282,13 +283,12 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @SideOnly(value=Side.CLIENT)
     public void resetAnimationControllerTicks() {
         super.resetAnimationControllerTicks();
-        if (this.getCurrentAction() != Action.PRONE_DOGGY_HARD) {
-            return;
+        if (this.getCurrentAction() == Action.PRONE_DOGGY_HARD) {
+            int oldState = this.state;
+            do {
+                this.state = this.getRNG().nextInt(3) + 1;
+            } while (oldState == this.state);
         }
-        int n = this.ah;
-        do {
-            this.ah = this.getRNG().nextInt(3) + 1;
-        } while (n == this.ah);
     }
 
     @Override
@@ -307,26 +307,26 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.setInteractionPlayerUUID(Minecraft.getMinecraft().player.getPersistentID());
                 this.changeDataParameterFromClient("playerSheHasSexWith", Minecraft.getMinecraft().player.getPersistentID().toString());
                 this.changeDataParameterFromClient("animationFollowUp", "talkHorny");
-                this.void_a(player);
+                this.triggerAnalAction(player);
                 break;
             }
             case "action.names.headpat": {
                 this.setInteractionPlayerUUID(Minecraft.getMinecraft().player.getPersistentID());
                 this.changeDataParameterFromClient("playerSheHasSexWith", Minecraft.getMinecraft().player.getPersistentID().toString());
                 this.changeDataParameterFromClient("animationFollowUp", "Headpat");
-                this.void_a(player);
+                this.triggerAnalAction(player);
                 break;
             }
             case "action.names.anal": {
                 this.changeDataParameterFromClient("animationFollowUp", "anal");
                 this.setCurrentAction(Action.TALK_RESPONSE);
-                this.aa = true;
+                this.supressCameraReset = true;
                 break;
             }
             case "doggy": {
                 this.changeDataParameterFromClient("animationFollowUp", "doggy");
                 this.setCurrentAction(Action.TALK_RESPONSE);
-                this.aa = true;
+                this.supressCameraReset = true;
                 break;
             }
             case "action.names.dressup": 
@@ -337,123 +337,132 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     @Override
-    public void onDeath(DamageSource damageSource) {
-        super.onDeath(damageSource);
-        if (this.world.isRemote) {
-            return;
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        if (!this.world.isRemote) {
+            EntityItem drop = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(Blocks.WOOL, this.getRNG().nextInt(4), 12));
+            this.world.spawnEntity(drop);
         }
-        EntityItem entityItem = new EntityItem(this.world, this.posX, this.posY, this.posZ, new ItemStack(Blocks.WOOL, this.getRNG().nextInt(4), 12));
-        this.world.spawnEntity(entityItem);
     }
 
-    void void_a(UUID uUID) {
+    void triggerAnalAction(UUID uUID) {
         this.triggerActionSync(true, true, uUID);
         HandlePlayerMovement.setMovementLock(false);
     }
 
-    Vector4d javax_vecmath_Vector4d_a() {
-        BlockPos blockPos = null;
-        int n = 0;
-        while (!this.boolean_a(blockPos)) {
-            blockPos = this.findNearestBed(this.getPosition(), n);
-            if (++n != 50) continue;
+    Vector4d getBedVector() {
+        BlockPos bedPos = null;
+        int attempts = 0;
+
+        while (!this.isValidBed(bedPos)) {
+            bedPos = this.findNearestBed(this.getPosition(), attempts);
+            if (++attempts == 50) {
+                break;
+            };
         }
-        if (blockPos == null || n == 50) {
-            this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
-            this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight"));
-            return null;
-        }
-        this.tasks.removeTask(this.aiWander);
-        this.tasks.removeTask(this.watchClosestGirlGoal);
-        Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-        int n2 = -1;
-        for (int i = 0; i < this.ad.length; ++i) {
-            Vec3d vec3d2 = vec3d.add(this.ad[i][1]);
-            Vec3d vec3d3 = vec3d.subtract(this.ad[i][1]);
-            Block block = this.world.getBlockState(new BlockPos(vec3d2.x, vec3d2.y, vec3d2.z)).getBlock();
-            if (block != Blocks.AIR || !WorldUtils.b(this.world, new BlockPos(vec3d3))) continue;
-            if (n2 == -1) {
-                n2 = i;
-                continue;
+
+        if (bedPos != null && attempts != 50) {
+            this.tasks.removeTask(this.aiWander);
+            this.tasks.removeTask(this.watchClosestGirlGoal);
+            Vec3d bedVec = new Vec3d(bedPos.getX(), bedPos.getY(), bedPos.getZ());
+            int bestIndex = -1;
+            for (int i = 0; i < this.positions.length; ++i) {
+                Vec3d offsetPos = bedVec.add(this.positions[i][1]);
+                Vec3d offsetNeg = bedVec.subtract(this.positions[i][1]);
+                Block block = this.world.getBlockState(new BlockPos(offsetPos.x, offsetPos.y, offsetPos.z)).getBlock();
+                if (block == Blocks.AIR && WorldUtils.canPlaceStructure(this.world, new BlockPos(offsetNeg))) {
+                    if (bestIndex == -1) {
+                        bestIndex = i;
+                    } else {
+                        double bestDist = this.getPosition().distanceSq(bedVec.add(this.positions[bestIndex][0]).x, bedVec.add(this.positions[bestIndex][0]).y, bedVec.add(this.positions[bestIndex][0]).z);
+                        double dist = this.getPosition().distanceSq(bedVec.add(this.positions[i][0]).x, bedVec.add(this.positions[i][0]).y, bedVec.add(this.positions[i][0]).z);
+                        if (dist < bestDist) {
+                            bestIndex = i;
+                        }
+                    }
+                }
             }
-            double d = this.getPosition().distanceSq(vec3d.add(this.ad[n2][0]).x, vec3d.add(this.ad[n2][0]).y, vec3d.add(this.ad[n2][0]).z);
-            double d2 = this.getPosition().distanceSq(vec3d.add(this.ad[i][0]).x, vec3d.add(this.ad[i][0]).y, vec3d.add(this.ad[i][0]).z);
-            if (!(d2 < d)) continue;
-            n2 = i;
-        }
-        if (n2 == -1) {
+            if (bestIndex == -1) {
+                this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
+                this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight"));
+                return null;
+            }
+            Vec3d bestBed = bedVec.add(this.positions[bestIndex][0]);
+            return new Vector4d(bestBed.x, bestBed.y, bestBed.z, this.yaws[bestIndex]);
+        } else {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
             this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight"));
             return null;
         }
-        Vec3d vec3d4 = vec3d.add(this.ad[n2][0]);
-        return new Vector4d(vec3d4.x, vec3d4.y, vec3d4.z, this.ai[n2]);
     }
 
-    boolean boolean_a(BlockPos blockPos) {
-        if (blockPos == null) {
+    boolean isValidBed(BlockPos pos) {
+        if (pos == null) {
             return false;
         }
-        if (WorldUtils.b(this.world, blockPos.north()) && this.world.isAirBlock(blockPos.south())) {
+        if (WorldUtils.canPlaceStructure(this.world, pos.north()) && this.world.isAirBlock(pos.south())) {
             return true;
         }
-        if (WorldUtils.b(this.world, blockPos.east()) && this.world.isAirBlock(blockPos.west())) {
+        if (WorldUtils.canPlaceStructure(this.world, pos.east()) && this.world.isAirBlock(pos.west())) {
             return true;
         }
-        if (WorldUtils.b(this.world, blockPos.south()) && this.world.isAirBlock(blockPos.north())) {
+        if (WorldUtils.canPlaceStructure(this.world, pos.south()) && this.world.isAirBlock(pos.north())) {
             return true;
         }
-        return WorldUtils.b(this.world, blockPos.west()) && this.world.isAirBlock(blockPos.east());
+        return WorldUtils.canPlaceStructure(this.world, pos.west()) && this.world.isAirBlock(pos.east());
     }
 
-    Vector4d javax_vecmath_Vector4d_b() {
-        BlockPos blockPos = this.getNearestBed(this.getPosition());
-        if (blockPos == null) {
+    Vector4d findNearestBedVector() {
+        BlockPos bedPos = this.getNearestBed(this.getPosition());
+        if (bedPos == null) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
             this.sendChatMessage(I18n.format("jenny.dialogue.nobedinsight"));
             return null;
         }
+
         this.tasks.removeTask(this.aiWander);
         this.tasks.removeTask(this.watchClosestGirlGoal);
-        Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-        int n = -1;
-        for (int i = 0; i < this.ad.length; ++i) {
-            Vec3d vec3d2 = vec3d.add(this.ad[i][1]);
-            if (this.world.getBlockState(new BlockPos(vec3d2.x, vec3d2.y, vec3d2.z)).getBlock() != Blocks.AIR) continue;
-            if (n == -1) {
-                n = i;
-                continue;
+        Vec3d bedVec = new Vec3d(bedPos.getX(), bedPos.getY(), bedPos.getZ());
+
+        int bestIndex = -1;
+        for (int i = 0; i < this.positions.length; ++i) {
+            Vec3d offsetPos = bedVec.add(this.positions[i][1]);
+            
+            if (this.world.getBlockState(new BlockPos(offsetPos.x, offsetPos.y, offsetPos.z)).getBlock() != Blocks.AIR) continue;
+            if (bestIndex == -1) {
+                bestIndex = i;
+            } else {
+                double bestDist = this.getPosition().distanceSq(bedVec.add(this.positions[bestIndex][0]).x, bedVec.add(this.positions[bestIndex][0]).y, bedVec.add(this.positions[bestIndex][0]).z);
+                double dist = this.getPosition().distanceSq(bedVec.add(this.positions[i][0]).x, bedVec.add(this.positions[i][0]).y, bedVec.add(this.positions[i][0]).z);
+                if (dist < bestDist) {
+                    bestIndex = i;
+                }
             }
-            double d = this.getPosition().distanceSq(vec3d.add(this.ad[n][0]).x, vec3d.add(this.ad[n][0]).y, vec3d.add(this.ad[n][0]).z);
-            double d2 = this.getPosition().distanceSq(vec3d.add(this.ad[i][0]).x, vec3d.add(this.ad[i][0]).y, vec3d.add(this.ad[i][0]).z);
-            if (!(d2 < d)) continue;
-            n = i;
         }
-        if (n == -1) {
+        if (bestIndex == -1) {
             this.PlaySound(SoundsHandler.GIRLS_BIA_BREATH[2]);
             this.sendChatMessage(I18n.format("jenny.dialogue.bedobscured"));
             return null;
+        } else {
+            Vec3d bedOffset = bedVec.add(this.positions[bestIndex][0]);
+            return new Vector4d(bedOffset.x, bedOffset.y, bedOffset.z, this.yaws[bestIndex]);
         }
-        Vec3d vec3d3 = vec3d.add(this.ad[n][0]);
-        return new Vector4d(vec3d3.x, vec3d3.y, vec3d3.z, this.ai[n]);
     }
 
     @Override
     public void goToSexBed() {
-        Vector4d vector4d;
-        String string = this.entityDataManager.get(GIRL_HAND_STATES);
-        Vector4d vector4d2 = vector4d = string.equals("anal") ? this.javax_vecmath_Vector4d_b() : this.javax_vecmath_Vector4d_a();
-        if (vector4d == null) {
-            return;
+        String stateStr = this.entityDataManager.get(GIRL_HAND_STATES);
+        Vector4d bedVec = stateStr.equals("anal") ? this.findNearestBedVector() : this.getBedVector();
+        if (bedVec != null) {
+            Vec3d vec3d = new Vec3d(bedVec.getX(), bedVec.getY(), bedVec.getZ());
+            this.setYawRotation((float) bedVec.getW());
+            this.setTargetPosition(vec3d);
+            this.cameraYaw = this.getYawRotation();
+            this.getNavigator().clearPath();
+            this.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 0.35);
+            this.isWalkingToBed = true;
+            this.bedWalkTicks = 0;
         }
-        Vec3d vec3d = new Vec3d(vector4d.getX(), vector4d.getY(), vector4d.getZ());
-        this.setYawRotation((float)vector4d.getW());
-        this.setTargetPosition(vec3d);
-        this.cameraYaw = this.getYawRotation().floatValue();
-        this.getNavigator().clearPath();
-        this.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 0.35);
-        this.af = true;
-        this.Z = 0;
     }
 
     @Override
@@ -651,7 +660,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                         break;
                     }
                     case PRONE_DOGGY_HARD: {
-                        this.createAnimation("animation.bia.prone_doggy_hard" + this.ah, true, event);
+                        this.createAnimation("animation.bia.prone_doggy_hard" + this.state, true, event);
                         break;
                     }
                     case PRONE_DOGGY_CUM: {
@@ -733,7 +742,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 case "talk_hornyDone": {
                     this.setCurrentAction(Action.TALK_IDLE);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.void_b(Minecraft.getMinecraft().player);
+                    this.openBiaInventory(Minecraft.getMinecraft().player);
                     break;
                 }
                 case "talk_responseMSG1": {
