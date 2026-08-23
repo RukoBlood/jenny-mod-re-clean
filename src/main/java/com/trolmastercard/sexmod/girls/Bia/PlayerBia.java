@@ -465,7 +465,7 @@ extends PlayerGirl {
                         this.setCurrentAction(Action.STRIP);
                         break;
                     }
-                    this.doAction();
+                    this.doSubAction();
                     break;
                 }
                 case "anal_prepareMSG1": {

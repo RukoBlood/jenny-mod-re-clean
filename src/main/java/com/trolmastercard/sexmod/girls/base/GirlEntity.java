@@ -200,9 +200,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public void setCurrentAction(Action action) {
         Action previousAction = this.getCurrentAction();
         if (previousAction != action) {
-            if (action != Action.ATTACK || previousAction == Action.NULL) {//Action targetAction = action == null ? Action.NULL : action;
+            if (action != Action.ATTACK || previousAction == Action.NULL) {
+                Action targetAction = action == null ? Action.NULL : action;
                 if (this.world.isRemote) {
                     this.changeDataParameterFromClient("currentAction", action.toString());
+                    System.out.printf("GirlEntity: previousAction: %s, targetAction: %s %n", previousAction, targetAction);
                 } else {
                     previousAction.ticksPlaying = new int[]{0, 0};
                     this.entityDataManager.set(CUR_ACTION, action.toString());
@@ -974,7 +976,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public void AcSomeUnknownClass() {
     }
 
+    //TODO: Crashes
     public void resetCameraAndPhysics() {
+        //System.out.printf("resetCameraAndPhysics %s (remote=%s, action=%s, anchored=%s)%n", this.getDisplayNameText(), this.world.isRemote, this.getCurrentAction(), this.isAnchored());
         this.cameraOriginPos = null;
         this.setNoGravity(false);
         this.setCurrentAction(null);
@@ -1078,7 +1082,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return clientPlayer.getPersistentID().equals(this.getInteractionPlayerUUID()) || clientPlayer.getUniqueID().equals(this.getInteractionPlayerUUID());
     }
 
-    protected void doAction() {
+    protected void doSubAction() {
     }
 
     public void setCustomNameOverride(String name) {

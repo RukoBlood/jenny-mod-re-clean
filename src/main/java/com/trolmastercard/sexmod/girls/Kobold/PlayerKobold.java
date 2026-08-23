@@ -461,7 +461,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                 }
                 case "paymentDone": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.doAction();
+                    this.doSubAction();
                     break;
                 }
                 case "blowjobStartMSG1": {

@@ -287,7 +287,7 @@ public class BeeEntity extends Supporter {
     }
 
     @Override
-    protected void doAction() {
+    protected void doSubAction() {
     }
 
     @Override

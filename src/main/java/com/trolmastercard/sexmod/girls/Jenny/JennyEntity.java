@@ -167,7 +167,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 if (this.entityDataManager.get(Y)) {
-                    this.doAction();
+                    this.doSubAction();
                     return;
                 }
                 this.setCurrentAction(Action.PAYMENT);
@@ -372,7 +372,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     @Override
-    protected void doAction() {
+    protected void doSubAction() {
         switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
             case "strip": {
                 this.resetGirlState();
@@ -590,7 +590,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     if (!this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES).equals("boobjob")) {
                         this.resetCameraAndPhysics();
                     }
-                    this.doAction();
+                    this.doSubAction();
                     break;
                 }
                 case "stripMSG1": {
@@ -642,7 +642,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "paymentDone": {
-                    this.doAction();
+                    this.doSubAction();
                     break;
                 }
                 case "bjiMSG1": {

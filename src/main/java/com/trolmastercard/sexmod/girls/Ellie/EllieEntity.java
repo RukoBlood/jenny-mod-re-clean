@@ -289,7 +289,7 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     @Override
-    protected void doAction() {
+    protected void doSubAction() {
         Vec3d vec3d;
         Vec3d pos;
 //        EntityPlayer player;
@@ -343,7 +343,7 @@ public class EllieEntity extends Fighter implements IEllie {
 
     void handleStandTimer() {
         if (--this.af == 0) {
-            this.doAction();
+            this.doSubAction();
         }
     }
 
@@ -732,7 +732,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 case "stripDone": {
                     this.setCurrentAction((Action)null);
                     this.resetCameraAndPhysics();
-                    this.doAction();
+                    this.doSubAction();
                     break;
                 }
                 case "hugMSG2": {

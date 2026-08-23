@@ -584,7 +584,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             this.noClip = true;
             this.setNoGravity(true);
             this.getNavigator().clearPath();
-            this.doAction();
+            this.doSubAction();
             return true;
         }
         this.rotationYaw = this.getYawRotation();
@@ -797,7 +797,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     @Override
-    protected void doAction() {
+    protected void doSubAction() {
         //boolean condition;
         String handState = this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES);
         boolean hasHornyPotion = this.getActivePotionEffect(HornyPotion.HORNY_POTION) != null;
@@ -2843,7 +2843,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 }
                 case "paymentDone": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.doAction();
+                    this.doSubAction();
                     break;
                 }
                 case "blowjobStartMSG1": {

@@ -393,7 +393,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "paymentDone": {
-                    this.doAction();
+                    this.doSubAction();
                     break;
                 }
                 case "bjiMSG1": {

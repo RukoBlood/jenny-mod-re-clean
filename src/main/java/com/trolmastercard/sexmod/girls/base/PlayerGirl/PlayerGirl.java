@@ -607,7 +607,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     @Override
-    protected void doAction() {
+    protected void doSubAction() {
     }
 }
 

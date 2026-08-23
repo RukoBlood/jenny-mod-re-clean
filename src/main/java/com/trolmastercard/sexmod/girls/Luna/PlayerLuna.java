@@ -363,7 +363,7 @@ extends PlayerGirl {
                 }
                 case "paymentDone": {
                     if (this.isLocalPlayerNearby()) {
-                        this.doAction();
+                        this.doSubAction();
                     }
                     this.scaleFactor = 1.0f;
                     break;

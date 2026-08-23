@@ -42,7 +42,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -103,6 +102,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (currentAction != Action.ANAL_CUM || (action != Action.ANAL_FAST && action != Action.ANAL_SLOW)) {
             if (currentAction != Action.PRONE_DOGGY_CUM || (action != Action.PRONE_DOGGY_HARD && action != Action.PRONE_DOGGY_SOFT)) {
                 super.setCurrentAction(action);
+                System.out.printf("BiaEntity setCurrentAction: actionInput: %s, currentAction: %s %n", action, this.getCurrentAction()); //TODO: test code
             }
         }
     }
@@ -128,7 +128,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
-                this.doAction();
+                this.doSubAction();
             } else {
                 this.rotationYaw = this.getYawRotation().floatValue();
                 try {
@@ -479,7 +479,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     @Override
-    protected void doAction() {
+    protected void doSubAction() {
         switch (this.entityDataManager.get(GIRL_HAND_STATES)) {
             case "talkHorny": {
                 this.setCurrentAction(Action.TALK_HORNY);
@@ -678,8 +678,8 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
-        AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
-            switch (soundKeyframeEvent.sound) {
+        AnimationController.ISoundListener soundListener = sound -> {
+            switch (sound.sound) {
                 case "attackDone": {
                     this.setCurrentAction(Action.NULL);
                     if (++this.nextAttack != 3) break;
@@ -692,8 +692,8 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "stripDone": {
-                    this.resetCameraAndPhysics();
-                    this.doAction();
+                        this.resetCameraAndPhysics();
+                        this.doSubAction();
                     break;
                 }
                 case "stripMSG1": {
@@ -755,7 +755,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     if (this.isControlledByLocalPlayer()) {
                         this.resetGirlState();
                     }
-                    this.doAction();
+                    this.doSubAction();
                     break;
                 }
                 case "anal_prepareMSG1": {
@@ -890,7 +890,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
             }
         };
-        this.actionController.registerSoundListener(iSoundListener);
+        this.actionController.registerSoundListener(soundListener);
         data.addAnimationController(this.actionController);
         data.addAnimationController(this.movementController);
         data.addAnimationController(this.eyesController);

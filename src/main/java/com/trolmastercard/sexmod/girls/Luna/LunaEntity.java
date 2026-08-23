@@ -259,7 +259,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
-                this.doAction();
+                this.doSubAction();
             } else {
                 this.rotationYaw = this.getYawRotation().floatValue();
                 this.setNoGravity(false);
@@ -602,7 +602,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     @Override
-    protected void doAction() {
+    protected void doSubAction() {
         switch (this.entityDataManager.get(GIRL_HAND_STATES)) {
             case "touch_boobs": {
                 if (this.getCurrentAction() != Action.PAYMENT) {
@@ -882,7 +882,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "paymentDone": {
                     if (this.isLocalPlayerNearby()) {
-                        this.doAction();
+                        this.doSubAction();
                     }
                     this.scaleFactor = 1.0f;
                     break;
