@@ -179,12 +179,12 @@ public class PlayerSlime extends PlayerGirl {
                     this.createAnimation("animation.slime.fly" + (this.flySwitch ? "2" : ""), true, event);
                     break;
                 }
-                if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
+                if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.createAnimation("animation.slime.run", true, event);
                         break;
                     }
-                    if (this.ao.y >= -0.1f) {
+                    if (this.moveInputVector.y >= -0.1f) {
                         this.createAnimation("animation.slime.walk", true, event);
                         break;
                     }

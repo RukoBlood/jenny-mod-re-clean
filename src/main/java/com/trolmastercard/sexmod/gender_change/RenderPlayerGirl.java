@@ -59,7 +59,7 @@ public class RenderPlayerGirl {
     @SideOnly(value=Side.CLIENT)
     public static void calculate(PlayerGirl playerGirl, EntityPlayer player, double d, double d2, double d3, float f) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (!(player = playerGirl.resolvePlayerEntity(player)).isInvisibleToPlayer(mc.player) || playerGirl.EGoblinIsOwnerUUIDNotNull()) {
+        if (!(player = playerGirl.resolvePlayerEntity(player)).isInvisibleToPlayer(mc.player) || playerGirl.hasOwner()) {
             RenderManager renderManager = mc.getRenderManager();
             playerGirl.rotationYaw = player.rotationYaw;
             playerGirl.prevRotationYawHead = player.prevRotationYawHead;
@@ -83,7 +83,7 @@ public class RenderPlayerGirl {
             double d4 = player.lastTickPosX - player.posX;
             double d5 = player.posZ - player.lastTickPosZ;
             double d6 = Math.PI / 180 * (double) player.rotationYaw;
-            playerGirl.ao = new Vector2f((float) (d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float) (d4 * Math.sin(d6) + d5 * Math.cos(d6)));
+            playerGirl.moveInputVector = new Vector2f((float) (d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float) (d4 * Math.sin(d6) + d5 * Math.cos(d6)));
             float f2 = playerGirl.isRidingSomething() ? RenderPlayerGirl.manageActions(playerGirl, player) : 0.0f;
             PlayerGirlRenderer.forceRenderNextFrame = true;
             renderManager.renderEntity(playerGirl, d, d2 + (double) f2, d3, 90.0f, f, false);

@@ -94,13 +94,13 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
 
     @Override
     protected void onRenderSetup() {
-        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.aA);
+        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.SCALE_OFFSET);
         GlStateManager.scale(1.0f - f, 1.0f - f, 1.0f - f);
     }
 
     @Override
     protected void onRenderCleanup() {
-        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.aA);
+        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.SCALE_OFFSET);
         double d = 1.0 / (1.0 - (double)f);
         GlStateManager.scale(d, d, d);
     }

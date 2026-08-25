@@ -14,14 +14,15 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/*Used by playerGoblin and PlayerKobold*/
 public abstract class WorkerPlayerEntity extends PlayerGirl {
-    final static public DataParameter<String> as = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.STRING).getSerializer().createKey(119);
-    final static public DataParameter<BlockPos> au = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.BLOCK_POS).getSerializer().createKey(120);
-    final static public DataParameter<String> at = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
-    boolean ar = true;
-    String ap = null;
-    String av = null;
-    BlockPos aq = null;
+    final static public DataParameter<String> MODEL_CODE = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.STRING).getSerializer().createKey(119);
+    final static public DataParameter<BlockPos> WORK_POS = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.BLOCK_POS).getSerializer().createKey(120);
+    final static public DataParameter<String> DNA_CODE = EntityDataManager.createKey(WorkerPlayerEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
+    boolean isFirstInit = true;
+    String cachedModelCode = null;
+    String cachedDnaCode = null;
+    BlockPos cachedWorkPos = null;
 
     protected WorkerPlayerEntity(World world) {
         super(world);
@@ -34,60 +35,52 @@ public abstract class WorkerPlayerEntity extends PlayerGirl {
     @Override
     protected void entityInit() {
         super.entityInit();
-        if (this.world.isRemote && this.world instanceof FakeWorld) {
-            return;
+        if (!this.world.isRemote || !(this.world instanceof FakeWorld)) {
+            this.entityDataManager.register(DNA_CODE, this.buildModelCodeDNA(new StringBuilder()));
         }
-        this.entityDataManager.register(at, this.a(new StringBuilder()));
     }
 
-    protected abstract String a(StringBuilder var1);
+    protected abstract String buildModelCodeDNA(StringBuilder builder);
 
-    public static String[] java_lang_String_arr_a(GirlEntity em_class2582) {
-        return em_class2582.getDataManager().get(at).split("-");
+    public static String[] getModelCodeParts(GirlEntity buildModelCodeDNA) {
+        return buildModelCodeDNA.getDataManager().get(DNA_CODE).split("-");
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        this.void_b();
-        if (!this.ar) {
-            return;
-        }
-        if (this.world.isRemote) {
-            this.ResetColors();
-            this.ar = true;
-            return;
-        }
-        EntityPlayer entityPlayer = this.getOwnerPlayer();
-        if (entityPlayer == null) {
-            return;
-        }
-        String string = entityPlayer.getEntityData().getString("sexmod:GirlSpecific" + (Object)((Object) PlayerGirlEntity.getGirlType(this)));
-        this.ar = false;
-        if (!string.isEmpty()) {
-            this.setCustomPartList(WorkerPlayerEntity.decodePartIdList(string));
+        this.syncModelCodeClient();
+        if (this.isFirstInit) {
+            if (this.world.isRemote) {
+                this.ResetColors();
+                this.isFirstInit = true;
+                return;
+            }
+            EntityPlayer player = this.getOwnerPlayer();
+            if (player != null) {
+                String modelCode = player.getEntityData().getString("sexmod:GirlSpecific" + PlayerGirlEntity.getGirlType(this));
+                this.isFirstInit = false;
+                if (!modelCode.isEmpty()) {
+                    this.setCustomPartList(WorkerPlayerEntity.decodePartIdList(modelCode));
+                }
+            }
         }
     }
 
-    void void_b() {
-        if (!this.world.isRemote) {
-            return;
+    void syncModelCodeClient() {
+        if (this.world.isRemote) {
+            String currentModelCode = this.entityDataManager.get(MODEL_CODE);
+            String currentDnaCode = this.entityDataManager.get(DNA_CODE);
+            BlockPos currentWorkPos = this.entityDataManager.get(WORK_POS);
+            if (this.cachedModelCode != null) {
+                if (!(this.cachedDnaCode.equals(currentDnaCode) && this.cachedModelCode.equals(currentModelCode) && this.cachedWorkPos.equals(currentWorkPos))) {
+                    this.ResetColors();
+                }
+            }
+            this.cachedModelCode = currentModelCode;
+            this.cachedDnaCode = currentDnaCode;
+            this.cachedWorkPos = currentWorkPos;
         }
-        String string = this.entityDataManager.get(as);
-        String string2 = this.entityDataManager.get(at);
-        BlockPos blockPos = this.entityDataManager.get(au);
-        if (this.ap == null) {
-            this.ap = string;
-            this.av = string2;
-            this.aq = blockPos;
-            return;
-        }
-        if (!(this.av.equals(string2) && this.ap.equals(string) && this.aq.equals(blockPos))) {
-            this.ResetColors();
-        }
-        this.ap = string;
-        this.av = string2;
-        this.aq = blockPos;
     }
 
     protected abstract void ResetColors();

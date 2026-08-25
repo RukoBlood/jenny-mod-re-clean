@@ -241,13 +241,13 @@ extends PlayerGirl {
                     this.createAnimation("animation.ellie.fly" + (this.ar ? "2" : ""), true, event);
                     break;
                 }
-                if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
+                if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.5);
                         this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.run", true, event);
                         break;
                     }
-                    if (this.ao.y >= -0.1f) {
+                    if (this.moveInputVector.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(2.0);
                         this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.fastwalk", true, event);
                         break;

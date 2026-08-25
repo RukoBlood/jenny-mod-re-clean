@@ -58,7 +58,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -68,20 +67,20 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
-    final static public float aI = 2.0f;
-    final static public DataParameter<String> ax = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.STRING).getSerializer().createKey(122);
-    final static public DataParameter<Boolean> aA = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.BOOLEAN).getSerializer().createKey(126);
-    int aJ = 0;
-    int az = -1;
-    int aG = 0;
-    Action aw = Action.NULL;
-    int aE = -1;
-    boolean aC = false;
-    boolean aB = true;
-    boolean ay = true;
-    boolean aF = false;
-    boolean aH = false;
-    String aD = "";
+    final static public float THROW_HEIGHT_MODIFIER = 2.0f;
+    final static public DataParameter<String> OWNER_UUID = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.STRING).getSerializer().createKey(122);
+    final static public DataParameter<Boolean> IS_CUMMING = EntityDataManager.createKey(PlayerGoblin.class, DataSerializers.BOOLEAN).getSerializer().createKey(126);
+    int standUpTicks = 0;
+    int throwProgress = -1;
+    int throwTicksOnGround = 0;
+    Action previousAction = Action.NULL;
+    int heldPlayerDistance = -1;
+    boolean alternateFlyAnim = false;
+    boolean breedingSlowAlternate = true;
+    boolean nelsonSlowAlternate = true;
+    boolean nelsonFastState = false;
+    boolean breedingFastState = false;
+    String paizuriAnimSuffix = "";
 
     public PlayerGoblin(World world) {
         super(world);
@@ -108,21 +107,21 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
 
     @Override
     public Vec3i getHandColor(int index) {
-        String[] stringArray = PlayerGoblin.java_lang_String_arr_a(this);
-        if (stringArray.length < 8) {
+        String[] parts = PlayerGoblin.getModelCodeParts(this);
+        if (parts.length < 8) {
             return super.getHandColor(index);
         }
-        return SkinColor.values()[Integer.parseInt(stringArray[7])].getColor();
+        return SkinColor.values()[Integer.parseInt(parts[7])].getColor();
     }
 
     @Override
     protected void entityInit() {
         super.entityInit();
-        EyeColor eh_class2502 = EyeColor.values()[this.getRNG().nextInt(EyeColor.values().length)];
-        this.entityDataManager.register(au, new BlockPos(eh_class2502.a()));
-        this.entityDataManager.register(as, GoblinEntity.DEFAULT_COLOR.name());
-        this.entityDataManager.register(aA, false);
-        this.entityDataManager.register(ax, "");
+        EyeColor color = EyeColor.values()[this.getRNG().nextInt(EyeColor.values().length)];
+        this.entityDataManager.register(WORK_POS, new BlockPos(color.a()));
+        this.entityDataManager.register(MODEL_CODE, GoblinEntity.DEFAULT_COLOR.name());
+        this.entityDataManager.register(IS_CUMMING, false);
+        this.entityDataManager.register(OWNER_UUID, "");
     }
 
     @Override
@@ -187,45 +186,41 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         return RotationHelper.LerpVec3d(lastTickPos, pos, partialTicks);
     }
 
-    void void_c(EntityPlayer entityPlayer) {
-        if (this.getCurrentAction() != Action.NULL) {
-            return;
+    void handlePlayerThrow(EntityPlayer player) {
+        if (this.getCurrentAction() == Action.NULL) {
+            if (this.getOwnerUUID() == null) {
+                if (GoblinEntity.hasGoblinWithUUID(player.getPersistentID())) {
+                    player.sendStatusMessage(new TextComponentString("you are already carrying a Goblin"), true);
+                } else {
+                    this.setOwnerUUID(player.getPersistentID());
+                    this.setCurrentAction(Action.PICK_UP);
+                    this.setHeldPlayerDistance(45);
+                    EntityPlayer owner = this.getOwnerPlayer();
+                    if (owner != null) {
+                        owner.setNoGravity(true);
+                        owner.noClip = true;
+                        if (!this.world.isRemote) {
+                            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP) owner);
+                        }
+                    }
+                }
+            }
         }
-        if (this.getOwnerUUID() != null) {
-            return;
-        }
-        if (GoblinEntity.hasGoblinWithUUID(entityPlayer.getPersistentID())) {
-            entityPlayer.sendStatusMessage(new TextComponentString("you are already carrying a Goblin"), true);
-            return;
-        }
-        this.setOwnerUUID(entityPlayer.getPersistentID());
-        this.setCurrentAction(Action.PICK_UP);
-        this.setHeldPlayerDistance(45);
-        EntityPlayer entityPlayer2 = this.getOwnerPlayer();
-        if (entityPlayer2 == null) {
-            return;
-        }
-        entityPlayer2.setNoGravity(true);
-        entityPlayer2.noClip = true;
-        if (this.world.isRemote) {
-            return;
-        }
-        PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)entityPlayer2);
     }
 
     @Override
-    protected String a(StringBuilder stringBuilder) {
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 3);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 7);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 7);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 5);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, HairColor.values().length - 1);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, SkinColor.values().length - 1);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, EyeColor.values().length - 1);
-        AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, 0);
-        return stringBuilder.toString();
+    protected String buildModelCodeDNA(StringBuilder builder) {
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 3);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 2);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 2);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 7);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 7);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 5);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, HairColor.values().length - 1);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, SkinColor.values().length - 1);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, EyeColor.values().length - 1);
+        AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(builder, 0);
+        return builder.toString();
     }
 
     @Override
@@ -273,22 +268,22 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         if (uUID == null) {
             return false;
         }
-        EntityPlayer entityPlayer2 = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer2 == null) {
+        EntityPlayer player1 = this.world.getPlayerEntityByUUID(uUID);
+        if (player1 == null) {
             return false;
         }
-        float f2 = player.rotationYaw;
+        float yaw = player.rotationYaw;
         float f3 = action == Action.PICK_UP ? 180.0f : 0.0f;
-        float f4 = entityPlayer2.rotationYaw - 90.0f + f3;
-        float f5 = entityPlayer2.rotationYaw + 90.0f + f3;
-        if (f2 < f4) {
+        float f4 = player1.rotationYaw - 90.0f + f3;
+        float f5 = player1.rotationYaw + 90.0f + f3;
+        if (yaw < f4) {
             player.rotationYaw = f4;
         }
-        if (f2 > f5) {
+        if (yaw > f5) {
             player.rotationYaw = f5;
         }
         float f6 = player.rotationPitch;
-        float f7 = f = action == Action.PICK_UP ? 0.0f : 37.5f;
+        f = action == Action.PICK_UP ? 0.0f : 37.5f;
         if (f6 > f) {
             player.rotationPitch = f;
         }
@@ -320,7 +315,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_f() {
+    void handleOwnerThrow() {
         EntityPlayer entityPlayer = this.getOwnerPlayer();
         if (entityPlayer == null) {
             return;
@@ -336,82 +331,74 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     @Override
     public void onUpdate() {
         GoblinEntity.handleGoblinThrowAction(this);
-        this.void_d();
-        this.void_j();
+        this.updatePlayerThrowProgress();
+        this.handleThrowAction();
         super.onUpdate();
-        if (!this.world.isRemote) {
-            return;
+        if (this.world.isRemote) {
+            this.handleOwnerThrow();
+            Action action = this.getCurrentAction();
+            this.handleLocalAction(action);
+            this.handleNelsonAction(action);
+            this.previousAction = action;
         }
-        this.void_f();
-        Action fp_class3242 = this.getCurrentAction();
-        this.d(fp_class3242);
-        this.void_c(fp_class3242);
-        this.aw = fp_class3242;
     }
 
     @Override
-    public boolean EGoblinIsOwnerUUIDNotNull() {
+    public boolean hasOwner() {
         return this.getOwnerUUID() != null;
     }
 
-    void void_j() {
-        Action fp_class3242 = this.getCurrentAction();
-        if (fp_class3242 == Action.THROWN) {
-            return;
+    void handleThrowAction() {
+        Action action = this.getCurrentAction();
+        if (action != Action.THROWN) {
+            if (action != Action.START_THROWING || this.getThrowProgress() <= 15) {
+                UUID uUID = this.getOwnerUUID();
+                if (uUID != null) {
+                    EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+                    if (player != null) {
+                        EntityPlayer ownerPlayer = this.getOwnerPlayer();
+                        if (ownerPlayer != null) {
+                            ownerPlayer.noClip = true;
+                            ownerPlayer.setNoGravity(true);
+                            ownerPlayer.setPosition(player.posX, player.posY + 2.0, player.posZ);
+                        }
+                    }
+                }
+            }
         }
-        if (fp_class3242 == Action.START_THROWING && this.getThrowProgress() > 15) {
-            return;
-        }
-        UUID uUID = this.getOwnerUUID();
-        if (uUID == null) {
-            return;
-        }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            return;
-        }
-        EntityPlayer entityPlayer2 = this.getOwnerPlayer();
-        if (entityPlayer2 == null) {
-            return;
-        }
-        entityPlayer2.noClip = true;
-        entityPlayer2.setNoGravity(true);
-        entityPlayer2.setPosition(entityPlayer.posX, entityPlayer.posY + 2.0, entityPlayer.posZ);
     }
 
-    void void_d() {
-        PlayerGoblin eq_class2642 = this;
-        int n = eq_class2642.getThrowProgress();
-        if (n == -1) {
-            return;
-        }
-        eq_class2642.setThrowProgress(++n);
-        EntityPlayer entityPlayer = this.getOwnerPlayer();
-        if (entityPlayer == null) {
-            return;
-        }
-        if (n == 15) {
-            Vec3d vec3d = GoblinEntity.getGoblinThrowPos(this);
-            float f = GoblinEntity.getGoblinThrowHeight(this);
-            float f2 = GoblinEntity.getGoblinThrowDistance(this);
-            if (this.world.isRemote && this.hasOwnerUUID()) {
-                HandlePlayerMovement.setMovementLock(true);
+    void updatePlayerThrowProgress() {
+        PlayerGoblin goblin = this;
+        int throwProgress = goblin.getThrowProgress();
+        if (throwProgress != -1) {
+            goblin.setThrowProgress(++throwProgress);
+            EntityPlayer player = this.getOwnerPlayer();
+            if (player != null) {
+                if (throwProgress == 15) {
+                    //Vec3d vec3d = GoblinEntity.getGoblinThrowPos(this);
+                    float height = GoblinEntity.getGoblinThrowHeight(this);
+                    float distance = GoblinEntity.getGoblinThrowDistance(this);
+                    if (this.world.isRemote && this.hasOwnerUUID()) {
+                        HandlePlayerMovement.setMovementLock(true);
+                    }
+                    Vec3d rot = GoblinEntity.rotateVectorPitchYaw(new Vec3d(0.0, 0.0, 1.5), height, distance);
+                    player.motionX = rot.x;
+                    player.motionY = rot.y;
+                    player.motionZ = rot.z;
+                    if (!this.world.isRemote) {
+                        this.setYawRotation(distance);
+                    }
+                }
+                player.noClip = false;
+                player.setNoGravity(false);
+                if (throwProgress == 39) {
+                    this.setThrowProgress(-1);
+                    this.setCurrentAction(Action.THROWN);
+                    this.setInteractionPlayerUUID(null);
+                    this.setOwnerUUID(null);
+                }
             }
-            Vec3d vec3d2 = GoblinEntity.rotateVectorPitchYaw(new Vec3d(0.0, 0.0, 1.5), f, f2);
-            entityPlayer.motionX = vec3d2.x;
-            entityPlayer.motionY = vec3d2.y;
-            entityPlayer.motionZ = vec3d2.z;
-            if (!this.world.isRemote) {
-                this.setYawRotation(f2);
-            }
-        }
-        entityPlayer.noClip = false;
-        entityPlayer.setNoGravity(false);
-        if (n == 39) {
-            this.setThrowProgress(-1);
-            this.setCurrentAction(Action.THROWN);
-            this.setInteractionPlayerUUID((UUID)null);
-            this.setOwnerUUID((UUID)null);
         }
     }
 
@@ -419,50 +406,44 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     public void updateAITasks() {
         super.updateAITasks();
         GoblinEntity.handlePickUpState(this);
-        this.void_o();
-        this.void_e();
+        this.handlePlayerThrown();
+        this.handlePlayerStandUp();
     }
 
-    void void_e() {
-        if (this.getCurrentAction() != Action.STAND_UP) {
-            return;
+    void handlePlayerStandUp() {
+        if (this.getCurrentAction() == Action.STAND_UP) {
+            if (++this.standUpTicks >= 37) {
+                this.standUpTicks = 0;
+                this.setCurrentAction(Action.NULL);
+            }
         }
-        if (++this.aJ < 37) {
-            return;
-        }
-        this.aJ = 0;
-        this.setCurrentAction(Action.NULL);
     }
 
-    void void_o() {
-        if (this.getCurrentAction() != Action.THROWN) {
-            return;
+    void handlePlayerThrown() {
+        if (this.getCurrentAction() == Action.THROWN) {
+            EntityPlayer player = this.getOwnerPlayer();
+            if (player != null) {
+                if (player.onGround) {
+                    int nextThrowTick = this.getThrowTickCount() + 1;
+                    this.setThrowTickCount(nextThrowTick);
+                    if (nextThrowTick >= 30) {
+                        this.setThrowTickCount(0);
+                        this.setCurrentAction(Action.STAND_UP);
+                    }
+                }
+            }
         }
-        EntityPlayer entityPlayer = this.getOwnerPlayer();
-        if (entityPlayer == null) {
-            return;
-        }
-        if (!entityPlayer.onGround) {
-            return;
-        }
-        int n = this.getThrowTickCount() + 1;
-        this.setThrowTickCount(n);
-        if (n < 30) {
-            return;
-        }
-        this.setThrowTickCount(0);
-        this.setCurrentAction(Action.STAND_UP);
     }
 
     @Override
     @Nullable
     public UUID getOwnerUUID() {
-        String string = this.entityDataManager.get(ax);
-        if ("".equals(string)) {
+        String string = this.entityDataManager.get(OWNER_UUID);
+        if (string.isEmpty()) {
             return null;
         }
         try {
-            return UUID.fromString(this.entityDataManager.get(ax));
+            return UUID.fromString(this.entityDataManager.get(OWNER_UUID));
         } catch (Exception exception) {
             exception.printStackTrace();
             return null;
@@ -472,109 +453,102 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     @Override
     public void setOwnerUUID(UUID uuid) {
         if (uuid == null) {
-            this.entityDataManager.set(ax, "");
+            this.entityDataManager.set(OWNER_UUID, "");
             return;
         }
-        this.entityDataManager.set(ax, uuid.toString());
+        this.entityDataManager.set(OWNER_UUID, uuid.toString());
     }
 
-    public EntityPlayer net_minecraft_entity_player_EntityPlayer_r() {
+    public EntityPlayer gobGetOwnerPlayer() {
         UUID uUID = this.getOwnerUUID();
-        if (uUID == null) {
-            return null;
-        }
-        return this.world.getPlayerEntityByUUID(uUID);
+        return uUID == null ? null : this.world.getPlayerEntityByUUID(uUID);
     }
 
     @Override
     public void setThrowProgress(int progress) {
-        this.az = progress;
+        this.throwProgress = progress;
     }
 
     @Override
     public int getThrowProgress() {
-        return this.az;
+        return this.throwProgress;
     }
 
     @Override
     public void setThrowTickCount(int ticks) {
-        this.aG = ticks;
+        this.throwTicksOnGround = ticks;
     }
 
     @Override
     public int getThrowTickCount() {
-        return this.aG;
+        return this.throwTicksOnGround;
     }
 
     @Override
     public void setPreviousAction(Action action) {
-        this.aw = action;
+        this.previousAction = action;
     }
 
     @Override
     public Action getPreviousAction() {
-        return this.aw;
+        return this.previousAction;
     }
 
     @Override
     public void setHeldPlayerDistance(int distance) {
-        this.aE = distance;
+        this.heldPlayerDistance = distance;
     }
 
     @Override
     public int getHeldPlayerDistance() {
-        return this.aE;
+        return this.heldPlayerDistance;
     }
 
     @Override
     public void reInitTasks() {
         super.reInitTasks();
-        this.entityDataManager.set(aA, false);
-        if (this.getOwnerUUID() == null) {
-            return;
-        }
-        this.setOwnerUUID((UUID)null);
-        EntityPlayer entityPlayer = this.getOwnerPlayer();
-        if (entityPlayer == null) {
-            return;
-        }
-        PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), (EntityPlayerMP)entityPlayer);
-    }
-
-    @SideOnly(value=Side.CLIENT)
-    void void_c(Action fp_class3242) {
-        if (fp_class3242 == Action.NELSON_FAST && this.aw != Action.NELSON_FAST) {
-            this.aF = false;
+        this.entityDataManager.set(IS_CUMMING, false);
+        if (this.getOwnerUUID() != null) {
+            this.setOwnerUUID(null);
+            EntityPlayer player = this.getOwnerPlayer();
+            if (player != null) {
+                PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), (EntityPlayerMP) player);
+            }
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    void d(Action fp_class3242) {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        if (!minecraft.player.getPersistentID().equals(this.getInteractionPlayerUUID())) {
-            return;
+    void handleNelsonAction(Action action) {
+        if (action == Action.NELSON_FAST && this.previousAction != Action.NELSON_FAST) {
+            this.nelsonFastState = false;
         }
-        if (minecraft.gameSettings.thirdPersonView != 0) {
-            return;
-        }
-        switch (fp_class3242) {
-            case NELSON_CUM: 
-            case NELSON_FAST: 
-            case NELSON_INTRO: 
-            case NELSON_SLOW: {
-                minecraft.gameSettings.thirdPersonView = 2;
+    }
+
+    @SideOnly(value=Side.CLIENT)
+    void handleLocalAction(Action action) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.player.getPersistentID().equals(this.getInteractionPlayerUUID())) {
+            if (mc.gameSettings.thirdPersonView == 0) {
+                switch (action) {
+                    case NELSON_CUM:
+                    case NELSON_FAST:
+                    case NELSON_INTRO:
+                    case NELSON_SLOW: {
+                        mc.gameSettings.thirdPersonView = 2;
+                    }
+                }
             }
         }
     }
 
     @Override
-    public void setCustomPartList(List<Integer> list) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int n : list) {
-            AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, n);
+    public void setCustomPartList(List<Integer> parts) {
+        StringBuilder builder = new StringBuilder();
+        for (int part : parts) {
+            AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(builder, part);
         }
-        AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, 1);
-        this.entityDataManager.set(at, stringBuilder.toString());
+        AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(builder, 1);
+        this.entityDataManager.set(DNA_CODE, builder.toString());
     }
 
     @Override
@@ -600,57 +574,52 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.getCurrentAction();
-        if (fp_class3243 == Action.PAIZURI_CUM && (action == Action.PAIZURI_SLOW || action == Action.PAIZURI_FAST)) {
-            return;
+        Action currentAction = this.getCurrentAction();
+        if (currentAction != Action.PAIZURI_CUM || (action != Action.PAIZURI_SLOW && action != Action.PAIZURI_FAST)) {
+            if (currentAction != Action.NELSON_CUM || (action != Action.NELSON_SLOW && action != Action.NELSON_FAST)) {
+                if (currentAction != Action.BREEDING_CUM_0 || (action != Action.BREEDING_SLOW_0 && action != Action.BREEDING_FAST_0)) {
+                    if (action == Action.PAIZURI_START && !this.world.isRemote) {
+                        this.handlePlayerInteract();
+                    }
+                    if (action == Action.NELSON_INTRO && !this.world.isRemote) {
+                        this.handlePlayerLook();
+                    }
+                    if (action == Action.NELSON_CUM) {
+                        this.entityDataManager.set(IS_CUMMING, true);
+                    }
+                    if (currentAction == Action.NELSON_CUM && action != Action.NELSON_CUM) {
+                        this.entityDataManager.set(IS_CUMMING, false);
+                    }
+                    super.setCurrentAction(action);
+                }
+            }
         }
-        if (fp_class3243 == Action.NELSON_CUM && (action == Action.NELSON_SLOW || action == Action.NELSON_FAST)) {
-            return;
-        }
-        if (fp_class3243 == Action.BREEDING_CUM_0 && (action == Action.BREEDING_SLOW_0 || action == Action.BREEDING_FAST_0)) {
-            return;
-        }
-        if (action == Action.PAIZURI_START && !this.world.isRemote) {
-            this.void_m();
-        }
-        if (action == Action.NELSON_INTRO && !this.world.isRemote) {
-            this.void_q();
-        }
-        if (action == Action.NELSON_CUM) {
-            this.entityDataManager.set(aA, true);
-        }
-        if (fp_class3243 == Action.NELSON_CUM && action != Action.NELSON_CUM) {
-            this.entityDataManager.set(aA, false);
-        }
-        super.setCurrentAction(action);
     }
 
-    void void_q() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
-        if (entityPlayer == null) {
-            return;
+    void handlePlayerLook() {
+        EntityPlayer player = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
+        if (player != null) {
+            this.setYawRotation(player.rotationYaw);
+            this.noClip = true;
+            this.setNoGravity(true);
+            player.setNoGravity(true);
+            player.noClip = true;
+            player.setPositionAndUpdate(player.posX, player.posY, player.posZ - 1.0);
         }
-        this.setYawRotation(entityPlayer.rotationYaw);
-        this.noClip = true;
-        this.setNoGravity(true);
-        entityPlayer.setNoGravity(true);
-        entityPlayer.noClip = true;
-        entityPlayer.setPositionAndUpdate(entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ - 1.0);
     }
 
-    void void_m() {
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
-        if (entityPlayer == null) {
-            return;
+    void handlePlayerInteract() {
+        EntityPlayer player = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
+        if (player != null) {
+            this.setYawRotation(player.rotationYaw + 180.0f);
+            this.noClip = true;
+            this.setNoGravity(true);
+            player.setNoGravity(true);
+            player.noClip = true;
+            player.setPositionAndUpdate(player.posX, player.posY - 0.5, player.posZ - (double) 0.6f);
+            player.rotationPitch = 70.0f;
+            player.prevRotationPitch = 70.0f;
         }
-        this.setYawRotation(entityPlayer.rotationYaw + 180.0f);
-        this.noClip = true;
-        this.setNoGravity(true);
-        entityPlayer.setNoGravity(true);
-        entityPlayer.noClip = true;
-        entityPlayer.setPositionAndUpdate(entityPlayer.posX, entityPlayer.posY - 0.5, entityPlayer.posZ - (double)0.6f);
-        entityPlayer.rotationPitch = 70.0f;
-        entityPlayer.prevRotationPitch = 70.0f;
     }
 
     @Override
@@ -666,7 +635,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
         ResetGirl.EventHandler.resetGirl(this);
         this.setAnchored(false);
         this.setCurrentAction(Action.NULL);
-        this.setOwnerUUID((UUID)null);
+        this.setOwnerUUID(null);
     }
 
     @Override
@@ -716,19 +685,19 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
-                    boolean bl = this.aC = !this.aC;
+                    this.alternateFlyAnim = !this.alternateFlyAnim;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.goblin.fly" + (this.aC ? "2" : ""), true, event);
+                    this.createAnimation("animation.goblin.fly" + (this.alternateFlyAnim ? "2" : ""), true, event);
                     break;
                 }
-                if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
+                if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2f);
                         this.createAnimation("animation.goblin.running", true, event);
                         break;
                     }
-                    if (this.ao.y >= -0.1f) {
+                    if (this.moveInputVector.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(2.0);
                         this.createAnimation("animation.goblin.walk", true, event);
                         break;
@@ -789,11 +758,11 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                         break;
                     }
                     case NELSON_SLOW: {
-                        this.createAnimation("animation.goblin.nelson_slow" + (this.ay ? "" : "2"), true, event);
+                        this.createAnimation("animation.goblin.nelson_slow" + (this.nelsonSlowAlternate ? "" : "2"), true, event);
                         break;
                     }
                     case NELSON_FAST: {
-                        this.createAnimation("animation.goblin.nelson_fast" + (this.aF ? "c" : "s"), true, event);
+                        this.createAnimation("animation.goblin.nelson_fast" + (this.nelsonFastState ? "c" : "s"), true, event);
                         break;
                     }
                     case NELSON_CUM: {
@@ -813,7 +782,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                         break;
                     }
                     case BREEDING_SLOW_0: {
-                        this.createAnimation("animation.goblin.breeding_slow_1" + (this.aB ? "l" : "r"), true, event);
+                        this.createAnimation("animation.goblin.breeding_slow_1" + (this.breedingSlowAlternate ? "l" : "r"), true, event);
                         break;
                     }
                     case BREEDING_SLOW_2: {
@@ -821,7 +790,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                         break;
                     }
                     case BREEDING_FAST_0: {
-                        this.createAnimation("animation.goblin.breeding_fast_1" + (this.aH ? "c" : "s"), true, event);
+                        this.createAnimation("animation.goblin.breeding_fast_1" + (this.breedingFastState ? "c" : "s"), true, event);
                         break;
                     }
                     case BREEDING_FAST_2: {
@@ -849,7 +818,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                         break;
                     }
                     case PAIZURI_SLOW: {
-                        this.createAnimation("animation.goblin.paizuri_slow" + this.aD, true, event);
+                        this.createAnimation("animation.goblin.paizuri_slow" + this.paizuriAnimSuffix, true, event);
                         break;
                     }
                     case PAIZURI_FAST: {
@@ -940,7 +909,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                 }
                 case "paizuriSwitch": {
                     if (this.getRNG().nextBoolean()) break;
-                    this.aD = "".equals(this.aD) ? "2" : "";
+                    this.paizuriAnimSuffix = "".equals(this.paizuriAnimSuffix) ? "2" : "";
                     break;
                 }
                 case "touch": {
@@ -999,7 +968,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                 case "jumpCam": {
                     if (!this.isControlledByLocalPlayer()) break;
                     Minecraft minecraft = Minecraft.getMinecraft();
-                    minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 170.0f;
+                    minecraft.player.rotationYaw = this.getYawRotation() + 170.0f;
                     minecraft.player.rotationPitch = -20.0f;
                     minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                     minecraft.gameSettings.thirdPersonView = 2;
@@ -1008,7 +977,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                 case "breedingHmm": {
                     if (this.isControlledByLocalPlayer()) {
                         Minecraft minecraft = Minecraft.getMinecraft();
-                        minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
+                        minecraft.player.rotationYaw = this.getYawRotation() + 180.0f;
                         minecraft.player.rotationPitch = -15.0f;
                         minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                         minecraft.gameSettings.thirdPersonView = 0;
@@ -1031,7 +1000,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     if (this.isControlledByLocalPlayer()) {
                         Minecraft minecraft = Minecraft.getMinecraft();
                         minecraft.gameSettings.thirdPersonView = 2;
-                        minecraft.player.rotationYaw = this.getYawRotation().floatValue() - 120.0f;
+                        minecraft.player.rotationYaw = this.getYawRotation() - 120.0f;
                         minecraft.player.rotationPitch = -30.0f;
                     }
                 }
@@ -1043,22 +1012,22 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                 }
                 case "breeding_slow1Done": {
                     if (this.getRNG().nextBoolean()) {
-                        boolean bl = this.aB = !this.aB;
+                        this.breedingSlowAlternate = !this.breedingSlowAlternate;
                     }
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.setCurrentAction(Action.BREEDING_FAST_0);
-                    this.aH = false;
+                    this.breedingFastState = false;
                     break;
                 }
                 case "breeding_fast1Done": {
                     this.setCurrentAction(Action.BREEDING_SLOW_0);
                     if (!this.isControlledByLocalPlayer()) break;
-                    this.aH = false;
+                    this.breedingFastState = false;
                     break;
                 }
                 case "breeding_fast1Ready": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.aH = true;
+                    this.breedingFastState = true;
                     this.resetAnimationControllerOffset();
                     this.actionController.tickOffset = 0.0;
                     break;
@@ -1089,7 +1058,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                     if (!this.isControlledByLocalPlayer()) break;
                     Minecraft minecraft = Minecraft.getMinecraft();
                     minecraft.gameSettings.thirdPersonView = 0;
-                    minecraft.player.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
+                    minecraft.player.rotationYaw = this.getYawRotation() + 180.0f;
                     minecraft.player.rotationPitch = -15.0f;
                     minecraft.player.rotationYawHead = minecraft.player.rotationYaw;
                     minecraft.gameSettings.thirdPersonView = 0;
@@ -1103,20 +1072,20 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
                 }
                 case "nelson_slowDone": {
                     if (!this.getRNG().nextBoolean()) break;
-                    this.ay = !this.ay;
+                    this.nelsonSlowAlternate = !this.nelsonSlowAlternate;
                     break;
                 }
                 case "neslon_fastSwitch": {
                     if (!this.isControlledByLocalPlayer()) {
-                        this.aF = true;
+                        this.nelsonFastState = true;
                         return;
                     }
                     if (!HandlePlayerMovement.isThrusting) break;
-                    this.aF = true;
+                    this.nelsonFastState = true;
                     break;
                 }
                 case "nelsonFastDone": {
-                    this.aF = false;
+                    this.nelsonFastState = false;
                     if (!this.isControlledByLocalPlayer()) break;
                     this.setCurrentAction(Action.NELSON_SLOW);
                     break;
@@ -1137,151 +1106,135 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     }
 
     public static class EventHandler {
-        HashSet<EntityPlayer> a = new HashSet();
+        HashSet<EntityPlayer> players = new HashSet();
 
         @SideOnly(value=Side.CLIENT)
         @SubscribeEvent
-        public void a(RenderHandEvent renderHandEvent) {
-            PlayerGirl ei_class2512 = PlayerGirl.GetPlayer(Minecraft.getMinecraft().player);
-            if (ei_class2512 == null) {
-                return;
-            }
-            if (!(ei_class2512 instanceof IGoblin)) {
-                return;
-            }
-            if (((IGoblin)((Object)ei_class2512)).getOwnerUUID() != null) {
-                renderHandEvent.setCanceled(true);
-            }
-        }
-
-        @SubscribeEvent
-        public void a(TickEvent.PlayerTickEvent playerTickEvent) {
-            EntityPlayer entityPlayer = playerTickEvent.player;
-            if (entityPlayer == null) {
-                return;
-            }
-            this.a(entityPlayer);
-        }
-
-        @SideOnly(value=Side.CLIENT)
-        @SubscribeEvent
-        public void a(TickEvent.RenderTickEvent renderTickEvent) {
-            if (renderTickEvent.phase == TickEvent.Phase.END) {
-                return;
-            }
-            EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-            if (entityPlayerSP == null) {
-                return;
-            }
-            this.a(entityPlayerSP);
-        }
-
-        void a(EntityPlayer entityPlayer) {
-            PlayerGirl ei_class2512 = PlayerGirl.GetPlayer(entityPlayer);
-            if (!(ei_class2512 instanceof PlayerGoblin)) {
-                return;
-            }
-            Action fp_class3242 = ei_class2512.getCurrentAction();
-            if (fp_class3242 == Action.THROWN) {
-                return;
-            }
-            if (fp_class3242 == Action.START_THROWING && ((IGoblin)((Object)ei_class2512)).getThrowProgress() > 15) {
-                return;
-            }
-            UUID uUID = ((PlayerGoblin)ei_class2512).getOwnerUUID();
-            if (uUID == null) {
-                return;
-            }
-            EntityPlayer entityPlayer2 = entityPlayer.world.getPlayerEntityByUUID(uUID);
-            if (entityPlayer2 == null) {
-                return;
-            }
-            entityPlayer.noClip = true;
-            entityPlayer.setNoGravity(true);
-            ei_class2512.noClip = true;
-            ei_class2512.setNoGravity(true);
-            entityPlayer.setPosition(entityPlayer2.posX, entityPlayer2.posY + 2.0, entityPlayer2.posZ);
-            entityPlayer.lastTickPosX = entityPlayer2.lastTickPosX;
-            entityPlayer.lastTickPosY = entityPlayer2.lastTickPosY + 2.0;
-            entityPlayer.lastTickPosZ = entityPlayer2.lastTickPosZ;
-        }
-
-        @SideOnly(value=Side.CLIENT)
-        @SubscribeEvent
-        public void a(RenderWorldLastEvent renderWorldLastEvent) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            RenderManager renderManager = minecraft.getRenderManager();
-            EntityPlayerSP entityPlayerSP = minecraft.player;
-            if (minecraft.player == null) {
-                return;
-            }
-            Vec3d vec3d = entityPlayerSP.getPositionVector();
-            for (EntityPlayer entityPlayer : this.a) {
-                Vec3d vec3d2 = entityPlayer.getPositionVector();
-                Vec3d vec3d3 = vec3d2.subtract(vec3d);
-                renderManager.renderEntity(entityPlayer, vec3d3.x, vec3d3.y, vec3d3.z, 69.0f, renderWorldLastEvent.getPartialTicks(), true);
-            }
-            GlStateManager.enableLighting();
-            GlStateManager.enableDepth();
-            GlStateManager.enableAlpha();
-        }
-
-        @SideOnly(value=Side.CLIENT)
-        @SubscribeEvent
-        public void b(TickEvent.RenderTickEvent renderTickEvent) {
-            if (renderTickEvent.phase == TickEvent.Phase.START) {
-                this.b();
-            } else {
-                this.a();
-            }
-        }
-
-        @SideOnly(value=Side.CLIENT)
-        void a() {
-            for (EntityPlayer entityPlayer : this.a) {
-                entityPlayer.isDead = true;
-            }
-        }
-
-        @SideOnly(value=Side.CLIENT)
-        void b() {
-            this.a.clear();
-            Minecraft minecraft = Minecraft.getMinecraft();
-            EntityPlayerSP entityPlayerSP = minecraft.player;
-            if (minecraft.world == null) {
-                return;
-            }
-            for (EntityPlayer entityPlayer : minecraft.world.playerEntities) {
-                PlayerGoblin eq_class2642;
-                PlayerGirl ei_class2512;
-                if (entityPlayer == entityPlayerSP || !((ei_class2512 = PlayerGirl.GetPlayer(entityPlayer)) instanceof PlayerGoblin) || (eq_class2642 = (PlayerGoblin)ei_class2512).getOwnerUUID() == null) continue;
-                Action fp_class3242 = eq_class2642.getCurrentAction();
-                if (fp_class3242 == Action.THROWN || fp_class3242 == Action.START_THROWING) {
-                    return;
+        public void onRenderHand(RenderHandEvent event) {
+            PlayerGirl playerGirl = PlayerGirl.GetPlayer(Minecraft.getMinecraft().player);
+            if (playerGirl != null) {
+                if (playerGirl instanceof IGoblin) {
+                    if (((IGoblin) playerGirl).getOwnerUUID() != null) {
+                        event.setCanceled(true);
+                    }
                 }
-                this.a.add(entityPlayer);
-                entityPlayer.isDead = false;
             }
         }
 
         @SubscribeEvent
-        public void a(PlayerInteractEvent.EntityInteract entityInteract) {
-            EntityPlayer entityPlayer = entityInteract.getEntityPlayer();
-            if (!entityPlayer.isSneaking()) {
-                return;
+        public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+            EntityPlayer player = event.player;
+            if (player != null) {
+                this.handlePlayerOwner(player);
             }
-            if (!(entityInteract.getTarget() instanceof EntityPlayer)) {
-                return;
+        }
+
+        @SideOnly(value=Side.CLIENT)
+        @SubscribeEvent
+        public void onPlayerTickSync(TickEvent.RenderTickEvent event) {
+            if (event.phase != TickEvent.Phase.END) {
+                EntityPlayerSP player = Minecraft.getMinecraft().player;
+                if (player != null) {
+                    this.handlePlayerOwner(player);
+                }
             }
-            PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityInteract.getTarget().getPersistentID());
-            if (!(ei_class2512 instanceof PlayerGoblin)) {
-                return;
+        }
+
+        void handlePlayerOwner(EntityPlayer player) {
+            PlayerGirl playerGirl = PlayerGirl.GetPlayer(player);
+            if (playerGirl instanceof PlayerGoblin) {
+                Action action = playerGirl.getCurrentAction();
+                if (action != Action.THROWN) {
+                    if (action != Action.START_THROWING || ((IGoblin) playerGirl).getThrowProgress() <= 15) {
+                        UUID uUID = ((PlayerGoblin) playerGirl).getOwnerUUID();
+                        if (uUID != null) {
+                            EntityPlayer owner = player.world.getPlayerEntityByUUID(uUID);
+                            if (owner != null) {
+                                player.noClip = true;
+                                player.setNoGravity(true);
+                                playerGirl.noClip = true;
+                                playerGirl.setNoGravity(true);
+                                player.setPosition(owner.posX, owner.posY + 2.0, owner.posZ);
+                                player.lastTickPosX = owner.lastTickPosX;
+                                player.lastTickPosY = owner.lastTickPosY + 2.0;
+                                player.lastTickPosZ = owner.lastTickPosZ;
+                            }
+                        }
+                    }
+                }
             }
-            PlayerGirl ei_class2513 = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
-            if (ei_class2513 != null) {
-                return;
+        }
+
+        @SideOnly(value=Side.CLIENT)
+        @SubscribeEvent
+        public void onRenderWorldLast(RenderWorldLastEvent event) {
+            Minecraft mc = Minecraft.getMinecraft();
+            RenderManager renderManager = mc.getRenderManager();
+            EntityPlayerSP player = mc.player;
+            if (mc.player != null) {
+                Vec3d playerPos = player.getPositionVector();
+                for (EntityPlayer owner : this.players) {
+                    Vec3d pos = owner.getPositionVector();
+                    Vec3d targetPos = pos.subtract(playerPos);
+                    renderManager.renderEntity(owner, targetPos.x, targetPos.y, targetPos.z, 69.0f, event.getPartialTicks(), true);
+                }
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
+                GlStateManager.enableAlpha();
             }
-            ((PlayerGoblin)ei_class2512).void_c(entityInteract.getEntityPlayer());
+        }
+
+        @SideOnly(value=Side.CLIENT)
+        @SubscribeEvent
+        public void onRenderTick(TickEvent.RenderTickEvent event) {
+            if (event.phase == TickEvent.Phase.START) {
+                this.clearFakePlayers();
+            } else {
+                this.killFakePlayers();
+            }
+        }
+
+        @SideOnly(value=Side.CLIENT)
+        void killFakePlayers() {
+            for (EntityPlayer player : this.players) {
+                player.isDead = true;
+            }
+        }
+
+        @SideOnly(value=Side.CLIENT)
+        void clearFakePlayers() {
+            this.players.clear();
+            Minecraft mc = Minecraft.getMinecraft();
+            EntityPlayerSP player = mc.player;
+            if (mc.world != null) {
+                for (EntityPlayer owner : mc.world.playerEntities) {
+                    PlayerGoblin goblin;
+                    PlayerGirl playerGirl;
+                    if (owner != player && (playerGirl = PlayerGirl.GetPlayer(owner)) instanceof PlayerGoblin && (goblin = (PlayerGoblin) playerGirl).getOwnerUUID() != null) {
+                        Action action = goblin.getCurrentAction();
+                        if (action != Action.THROWN && action != Action.START_THROWING) {
+                            this.players.add(owner);
+                            owner.isDead = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        @SubscribeEvent
+        public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+            EntityPlayer player = event.getEntityPlayer();
+            if (player.isSneaking()) {
+                if (event.getTarget() instanceof EntityPlayer) {
+                    PlayerGirl target = PlayerGirl.getUUIDHashtable(event.getTarget().getPersistentID());
+                    if (target instanceof PlayerGoblin) {
+                        PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(player.getPersistentID());
+                        if (playerGirl == null) {
+                            ((PlayerGoblin) target).handlePlayerThrow(event.getEntityPlayer());
+                        }
+                    }
+                }
+            }
         }
     }
 }

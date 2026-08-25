@@ -67,29 +67,25 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
     }
 
     public void doRender(GirlEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        // TODO check clash above
-        if (!this.shouldProceedWithRender(entity)) {
-            return;
+        if (this.shouldProceedWithRender(entity)) {
+            PlayerGirl playerGirl = (PlayerGirl) entity;
+            if (playerGirl.getOwnerUserUUID() != null) {
+                EntityPlayer owner = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(playerGirl.getOwnerUserUUID());
+                if (owner != null) {
+                    this.mainHandItem = owner.getHeldItemMainhand();
+                    this.offHandItem = owner.getHeldItemOffhand();
+                    this.isUsingItem = playerGirl.isUsingItem;
+                    this.isSneaking = playerGirl.isPlayerSneaking;
+                    this.currentGirl = (PlayerGirl) entity;
+                    this.partialTicks = partialTicks;
+                    playerGirl.syncArmor(owner);
+                    if (this.shouldRenderNameTag(owner, entity)) {
+                        this.renderLivingLabel(entity, owner.getName(), x, y + (double) playerGirl.getScaleFactor(), z, 300);
+                    }
+                    super.doRender(entity, x, y, z, entityYaw, partialTicks);
+                }
+            }
         }
-        PlayerGirl playerGirl = (PlayerGirl) entity;
-        if (playerGirl.getOwnerUserUUID() == null) {
-            return;
-        }
-        EntityPlayer owner = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(playerGirl.getOwnerUserUUID());
-        if (owner == null) {
-            return;
-        }
-        this.mainHandItem = owner.getHeldItemMainhand();
-        this.offHandItem = owner.getHeldItemOffhand();
-        this.isUsingItem = playerGirl.isUsingItem;
-        this.isSneaking = playerGirl.isPlayerSneaking;
-        this.currentGirl = (PlayerGirl) entity;
-        this.partialTicks = partialTicks;
-        playerGirl.syncArmor(owner);
-        if (this.shouldRenderNameTag(owner, entity)) {
-            this.renderLivingLabel(entity, owner.getName(), x, y + (double)playerGirl.getScaleFactor(), z, 300);
-        }
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
     @Override
@@ -110,10 +106,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
             return false;
         }
         Action currentAction = girl.getCurrentAction();
-        if (currentAction == null) {
-            return true;
-        }
-        return !currentAction.hideNameTag;
+        return currentAction == null || !currentAction.hideNameTag;
     }
 
     protected void onBoneRenderStart(String boneName, GeoBone geoBone) {

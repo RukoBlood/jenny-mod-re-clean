@@ -19,41 +19,40 @@ import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 public class PlayerGirlElytraRenderer extends GeoLayerRenderer {
-    final static private ResourceLocation b = new ResourceLocation("textures/entity/elytra.png");
-    final private ModelElytra a = new ModelElytra();
+    final static private ResourceLocation ELYTRA_TEXTURE = new ResourceLocation("textures/entity/elytra.png");
+    final private ModelElytra modelElytra = new ModelElytra();
 
     public PlayerGirlElytraRenderer(IGeoRenderer iGeoRenderer) {
         super(iGeoRenderer);
     }
 
-    public void render(EntityLivingBase entityLivingBase, float f, float f2, float f3, float f4, float f5, float f6, Color color) {
+    @Override
+    public void render(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float unused, float ageInTicks, float netHeadYaw, float headPitch, Color color) {
         UUID uUID;
-        if (!(entityLivingBase instanceof Fighter)) {
-            return;
+        if (entity instanceof Fighter) {
+            Fighter fighter = (Fighter) entity;
+            ItemStack itemStack = fighter.getDataManager().get(Fighter.CHEST_SLOT);
+            EntityPlayer entityPlayer = null;
+            if (fighter instanceof PlayerGirl && (uUID = ((PlayerGirl) fighter).getOwnerUserUUID()) != null) {
+                entityPlayer = entity.world.getPlayerEntityByUUID(uUID);
+            }
+            if (itemStack.getItem() == Items.ELYTRA) {
+                GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(ELYTRA_TEXTURE);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(0.0f, 0.0f, 0.125f);
+                float scaleFactor = this.getScaleFactor();
+                this.modelElytra.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityPlayer == null ? entity : entityPlayer);
+                this.modelElytra.render(entityPlayer == null ? entity : entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+                GlStateManager.disableBlend();
+                GlStateManager.popMatrix();
+            }
         }
-        Fighter e2_class2182 = (Fighter)entityLivingBase;
-        ItemStack itemStack = e2_class2182.getDataManager().get(Fighter.CHEST_SLOT);
-        EntityPlayer entityPlayer = null;
-        if (e2_class2182 instanceof PlayerGirl && (uUID = ((PlayerGirl)e2_class2182).getOwnerUserUUID()) != null) {
-            entityPlayer = entityLivingBase.world.getPlayerEntityByUUID(uUID);
-        }
-        if (itemStack.getItem() != Items.ELYTRA) {
-            return;
-        }
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(b);
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0.0f, 0.0f, 0.125f);
-        float f7 = this.a();
-        this.a.setRotationAngles(f, f2, f4, f5, f6, f7, entityPlayer == null ? entityLivingBase : entityPlayer);
-        this.a.render(entityPlayer == null ? entityLivingBase : entityPlayer, f, f2, f4, f5, f6, f7);
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
     }
 
-    public float a() {
+    public float getScaleFactor() {
         GlStateManager.enableRescaleNormal();
         GlStateManager.scale(-1.0f, -1.0f, 1.0f);
         GlStateManager.translate(0.0f, -1.501f, 0.0f);

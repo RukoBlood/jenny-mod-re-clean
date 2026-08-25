@@ -60,12 +60,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 //ei
 public abstract class PlayerGirl extends Fighter {
     final static public String CUSTOM_MODEL_NBT = "sexmod:CustomModel";
-    final static public String ae = "sexmod:GirlSpecific";
-    final static public float ac = 0.0f;
-    final static public int am = 100;
-    final static public int Y = 65;
-    static public boolean ag = true; //TODO: what is ag
-    public Vector2f ao = new Vector2f(0.0f, 0.0f);
+    final static public String GIRL_SPECIFIC_NBT_KEY = "sexmod:GirlSpecific";
+    final static public float DEFAULT_OFFSET_Y = 0.0f;
+    final static public int STRIP_ANIMATION_DURATION_TICKS = 100;
+    final static public int STRIP_OUTFIT_TOGGLE_TICK = 65;
+    static public boolean ALLOW_FLIGHT_SYNC_ENABLED = true;
+    public Vector2f moveInputVector = new Vector2f(0.0f, 0.0f);
     public boolean isPlayerSneaking = false;
     public boolean isPlayerSprinting = false;
     public boolean isPlayerRiding = false;
@@ -93,7 +93,6 @@ public abstract class PlayerGirl extends Fighter {
         this.entityDataManager.set(OWNER, Optional.of(player));
     }
 
-    // TODO clash
     @Nullable
     public static PlayerGirl getUUIDHashtable(UUID uUID) {
         return playerGirlUUIDHashtable.get(uUID);
@@ -246,7 +245,7 @@ public abstract class PlayerGirl extends Fighter {
     }
 
     protected void handleOwnerUUID(boolean allowFly) {
-        if (ag) {
+        if (ALLOW_FLIGHT_SYNC_ENABLED) {
             if (this.getOwnerUserUUID() != null) {
                 EntityPlayer player = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
                 if (player != null) {
@@ -368,7 +367,7 @@ public abstract class PlayerGirl extends Fighter {
         return this.entityDataManager.get(OWNER).isPresent() && this.entityDataManager.get(OWNER).get().equals(Minecraft.getMinecraft().player.getPersistentID());
     }
 
-    public boolean EGoblinIsOwnerUUIDNotNull() {
+    public boolean hasOwner() {
         return false;
     }
 

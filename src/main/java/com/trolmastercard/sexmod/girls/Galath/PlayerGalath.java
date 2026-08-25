@@ -238,14 +238,14 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                 else if (!this.isPlayerOnGround) {
                     this.createAnimation("animation.galath.controlled_flight", true, event);
                 }
-                else if (Math.abs(this.ao.x) + Math.abs(this.ao.y) == 0.0f) {
+                else if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) == 0.0f) {
                     this.createAnimation(this.hasNoGalathOwner() ? "animation.galath.crouchidle" : "animation.galath.idle", true, event);
                 }
                 else if (this.isPlayerSprinting) {
                     this.movementController.setAnimationSpeed(1.5);
                     this.createAnimation(this.hasNoGalathOwner() ? "animation.galath.crouchwalk" : "animation.galath.run", true, event);
                 }
-                else if (this.ao.y >= -0.1f) {
+                else if (this.moveInputVector.y >= -0.1f) {
                     this.movementController.setAnimationSpeed(2.0);
                     this.createAnimation(this.hasNoGalathOwner() ? "animation.galath.crouchwalk" : "animation.galath.walk", true, event);
                 } else {

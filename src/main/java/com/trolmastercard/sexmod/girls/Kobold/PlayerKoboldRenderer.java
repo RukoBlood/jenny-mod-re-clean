@@ -54,13 +54,13 @@ extends WorkerPlayerRenderer {
 
     @Override
     protected void onRenderSetup() {
-        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.aA).floatValue();
+        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.SCALE_OFFSET).floatValue();
         GlStateManager.scale(1.0f - f, 1.0f - f, 1.0f - f);
     }
 
     @Override
     protected void onRenderCleanup() {
-        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.aA).floatValue();
+        float f = 0.25f - this.renderEntity.getDataManager().get(PlayerKobold.SCALE_OFFSET).floatValue();
         double d = 1.0 / (1.0 - (double)f);
         GlStateManager.scale(d, d, d);
     }

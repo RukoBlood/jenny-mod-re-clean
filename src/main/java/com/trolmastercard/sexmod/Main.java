@@ -161,7 +161,7 @@ public class Main {
             ((OutputStreamWriter)writer2).close();
             ConfigWorldGenHandler.GENERATION_ENABLED = true;
             GirlModel.enableModelCache = false;
-            PlayerGirl.ag = true;
+            PlayerGirl.ALLOW_FLIGHT_SYNC_ENABLED = true;
             return;
         }
         int genIdx = ((String)json).indexOf("shouldGenBuildings");
@@ -169,7 +169,7 @@ public class Main {
         int n3 = ((String)json).indexOf("allowFlying");
         ConfigWorldGenHandler.GENERATION_ENABLED = 't' == ((String)json).charAt(genIdx + 20);
         GirlModel.enableModelCache = 't' == ((String)json).charAt(n2 + 22);
-        PlayerGirl.ag = 't' == ((String)json).charAt(n3 + 13);
+        PlayerGirl.ALLOW_FLIGHT_SYNC_ENABLED = 't' == ((String)json).charAt(n3 + 13);
     }
 
     static {

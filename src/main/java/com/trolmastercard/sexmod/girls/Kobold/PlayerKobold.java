@@ -51,12 +51,12 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 import software.bernie.geckolib3.util.MatrixStack;
 
 public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
-    final static public EyeAndKoboldColor aw = EyeAndKoboldColor.PURPLE;
-    final static public DataParameter<Float> aA = EntityDataManager.createKey(PlayerKobold.class, DataSerializers.FLOAT).getSerializer().createKey(122);
-    boolean aB = false;
-    boolean az = true;
-    boolean ay = false;
-    int ax = 0;
+    final static public EyeAndKoboldColor DEFAULT_COLOR = EyeAndKoboldColor.PURPLE;
+    final static public DataParameter<Float> SCALE_OFFSET = EntityDataManager.createKey(PlayerKobold.class, DataSerializers.FLOAT).getSerializer().createKey(122);
+    boolean flyVariantToggle = false;
+    boolean blowjobSideRight = true;
+    boolean blowjobSwitching = false;
+    int moanCounter = 0;
 
     protected PlayerKobold(World world) {
         super(world);
@@ -69,44 +69,50 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     @Override
     protected void entityInit() {
         super.entityInit();
-        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.values()[this.getRNG().nextInt(EyeAndKoboldColor.values().length)];
-        this.entityDataManager.register(au, new BlockPos(eyeAndKoboldColor_.getMainColor()));
-        this.entityDataManager.register(as, aw.name());
-        this.entityDataManager.register(aA, 0.0f);
+        EyeAndKoboldColor color = EyeAndKoboldColor.values()[this.getRNG().nextInt(EyeAndKoboldColor.values().length)];
+        this.entityDataManager.register(WORK_POS, new BlockPos(color.getMainColor()));
+        this.entityDataManager.register(MODEL_CODE, DEFAULT_COLOR.name());
+        this.entityDataManager.register(SCALE_OFFSET, 0.0f);
     }
 
     @Override
-    public AxisAlignedBB getPlayerCollisionBox(EntityPlayer entityPlayer) {
-        float f = 0.6f;
-        float f2 = 0.9f;
-        float f3 = f / 2.0f;
-        return new AxisAlignedBB(entityPlayer.posX - (double)f3, entityPlayer.posY, entityPlayer.posZ - (double)f3, entityPlayer.posX + (double)f3, entityPlayer.posY + (double)f2, entityPlayer.posZ + (double)f3);
+    public AxisAlignedBB getPlayerCollisionBox(EntityPlayer player) {
+        float base = 0.6f;
+        float offsetY = 0.9f;
+        float offsetXZ = base / 2.0f;
+        return new AxisAlignedBB(
+                player.posX - (double)offsetXZ,
+                player.posY,
+                player.posZ - (double)offsetXZ,
+                player.posX + (double)offsetXZ,
+                player.posY + (double)offsetY,
+                player.posZ + (double)offsetXZ);
     }
 
     @Override
-    public void setCustomPartList(List<Integer> list) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < list.size(); ++i) {
-            int n = list.get(i);
+    public void setCustomPartList(List<Integer> parts) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < parts.size(); ++i) {
+            int partId = parts.get(i);
             switch (i) {
                 case 0: {
-                    this.entityDataManager.set(aA, (float) n / 100.0f * 0.25f);
+                    this.entityDataManager.set(SCALE_OFFSET, (float) partId / 100.0f * 0.25f);
                     continue;
                 }
                 case 1: {
-                    this.entityDataManager.set(as, EyeAndKoboldColor.values()[n].toString());
+                    this.entityDataManager.set(MODEL_CODE, EyeAndKoboldColor.values()[partId].toString());
                     continue;
                 }
                 case 2: {
-                    this.entityDataManager.set(au, new BlockPos(EyeAndKoboldColor.values()[n].getMainColor()));
+                    this.entityDataManager.set(WORK_POS, new BlockPos(EyeAndKoboldColor.values()[partId].getMainColor()));
                     continue;
                 }
                 default: {
-                    AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(stringBuilder, n);
+                    AbstractNpcOnlyEntity.appendPaddedNumberWithFixedValue(sb, partId);
                 }
             }
         }
-        this.entityDataManager.set(at, stringBuilder.toString());
+        this.entityDataManager.set(DNA_CODE, sb.toString());
         if (this.world.isRemote) {
             PlayerKoboldRenderer.ResetColors();
         }
@@ -114,24 +120,24 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
 
     @Override
     public ArrayList<Integer> getBasePartIdList() {
-        ArrayList<Integer> arrayList = new ArrayList<Integer>();
-        arrayList.add(Math.round(this.entityDataManager.get(aA) * 100.0f / 0.25f));
-        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf(this.entityDataManager.get(as))));
-        arrayList.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf(this.entityDataManager.get(au))));
-        return arrayList;
+        ArrayList<Integer> parts = new ArrayList<>();
+        parts.add(Math.round(this.entityDataManager.get(SCALE_OFFSET) * 100.0f / 0.25f));
+        parts.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf(this.entityDataManager.get(MODEL_CODE))));
+        parts.add(EyeAndKoboldColor.indexOf(EyeAndKoboldColor.safeValueOf(this.entityDataManager.get(WORK_POS))));
+        return parts;
     }
 
     @Override
-    protected String a(StringBuilder stringBuilder) {
-        AbstractNpcOnlyEntity.appendPaddedLetter(stringBuilder, 8);
-        AbstractNpcOnlyEntity.appendPaddedLetter(stringBuilder, 3);
-        AbstractNpcOnlyEntity.appendRandomGene(stringBuilder);
-        AbstractNpcOnlyEntity.appendRandomGene(stringBuilder);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 2);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 1);
-        AbstractNpcOnlyEntity.appendPaddedNumber(stringBuilder, 1);
-        return stringBuilder.toString();
+    protected String buildModelCodeDNA(StringBuilder builder) {
+        AbstractNpcOnlyEntity.appendPaddedLetter(builder, 8);
+        AbstractNpcOnlyEntity.appendPaddedLetter(builder, 3);
+        AbstractNpcOnlyEntity.appendRandomGene(builder);
+        AbstractNpcOnlyEntity.appendRandomGene(builder);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 2);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 2);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 1);
+        AbstractNpcOnlyEntity.appendPaddedNumber(builder, 1);
+        return builder.toString();
     }
 
     @Override
@@ -161,8 +167,8 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
 
     @Override
     public float getScaleFactor() {
-        float f = 0.25f - this.entityDataManager.get(aA).floatValue();
-        return 1.4f - f;
+        float shrink = 0.25f - this.entityDataManager.get(SCALE_OFFSET);
+        return 1.4f - shrink;
     }
 
     @Override
@@ -202,14 +208,14 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
 
     @Override
     protected MatrixStack applyAdditionalMatrixTransformations(MatrixStack stack) {
-        float f = 0.25f - this.entityDataManager.get(aA);
+        float f = 0.25f - this.entityDataManager.get(SCALE_OFFSET);
         stack.scale(1.0f - f, 1.0f - f, 1.0f - f);
         return stack;
     }
 
     @Override
     protected float transformCameraPivotY(float pivotY) {
-        float f2 = 1.0f - (0.25f - this.entityDataManager.get(aA));
+        float f2 = 1.0f - (0.25f - this.entityDataManager.get(SCALE_OFFSET));
         return pivotY * f2;
     }
 
@@ -226,7 +232,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
     @Override
     public Vec3i getHandColor(int index) {
         try {
-            return EyeAndKoboldColor.valueOf(this.entityDataManager.get(as)).getMainColor();
+            return EyeAndKoboldColor.valueOf(this.entityDataManager.get(MODEL_CODE)).getMainColor();
         } catch (Exception e) {
             e.printStackTrace();
             return super.getHandColor(index);
@@ -261,17 +267,14 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.getCurrentAction();
-        if (fp_class3243 == Action.MATING_PRESS_CUM && (action == Action.MATING_PRESS_SOFT || action == Action.MATING_PRESS_HARD)) {
-            return;
+        Action currentAction = this.getCurrentAction();
+        if (currentAction != Action.MATING_PRESS_CUM || (action != Action.MATING_PRESS_SOFT && action != Action.MATING_PRESS_HARD)) {
+            if (currentAction != Action.KOBOLD_ANAL_CUM || (action != Action.KOBOLD_ANAL_SLOW && action != Action.KOBOLD_ANAL_FAST)) {
+                if (currentAction != Action.CUMBLOWJOB || (action != Action.SUCKBLOWJOB && action != Action.THRUSTBLOWJOB)) {
+                    super.setCurrentAction(action);
+                }
+            }
         }
-        if (fp_class3243 == Action.KOBOLD_ANAL_CUM && (action == Action.KOBOLD_ANAL_SLOW || action == Action.KOBOLD_ANAL_FAST)) {
-            return;
-        }
-        if (fp_class3243 == Action.CUMBLOWJOB && (action == Action.SUCKBLOWJOB || action == Action.THRUSTBLOWJOB)) {
-            return;
-        }
-        super.setCurrentAction(action);
     }
 
     @Override
@@ -279,7 +282,7 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
         if (this.world instanceof FakeWorld) {
             return PlayState.STOP;
         }
-        float f = 0.25f - this.getDataManager().get(KoboldEntity.SIZE).floatValue();
+        float f = 0.25f - this.getDataManager().get(KoboldEntity.SIZE);
         GeckoLibCache.getInstance().parser.setValue("size", f);
         switch (event.getController().getName()) {
             case "eyes": {
@@ -300,19 +303,19 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
-                    boolean bl = this.aB = !this.aB;
+                    this.flyVariantToggle = !this.flyVariantToggle;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.kobold.fly" + (this.aB ? "2" : ""), true, event);
+                    this.createAnimation("animation.kobold.fly" + (this.flyVariantToggle ? "2" : ""), true, event);
                     break;
                 }
-                if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
+                if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2f);
                         this.createAnimation("animation.kobold.run", true, event);
                         break;
                     }
-                    if (this.ao.y >= -0.1f) {
+                    if (this.moveInputVector.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(2.0);
                         this.createAnimation("animation.kobold.walk", true, event);
                         break;
@@ -359,9 +362,9 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                         break;
                     }
                     case SUCKBLOWJOB_BLINK: {
-                        String string = this.az ? "R" : "L";
-                        String string2 = this.ay ? "Switch" : "";
-                        this.createAnimation("animation.kobold.blowjobSlow" + string + string2, true, event);
+                        String side = this.blowjobSideRight ? "R" : "L";
+                        String isSwitch = this.blowjobSwitching ? "Switch" : "";
+                        this.createAnimation("animation.kobold.blowjobSlow" + side + isSwitch, true, event);
                         break;
                     }
                     case THRUSTBLOWJOB: {
@@ -413,23 +416,24 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
         return PlayState.CONTINUE;
     }
 
-    void b(SoundEvent soundEvent) {
-        this.b(soundEvent, 1.0f);
+    void playSound(SoundEvent sound) {
+        this.playKoboldSoundAtVolume(sound, 1.0f);
     }
 
-    void b(SoundEvent[] soundEventArray) {
-        this.b(soundEventArray, 1.0f);
+    void kbPlayRandomSound(SoundEvent[] sounds) {
+        this.kbPlayRandomSoundAtVolume(sounds, 1.0f);
     }
 
-    void b(SoundEvent[] soundEventArray, float f) {
-        this.b(soundEventArray[this.getRNG().nextInt(soundEventArray.length)], f);
+    void kbPlayRandomSoundAtVolume(SoundEvent[] sounds, float volume) {
+        this.playKoboldSoundAtVolume(sounds[this.getRNG().nextInt(sounds.length)], volume);
     }
 
-    void b(SoundEvent soundEvent, float f) {
-        float f2 = 0.25f - this.entityDataManager.get(aA).floatValue();
-        double d = f2 / 0.25f;
-        float f3 = (float) RotationHelper.LerpDouble(0.9f, 1.1f, d);
-        this.PlaySoundAtPosition(soundEvent, f, f3);
+
+    void playKoboldSoundAtVolume(SoundEvent sound, float volume) {
+        float size = 0.25f - this.entityDataManager.get(SCALE_OFFSET);
+        double step = size / 0.25f;
+        float pitch = (float) RotationHelper.LerpDouble(0.9f, 1.1f, step);
+        this.PlaySoundAtPosition(sound, volume, pitch);
     }
 
     @Override
@@ -467,15 +471,15 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                 case "blowjobStartMSG1": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation().floatValue() + 180.0f);
-                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f, 0.0f));
+                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.625 - (double)entityPlayerSP.getEyeHeight(), -1.0), this.getYawRotation() + 180.0f);
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation() + 180.0f, 0.0f));
                     break;
                 }
                 case "blowjobStartMSG2": {
                     if (!this.isControlledByLocalPlayer()) break;
-                    EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5 - (double)entityPlayerSP.getEyeHeight(), -0.6875), this.getYawRotation().floatValue() + 180.0f);
-                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue() + 180.0f - 40.0f, 0.0f));
+                    EntityPlayerSP player = Minecraft.getMinecraft().player;
+                    Vec3d pos = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5 - (double)player.getEyeHeight(), -0.6875), this.getYawRotation() + 180.0f);
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(pos), this.getYawRotation() + 180.0f - 40.0f, 0.0f));
                     break;
                 }
                 case "lipsound": {
@@ -493,20 +497,20 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                 }
                 case "blowjobStartDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB_BLINK);
-                    this.ay = false;
-                    this.az = true;
+                    this.blowjobSwitching = false;
+                    this.blowjobSideRight = true;
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.showUI();
                     break;
                 }
                 case "switch": {
-                    this.ay = this.getRNG().nextBoolean();
+                    this.blowjobSwitching = this.getRNG().nextBoolean();
                     this.actionController.clearAnimationCache();
                     break;
                 }
                 case "endSwitch": {
-                    this.ay = false;
-                    this.az = !this.az;
+                    this.blowjobSwitching = false;
+                    this.blowjobSideRight = !this.blowjobSideRight;
                     this.actionController.clearAnimationCache();
                     break;
                 }
@@ -539,8 +543,8 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                 case "analStartCam": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation().floatValue() + 180.0f);
-                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation().floatValue(), 0.0f));
+                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, 0.5625 - (double)entityPlayerSP.getEyeHeight(), 0.5625), this.getYawRotation() + 180.0f);
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(this.getInteractionPlayerUUID().toString(), this.getTargetPosition().add(vec3d), this.getYawRotation(), 0.0f));
                     break;
                 }
                 case "pounding": {
@@ -576,63 +580,63 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     break;
                 }
                 case "giggle": {
-                    this.b(SoundsHandler.GIRLS_KOBOLD_GIGGLE);
+                    this.kbPlayRandomSound(SoundsHandler.GIRLS_KOBOLD_GIGGLE);
                     break;
                 }
                 case "moan": {
-                    this.b(SoundsHandler.GIRLS_KOBOLD_MOAN);
+                    this.kbPlayRandomSound(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "moanMating": {
-                    --this.ax;
-                    if (this.ax > 0) break;
-                    this.ax = 3;
-                    this.b(SoundsHandler.GIRLS_KOBOLD_MOAN);
+                    --this.moanCounter;
+                    if (this.moanCounter > 0) break;
+                    this.moanCounter = 3;
+                    this.kbPlayRandomSound(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "analHardMSG1": {
-                    --this.ax;
-                    if (this.ax > 0) break;
-                    this.ax = 4;
-                    this.b(SoundsHandler.GIRLS_KOBOLD_MOAN);
+                    --this.moanCounter;
+                    if (this.moanCounter > 0) break;
+                    this.moanCounter = 4;
+                    this.kbPlayRandomSound(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "orgasm": {
-                    this.b(SoundsHandler.GIRLS_KOBOLD_ORGASM);
+                    this.kbPlayRandomSound(SoundsHandler.GIRLS_KOBOLD_ORGASM);
                     break;
                 }
                 case "breath": {
-                    this.b(SoundsHandler.GIRLS_KOBOLD_LIGHTBREATHING, 0.5f);
+                    this.kbPlayRandomSoundAtVolume(SoundsHandler.GIRLS_KOBOLD_LIGHTBREATHING, 0.5f);
                     break;
                 }
                 case "haa": {
-                    this.b(SoundsHandler.GIRLS_KOBOLD_HAA, 0.7f);
+                    this.kbPlayRandomSoundAtVolume(SoundsHandler.GIRLS_KOBOLD_HAA, 0.7f);
                     break;
                 }
                 case "interested": {
-                    this.b(SoundsHandler.GIRLS_KOBOLD_INTERESTED);
+                    this.kbPlayRandomSound(SoundsHandler.GIRLS_KOBOLD_INTERESTED);
                     break;
                 }
                 case "yep": {
-                    this.b(SoundsHandler.GIRLS_KOBOLD_YEP);
+                    this.kbPlayRandomSound(SoundsHandler.GIRLS_KOBOLD_YEP);
                     break;
                 }
                 case "bjmoan": {
-                    this.b(SoundsHandler.random(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
+                    this.playSound(SoundsHandler.random(SoundsHandler.GIRLS_KOBOLD_BJMOAN));
                     break;
                 }
                 case "blowjobStartbreath": {
                     int n = this.getRNG().nextInt(3);
-                    this.b(SoundsHandler.GIRLS_KOBOLD_LIGHTBREATHING[n]);
+                    this.playSound(SoundsHandler.GIRLS_KOBOLD_LIGHTBREATHING[n]);
                     break;
                 }
                 case "matingCam": {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 0.4375 - (double)entityPlayerSP.eyeHeight, -0.6875);
-                    vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation().floatValue() + 180.0f);
+                    vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
-                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 10.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation() + 180.0f, 10.0f));
                     break;
                 }
                 case "mating_press_startDone": {
@@ -665,14 +669,14 @@ public class PlayerKobold extends WorkerPlayerEntity implements IKobold {
                     if (!this.isControlledByLocalPlayer()) break;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     Vec3d vec3d = new Vec3d(0.0, 1.1875 - (double)entityPlayerSP.eyeHeight, 0.125);
-                    vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation().floatValue() + 180.0f);
+                    vec3d = VectorMath.rotateByYaw(vec3d, this.getYawRotation() + 180.0f);
                     vec3d = vec3d.add(this.getTargetPosition());
-                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation().floatValue() + 180.0f, 70.0f));
+                    PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, this.getYawRotation() + 180.0f, 70.0f));
                     break;
                 }
                 case "cumMsg": {
                     this.sendChatMessage("I.. hope I am satisfying you sir");
-                    this.b(SoundsHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
+                    this.playSound(SoundsHandler.GIRLS_KOBOLD_SAD[this.getRNG().nextInt(1)]);
                     break;
                 }
                 case "mating_press_cumDone": {

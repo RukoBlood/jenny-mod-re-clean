@@ -23,7 +23,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -32,11 +31,10 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlayerBia
-extends PlayerGirl {
-    int ar = -1;
-    boolean ap = false;
-    int aq = 1;
+public class PlayerBia extends PlayerGirl {
+    int interactionWaitTimer = -1;
+    boolean isFlyAltAnimation = false;
+    int hardDoggyAnimVariant = 1;
 
     public PlayerBia(World world) {
         super(world);
@@ -61,13 +59,13 @@ extends PlayerGirl {
     }
 
     @Override
-    public boolean handleActionRequest(String string) {
-        if ("anal".equals(string)) {
+    public boolean handleActionRequest(String action) {
+        if ("anal".equals(action)) {
             this.setCurrentAction(Action.ANAL_PREPARE);
             this.setOutfitIndex(0);
             return true;
         }
-        if ("doggy".equals(string)) {
+        if ("doggy".equals(action)) {
             this.setCurrentAction(Action.SITDOWN);
             this.setOutfitIndex(0);
             return true;
@@ -157,77 +155,72 @@ extends PlayerGirl {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        this.a_();
+        this.handleBiaAnalState();
     }
 
     @Override
     protected void resetLocalPlayerClientState() {
         super.resetLocalPlayerClientState();
-        this.ar = -1;
+        this.interactionWaitTimer = -1;
     }
 
     @SideOnly(value=Side.CLIENT)
-    public boolean boolean_a(EntityPlayer entityPlayer) {
+    public boolean isOwnPlayer(EntityPlayer entityPlayer) {
         return Minecraft.getMinecraft().player.getPersistentID().equals(entityPlayer.getPersistentID());
     }
 
-    void a_() {
-        float f;
-        Action fp_class3242 = this.getCurrentAction();
-        if (fp_class3242 != Action.ANAL_WAIT && fp_class3242 != Action.SITDOWNIDLE) {
-            return;
-        }
-        EntityPlayer entityPlayer = this.getPlayerPartner();
-        if (entityPlayer == null) {
-            return;
-        }
-        if (entityPlayer.getDistance(this) > 1.0f) {
-            return;
-        }
-        if (this.world.isRemote && !this.boolean_a(entityPlayer)) {
-            return;
-        }
-        if (this.ar == -1) {
-            if (this.world.isRemote) {
-                BlackScreenUI.run();
-                HandlePlayerMovement.setMovementLock(false);
-            } else {
-                this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
+    void handleBiaAnalState() {
+        float yaw;
+        Action action = this.getCurrentAction();
+        if (action == Action.ANAL_WAIT || action == Action.SITDOWNIDLE) {
+            EntityPlayer player = this.getPlayerPartner();
+            if (player != null) {
+                if (!(player.getDistance(this) > 1.0f)) {
+                    if (!this.world.isRemote || this.isOwnPlayer(player)) {
+                        if (this.interactionWaitTimer == -1) {
+                            if (this.world.isRemote) {
+                                BlackScreenUI.run();
+                                HandlePlayerMovement.setMovementLock(false);
+                            } else {
+                                this.setInteractionPlayerUUID(player.getPersistentID());
+                            }
+                            this.interactionWaitTimer = GirlEntity.maxAgeInTicks;
+                            return;
+                        }
+                        if (--this.interactionWaitTimer <= 0) {
+                            this.interactionWaitTimer = -1;
+                            player.noClip = true;
+                            player.setNoGravity(true);
+                            if (action == Action.ANAL_WAIT) {
+                                if (!this.world.isRemote) {
+                                    this.setCurrentAction(Action.ANAL_START);
+                                    Vec3d vec3d = this.getTargetPosition().add(VectorMath.rotateByYaw(-0.3, -1.0, -0.5, this.getYawRotation()));
+                                    player.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
+                                } else if (this.isControlledByLocalPlayer()) {
+                                    SexUI.showUI();
+                                }
+                                return;
+                            }
+                            player.rotationYaw = yaw = this.getYawRotation();
+                            player.rotationPitch = 60.0f;
+                            if (!this.world.isRemote) {
+                                this.setOutfitIndex(0);
+                                this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
+                                Vec3d vec3d = this.getTargetPosition();
+                                Vec3d vec3d2 = vec3d.add(VectorMath.rotateByYaw(0.0, 0.0, 1.0, yaw));
+                                this.setTargetPosition(vec3d2);
+                                EntityPlayer entityPlayer2 = this.getOwnerPlayer();
+                                if (entityPlayer2 != null) {
+                                    entityPlayer2.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
+                                }
+                                Vec3d vec3d3 = vec3d.add(VectorMath.rotateByYaw(0.0, 1.1875 - (double) player.getEyeHeight(), 0.5, yaw));
+                                player.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
+                                this.setAnchored(true);
+                            }
+                        }
+                    }
+                }
             }
-            this.ar = GirlEntity.maxAgeInTicks;
-            return;
-        }
-        if (--this.ar > 0) {
-            return;
-        }
-        this.ar = -1;
-        entityPlayer.noClip = true;
-        entityPlayer.setNoGravity(true);
-        if (fp_class3242 == Action.ANAL_WAIT) {
-            if (!this.world.isRemote) {
-                this.setCurrentAction(Action.ANAL_START);
-                Vec3d vec3d = this.getTargetPosition().add(VectorMath.rotateByYaw(-0.3, -1.0, -0.5, this.getYawRotation().floatValue()));
-                entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
-            } else if (this.isControlledByLocalPlayer()) {
-                SexUI.showUI();
-            }
-            return;
-        }
-        entityPlayer.rotationYaw = f = this.getYawRotation().floatValue();
-        entityPlayer.rotationPitch = 60.0f;
-        if (!this.world.isRemote) {
-            this.setOutfitIndex(0);
-            this.setCurrentAction(Action.PRONE_DOGGY_INTRO);
-            Vec3d vec3d = this.getTargetPosition();
-            Vec3d vec3d2 = vec3d.add(VectorMath.rotateByYaw(0.0, 0.0, 1.0, f));
-            this.setTargetPosition(vec3d2);
-            EntityPlayer entityPlayer2 = this.getOwnerPlayer();
-            if (entityPlayer2 != null) {
-                entityPlayer2.setPositionAndUpdate(vec3d2.x, vec3d2.y, vec3d2.z);
-            }
-            Vec3d vec3d3 = vec3d.add(VectorMath.rotateByYaw(0.0, 1.1875 - (double)entityPlayer.getEyeHeight(), 0.5, f));
-            entityPlayer.setPositionAndUpdate(vec3d3.x, vec3d3.y, vec3d3.z);
-            this.setAnchored(true);
         }
     }
 
@@ -235,13 +228,12 @@ extends PlayerGirl {
     @SideOnly(value=Side.CLIENT)
     public void resetAnimationControllerTicks() {
         super.resetAnimationControllerTicks();
-        if (this.getCurrentAction() != Action.PRONE_DOGGY_HARD) {
-            return;
+        if (this.getCurrentAction() == Action.PRONE_DOGGY_HARD) {
+            int oldState = this.hardDoggyAnimVariant;
+            do {
+                this.hardDoggyAnimVariant = this.getRNG().nextInt(3) + 1;
+            } while (oldState == this.hardDoggyAnimVariant);
         }
-        int n = this.aq;
-        do {
-            this.aq = this.getRNG().nextInt(3) + 1;
-        } while (n == this.aq);
     }
 
     @Override
@@ -265,19 +257,19 @@ extends PlayerGirl {
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
-                    boolean bl = this.ap = !this.ap;
+                    this.isFlyAltAnimation = !this.isFlyAltAnimation;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.bia.fly" + (this.ap ? "2" : ""), true, event);
+                    this.createAnimation("animation.bia.fly" + (this.isFlyAltAnimation ? "2" : ""), true, event);
                     break;
                 }
-                if (Math.abs(this.ao.x) + Math.abs(this.ao.y) > 0.0f) {
+                if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.2);
                         this.createAnimation("animation.bia.run", true, event);
                         break;
                     }
-                    if (this.ao.y >= -0.1f) {
+                    if (this.moveInputVector.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(1.2);
                         this.createAnimation("animation.bia.fastwalk", true, event);
                         break;
@@ -384,7 +376,7 @@ extends PlayerGirl {
                         break;
                     }
                     case PRONE_DOGGY_HARD: {
-                        this.createAnimation("animation.bia.prone_doggy_hard" + this.aq, true, event);
+                        this.createAnimation("animation.bia.prone_doggy_hard" + this.hardDoggyAnimVariant, true, event);
                         break;
                     }
                     case PRONE_DOGGY_CUM: {
@@ -403,8 +395,8 @@ extends PlayerGirl {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
-        AnimationController.ISoundListener iSoundListener = soundKeyframeEvent -> {
-            switch (soundKeyframeEvent.sound) {
+        AnimationController.ISoundListener iSoundListener = sound -> {
+            switch (sound.sound) {
                 case "attackDone": {
                     if (++this.nextAttack != 3) break;
                     this.nextAttack = 0;
@@ -415,13 +407,14 @@ extends PlayerGirl {
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_BIA_GIGGLE));
                     break;
                 }
-                case "sexUiOn": {
+                case "sexUiOn":
+                case "openSexUI": {
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.showUI();
                     break;
                 }
                 case "pearl": {
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "talk_hornyMSG1": {
@@ -603,11 +596,6 @@ extends PlayerGirl {
                 }
                 case "orgasm2": {
                     this.PlaySound(SoundsHandler.GIRLS_BIA_MMM[7]);
-                    break;
-                }
-                case "openSexUI": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    SexUI.showUI();
                     break;
                 }
             }
