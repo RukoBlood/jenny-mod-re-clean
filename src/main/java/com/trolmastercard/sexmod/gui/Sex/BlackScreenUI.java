@@ -34,6 +34,7 @@ public class BlackScreenUI extends GuiScreen {
         return active;
     }
 
+
     public static void run() {
         active = true;
     }
@@ -50,48 +51,47 @@ public class BlackScreenUI extends GuiScreen {
 
     @SubscribeEvent
     public void Render(RenderGameOverlayEvent event) {
-        if (!active) {
-            return;
-        }
-        if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT) {
-            return;
-        }
-        Minecraft mc1 = Minecraft.getMinecraft();
-        int guiScale = mc1.gameSettings.guiScale;
-        float overlayScale = guiScale == 1
-                ? (float) RotationHelper.LerpDouble(-1800.0, 1000.0, 0.5 * Math.cos(step / 25.0) + 0.5)
-                : (guiScale == 2 ? (float) RotationHelper.LerpDouble(-900.0, 750.0, 0.5 * Math.cos(step / 25.0) + 0.5)
-                : (float) RotationHelper.LerpDouble(-900.0, 600.0, 0.5 * Math.cos((step += (double)(mc1.getTickLength() * 0.75f)) / 25.0) + 0.5));
+        if (active) {
+            if (event.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
+                Minecraft mc = Minecraft.getMinecraft();
+                int guiScale = mc.gameSettings.guiScale;
+                float offsetX = guiScale == 1
+                        ? (float) RotationHelper.LerpDouble(-1800.0, 1000.0, 0.5 * Math.cos(step / 25.0) + 0.5)
+                        : (guiScale == 2 ? (float) RotationHelper.LerpDouble(-900.0, 750.0, 0.5 * Math.cos(step / 25.0) + 0.5)
+                        : (float) RotationHelper.LerpDouble(-900.0, 600.0, 0.5 * Math.cos((step += mc.getTickLength() * 0.75f) / 25.0) + 0.5));
 
-        GlStateManager.pushMatrix();
+                GlStateManager.pushMatrix();
 
-        if (guiScale == 1) {
-            GlStateManager.scale(2.0f, 2.0f, 2.0f);
-        }
-        if (guiScale == 2) {
-            GlStateManager.scale(1.5, 1.5, 1.5);
-        }
+                if (guiScale == 1) {
+                    GlStateManager.scale(2.0f, 2.0f, 2.0f);
+                }
+                if (guiScale == 2) {
+                    GlStateManager.scale(1.5, 1.5, 1.5);
+                }
 
-        mc1.renderEngine.bindTexture(transitionScreen);
-        this.drawTexturedModalRect(overlayScale, 0.0f, 0, (int)(step * 1.5), 256, 256);
-        this.drawTexturedModalRect(overlayScale, 256.0f, 0, (int)(step * 1.5), 256, 256);
-        this.drawTexturedModalRect(overlayScale, 512.0f, 0, (int)(step * 1.5), 256, 256);
-        mc1.renderEngine.bindTexture(BlackScreenUI.mirroredTransitionScreen);
-        this.drawTexturedModalRect(overlayScale + 600.0f, 0.0f, 0, (int)(step * 1.5), 256, 256);
-        this.drawTexturedModalRect(overlayScale + 600.0f, 256.0f, 0, (int)(step * 1.5), 256, 256);
-        this.drawTexturedModalRect(overlayScale + 600.0f, 512.0f, 0, (int)(step * 1.5), 256, 256);
-        mc1.renderEngine.bindTexture(blackScreen);
-        this.drawTexturedModalRect(overlayScale + 200.0f, 0.0f, 0, 0, 400, 256);
-        this.drawTexturedModalRect(overlayScale + 200.0f, 256.0f, 0, 0, 400, 256);
-        this.drawTexturedModalRect(overlayScale + 200.0f, 512.0f, 0, 0, 400, 256);
-        if (step > 30.0) {
-            SexUI.hide();
+                mc.renderEngine.bindTexture(transitionScreen);
+                this.drawTexturedModalRect(offsetX, 0.0f, 0, (int) (step * 1.5), 256, 256);
+                this.drawTexturedModalRect(offsetX, 256.0f, 0, (int) (step * 1.5), 256, 256);
+                this.drawTexturedModalRect(offsetX, 512.0f, 0, (int) (step * 1.5), 256, 256);
+                mc.renderEngine.bindTexture(mirroredTransitionScreen);
+                this.drawTexturedModalRect(offsetX + 600.0f, 0.0f, 0, (int) (step * 1.5), 256, 256);
+                this.drawTexturedModalRect(offsetX + 600.0f, 256.0f, 0, (int) (step * 1.5), 256, 256);
+                this.drawTexturedModalRect(offsetX + 600.0f, 512.0f, 0, (int) (step * 1.5), 256, 256);
+                mc.renderEngine.bindTexture(blackScreen);
+                this.drawTexturedModalRect(offsetX + 200.0f, 0.0f, 0, 0, 400, 256);
+                this.drawTexturedModalRect(offsetX + 200.0f, 256.0f, 0, 0, 400, 256);
+                this.drawTexturedModalRect(offsetX + 200.0f, 512.0f, 0, 0, 400, 256);
+                if (step > 30.0) {
+                    SexUI.hide();
+                }
+                if (step > 69.0) {
+                    step = 0.0;
+                    active = false;
+                    SexUI.showUI(); //TODO possible bugfix
+                }
+                GlStateManager.popMatrix();
+            }
         }
-        if (step > 69.0) {
-            step = 0.0;
-            active = false;
-        }
-        GlStateManager.popMatrix();
     }
 }
 

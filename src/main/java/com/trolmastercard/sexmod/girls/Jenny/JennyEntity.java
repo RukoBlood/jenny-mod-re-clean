@@ -777,8 +777,13 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjcBlackScreen": {
-                    if (!this.isControlledByLocalPlayer()) break;
-                    BlackScreenUI.run();
+                    if (this.isControlledByLocalPlayer()) {
+                        try {
+                            BlackScreenUI.run();
+                        } catch (Exception e) {
+                            System.out.printf("Couldn't run black screen due to %s%n", e);
+                        }
+                    }
                     break;
                 }
                 case "bjcDone": 
