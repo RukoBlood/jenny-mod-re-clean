@@ -118,7 +118,7 @@ public class PlayerGoblin extends WorkerPlayerEntity implements IGoblin {
     protected void entityInit() {
         super.entityInit();
         EyeColor color = EyeColor.values()[this.getRNG().nextInt(EyeColor.values().length)];
-        this.entityDataManager.register(WORK_POS, new BlockPos(color.a()));
+        this.entityDataManager.register(WORK_POS, new BlockPos(color.getColor()));
         this.entityDataManager.register(MODEL_CODE, GoblinEntity.DEFAULT_COLOR.name());
         this.entityDataManager.register(IS_CUMMING, false);
         this.entityDataManager.register(OWNER_UUID, "");

@@ -1,5 +1,5 @@
-Methods renamed: 93.87% (2650/2823)
-Fields renamed: 73.49% (1181/1607)
+Methods renamed: 94.76% (2676/2824)
+Fields renamed: 74.67% (1200/1607)
 
 ## Synthetic Elements Detailed List
 
@@ -282,27 +282,6 @@ Fields renamed: 73.49% (1181/1607)
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\EyeColor.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\EyeColor.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\EyeColor.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\EyeColor.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aj` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aE` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aH` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `ad` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aw` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aL` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aA` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `ak` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aW` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aU` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aI` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinEntity.java` | Field | `aG` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinFirstPersonRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinFirstPersonRenderer.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinFirstPersonRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinFirstPersonRenderer.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `b()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
@@ -312,29 +291,6 @@ Fields renamed: 73.49% (1181/1607)
 | `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Field | `g` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Field | `f` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a_0()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `c()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `d()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Field | `w` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Field | `v` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Field | `u` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinRenderer.java` | Field | `t` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\HairColor.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\HairColor.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\HairColor.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Goblin\PlayerGoblinRenderer.java` | Method | `c()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ab` |

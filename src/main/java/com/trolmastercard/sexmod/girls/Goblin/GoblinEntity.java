@@ -104,22 +104,22 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
     final static public Vec3d GUARD_OFFSET_RIGHT = new Vec3d(-1.0, -1.0, -3.0);
     final static public Vec3d OFFSET_ALT_NORTH = new Vec3d(6.0, -1.0, -3.0);
 
-    final static public int aj = 39;
+    final static public int MAX_THROW_PROGRESS = 39;
     final static public int THROW_RELEASE_TICK = 15;
-    final static public int aE = 8400;
-    final static int aH = 45;
-    final static int ad = 32000;
-    final static int aw = 26;
+    final static public int PREGNANCY_DURATION = 8400;
+    final static int STAND_UP_TICKS = 45;
+    final static int ROB_COOLDOWN = 32000;
+    final static int JUMP_INTRO_TICKS = 26;
     final static int THROW_TICKS = 205;
-    final static int aL = 100;
-    final static int aA = 1200;
-    final static int ak = 30;
-    final static int aW = 37;
-    final static float aU = 2.0f;
-    final static int aI = 5;
-    final static int S = 100;
-    final static int aq = 20;
-    final static float aG = 0.825f;
+    final static int THROW_RESET_COOLDOWN = 100;
+    final static int PREGNANCY_MSG_COOLDOWN = 1200;
+    final static int THROWN_LAND_TICKS = 30;
+    final static int STAND_UP_TOTAL_TICKS = 37;
+    final static float PAIZURI_PITCH = 2.0f;
+    final static int PAIZURI_START_DELAY = 5;
+    final static int GUARD_DESPAWN_TIME = 100;
+    final static int HOLD_COOLDOWN_MAX = 20;
+    final static float GOBLIN_TYPE = 0.825f;
     final static Vector2f ENTITY_SIZE = new Vector2f(0.5f, 0.99f);
     final static HashSet<Item> TOOLS_LIST = new HashSet<>(Arrays.asList(Items.GOLDEN_HOE, Items.GOLDEN_HORSE_ARMOR, Items.GOLD_INGOT, Items.GOLDEN_APPLE, Items.GOLDEN_AXE, Items.GOLDEN_SHOVEL, Items.GOLDEN_PICKAXE, Items.GOLDEN_SWORD, Items.GOLDEN_CARROT, Items.GOLDEN_HELMET, Items.GOLDEN_BOOTS, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLD_INGOT, Items.GOLD_NUGGET, Item.getItemFromBlock(Blocks.GOLD_BLOCK), Item.getItemFromBlock(Blocks.GOLD_ORE)));
 
@@ -195,7 +195,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
     protected void entityInit() {
         super.entityInit();
         EyeColor color = EyeColor.values()[this.getRNG().nextInt(EyeColor.values().length)];
-        this.entityDataManager.register(ACTION_TARGET_POS, new BlockPos(color.a()));
+        this.entityDataManager.register(ACTION_TARGET_POS, new BlockPos(color.getColor()));
         this.entityDataManager.register(CURRENT_ACTION, DEFAULT_COLOR.name());
         this.entityDataManager.register(OWNER_UUID, "");
         this.entityDataManager.register(QUEEN_UUID, "");

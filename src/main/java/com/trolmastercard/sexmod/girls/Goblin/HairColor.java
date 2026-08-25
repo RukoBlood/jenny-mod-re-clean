@@ -16,25 +16,25 @@ public enum HairColor {
     RED(241, 69, 49),
     GREEN(75, 143, 106);
 
-    final private Vec3i b;
+    final private Vec3i color;
 
-    private HairColor(int n2, int n3, int n4) {
-        this.b = new Vec3i(n2, n3, n4);
+    private HairColor(int r, int g, int b) {
+        this.color = new Vec3i(r, g, b);
     }
 
-    public Vec3i a() {
-        return this.b;
+    public Vec3i getColor() {
+        return this.color;
     }
 
-    public static int a(HairColor g5_class3492) {
-        int n = 0;
-        for (HairColor g5_class3493 : HairColor.values()) {
-            if (g5_class3492 == g5_class3493) {
-                return n;
+    public static int indexOf(HairColor color) {
+        int index = 0;
+        for (HairColor value : HairColor.values()) {
+            if (color == value) {
+                return index;
             }
-            ++n;
+            ++index;
         }
-        return n;
+        return index;
     }
 }
 

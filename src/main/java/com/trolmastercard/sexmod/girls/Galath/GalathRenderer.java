@@ -401,7 +401,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
         this.renderCoinBone(buffer, coinBone, entity, partialTicks);
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         try {
-            Minecraft.getMinecraft().renderEngine.bindTexture(this.getOrCreateDynamicSkin(this.renderEntity));
+            Minecraft.getMinecraft().renderEngine.bindTexture(this.getGoblinTexture(this.renderEntity));
         } catch (IOException e) {
             e.printStackTrace();
         }

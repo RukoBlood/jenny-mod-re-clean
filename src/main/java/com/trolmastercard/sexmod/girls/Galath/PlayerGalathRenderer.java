@@ -182,7 +182,7 @@ public class PlayerGalathRenderer extends PlayerGirlRenderer {
         Tessellator.getInstance().draw();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         try {
-            Minecraft.getMinecraft().renderEngine.bindTexture(this.getOrCreateDynamicSkin(this.renderEntity));
+            Minecraft.getMinecraft().renderEngine.bindTexture(this.getGoblinTexture(this.renderEntity));
         } catch (IOException iOException) {
             iOException.printStackTrace();
         }

@@ -9,7 +9,6 @@ package com.trolmastercard.sexmod.girls.Mangelie;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.UUID;
 
 import com.trolmastercard.sexmod.util.EntityLookVectorHelper;
 import com.trolmastercard.sexmod.girls.base.Action;
@@ -375,7 +374,7 @@ extends GirlRenderer<ManglelieEntity> {
         Tessellator.getInstance().draw();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         try {
-            Minecraft.getMinecraft().renderEngine.bindTexture(this.getOrCreateDynamicSkin(this.renderEntity));
+            Minecraft.getMinecraft().renderEngine.bindTexture(this.getGoblinTexture(this.renderEntity));
         } catch (IOException iOException) {
             iOException.printStackTrace();
         }

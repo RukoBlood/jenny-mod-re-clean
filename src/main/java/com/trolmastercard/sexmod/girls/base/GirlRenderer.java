@@ -29,8 +29,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Tuple3f;
-import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
 import com.trolmastercard.sexmod.gui.CustomModel.ClothingGui;
@@ -127,7 +125,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     //d
     //@Override
     // getResourceLocation
-    protected ResourceLocation getOrCreateDynamicSkin(T entity) throws IOException {
+    protected ResourceLocation getGoblinTexture(T entity) throws IOException {
         ResourceLocation cachedLocation;
         if (entity.world instanceof FakeWorld || entity.getInteractionPlayerUUID() == null) {
             cachedLocation = skinTextureCache.get(mc.getSession().getProfile().getId());
@@ -285,7 +283,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (steveSkinBone != null) {
             buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
             try {
-                Minecraft.getMinecraft().renderEngine.bindTexture(this.getOrCreateDynamicSkin(this.renderEntity));
+                Minecraft.getMinecraft().renderEngine.bindTexture(this.getGoblinTexture(this.renderEntity));
             } catch (IOException e) {
                 e.printStackTrace();
             }

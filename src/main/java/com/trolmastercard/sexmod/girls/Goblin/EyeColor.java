@@ -13,33 +13,34 @@ public enum EyeColor {
     TURKEY(0, 206, 217),
     BLUE(0, 0, 255);
 
-    final private Vec3i b;
+    final private Vec3i color;
 
-    private EyeColor(int n2, int n3, int n4) {
-        this.b = new Vec3i(n2, n3, n4);
+    private EyeColor(int r, int g, int b) {
+        this.color = new Vec3i(r, g, b);
     }
 
-    public Vec3i a() {
-        return this.b;
+    public Vec3i getColor() {
+        return this.color;
     }
 
-    public static EyeColor a(Vec3i vec3i) {
-        for (EyeColor eh_class2502 : EyeColor.values()) {
-            if (!vec3i.equals(eh_class2502.a())) continue;
-            return eh_class2502;
+    public static EyeColor fromColor(Vec3i rgb) {
+        for (EyeColor color : EyeColor.values()) {
+            if (rgb.equals(color.getColor())) {
+                return color;
+            }
         }
         return RED;
     }
 
-    public static int a(EyeColor eh_class2502) {
-        int n = 0;
-        for (EyeColor eh_class2503 : EyeColor.values()) {
-            if (eh_class2502 == eh_class2503) {
-                return n;
+    public static int indexOf(EyeColor color) {
+        int index = 0;
+        for (EyeColor value : EyeColor.values()) {
+            if (color == value) {
+                return index;
             }
-            ++n;
+            ++index;
         }
-        return n;
+        return index;
     }
 }
 
