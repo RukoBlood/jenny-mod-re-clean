@@ -83,7 +83,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
 
         this.updateFlightRotation(girl);
         this.updateRapeChargeBodyRotation(girl);
-        //this.f(em_class2582); // TODO fix
+        //this.f(em_class2582); // OLD_TODO fix
         //assert(false);
         this.updateSwordAttackBodyOffset(girl); //fixed
         this.updateKnockoutFlightPose(girl);

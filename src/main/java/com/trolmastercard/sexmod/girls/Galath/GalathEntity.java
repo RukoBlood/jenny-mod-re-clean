@@ -279,6 +279,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         super(world);
     }
 
+    //HEAVY TODO:
+    //ASK GEMINI TO RENAME FIELDS AND METHODS
+
     public GalathEntity(World world, @Nonnull EntityPlayer player, Vec3d pos, boolean spawnStructure) {
         this(world);
         UUID uUID = player.getPersistentID();
@@ -2150,7 +2153,6 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return action == Action.MASTERBATE_SITTING ? scale : 1.0f - scale;
     }
 
-    // TODO
     @Override
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (this.isLocallyRegistered()) {
@@ -2533,7 +2535,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 }
                 case "creampie": {
                     CummyEntity.registerTrail(new DynamicTrailRenderer(100, girl -> VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 0.6f), this.getYawRotation()), girl -> girl.getCachedBoneOffset("creampiePos").add(girl.getTargetPosition()), this, 0.6f, 0.5f));
-                    // TODO fallthrough looks intentional
+                    // fallthrough looks intentional
                 }
                 case "creampieGalath": {
                     if (FutaCommand.ENABLED) {

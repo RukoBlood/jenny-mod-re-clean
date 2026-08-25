@@ -93,7 +93,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
         super(renderManager, animatedGeoModel, shadowSize);
     }
 
-    //TODO rename to e
+    //OLD_TODO rename to e
     //formerly a
     @Override
     @Nullable
@@ -592,7 +592,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
         //super.a((GeoBone)null);
     }
 
-    // TODO
+    // OLD_TODO
     //  this doesnt appear to override anything
     //@Override
     void updateIrisBlowjobOffset(GeoBone geoBone) {

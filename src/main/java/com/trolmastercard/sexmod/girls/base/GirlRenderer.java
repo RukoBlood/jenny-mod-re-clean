@@ -126,18 +126,18 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     //d
     //@Override
-    // getResourceLocation TODO is this supposed to override?
+    // getResourceLocation
     protected ResourceLocation getOrCreateDynamicSkin(T entity) throws IOException {
         ResourceLocation cachedLocation;
-        if (((GirlEntity)entity).world instanceof FakeWorld || ((GirlEntity)entity).getInteractionPlayerUUID() == null) {
+        if (entity.world instanceof FakeWorld || entity.getInteractionPlayerUUID() == null) {
             cachedLocation = skinTextureCache.get(mc.getSession().getProfile().getId());
             if (cachedLocation == null) {
-                return this.generateSkinTexture(mc.getSession().getProfile().getId(), ((GirlEntity)entity).world);
+                return this.generateSkinTexture(mc.getSession().getProfile().getId(), entity.world);
             }
         } else {
-            cachedLocation = skinTextureCache.get(((GirlEntity)entity).getInteractionPlayerUUID());
+            cachedLocation = skinTextureCache.get(entity.getInteractionPlayerUUID());
             if (cachedLocation == null) {
-                return this.generateSkinTexture(((GirlEntity)entity).getInteractionPlayerUUID(), ((GirlEntity)entity).world);
+                return this.generateSkinTexture(entity.getInteractionPlayerUUID(), entity.world);
             }
         }
         return cachedLocation;
@@ -187,10 +187,10 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (entity instanceof PlayerGirl) {
             return true;
         }
-        World world = ((GirlEntity)entity).world;
-        Vec3d pos = ((Entity)entity).getPositionVector();
-        float halfW = ((GirlEntity)entity).width * 1.5f;
-        float height = ((GirlEntity)entity).height * 1.5f;
+        World world = entity.world;
+        Vec3d pos = entity.getPositionVector();
+        float halfW = entity.width * 1.5f;
+        float height = entity.height * 1.5f;
         Vec3d eyePos = player.getPositionVector().add(0.0, player.getEyeHeight(), 0.0);
 
         int viewMode = GirlRenderer.mc.gameSettings.thirdPersonView;
@@ -228,7 +228,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (ClientProxy.IS_PRELOADING) {
             return new HashSet<String>();
         }
-        HashSet<String> rawParts = isSpecialState != false ? ClothingGui.getSelectedPartsSet() : ((GirlEntity)this.renderEntity).getCustomPartsSet();
+        HashSet<String> rawParts = isSpecialState != false ? ClothingGui.getSelectedPartsSet() : this.renderEntity.getCustomPartsSet();
         HashSet<String> validatedBones = new HashSet<String>();
         for (String partKey : rawParts) {
             CustomModel.ModelData modelPart = CustomModel.getModelDataForGirl(partKey);
@@ -243,8 +243,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     @Override
     public void render(GeoModel model, T entity, float partialTicks, float r, float g, float b, float a) {
         if (GirlRenderer.mc.player != null
-                && !((GirlEntity)entity).isLocallyRegistered()
-                && ((GirlEntity)entity).isInteractable()
+                && !entity.isLocallyRegistered()
+                && entity.isInteractable()
                 && !this.isVisibleToPlayer(entity, GirlRenderer.mc.player)
         ) {
             return;
@@ -257,9 +257,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
         this.activeCustomPartBones.clear();
-        this.activeCustomPartBones = this.queryCustomModelParts(((GirlEntity)entity).isLocallyRegistered(), ((GirlEntity)entity).getOutfitIndex() == 0);
+        this.activeCustomPartBones = this.queryCustomModelParts(entity.isLocallyRegistered(), entity.getOutfitIndex() == 0);
         this.onRenderSetup();
-        BoneDeformProcessor.preWarmFilterCache(((GirlEntity)entity).getAnimationProcessor().getModelRendererList(), this.getBlacklistedBoneNames(), this);
+        BoneDeformProcessor.preWarmFilterCache(entity.getAnimationProcessor().getModelRendererList(), this.getBlacklistedBoneNames(), this);
         BoneDeformProcessor.updateGlobalInfluence(entity, partialTicks);
         this.renderModelBuffer(model, buffer, entity, r, g, b, a, partialTicks);
         this.renderAfter(entity, partialTicks, r, g, b, a);
@@ -268,9 +268,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GL20.glUseProgram(0);
     }
 
-    // TODO
-    //  does this override anything?
-    //  it doesnt look like it...
+
     protected void renderModelBuffer(GeoModel model, BufferBuilder buffer, T entity, float r, float g, float b, float a, float partialTicks) {
         GeoBone steveSkinBone = null;
         for (GeoBone bone : model.topLevelBones) {
@@ -291,7 +289,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.renderRecursively(buffer, steveSkinBone, r, g, b, ((GirlEntity)this.renderEntity).getRenderScaleFactor());
+            this.renderRecursively(buffer, steveSkinBone, r, g, b, this.renderEntity.getRenderScaleFactor());
             Tessellator.getInstance().draw();
         }
     }
@@ -314,16 +312,16 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     }
 
     protected void renderNameTag(double x, double y, double z) {
-        if (((GirlEntity)this.renderEntity).isLocallyRegistered()) {
+        if (this.renderEntity.isLocallyRegistered()) {
             return;
         }
-        if (((GirlEntity)this.renderEntity).getCurrentAction().hideNameTag) {
+        if (this.renderEntity.getCurrentAction().hideNameTag) {
             return;
         }
         if (GirlRenderer.mc.getRenderManager().renderViewEntity == null) {
             return;
         }
-        this.renderLivingLabel(this.renderEntity, ((GirlEntity)this.renderEntity).getDisplayNameText(), x, y + (double)((GirlEntity)this.renderEntity).getScaleFactor(), z, 300);
+        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText(), x, y + (double) this.renderEntity.getScaleFactor(), z, 300);
     }
 
     Vec3d getRidingPassengerVector(EntityPlayer owner, float partialTicks) {
@@ -332,10 +330,10 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         //TODO: is this crashes?
         assert mount != null;
         Vec3d lookVec = mount.getLookVec();
-        Vec3d ownerInterp = RotationHelper.LerpVec3d(new Vec3d(owner.lastTickPosX, owner.lastTickPosY, owner.lastTickPosZ), owner.getPositionVector(), (double)partialTicks);
-        Vec3d clientInterp = RotationHelper.LerpVec3d(new Vec3d(playerClient.lastTickPosX, playerClient.lastTickPosY, playerClient.lastTickPosZ), playerClient.getPositionVector(), (double)partialTicks);
+        Vec3d ownerInterp = RotationHelper.LerpVec3d(new Vec3d(owner.lastTickPosX, owner.lastTickPosY, owner.lastTickPosZ), owner.getPositionVector(), partialTicks);
+        Vec3d clientInterp = RotationHelper.LerpVec3d(new Vec3d(playerClient.lastTickPosX, playerClient.lastTickPosY, playerClient.lastTickPosZ), playerClient.getPositionVector(), partialTicks);
         clientInterp = ownerInterp.subtract(clientInterp);
-        ((GirlEntity)this.renderEntity).renderYawOffset = mount.renderYawOffset;
+        this.renderEntity.renderYawOffset = mount.renderYawOffset;
         return new Vec3d(clientInterp.x + lookVec.x * -0.5, clientInterp.y + (double)0.15f, clientInterp.z + lookVec.z * -0.5);
     }
 
@@ -347,40 +345,39 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         float yaw;
         EntityPlayer owner;
         Vec3d basePos = new Vec3d(x, y, z);
-        if (((GirlEntity)entity).world instanceof FakeWorld) {
+        if (entity.world instanceof FakeWorld) {
             return basePos;
         }
-        if (((GirlEntity)entity).shouldRenderNameTag()
+        if (entity.shouldRenderNameTag()
                 && (!(entity instanceof PlayerGirl)
                 || GirlRenderer.mc.gameSettings.thirdPersonView != 0)) {
             this.renderNameTag(x, y, z);
         }
 
-        if ((owner = ((GirlEntity)entity).getMasterPlayer()) != null
+        if ((owner = entity.getMasterPlayer()) != null
                 && owner.isRiding() && owner.getRidingEntity() instanceof EntityHorse
                 && ((EntityHorse)owner.getRidingEntity()).isHorseSaddled()) {
             return this.getRidingPassengerVector(owner, partialTicks);
         }
 
-        if (!((GirlEntity)entity).isAnchored()) {
+        if (!entity.isAnchored()) {
             return basePos;
         }
 
         if (!(entity instanceof PlayerGirl) || !((PlayerGirl)entity).hasOwnerUUID() || GirlRenderer.mc.gameSettings.thirdPersonView == 0) {
-            Vec3d clientPlayerPos = RotationHelper.LerpVec3d(new Vec3d(GirlRenderer.mc.player.lastTickPosX, GirlRenderer.mc.player.lastTickPosY, GirlRenderer.mc.player.lastTickPosZ), GirlRenderer.mc.player.getPositionVector(), (double)partialTicks);
-            basePos = ((GirlEntity)entity).getTargetPosition().subtract(clientPlayerPos);
+            Vec3d clientPlayerPos = RotationHelper.LerpVec3d(new Vec3d(GirlRenderer.mc.player.lastTickPosX, GirlRenderer.mc.player.lastTickPosY, GirlRenderer.mc.player.lastTickPosZ), GirlRenderer.mc.player.getPositionVector(), partialTicks);
+            basePos = entity.getTargetPosition().subtract(clientPlayerPos);
         }
-        ((GirlEntity)entity).rotationYaw = yaw = ((GirlEntity) entity).getYawRotation();
-        ((GirlEntity)entity).prevRenderYawOffset = yaw;
-        ((GirlEntity)entity).renderYawOffset = yaw;
-        ((GirlEntity)entity).prevRotationYawHead = yaw;
-        ((GirlEntity)entity).rotationYawHead = yaw;
+        entity.rotationYaw = yaw = entity.getYawRotation();
+        entity.prevRenderYawOffset = yaw;
+        entity.renderYawOffset = yaw;
+        entity.prevRotationYawHead = yaw;
+        entity.rotationYawHead = yaw;
         return basePos;
     }
 
     protected void preRenderCallback(T entity) {}
 
-    // TODO
     //a
     //doRender
     @Override
@@ -394,8 +391,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         z = finalPos.z;
 
         this.preRenderCallback(entity);
-        if (((EntityLiving)entity).getLeashed()) {
-            this.renderLeashConnection((GirlEntity)entity, x, y + this.leashYOffset, z, partialTicks);
+        if (entity.getLeashed()) {
+            this.renderLeashConnection(entity, x, y + this.leashYOffset, z, partialTicks);
         }
 
         GlStateManager.pushMatrix();
@@ -406,17 +403,17 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        boolean isSitting = ((Entity)entity).getRidingEntity() != null && ((Entity)entity).getRidingEntity().shouldRiderSit();
+        boolean isSitting = entity.getRidingEntity() != null && entity.getRidingEntity().shouldRiderSit();
         EntityModelData modelData = new EntityModelData();
         modelData.isSitting = isSitting;
-        modelData.isChild = ((EntityLivingBase)entity).isChild();
+        modelData.isChild = entity.isChild();
 
-        float renderYaw = Interpolations.lerpYaw(((GirlEntity)entity).prevRenderYawOffset, ((GirlEntity)entity).renderYawOffset, partialTicks);
-        float headYaw = Interpolations.lerpYaw(((GirlEntity)entity).prevRotationYawHead, ((GirlEntity)entity).rotationYawHead, partialTicks);
+        float renderYaw = Interpolations.lerpYaw(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
+        float headYaw = Interpolations.lerpYaw(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks);
         float netHeadYaw = headYaw - renderYaw;
 
-        if (isSitting && ((Entity)entity).getRidingEntity() instanceof EntityLivingBase) {
-            EntityLivingBase rider = (EntityLivingBase)((Entity)entity).getRidingEntity();
+        if (isSitting && entity.getRidingEntity() instanceof EntityLivingBase) {
+            EntityLivingBase rider = (EntityLivingBase) entity.getRidingEntity();
             renderYaw = Interpolations.lerpYaw(rider.prevRenderYawOffset, rider.renderYawOffset, partialTicks);
             netHeadYaw = headYaw - renderYaw;
             wrappedYaw = MathHelper.wrapDegrees(netHeadYaw);
@@ -433,17 +430,17 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             netHeadYaw = headYaw - renderYaw;
         }
 
-        float pitch = Interpolations.lerp(((GirlEntity)entity).prevRotationPitch, ((GirlEntity)entity).rotationPitch, partialTicks);
+        float pitch = Interpolations.lerp(entity.prevRotationPitch, entity.rotationPitch, partialTicks);
         wrappedYaw = this.handleRotationFloat(entity, partialTicks);
         //this.b(t, f3, f4, f2);
         this.applyRotations(entity, wrappedYaw, renderYaw, partialTicks);
         float limbSwingAmount = 0.0f;
         float limbSwing = 0.0f;
 
-        if (!isSitting && ((EntityLivingBase)entity).isEntityAlive()) {
-            limbSwingAmount = Interpolations.lerp(((GirlEntity)entity).prevLimbSwingAmount, ((GirlEntity)entity).limbSwingAmount, partialTicks);
-            limbSwing = ((GirlEntity)entity).limbSwing - ((GirlEntity)entity).limbSwingAmount * (1.0f - partialTicks);
-            if (((EntityLivingBase)entity).isChild()) {
+        if (!isSitting && entity.isEntityAlive()) {
+            limbSwingAmount = Interpolations.lerp(entity.prevLimbSwingAmount, entity.limbSwingAmount, partialTicks);
+            limbSwing = entity.limbSwing - entity.limbSwingAmount * (1.0f - partialTicks);
+            if (entity.isChild()) {
                 limbSwing *= 3.0f;
             }
             if (limbSwingAmount > 1.0f) {
@@ -461,7 +458,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GeoModel geoModel = provider.getModel(modelLocation);
 
         if (provider instanceof IAnimatableModel) {
-            ((IAnimatableModel)((Object)provider)).setLivingAnimations(entity, ((Entity)entity).getUniqueID().hashCode(), animEvent);
+            ((IAnimatableModel) provider).setLivingAnimations(entity, entity.getUniqueID().hashCode(), animEvent);
         }
 
         GlStateManager.pushMatrix();
@@ -498,19 +495,19 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
         Vector3fSexmodSpecial additionalOverlayColor = this.getAdditionalOverlayColor(entity);
         if (additionalOverlayColor != null) {
-            this.renderAdditionalOverlays((GirlEntity)entity, partialTicks, additionalOverlayColor);
+            this.renderAdditionalOverlays(entity, partialTicks, additionalOverlayColor);
         }
     }
 
     void updateModelMatrices(T entity) {
         ArrayList<String> bonesToTrack = new ArrayList<String>(GirlModel.CAMERA_PLACEMENTS);
-        bonesToTrack.addAll(((GirlEntity)entity).boneTrackingList);
+        bonesToTrack.addAll(entity.boneTrackingList);
 
         for (String boneName : bonesToTrack) {
-            MatrixStack matrixStack = ((GirlEntity)entity).getBoneMatrixStack(boneName, !((GirlEntity)entity).isLocallyRegistered());
+            MatrixStack matrixStack = entity.getBoneMatrixStack(boneName, !entity.isLocallyRegistered());
             Matrix4f m = matrixStack.getModelMatrix();
             Vec3d translatedVec = new Vec3d(-m.m03, m.m13, -m.m23);
-            ((GirlEntity)entity).setBoneWorldPosition(boneName, translatedVec);
+            entity.setBoneWorldPosition(boneName, translatedVec);
         }
     }
 
@@ -533,8 +530,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GlStateManager.translate(0.0, 0.01, 0.0);
         Entity resolvedEntity = this.resolveTargetEntity(girl);
 
-        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : RotationHelper.LerpVec3d(new Vec3d(resolvedEntity.lastTickPosX, resolvedEntity.lastTickPosY, resolvedEntity.lastTickPosZ), resolvedEntity.getPositionVector(), (double)partialTicks);
-        Vec3d interpClient = RotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), (double)partialTicks);
+        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : RotationHelper.LerpVec3d(new Vec3d(resolvedEntity.lastTickPosX, resolvedEntity.lastTickPosY, resolvedEntity.lastTickPosZ), resolvedEntity.getPositionVector(), partialTicks);
+        Vec3d interpClient = RotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), partialTicks);
         Vec3d relativeVector = interpTarget.subtract(interpClient);
         GlStateManager.translate(relativeVector.x, relativeVector.y, relativeVector.z);
         mc.getTextureManager().bindTexture(LINE);
@@ -547,8 +544,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     protected static float calculateLineThickness(GirlEntity girl, float partialTicks, float min, float max) {
         EntityPlayerSP player = GirlRenderer.mc.player;
         Entity target = ((GirlRenderer) mc.getRenderManager().getEntityRenderObject(girl)).resolveTargetEntity(girl);
-        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : RotationHelper.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), (double)partialTicks);
-        Vec3d interpClient = RotationHelper.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), (double)partialTicks);
+        Vec3d interpTarget = girl.isAnchored() ? girl.getTargetPosition() : RotationHelper.LerpVec3d(new Vec3d(target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ), target.getPositionVector(), partialTicks);
+        Vec3d interpClient = RotationHelper.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), partialTicks);
         Vec3d cameraPos = ActiveRenderInfo.getCameraPosition().add(interpClient);
         float distance = (float)cameraPos.distanceTo(interpTarget);
         float ratio = Math.abs(distance) / 5.0f;
@@ -586,7 +583,6 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         GirlRenderer.drawLineBetweenBones(buffer, tessellator, girl, "braStringLeftEndL", "braStringLeftStartL", rgb.x, rgb.y, rgb.z, th);
     }
 
-    // TODO
     //b
     //protected void b(T t, float f, float f2, float f3) {
     // applyRotations
@@ -601,7 +597,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (OwnerUUID == null) {
             return;
         }
-        EntityPlayer owner = ((GirlEntity)entity).world.getPlayerEntityByUUID(OwnerUUID);
+        EntityPlayer owner = entity.world.getPlayerEntityByUUID(OwnerUUID);
         if (owner == null) {
             return;
         }
@@ -625,7 +621,6 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     protected void onBoneProcessing(BufferBuilder buffer, String boneName, GeoBone bone) {
     }
-    //TODO: find out what is this
     protected void renderLeashConnection(GirlEntity girl, double d, double d2, double d3, float f) {
         float f2;
         float f3;
@@ -647,15 +642,15 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             d8 = -1.0;
         }
         double d9 = Math.cos(d5);
-        double d10 = RotationHelper.LerpDouble(entity.prevPosX, entity.posX, (double)f) - d6 * 0.7 - d7 * 0.5 * d9;
-        double d11 = RotationHelper.LerpDouble(entity.prevPosY + (double)entity.getEyeHeight() * 0.7, entity.posY + (double)entity.getEyeHeight() * 0.7, (double)f) - d8 * 0.5 - 0.25;
-        double d12 = RotationHelper.LerpDouble(entity.prevPosZ, entity.posZ, (double)f) - d7 * 0.7 + d6 * 0.5 * d9;
+        double d10 = RotationHelper.LerpDouble(entity.prevPosX, entity.posX, f) - d6 * 0.7 - d7 * 0.5 * d9;
+        double d11 = RotationHelper.LerpDouble(entity.prevPosY + (double)entity.getEyeHeight() * 0.7, entity.posY + (double)entity.getEyeHeight() * 0.7, f) - d8 * 0.5 - 0.25;
+        double d12 = RotationHelper.LerpDouble(entity.prevPosZ, entity.posZ, f) - d7 * 0.7 + d6 * 0.5 * d9;
         double d13 = (double) RotationHelper.LerpFloat(girl.prevRenderYawOffset, girl.renderYawOffset, f) * 0.01745329238474369 + 1.5707963267948966;
         d6 = Math.cos(d13) * (double)girl.width * 0.4;
         d7 = Math.sin(d13) * (double)girl.width * 0.4;
-        double d14 = RotationHelper.LerpDouble(girl.prevPosX, girl.posX, (double)f) + d6;
-        double d15 = RotationHelper.LerpDouble(girl.prevPosY, girl.posY, (double)f);
-        double d16 = RotationHelper.LerpDouble(girl.prevPosZ, girl.posZ, (double)f) + d7;
+        double d14 = RotationHelper.LerpDouble(girl.prevPosX, girl.posX, f) + d6;
+        double d15 = RotationHelper.LerpDouble(girl.prevPosY, girl.posY, f);
+        double d16 = RotationHelper.LerpDouble(girl.prevPosZ, girl.posZ, f) + d7;
         d += d6;
         d3 += d7;
         double d17 = (float)(d10 - d14);
@@ -701,14 +696,14 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     @Override
     public void renderRecursively(BufferBuilder buffer, GeoBone bone, float red, float green, float blue, float alpha) {
-        if (((GirlEntity) this.renderEntity).world instanceof FakeWorld) {
+        if (this.renderEntity.world instanceof FakeWorld) {
             return;
         }
         String boneName = bone.getName();
         if (boneName.equals("weapon") && this.renderEntity instanceof Fighter) {
             this.RenderHeldItem(buffer, bone);
         }
-        if (boneName.equals("itemRenderer") && ((GirlEntity) this.renderEntity).getCurrentAction() == Action.PAYMENT) {
+        if (boneName.equals("itemRenderer") && this.renderEntity.getCurrentAction() == Action.PAYMENT) {
             this.renderTradeOverlay(buffer, bone);
         }
         if (boneName.equals("ballL") || boneName.equals("ballR") || boneName.equals("cock")) {
@@ -777,7 +772,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (!(this.renderEntity instanceof Fighter)) {
             return this.getBaseColorVector(r, g, b);
         }
-        if (((GirlEntity)this.renderEntity).entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 0) {
+        if (this.renderEntity.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 0) {
             return this.getBaseColorVector(r, g, b);
         }
         GeoModelProvider provider = this.getGeoModelProvider();
@@ -785,7 +780,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             return this.getBaseColorVector(r, g, b);
         }
         GirlModel girlModel = (GirlModel)provider;
-        ItemStack armorStack = girlModel.getArmorStackForBone((GirlEntity)this.renderEntity, boneName);
+        ItemStack armorStack = girlModel.getArmorStackForBone(this.renderEntity, boneName);
         if (!(armorStack.getItem() instanceof ItemArmor)) {
             return this.getBaseColorVector(r, g, b);
         }
@@ -818,7 +813,6 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         return new Vector4f(r, g, b, 72.0f * materialIdOffset / 4096.0f);
     }
 
-    //TODO
     //a
     //renderEarly
     @Override
@@ -827,7 +821,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     }
 
     public void renderCustomBones(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a, double uOffset) {
-        if (((GirlEntity)this.renderEntity).world instanceof FakeWorld) {
+        if (this.renderEntity.world instanceof FakeWorld) {
             return;
         }
 
@@ -868,7 +862,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     @CheckReturnValue
     protected boolean boolean_c() {
-        if (!((GirlEntity)this.renderEntity).isControlledByLocalPlayer()) {
+        if (!this.renderEntity.isControlledByLocalPlayer()) {
             return true;
         }
         return GirlRenderer.mc.gameSettings.thirdPersonView != 0;
@@ -883,7 +877,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             if (quad == null) continue;
             javax.vecmath.Vector3f normal = new javax.vecmath.Vector3f((float)quad.normal.getX(), (float)quad.normal.getY(), (float)quad.normal.getZ());
 
-            MATRIX_STACK.getNormalMatrix().transform((Tuple3f)normal);
+            MATRIX_STACK.getNormalMatrix().transform(normal);
             if ((cube.size.y == 0.0f || cube.size.z == 0.0f) && normal.getX() < 0.0f) {
                 normal.x *= -1.0f;
             }
@@ -897,7 +891,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             Vec3d defColor = BoneDeformProcessor.applyBoneDeformation(this, this.currentRenderingBone, new Vec3d(r, g, b), normal);
             for (GeoVertex vertex : quad.vertices) {
                 Vector4f vertexPos = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0f);
-                MATRIX_STACK.getModelMatrix().transform((Tuple4f)vertexPos);
+                MATRIX_STACK.getModelMatrix().transform(vertexPos);
                 buffer.pos(vertexPos.getX(), vertexPos.getY(), vertexPos.getZ()).tex((double)vertex.textureU + uOffset, vertex.textureV).color((float)defColor.x, (float)defColor.y, (float)defColor.z, a).normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
             }
         }
@@ -905,7 +899,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
 
     @CheckReturnValue
     protected ItemStack resolveTradePaymentItemStack() {
-        switch (((GirlEntity)this.renderEntity).entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
+        switch (this.renderEntity.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
             case "doggy": {
                 return new ItemStack(Items.DIAMOND, 2);
             }
@@ -941,9 +935,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
             Tessellator.getInstance().draw();
             MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
             GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glRotated((double)((double)bone.getRotationX() + 2.5), 0.0, 0.0, 1.0);
-            GL11.glRotated((double)bone.getRotationY(), 0.0, 1.0, 0.0);
-            GL11.glRotated((double)bone.getRotationZ(), 1.0, 0.0, 0.0);
+            GL11.glRotated((double)bone.getRotationX() + 2.5, 0.0, 0.0, 1.0);
+            GL11.glRotated(bone.getRotationY(), 0.0, 1.0, 0.0);
+            GL11.glRotated(bone.getRotationZ(), 1.0, 0.0, 0.0);
             switch (i) {
                 case 1: {
                     GL11.glRotated(-15.0, 0.0, 0.0, 1.0);
@@ -955,8 +949,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
                     GlStateManager.translate(0.0, 0.0, 0.025);
                 }
             }
-            GlStateManager.scale(((GirlEntity)this.renderEntity).scaleFactor, ((GirlEntity)this.renderEntity).scaleFactor, ((GirlEntity)this.renderEntity).scaleFactor);
-            itemRenderer.renderItem((EntityLivingBase)this.renderEntity, new ItemStack(paymentStack.getItem(), 1), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+            GlStateManager.scale(this.renderEntity.scaleFactor, this.renderEntity.scaleFactor, this.renderEntity.scaleFactor);
+            itemRenderer.renderItem(this.renderEntity, new ItemStack(paymentStack.getItem(), 1), ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
             this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
             buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
             GL11.glDisable(GL11.GL_LIGHTING);
@@ -976,7 +970,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         if (!(this.renderEntity instanceof Fighter)) {
             return;
         }
-        EntityDataManager manager = ((Entity)this.renderEntity).getDataManager();
+        EntityDataManager manager = this.renderEntity.getDataManager();
         Fighter fighter = (Fighter)this.renderEntity;
         int activeSlot = manager.get(Fighter.ATTACK_MODE);
         if (fighter.getCurrentAction() != Action.BOW) {
@@ -1009,7 +1003,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         } else {
             GL11.glRotatef((float)fighter.slashSwordRot, 1.0f, 0.0f, 0.0f);
         }
-        Minecraft.getMinecraft().getItemRenderer().renderItem((EntityLivingBase)this.renderEntity, weaponStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+        Minecraft.getMinecraft().getItemRenderer().renderItem(this.renderEntity, weaponStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
         this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         GL11.glDisable(2896);

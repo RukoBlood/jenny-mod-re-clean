@@ -142,7 +142,7 @@ extends PlayerGirl {
         }
     }
 
-    // TODO clash with 'AnimatedGeo a()'
+    // TODO Rename
     @SideOnly(value=Side.CLIENT)
     void a_9() {
         if (this.ticksExisted % 10 != 0) {

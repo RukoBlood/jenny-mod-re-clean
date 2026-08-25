@@ -699,7 +699,6 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return null;
     }
 
-    // TODO clashes with KoboldEntity 'void g(UUID)'
     public static ArrayList<GirlEntity> girlList(UUID uUID) {
         ArrayList<GirlEntity> girls = new ArrayList<GirlEntity>();
         try {
@@ -828,7 +827,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public void doAction(String string, UUID uUID) {
     }
 
-    // TODO rename animationPredicateHandler or whatever
+    // OLD_TODO rename animationPredicateHandler or whatever
     // DOTO it's called predicate
     @SideOnly(value=Side.CLIENT)
     protected abstract <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event);
@@ -895,7 +894,7 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.playRandomizedAnimation(baseAnimName, maxVariants, chance, event, false);
     }
 
-    // TODO probably utilized for random sounds
+    // OLD_TODO probably utilized for random sounds
     // DOTO: No, it's for random variant index
     int pickRandomVariantIndex(int current, int previous, int maxVariants, float chance) {
         int next;

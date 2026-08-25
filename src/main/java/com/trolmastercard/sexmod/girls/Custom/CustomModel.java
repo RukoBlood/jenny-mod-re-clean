@@ -167,7 +167,6 @@ public class CustomModel {
                 throwable = t;
                 throw t;
             } finally {
-                // TODO try with resources
                 if (throwable != null) {
                     try {
                         bufferedReader.close();

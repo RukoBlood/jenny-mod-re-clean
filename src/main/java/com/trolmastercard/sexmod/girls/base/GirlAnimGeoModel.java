@@ -12,8 +12,6 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-// TODO
-//  if generic conflicts, then revert to: 'T extends IAnimatable'
 public abstract class GirlAnimGeoModel<T extends GirlEntity> extends AnimatedGeoModel<T> {
     protected GirlAnimGeoModel() {
         try {

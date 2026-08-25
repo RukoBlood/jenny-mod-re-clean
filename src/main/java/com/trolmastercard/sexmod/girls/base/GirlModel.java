@@ -36,7 +36,6 @@ public abstract class GirlModel<T extends GirlEntity> extends GirlAnimGeoModel<T
     protected GirlModel() {
     }
 
-    // TODO fix these override / names clashing synthetics
     protected abstract ResourceLocation[] getAnimationResource();
 
     public abstract ResourceLocation getSkinLocation();
@@ -283,7 +282,6 @@ public abstract class GirlModel<T extends GirlEntity> extends GirlAnimGeoModel<T
     //    this.a((em_class258)object, n, animationEvent);
     //}
 
-    // TODO override to accept EntityGirl
     //@Override
     //public void setLivingAnimations(GirlEntity iAnimatable, Integer n, AnimationEvent animationEvent) {
     //    this.a(iAnimatable, n, animationEvent);
