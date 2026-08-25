@@ -94,7 +94,7 @@ public class DebugMode {
         } catch (Exception e) {
             return;
         }
-        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("%sSet dev float N.%s from %s to %s", new Object[]{TextFormatting.GRAY, index, Float.valueOf(devDebugFloats[index]), Float.valueOf(newValue)})));
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("%sSet dev float N.%s from %s to %s", TextFormatting.GRAY, index, Float.valueOf(devDebugFloats[index]), Float.valueOf(newValue))));
         DebugMode.devDebugFloats[index] = newValue;
         event.setCanceled(true);
     }
@@ -122,14 +122,14 @@ public class DebugMode {
         } catch (Exception e) {
             return;
         }
-        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("%sdev float N.%s is %s", new Object[]{TextFormatting.YELLOW, index, devDebugFloats[index]})));
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("%sdev float N.%s is %s", TextFormatting.YELLOW, index, devDebugFloats[index])));
         event.setCanceled(true);
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
 //    public void onLivingHurtDebug(LivingHurtEvent event) {
-//        // TODO this class is useless
+//        // this class is useless
 //        //if (true)
 //        //    return;
 //
@@ -142,7 +142,7 @@ public class DebugMode {
 //            return;
 //        }
 //        KoboldEntity kobold = (KoboldEntity)target;
-//        // TODO something is broken in kobold,
+//        // TOAD something is broken in kobold,
 //        //  because some kind of tribe identification with PLAYER ID results in null
 ////        UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
 ////        {
@@ -215,142 +215,138 @@ public class DebugMode {
 //    }
 
     public void onLivingHurtDebug(LivingHurtEvent event) {
-        if (!DebugMode.GetEnv()) {
-            return;
-        }
+        if (DebugMode.GetEnv()) {
+            EntityLivingBase target = event.getEntityLiving();
+            if (target instanceof KoboldEntity) {
+                KoboldEntity kobold = (KoboldEntity) target;
 
-        EntityLivingBase target = event.getEntityLiving();
-        if (!(target instanceof KoboldEntity)) {
-            return;
-        }
-        KoboldEntity kobold = (KoboldEntity) target;
+                // Безопасный поиск ближайшего игрока в том же мире
+                EntityPlayer player = kobold.world.getClosestPlayerToEntity(kobold, 50.0D);
+                if (player != null) {
+                    UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
 
-        // Безопасный поиск ближайшего игрока в том же мире
-        EntityPlayer player = kobold.world.getClosestPlayerToEntity(kobold, 50.0D);
-        if (player == null) {
-            System.out.println("[DebugMode] Kobold hurt, but no player nearby.");
-            return;
-        }
+                    if (tribeID == null) {
+                        System.out.println("[DebugMode] Tribe not found for player: " + player.getName());
+                    } else {
+                        Collection<KoboldTask> tribeTasks = KoboldManager.getTribeTasks(tribeID);
+                        if (tribeTasks != null && !tribeTasks.isEmpty()) {
+                            for (KoboldTask task : tribeTasks) {
+                                if (task == null) {
+                                    System.out.println("[DebugMode] task: [NULL TASK OBJECT]");
+                                } else {
+                                    String taskName = (task.getTaskType() != null) ? task.getTaskType().name() : "UNKNOWN_TYPE";
+                                    System.out.println("[DebugMode] task: " + taskName);
+                                    System.out.println("[DebugMode] workers involved: ");
 
-        UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
-
-        if (tribeID != null) {
-            Collection<KoboldTask> tribeTasks = KoboldManager.getTribeTasks(tribeID);
-            if (tribeTasks != null && !tribeTasks.isEmpty()) {
-                for (KoboldTask task : tribeTasks) {
-                    if (task == null) {
-                        System.out.println("[DebugMode] task: [NULL TASK OBJECT]");
-                        continue;
-                    }
-                    String taskName = (task.getTaskType() != null) ? task.getTaskType().name() : "UNKNOWN_TYPE";
-                    System.out.println("[DebugMode] task: " + taskName);
-                    System.out.println("[DebugMode] workers involved: ");
-
-                    List<KoboldEntity> workers = task.getAssignedWorkers();
-                    if (workers == null || workers.isEmpty()) {
-                        System.out.println("[DebugMode]   (none)");
-                        continue;
-                    }
-                    for (KoboldEntity worker : workers) {
-                        if (worker == null) {
-                            System.out.println("[DebugMode]   [NULL WORKER - Unloaded or Dead]");
+                                    List<KoboldEntity> workers = task.getAssignedWorkers();
+                                    if (workers == null || workers.isEmpty()) {
+                                        System.out.println("[DebugMode]   (none)");
+                                        continue;
+                                    }
+                                    for (KoboldEntity worker : workers) {
+                                        if (worker == null) {
+                                            System.out.println("[DebugMode]   [NULL WORKER - Unloaded or Dead]");
+                                        } else {
+                                            System.out.println("[DebugMode]   " + worker.getGirlName() + " (UUID: " + worker.girlID() + ")");
+                                        }
+                                    }
+                                }
+                            }
                         } else {
-                            System.out.println("[DebugMode]   " + worker.getGirlName() + " (UUID: " + worker.girlID() + ")");
+                            System.out.println("[DebugMode] No tasks found for tribe: " + tribeID);
                         }
+
+                        // Блок проверки членов племени
+                        List<KoboldEntity> membersList = KoboldManager.getTribeMembersList(tribeID);
+                        boolean containsExactRef = membersList != null && membersList.contains(kobold);
+                        System.out.println("[DebugMode] tribe contains my exact reference: " + containsExactRef);
+
+                        boolean containsRef = false;
+                        if (membersList != null) {
+                            for (KoboldEntity member : membersList) {
+                                if (member != null && member.girlID() != null && member.girlID().equals(kobold.girlID())) {
+                                    containsRef = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        boolean containsSavedPos = false;
+                        Map<UUID, BlockPos> unloadedMap = KoboldManager.getUnloadedMembersMap(tribeID, kobold.world);
+                        if (unloadedMap != null) {
+                            for (Map.Entry<UUID, BlockPos> entry : unloadedMap.entrySet()) {
+                                if (entry.getKey() != null && entry.getKey().equals(kobold.girlID())) {
+                                    containsSavedPos = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        System.out.println("[DebugMode] loaded : " + containsRef);
+                        System.out.println("[DebugMode] saved : " + containsSavedPos);
+
                     }
+                } else {
+                    System.out.println("[DebugMode] Kobold hurt, but no player nearby.");
                 }
-            } else {
-                System.out.println("[DebugMode] No tasks found for tribe: " + tribeID);
+
             }
-
-            // Блок проверки членов племени
-            List<KoboldEntity> membersList = KoboldManager.getTribeMembersList(tribeID);
-            boolean containsExactRef = membersList != null && membersList.contains(kobold);
-            System.out.println("[DebugMode] tribe contains my exact reference: " + containsExactRef);
-
-            boolean containsRef = false;
-            if (membersList != null) {
-                for (KoboldEntity member : membersList) {
-                    if (member != null && member.girlID() != null && member.girlID().equals(kobold.girlID())) {
-                        containsRef = true;
-                        break;
-                    }
-                }
-            }
-
-            boolean containsSavedPos = false;
-            Map<UUID, BlockPos> unloadedMap = KoboldManager.getUnloadedMembersMap(tribeID, kobold.world);
-            if (unloadedMap != null) {
-                for (Map.Entry<UUID, BlockPos> entry : unloadedMap.entrySet()) {
-                    if (entry.getKey() != null && entry.getKey().equals(kobold.girlID())) {
-                        containsSavedPos = true;
-                        break;
-                    }
-                }
-            }
-
-            System.out.println("[DebugMode] loaded : " + containsRef);
-            System.out.println("[DebugMode] saved : " + containsSavedPos);
-
-        } else {
-            System.out.println("[DebugMode] Tribe not found for player: " + player.getName());
         }
     }
 
-    // TODO this is a very weird way of handling a command
+    //this is a very weird way of handling a command
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void onDebugCommandInterpreter(ClientChatEvent event) {
         //String[] stringArray;
-        if (!DebugMode.GetEnv()) {
-            return;
-        }
+        if (DebugMode.GetEnv()) {
+            String message = event.getOriginalMessage().toLowerCase();
+            EntityPlayerSP player = Minecraft.getMinecraft().player;
 
-        String message = event.getOriginalMessage().toLowerCase();
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
+            if ("time".equals(message)) {
+                player.sendMessage(new TextComponentString(String.valueOf(player.world.getTotalWorldTime())));
+            }
 
-        if ("time".equals(message)) {
-            ((Entity)player).sendMessage(new TextComponentString(String.valueOf(player.world.getTotalWorldTime())));
-        }
+            if ("girls".equals(message)) {
+                List<GirlEntity> activeGirls = player.world.getEntities(GirlEntity.class, entity -> true);
+                player.sendMessage(new TextComponentString(String.valueOf(activeGirls.size())));
+                for (GirlEntity object : activeGirls) {
+                    System.out.printf("%s at %s %s %s\n", object, object.posX, object.posY, object.posZ);
+                }
+            }
 
-        if ("girls".equals(message)) {
-            List<GirlEntity> activeGirls = player.world.getEntities(GirlEntity.class, entity -> true);
-            ((Entity)player).sendMessage(new TextComponentString(String.valueOf(activeGirls.size())));
-            for (GirlEntity object : activeGirls) {
-                System.out.printf("%s at %s %s %s\n", object, object.posX, object.posY, object.posZ);
+            if ("kobs".equals(message)) {
+                UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
+                int totalMembersCount = KoboldManager.getTribeMemberCount(tribeID);
+                List<KoboldEntity> aliveMembers = KoboldManager.getTribeMembersList(tribeID);
+
+                for (KoboldEntity members : aliveMembers) {
+                    this.sayMessage(String.format("alive member %s at %s world.isremote? %s isdead %s girlID %s entityID %s", members.getGirlName(), members.getPosition(), members.world.isRemote, members.isDead, members.girlID(), members.getEntityId()));
+                    this.sayMessage(player.world.getEntitiesWithinAABB(KoboldEntity.class, new AxisAlignedBB(members.getPosition())).isEmpty() ? "couldn't be located" : "appears to actually exist");
+                }
+
+                HashMap<UUID, BlockPos> savedPositions = KoboldManager.getUnloadedMembersMap(tribeID, player.world);
+                for (Map.Entry entry : savedPositions.entrySet()) {
+                    this.sayMessage(String.format("saved pos of %s at %s", ((UUID) entry.getKey()).toString(), ((BlockPos) entry.getValue()).toString()));
+                }
+                this.sayMessage("total amount members: " + totalMembersCount);
+            }
+
+            if (message.startsWith("setcumtime ")) {
+                long cumtime;
+                String[] args = message.split(" ");
+                try {
+                    cumtime = Long.parseLong(args[1]);
+                } catch (NullPointerException e) {
+                    System.out.println("long: " + args[1]);
+                    e.printStackTrace();
+                    return;
+                }
+                GalathMangTracker.saveCumTime(player.getPersistentID(), cumtime);
+                player.sendMessage(new TextComponentString("set to: " + cumtime));
             }
         }
 
-        if ("kobs".equals(message)) {
-            UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
-            int totalMembersCount = KoboldManager.getTribeMemberCount((UUID)tribeID);
-            List<KoboldEntity> aliveMembers = KoboldManager.getTribeMembersList((UUID)tribeID);
-
-            for (Object members : aliveMembers) {
-                this.sayMessage(String.format("alive member %s at %s world.isremote? %s isdead %s girlID %s entityID %s", ((KoboldEntity)members).getGirlName(), ((Entity)members).getPosition(), ((KoboldEntity)members).world.isRemote, ((KoboldEntity)members).isDead, ((GirlEntity)members).girlID(), ((Entity)members).getEntityId()));
-                this.sayMessage(player.world.getEntitiesWithinAABB(KoboldEntity.class, new AxisAlignedBB(((Entity)members).getPosition())).isEmpty() ? "couldn't be located" : "appears to actually exist");
-            }
-
-            HashMap<UUID, BlockPos> savedPositions = KoboldManager.getUnloadedMembersMap((UUID)tribeID, player.world);
-            for (Map.Entry entry : savedPositions.entrySet()) {
-                this.sayMessage(String.format("saved pos of %s at %s", ((UUID)entry.getKey()).toString(), ((BlockPos)entry.getValue()).toString()));
-            }
-            this.sayMessage("total amount members: " + totalMembersCount);
-        }
-
-        if (message.startsWith("setcumtime ")) {
-            long cumtime;
-            String[] args = message.split(" ");
-            try {
-                cumtime = Long.parseLong(args[1]);
-            } catch (NullPointerException e) {
-                System.out.println("long: " + args[1]);
-                e.printStackTrace();
-                return;
-            }
-            GalathMangTracker.saveCumTime(player.getPersistentID(), cumtime);
-            ((Entity)player).sendMessage(new TextComponentString("set to: " + cumtime));
-        }
     }
 
     @SideOnly(value=Side.CLIENT)

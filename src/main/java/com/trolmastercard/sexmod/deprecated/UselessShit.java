@@ -3,7 +3,7 @@
  */
 package com.trolmastercard.sexmod.deprecated;
 
-//TODO: THIS DOES NOTHING
+//THIS DOES NOTHING
 public class UselessShit {
     static public UselessShit a;
     public boolean c;
