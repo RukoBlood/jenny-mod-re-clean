@@ -140,9 +140,9 @@ extends PlayerGirlRenderer {
         double d2 = this.z - this.D;
         this.L = (Math.abs(d) + Math.abs(d2)) * 5.0;
         this.L = ThreadNames.clamp((float)this.L, 0.0f, 1.0f);
-        geoBone.setPositionY((float) RotationHelper.a(5.0, 0.0, RotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks)));
+        geoBone.setPositionY((float) RotationHelper.lerpAngle(5.0, 0.0, RotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks)));
         if (this.currentGirl instanceof PlayerAllie) {
-            ((PlayerAllie)this.currentGirl).aq = (float) RotationHelper.a((double)0.3f, 0.0, RotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks));
+            ((PlayerAllie)this.currentGirl).aq = (float) RotationHelper.lerpAngle((double)0.3f, 0.0, RotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks));
         }
     }
 

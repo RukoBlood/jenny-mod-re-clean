@@ -193,7 +193,7 @@ public class LampItem extends Item implements IAnimatable {
         nBTTagCompound.setInteger(inUseTicks, n2 + 1);
         if (n2 > k && n2 < c) {
             double d = (float)(n2 - k) / (float)(c - k);
-            d = RotationHelper.h(d);
+            d = RotationHelper.smoothStep(d);
             vec3d = new Vec3d(0.0, (double)entityPlayer.eyeHeight * (1.0 - d), 0.0);
             WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer).add(vec3d), (int)(d * 150.0), d * 0.75, d);
         }

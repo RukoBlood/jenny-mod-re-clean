@@ -283,7 +283,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             factor = Math.max(0.0f, factor - 0.5f) * 2.0f;
         }
 
-        float f9 = (float) RotationHelper.h(factor); //factorH
+        float f9 = (float) RotationHelper.smoothStep(factor); //factorH
 
         float lerpedRot = TrigMath.wrapDegrees(RotationHelper.LerpFloat(0.0f, 90.0f, progressQuart));
 
@@ -302,11 +302,11 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             state.lowerArmLRot.z = RotationHelper.LerpFloat(lerpedRot, 0.0f, f9);
 
             if ((double)factor > 0.5) {
-                state.lowerArmLRot.x = RAD_35 + (float) RotationHelper.LerpDouble(RAD_45, 0.0, RotationHelper.h((factor - 0.5f) * 2.0f));
+                state.lowerArmLRot.x = RAD_35 + (float) RotationHelper.LerpDouble(RAD_45, 0.0, RotationHelper.smoothStep((factor - 0.5f) * 2.0f));
                 //ArmTransformState.access$200((ArmTransformState)state).x = RAD_35 + (float) Reference.LerpDouble((double) RAD_45, 0.0, Reference.h((factor - 0.5f) * 2.0f));
             } else if (factor != 0.0f && (double)factor < 0.5) {
                 //ArmTransformState.access$200((ArmTransformState)state).x = RAD_35 + (float) Reference.LerpDouble(0.0, (double) RAD_45, Reference.h(factor * 2.0f));
-                state.lowerArmLRot.x = RAD_35 + (float) RotationHelper.LerpDouble(0.0, RAD_45, RotationHelper.h(factor * 2.0f));
+                state.lowerArmLRot.x = RAD_35 + (float) RotationHelper.LerpDouble(0.0, RAD_45, RotationHelper.smoothStep(factor * 2.0f));
             }
         } else {
 //            ArmTransformState.access$102(state, new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.toRadians(90.0f), lookL.pitch, 0.0f));
@@ -322,10 +322,10 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
 
             if ((double)factor > 0.5) {
                 //ArmTransformState.access$300((ArmTransformState)state).x = RAD_140 + (float) Reference.LerpDouble((double) RAD_45, 0.0, Reference.h((factor - 0.5f) * 2.0f));
-                state.lowerArmRRot.x = RAD_140 + (float) RotationHelper.LerpDouble(RAD_45, 0.0, RotationHelper.h((factor - 0.5f) * 2.0f));
+                state.lowerArmRRot.x = RAD_140 + (float) RotationHelper.LerpDouble(RAD_45, 0.0, RotationHelper.smoothStep((factor - 0.5f) * 2.0f));
             } else if (factor != 0.0f && (double)factor < 0.5) {
                 //ArmTransformState.access$300((ArmTransformState)state).x = RAD_140 + (float) Reference.LerpDouble(0.0, (double) RAD_45, Reference.h(factor * 2.0f));
-                state.lowerArmRRot.x = RAD_140 + (float) RotationHelper.LerpDouble(0.0, RAD_45, RotationHelper.h(factor * 2.0f));
+                state.lowerArmRRot.x = RAD_140 + (float) RotationHelper.LerpDouble(0.0, RAD_45, RotationHelper.smoothStep(factor * 2.0f));
             }
         }
         //ArmTransformState.access$000((ArmTransformState)state).y += radYawHead;

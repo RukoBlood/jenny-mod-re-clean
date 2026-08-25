@@ -23,7 +23,7 @@ public class RotationHelper {
         return start + (end - start) * step;
     }
 
-    public static float a(float start, float end, double step) {
+    public static float lerpFloatAngular(float start, float end, double step) {
         float delta = end - start;
         while ((double)delta < -Math.PI) {
             delta = (float)((double)delta + Math.PI * 2);
@@ -37,7 +37,7 @@ public class RotationHelper {
     public static float LerpAngleDegrees(float start, float end, double step) {
         double StartRad = Math.toRadians(start);
         double EndRad = Math.toRadians(end);
-        return (float)Math.toDegrees(RotationHelper.a((float)StartRad, (float)EndRad, step));
+        return (float)Math.toDegrees(RotationHelper.lerpFloatAngular((float)StartRad, (float)EndRad, step));
     }
 
     public static Vec3d LerpVec3d(Vec3d start, Vec3d end, double step) {
@@ -88,17 +88,17 @@ public class RotationHelper {
         return d * d * d;
     }
 
-    public static double h(double d) {
-        return -(Math.cos(Math.PI * d) - 1.0) / 2.0;
+    public static double smoothStep(double t) {
+        return -(Math.cos(Math.PI * t) - 1.0) / 2.0;
     }
 
-    public static double f(double d) {
-        return 1.0 - Math.cos(Math.PI * d / 2.0);
+    public static double easeInQuart(double t) {
+        return 1.0 - Math.cos(Math.PI * t / 2.0);
     }
 
-    public static double a(double d, double d2, double d3) {
-        double d4 = (1.0 - Math.cos(d3 * Math.PI)) / 2.0;
-        return d * (1.0 - d4) + d2 * d4;
+    public static double lerpAngle(double start, double end, double step) {
+        double smooth = (1.0 - Math.cos(step * Math.PI)) / 2.0;
+        return start * (1.0 - smooth) + end * smooth;
     }
 }
 
