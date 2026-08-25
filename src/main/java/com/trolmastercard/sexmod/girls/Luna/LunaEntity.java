@@ -77,7 +77,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
-    static public double ap = 0.01;
+    static public double onePercent = 0.01;
     public ItemStack lunaRod = new ItemStack(LunaRod.LUNA_ROD);
     final static public DataParameter<Float> TARGET_DISTANCE;
     final static public DataParameter<ItemStack> FISHING_ROD;
@@ -93,21 +93,21 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     public float throwBackPercentage = 0.0f;
     int hunger = 8000;
     public boolean isPreparingTalk = false;
-    int aw = 0;
-    boolean ay = false;
-    int ak = 0;
-    int ab = 0;
+    int preparingTalkTicks = 0;
+    boolean isMovingToBed = false;
+    int bedMoveTicks = 0;
+    int catWaitTicks = 0;
     public BlockPos chosenFishingSpot;
-    int at = 0;
-    int as = 0;
-    boolean am;
-    long al = 0L;
-    boolean ar = false;
-    Path au = null;
-    int aq = 0;
-    HashSet<BlockPos> an = new HashSet();
-    boolean ae = false;
-    boolean ad = false;
+    int maxFishingSpotDepth = 0;
+    int fishingSpotSearchTimer = 0;
+    boolean isFishingSpotConfirmed;
+    long fishCatchRemoveTime = 0L;
+    boolean hasEatenFishToBed = false;
+    Path fishingPath = null;
+    int fishingEatenCounter = 0;
+    HashSet<BlockPos> fishedSpotsHistory = new HashSet();
+    boolean alternateTouchBoobsAnim = false;
+    boolean playIdle2Anim = false;
 
     static {
         TARGET_DISTANCE = EntityDataManager.createKey(LunaEntity.class, DataSerializers.FLOAT).getSerializer().createKey(121);
@@ -177,18 +177,19 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer entityPlayer, EnumHand enumHand) {
-        boolean bl;
-        if (super.processInteract(entityPlayer, enumHand)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        //boolean bl;
+        if (super.processInteract(player, hand)) {
             return true;
         }
-        ItemStack itemStack = entityPlayer.getHeldItem(enumHand);
-        boolean bl2 = bl = itemStack.getItem() == Items.NAME_TAG;
-        if (bl) {
-            itemStack.interactWithEntity(entityPlayer, this, enumHand);
+
+        ItemStack stack = player.getHeldItem(hand);
+        boolean isNameTag = stack.getItem() == Items.NAME_TAG;
+        if (isNameTag) {
+            stack.interactWithEntity(player, this, hand);
             return true;
         }
-        if (this.world.isRemote && !this.openInteractionMenu(entityPlayer)) {
+        if (this.world.isRemote && !this.openInteractionMenu(player)) {
             this.sendChatMessage(I18n.format("bia.dialogue.busy"));
         }
         return true;
@@ -227,18 +228,20 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         } else {
             this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5);
         }
-        this.void_m();
-        this.void_i();
+
+        this.handleFishingPath();
+        this.handleFishingIdle();
         this.entityDataManager.set(IS_FISHING, this.fishEntity != null && this.entityDataManager.get(CAUGHT_ITEM) == ItemStack.EMPTY);
-        if (this.al == this.world.getTotalWorldTime() && this.fishEntity != null) {
+
+        if (this.fishCatchRemoveTime == this.world.getTotalWorldTime() && this.fishEntity != null) {
             this.world.removeEntity(this.fishEntity);
             this.fishEntity = null;
         }
-        if (this.ay) {
-            double d = this.getTargetPosition().distanceTo(this.getPositionVector());
-            if (d < 0.5 || this.ak > 200) {
-                this.ay = false;
-                this.ak = 0;
+        if (this.isMovingToBed) {
+            double dist = this.getTargetPosition().distanceTo(this.getPositionVector());
+            if (dist < 0.5 || this.bedMoveTicks > 200) {
+                this.isMovingToBed = false;
+                this.bedMoveTicks = 0;
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.noClip = true;
                 this.setNoGravity(true);
@@ -246,85 +249,82 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.motionY = 0.0;
                 this.motionZ = 0.0;
                 this.setCurrentAction(Action.WAIT_CAT);
-            } else if (++this.ak == 60 || this.ak == 120) {
+            } else if (++this.bedMoveTicks == 60 || this.bedMoveTicks == 120) {
                 this.getNavigator().clearPath();
                 this.getNavigator().tryMoveToXYZ(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, 0.2);
             }
         }
         if (this.isPreparingTalk) {
-            ++this.aw;
-            if (this.getPositionVector().equals(this.getTargetPosition()) || this.aw > 40) {
+            ++this.preparingTalkTicks;
+            if (this.getPositionVector().equals(this.getTargetPosition()) || this.preparingTalkTicks > 40) {
                 this.isPreparingTalk = false;
-                this.aw = 0;
+                this.preparingTalkTicks = 0;
                 this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.getNavigator().clearPath();
                 this.doSubAction();
             } else {
-                this.rotationYaw = this.getYawRotation().floatValue();
+                this.rotationYaw = this.getYawRotation();
                 this.setNoGravity(false);
-                Vec3d vec3d = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.aw);
-                this.setPosition(vec3d.x, vec3d.y, vec3d.z);
+                Vec3d pos = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.preparingTalkTicks);
+                this.setPosition(pos.x, pos.y, pos.z);
             }
         }
-        this.void_d();
+        this.syncHeldItem();
         this.entityDataManager.set(FISHING_ROD, this.inventory.getStackInSlot(6));
     }
 
-    void void_d() {
-        ItemStack itemStack = this.lunaRod;
-        ItemStack itemStack2 = this.entityDataManager.get(FISHING_ROD);
-        if (itemStack2.equals(ItemStack.EMPTY)) {
-            return;
+    void syncHeldItem() {
+        ItemStack heldItem = this.lunaRod;
+        ItemStack syncedItem = this.entityDataManager.get(FISHING_ROD);
+        if (!syncedItem.equals(ItemStack.EMPTY)) {
+            Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(syncedItem);
+            EnchantmentHelper.setEnchantments(map, heldItem);
         }
-        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack2);
-        EnchantmentHelper.setEnchantments(map, itemStack);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
         if (Action.WAIT_CAT.equals(this.getCurrentAction())) {
-            this.void_f();
+            this.handleNearbyPlayer();
         } else {
-            this.ab = 0;
+            this.catWaitTicks = 0;
         }
     }
 
-    void void_f() {
-        EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
-        if (entityPlayer == null) {
-            return;
+    void handleNearbyPlayer() {
+        EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10.0);
+        if (player != null) {
+            if (!(player.getDistance(this) > 1.25f)) {
+                if (this.world.isRemote) {
+                    this.setFishingLevelFor(player, this.catWaitTicks);
+                } else if (this.catWaitTicks == 25) {
+                    this.setInteractionPlayerUUID(player.getPersistentID());
+                    player.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
+                    player.setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
+                    this.setCurrentAction(Action.COWGIRL_SITTING_INTRO);
+                    player.setRotationYawHead(this.getYawRotation() + 180.0f);
+                    player.rotationYaw = this.getYawRotation() + 180.0f;
+                    player.prevRotationYaw = this.getYawRotation() + 180.0f;
+                    this.cameraYaw = this.getYawRotation() + 180.0f;
+                    this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
+                    this.entityDataManager.set(OUTFIT_INDEX, 0);
+                }
+                ++this.catWaitTicks;
+            }
         }
-        if (entityPlayer.getDistance(this) > 1.25f) {
-            return;
-        }
-        if (this.world.isRemote) {
-            this.a(entityPlayer, this.ab);
-        } else if (this.ab == 25) {
-            this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-            entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
-            entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
-            this.setCurrentAction(Action.COWGIRL_SITTING_INTRO);
-            entityPlayer.setRotationYawHead(this.getYawRotation().floatValue() + 180.0f);
-            entityPlayer.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
-            entityPlayer.prevRotationYaw = this.getYawRotation().floatValue() + 180.0f;
-            this.cameraYaw = this.getYawRotation().floatValue() + 180.0f;
-            this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
-            this.entityDataManager.set(OUTFIT_INDEX, 0);
-        }
-        ++this.ab;
     }
 
     @SideOnly(value=Side.CLIENT)
-    void a(EntityPlayer entityPlayer, int n) {
-        EntityPlayerSP entityPlayerSP;
-        if (n == 0 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
+    void setFishingLevelFor(EntityPlayer player, int level) {
+        EntityPlayerSP playerSP;
+        if (level == 0 && (playerSP = Minecraft.getMinecraft().player).getPersistentID().equals(player.getPersistentID())) {
             BlackScreenUI.run();
-            entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
+            playerSP.setVelocity(0.0, 0.0, 0.0);
             HandlePlayerMovement.setMovementLock(false);
         }
-        if (n == 25 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
+        if (level == 25 && Minecraft.getMinecraft().player.getPersistentID().equals(player.getPersistentID())) {
             Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
         }
     }
@@ -333,59 +333,60 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     public void goToSexBed() {
         this.entityDataManager.set(IS_ANCHORED, false);
         this.setCurrentAction(Action.NULL);
-        this.ar = true;
-        BlockPos blockPos = this.getNearestBed(this.getPosition());
-        if (blockPos == null) {
+        this.hasEatenFishToBed = true;
+        BlockPos bedPos = this.getNearestBed(this.getPosition());
+        if (bedPos == null) {
             this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
             PacketHandler.INSTANCE.sendToAllAround(new SendChatMessage("<" + this.getGirlName() + "> Heh.. there is no bed nearby.. but I already ate the fish so nya~ hehe", this.dimension, this.girlID()), this.getTargetNetworkPoint());
         } else {
-            Vec3d vec3d = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            int[] nArray = new int[]{0, 180, -90, 90};
-            Vec3d[][] vec3dArrayArray = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.5), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(0.5, 0.0, 1.5), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(-0.5, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0)}, {new Vec3d(1.5, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0)}};
-            int n = -1;
-            for (int i = 0; i < vec3dArrayArray.length; ++i) {
-                Vec3d vec3d2 = vec3d.add(vec3dArrayArray[i][1]);
+            Vec3d bedVec = new Vec3d(bedPos.getX(), bedPos.getY(), bedPos.getZ());
+            int[] yaws = new int[]{0, 180, -90, 90};
+            Vec3d[][] offsets = new Vec3d[][]{{new Vec3d(0.5, 0.0, -0.5), new Vec3d(0.0, 0.0, -1.0)}, {new Vec3d(0.5, 0.0, 1.5), new Vec3d(0.0, 0.0, 1.0)}, {new Vec3d(-0.5, 0.0, 0.5), new Vec3d(-1.0, 0.0, 0.0)}, {new Vec3d(1.5, 0.0, 0.5), new Vec3d(1.0, 0.0, 0.0)}};
+            int bestIndex = -1;
+            for (int i = 0; i < offsets.length; ++i) {
+                Vec3d vec3d2 = bedVec.add(offsets[i][1]);
                 if (this.world.getBlockState(new BlockPos(vec3d2.x, vec3d2.y, vec3d2.z)).getBlock() != Blocks.AIR) continue;
-                if (n == -1) {
-                    n = i;
-                    continue;
+                if (bestIndex == -1) {
+                    bestIndex = i;
+                } else {
+                    double bestDist = this.getPosition().distanceSq(bedVec.add(offsets[bestIndex][0]).x, bedVec.add(offsets[bestIndex][0]).y, bedVec.add(offsets[bestIndex][0]).z);
+                    double dist = this.getPosition().distanceSq(bedVec.add(offsets[i][0]).x, bedVec.add(offsets[i][0]).y, bedVec.add(offsets[i][0]).z);
+                    if (dist < bestDist) {
+                        bestIndex = i;
+                    }
                 }
-                double d = this.getPosition().distanceSq(vec3d.add(vec3dArrayArray[n][0]).x, vec3d.add(vec3dArrayArray[n][0]).y, vec3d.add(vec3dArrayArray[n][0]).z);
-                double d2 = this.getPosition().distanceSq(vec3d.add(vec3dArrayArray[i][0]).x, vec3d.add(vec3dArrayArray[i][0]).y, vec3d.add(vec3dArrayArray[i][0]).z);
-                if (!(d2 < d)) continue;
-                n = i;
             }
-            if (n == -1) {
+            if (bestIndex == -1) {
                 this.playRandomSound(SoundsHandler.GIRLS_LUNA_GIGGLE);
                 this.sendChatMessage("Heh.. the bed is obscured.. but I already ate the fish so nya~ hehe");
                 return;
             }
-            Vec3d vec3d3 = vec3d.add(vec3dArrayArray[n][0]);
-            this.setYawRotation(nArray[n]);
-            this.setTargetPosition(new Vec3d(vec3d3.x, vec3d3.y, vec3d3.z));
+            Vec3d bedOffset = bedVec.add(offsets[bestIndex][0]);
+            this.setYawRotation(yaws[bestIndex]);
+            this.setTargetPosition(new Vec3d(bedOffset.x, bedOffset.y, bedOffset.z));
             this.cameraYaw = this.getYawRotation();
             this.getNavigator().clearPath();
-            this.getNavigator().tryMoveToXYZ(vec3d3.x, vec3d3.y, vec3d3.z, 0.2);
-            this.ay = true;
-            this.ak = 0;
+            this.getNavigator().tryMoveToXYZ(bedOffset.x, bedOffset.y, bedOffset.z, 0.2);
+            this.isMovingToBed = true;
+            this.bedMoveTicks = 0;
         }
     }
 
-    public void void_j() {
-        EntityItem entityItem = new EntityItem(this.world, this.posX, this.posY, this.posZ, this.entityDataManager.get(CAUGHT_ITEM));
-        Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.0, (double)0.2f + Math.random() * (double)0.1f, (double)-0.2f + Math.random() * (double)-0.1f), this.rotationYaw);
-        entityItem.motionX = vec3d.x;
-        entityItem.motionY = vec3d.y;
-        entityItem.motionZ = vec3d.z;
-        this.world.spawnEntity(entityItem);
+    public void dropHeldItem() {
+        EntityItem item = new EntityItem(this.world, this.posX, this.posY, this.posZ, this.entityDataManager.get(CAUGHT_ITEM));
+        Vec3d throwVec = VectorMath.rotateByYaw(new Vec3d(0.0, (double)0.2f + Math.random() * (double)0.1f, (double)-0.2f + Math.random() * (double)-0.1f), this.rotationYaw);
+        item.motionX = throwVec.x;
+        item.motionY = throwVec.y;
+        item.motionZ = throwVec.z;
+        this.world.spawnEntity(item);
         this.entityDataManager.set(CAUGHT_ITEM, ItemStack.EMPTY);
     }
 
-    public void void_q() {
+    public void clearFishingState() {
         this.chosenFishingSpot = null;
-        this.at = 0;
-        this.as = 0;
-        this.am = false;
+        this.maxFishingSpotDepth = 0;
+        this.fishingSpotSearchTimer = 0;
+        this.isFishingSpotConfirmed = false;
         this.entityDataManager.set(IS_ANCHORED, false);
         this.entityDataManager.set(CAUGHT_ITEM, ItemStack.EMPTY);
         this.setSilent(false);
@@ -394,31 +395,29 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             this.world.removeEntity(this.fishEntity);
             this.fishEntity = null;
         }
-        if (this.getInteractionPlayerUUID() != null) {
-            return;
+        if (this.getInteractionPlayerUUID() == null) {
+            this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
+            this.tasks.addTask(5, this.watchClosestGirlGoal);
+            if (!this.hasMaster()) {
+                this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
+                this.tasks.addTask(5, this.aiWander);
+            }
         }
-        this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
-        this.tasks.addTask(5, this.watchClosestGirlGoal);
-        if (this.hasMaster()) {
-            return;
-        }
-        this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
-        this.tasks.addTask(5, this.aiWander);
     }
 
-    public void void_h() {
-        this.void_q();
-        if (++this.aq >= 3) {
-            this.aq = 0;
+    public void onFishingTick() {
+        this.clearFishingState();
+        if (++this.fishingEatenCounter >= 3) {
+            this.fishingEatenCounter = 0;
             this.hunger = 0;
         }
     }
 
-    void void_i() {
+    void handleFishingIdle() {
         Object object;
-        if (this.hasMaster() || this.getInteractionPlayerUUID() != null || this.ar) {
-            if (this.entityDataManager.get(IS_FISHING).booleanValue()) {
-                this.void_q();
+        if (this.hasMaster() || this.getInteractionPlayerUUID() != null || this.hasEatenFishToBed) {
+            if (this.entityDataManager.get(IS_FISHING)) {
+                this.clearFishingState();
             }
             return;
         }
@@ -428,7 +427,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         }
         if (this.fishEntity != null && this.fishEntity.lureTimer == 15) {
             ((LunaRod)this.lunaRod.getItem()).onItemRightClick(this.world, this, EnumHand.MAIN_HAND);
-            this.al = this.world.getTotalWorldTime() + 20L;
+            this.fishCatchRemoveTime = this.world.getTotalWorldTime() + 20L;
             object = this.entityDataManager.get(CAUGHT_ITEM);
             if (object != ItemStack.EMPTY) {
                 if (((ItemStack)object).getItem() instanceof ItemFood) {
@@ -439,11 +438,11 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             }
         }
         if (!this.getCurrentAction().toString().toLowerCase().contains("fishing")) {
-            this.void_n();
-            this.void_e();
+            this.findFishingSpot();
+            this.handleFishingMove();
         }
-        if (this.chosenFishingSpot != null && this.au == null && this.getNavigator().getPath() == null && !this.inWater && this.onGround) {
-            object = this.world.rayTraceBlocks(this.getPositionVector().add(0.0, this.getEyeHeight(), 0.0), new Vec3d(this.chosenFishingSpot.getX(), this.chosenFishingSpot.getY(), this.chosenFishingSpot.getZ()), true);
+        if (this.chosenFishingSpot != null && this.fishingPath == null && this.getNavigator().getPath() == null && !this.inWater && this.onGround) {
+            this.world.rayTraceBlocks(this.getPositionVector().add(0.0, this.getEyeHeight(), 0.0), new Vec3d(this.chosenFishingSpot.getX(), this.chosenFishingSpot.getY(), this.chosenFishingSpot.getZ()), true);
             this.setSilent(true);
             if (this.aiWander != null) {
                 this.tasks.removeTask(this.aiWander);
@@ -461,46 +460,44 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             }
             return;
         }
-        this.au = this.getNavigator().getPath();
+        this.fishingPath = this.getNavigator().getPath();
     }
 
     public void addCaughtItem() {
-        this.an.add(this.chosenFishingSpot);
-        this.void_q();
+        this.fishedSpotsHistory.add(this.chosenFishingSpot);
+        this.clearFishingState();
     }
 
-    void void_e() {
-        if (this.chosenFishingSpot == null) {
-            return;
-        }
-        PathNavigate pathNavigate = this.getNavigator();
-        pathNavigate.tryMoveToXYZ(this.chosenFishingSpot.getX(), this.chosenFishingSpot.getY(), this.chosenFishingSpot.getZ(), 0.35f);
-        Path path = pathNavigate.getPath();
-        if (path == null) {
-            return;
-        }
-        if (path.getCurrentPathLength() > path.getCurrentPathIndex() + 1) {
-            PathPoint pathPoint = path.getPathPointFromIndex(path.getCurrentPathIndex() + 1);
-            PathPoint pathPoint2 = path.getPathPointFromIndex(path.getCurrentPathLength() - 1);
-            Vec3d vec3d = new Vec3d(pathPoint2.x, pathPoint2.y, pathPoint2.z);
-            BlockPos blockPos = new BlockPos(pathPoint.x, pathPoint.y, pathPoint.z);
-            if (this.getPositionVector().distanceTo(vec3d) < 0.75) {
-                pathNavigate.clearPath();
-                this.setPosition(vec3d.x, vec3d.y, vec3d.z);
-            }
-            if (this.world.getBlockState(blockPos.add(0, 1, 0)).getBlock() == Blocks.WATER) {
-                pathNavigate.clearPath();
-            }
-            if (this.world.getBlockState(blockPos).getBlock() == Blocks.WATER) {
-                pathNavigate.clearPath();
-            }
-            if (this.world.getBlockState(blockPos.add(0, -1, 0)).getBlock() == Blocks.WATER) {
-                pathNavigate.clearPath();
+    void handleFishingMove() {
+        if (this.chosenFishingSpot != null) {
+            PathNavigate pathNavigate = this.getNavigator();
+            pathNavigate.tryMoveToXYZ(this.chosenFishingSpot.getX(), this.chosenFishingSpot.getY(), this.chosenFishingSpot.getZ(), 0.35f);
+            Path path = pathNavigate.getPath();
+            if (path != null) {
+                if (path.getCurrentPathLength() > path.getCurrentPathIndex() + 1) {
+                    PathPoint pathPoint = path.getPathPointFromIndex(path.getCurrentPathIndex() + 1);
+                    PathPoint pathPoint2 = path.getPathPointFromIndex(path.getCurrentPathLength() - 1);
+                    Vec3d vec3d = new Vec3d(pathPoint2.x, pathPoint2.y, pathPoint2.z);
+                    BlockPos blockPos = new BlockPos(pathPoint.x, pathPoint.y, pathPoint.z);
+                    if (this.getPositionVector().distanceTo(vec3d) < 0.75) {
+                        pathNavigate.clearPath();
+                        this.setPosition(vec3d.x, vec3d.y, vec3d.z);
+                    }
+                    if (this.world.getBlockState(blockPos.add(0, 1, 0)).getBlock() == Blocks.WATER) {
+                        pathNavigate.clearPath();
+                    }
+                    if (this.world.getBlockState(blockPos).getBlock() == Blocks.WATER) {
+                        pathNavigate.clearPath();
+                    }
+                    if (this.world.getBlockState(blockPos.add(0, -1, 0)).getBlock() == Blocks.WATER) {
+                        pathNavigate.clearPath();
+                    }
+                }
             }
         }
     }
 
-    void void_n() {
+    void findFishingSpot() {
         BlockPos blockPos;
         int n = 0;
         BlockPos blockPos2 = null;
@@ -515,7 +512,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 blockPos3 = blockPos3.add(0, -1, 0);
                 ++n3;
             }
-            if (this.an.contains(blockPos)) continue;
+            if (this.fishedSpotsHistory.contains(blockPos)) continue;
             if (blockPos2 == null) {
                 blockPos2 = blockPos;
                 n2 = n3;
@@ -530,19 +527,19 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (blockPos2 == null) {
             return;
         }
-        if (this.chosenFishingSpot == null || this.at < n2) {
+        if (this.chosenFishingSpot == null || this.maxFishingSpotDepth < n2) {
             this.chosenFishingSpot = blockPos2;
-            this.at = n2;
+            this.maxFishingSpotDepth = n2;
         }
         if (this.chosenFishingSpot.equals(blockPos2)) {
-            this.as = 0;
-        } else if (++this.as > 20) {
+            this.fishingSpotSearchTimer = 0;
+        } else if (++this.fishingSpotSearchTimer > 20) {
             this.chosenFishingSpot = blockPos2;
-            this.at = n2;
+            this.maxFishingSpotDepth = n2;
         }
     }
 
-    void void_m() {
+    void handleFishingPath() {
         Path path = this.getNavigator().getPath();
         if (path == null) {
             return;
@@ -552,7 +549,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (pathPoint == null) {
             return;
         }
-        this.entityDataManager.set(TARGET_DISTANCE, Float.valueOf(pathPoint.distanceTo(pathPoint2)));
+        this.entityDataManager.set(TARGET_DISTANCE, pathPoint.distanceTo(pathPoint2));
     }
 
     @Override
@@ -682,14 +679,14 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 if (Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ) > 0.0) {
                     if (this.onGround && Math.abs(Math.abs(this.prevPosY) - Math.abs(this.posY)) < (double)0.1f) {
-                        this.createAnimation(this.entityDataManager.get(TARGET_DISTANCE).floatValue() < 3.0f ? "animation.cat.walk" : "animation.cat.run", true, event);
+                        this.createAnimation(this.entityDataManager.get(TARGET_DISTANCE) < 3.0f ? "animation.cat.walk" : "animation.cat.run", true, event);
                     } else {
                         this.createAnimation("animation.cat.fly", true, event);
                     }
                     this.rotationYaw = this.rotationYawHead;
                     break;
                 }
-                this.createAnimation("animation.cat.idle" + (this.ad ? "2" : ""), true, event);
+                this.createAnimation("animation.cat.idle" + (this.playIdle2Anim ? "2" : ""), true, event);
                 break;
             }
             case "action": {
@@ -744,7 +741,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                         break;
                     }
                     case TOUCH_BOOBS_SLOW: {
-                        this.createAnimation("animation.cat.touch_boobs_slow" + (this.ae ? "1" : ""), true, event);
+                        this.createAnimation("animation.cat.touch_boobs_slow" + (this.alternateTouchBoobsAnim ? "1" : ""), true, event);
                         break;
                     }
                     case TOUCH_BOOBS_FAST: {
@@ -802,11 +799,11 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "idleDone": {
-                    this.ad = this.getRNG().nextInt(10) == 0;
+                    this.playIdle2Anim = this.getRNG().nextInt(10) == 0;
                     break;
                 }
                 case "idle2Done": {
-                    this.ad = false;
+                    this.playIdle2Anim = false;
                     break;
                 }
                 case "pearl": {
@@ -958,11 +955,11 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "touch_boobs_slowDone": {
-                    if (this.ae) {
-                        this.ae = false;
+                    if (this.alternateTouchBoobsAnim) {
+                        this.alternateTouchBoobsAnim = false;
                         break;
                     }
-                    this.ae = Math.random() < 0.5;
+                    this.alternateTouchBoobsAnim = Math.random() < 0.5;
                     break;
                 }
                 case "addCumSlow": {
@@ -1068,7 +1065,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 case "sitting_fastTp": {
                     if (!this.isControlledByLocalPlayer()) break;
                     Vec3d vec3d = new Vec3d(0.0, -0.160625, -0.9925);
-                    Vec3d vec3d3 = VectorMath.rotateByYaw(vec3d, this.getYawRotation().floatValue() + 180.0f);
+                    Vec3d vec3d3 = VectorMath.rotateByYaw(vec3d, this.getYawRotation() + 180.0f);
                     Minecraft.getMinecraft().player.setPosition(this.getTargetPosition().x + vec3d3.x, this.getTargetPosition().y + vec3d3.y, this.getTargetPosition().z + vec3d3.z);
                     break;
                 }
@@ -1106,7 +1103,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             Entity entity = event.getEntity();
             if (entity instanceof EntityCreeper) {
                 EntityCreeper creeper = (EntityCreeper)entity;
-                creeper.tasks.addTask(3, new EntityAIAvoidEntity<LunaEntity>(creeper, LunaEntity.class, 6.0f, 1.0, 1.2));
+                creeper.tasks.addTask(3, new EntityAIAvoidEntity<>(creeper, LunaEntity.class, 6.0f, 1.0, 1.2));
             }
         }
     }

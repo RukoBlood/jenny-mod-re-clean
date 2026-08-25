@@ -61,7 +61,7 @@ implements IMessage {
                 if (hashSet.isEmpty()) {
                     return;
                 }
-                PacketHandler.INSTANCE.sendTo((IMessage)new SendBlocks(hashSet, false), ctx.getServerHandler().player);
+                PacketHandler.INSTANCE.sendTo(new SendBlocks(hashSet, false), ctx.getServerHandler().player);
             });
             return null;
         }

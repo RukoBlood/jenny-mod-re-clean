@@ -26,22 +26,22 @@ import net.minecraftforge.fml.relauncher.Side;
 public class CatEatingDone
 implements IMessage {
     boolean isValid = false;
-    UUID b;
+    UUID lunaId;
 
     public CatEatingDone() {
     }
 
     public CatEatingDone(UUID uUID) {
-        this.b = uUID;
+        this.lunaId = uUID;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.lunaId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.lunaId.toString());
     }
 
     public static class Handler implements IMessageHandler<CatEatingDone, IMessage> {
@@ -52,11 +52,12 @@ implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.b);
-                for (GirlEntity em_class2582 : arrayList) {
-                    if (em_class2582.world.isRemote || !(em_class2582 instanceof LunaEntity)) continue;
-                    LunaEntity eb_class2362 = (LunaEntity)em_class2582;
-                    eb_class2362.void_h();
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.lunaId);
+                for (GirlEntity girl : arrayList) {
+                    if (!girl.world.isRemote && girl instanceof LunaEntity) {
+                        LunaEntity luna = (LunaEntity) girl;
+                        luna.onFishingTick();
+                    }
                 }
             });
             return null;

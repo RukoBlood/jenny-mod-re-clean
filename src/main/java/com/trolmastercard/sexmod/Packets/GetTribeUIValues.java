@@ -35,40 +35,40 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class GetTribeUIValues implements IMessage {
     boolean isValid = false;
-    boolean b;
-    List<Vector4d> c;
+    boolean isTribeLeader;
+    List<Vector4d> tribeMembers;
 
     public GetTribeUIValues() {
-        this.b = false;
-        this.c = new ArrayList<Vector4d>();
+        this.isTribeLeader = false;
+        this.tribeMembers = new ArrayList<Vector4d>();
     }
 
     public GetTribeUIValues(boolean bl, List<Vector4d> list) {
-        this.b = bl;
-        this.c = list;
+        this.isTribeLeader = bl;
+        this.tribeMembers = list;
     }
 
-    static GetTribeUIValues a() {
+    static GetTribeUIValues createEmptyPacket() {
         return new GetTribeUIValues(false, new ArrayList<>());
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = byteBuf.readBoolean();
+        this.isTribeLeader = byteBuf.readBoolean();
         int n = byteBuf.readInt();
         for (int i = 0; i < n; ++i) {
-            this.c.add(new Vector4d(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt()));
+            this.tribeMembers.add(new Vector4d(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt()));
         }
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeBoolean(this.b);
-        byteBuf.writeInt(this.c.size());
-        for (Vector4d vector4d : this.c) {
-            byteBuf.writeInt((int)vector4d.getX());
-            byteBuf.writeInt((int)vector4d.getY());
-            byteBuf.writeInt((int)vector4d.getZ());
-            byteBuf.writeInt((int)vector4d.getW());
+        byteBuf.writeBoolean(this.isTribeLeader);
+        byteBuf.writeInt(this.tribeMembers.size());
+        for (Vector4d member : this.tribeMembers) {
+            byteBuf.writeInt((int)member.getX());
+            byteBuf.writeInt((int)member.getY());
+            byteBuf.writeInt((int)member.getZ());
+            byteBuf.writeInt((int)member.getW());
         }
     }
 
@@ -81,15 +81,15 @@ public class GetTribeUIValues implements IMessage {
                 return null;
             }
             if (ctx.side.isClient()) {
-                DragonStaffUI.isTribeFollowing = msg.b;
-                KoboldEntity.aY = msg.c;
+                DragonStaffUI.isTribeFollowing = msg.isTribeLeader;
+                KoboldEntity.aY = msg.tribeMembers;
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 Object object;
                 UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
                 if (uUID == null) {
-                    PacketHandler.INSTANCE.sendTo(GetTribeUIValues.a(), ctx.getServerHandler().player);
+                    PacketHandler.INSTANCE.sendTo(GetTribeUIValues.createEmptyPacket(), ctx.getServerHandler().player);
                     return;
                 }
                 boolean bl = KoboldManager.isTribeAlerted(uUID);

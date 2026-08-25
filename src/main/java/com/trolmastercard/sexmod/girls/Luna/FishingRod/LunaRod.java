@@ -38,8 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class LunaRod
-extends ItemFishingRod {
+public class LunaRod extends ItemFishingRod {
     final static public LunaRod LUNA_ROD = new LunaRod();
 
     public LunaRod() {
@@ -90,7 +89,7 @@ extends ItemFishingRod {
                 int luckBonus = EnchantmentHelper.getFishingLuckBonus(heldItem);
                 LunaHookEntity.ownerLuna = luna;
                 double distance = luna.getPositionVector().distanceTo(new Vec3d(luna.chosenFishingSpot.getX(), luna.chosenFishingSpot.getY(), luna.chosenFishingSpot.getZ()));
-                LunaHookEntity entityfishhook = new LunaHookEntity(worldIn, luna, distance * LunaEntity.ap);
+                LunaHookEntity entityfishhook = new LunaHookEntity(worldIn, luna, distance * LunaEntity.onePercent);
                 int speedBonus = EnchantmentHelper.getFishingSpeedBonus(heldItem);
                 if (speedBonus > 0) {
                     entityfishhook.setFishingLevel(speedBonus);

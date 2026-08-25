@@ -1,5 +1,5 @@
-Methods renamed: 93.30% (2634/2823)
-Fields renamed: 72.00% (1157/1607)
+Methods renamed: 93.69% (2645/2823)
+Fields renamed: 73.18% (1176/1607)
 
 ## Synthetic Elements Detailed List
 
@@ -445,31 +445,6 @@ Fields renamed: 72.00% (1157/1607)
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEgg\KoboldEggItem.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEgg\KoboldEggRenderer.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEgg\KoboldEggRenderer.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_d()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_f()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_j()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_q()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_h()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_i()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_e()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_n()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Method | `void_m()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `ap` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `aw` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `ay` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `ak` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `ab` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `at` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `as` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `am` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `al` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `ar` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `au` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `an` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `ae` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaEntity.java` | Field | `ad` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaHand.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaRenderer.java` | Method | `boolean_a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaRenderer.java` | Field | `r` |
@@ -538,7 +513,6 @@ Fields renamed: 72.00% (1157/1607)
 | `src\main\java\com\trolmastercard\sexmod\gui\GenderChange\GenderChangeUI.java` | Field | `i` |
 | `src\main\java\com\trolmastercard\sexmod\gui\Menu\SupporterUI.java` | Field | `mu` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\CancelTask.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\Packets\CatEatingDone.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\CatThrowAwayItem.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\ChangeDataParameter.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\ChangeDataParameter.java` | Field | `d` |
@@ -560,10 +534,6 @@ Fields renamed: 72.00% (1157/1607)
 | `src\main\java\com\trolmastercard\sexmod\Packets\ForcePlayerGirlUpdate.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\ForcePlayerGirlUpdate.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\ForcePlayerGirlUpdate.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\Packets\GalathRapePounce.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\Packets\GetTribeUIValues.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\Packets\GetTribeUIValues.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\Packets\GetTribeUIValues.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\InformOfOwnership.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\InformOfOwnership.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\MakeRichWish.java` | Field | `a` |

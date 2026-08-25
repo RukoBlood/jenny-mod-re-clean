@@ -57,7 +57,7 @@ implements IMessage {
                 for (GirlEntity girl : girls) {
                     if (!girl.world.isRemote && girl instanceof LunaEntity) {
                         LunaEntity luna = (LunaEntity) girl;
-                        luna.void_j();
+                        luna.dropHeldItem();
                     }
                 }
             });

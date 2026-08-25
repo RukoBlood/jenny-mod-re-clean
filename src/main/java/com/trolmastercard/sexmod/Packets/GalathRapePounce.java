@@ -22,22 +22,22 @@ import net.minecraftforge.fml.relauncher.Side;
 public class GalathRapePounce
 implements IMessage {
     boolean isValid = false;
-    boolean b;
+    boolean isPounce;
 
     public GalathRapePounce() {
     }
 
     public GalathRapePounce(boolean bl) {
-        this.b = bl;
+        this.isPounce = bl;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = byteBuf.readBoolean();
+        this.isPounce = byteBuf.readBoolean();
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeBoolean(this.b);
+        byteBuf.writeBoolean(this.isPounce);
     }
 
     public static class Handler implements IMessageHandler<GalathRapePounce, IMessage> {
@@ -50,7 +50,7 @@ implements IMessage {
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 GirlEntity girl = GirlEntity.getActiveSceneInfo(ctx.getServerHandler().player.getPersistentID());
                 if (girl instanceof GalathEntity) {
-                    ((GalathEntity)girl).handleRapeAction(msg.b);
+                    ((GalathEntity)girl).handleRapeAction(msg.isPounce);
                 }
             });
             return null;
