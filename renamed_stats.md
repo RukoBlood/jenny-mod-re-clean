@@ -1,4 +1,4 @@
-Methods renamed: 93.16% (2630/2823)
+Methods renamed: 93.30% (2634/2823)
 Fields renamed: 72.00% (1157/1607)
 
 ## Synthetic Elements Detailed List
@@ -644,7 +644,3 @@ Fields renamed: 72.00% (1157/1607)
 | `src\main\java\com\trolmastercard\sexmod\util\Reference.java` | Field | `i` |
 | `src\main\java\com\trolmastercard\sexmod\util\Reference.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\util\Reference.java` | Field | `e` |
-| `src\main\java\com\trolmastercard\sexmod\util\RotationHelper.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\util\RotationHelper.java` | Method | `h()` |
-| `src\main\java\com\trolmastercard\sexmod\util\RotationHelper.java` | Method | `f()` |
-| `src\main\java\com\trolmastercard\sexmod\util\RotationHelper.java` | Method | `a()` |
