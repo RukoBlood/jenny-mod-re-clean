@@ -32,12 +32,11 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlayerLuna
-extends PlayerGirl {
-    int ar = 0;
-    boolean aq = false;
-    boolean ap = false;
-    boolean as = false;
+public class PlayerLuna extends PlayerGirl {
+    int waitInteractionTicks = 0;
+    boolean alternateFlyAnim = false;
+    boolean alternateTouchBoobsAnim = false;
+    boolean playIdle2Anim = false;
 
     protected PlayerLuna(World world) {
         super(world);
@@ -99,59 +98,55 @@ extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.getCurrentAction() == Action.COWGIRL_SITTING_CUM && (action == Action.COWGIRL_SITTING_SLOW || action == Action.COWGIRL_SITTING_FAST)) {
-            return;
+        if (this.getCurrentAction() != Action.COWGIRL_SITTING_CUM || (action != Action.COWGIRL_SITTING_SLOW && action != Action.COWGIRL_SITTING_FAST)) {
+            if (this.getCurrentAction() != Action.TOUCH_BOOBS_CUM || (action != Action.TOUCH_BOOBS_FAST && action != Action.TOUCH_BOOBS_SLOW)) {
+                super.setCurrentAction(action);
+            }
         }
-        if (this.getCurrentAction() == Action.TOUCH_BOOBS_CUM && (action == Action.TOUCH_BOOBS_FAST || action == Action.TOUCH_BOOBS_SLOW)) {
-            return;
-        }
-        super.setCurrentAction(action);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
         if (Action.WAIT_CAT.equals((Object)this.getCurrentAction())) {
-            this.a_();
+            this.handleLunaOwner();
         } else {
-            this.ar = 0;
+            this.waitInteractionTicks = 0;
         }
     }
 
-    void a_() {
-        EntityPlayer entityPlayer = this.getPlayerPartner();
-        if (entityPlayer == null) {
-            return;
+    void handleLunaOwner() {
+        EntityPlayer player = this.getPlayerPartner();
+        if (player != null) {
+            if (!(player.getDistance(this.posX, this.getTargetScenePosition().y, this.posZ) > 1.25)) {
+                if (this.world.isRemote) {
+                    this.setFishingLevelFor(player, this.waitInteractionTicks);
+                } else if (this.waitInteractionTicks == 25) {
+                    this.setInteractionPlayerUUID(player.getPersistentID());
+                    player.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
+                    player.setPositionAndUpdate(this.getPositionVector().x, this.getTargetScenePosition().y, this.getPositionVector().z);
+                    this.setCurrentAction(Action.COWGIRL_SITTING_INTRO);
+                    player.setRotationYawHead(this.getYawRotation() + 180.0f);
+                    player.rotationYaw = this.getYawRotation() + 180.0f;
+                    player.prevRotationYaw = this.getYawRotation() + 180.0f;
+                    this.cameraYaw = this.getYawRotation() + 180.0f;
+                    this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
+                    this.entityDataManager.set(OUTFIT_INDEX, 0);
+                }
+                ++this.waitInteractionTicks;
+            }
         }
-        if (entityPlayer.getDistance(this.posX, this.getTargetScenePosition().y, this.posZ) > 1.25) {
-            return;
-        }
-        if (this.world.isRemote) {
-            this.a(entityPlayer, this.ar);
-        } else if (this.ar == 25) {
-            this.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-            entityPlayer.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
-            entityPlayer.setPositionAndUpdate(this.getPositionVector().x, this.getTargetScenePosition().y, this.getPositionVector().z);
-            this.setCurrentAction(Action.COWGIRL_SITTING_INTRO);
-            entityPlayer.setRotationYawHead(this.getYawRotation().floatValue() + 180.0f);
-            entityPlayer.rotationYaw = this.getYawRotation().floatValue() + 180.0f;
-            entityPlayer.prevRotationYaw = this.getYawRotation().floatValue() + 180.0f;
-            this.cameraYaw = this.getYawRotation().floatValue() + 180.0f;
-            this.moveCamera(0.0, -0.075f, -0.7109375, 0.0f, 0.0f);
-            this.entityDataManager.set(OUTFIT_INDEX, 0);
-        }
-        ++this.ar;
     }
 
     @SideOnly(value=Side.CLIENT)
-    void a(EntityPlayer entityPlayer, int n) {
-        EntityPlayerSP entityPlayerSP;
-        if (n == 0 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
+    void setFishingLevelFor(EntityPlayer player, int level) {
+        EntityPlayerSP playerSP;
+        if (level == 0 && (playerSP = Minecraft.getMinecraft().player).getPersistentID().equals(player.getPersistentID())) {
             BlackScreenUI.run();
-            entityPlayerSP.setVelocity(0.0, 0.0, 0.0);
+            playerSP.setVelocity(0.0, 0.0, 0.0);
             HandlePlayerMovement.setMovementLock(false);
         }
-        if (n == 25 && (entityPlayerSP = Minecraft.getMinecraft().player).getPersistentID().equals(entityPlayer.getPersistentID())) {
+        if (level == 25 && Minecraft.getMinecraft().player.getPersistentID().equals(player.getPersistentID())) {
             Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
         }
     }
@@ -199,10 +194,10 @@ extends PlayerGirl {
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
-                    boolean bl = this.aq = !this.aq;
+                    boolean bl = this.alternateFlyAnim = !this.alternateFlyAnim;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.cat.fly" + (this.aq ? "2" : ""), true, event);
+                    this.createAnimation("animation.cat.fly" + (this.alternateFlyAnim ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) > 0.0f) {
@@ -275,7 +270,7 @@ extends PlayerGirl {
                         break;
                     }
                     case TOUCH_BOOBS_SLOW: {
-                        this.createAnimation("animation.cat.touch_boobs_slow" + (this.ap ? "1" : ""), true, event);
+                        this.createAnimation("animation.cat.touch_boobs_slow" + (this.alternateTouchBoobsAnim ? "1" : ""), true, event);
                         break;
                     }
                     case TOUCH_BOOBS_FAST: {
@@ -328,11 +323,11 @@ extends PlayerGirl {
                     break;
                 }
                 case "idleDone": {
-                    this.as = this.getRNG().nextInt(10) == 0;
+                    this.playIdle2Anim = this.getRNG().nextInt(10) == 0;
                     break;
                 }
                 case "idle2Done": {
-                    this.as = false;
+                    this.playIdle2Anim = false;
                     break;
                 }
                 case "pearl": {
@@ -439,11 +434,11 @@ extends PlayerGirl {
                     break;
                 }
                 case "touch_boobs_slowDone": {
-                    if (this.ap) {
-                        this.ap = false;
+                    if (this.alternateTouchBoobsAnim) {
+                        this.alternateTouchBoobsAnim = false;
                         break;
                     }
-                    this.ap = Math.random() < 0.5;
+                    this.alternateTouchBoobsAnim = Math.random() < 0.5;
                     break;
                 }
                 case "addCumSlow": {

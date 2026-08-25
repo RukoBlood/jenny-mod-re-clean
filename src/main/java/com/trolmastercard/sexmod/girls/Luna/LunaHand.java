@@ -25,7 +25,7 @@ public class LunaHand extends ModelBase implements IRenderer {
         this.renderer.render(scale);
     }
 
-    public void a(ModelRenderer renderer, float x, float y, float z) {
+    public void rotate(ModelRenderer renderer, float x, float y, float z) {
         renderer.rotateAngleX = x;
         renderer.rotateAngleY = y;
         renderer.rotateAngleZ = z;

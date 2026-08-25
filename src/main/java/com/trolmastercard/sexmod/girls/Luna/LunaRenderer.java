@@ -31,7 +31,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 public class LunaRenderer extends GirlRenderer {
-    float r;
+    float rotX;
 
     public LunaRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel, double d) {
         super(renderManager, animatedGeoModel, d);
@@ -56,56 +56,55 @@ public class LunaRenderer extends GirlRenderer {
         return input;
     }
 
-    boolean boolean_a() {
+    boolean isAnchored() {
         return this.renderEntity.getDataManager().get(GirlEntity.IS_ANCHORED);
     }
 
     @Override
     protected void onBoneProcessing(BufferBuilder buffer, String boneName, GeoBone bone) {
-        if (Minecraft.getMinecraft().isGamePaused()) {
-            return;
-        }
-        switch (boneName) {
-            case "head": {
-                this.r = bone.getRotationX();
-                break;
-            }
-            case "backHair": {
-                if (this.boolean_a()) break;
-                double d = this.r / TrigMath.wrapDegrees(45.0f);
-                float f = (float) RotationHelper.LerpDouble(0.0, 0.75, d);
-                bone.setPositionZ(f);
-                bone.setPositionY(f);
-                bone.setRotationX(-this.r);
-                break;
-            }
-            case "sideHairR": 
-            case "sideHairL": {
-                if (this.boolean_a()) break;
-                double d = this.r / TrigMath.wrapDegrees(45.0f);
-                float f = (float) RotationHelper.LerpDouble(0.0, (double)1.3f, d);
-                bone.setPositionZ(-f);
-                bone.setPositionY(f);
-            }
-            case "frontHairL": 
-            case "frontHairR": {
-                if (this.boolean_a()) break;
-                bone.setRotationX(-this.r);
-                break;
-            }
-            case "offhand": {
-                LunaEntity eb_class2362 = (LunaEntity)this.renderEntity;
-                ItemStack itemStack = this.renderEntity.getDataManager().get(LunaEntity.CAUGHT_ITEM);
-                if (itemStack.equals(ItemStack.EMPTY) || eb_class2362.throwBackPercentage != 1.0f) break;
-                GlStateManager.pushMatrix();
-                Tessellator.getInstance().draw();
-                MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
-                GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
-                GlStateManager.scale(eb_class2362.fishSizePercentage, eb_class2362.fishSizePercentage, eb_class2362.fishSizePercentage);
-                Minecraft.getMinecraft().getItemRenderer().renderItem(this.renderEntity, itemStack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
-                GirlRenderer.tempBuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-                this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
-                GlStateManager.popMatrix();
+        if (!Minecraft.getMinecraft().isGamePaused()) {
+            switch (boneName) {
+                case "head": {
+                    this.rotX = bone.getRotationX();
+                    break;
+                }
+                case "backHair": {
+                    if (this.isAnchored()) break;
+                    double d = this.rotX / TrigMath.wrapDegrees(45.0f);
+                    float f = (float) RotationHelper.LerpDouble(0.0, 0.75, d);
+                    bone.setPositionZ(f);
+                    bone.setPositionY(f);
+                    bone.setRotationX(-this.rotX);
+                    break;
+                }
+                case "sideHairR":
+                case "sideHairL": {
+                    if (this.isAnchored()) break;
+                    double d = this.rotX / TrigMath.wrapDegrees(45.0f);
+                    float f = (float) RotationHelper.LerpDouble(0.0, (double) 1.3f, d);
+                    bone.setPositionZ(-f);
+                    bone.setPositionY(f);
+                }
+                case "frontHairL":
+                case "frontHairR": {
+                    if (this.isAnchored()) break;
+                    bone.setRotationX(-this.rotX);
+                    break;
+                }
+                case "offhand": {
+                    LunaEntity luna = (LunaEntity) this.renderEntity;
+                    ItemStack caughtItem = this.renderEntity.getDataManager().get(LunaEntity.CAUGHT_ITEM);
+                    if (caughtItem.equals(ItemStack.EMPTY) || luna.throwBackPercentage != 1.0f) break;
+                    GlStateManager.pushMatrix();
+                    Tessellator.getInstance().draw();
+                    MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
+                    GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
+                    GlStateManager.scale(luna.fishSizePercentage, luna.fishSizePercentage, luna.fishSizePercentage);
+                    Minecraft.getMinecraft().getItemRenderer().renderItem(this.renderEntity, caughtItem, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+                    GirlRenderer.tempBuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+                    this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
+                    GlStateManager.popMatrix();
+                }
             }
         }
     }

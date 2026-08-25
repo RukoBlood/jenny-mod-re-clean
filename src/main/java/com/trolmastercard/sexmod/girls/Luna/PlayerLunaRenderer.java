@@ -20,9 +20,8 @@ import net.minecraft.util.EnumHand;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class PlayerLunaRenderer
-extends PlayerGirlRenderer {
-    float z = 0.0f;
+public class PlayerLunaRenderer extends PlayerGirlRenderer {
+    float rotZ = 0.0f;
 
     public PlayerLunaRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
         super(renderManager, animatedGeoModel);
@@ -47,7 +46,7 @@ extends PlayerGirlRenderer {
         return input;
     }
 
-    boolean boolean_b() {
+    boolean isLunaAnchored() {
         return this.renderEntity.getDataManager().get(GirlEntity.IS_ANCHORED);
     }
 
@@ -58,22 +57,22 @@ extends PlayerGirlRenderer {
         }
         switch (boneName) {
             case "head": {
-                this.z = geoBone.getRotationX();
+                this.rotZ = geoBone.getRotationX();
                 break;
             }
             case "backHair": {
-                if (this.boolean_b() || !(this.z > 0.0f)) break;
-                double d = this.z / TrigMath.wrapDegrees(45.0f);
+                if (this.isLunaAnchored() || !(this.rotZ > 0.0f)) break;
+                double d = this.rotZ / TrigMath.wrapDegrees(45.0f);
                 float f = (float) RotationHelper.LerpDouble(0.0, 0.75, d);
                 geoBone.setPositionZ(f);
                 geoBone.setPositionY(f);
-                geoBone.setRotationX(-this.z);
+                geoBone.setRotationX(-this.rotZ);
                 break;
             }
             case "frontHairL": 
             case "frontHairR": {
-                if (this.boolean_b()) break;
-                geoBone.setRotationX(-this.z);
+                if (this.isLunaAnchored()) break;
+                geoBone.setRotationX(-this.rotZ);
             }
         }
     }

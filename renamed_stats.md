@@ -1,5 +1,5 @@
-Methods renamed: 93.69% (2645/2823)
-Fields renamed: 73.18% (1176/1607)
+Methods renamed: 93.87% (2650/2823)
+Fields renamed: 73.49% (1181/1607)
 
 ## Synthetic Elements Detailed List
 
@@ -445,16 +445,6 @@ Fields renamed: 73.18% (1176/1607)
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEgg\KoboldEggItem.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEgg\KoboldEggRenderer.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEgg\KoboldEggRenderer.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaHand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaRenderer.java` | Method | `boolean_a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\LunaRenderer.java` | Field | `r` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\PlayerLuna.java` | Method | `a_()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\PlayerLuna.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\PlayerLuna.java` | Field | `ar` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\PlayerLuna.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\PlayerLuna.java` | Field | `ap` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\PlayerLuna.java` | Field | `as` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\PlayerLunaRenderer.java` | Method | `boolean_b()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Luna\FishingRod\LunaHookRenderer.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Luna\FishingRod\LunaHookRenderer.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Luna\FishingRod\LunaHookRenderer.java` | Field | `c` |
