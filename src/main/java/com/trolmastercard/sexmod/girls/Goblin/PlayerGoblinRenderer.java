@@ -108,11 +108,11 @@ public class PlayerGoblinRenderer extends WorkerPlayerRenderer {
     }
 
     @Override
-    protected boolean c(String string) {
-        if (string.startsWith("crown")) {
+    protected boolean isArmor(String name) {
+        if (name.startsWith("crown")) {
             return true;
         }
-        return super.c(string);
+        return super.isArmor(name);
     }
 
     @Override

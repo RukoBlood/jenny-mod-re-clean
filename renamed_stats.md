@@ -1,5 +1,5 @@
-Methods renamed: 94.76% (2676/2824)
-Fields renamed: 74.67% (1200/1607)
+Methods renamed: 95.08% (2685/2824)
+Fields renamed: 74.80% (1202/1607)
 
 ## Synthetic Elements Detailed List
 
@@ -69,7 +69,6 @@ Fields renamed: 74.67% (1200/1607)
 | `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\base\PlayerGirl\PlayerGirlEntity.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\PlayerGirl\WorkerPlayerRenderer.java` | Method | `c()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Bee\BeeEntity.java` | Method | `b_15()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Bee\BeeLimb.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Bia\BiaHand.java` | Field | `a` |
@@ -282,16 +281,6 @@ Fields renamed: 74.67% (1200/1607)
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Field | `g` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\GoblinModel.java` | Field | `f` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Goblin\PlayerGoblinRenderer.java` | Method | `c()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ab` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `af` |

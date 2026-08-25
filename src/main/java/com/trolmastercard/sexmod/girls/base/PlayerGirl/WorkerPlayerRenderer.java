@@ -12,8 +12,6 @@ package com.trolmastercard.sexmod.girls.base.PlayerGirl;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import javax.vecmath.Tuple3f;
-import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
@@ -163,10 +161,10 @@ public abstract class WorkerPlayerRenderer extends PlayerGirlRenderer {
         }
         if (!bone.isHidden) {
             Vector4f vec4f = this.calculateBoneArmorColor(Bone, red, green, blue);
-            red = ((Vector4f) vec4f).x;
-            green = ((Vector4f) vec4f).y;
-            blue = ((Vector4f) vec4f).z;
-            double d = ((Vector4f) vec4f).w;
+            red = vec4f.x;
+            green = vec4f.y;
+            blue = vec4f.z;
+            double d = vec4f.w;
             if (!this.activeCustomPartBones.contains(Bone)) {
                 for (GeoCube object : bone.childCubes) {
                     MATRIX_STACK.push();
@@ -196,7 +194,7 @@ public abstract class WorkerPlayerRenderer extends PlayerGirlRenderer {
             Vec3d vec3d;
             if (geoQuad == null) continue;
             Vector3f vector3f = new Vector3f((float)geoQuad.normal.getX(), (float)geoQuad.normal.getY(), (float)geoQuad.normal.getZ());
-            MATRIX_STACK.getNormalMatrix().transform((Tuple3f)vector3f);
+            MATRIX_STACK.getNormalMatrix().transform(vector3f);
             if ((geoCube.size.y == 0.0f || geoCube.size.z == 0.0f) && vector3f.getX() < 0.0f) {
                 vector3f.x *= -1.0f;
             }
@@ -206,23 +204,23 @@ public abstract class WorkerPlayerRenderer extends PlayerGirlRenderer {
             if ((geoCube.size.x == 0.0f || geoCube.size.y == 0.0f) && vector3f.getZ() < 0.0f) {
                 vector3f.z *= -1.0f;
             }
-            if (this.c(geoBone.getName())) {
+            if (this.isArmor(geoBone.getName())) {
                 vec3d = new Vec3d(f, f2, f3);
             } else {
                 Vec3i geoVertexArray = this.GetBoneColor(geoBone);
-                geoVertexArray = this.filterFinalColor((Vec3i)geoVertexArray);
+                geoVertexArray = this.filterFinalColor(geoVertexArray);
                 vec3d = BoneDeformProcessor.applyBoneDeformation(this, geoBone, new Vec3d((float)geoVertexArray.getX() / 255.0f, (float)geoVertexArray.getY() / 255.0f, (float)geoVertexArray.getZ() / 255.0f), vector3f);
             }
             for (GeoVertex geoVertex : geoQuad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
-                MATRIX_STACK.getModelMatrix().transform((Tuple4f)vector4f);
+                MATRIX_STACK.getModelMatrix().transform(vector4f);
                 bufferBuilder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex((double)geoVertex.textureU + d, geoVertex.textureV).color((float)vec3d.x, (float)vec3d.y, (float)vec3d.z, f4).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
             }
         }
     }
 
-    protected boolean c(String string) {
-        return string.startsWith("armor");
+    protected boolean isArmor(String name) {
+        return name.startsWith("armor");
     }
 
 }

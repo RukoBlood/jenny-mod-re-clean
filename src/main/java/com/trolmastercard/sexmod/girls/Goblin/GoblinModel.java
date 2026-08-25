@@ -25,10 +25,9 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.AnimationProcessor;
 import software.bernie.geckolib3.core.processor.IBone;
 
-public class GoblinModel
-extends GirlModel<GirlEntity> {
-    final float g = 60.0f;
-    Minecraft f = Minecraft.getMinecraft();
+public class GoblinModel extends GirlModel<GirlEntity> {
+    final float legSwingAngle = 60.0f;
+    Minecraft mc3 = Minecraft.getMinecraft();
 
     @Override
     protected ResourceLocation[] getAnimationResource() {
@@ -49,20 +48,21 @@ extends GirlModel<GirlEntity> {
     }
 
     @Override
-    protected boolean isSteveSkinType(GirlEntity girl) {
+    protected boolean canRender(GirlEntity girl) {
         if (!(girl instanceof GoblinEntity)) {
-            return super.isSteveSkinType(girl);
+            return super.canRender(girl);
         }
-        GoblinEntity e3_class2192 = (GoblinEntity) girl;
-        UUID uUID = e3_class2192.getInteractionPlayerUUID();
-        if (uUID == null) {
-            uUID = e3_class2192.getOwnerUUID();
+
+        GoblinEntity goblin = (GoblinEntity) girl;
+        UUID uuid = goblin.getInteractionPlayerUUID();
+        if (uuid == null) {
+            uuid = goblin.getOwnerUUID();
         }
-        if (uUID == null) {
+        if (uuid == null) {
             return true;
         }
-        World world = e3_class2192.world;
-        AbstractClientPlayer abstractClientPlayer = (AbstractClientPlayer)world.getPlayerEntityByUUID(uUID);
+        World world = goblin.world;
+        AbstractClientPlayer abstractClientPlayer = (AbstractClientPlayer)world.getPlayerEntityByUUID(uuid);
         if (abstractClientPlayer == null) {
             return true;
         }
@@ -72,187 +72,180 @@ extends GirlModel<GirlEntity> {
     @Override
     public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent event) {
         super.setLivingAnimations(girl, instanceID, event);
-        if (girl.world instanceof FakeWorld) {
-            return;
-        }
-        AnimationProcessor animationProcessor = this.getAnimationProcessor();
-        boolean bl = girl instanceof GoblinEntity;
-        IBone iBone = animationProcessor.getBone("preggy");
-        iBone.setHidden(!girl.getDataManager().get(GoblinEntity.IS_PREGNANT));
-        IBone iBone2 = animationProcessor.getBone("body");
-        IBone iBone3 = animationProcessor.getBone("head");
-        Action fp_class3242 = girl.getCurrentAction();
-        if ((fp_class3242 == Action.BREEDING_SLOW_2 || fp_class3242 == Action.BREEDING_FAST_2 || fp_class3242 == Action.BREEDING_CUM_2) && this.f.gameSettings.thirdPersonView == 0) {
-            iBone2.setPositionY(iBone2.getPositionY() + 1.5f);
-        }
-        IGoblin ai_class302 = (IGoblin)((Object) girl);
-        if (bl && fp_class3242 == Action.AWAIT_PICK_UP || fp_class3242 == Action.VANISH) {
-            this.a(girl, iBone2, iBone3);
-        }
-        if (bl && fp_class3242 == Action.SIT) {
-            this.a(girl, iBone3);
-        }
-        if (fp_class3242 == Action.START_THROWING) {
-            if (this.f.player.getPersistentID().equals(ai_class302.getOwnerUUID())) {
-                this.a(iBone2, animationProcessor, girl, ai_class302);
+        if (!(girl.world instanceof FakeWorld)) {
+            AnimationProcessor processor = this.getAnimationProcessor();
+            boolean isGoblin = girl instanceof GoblinEntity;
+            IBone preggy = processor.getBone("preggy");
+            preggy.setHidden(!girl.getDataManager().get(GoblinEntity.IS_PREGNANT));
+            IBone body = processor.getBone("body");
+            IBone head = processor.getBone("head");
+            Action action = girl.getCurrentAction();
+
+            if ((action == Action.BREEDING_SLOW_2 || action == Action.BREEDING_FAST_2 || action == Action.BREEDING_CUM_2) && this.mc3.gameSettings.thirdPersonView == 0) {
+                body.setPositionY(body.getPositionY() + 1.5f);
+            }
+
+            IGoblin goblin = (IGoblin) girl;
+            if (isGoblin && action == Action.AWAIT_PICK_UP || action == Action.VANISH) {
+                this.updateBoneLook(girl, body, head);
+            }
+            if (isGoblin && action == Action.SIT) {
+                this.updateBoneLook2(girl, head);
+            }
+
+            if (action == Action.START_THROWING) {
+                if (this.mc3.player.getPersistentID().equals(goblin.getOwnerUUID())) {
+                    this.applyGoblinBone(body, processor, girl, goblin);
+                } else {
+                    this.applyBoneState(body, processor, girl);
+                }
             } else {
-                this.a(iBone2, animationProcessor, girl);
+                body.setHidden(false);
             }
-        } else {
-            iBone2.setHidden(false);
-        }
-        if (!iBone2.isHidden() && fp_class3242 == Action.START_THROWING || fp_class3242 == Action.THROWN) {
-            Vec3d vec3d = GoblinModel.calculateMovementDelta(girl);
-            iBone2.setRotationX((float)vec3d.x);
-            iBone2.setPositionY((float)vec3d.y);
-            iBone2.setPositionZ((float)vec3d.z);
-        }
-        if (fp_class3242 == Action.START_THROWING || fp_class3242 == Action.PICK_UP) {
-            this.a(animationProcessor, ai_class302, girl);
-        }
-        if (!bl) {
-            this.b(animationProcessor, girl);
-            this.a(animationProcessor, girl);
+            if (!body.isHidden() && action == Action.START_THROWING || action == Action.THROWN) {
+                Vec3d interpolated = GoblinModel.calculateMovementDelta(girl);
+                body.setRotationX((float) interpolated.x);
+                body.setPositionY((float) interpolated.y);
+                body.setPositionZ((float) interpolated.z);
+            }
+            if (action == Action.START_THROWING || action == Action.PICK_UP) {
+                this.updateThrowPose(processor, goblin, girl);
+            }
+            if (!isGoblin) {
+                this.updateWalkPose(processor, girl);
+                this.updateIdlePose(processor, girl);
+            }
         }
     }
 
-    void a(AnimationProcessor<GirlEntity> animationProcessor, GirlEntity em_class2582) {
-        if (em_class2582.getCurrentAction() != Action.START_THROWING) {
-            return;
+    void updateIdlePose(AnimationProcessor<GirlEntity> processor, GirlEntity girl) {
+        if (girl.getCurrentAction() == Action.START_THROWING) {
+            if (this.mc3.gameSettings.thirdPersonView == 0 && this.mc3.player.getPersistentID().equals(((PlayerGirl) girl).getOwnerUserUUID())) {
+                IBone iBone = processor.getBone("body");
+                if (iBone != null) {
+                    iBone.setHidden(true);
+                }
+            }
         }
-        if (this.f.gameSettings.thirdPersonView != 0 || !this.f.player.getPersistentID().equals(((PlayerGirl)em_class2582).getOwnerUserUUID())) {
-            return;
-        }
-        IBone iBone = animationProcessor.getBone("body");
-        if (iBone == null) {
-            return;
-        }
-        iBone.setHidden(true);
     }
 
-    void b(AnimationProcessor animationProcessor, GirlEntity em_class2582) {
-        if (em_class2582.getCurrentAction() != Action.PICK_UP) {
-            return;
+    void updateWalkPose(AnimationProcessor processor, GirlEntity girl) {
+        if (girl.getCurrentAction() == Action.PICK_UP) {
+            if (this.mc3.gameSettings.thirdPersonView == 0 && this.mc3.player.getPersistentID().equals(((IGoblin) girl).getOwnerUUID())) {
+                return;
+            }
+            IBone iBone = processor.getBone("body");
+            if (iBone != null) {
+                IBone iBone2 = processor.getBone("steve");
+                if (iBone2 != null) {
+                    iBone.setPositionY(iBone.getPositionY() - 32.0f);
+                    iBone2.setPositionY(iBone2.getPositionY() - 32.0f);
+                }
+            }
         }
-        if (this.f.gameSettings.thirdPersonView == 0 && this.f.player.getPersistentID().equals(((IGoblin)((Object)em_class2582)).getOwnerUUID())) {
-            return;
-        }
-        IBone iBone = animationProcessor.getBone("body");
-        if (iBone == null) {
-            return;
-        }
-        IBone iBone2 = animationProcessor.getBone("steve");
-        if (iBone2 == null) {
-            return;
-        }
-        iBone.setPositionY(iBone.getPositionY() - 32.0f);
-        iBone2.setPositionY(iBone2.getPositionY() - 32.0f);
     }
 
-    void a(AnimationProcessor animationProcessor, IGoblin ai_class302, GirlEntity em_class2582) {
-        UUID uUID = ai_class302.getOwnerUUID();
+    void updateThrowPose(AnimationProcessor processor, IGoblin goblin, GirlEntity girl) {
+        UUID uUID = goblin.getOwnerUUID();
         if (uUID == null) {
-            em_class2582.getInteractionPlayerUUID();
+            girl.getInteractionPlayerUUID();
         }
-        if (uUID == null) {
-            return;
+        if (uUID != null) {
+            EntityPlayer player = girl.world.getPlayerEntityByUUID(uUID);
+            if (player != null) {
+                float limbSwingAmount = RotationHelper.LerpFloat(player.prevLimbSwingAmount, player.limbSwingAmount, this.mc3.getRenderPartialTicks());
+                float limbSwing = player.limbSwing;
+                float swingSin = (float) Math.sin(limbSwing);
+                IBone leftLeg = processor.getBone("LeftLeg");
+                IBone rightLeg = processor.getBone("RightLeg");
+                float swingAngle = TrigMath.wrapDegrees(60.0f * swingSin * limbSwingAmount);
+                leftLeg.setRotationX(swingAngle);
+                rightLeg.setRotationX(-swingAngle);
+            }
         }
-        EntityPlayer entityPlayer = em_class2582.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            return;
-        }
-        float f = RotationHelper.LerpFloat(entityPlayer.prevLimbSwingAmount, entityPlayer.limbSwingAmount, this.f.getRenderPartialTicks());
-        float f2 = entityPlayer.limbSwing;
-        float f3 = (float)Math.sin(f2);
-        IBone iBone = animationProcessor.getBone("LeftLeg");
-        IBone iBone2 = animationProcessor.getBone("RightLeg");
-        float f4 = TrigMath.wrapDegrees(60.0f * f3 * f);
-        iBone.setRotationX(f4);
-        iBone2.setRotationX(-f4);
     }
 
-    void a(GirlEntity em_class2582, IBone iBone) {
-        EntityPlayer entityPlayer = em_class2582.world.getClosestPlayerToEntity(em_class2582, 15.0);
-        if (entityPlayer == null) {
-            return;
+    void updateBoneLook2(GirlEntity girl, IBone bone) {
+        EntityPlayer player = girl.world.getClosestPlayerToEntity(girl, 15.0);
+        if (player != null) {
+            Vec3d playerPos = player.getPositionVector();
+            Vec3d girlPos = girl.getPositionVector();
+            Vec3d delta = playerPos.subtract(girlPos);
+            float yaw = girl.rotationYaw;
+            boolean inFront = false;
+
+            switch ((int) yaw) {
+                case 0: {
+                    inFront = playerPos.z > girlPos.z;
+                    break;
+                }
+                case 180: {
+                    inFront = playerPos.z < girlPos.z;
+                    break;
+                }
+                case 90: {
+                    inFront = playerPos.x < girlPos.x;
+                    break;
+                }
+                case -90: {
+                    inFront = playerPos.x > girlPos.x;
+                }
+            }
+            if (!inFront) {
+                bone.setRotationY(0.0f);
+            } else {
+                float facingOffset = 0.0f;
+                switch ((int) yaw) {
+                    case 180: {
+                        facingOffset = 90.0f;
+                        break;
+                    }
+                    case 90: {
+                        facingOffset = 180.0f;
+                        break;
+                    }
+                    case 0: {
+                        facingOffset = -90.0f;
+                    }
+                }
+                float yawAngle = (float) (-(MathHelper.atan2(delta.z, delta.x) * 57.29577951308232 + (double) facingOffset));
+                float pitch = ThreadNames.clamp((float) ((double) player.getEyeHeight() + playerPos.y - ((double) girl.getEyeHeight() + girlPos.y)), -0.75f, 0.75f);
+                bone.setRotationY(TrigMath.wrapDegrees(yawAngle));
+                bone.setRotationX(pitch);
+            }
         }
-        Vec3d vec3d = entityPlayer.getPositionVector();
-        Vec3d vec3d2 = em_class2582.getPositionVector();
-        Vec3d vec3d3 = vec3d.subtract(vec3d2);
-        float f = em_class2582.rotationYaw;
-        boolean bl = false;
-        switch ((int)f) {
-            case 0: {
-                bl = vec3d.z > vec3d2.z;
-                break;
-            }
-            case 180: {
-                bl = vec3d.z < vec3d2.z;
-                break;
-            }
-            case 90: {
-                bl = vec3d.x < vec3d2.x;
-                break;
-            }
-            case -90: {
-                boolean bl2 = bl = vec3d.x > vec3d2.x;
-            }
-        }
-        if (!bl) {
-            iBone.setRotationY(0.0f);
-            return;
-        }
-        float f2 = 0.0f;
-        switch ((int)f) {
-            case 180: {
-                f2 = 90.0f;
-                break;
-            }
-            case 90: {
-                f2 = 180.0f;
-                break;
-            }
-            case 0: {
-                f2 = -90.0f;
-            }
-        }
-        float f3 = (float)(-(MathHelper.atan2(vec3d3.z, vec3d3.x) * 57.29577951308232 + (double)f2));
-        float f4 = ThreadNames.clamp((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
-        iBone.setRotationY(TrigMath.wrapDegrees(f3));
-        iBone.setRotationX(f4);
     }
 
-    void a(GirlEntity em_class2582, IBone iBone, IBone iBone2) {
-        EntityPlayer entityPlayer = em_class2582.world.getClosestPlayerToEntity(em_class2582, 15.0);
-        if (entityPlayer == null) {
-            return;
+    void updateBoneLook(GirlEntity girl, IBone body, IBone head) {
+        EntityPlayer player = girl.world.getClosestPlayerToEntity(girl, 15.0);
+        if (player != null) {
+            Vec3d vec3d = player.getPositionVector();
+            Vec3d vec3d2 = girl.getPositionVector();
+            Vec3d vec3d3 = vec3d.subtract(vec3d2);
+            float f = (float) (-(Math.atan2(vec3d3.z, vec3d3.x) * 57.29577951308232)) + 90.0f;
+            float f2 = ThreadNames.clamp((float) ((double) player.getEyeHeight() + vec3d.y - ((double) girl.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
+            body.setRotationY(TrigMath.wrapDegrees(f));
+            head.setRotationX(f2);
         }
-        Vec3d vec3d = entityPlayer.getPositionVector();
-        Vec3d vec3d2 = em_class2582.getPositionVector();
-        Vec3d vec3d3 = vec3d.subtract(vec3d2);
-        float f = (float)(-(Math.atan2(vec3d3.z, vec3d3.x) * 57.29577951308232)) + 90.0f;
-        float f2 = ThreadNames.clamp((float)((double)entityPlayer.getEyeHeight() + vec3d.y - ((double)em_class2582.getEyeHeight() + vec3d2.y)), -0.75f, 0.75f);
-        iBone.setRotationY(TrigMath.wrapDegrees(f));
-        iBone2.setRotationX(f2);
     }
 
-    void a(IBone iBone, AnimationProcessor animationProcessor, GirlEntity em_class2582) {
-        if (em_class2582.isLocallyRegistered()) {
+    void applyBoneState(IBone iBone, AnimationProcessor processor, GirlEntity girl) {
+        if (girl.isLocallyRegistered()) {
             iBone.setHidden(true);
         } else {
             iBone.setHidden(false);
-            animationProcessor.getBone("steve").setHidden(true);
+            processor.getBone("steve").setHidden(true);
         }
     }
 
-    void a(IBone iBone, AnimationProcessor animationProcessor, GirlEntity em_class2582, IGoblin ai_class302) {
-        if (em_class2582.isLocallyRegistered()) {
+    void applyGoblinBone(IBone iBone, AnimationProcessor processor, GirlEntity girl, IGoblin goblin) {
+        if (girl.isLocallyRegistered()) {
             iBone.setHidden(true);
         } else {
-            iBone.setHidden(ai_class302.getThrowProgress() < 15);
+            iBone.setHidden(goblin.getThrowProgress() < 15);
         }
-        if (!em_class2582.isLocallyRegistered()) {
-            animationProcessor.getBone("steve").setHidden(true);
+        if (!girl.isLocallyRegistered()) {
+            processor.getBone("steve").setHidden(true);
         }
     }
 

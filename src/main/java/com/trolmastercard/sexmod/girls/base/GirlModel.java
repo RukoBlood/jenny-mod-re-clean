@@ -194,7 +194,7 @@ public abstract class GirlModel<T extends GirlEntity> extends GirlAnimGeoModel<T
     }
 
     @CheckReturnValue
-    protected boolean isSteveSkinType(T girl) {
+    protected boolean canRender(T girl) {
         UUID ownerUUID = girl.getInteractionPlayerUUID();
         if (ownerUUID == null) {
             return true;
@@ -209,7 +209,7 @@ public abstract class GirlModel<T extends GirlEntity> extends GirlAnimGeoModel<T
     }
 
     void updateArmModelType(T girl, AnimationProcessor<T> processor) {
-        boolean isSteve = this.isSteveSkinType(girl);
+        boolean isSteve = this.canRender(girl);
         processor.getBone("rightArmAlex").setHidden(isSteve);
         processor.getBone("rightLowerArmAlex").setHidden(isSteve);
         processor.getBone("rightArmSteve").setHidden(!isSteve);
