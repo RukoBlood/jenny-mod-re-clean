@@ -34,9 +34,9 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
     final static int j = 30;
     final static float c = 1.4f;
     final static float h = 0.75f;
-    Minecraft minecraft = Minecraft.getMinecraft();
-    ResourceLocation k = null;
-    long i = 0L;
+    Minecraft mc = Minecraft.getMinecraft();
+    ResourceLocation cachedTexture = null;
+    long lastTextureSwitchTime = 0L;
 
     public PyrocynicalRenderer(RenderManager renderManager) {
         super(renderManager);
@@ -51,24 +51,24 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
 
     // a
     @Override
-    public void doRender(PyrocynicalEntity entity, double x, double y, double z, float f, float f2) {
+    public void doRender(PyrocynicalEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GL11.glDisable(2896);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
-        EntityPlayerSP entityPlayerSP = this.minecraft.player;
-        Vec3d vec3d = RotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), f2);
-        Vec3d vec3d2 = RotationHelper.LerpVec3d(new Vec3d(entityPlayerSP.lastTickPosX, entityPlayerSP.lastTickPosY, entityPlayerSP.lastTickPosZ), entityPlayerSP.getPositionVector(), f2);
-        Vec3d vec3d3 = vec3d.subtract(vec3d2);
-        ResourceLocation resourceLocation = this.a(entity, Math.abs(vec3d3.x) + Math.abs(vec3d3.y) + Math.abs(vec3d3.z));
-        this.minecraft.renderEngine.bindTexture(resourceLocation);
+        EntityPlayerSP player = this.mc.player;
+        Vec3d pyroPos = RotationHelper.LerpVec3d(new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), entity.getPositionVector(), partialTicks);
+        Vec3d playerPos = RotationHelper.LerpVec3d(new Vec3d(player.lastTickPosX, player.lastTickPosY, player.lastTickPosZ), player.getPositionVector(), partialTicks);
+        Vec3d offset = pyroPos.subtract(playerPos);
+        ResourceLocation texture = this.getFatTexture(entity, Math.abs(offset.x) + Math.abs(offset.y) + Math.abs(offset.z));
+        this.mc.renderEngine.bindTexture(texture);
         GlStateManager.pushMatrix();
-        GlStateManager.color(1.0f, 1.0f, 1.0f, this.b(entity, f2));
-        GlStateManager.translate(vec3d3.x, vec3d3.y + this.a(resourceLocation), vec3d3.z);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, this.getFatShrink(entity, partialTicks));
+        GlStateManager.translate(offset.x, offset.y + this.getFatBobOffset(texture), offset.z);
         GlStateManager.rotate(180.0f - this.renderManager.playerViewY, 0.0f, 1.0f, 0.0f);
-        float f3 = 1.4f + this.a(entity, f2);
-        GlStateManager.scale(f3, f3, f3);
+        float scale = 1.4f + this.getFatProgress(entity, partialTicks);
+        GlStateManager.scale(scale, scale, scale);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -81,64 +81,55 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
         GL11.glEnable(2896);
         GlStateManager.disableAlpha();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, OpenGlHelper.lastBrightnessX, OpenGlHelper.lastBrightnessY);
-        long l = System.currentTimeMillis();
-        if (this.k != PyrocynicalRenderer.PYRO_PRAISING && resourceLocation == PyrocynicalRenderer.PYRO_PRAISING && l > this.i + 60000L) {
-            this.minecraft.player.playSound(SoundsHandler.MISC_PYRO[0], 1.0f, 1.0f);
-            this.i = l;
+        long now = System.currentTimeMillis();
+        if (this.cachedTexture != PyrocynicalRenderer.PYRO_PRAISING && texture == PyrocynicalRenderer.PYRO_PRAISING && now > this.lastTextureSwitchTime + 60000L) {
+            this.mc.player.playSound(SoundsHandler.MISC_PYRO[0], 1.0f, 1.0f);
+            this.lastTextureSwitchTime = now;
         }
-        this.k = resourceLocation;
+        this.cachedTexture = texture;
     }
 
-    ResourceLocation a(PyrocynicalEntity pyrocynical, double d) {
+    ResourceLocation getFatTexture(PyrocynicalEntity pyrocynical, double distance) {
         if (pyrocynical.triggerTick != -1) {
-            return new ResourceLocation("sexmod", String.format("%s%s.png", PYRO_FAT_ANIM_FRAMES, this.b(pyrocynical)));
+            return new ResourceLocation("sexmod", String.format("%s%s.png", PYRO_FAT_ANIM_FRAMES, this.getFatIndex(pyrocynical)));
         }
-        if (d < 3.0) {
+        if (distance < 3.0) {
             return PYRO_PRAISING;
         }
-        Vec3d vec3d = new Vec3d(pyrocynical.lastTickPosX, pyrocynical.lastTickPosY, pyrocynical.lastTickPosZ).subtract(pyrocynical.getPositionVector());
-        if (Math.abs(vec3d.x) + Math.abs(vec3d.y) + Math.abs(vec3d.z) == 0.0) {
+        Vec3d movement = new Vec3d(pyrocynical.lastTickPosX, pyrocynical.lastTickPosY, pyrocynical.lastTickPosZ).subtract(pyrocynical.getPositionVector());
+        if (Math.abs(movement.x) + Math.abs(movement.y) + Math.abs(movement.z) == 0.0) {
             return PYRO_STANDING;
         }
-        return Math.sin((float)this.minecraft.player.ticksExisted * 0.75f) > 0.0 ? PYRO_WALKINGANIM_F1 : PYRO_WALINGANIM_F2;
+        return Math.sin((float)this.mc.player.ticksExisted * 0.75f) > 0.0 ? PYRO_WALKINGANIM_F1 : PYRO_WALINGANIM_F2;
     }
 
-    double a(ResourceLocation resourceLocation) {
-        if (!PYRO_WALKINGANIM_F1.equals(resourceLocation) && !PYRO_WALINGANIM_F2.equals(resourceLocation)) {
-            return 0.0;
-        }
-        return Math.sin((float)this.minecraft.player.ticksExisted * 0.75f) * (double)0.1f;
+    double getFatBobOffset(ResourceLocation resourceLocation) {
+        return !PYRO_WALKINGANIM_F1.equals(resourceLocation) && !PYRO_WALINGANIM_F2.equals(resourceLocation) ? 0.0 : Math.sin((float) this.mc.player.ticksExisted * 0.75f) * (double) 0.1f;
     }
 
-    int b(PyrocynicalEntity al_class332) {
-        if (al_class332.triggerTick == -1) {
-            return 0;
-        }
-        return (int) ThreadNames.clamp(this.minecraft.player.ticksExisted - al_class332.triggerTick, 1.0f, 30.0f);
+    int getFatIndex(PyrocynicalEntity pyrocynical) {
+        return pyrocynical.triggerTick == -1 ? 0 : (int) ThreadNames.clamp(this.mc.player.ticksExisted - pyrocynical.triggerTick, 1.0f, 30.0f);
     }
 
-    float a(PyrocynicalEntity al_class332, float f) {
-        if (al_class332.triggerTick == -1) {
+    float getFatProgress(PyrocynicalEntity pyrocynical, float partialTicks) {
+        if (pyrocynical.triggerTick == -1) {
             return 0.0f;
         }
-        int n = this.b(al_class332);
-        if (n == 30) {
-            return 1.0f;
-        }
-        return ((float)n + f) / 30.0f;
+        int index = this.getFatIndex(pyrocynical);
+        return index == 30 ? 1.0f : ((float) index + partialTicks) / 30.0f;
     }
 
-    float b(PyrocynicalEntity al_class332, float f) {
-        if (al_class332.triggerTick == -1) {
+    float getFatShrink(PyrocynicalEntity pyrocynical, float partialTicks) {
+        if (pyrocynical.triggerTick == -1) {
             return 1.0f;
         }
-        if (this.minecraft.player.ticksExisted - al_class332.triggerTick > 120) {
+        if (this.mc.player.ticksExisted - pyrocynical.triggerTick > 120) {
             return 0.0f;
         }
-        int n = 90;
-        float f2 = ThreadNames.clamp(this.minecraft.player.ticksExisted - al_class332.triggerTick, n, 120.0f) - (float)n;
-        float f3 = (f2 + f) / 30.0f;
-        return 1.0f - f3;
+        //int ninety = 90;
+        float elapsed = ThreadNames.clamp(this.mc.player.ticksExisted - pyrocynical.triggerTick, 90, 120.0f) - 90.0f;
+        float fadeProgress = (elapsed + partialTicks) / 30.0f;
+        return 1.0f - fadeProgress;
     }
 
     //@Override

@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class LunaInventoryUI extends GuiContainer {
     final static ResourceLocation ITEMS_BACKGROUND = new ResourceLocation("sexmod", "textures/gui/girlinventory.png");
@@ -53,7 +52,7 @@ public class LunaInventoryUI extends GuiContainer {
             stacks[40] = container.getSlot(4).getStack();
             stacks[41] = container.getSlot(5).getStack();
             stacks[42] = container.getSlot(6).getStack();
-            PacketHandler.INSTANCE.sendToServer((IMessage)new UploadInventoryToServer(this.lunaEntity.girlID(), this.invID, stacks));
+            PacketHandler.INSTANCE.sendToServer(new UploadInventoryToServer(this.lunaEntity.girlID(), this.invID, stacks));
         }
     }
 

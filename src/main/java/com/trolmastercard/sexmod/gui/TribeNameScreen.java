@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class TribeNameScreen extends GuiScreen {
     final static int b = 15;
@@ -68,11 +67,10 @@ public class TribeNameScreen extends GuiScreen {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
         String string = this.nameField.getText().trim();
-        if (string.isEmpty()) {
-            return;
+        if (!string.isEmpty()) {
+            PacketHandler.INSTANCE.sendToServer(new ClaimTribe(this.koboldID, Minecraft.getMinecraft().player.getPersistentID(), string));
+            Minecraft.getMinecraft().player.closeScreen();
         }
-        PacketHandler.INSTANCE.sendToServer((IMessage)new ClaimTribe(this.koboldID, Minecraft.getMinecraft().player.getPersistentID(), string));
-        Minecraft.getMinecraft().player.closeScreen();
     }
 
 }

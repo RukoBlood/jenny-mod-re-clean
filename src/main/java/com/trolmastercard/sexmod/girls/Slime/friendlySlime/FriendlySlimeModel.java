@@ -35,22 +35,22 @@ public class FriendlySlimeModel extends ModelBase {
         ModelRenderer modelRenderer = new ModelRenderer(this);
         modelRenderer.setRotationPoint(2.0f, 20.7406f, 4.0504f);
         this.b.addChild(modelRenderer);
-        this.a(modelRenderer, 1.0908f, 0.0f, 0.0f);
+        this.Rotate(modelRenderer, 1.0908f, 0.0f, 0.0f);
         modelRenderer.cubeList.add(new ModelBox(modelRenderer, 10, 11, -2.5f, 0.0f, 0.0f, 2, 2, 1, 0.0f, false));
         ModelRenderer modelRenderer2 = new ModelRenderer(this);
         modelRenderer2.setRotationPoint(2.0f, 19.9214f, 3.4768f);
         this.b.addChild(modelRenderer2);
-        this.a(modelRenderer2, 0.6109f, 0.0f, 0.0f);
+        this.Rotate(modelRenderer2, 0.6109f, 0.0f, 0.0f);
         modelRenderer2.cubeList.add(new ModelBox(modelRenderer2, 10, 11, -3.0f, 0.0f, 0.0f, 3, 1, 1, 0.0f, false));
         ModelRenderer modelRenderer3 = new ModelRenderer(this);
         modelRenderer3.setRotationPoint(2.0f, 19.0074f, 3.0643f);
         this.b.addChild(modelRenderer3);
-        this.a(modelRenderer3, 0.3491f, 0.0f, 0.0f);
+        this.Rotate(modelRenderer3, 0.3491f, 0.0f, 0.0f);
         modelRenderer3.cubeList.add(new ModelBox(modelRenderer3, 10, 11, -4.0f, 0.0f, 0.075f, 5, 1, 1, 0.0f, false));
         ModelRenderer modelRenderer4 = new ModelRenderer(this);
         modelRenderer4.setRotationPoint(0.0f, 17.925f, 3.5f);
         this.b.addChild(modelRenderer4);
-        this.a(modelRenderer4, 0.1309f, 0.0f, 0.0f);
+        this.Rotate(modelRenderer4, 0.1309f, 0.0f, 0.0f);
         modelRenderer4.cubeList.add(new ModelBox(modelRenderer4, 10, 11, -3.0f, -1.0f, -0.5f, 7, 2, 1, 0.0f, false));
     }
 
@@ -63,7 +63,7 @@ public class FriendlySlimeModel extends ModelBase {
         this.b.render(f6);
     }
 
-    public void a(ModelRenderer modelRenderer, float f, float f2, float f3) {
+    public void Rotate(ModelRenderer modelRenderer, float f, float f2, float f3) {
         modelRenderer.rotateAngleX = f;
         modelRenderer.rotateAngleY = f2;
         modelRenderer.rotateAngleZ = f3;

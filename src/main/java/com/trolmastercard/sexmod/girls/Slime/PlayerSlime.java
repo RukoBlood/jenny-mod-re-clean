@@ -337,11 +337,7 @@ public class PlayerSlime extends PlayerGirl {
                     this.setCurrentAction(Action.SUCKBLOWJOB);
                     break;
                 }
-                case "doggyfastReady": {
-                    if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.resetAnimationControllerOffset();
-                    break;
-                }
+                case "doggyfastReady":
                 case "bjtReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.resetAnimationControllerOffset();

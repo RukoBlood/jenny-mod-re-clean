@@ -54,7 +54,7 @@ public class GirlInventory extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int idx) {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(idx);
+        Slot slot = this.inventorySlots.get(idx);
         if (slot != null && slot.getHasStack()) {
             ItemStack stackInSlot = slot.getStack();
             stack = stackInSlot.copy();

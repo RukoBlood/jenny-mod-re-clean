@@ -104,12 +104,12 @@ public class CustomPartListScrollList extends GuiListExtended {
             Map.Entry<List<String>, Integer> modelData = entry.getValue();
             this.entries.add(new PartListEntry(category, modelData.getKey(), modelData.getValue()));
 
-            if (!CustomPartCategory.CUSTOM_BONE.equals((Object)entry.getKey())) continue;
+            if (!CustomPartCategory.CUSTOM_BONE.equals(entry.getKey())) continue;
             customBoneCount++;
         }
 
         this.entries.sort(Comparator.comparingInt(entry -> CATEGORY_ORDER.indexOf(entry.category)));
-        List<String> boneModels = CustomModel.getModelTypes(this.parentGUI.previewGirl).get((Object) CustomPartCategory.CUSTOM_BONE);
+        List<String> boneModels = CustomModel.getModelTypes(this.parentGUI.previewGirl).get(CustomPartCategory.CUSTOM_BONE);
         boneModels.add(0, "cross");
         this.entries.add(new PartListEntry(customBoneCount > 1));
         this.updateTopPadding();
@@ -437,7 +437,7 @@ public class CustomPartListScrollList extends GuiListExtended {
 
                 ArrayList<String> arrayList = new ArrayList<String>();
                 arrayList.add("cross");
-                arrayList.addAll(CustomModel.getModelTypes(CustomPartListScrollList.this.parentGUI.previewGirl).get((Object) CustomPartCategory.CUSTOM_BONE));
+                arrayList.addAll(CustomModel.getModelTypes(CustomPartListScrollList.this.parentGUI.previewGirl).get(CustomPartCategory.CUSTOM_BONE));
                 ClothingGui.activeCategories.add(ClothingGui.createCustomBoneEntry(CustomPartListScrollList.this.parentGUI.previewGirl));
             }
             if (!this.canRemoveBone) {

@@ -8,7 +8,6 @@
 package com.trolmastercard.sexmod.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.SystemColor;
@@ -48,17 +47,17 @@ public class PornWarningWindow extends JFrame {
         this.panel.setLayout(new BorderLayout(0, 0));
         this.setContentPane(this.panel);
         JPanel jPanel = new JPanel();
-        this.panel.add((Component)jPanel, "North");
+        this.panel.add(jPanel, "North");
         JTextPane jTextPane = new JTextPane();
         jTextPane.setFont(new Font("Tahoma", 0, 16));
         jTextPane.setBackground(SystemColor.control);
-        jTextPane.setText(I18n.format("window.pornwarning.title", new Object[0]));
+        jTextPane.setText(I18n.format("window.pornwarning.title"));
         jPanel.add(jTextPane);
         JPanel jPanel2 = new JPanel();
-        this.panel.add((Component)jPanel2, "South");
-        JCheckBox jCheckBox = new JCheckBox(I18n.format("window.pornwarning.dontaskagain", new Object[0]));
+        this.panel.add(jPanel2, "South");
+        JCheckBox jCheckBox = new JCheckBox(I18n.format("window.pornwarning.dontaskagain"));
         jPanel2.add(jCheckBox);
-        JButton iamnotminor = new JButton(I18n.format("window.pornwarning.am18", new Object[0]));
+        JButton iamnotminor = new JButton(I18n.format("window.pornwarning.am18"));
         iamnotminor.addActionListener(actionEvent -> {
             isAdult = false;
             if (jCheckBox.isSelected()) {
@@ -74,7 +73,7 @@ public class PornWarningWindow extends JFrame {
             window.dispose();
         });
         jPanel2.add(iamnotminor);
-        JButton iamminor = new JButton(I18n.format("window.pornwarning.not18", new Object[0]));
+        JButton iamminor = new JButton(I18n.format("window.pornwarning.not18"));
         iamminor.addActionListener(actionEvent -> {
             isAdult = false;
             System.out.println("MINOR!!! WHEOO WOOO WHEEE WHOOO WHEEE WHOO");
@@ -100,13 +99,13 @@ public class PornWarningWindow extends JFrame {
         });
         jPanel2.add(iamminor);
         JPanel jPanel3 = new JPanel();
-        this.panel.add((Component)jPanel3, "Center");
+        this.panel.add(jPanel3, "Center");
         jPanel3.setLayout(new BoxLayout(jPanel3, 0));
         JTextPane jTextPane2 = new JTextPane();
         jTextPane2.setContentType("text/html");
         jTextPane2.setBackground(SystemColor.control);
         jTextPane2.setEditable(false);
-        jTextPane2.setText("<html><center><p style='font-family: Tahoma'>" + I18n.format("window.pornwarning.text", new Object[0]) + "</p></center></html> ");
+        jTextPane2.setText("<html><center><p style='font-family: Tahoma'>" + I18n.format("window.pornwarning.text") + "</p></center></html> ");
         jPanel3.add(jTextPane2);
     }
 

@@ -8,7 +8,6 @@
 package com.trolmastercard.sexmod.girls.Slime;
 
 import java.util.Arrays;
-import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
 import com.trolmastercard.sexmod.girls.base.Action;
@@ -67,8 +66,8 @@ extends GirlModel<GirlEntity> {
         super.setLivingAnimations(girl, instanceID, event);
         AnimationProcessor<SlimeEntity> animationProcessor = this.getAnimationProcessor();
         if (!(girl.world instanceof FakeWorld) && animationProcessor.getBone("bedSlime") != null && animationProcessor.getBone("bedSlimeLayer") != null) {
-            animationProcessor.getBone("bedSlime").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.getCurrentAction()));
-            animationProcessor.getBone("bedSlimeLayer").setHidden(!Arrays.asList(this.actionsWithSlime).contains((Object) girl.getCurrentAction()));
+            animationProcessor.getBone("bedSlime").setHidden(!Arrays.asList(this.actionsWithSlime).contains(girl.getCurrentAction()));
+            animationProcessor.getBone("bedSlimeLayer").setHidden(!Arrays.asList(this.actionsWithSlime).contains(girl.getCurrentAction()));
         }
         if (girl instanceof PlayerGirl) {
             return;
@@ -86,8 +85,8 @@ extends GirlModel<GirlEntity> {
         Vector3f vector3f = new Vector3f(0.0f, 0.0f, 0.0f);
         Vector3f vector3f2 = new Vector3f(0.0f, 0.0f, 0.0f);
         for (IBone iBone2 : iBoneArray) {
-            vector3f.add((Tuple3f)new Vector3f(iBone2.getRotationX(), iBone2.getRotationY(), iBone2.getRotationZ()));
-            vector3f2.add((Tuple3f)new Vector3f(iBone2.getPositionX(), iBone2.getPositionY(), iBone2.getPositionZ()));
+            vector3f.add(new Vector3f(iBone2.getRotationX(), iBone2.getRotationY(), iBone2.getRotationZ()));
+            vector3f2.add(new Vector3f(iBone2.getPositionX(), iBone2.getPositionY(), iBone2.getPositionZ()));
         }
         iBone.setRotationX(vector3f.x);
         iBone.setRotationY(vector3f.y);

@@ -51,33 +51,31 @@ public class EscapeMinigameUI extends Gui {
     static boolean hasSentReleasePacket = false;
 
     public static void UpdateMinigame() {
-        if (!isMinigameActive) {
-            return;
-        }
-        if (EscapeMinigameUI.mc.world == null) {
-            isMinigameActive = false;
-            hasSentReleasePacket = false;
-            activeTasks = 0.0f;
-            escapeProgress = 0.0f;
-            closingTicks = 0.0f;
-            isClosing = false;
-        }
-        if (isClosing) {
-            isIndicatorBlinking = false;
-            if ((closingTicks += 1.0f) >= INTRO_OUTRO_DURATION) {
+        if (isMinigameActive) {
+            if (EscapeMinigameUI.mc.world == null) {
                 isMinigameActive = false;
+                hasSentReleasePacket = false;
+                activeTasks = 0.0f;
+                escapeProgress = 0.0f;
+                closingTicks = 0.0f;
+                isClosing = false;
             }
-            return;
-        }
-        if ((activeTasks += 1.0f) % (float)Math.max(1, 2) == 0.0f) {
-            isIndicatorBlinking = !isIndicatorBlinking;
-        }
-        escapeProgress = Math.max(0.0f, escapeProgress - PROGRESS_DECAY);
-        if (activeTasks < INTRO_OUTRO_DURATION) {
-            return;
-        }
-        if (activeTasks % (float)KEY_SWITCH_COOLDOWN == 0.0f || currentRequiredKey == null) {
-            EscapeMinigameUI.selectRandomKey();
+            if (isClosing) {
+                isIndicatorBlinking = false;
+                if ((closingTicks += 1.0f) >= INTRO_OUTRO_DURATION) {
+                    isMinigameActive = false;
+                }
+            } else {
+                if ((activeTasks += 1.0f) % (float) Math.max(1, 2) == 0.0f) {
+                    isIndicatorBlinking = !isIndicatorBlinking;
+                }
+                escapeProgress = Math.max(0.0f, escapeProgress - PROGRESS_DECAY);
+                if (!(activeTasks < INTRO_OUTRO_DURATION)) {
+                    if (activeTasks % (float) KEY_SWITCH_COOLDOWN == 0.0f || currentRequiredKey == null) {
+                        EscapeMinigameUI.selectRandomKey();
+                    }
+                }
+            }
         }
     }
 
@@ -90,15 +88,13 @@ public class EscapeMinigameUI extends Gui {
     }
 
     static void handleSuccessfulEscape() {
-        if (!isMinigameActive) {
-            return;
+        if (isMinigameActive) {
+            if (!hasSentReleasePacket) {
+                hasSentReleasePacket = true;
+                PacketHandler.INSTANCE.sendToServer(new GalathBackOffRape());
+                EscapeMinigameUI.StartClosingAnimation();
+            }
         }
-        if (hasSentReleasePacket) {
-            return;
-        }
-        hasSentReleasePacket = true;
-        PacketHandler.INSTANCE.sendToServer((IMessage)new GalathBackOffRape());
-        EscapeMinigameUI.StartClosingAnimation();
     }
 
     public static void StartMinigame() {
@@ -117,56 +113,53 @@ public class EscapeMinigameUI extends Gui {
 
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent event) {
-        if (!isMinigameActive) {
-            return;
+        if (isMinigameActive) {
+            if (event.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
+                int width = event.getResolution().getScaledWidth();
+                int height = event.getResolution().getScaledHeight();
+                float partialTicks = event.getPartialTicks();
+                mc.getTextureManager().bindTexture(ESCAPE_MINIGAME_UI);
+                double easeOffset = isClosing ? 1.0 - RotationHelper.EaseInBack((EscapeMinigameUI.closingTicks + partialTicks) / INTRO_OUTRO_DURATION) : Math.min(1.0, RotationHelper.EaseOutBack((activeTasks + partialTicks) / INTRO_OUTRO_DURATION));
+                int targetY = height + 385;
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(UI_SCALE, UI_SCALE, UI_SCALE);
+                GlStateManager.translate(485.0f, 0.0f, 0.0f);
+                int SpawnY = 4 * height;
+                this.drawTexturedModalRect(width / 2 - 87, (int) RotationHelper.LerpDouble(SpawnY, targetY, easeOffset), 0, 104, 174, 48);
+                this.drawTexturedModalRect((int) ((float) width / 2.0f - 78.0f), (int) RotationHelper.LerpDouble(SpawnY, targetY - BUTTON_SIZE, easeOffset), BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.A ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
+                this.drawTexturedModalRect((int) ((float) width / 2.0f - 26.0f), (int) RotationHelper.LerpDouble(SpawnY, targetY - BUTTON_SIZE, easeOffset), 2 * BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.S ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
+                this.drawTexturedModalRect((int) ((float) width / 2.0f + 26.0f), (int) RotationHelper.LerpDouble(SpawnY, targetY - BUTTON_SIZE, easeOffset), 3 * BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.D ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
+                this.drawTexturedModalRect((int) ((float) width / 2.0f - 26.0f), (int) RotationHelper.LerpDouble(SpawnY, targetY - BUTTON_SIZE, easeOffset), 0, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.W ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
+                this.drawTexturedModalRect(width / 2 - 87 + 8, (int) RotationHelper.LerpDouble(SpawnY - 8, targetY + 8, easeOffset), 8, 152, (int) (158.0f * escapeProgress), 32);
+                GlStateManager.popMatrix();
+            }
         }
-        if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT) {
-            return;
-        }
-        int width = event.getResolution().getScaledWidth();
-        int height = event.getResolution().getScaledHeight();
-        float partialTicks = event.getPartialTicks();
-        mc.getTextureManager().bindTexture(ESCAPE_MINIGAME_UI);
-        double easeOffset = isClosing ? 1.0 - RotationHelper.EaseInBack((EscapeMinigameUI.closingTicks + partialTicks) / INTRO_OUTRO_DURATION) : Math.min(1.0, RotationHelper.EaseOutBack((activeTasks + partialTicks) / INTRO_OUTRO_DURATION));
-        int targetY = height + 385;
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(UI_SCALE, UI_SCALE, UI_SCALE);
-        GlStateManager.translate(485.0f, 0.0f, 0.0f);
-        int SpawnY = 4 * height;
-        this.drawTexturedModalRect(width / 2 - 87, (int) RotationHelper.LerpDouble((double)SpawnY, (double)targetY, easeOffset), 0, 104, 174, 48);
-        this.drawTexturedModalRect((int)((float)width / 2.0f - 78.0f), (int) RotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.A ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
-        this.drawTexturedModalRect((int)((float)width / 2.0f - 26.0f), (int) RotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 2*BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.S ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
-        this.drawTexturedModalRect((int)((float)width / 2.0f + 26.0f), (int) RotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 3*BUTTON_SIZE, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.D ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
-        this.drawTexturedModalRect((int)((float)width / 2.0f - 26.0f), (int) RotationHelper.LerpDouble((double)SpawnY, (double)(targetY - BUTTON_SIZE), easeOffset), 0, isIndicatorBlinking && currentRequiredKey == EscapeMinigameUIKeybinds.W ? BUTTON_SIZE : 0, BUTTON_SIZE, BUTTON_SIZE);
-        this.drawTexturedModalRect(width / 2 - 87 + 8, (int) RotationHelper.LerpDouble((double)(SpawnY - 8), (double)(targetY + 8), easeOffset), 8, 152, (int)(158.0f * escapeProgress), 32);
-        GlStateManager.popMatrix();
     }
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            return;
+        if (event.phase != TickEvent.Phase.END) {
+            EscapeMinigameUI.UpdateMinigame();
         }
-        EscapeMinigameUI.UpdateMinigame();
     }
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent keyInputEvent) {
         GameSettings gameSettings = Minecraft.getMinecraft().gameSettings;
         if (GameSettings.isKeyDown(gameSettings.keyBindLeft)) {
-            escapeProgress = currentRequiredKey == EscapeMinigameUIKeybinds.A ? (escapeProgress += PROGRESS_INCREMENT) : (escapeProgress -= PROGRESS_INCREMENT / 2);
+            escapeProgress = currentRequiredKey == EscapeMinigameUIKeybinds.A ? escapeProgress + PROGRESS_INCREMENT : escapeProgress - (PROGRESS_INCREMENT / 2);
             return;
         }
         if (GameSettings.isKeyDown(gameSettings.keyBindRight)) {
-            escapeProgress = currentRequiredKey == EscapeMinigameUIKeybinds.D ? (escapeProgress += PROGRESS_INCREMENT) : (escapeProgress -= PROGRESS_INCREMENT / 2);
+            escapeProgress = currentRequiredKey == EscapeMinigameUIKeybinds.D ? escapeProgress + PROGRESS_INCREMENT : escapeProgress - (PROGRESS_INCREMENT / 2);
             return;
         }
         if (GameSettings.isKeyDown(gameSettings.keyBindForward)) {
-            escapeProgress = currentRequiredKey == EscapeMinigameUIKeybinds.W ? (escapeProgress += PROGRESS_INCREMENT) : (escapeProgress -= PROGRESS_INCREMENT /2);
+            escapeProgress = currentRequiredKey == EscapeMinigameUIKeybinds.W ? escapeProgress + PROGRESS_INCREMENT : (escapeProgress -= PROGRESS_INCREMENT /2);
             return;
         }
         if (GameSettings.isKeyDown(gameSettings.keyBindBack)) {
-            escapeProgress = currentRequiredKey == EscapeMinigameUIKeybinds.S ? (escapeProgress += PROGRESS_INCREMENT) : (escapeProgress -= PROGRESS_INCREMENT /2);
+            escapeProgress = currentRequiredKey == EscapeMinigameUIKeybinds.S ? escapeProgress + PROGRESS_INCREMENT : escapeProgress - (PROGRESS_INCREMENT / 2);
             return;
         }
         if (escapeProgress >= 1.0f) {

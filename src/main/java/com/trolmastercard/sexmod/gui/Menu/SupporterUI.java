@@ -23,7 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class SupporterUI extends GuiScreen {
     Supporter girl;
@@ -50,8 +49,8 @@ public class SupporterUI extends GuiScreen {
         ScaledResolution resolution = new ScaledResolution(this.mc);
         int screenWidth = resolution.getScaledWidth();
         this.mu = Math.min(1.0, this.mu + (double)(this.mc.getTickLength() / 5.0f));
-        this.buttonList.add(new GuiButton(0, screenWidth / 2 - 119 + (int)(100.0 - 100.0 * this.mu), 30, (int)(this.mu * 100.0), 20, this.isFollowing ? I18n.format("action.names.stopfollowme", new Object[0]) : I18n.format("action.names.followme", new Object[0])));
-        this.buttonList.add(new GuiButton(1, screenWidth / 2 + 19, 30, (int)(this.mu * 100.0), 20, I18n.format("action.names.gohome", new Object[0])));
+        this.buttonList.add(new GuiButton(0, screenWidth / 2 - 119 + (int)(100.0 - 100.0 * this.mu), 30, (int)(this.mu * 100.0), 20, this.isFollowing ? I18n.format("action.names.stopfollowme") : I18n.format("action.names.followme")));
+        this.buttonList.add(new GuiButton(1, screenWidth / 2 + 19, 30, (int)(this.mu * 100.0), 20, I18n.format("action.names.gohome")));
         this.mc.renderEngine.bindTexture(ITEMS_BACKGROUND);
         this.drawTexturedModalRect(screenWidth / 2 - 7, 61 - (int)(15.0 - this.mu * 15.0), 32, 0, 15, 15);
         this.buttonList.add(new GuiButton(2, screenWidth / 2 - 10, 59 - (int)(15.0 - this.mu * 15.0), 20, 20, ""));
@@ -63,7 +62,7 @@ public class SupporterUI extends GuiScreen {
         ScaledResolution resolution = new ScaledResolution(this.mc);
         int screenWidth = resolution.getScaledWidth();
         if (this.girl.getDataManager().get(Supporter.HAS_CHEST) && mouseX >= screenWidth / 2 - 20 && mouseX <= screenWidth / 2 + 20 && mouseY >= 20 && mouseY <= 60) {
-            PacketHandler.INSTANCE.sendToServer((IMessage)new BeeOpenChest(this.girl.girlID(), this.player.getPersistentID()));
+            PacketHandler.INSTANCE.sendToServer(new BeeOpenChest(this.girl.girlID(), this.player.getPersistentID()));
             this.onGuiClosed();
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -74,23 +73,23 @@ public class SupporterUI extends GuiScreen {
         super.actionPerformed(button);
         if (button.id == 0) {
             if (this.isFollowing) {
-                PacketHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girl.girlID(), "master", ""));
-                this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.sad", new Object[0])));
+                PacketHandler.INSTANCE.sendToServer(new ChangeDataParameter(this.girl.girlID(), "master", ""));
+                this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.sad")));
             } else {
-                PacketHandler.INSTANCE.sendToServer((IMessage)new ChangeDataParameter(this.girl.girlID(), "master", this.player.getPersistentID().toString()));
-                this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.exited", new Object[0])));
+                PacketHandler.INSTANCE.sendToServer(new ChangeDataParameter(this.girl.girlID(), "master", this.player.getPersistentID().toString()));
+                this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.exited")));
             }
             this.isFollowing = !this.isFollowing;
             this.player.closeScreen();
         }
         if (button.id == 1) {
-            PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girl.girlID()));
+            PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girl.girlID()));
             this.player.closeScreen();
         }
         if (button.id == 2) {
-            PacketHandler.INSTANCE.sendToServer((IMessage)new SetNewHome(this.girl.girlID(), new Vec3d(this.girl.posX, this.girl.posY, this.girl.posZ)));
+            PacketHandler.INSTANCE.sendToServer(new SetNewHome(this.girl.girlID(), new Vec3d(this.girl.posX, this.girl.posY, this.girl.posZ)));
             this.player.closeScreen();
-            this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.home", new Object[0])));
+            this.player.sendMessage(new TextComponentString(I18n.format("bee.dialogue.home")));
         }
     }
 }

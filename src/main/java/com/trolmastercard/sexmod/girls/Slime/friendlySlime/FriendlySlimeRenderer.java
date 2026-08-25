@@ -19,7 +19,7 @@ public class FriendlySlimeRenderer extends RenderLiving<FriendlySlimeEntity> {
     // a
     @Override
     public void doRender(FriendlySlimeEntity entity, double x, double y, double z, float yaw, float partialTicks) {
-        this.shadowSize = 0.25f * (float)entity.h();
+        this.shadowSize = 0.25f * (float)entity.getSquishFactor();
         super.doRender(entity, x, y, z, yaw, partialTicks);
     }
 
@@ -28,10 +28,10 @@ public class FriendlySlimeRenderer extends RenderLiving<FriendlySlimeEntity> {
     @Override
     protected void preRenderCallback(FriendlySlimeEntity entity, float f) {
         GlStateManager.scale(0.999f, 0.999f, 0.999f);
-        float f3 = entity.h();
-        float f4 = (entity.h + (entity.e - entity.h) * f) / (f3 * 0.5f + 1.0f);
+        float squish = entity.getSquishFactor();
+        float f4 = (entity.prevSquishFactor + (entity.squishFactor - entity.prevSquishFactor) * f) / (squish * 0.5f + 1.0f);
         float f5 = 1.0f / (f4 + 1.0f);
-        GlStateManager.scale(f5 * f3, 1.0f / f5 * f3, f5 * f3);
+        GlStateManager.scale(f5 * squish, 1.0f / f5 * squish, f5 * squish);
     }
 
     // a

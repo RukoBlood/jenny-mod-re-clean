@@ -50,7 +50,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 //a.class
@@ -102,17 +101,17 @@ public class ClothingGui extends GuiScreen {
 
         for (String partName : this.previewGirl.getCustomPartsSet()) {
             CustomPartCategory category = CustomModel.getClothingType(partName);
-            if (CustomPartCategory.CUSTOM_BONE.equals((Object)category)) {
+            if (CustomPartCategory.CUSTOM_BONE.equals(category)) {
                 ++customBoneCount;
             }
 
             Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> targetEntry = null;
 
-            if (CustomPartCategory.CUSTOM_BONE.equals((Object)category) && customBoneCount > 1) {
+            if (CustomPartCategory.CUSTOM_BONE.equals(category) && customBoneCount > 1) {
                 targetEntry = ClothingGui.createCustomBoneEntry(this.previewGirl);
             } else {
                 for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry : activeCategories) {
-                    if (!entry.getKey().equals((Object)category)) continue;
+                    if (!entry.getKey().equals(category)) continue;
                     targetEntry = entry;
                 }
             }
@@ -155,7 +154,7 @@ public class ClothingGui extends GuiScreen {
     public static Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> createCustomBoneEntry(GirlEntity girl) {
         ArrayList<String> arrayList = new ArrayList<String>();
         arrayList.add("cross");
-        arrayList.addAll(CustomModel.getModelTypes(girl).get((Object) CustomPartCategory.CUSTOM_BONE));
+        arrayList.addAll(CustomModel.getModelTypes(girl).get(CustomPartCategory.CUSTOM_BONE));
         return new AbstractMap.SimpleEntry<CustomPartCategory, Map.Entry<List<String>, Integer>>(CustomPartCategory.CUSTOM_BONE, new AbstractMap.SimpleEntry<>(arrayList, 0));
     }
 
@@ -177,7 +176,7 @@ public class ClothingGui extends GuiScreen {
             Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> targetEntry = null;
 
             for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry : activeCategories) {
-                if (!((CustomPartCategory)((Object)modelEntry.getKey())).equals((Object)entry.getKey())) continue;
+                if (!modelEntry.getKey().equals(entry.getKey())) continue;
                 targetEntry = entry;
             }
 
@@ -280,7 +279,7 @@ public class ClothingGui extends GuiScreen {
         }
 
         PacketHandler.INSTANCE.sendToServer(
-                (IMessage)new UploadModelString(GirlEntity.serializePartsSet(selectedParts), this.ID, girlSpecificIndices)
+                new UploadModelString(GirlEntity.serializePartsSet(selectedParts), this.ID, girlSpecificIndices)
         );
 
         this.mc.player.closeScreen();
@@ -297,7 +296,7 @@ public class ClothingGui extends GuiScreen {
         int indexCounter = 0;
 
         for (Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> entry : activeCategories) {
-            if (entry.getKey().equals((Object)category)) {
+            if (entry.getKey().equals(category)) {
                 matchingEntries.add(entry);
                 matchingGlobalIndices.add(indexCounter);
             }
@@ -311,13 +310,13 @@ public class ClothingGui extends GuiScreen {
         Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>> selectedEntry;
         if (matchingEntries.size() == 1) {
             selectedEntry = matchingEntries.get(0);
-            globalListIndex = (Integer)matchingGlobalIndices.get(0);
+            globalListIndex = matchingGlobalIndices.get(0);
         } else {
             int subIndex = this.customCategoryCount == 0 || itemIndex > this.customCategoryCount - 1 + CustomPartCategory.getCount()
                     ? itemIndex - (this.customCategoryCount + CustomPartCategory.getCount())
                     : itemIndex;
             selectedEntry = matchingEntries.get(subIndex);
-            globalListIndex = (Integer)matchingGlobalIndices.get(subIndex);
+            globalListIndex = matchingGlobalIndices.get(subIndex);
         }
 
         if (selectedEntry == null) {
@@ -325,8 +324,8 @@ public class ClothingGui extends GuiScreen {
         }
 
         Map.Entry<List<String>, Integer> partData = selectedEntry.getValue();
-        int currentOption = (Integer)partData.getValue();
-        int totalOptions = ((List)partData.getKey()).size();
+        int currentOption = partData.getValue();
+        int totalOptions = partData.getKey().size();
 
         if (forward) {
             if (++currentOption >= totalOptions) {
@@ -370,12 +369,11 @@ public class ClothingGui extends GuiScreen {
 //        if (mouseX < this.width / 2) {
 //            return;
 //        }
-        if (clickedMouseButton != 0 || mouseX < this.width / 2) {
-            return;
+        if (clickedMouseButton == 0 && mouseX >= this.width / 2) {
+            int dX = mouseX - this.lastMouseX;
+            mouseDragDeltas.add(dX);
+            this.lastMouseX = mouseX;
         }
-        int dX = mouseX - this.lastMouseX;
-        mouseDragDeltas.add(dX);
-        this.lastMouseX = mouseX;
     }
 
     @Override
@@ -574,7 +572,7 @@ public class ClothingGui extends GuiScreen {
         boolean canOpen = CustomModel.getCustomModelsKey() == null || CustomModel.isGlobalRenderingDisabled();
 
         if (!canOpen) {
-            mc.player.sendStatusMessage(new TextComponentString("You have to whitelist the server to use its custom models. " + (Object)((Object)TextFormatting.YELLOW) + "/whitelistserver"), true);
+            mc.player.sendStatusMessage(new TextComponentString("You have to whitelist the server to use its custom models. " + TextFormatting.YELLOW + "/whitelistserver"), true);
             return;
         }
         mc.addScheduledTask(() -> mc.displayGuiScreen(new ClothingGui(girl)));

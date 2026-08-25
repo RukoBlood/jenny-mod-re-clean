@@ -33,7 +33,7 @@ public class GirlContainer extends Container {
         OPEN_CONTAINERS.add(this);
         if (girl.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH)) {
             int n;
-            IItemHandler iItemHandler = (IItemHandler)girl.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
+            IItemHandler iItemHandler = girl.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
             this.girl = girl;
 
             this.equipmentSlots = new Slot[]{
@@ -66,7 +66,7 @@ public class GirlContainer extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int n) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.inventorySlots.get(n);
+        Slot slot = this.inventorySlots.get(n);
         if (slot != null && slot.getHasStack()) {
             ItemStack itemStack2 = slot.getStack();
             itemStack = itemStack2.copy();

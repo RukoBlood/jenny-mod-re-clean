@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 //b5.class
 
 public class GenderChangeUI extends GuiScreen {
@@ -43,7 +42,7 @@ public class GenderChangeUI extends GuiScreen {
                 GirlEntity girl = worldConstructor.newInstance(this.mc.world);
                 girl.setLocallyRegistered(true);
                 this.entities.add(girl);
-                String string = hashMap.get((Object)entity);
+                String string = hashMap.get(entity);
                 if (string == null) continue;
                 girl.setCustomPartList(GirlEntity.decodePartIdList(string));
             } catch (Exception e) {
@@ -72,9 +71,9 @@ public class GenderChangeUI extends GuiScreen {
             this.i = this.entities.size() - 1;
         }
         if (button.id == 0) {
-            PacketHandler.INSTANCE.sendToServer((IMessage)new UpdatePlayerModel(PlayerGirlEntity.getGirlType(this.entities.get(this.i))));
+            PacketHandler.INSTANCE.sendToServer(new UpdatePlayerModel(PlayerGirlEntity.getGirlType(this.entities.get(this.i))));
             EntityPlayerSP player = Minecraft.getMinecraft().player;
-            ((EntityPlayer)player).closeScreen();
+            player.closeScreen();
             player.eyeHeight = player.getDefaultEyeHeight();
             if (!player.capabilities.allowFlying) {
                 player.capabilities.allowFlying = player.capabilities.isCreativeMode;

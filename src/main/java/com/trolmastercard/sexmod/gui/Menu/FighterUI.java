@@ -7,7 +7,7 @@
  */
 package com.trolmastercard.sexmod.gui.Menu;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -30,7 +30,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -89,7 +88,7 @@ public class FighterUI extends GuiScreen {
         }
         for (ItemStack itemStack : this.player.inventory.mainInventory) {
             if (!itemStack.getItem().equals(this.prices[button.id - 5].getItem()) || itemStack.getCount() < this.prices[button.id - 5].getCount() || itemStack.getMetadata() != this.prices[button.id - 5].getMetadata()) continue;
-            PacketHandler.INSTANCE.sendToServer((IMessage)new RemoveItems(this.player.getPersistentID(), this.prices[button.id - 5]));
+            PacketHandler.INSTANCE.sendToServer(new RemoveItems(this.player.getPersistentID(), this.prices[button.id - 5]));
             this.doAction(button);
             return;
         }
@@ -125,12 +124,12 @@ public class FighterUI extends GuiScreen {
             if (this.secondTransition > 0.0f && this.prices != null && this.prices[i - 5] != null && this.prices[i - 5].getCount() != 0) {
                 this.zLevel = -300.0f;
                 this.itemRender.zLevel = -300.0f;
-                this.drawHoveringTextWithZ(Arrays.asList(this.prices[i - 5].getCount() + "x    "), screenWidth - xText, screenHeight - yText, this.fontRenderer);
+                this.drawHoveringTextWithZ(Collections.singletonList(this.prices[i - 5].getCount() + "x    "), screenWidth - xText, screenHeight - yText, this.fontRenderer);
                 this.itemRender.renderItemIntoGUI(this.prices[i - 5], screenWidth - xItem, screenHeight - yItem);
                 this.zLevel = 0.0f;
                 this.itemRender.zLevel = 0.0f;
             }
-            this.buttonList.add(new GuiButton(i, screenWidth - x, screenHeight - y, 100, 20, I18n.format(this.actions[i - 5], new Object[0])));
+            this.buttonList.add(new GuiButton(i, screenWidth - x, screenHeight - y, 100, 20, I18n.format(this.actions[i - 5])));
             y += 30;
             yText += 30;
             yItem += 30;
@@ -162,7 +161,7 @@ public class FighterUI extends GuiScreen {
                 i = 2;
             }
             this.extraButtonWidth[i] = mouseX >= buttonX && mouseX <= buttonX + 23 + this.extraButtonWidth[i] && mouseY >= buttonY && mouseY <= buttonY + 20 ? Math.min(this.sizes[i], this.extraButtonWidth[i] + 7) : Math.max(0, this.extraButtonWidth[i] - 7);
-            StringBuilder stringBuilder = new StringBuilder(I18n.format(this.companionButtonTexts[i], new Object[0]));
+            StringBuilder stringBuilder = new StringBuilder(I18n.format(this.companionButtonTexts[i]));
             for (int j = 0; j < this.spaces[i]; ++j) {
                 stringBuilder.append(" ");
             }

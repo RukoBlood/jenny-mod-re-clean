@@ -233,7 +233,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     public Vec3d previousPos = null;
     public int aF = 0;
     public Vec3d bd = null;
-    public List<EntityWitherSkeleton> witherSkeletons = new ArrayList<EntityWitherSkeleton>();
+    public List<EntityWitherSkeleton> witherSkeletons = new ArrayList<>();
     public float cachedHeadRotationX = 0.0f;
     public long dashStartWorldTime = -1L;
     public long dashEndWorldTime = -1L;
@@ -415,7 +415,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     protected void initEntityAI() {
         this.watchClosestGirlGoal = new WatchClosestGirlGoal(this, EntityPlayer.class, 3.0f, 1.0f);
         this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAITempt(this, 0.4, false, new HashSet<Item>(TEMPTATION_ITEMS)));
+        this.tasks.addTask(2, new EntityAITempt(this, 0.4, false, new HashSet<>(TEMPTATION_ITEMS)));
         this.tasks.addTask(3, new DoorInteractAIGoal(this));
         this.tasks.addTask(5, this.watchClosestGirlGoal);
     }
@@ -1167,10 +1167,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
 
         EntityPlayer owner = this.world.getPlayerEntityByUUID(ownerID);
-        if (owner == null) {
-            return BlockPos.ORIGIN;
-        }
-        return owner.getPosition();
+        return owner == null ? BlockPos.ORIGIN : owner.getPosition();
     }
 
     double getFlightRange() {
@@ -2435,13 +2432,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "rape_switch": {
-                    EntityPlayerSP player;
                     Random random = this.getRNG();
                     int n = this.b1;
                     do {
                         this.b1 = random.nextInt(3);
                     } while (this.b1 == n);
-                    if (this.hasMasterOAlgo() || !this.isControlledByLocalPlayer() || !(0.0f >= (player = Minecraft.getMinecraft().player).getHealth() - 1.0f)) break;
+                    if (this.hasMasterOAlgo() || !this.isControlledByLocalPlayer() || !(0.0f >= Minecraft.getMinecraft().player.getHealth() - 1.0f)) break;
                     this.setCurrentAction(Action.RAPE_CUM);
                     break;
                 }
@@ -2513,8 +2509,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     }
                     this.corruptIntroActive = true;
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-                    float f = this.getYawRotation().floatValue() + 220.0f;
-                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.getYawRotation().floatValue()).add(this.getTargetPosition());
+                    float f = this.getYawRotation() + 220.0f;
+                    Vec3d vec3d = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5f - entityPlayerSP.getEyeHeight(), 0.4f), this.getYawRotation()).add(this.getTargetPosition());
                     PacketHandler.INSTANCE.sendToServer(new TeleportPlayer(entityPlayerSP.getPersistentID().toString(), vec3d, f, 15.0f));
                     SexUI.showUI();
                     break;
