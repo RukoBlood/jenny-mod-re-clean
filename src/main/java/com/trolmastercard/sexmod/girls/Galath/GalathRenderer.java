@@ -694,7 +694,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
         float progress = (currentTick - 105.0f) / 20.0f;
         float lightmapCoords = RotationHelper.LerpFloat(120.0f, 240.0f, progress);
 
-        Vector3fSexmodSpecial coinColor = RotationHelper.LerpVector3f(GalathCoinRenderer.f, GalathCoinRenderer.e, progress);
+        Vector3fSexmodSpecial coinColor = RotationHelper.LerpVector3f(GalathCoinRenderer.COIN_COLOR_DARK, GalathCoinRenderer.COIN_COLOR, progress);
 
         float lastLightX = OpenGlHelper.lastBrightnessX;
         float lastLightY = OpenGlHelper.lastBrightnessY;

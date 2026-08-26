@@ -1,5 +1,5 @@
-Methods renamed: 96.28% (2719/2824)
-Fields renamed: 77.46% (1234/1593)
+Methods renamed: 96.57% (2727/2824)
+Fields renamed: 78.59% (1252/1593)
 
 ## Synthetic Elements Detailed List
 
@@ -175,32 +175,6 @@ Fields renamed: 77.46% (1234/1593)
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `g` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `j` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `q` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `p` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `k` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `h` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `s` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoin.java` | Field | `l` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `e` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `f` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `g` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `h` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathCoin\GalathCoinRenderer.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ab` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `af` |

@@ -49,7 +49,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -63,17 +62,17 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class GalathCoin extends Item implements IAnimatable {
     final static public GalathCoin GALATH_COIN = new GalathCoin();
-    final static public long c = 4000L;
-    final static public long g = 1000L;
-    final static public long j = 3000L;
-    final static public float q = 0.1f;
-    final static public float p = -0.01f;
+    final static public long SUMMON_DURATION = 4000L;
+    final static public long ANIMATION_START_DELAY = 1000L;
+    final static public long ANIMATION_END_DELAY = 3000L;
+    final static public float HORIZONTAL_OFFSET = 0.1f;
+    final static public float BASE_VERTICAL_OFFSET = -0.01f;
     final static public float PITCH_MULTIPLIER = 0.0015f;
-    final static public float k = 2.0f;
-    final static public float h = 1.5f;
-    final static public float d = 0.03f;
-    final static public float s = 100.0f;
-    final static public float l = 0.2f;
+    final static public float SPAWN_DISTANCE = 2.0f;
+    final static public float HEIGHT_OFFSET = 1.5f;
+    final static public float PARTICLE_VELOCITY = 0.03f;
+    final static public float PARTICLE_COUNT = 100.0f;
+    final static public float PARTICLE_VELOCITY_SPREAD = 0.2f;
     final static public float PARTICLE_SPAWN_SPREAD = 1.5f;
     final static public String ACTIVATION_TIME_KEY = "sexmod:galath_coin_activation_time";
     final static public String DEACTIVATION_TIME_KEY = "sexmod:galath_coin_deactivation_time";
@@ -115,11 +114,11 @@ public class GalathCoin extends Item implements IAnimatable {
 
         if (!this.canSummon(worldIn, playerIn)) {
             worldIn.playSound(playerIn.posX, playerIn.posY, playerIn.posZ, SoundsHandler.MISC_BEEW[0], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
-            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+            return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
         }
         worldIn.playSound(playerIn.posX, playerIn.posY, playerIn.posZ, SoundsHandler.MISC_WEOWEO[1], SoundCategory.PLAYERS, 1.0f, 1.0f, false);
         nbtPlayerData.setLong(ACTIVATION_TIME_KEY, System.currentTimeMillis());
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+        return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
 
     boolean canSummon(World world, EntityPlayer player) {
@@ -179,9 +178,9 @@ public class GalathCoin extends Item implements IAnimatable {
                 if (galath != null) {
                     Vec3d targetPos = galath.getTargetPosition().add(0.0, 1.5, 0.0);
                     Vec3d eyePos = player.getPositionVector().add(0.0, player.getEyeHeight(), 0.0);
-                    Vec3d coinPos = eyePos.add(VectorMath.rotateByYaw((float) (player.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double) (-0.01f + player.rotationPitch * 0.0015f), 0.0, player.renderYawOffset));
+                    Vec3d coinPos = eyePos.add(VectorMath.rotateByYaw((float) (player.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, -0.01f + player.rotationPitch * 0.0015f, 0.0, player.renderYawOffset));
                     float progress = (float) (now - startTime - 1000L) / 2000.0f;
-                    Vec3d lerpedPos = RotationHelper.LerpVec3d(targetPos, coinPos, (double) progress);
+                    Vec3d lerpedPos = RotationHelper.LerpVec3d(targetPos, coinPos, progress);
                     DragonBreathParticle.BREATH_SCALE = 0.2f;
                     Minecraft.getMinecraft().effectRenderer.addEffect(new DragonBreathParticle(player.world, lerpedPos.x, lerpedPos.y, lerpedPos.z));
                 }
@@ -200,10 +199,10 @@ public class GalathCoin extends Item implements IAnimatable {
     void isSummonWindow(EntityPlayer player, long now, long startTime) {
         if (now > startTime + 1000L && now < startTime + 3000L) {
             Vec3d eyePos = player.getPositionVector().add(0.0, player.getEyeHeight(), 0.0);
-            Vec3d coinPos = eyePos.add(VectorMath.rotateByYaw((float) (player.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, (double) (-0.01f + player.rotationPitch * 0.0015f), 0.0, player.renderYawOffset));
+            Vec3d coinPos = eyePos.add(VectorMath.rotateByYaw((float) (player.getHeldItemMainhand().getItem().equals(GALATH_COIN) ? 1 : -1) * 0.1f, -0.01f + player.rotationPitch * 0.0015f, 0.0, player.renderYawOffset));
             Vec3d summonPos = eyePos.add(player.getLookVec().normalize().scale(2.0));
             float progress = (float) (now - startTime - 1000L) / 2000.0f;
-            Vec3d lerpedPos = RotationHelper.LerpVec3d(coinPos, summonPos, (double) progress);
+            Vec3d lerpedPos = RotationHelper.LerpVec3d(coinPos, summonPos, progress);
             DragonBreathParticle.BREATH_SCALE = 0.2f;
             Minecraft.getMinecraft().effectRenderer.addEffect(new DragonBreathParticle(player.world, lerpedPos.x, lerpedPos.y, lerpedPos.z));
         }
@@ -217,7 +216,7 @@ public class GalathCoin extends Item implements IAnimatable {
             GirlEntity girl = GirlEntity.getServerGirlEntity(ownerUUID);
             if (girl != null) {
                 GalathMangTracker.updateMangleliePartner((GalathEntity) girl);
-                PacketHandler.INSTANCE.sendTo((IMessage) new InformOfOwnership(false), (EntityPlayerMP) player);
+                PacketHandler.INSTANCE.sendTo(new InformOfOwnership(false), (EntityPlayerMP) player);
             }
         }
     }
@@ -233,7 +232,7 @@ public class GalathCoin extends Item implements IAnimatable {
 
                 int i = 0;
                 while ((float) i < 100.0f) {
-                    player.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, summonPos.x, summonPos.y, summonPos.z, (2.0f * random.nextFloat() - 1.0f) * 0.2f, (2.0f * random.nextFloat() - 1.0f) * 0.2f, (2.0f * random.nextFloat() - 1.0f) * 0.2f, new int[0]);
+                    player.world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, summonPos.x, summonPos.y, summonPos.z, (2.0f * random.nextFloat() - 1.0f) * 0.2f, (2.0f * random.nextFloat() - 1.0f) * 0.2f, (2.0f * random.nextFloat() - 1.0f) * 0.2f);
                     ++i;
                 }
 
@@ -303,7 +302,7 @@ public class GalathCoin extends Item implements IAnimatable {
             Vec3d offset = new Vec3d((random.nextFloat() * 2.0f - 1.0f) * 1.5f, (random.nextFloat() * 2.0f - 1.0f) * 1.5f, (random.nextFloat() * 2.0f - 1.0f) * 1.5f);
             Vec3d spawnPos = targetPos.add(offset);
             Vec3d velocity = offset.scale(-0.03f);
-            world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, spawnPos.x, spawnPos.y, spawnPos.z, velocity.x, velocity.y, velocity.z, new int[0]);
+            world.spawnParticle(EnumParticleTypes.DRAGON_BREATH, spawnPos.x, spawnPos.y, spawnPos.z, velocity.x, velocity.y, velocity.z);
             ++i;
         }
         if (Minecraft.getMinecraft().player.getPersistentID().equals(uUID)) {
