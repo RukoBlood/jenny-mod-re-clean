@@ -98,7 +98,7 @@ import software.bernie.shadowed.eliotlash.mclib.utils.Interpolations;
 // 'd_'
 public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends GeoEntityRenderer<T> implements IGirlRenderer {
     final static protected ResourceLocation LINE = new ResourceLocation("sexmod", "textures/line.png");
-    final static float m = 1.5f;
+    //final static float m = 1.5f;
     protected double leashYOffset;
     protected T renderEntity;
     static protected Minecraft mc;
@@ -107,9 +107,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     Color blushColor = new Color(245, 157, 169);
     boolean fallbackSkinLoaded = false;
     protected HashSet<String> activeCustomPartBones = new HashSet();
-    Integer k = null;
-    Integer b = null;
-    Integer d = null;
+    //Integer k = null;
+    //Integer b = null;
+    //Integer d = null;
     float bowPullProgressNotPlayer = 0.0f;
     static public BufferBuilder tempBuffer;
     Matrix4f globalModelMatrix = null;
@@ -292,9 +292,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         }
     }
 
-    // TODO was this method ever referenced? It appears unused //RukoBlood: nope. Even gemini ignored it.
+    // OLD_TODO was this method ever referenced? It appears unused //RukoBlood: nope. Even gemini ignored it.
     @CheckReturnValue
-    String java_lang_String_a(String string) {
+    String loadTextResource(String string) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             String string2;
@@ -717,7 +717,7 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         MATRIX_STACK.scale(bone);
         MATRIX_STACK.moveBackFromPivot(bone);
 
-        if ("Head2".equals(boneName) && !this.boolean_c()) {
+        if ("Head2".equals(boneName) && !this.shouldRender()) {
             MATRIX_STACK.pop();
             return;
         }
@@ -859,11 +859,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     }
 
     @CheckReturnValue
-    protected boolean boolean_c() {
-        if (!this.renderEntity.isControlledByLocalPlayer()) {
-            return true;
-        }
-        return GirlRenderer.mc.gameSettings.thirdPersonView != 0;
+    protected boolean shouldRender() {
+        return !this.renderEntity.isControlledByLocalPlayer() || GirlRenderer.mc.gameSettings.thirdPersonView != 0;
     }
 
     public void renderCubeGeometry(BufferBuilder buffer, GeoCube cube, float r, float g, float b, float a, double uOffset) {
@@ -872,25 +869,26 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         MATRIX_STACK.moveBackFromPivot(cube);
 
         for (GeoQuad quad : cube.quads) {
-            if (quad == null) continue;
-            javax.vecmath.Vector3f normal = new javax.vecmath.Vector3f((float)quad.normal.getX(), (float)quad.normal.getY(), (float)quad.normal.getZ());
+            if (quad != null) {
+                javax.vecmath.Vector3f normal = new javax.vecmath.Vector3f((float) quad.normal.getX(), (float) quad.normal.getY(), (float) quad.normal.getZ());
 
-            MATRIX_STACK.getNormalMatrix().transform(normal);
-            if ((cube.size.y == 0.0f || cube.size.z == 0.0f) && normal.getX() < 0.0f) {
-                normal.x *= -1.0f;
-            }
-            if ((cube.size.x == 0.0f || cube.size.z == 0.0f) && normal.getY() < 0.0f) {
-                normal.y *= -1.0f;
-            }
-            if ((cube.size.x == 0.0f || cube.size.y == 0.0f) && normal.getZ() < 0.0f) {
-                normal.z *= -1.0f;
-            }
+                MATRIX_STACK.getNormalMatrix().transform(normal);
+                if ((cube.size.y == 0.0f || cube.size.z == 0.0f) && normal.getX() < 0.0f) {
+                    normal.x *= -1.0f;
+                }
+                if ((cube.size.x == 0.0f || cube.size.z == 0.0f) && normal.getY() < 0.0f) {
+                    normal.y *= -1.0f;
+                }
+                if ((cube.size.x == 0.0f || cube.size.y == 0.0f) && normal.getZ() < 0.0f) {
+                    normal.z *= -1.0f;
+                }
 
-            Vec3d defColor = BoneDeformProcessor.applyBoneDeformation(this, this.currentRenderingBone, new Vec3d(r, g, b), normal);
-            for (GeoVertex vertex : quad.vertices) {
-                Vector4f vertexPos = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0f);
-                MATRIX_STACK.getModelMatrix().transform(vertexPos);
-                buffer.pos(vertexPos.getX(), vertexPos.getY(), vertexPos.getZ()).tex((double)vertex.textureU + uOffset, vertex.textureV).color((float)defColor.x, (float)defColor.y, (float)defColor.z, a).normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
+                Vec3d defColor = BoneDeformProcessor.applyBoneDeformation(this, this.currentRenderingBone, new Vec3d(r, g, b), normal);
+                for (GeoVertex vertex : quad.vertices) {
+                    Vector4f vertexPos = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0f);
+                    MATRIX_STACK.getModelMatrix().transform(vertexPos);
+                    buffer.pos(vertexPos.getX(), vertexPos.getY(), vertexPos.getZ()).tex((double) vertex.textureU + uOffset, vertex.textureV).color((float) defColor.x, (float) defColor.y, (float) defColor.z, a).normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
+                }
             }
         }
     }

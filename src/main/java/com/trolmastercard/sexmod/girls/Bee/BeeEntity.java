@@ -135,7 +135,7 @@ public class BeeEntity extends Supporter {
             this.particleTicks = Math.max(1, this.particleTicks);
         }
         this.doParticleStuff();
-        this.b_15();
+        this.clampGroundHoverDistance();
     }
 
     @Override
@@ -184,15 +184,14 @@ public class BeeEntity extends Supporter {
         }
     }
 
-    void b_15() {
-        RayTraceResult rayTraceResult = this.world.rayTraceBlocks(this.getPositionVector(), new Vec3d(this.posX, 0.0, this.posZ));
-        if (rayTraceResult == null) {
-            return;
-        }
-        BlockPos blockPos = rayTraceResult.getBlockPos();
-        double d = this.posY - (double)blockPos.getY();
-        if (d > 3.0 && this.motionY > 0.0) {
-            this.motionY = 0.0;
+    void clampGroundHoverDistance() {
+        RayTraceResult result = this.world.rayTraceBlocks(this.getPositionVector(), new Vec3d(this.posX, 0.0, this.posZ));
+        if (result != null) {
+            BlockPos pos = result.getBlockPos();
+            double dist = this.posY - (double) pos.getY();
+            if (dist > 3.0 && this.motionY > 0.0) {
+                this.motionY = 0.0;
+            }
         }
     }
 

@@ -12,10 +12,10 @@ import net.minecraft.entity.Entity;
 /*
 * Related to PlayerBee
 * */
-public class BeeLimb extends ModelBase implements IRenderer {
+public class BeeHand extends ModelBase implements IRenderer {
     final private ModelRenderer renderer;
 
-    public BeeLimb() {
+    public BeeHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.renderer = new ModelRenderer(this);
@@ -28,7 +28,7 @@ public class BeeLimb extends ModelBase implements IRenderer {
         this.renderer.render(scale);
     }
 
-    public void a(ModelRenderer modelRenderer, float x, float y, float z) {
+    public void rotate(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;

@@ -53,103 +53,92 @@ public class EditorWand extends Item {
     @Override
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int n, boolean bl) {
         if (world.isRemote) {
-            this.a(entity, itemStack);
+            this.applyEditor(entity, itemStack);
         }
         super.onUpdate(itemStack, world, entity, n, bl);
     }
 
     @SideOnly(value=Side.CLIENT)
-    void a(Entity entity, ItemStack itemStack) {
-        if (!(entity instanceof EntityPlayer)) {
-            return;
-        }
-        EntityPlayer entityPlayer = (EntityPlayer)entity;
-        if (!itemStack.equals(entityPlayer.getHeldItemMainhand()) && !itemStack.equals(entityPlayer.getHeldItemOffhand())) {
-            itemStack.setItemDamage(0);
-            return;
-        }
-        RayTraceResult rayTraceResult = Minecraft.getMinecraft().objectMouseOver;
-        itemStack.setItemDamage(rayTraceResult != null && GirlEntity.isValidGirl(rayTraceResult.entityHit) ? 1 : 0);
-    }
-
-    @SubscribeEvent
-    public void a(PlayerInteractEvent.EntityInteract entityInteract) {
-        Entity entity = entityInteract.getTarget();
-        if (!(entity instanceof GirlEntity)) {
-            return;
-        }
-        if (!GirlEntity.isValidGirl(entity)) {
-            return;
-        }
-        EntityPlayer entityPlayer = entityInteract.getEntityPlayer();
-        if (entityPlayer == null) {
-            return;
-        }
-        ItemStack itemStack = entityPlayer.getHeldItemMainhand();
-        if (itemStack.getItem() != EDITOR_WAND) {
-            itemStack = entityPlayer.getHeldItemOffhand();
-        }
-        if (itemStack.getItem() != EDITOR_WAND) {
-            return;
-        }
-        entityInteract.setCanceled(true);
-        if (!entityInteract.getWorld().isRemote) {
-            return;
-        }
-        if (CustomModel.isGlobalRenderingDisabled) {
-            boolean bl = CustomModel.isGlobalRenderingDisabled = 0 != CustomModel.getModelCount(true);
-            if (CustomModel.isGlobalRenderingDisabled) {
+    void applyEditor(Entity entity, ItemStack itemStack) {
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer entityPlayer = (EntityPlayer) entity;
+            if (!itemStack.equals(entityPlayer.getHeldItemMainhand()) && !itemStack.equals(entityPlayer.getHeldItemOffhand())) {
+                itemStack.setItemDamage(0);
                 return;
             }
-        }
-        ClothingGui.openGuiForGirl(((GirlEntity)entity).asGirl());
-    }
-
-    @SubscribeEvent
-    public void a(AttackEntityEvent attackEntityEvent) {
-        Entity entity = attackEntityEvent.getTarget();
-        if (entity == null) {
-            return;
-        }
-        if (!(entity instanceof GirlEntity)) {
-            return;
-        }
-        EntityPlayer entityPlayer = attackEntityEvent.getEntityPlayer();
-        if (entityPlayer == null) {
-            return;
-        }
-        ItemStack itemStack = entityPlayer.getHeldItemMainhand();
-        if (itemStack.getItem() != EDITOR_WAND) {
-            itemStack = entityPlayer.getHeldItemOffhand();
-        }
-        if (itemStack.getItem() != EDITOR_WAND) {
-            return;
-        }
-        attackEntityEvent.setCanceled(true);
-        if (!entityPlayer.world.isRemote) {
-            return;
-        }
-        GirlEntity em_class2582 = (GirlEntity)entity;
-        String string = em_class2582.getCustomModelCode();
-        String string2 = GirlEntity.encodePartIdList(GirlEntity.getAllPartIdsForGirl(em_class2582.girlID()));
-        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{em_class2582.getGirlName(), TextFormatting.YELLOW, string, string2})));
-        entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
-        ThreadNames.copyToClipboard(String.format("%s$%s", string, string2));
-    }
-
-    @SubscribeEvent
-    public void a(PlayerInteractEvent.LeftClickBlock leftClickBlock) {
-        if (this.a(leftClickBlock.getEntityPlayer(), leftClickBlock.getWorld())) {
-            leftClickBlock.setCanceled(true);
+            RayTraceResult rayTraceResult = Minecraft.getMinecraft().objectMouseOver;
+            itemStack.setItemDamage(rayTraceResult != null && GirlEntity.isValidGirl(rayTraceResult.entityHit) ? 1 : 0);
         }
     }
 
     @SubscribeEvent
-    public void a(PlayerInteractEvent.LeftClickEmpty leftClickEmpty) {
-        this.a(leftClickEmpty.getEntityPlayer(), leftClickEmpty.getWorld());
+    public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+        Entity entity = event.getTarget();
+        if (entity instanceof GirlEntity) {
+            if (GirlEntity.isValidGirl(entity)) {
+                EntityPlayer player = event.getEntityPlayer();
+                if (player != null) {
+                    ItemStack itemStack = player.getHeldItemMainhand();
+                    if (itemStack.getItem() != EDITOR_WAND) {
+                        itemStack = player.getHeldItemOffhand();
+                    }
+                    if (itemStack.getItem() == EDITOR_WAND) {
+                        event.setCanceled(true);
+                        if (event.getWorld().isRemote) {
+                            if (CustomModel.isGlobalRenderingDisabled) {
+                                CustomModel.isGlobalRenderingDisabled = 0 != CustomModel.getModelCount(true);
+                                if (CustomModel.isGlobalRenderingDisabled) {
+                                    return;
+                                }
+                            }
+                            ClothingGui.openGuiForGirl(((GirlEntity) entity).asGirl());
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    boolean a(EntityPlayer entityPlayer, World world) {
+    @SubscribeEvent
+    public void onAttackEntity(AttackEntityEvent event) {
+        Entity entity = event.getTarget();
+        if (entity != null) {
+            if (entity instanceof GirlEntity) {
+                EntityPlayer player = event.getEntityPlayer();
+                if (player != null) {
+                    ItemStack itemStack = player.getHeldItemMainhand();
+                    if (itemStack.getItem() != EDITOR_WAND) {
+                        itemStack = player.getHeldItemOffhand();
+                    }
+                    if (itemStack.getItem() == EDITOR_WAND) {
+                        event.setCanceled(true);
+                        if (player.world.isRemote) {
+                            GirlEntity girl = (GirlEntity) entity;
+                            String modelCode = girl.getCustomModelCode();
+                            String idList = GirlEntity.encodePartIdList(GirlEntity.getAllPartIdsForGirl(girl.girlID()));
+                            player.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", girl.getGirlName(), TextFormatting.YELLOW, modelCode, idList)));
+                            player.sendMessage(new TextComponentString(TextFormatting.ITALIC + "copied to clipboard"));
+                            ThreadNames.copyToClipboard(String.format("%s$%s", modelCode, idList));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
+        if (this.canEdit(event.getEntityPlayer(), event.getWorld())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onLeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
+        this.canEdit(event.getEntityPlayer(), event.getWorld());
+    }
+
+    boolean canEdit(EntityPlayer entityPlayer, World world) {
         if (entityPlayer == null) {
             return false;
         }
@@ -163,15 +152,15 @@ public class EditorWand extends Item {
         if (!world.isRemote) {
             return true;
         }
-        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
-        if (ei_class2512 == null) {
+        PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
+        if (playerGirl == null) {
             entityPlayer.sendStatusMessage(new TextComponentString("you gotta turn into the girl, you want to copy the model-code off"), true);
             return true;
         }
-        String string = ei_class2512.getCustomModelCode();
-        String string2 = GirlEntity.encodePartIdList(GirlEntity.getAllPartIdsForGirl(ei_class2512.girlID()));
-        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", new Object[]{ThreadNames.CapitalizeString(PlayerGirlEntity.getGirlType(ei_class2512).toString()), TextFormatting.YELLOW, string, string2})));
-        entityPlayer.sendMessage(new TextComponentString((Object)((Object)TextFormatting.ITALIC) + "copied to clipboard"));
+        String string = playerGirl.getCustomModelCode();
+        String string2 = GirlEntity.encodePartIdList(GirlEntity.getAllPartIdsForGirl(playerGirl.girlID()));
+        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", ThreadNames.CapitalizeString(PlayerGirlEntity.getGirlType(playerGirl).toString()), TextFormatting.YELLOW, string, string2)));
+        entityPlayer.sendMessage(new TextComponentString(TextFormatting.ITALIC + "copied to clipboard"));
         ThreadNames.copyToClipboard(String.format("%s$%s", string, string2));
         return true;
     }
@@ -183,15 +172,15 @@ public class EditorWand extends Item {
     }
 
     @SubscribeEvent
-    public static void a(RegistryEvent.Register<Item> register) {
+    public static void registerItems(RegistryEvent.Register<Item> register) {
         register.getRegistry().register(EDITOR_WAND);
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public static void a(ModelRegistryEvent modelRegistryEvent) {
-        ModelLoader.setCustomModelResourceLocation((Item) EDITOR_WAND, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:npc_editor_wand"));
-        ModelLoader.setCustomModelResourceLocation((Item) EDITOR_WAND, 1, (ModelResourceLocation)new ModelResourceLocation("sexmod:npc_editor_wand_active"));
+    public static void onModelRegistry(ModelRegistryEvent event) {
+        ModelLoader.setCustomModelResourceLocation(EDITOR_WAND, 0, new ModelResourceLocation("sexmod:npc_editor_wand"));
+        ModelLoader.setCustomModelResourceLocation(EDITOR_WAND, 1, new ModelResourceLocation("sexmod:npc_editor_wand_active"));
     }
 }
 

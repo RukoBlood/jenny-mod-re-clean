@@ -58,7 +58,7 @@ public class PlayerBee extends PlayerGirl {
 
     @Override
     public IRenderer getHandModelRenderer(int index) {
-        return new BeeLimb();
+        return new BeeHand();
     }
 
     @Override

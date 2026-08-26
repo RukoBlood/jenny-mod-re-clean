@@ -166,7 +166,7 @@ public class PlayerGirlRenderer extends GirlRenderer<GirlEntity> {
         MATRIX_STACK.rotate(bone);
         MATRIX_STACK.scale(bone);
         MATRIX_STACK.moveBackFromPivot(bone);
-        if ("Head2".equals(boneName) && !this.boolean_c()) {
+        if ("Head2".equals(boneName) && !this.shouldRender()) {
             MATRIX_STACK.pop();
             return;
         }

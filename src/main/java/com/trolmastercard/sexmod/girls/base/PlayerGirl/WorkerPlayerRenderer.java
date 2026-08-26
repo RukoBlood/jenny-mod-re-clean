@@ -151,7 +151,7 @@ public abstract class WorkerPlayerRenderer extends PlayerGirlRenderer {
         MATRIX_STACK.rotate(bone);
         MATRIX_STACK.scale(bone);
         MATRIX_STACK.moveBackFromPivot(bone);
-        if ("Head2".equals(Bone) && !this.boolean_c()) {
+        if ("Head2".equals(Bone) && !this.shouldRender()) {
             MATRIX_STACK.pop();
             return;
         }

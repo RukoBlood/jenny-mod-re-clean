@@ -80,10 +80,11 @@ public enum PlayerGirlEntity {
         this.playerID = 0;
     }
 
-    public static PlayerGirlEntity a(String string) {
-        for (PlayerGirlEntity playerGirlEntity : PlayerGirlEntity.values()) {
-            if (!playerGirlEntity.toString().equalsIgnoreCase(string)) continue;
-            return playerGirlEntity;
+    public static PlayerGirlEntity fromString(String string) {
+        for (PlayerGirlEntity entity : PlayerGirlEntity.values()) {
+            if (entity.toString().equalsIgnoreCase(string)) {
+                return entity;
+            }
         }
         return JENNY;
     }
