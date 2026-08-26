@@ -115,7 +115,7 @@ public class GalathModel extends GirlModel<GirlEntity> {
                     headBone.setRotationX(headBone.getRotationX() + offset.x);
                     headBone.setRotationY(headBone.getRotationY() + offset.y);
                     headBone.setRotationZ(headBone.getRotationZ() + offset.z);
-                    if (girl.getCurrentAction() == Action.PUSSY_LICKING && !((GalathEntity) girl).a5) {
+                    if (girl.getCurrentAction() == Action.PUSSY_LICKING && !((GalathEntity) girl).isPussyLickingSlow) {
                         float currentWave = (float) (Math.sin(partialTicks * 0.3f) * 10.0);
                         if (currentWave > 0.0f && this.lastPussyLickingWav < 0.0f || currentWave < 0.0f && this.lastPussyLickingWav > 0.0f) {
                             girl.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_LIPSOUND));

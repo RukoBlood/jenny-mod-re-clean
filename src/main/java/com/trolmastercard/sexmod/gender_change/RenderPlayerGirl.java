@@ -36,10 +36,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 //e_ -> RenderPlayerGirl
 public class RenderPlayerGirl {
     final static public float DONT_RENDER_WITH_THIS_PARTIALTICK = 1.2345679f;
-    Vec3d b = null;
-    Vec3d d = null;
-    PlayerGirl a = null;
-    boolean e = false;
+    Vec3d savedPlayerPos = null;
+    Vec3d savedPlayerLastTickPos = null;
+    PlayerGirl lastRenderedPlayerGirl = null;
+    boolean hasCustomEyeHeight = false;
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
@@ -49,15 +49,14 @@ public class RenderPlayerGirl {
         }
         PlayerGirl.rebuildPlayerGirlTableFromWorld();
         PlayerGirl girl = PlayerGirl.getUUIDHashtable(event.getEntityPlayer().getPersistentID());
-        if (girl == null) {
-            return;
+        if (girl != null) {
+            event.setCanceled(true);
+            RenderPlayerGirl.renderPlayerAsGirl(girl, event.getEntityPlayer(), event.getX(), event.getY(), event.getZ(), event.getPartialRenderTick());
         }
-        event.setCanceled(true);
-        RenderPlayerGirl.calculate(girl, event.getEntityPlayer(), event.getX(), event.getY(), event.getZ(), event.getPartialRenderTick());
     }
 
     @SideOnly(value=Side.CLIENT)
-    public static void calculate(PlayerGirl playerGirl, EntityPlayer player, double d, double d2, double d3, float f) {
+    public static void renderPlayerAsGirl(PlayerGirl playerGirl, EntityPlayer player, double d, double d2, double d3, float f) {
         Minecraft mc = Minecraft.getMinecraft();
         if (!(player = playerGirl.resolvePlayerEntity(player)).isInvisibleToPlayer(mc.player) || playerGirl.hasOwner()) {
             RenderManager renderManager = mc.getRenderManager();
@@ -113,145 +112,132 @@ public class RenderPlayerGirl {
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(TickEvent.RenderTickEvent event) {
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
         Minecraft minecraft = Minecraft.getMinecraft();
         if (minecraft.player == null) {
             return;
         }
         if (event.phase == TickEvent.Phase.END) {
-            if (this.b != null) {
-                minecraft.player.setPosition(this.b.x, this.b.y, this.b.z);
-                minecraft.player.lastTickPosX = this.d.x;
-                minecraft.player.lastTickPosY = this.d.y;
-                minecraft.player.lastTickPosZ = this.d.z;
-                this.b = null;
-                this.d = null;
+            if (this.savedPlayerPos != null) {
+                minecraft.player.setPosition(this.savedPlayerPos.x, this.savedPlayerPos.y, this.savedPlayerPos.z);
+                minecraft.player.lastTickPosX = this.savedPlayerLastTickPos.x;
+                minecraft.player.lastTickPosY = this.savedPlayerLastTickPos.y;
+                minecraft.player.lastTickPosZ = this.savedPlayerLastTickPos.z;
+                this.savedPlayerPos = null;
+                this.savedPlayerLastTickPos = null;
             }
             return;
         }
-        if (minecraft.gameSettings.thirdPersonView != 0) {
-            return;
-        }
-        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
-        if (ei_class2512 == null) {
-            return;
-        }
-        if (!ei_class2512.isSceneActive()) {
-            return;
-        }
-        this.b = minecraft.player.getPositionVector();
-        this.d = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
-        Vec3d vec3d = ei_class2512.getCachedBoneOffset("girlCam");
-        vec3d = ei_class2512.getOwnerAimVector(vec3d, event.renderTickTime);
-        vec3d = vec3d.add(RotationHelper.LerpVec3d(this.d, this.b, (double)event.renderTickTime));
-        minecraft.player.posX = vec3d.x;
-        minecraft.player.posY = vec3d.y - (double)minecraft.player.getEyeHeight();
-        minecraft.player.posZ = vec3d.z;
-        minecraft.player.lastTickPosX = vec3d.x;
-        minecraft.player.lastTickPosY = vec3d.y - (double)minecraft.player.getEyeHeight();
-        minecraft.player.lastTickPosZ = vec3d.z;
-        Action fp_class3242 = ei_class2512.getCurrentAction();
-        float f = ei_class2512.getYawRotation();
-        if (ei_class2512.canPerformAction(fp_class3242, minecraft.player)) {
-            return;
-        }
-        if (fp_class3242.flipGirlYaw) {
-            f += 180.0f;
-        }
-        if (minecraft.player.rotationPitch > fp_class3242.maxGirlPitch) {
-            minecraft.player.rotationPitch = fp_class3242.maxGirlPitch;
-            minecraft.player.prevRotationPitch = fp_class3242.maxGirlPitch;
-        }
-        if (minecraft.player.rotationPitch < fp_class3242.minGirlPitch) {
-            minecraft.player.rotationPitch = fp_class3242.minGirlPitch;
-            minecraft.player.prevRotationPitch = fp_class3242.minGirlPitch;
-        }
-        if (minecraft.player.rotationYaw > f + 90.0f) {
-            minecraft.player.rotationYaw = f + 90.0f;
-            minecraft.player.prevRotationYaw = f + 90.0f;
-        }
-        if (minecraft.player.rotationYaw < f - 90.0f) {
-            minecraft.player.rotationYaw = f - 90.0f;
-            minecraft.player.prevRotationYaw = f - 90.0f;
+        if (minecraft.gameSettings.thirdPersonView == 0) {
+            PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
+            if (playerGirl != null) {
+                if (playerGirl.isSceneActive()) {
+                    this.savedPlayerPos = minecraft.player.getPositionVector();
+                    this.savedPlayerLastTickPos = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
+                    Vec3d vec3d = playerGirl.getCachedBoneOffset("girlCam");
+                    vec3d = playerGirl.getOwnerAimVector(vec3d, event.renderTickTime);
+                    vec3d = vec3d.add(RotationHelper.LerpVec3d(this.savedPlayerLastTickPos, this.savedPlayerPos, (double) event.renderTickTime));
+                    minecraft.player.posX = vec3d.x;
+                    minecraft.player.posY = vec3d.y - (double) minecraft.player.getEyeHeight();
+                    minecraft.player.posZ = vec3d.z;
+                    minecraft.player.lastTickPosX = vec3d.x;
+                    minecraft.player.lastTickPosY = vec3d.y - (double) minecraft.player.getEyeHeight();
+                    minecraft.player.lastTickPosZ = vec3d.z;
+                    Action action = playerGirl.getCurrentAction();
+                    float yaw = playerGirl.getYawRotation();
+                    if (!playerGirl.canPerformAction(action, minecraft.player)) {
+                        if (action.flipGirlYaw) {
+                            yaw += 180.0f;
+                        }
+                        if (minecraft.player.rotationPitch > action.maxGirlPitch) {
+                            minecraft.player.rotationPitch = action.maxGirlPitch;
+                            minecraft.player.prevRotationPitch = action.maxGirlPitch;
+                        }
+                        if (minecraft.player.rotationPitch < action.minGirlPitch) {
+                            minecraft.player.rotationPitch = action.minGirlPitch;
+                            minecraft.player.prevRotationPitch = action.minGirlPitch;
+                        }
+                        if (minecraft.player.rotationYaw > yaw + 90.0f) {
+                            minecraft.player.rotationYaw = yaw + 90.0f;
+                            minecraft.player.prevRotationYaw = yaw + 90.0f;
+                        }
+                        if (minecraft.player.rotationYaw < yaw - 90.0f) {
+                            minecraft.player.rotationYaw = yaw - 90.0f;
+                            minecraft.player.prevRotationYaw = yaw - 90.0f;
+                        }
+                    }
+                }
+            }
         }
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(EntityViewRenderEvent.CameraSetup cameraSetup) {
+    public void onCameraSetup(EntityViewRenderEvent.CameraSetup setup) {
         Minecraft minecraft = Minecraft.getMinecraft();
-        if (minecraft.player == null) {
-            return;
+        if (minecraft.player != null) {
+            PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
+            if (playerGirl != null) {
+                if (playerGirl.FAllieBoolean()) {
+                    if (playerGirl.isAnchored()) {
+                        setup.setRoll(180.0f);
+                        setup.setPitch(-setup.getPitch());
+                        setup.setYaw(-setup.getYaw());
+                    }
+                }
+            }
         }
-        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
-        if (ei_class2512 == null) {
-            return;
-        }
-        if (!ei_class2512.FAllieBoolean()) {
-            return;
-        }
-        if (!ei_class2512.isAnchored()) {
-            return;
-        }
-        cameraSetup.setRoll(180.0f);
-        cameraSetup.setPitch(-cameraSetup.getPitch());
-        cameraSetup.setYaw(-cameraSetup.getYaw());
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void a(RenderWorldLastEvent event) {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        if (this.b == null) {
-            return;
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (this.savedPlayerPos != null) {
+            if (mc.gameSettings.thirdPersonView == 0) {
+                PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(mc.player.getPersistentID());
+                if (playerGirl != null) {
+                    Vec3d vec3d = mc.player.getPositionVector();
+                    Vec3d vec3d2 = RotationHelper.LerpVec3d(this.savedPlayerLastTickPos, this.savedPlayerPos, (double) event.getPartialTicks());
+                    Vec3d vec3d3 = vec3d2.subtract(vec3d);
+                    RenderPlayerGirl.renderPlayerAsGirl(playerGirl, mc.player, vec3d3.x, vec3d3.y, vec3d3.z, event.getPartialTicks());
+                    GlStateManager.enableLighting();
+                    GlStateManager.enableDepth();
+                    GlStateManager.enableAlpha();
+                }
+            }
         }
-        if (minecraft.gameSettings.thirdPersonView != 0) {
-            return;
-        }
-        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
-        if (ei_class2512 == null) {
-            return;
-        }
-        Vec3d vec3d = minecraft.player.getPositionVector();
-        Vec3d vec3d2 = RotationHelper.LerpVec3d(this.d, this.b, (double)event.getPartialTicks());
-        Vec3d vec3d3 = vec3d2.subtract(vec3d);
-        RenderPlayerGirl.calculate(ei_class2512, minecraft.player, vec3d3.x, vec3d3.y, vec3d3.z, event.getPartialTicks());
-        GlStateManager.enableLighting();
-        GlStateManager.enableDepth();
-        GlStateManager.enableAlpha();
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public void b(TickEvent.RenderTickEvent renderTickEvent) {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        if (minecraft.player == null) {
-            return;
-        }
-        if (renderTickEvent.phase == TickEvent.Phase.END) {
-            return;
-        }
-        PlayerGirl ei_class2512 = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
-        if (ei_class2512 == null) {
-            if (this.e) {
-                this.e = false;
-                minecraft.player.eyeHeight = minecraft.player.getDefaultEyeHeight();
+    public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.player != null) {
+            if (event.phase != TickEvent.Phase.END) {
+                PlayerGirl uuidHashtable = PlayerGirl.getUUIDHashtable(mc.player.getPersistentID());
+                if (uuidHashtable == null) {
+                    if (this.hasCustomEyeHeight) {
+                        this.hasCustomEyeHeight = false;
+                        mc.player.eyeHeight = mc.player.getDefaultEyeHeight();
+                    }
+                    return;
+                }
+                if (uuidHashtable.isAnchored()) {
+                    if (this.hasCustomEyeHeight) {
+                        this.hasCustomEyeHeight = false;
+                        mc.player.eyeHeight = mc.player.getDefaultEyeHeight();
+                    }
+                    return;
+                }
+                if (this.lastRenderedPlayerGirl != uuidHashtable) {
+                    RenderPlayerGirl.renderPlayerAsGirl(uuidHashtable, mc.player, 0.0, 500.0, 0.0, event.renderTickTime);
+                    this.lastRenderedPlayerGirl = uuidHashtable;
+                }
+                mc.player.eyeHeight = uuidHashtable.getCameraBoneHeight();
+                this.hasCustomEyeHeight = true;
             }
-            return;
         }
-        if (ei_class2512.isAnchored()) {
-            if (this.e) {
-                this.e = false;
-                minecraft.player.eyeHeight = minecraft.player.getDefaultEyeHeight();
-            }
-            return;
-        }
-        if (this.a != ei_class2512) {
-            RenderPlayerGirl.calculate(ei_class2512, minecraft.player, 0.0, 500.0, 0.0, renderTickEvent.renderTickTime);
-            this.a = ei_class2512;
-        }
-        minecraft.player.eyeHeight = ei_class2512.getCameraBoneHeight();
-        this.e = true;
     }
 }
 

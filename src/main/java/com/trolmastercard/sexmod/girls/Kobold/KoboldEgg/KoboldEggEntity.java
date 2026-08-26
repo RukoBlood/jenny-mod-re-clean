@@ -42,9 +42,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 // TODO this might be kobold egg class
 //  TODO perform string search for '"Tribeid", there are 2 spellings: 'Id' / 'ID'
-public class KoboldEggEntity
-extends EntityLivingBase
-implements IAnimatable {
+public class KoboldEggEntity extends EntityLivingBase implements IAnimatable {
     final static int e = 12000;
     final private AnimationFactory d = new AnimationFactory(this);
     public UUID f = null;

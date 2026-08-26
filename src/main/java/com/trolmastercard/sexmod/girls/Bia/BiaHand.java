@@ -10,19 +10,19 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 //go.class
 public class BiaHand extends ModelBase implements IRenderer {
-    final public ModelRenderer a;
+    final public ModelRenderer mdl;
 
     public BiaHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
-        this.a = new ModelRenderer(this);
-        this.a.setRotationPoint(-5.0f, 2.5f, 0.0f);
-        this.a.cubeList.add(new ModelBox(this.a, 0, 0, -2.0f, -6.0f, 0.0f, 2, 6, 2, 0.0f, false));
+        this.mdl = new ModelRenderer(this);
+        this.mdl.setRotationPoint(-5.0f, 2.5f, 0.0f);
+        this.mdl.cubeList.add(new ModelBox(this.mdl, 0, 0, -2.0f, -6.0f, 0.0f, 2, 6, 2, 0.0f, false));
     }
 
     @Override
     public void render(Entity entity, float f, float f2, float f3, float f4, float f5, float scale) {
-        this.a.render(scale);
+        this.mdl.render(scale);
     }
 
     public void rotate(ModelRenderer m, float x, float y, float z) {
@@ -33,7 +33,7 @@ public class BiaHand extends ModelBase implements IRenderer {
 
     @Override
     public ModelRenderer Render() {
-        return this.a;
+        return this.mdl;
     }
 }
 

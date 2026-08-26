@@ -82,7 +82,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -130,150 +129,150 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalath {
-    final static public float a2 = 0.6f;
-    final static public float b6 = 0.6f;
-    final static public int bj = 10;
-    final static public int an = 20;
-    final static public float aU = 50.0f;
-    final static public float ba = 40.0f;
-    final static public int bM = 5;
-    final static public int bs = 25;
-    final static public float bJ = 30.0f;
-    final static public float aA = 3.0f;
-    final static public int a3 = 23;
-    final static public int X = 45;
-    final static public float ca = 0.3f;
-    final static public float a8 = 9.0f;
-    final static public float aX = 30.0f;
-    final static public int bE = 24;
-    final static public int aQ = 32;
-    final static public int av = 5;
-    final static public int bQ = 36;
-    final static public int aR = 40;
-    final static public int aB = 54;
-    final static public int by = 10;
-    final static public float b_ = 0.25f;
-    final static public double ax = 3.0;
-    final static public double bF = 1.0;
-    final static public double bv = 1.5;
-    final static public double az = 0.3f;
-    final static public double ag = 40.0;
-    final static public double au = 5.0;
-    final static public double ae = 0.2;
-    final static public double aV = 3.0;
-    final static public double ar = 0.1f;
-    final static public double ai = 6.0;
-    final static public double ah = 50.0;
-    final static public double bR = 39.0;
-    final static public double bV = 58.0;
-    final static public double aZ = 2.0;
-    final static public double Q = 1.0;
-    final static public float aJ = 0.5f;
+    final static public float SPEED_WATER_SLOWDOWN = 0.6f;
+    final static public float SPEED_FLY_FACTOR = 0.6f;
+    final static public int COOLDOWN_ATTACK = 10;
+    final static public int TICKS_CAST_SUMMON = 20;
+    final static public float MAX_FLY_HEIGHT = 50.0f;
+    final static public float MIN_FLY_HEIGHT = 40.0f;
+    final static public int SUMMON_COUNT_MAX = 5;
+    final static public int SUMMON_COUNT_MIN = 25;
+    final static public float DASH_DISTANCE_MAX = 30.0f;
+    final static public float DASH_DISTANCE_MIN = 3.0f;
+    final static public int SKELETON_SUMMON_TICKS = 23;
+    final static public int SKELETON_SUMMON_MAX_TICKS = 45;
+    final static public float MELEE_ATTACK_RANGE = 0.3f;
+    final static public float SKELETON_SPAWN_RADIUS = 9.0f;
+    final static public float MAX_SPELL_RANGE = 30.0f;
+    final static public int KNOCKOUT_AIR_TICKS = 24;
+    final static public int KNOCKOUT_GROUND_TICKS = 32;
+    final static public int KNOCKOUT_RECOVERY_TICKS = 5;
+    final static public int FLIGHT_PATH_RECALC_TICKS = 36;
+    final static public int FLIGHT_TICK_MAX = 40;
+    final static public int FLIGHT_ANIM_TICKS = 54;
+    final static public int DESPAWN_CHECK_INTERVAL = 10;
+    final static public float RENDER_SCALE_CORRUPT = 0.25f;
+    final static public double FLIGHT_ACCELERATION = 3.0;
+    final static public double FLIGHT_DECEL_RATE = 1.0;
+    final static public double BASE_MOVEMENT_SPEED = 1.5;
+    final static public double WATER_SLOW_FACTOR = 0.3f;
+    final static public double MAX_TARGET_DISTANCE = 40.0;
+    final static public double MIN_TARGET_DISTANCE = 5.0;
+    final static public double TARGET_Y_OFFSET = 0.2;
+    final static public double TARGET_SMOOTH_FACTOR = 3.0;
+    final static public double VELOCITY_DECAY = 0.1f;
+    final static public double DISTANCE_TELEPORT_THRESHOLD = 6.0;
+    final static public double FLIGHT_AREA_RADIUS = 50.0;
+    final static public double KNOCKOUT_STANDUP_TICK_TRIGGER = 39.0;
+    final static public double KNOCKOUT_STANDUP_TICK_END = 58.0;
+    final static public double SWORD_EFFECT_SCALE = 2.0;
+    final static public double SWORD_TRAIL_ALPHA = 1.0;
+    final static public float PARTICLE_DENSITY = 0.5f;
     final static public Vector3fSexmodSpecial STAR_PARTICLE_COLOR = new Vector3fSexmodSpecial(0.83137256f, 0.6862745f, 0.21568628f);
-    final static public Vec3d bz = new Vec3d(-1.049342f, 2.0547213554382324, -0.05048239231109619);
-    final static public Vec3d bC = new Vec3d(1.2522261142730713, 1.435773253440857, 0.23570987582206726);
-    final static public int aN = 10;
-    final static public float ak = 0.2f;
-    final static public int am = 5;
-    final static public float T = 15.0f;
-    final static public int aM = 48;
-    final static public float be = 0.05f;
-    final static public float a7 = 0.65f;
-    final static public float bh = 0.9f;
-    final static public float K = 45.0f;
-    final static public float a0 = 1.0f;
-    final static public float bn = 1.5f;
-    final static public float ao = 110.0f;
-    final static public int aj = 15;
-    final static public float aw = 6.0f;
-    final static public float bp = 0.94f;
-    final static public int R = 13;
-    final static public int bW = 40;
-    final static public int bl = 25;
-    final static public int aY = 38;
-    final static public int N = 95;
-    final static int bB = 10;
-    final static int aI = 30;
-    final static int bf = 175;
-    final static float as = 2.0f;
-    final static public float bo = 0.25f;
-    final static public float Y = 1000.0f;
-    final static public float bX = 15.0f;
-    final static public float b9 = 5.0f;
-    final static public int aW = 8000;
-    final static public float aK = 0.1f;
-    final static public float ac = 5.0f;
-    final static public float b5 = -10.0f;
-    final static public int bk = 16;
-    final static public int br = 7;
-    final static public int cb = 4;
-    final static public float M = 0.5f;
-    final static public float bi = 0.55f;
+    final static public Vec3d ENERGY_BALL_OFFSET_LEFT = new Vec3d(-1.049342f, 2.0547213554382324, -0.05048239231109619);
+    final static public Vec3d ENERGY_BALL_OFFSET_RIGHT = new Vec3d(1.2522261142730713, 1.435773253440857, 0.23570987582206726);
+    final static public int ENERGY_BALL_SPAWN_TICKS = 10;
+    final static public float ENERGY_BALL_SPEED = 0.2f;
+    final static public int ENERGY_BALL_BURST_COUNT = 5;
+    final static public float ENERGY_BALL_SPREAD = 15.0f;
+    final static public int ENERGY_BALL_LIFESPAN = 48;
+    final static public float ENERGY_BALL_SIZE = 0.05f;
+    final static public float PARTICLE_ALPHA_STEP = 0.65f;
+    final static public float DRAGON_BREATH_SCALE = 0.9f;
+    final static public float DASH_SPEED = 45.0f;
+    final static public float DASH_ACCEL = 1.0f;
+    final static public float DASH_DRAG = 1.5f;
+    final static public float MAX_HEALTH_BASE = 110.0f;
+    final static public int RAPID_ATTACK_INTERVAL = 15;
+    final static public float SWORD_ATTACK_RANGE = 6.0f;
+    final static public float SWORD_DAMAGE_MULTIPLIER = 0.94f;
+    final static public int KNOCKOUT_AIR_STATE = 13;
+    final static public int KNOCKOUT_GROUND_STATE = 40;
+    final static public int RAPE_PREPARE_STATE = 25; //may be conflicting with boolean bl
+    final static public int RAPE_CHARGE_STATE = 38;
+    final static public int RAPE_INTRO_STATE = 95;
+    final static int DESPAWN_DELAY_TICKS = 10;
+    final static int TARGET_SEARCH_COOLDOWN = 30;
+    final static int FLIGHT_RANGE_MAX = 175;
+    final static float DRAGON_BREATH_BURST_SIZE = 2.0f;
+    final static public float PLAYER_RIDE_OFFSET_Y = 0.25f;
+    final static public float MAX_DESPAWN_DISTANCE = 1000.0f;
+    final static public float DESPAWN_SEARCH_RADIUS = 15.0f;
+    final static public float DESPAWN_CHECK_Y_OFFSET = 5.0f;
+    final static public int ASYNC_THREAD_TIMEOUT = 8000;
+    final static public float PITCH_CORRECTION_SPEED = 0.1f;
+    final static public float SWORD_HITBOX_EXPAND = 5.0f;
+    final static public float SWORD_HITBOX_OFFSET = -10.0f;
+    final static public int MAX_WANDER_ATTEMPTS = 16;
+    final static public int WANDER_SEARCH_RADIUS = 7;
+    final static public int WANDER_BOUND = 4;
+    final static public float RAPE_CUM_DRAIN_AMOUNT = 0.5f;
+    final static public float RAPE_HEAL_AMOUNT = 0.55f;
     final static Class<?>[] INVALID_FLIGHT_BLOCKS = new Class[]{BlockAir.class, BlockCarpet.class, BlockBush.class, BlockButton.class, BlockLadder.class, BlockTorch.class, BlockSign.class, BlockBanner.class};
-    final static public DataParameter<Integer> bq = EntityDataManager.createKey(GalathEntity.class, DataSerializers.VARINT).getSerializer().createKey(111);
+    final static public DataParameter<Integer> ATTACK_TARGET_ID = EntityDataManager.createKey(GalathEntity.class, DataSerializers.VARINT).getSerializer().createKey(111);
     final static public DataParameter<Integer> FLY_TICKS = EntityDataManager.createKey(GalathEntity.class, DataSerializers.VARINT).getSerializer().createKey(112);
-    final static public DataParameter<Boolean> bN = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(113);
-    final static public DataParameter<Boolean> b7 = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(114);
-    final static public DataParameter<Boolean> ay = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(115);
+    final static public DataParameter<Boolean> IS_RIGHT_ENERGY_BALL_ACTIVE = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(113);
+    final static public DataParameter<Boolean> IS_LEFT_ENERGY_BALL_ACTIVE = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(114);
+    final static public DataParameter<Boolean> MIRROR_ENERGY_BALLS = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(115);
     final static public DataParameter<Integer> SWORD_ATTACK_PROGRESS = EntityDataManager.createKey(GalathEntity.class, DataSerializers.VARINT).getSerializer().createKey(116);
     final static public DataParameter<String> FLIGHT_TARGET_POS = EntityDataManager.createKey(GalathEntity.class, DataSerializers.STRING).getSerializer().createKey(117);
     final static public DataParameter<Boolean> IS_FLYING_FLAG = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(118);
     final static public DataParameter<Float> SPIN_YAW_FACTOR = EntityDataManager.createKey(GalathEntity.class, DataSerializers.FLOAT).getSerializer().createKey(119);
     final static public DataParameter<Boolean> HIDE_EFFECTS_FLAG = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(120);
     final static public DataParameter<String> MANGLELIE_UUID = EntityDataManager.createKey(GalathEntity.class, DataSerializers.STRING).getSerializer().createKey(121);
-    final static public DataParameter<Boolean> bT = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(122);
-    final static public double b0 = 0.2;
-    final static public float bS = 5.0f;
-    final static public int a1 = 60;
+    final static public DataParameter<Boolean> IS_SPRINTING = EntityDataManager.createKey(GalathEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(122);
+    final static public double BOOST_ACCEL_BASE = 0.2;
+    final static public float BOOST_VELOCITY_MAX = 5.0f;
+    final static public int RAPE_DRAIN_INTERVAL = 60;
     BossInfoServer healthBar = new BossInfoServer(new TextComponentString(this.getGirlName()), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
     MultiPartHitbox energyBallHitboxLeft = new MultiPartHitbox(this, "energyBallHitBox", 0.75f, 0.75f);
     MultiPartHitbox energyBallHitboxRight = new MultiPartHitbox(this, "energyBallHitBox", 0.75f, 0.75f);
     public GalathFlightData flightData = null;
     public Vec3d flightTargetPosition = null;
     public Vec3d previousPos = null;
-    public int aF = 0;
-    public Vec3d bd = null;
+    public int spellCastTimer = 0;
+    public Vec3d lastTargetDashPos = null;
     public List<EntityWitherSkeleton> witherSkeletons = new ArrayList<>();
     public float cachedHeadRotationX = 0.0f;
     public long dashStartWorldTime = -1L;
     public long dashEndWorldTime = -1L;
     public float bodyRotationY = 0.0f;
     public float bodyScaleY = 0.0f;
-    boolean bU = false;
+    boolean isDashActive = false;
     public Vec3d targetDashPosition = null;
     boolean isDespawned = false;
     Vec3d position;
     Vec3d predicatedPosition;
     Vec3d velocity;
-    float al = 0.0f;
+    float boostSpeed = 0.0f;
     boolean corruptIntroActive = false;
-    public int ad = 0;
-    double a9 = 0.0;
-    double bg = 0.0;
-    double b4 = 0.0;
-    double a_ = 0.0;
-    boolean bK = false;
-    Path aq = null;
-    BlockPos bG = null;
-    int aC = 0;
-    Action ab = null;
-    int at = 0;
-    int bY = 0;
-    int b3 = 0;
-    long bc = 0L;
+    public int energyBallChargeTicks = 0;
+    double flightPitchRad = 0.0;
+    double flightRollRad = 0.0;
+    double prevFlightPitchRad = 0.0;
+    double prevFlightRollRad = 0.0;
+    boolean isCustomModelLoaded = false;
+    Path currentPath = null;
+    BlockPos targetWanderPos = null;
+    int wanderIdleTicks = 0;
+    Action pendingAction = null;
+    int rapeCumDrainTimer = 0;
+    int knockoutGroundTicks = 0;
+    int knockoutStandUpTicks = 0;
+    long lastHurtSoundTime = 0L;
     boolean morningBlowjobStarted = false;
     boolean despawned = false;
-    int b1 = 0;
-    boolean aT = false;
-    public boolean bx = false;
-    public boolean a5 = false;
+    int rapeVariantIndex = 0;
+    boolean isCorruptSoftMode = false;
+    public boolean isSittingFastAction = false;
+    public boolean isPussyLickingSlow = false;
     public boolean isTransformingManglelie = false;
-    public boolean bt = false;
+    public boolean isBedSlowAnimation = false;
     public boolean hasSwordEquipped = false;
-    public boolean bu = false;
-    public boolean aL = true;
+    public boolean isSwordTrailActive = false;
+    public boolean renderStarsFlag = true;
     public boolean isRenderingOverlayDisabled = false;
-    boolean a6 = false;
+    boolean isMoanAlternate = false;
 
     public GalathEntity(World world) {
         super(world);
@@ -288,7 +287,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
 
         this.entityDataManager.set(MASTER, uUID.toString());
         this.healthBar.setVisible(false);
-        this.bG = new BlockPos(this.getPositionVector());
+        this.targetWanderPos = new BlockPos(this.getPositionVector());
         String npcName = AllieWorldData.getCustomName(uUID, PlayerGirlEntity.GALATH);
         if (npcName != null) {
             super.setCustomNameOverride(npcName);
@@ -382,18 +381,18 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.entityDataManager.register(bq, -1);
+        this.entityDataManager.register(ATTACK_TARGET_ID, -1);
         this.entityDataManager.register(FLY_TICKS, 0);
-        this.entityDataManager.register(bN, true);
-        this.entityDataManager.register(b7, true);
-        this.entityDataManager.register(ay, false);
+        this.entityDataManager.register(IS_RIGHT_ENERGY_BALL_ACTIVE, true);
+        this.entityDataManager.register(IS_LEFT_ENERGY_BALL_ACTIVE, true);
+        this.entityDataManager.register(MIRROR_ENERGY_BALLS, false);
         this.entityDataManager.register(FLIGHT_TARGET_POS, "null");
         this.entityDataManager.register(SWORD_ATTACK_PROGRESS, -1);
         this.entityDataManager.register(IS_FLYING_FLAG, false);
         this.entityDataManager.register(SPIN_YAW_FACTOR, 0.0f);
         this.entityDataManager.register(HIDE_EFFECTS_FLAG, false);
         this.entityDataManager.register(MANGLELIE_UUID, "");
-        this.entityDataManager.register(bT, false);
+        this.entityDataManager.register(IS_SPRINTING, false);
     }
 
     @Override
@@ -532,7 +531,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void void_aa() {
+    void updateVelocityPrediction() {
         this.velocity = new Vec3d(this.motionX, this.motionY, this.motionZ);
         this.position = this.getPositionVector();
         this.predicatedPosition = this.getPositionVector().add(this.velocity);
@@ -543,20 +542,20 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     public void onUpdate() {
         boolean hasMasterFlag = this.hasMasterOAlgo();
         if (hasMasterFlag) {
-            this.void_E();
+            this.updateGravityState();
         } else {
             this.updateFlightUI();
         }
 
-        this.void_aa();
+        this.updateVelocityPrediction();
         super.onUpdate();
         if (hasMasterFlag) {
-            this.au();
+            this.tickMasterBehavior();
         } else {
-            this.void_R();
+            this.tickWildBehavior();
         }
         if (this.world.isRemote) {
-            this.void_X();
+            this.processParticleEffects();
         }
     }
 
@@ -566,7 +565,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_X() {
+    void processParticleEffects() {
         if (this.getCurrentAction() == Action.GIVE_COIN) {
             int coinTick = Action.GIVE_COIN.ticksPlaying[1];
             if (coinTick == 95) {
@@ -586,20 +585,20 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void void_E() {
+    void updateGravityState() {
         this.setNoGravity(this.getRidingPlayer() != null);
     }
 
-    void au() {
+    void tickMasterBehavior() {
         if (!this.isInWater() && !this.hasNoGravity() && this.motionY < 0.0 && this.getCurrentAction() != Action.MASTERBATE) {
             this.motionY *= 0.4f;
         }
-        this.aB();
-        this.aj();
-        this.aq();
-        this.aw();
-        this.void_C();
-        this.Y_();
+        this.updateRiderYaw();
+        this.updateFlightTilting();
+        this.updatePlayerPitchLook();
+        this.updateBoostMovement();
+        this.updateOverlayVisibility();
+        this.handleCorruptCumCompletion();
         this.handleRapeCum();
         if (this.getAttackTarget() == null) {
             this.hasSwordEquipped = false;
@@ -623,7 +622,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void Y_() {
+    void handleCorruptCumCompletion() {
         if (!this.world.isRemote) {
             if (this.getCurrentAction() == Action.CORRUPT_CUM) {
                 if (Action.CORRUPT_CUM.ticksPlaying[0] >= 30) {
@@ -666,7 +665,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return true;
     }
 
-    void aw() {
+    void updateBoostMovement() {
         EntityPlayer player = this.getRidingPlayer();
         Action action = this.getCurrentAction();
         if (player != null) {
@@ -674,13 +673,13 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 int sideIndex = ClientServerCheck.getInstance() ? 0 : 1;
                 if (action.ticksPlaying[sideIndex] >= 13) {
                     if (action.ticksPlaying[sideIndex] == 13) {
-                        this.al = 6.0f;
+                        this.boostSpeed = 6.0f;
                     }
                     Vec3d vec3d = player.getLook(0.0f).normalize();
-                    this.motionX = vec3d.x * (double) this.al;
-                    this.motionY = vec3d.y * (double) this.al;
-                    this.motionZ = vec3d.z * (double) this.al;
-                    this.al *= 0.94f;
+                    this.motionX = vec3d.x * (double) this.boostSpeed;
+                    this.motionY = vec3d.y * (double) this.boostSpeed;
+                    this.motionZ = vec3d.z * (double) this.boostSpeed;
+                    this.boostSpeed *= 0.94f;
                 }
             }
         }
@@ -689,20 +688,20 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     void updateFlightUI() {
         this.updateGravity();
         this.updateHealthBar();
-        this.void_ah();
+        this.updateSpellTimers();
     }
 
-    void void_R() {
+    void tickWildBehavior() {
         getAimYaw(this, 0.0f);
-        this.resetEnergyBalls();
-        this.aj();
-        this.void_af();
-        this.L_();
-        this.void_F();
-        this.void_C();
+        this.updateEnergyBallHitboxes();
+        this.updateFlightTilting();
+        this.spawnSwordParticles();
+        this.updateRenderStarsState();
+        this.updateOverlayVisibility2();
+        this.updateOverlayVisibility();
         this.handleCorruptCum();
         if (this.world.isRemote) {
-            this.void_H();
+            this.updateClientPlayerCamera();
         }
     }
 
@@ -716,7 +715,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void void_C() {
+    void updateOverlayVisibility() {
         if (this.entityDataManager.get(HIDE_EFFECTS_FLAG)) {
             this.isRenderingOverlayDisabled = true;
         } else {
@@ -745,10 +744,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return this.getCurrentAction() == Action.CORRUPT_INTRO && this.corruptIntroActive;
     }
 
-    void void_F() {
+    void updateOverlayVisibility2() {
         if (this.world.isRemote) {
             if (this.getCurrentAction() != Action.KNOCK_OUT_STAND_UP) {
-                this.aL = true;
+                this.renderStarsFlag = true;
             }
         }
     }
@@ -763,10 +762,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void L_() {
+    void updateRenderStarsState() {
         if (this.getCurrentAction() != Action.ATTACK_SWORD) {
             this.hasSwordEquipped = false;
-            this.bu = false;
+            this.isSwordTrailActive = false;
         }
     }
 
@@ -778,9 +777,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     public void addPotionEffect(PotionEffect effect) {
     }
 
-    void void_af() {
+    void spawnSwordParticles() {
         if (this.world.isRemote) {
-            if (this.bu) {
+            if (this.isSwordTrailActive) {
                 Vec3d pos = this.getPositionVector();
                 Vec3d startPos = this.getCachedBoneOffset("weaponStart").add(pos);
                 Vec3d endPos = this.getCachedBoneOffset("weaponEnd").add(pos);
@@ -815,16 +814,16 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return masterPlayer == null ? super.getDisplayNameText() : String.format("%s %s[%s]", super.getDisplayNameText(), TextFormatting.DARK_PURPLE, masterPlayer.getName());
     }
 
-    void resetEnergyBalls() {
+    void updateEnergyBallHitboxes() {
         this.energyBallHitboxLeft.isActive = false;
         this.energyBallHitboxRight.isActive = false;
-        if (!((float) this.ad < 9.0f)) {
-            if (!((float) this.ad > 30.0f)) {
+        if (!((float) this.energyBallChargeTicks < 9.0f)) {
+            if (!((float) this.energyBallChargeTicks > 30.0f)) {
                 this.energyBallHitboxLeft.isActive = true;
                 this.energyBallHitboxRight.isActive = true;
-                boolean reset = this.entityDataManager.get(ay);
-                Vec3d vec3d = this.getPositionVector().add(VectorMath.rotateByYaw(reset ? VectorMath.MirrorXZ(bz) : bz, 180.0f + this.renderYawOffset));
-                Vec3d vec3d2 = this.getPositionVector().add(VectorMath.rotateByYaw(reset ? VectorMath.MirrorXZ(bC) : bC, 180.0f + this.renderYawOffset));
+                boolean reset = this.entityDataManager.get(MIRROR_ENERGY_BALLS);
+                Vec3d vec3d = this.getPositionVector().add(VectorMath.rotateByYaw(reset ? VectorMath.MirrorXZ(ENERGY_BALL_OFFSET_LEFT) : ENERGY_BALL_OFFSET_LEFT, 180.0f + this.renderYawOffset));
+                Vec3d vec3d2 = this.getPositionVector().add(VectorMath.rotateByYaw(reset ? VectorMath.MirrorXZ(ENERGY_BALL_OFFSET_RIGHT) : ENERGY_BALL_OFFSET_RIGHT, 180.0f + this.renderYawOffset));
                 this.energyBallHitboxLeft.setLocationAndAngles(vec3d.x, vec3d.y, vec3d.z, this.renderYawOffset, 0.0f);
                 this.energyBallHitboxRight.setLocationAndAngles(vec3d2.x, vec3d2.y, vec3d2.z, this.renderYawOffset, 0.0f);
                 this.energyBallHitboxLeft.onUpdate();
@@ -833,28 +832,28 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void void_ah() {
+    void updateSpellTimers() {
         if (this.getCurrentAction() != Action.SUMMON_SKELETON) {
-            this.ad = 0;
+            this.energyBallChargeTicks = 0;
         } else {
-            if (this.ad++ > 45) {
-                this.ad = 0;
+            if (this.energyBallChargeTicks++ > 45) {
+                this.energyBallChargeTicks = 0;
             }
         }
     }
 
     @Override
     public Vector4d getFlightData() {
-        return new Vector4d(this.a9, this.bg, this.b4, this.a_);
+        return new Vector4d(this.flightPitchRad, this.flightRollRad, this.prevFlightPitchRad, this.prevFlightRollRad);
     }
 
-    void aj() {
-        this.b4 = this.a9;
-        this.a_ = this.bg;
+    void updateFlightTilting() {
+        this.prevFlightPitchRad = this.flightPitchRad;
+        this.prevFlightRollRad = this.flightRollRad;
         Vec3d delta = this.predicatedPosition.subtract(this.position);
         Vec3d rotated = VectorMath.rotateByYaw(delta, this.renderYawOffset + 180.0f);
-        this.a9 = TrigMath.toRadians(ThreadNames.clamp(rotated.z * 40.0, -50.0, 50.0));
-        this.bg = TrigMath.toRadians(ThreadNames.clamp(rotated.x * 40.0, -50.0, 50.0));
+        this.flightPitchRad = TrigMath.toRadians(ThreadNames.clamp(rotated.z * 40.0, -50.0, 50.0));
+        this.flightRollRad = TrigMath.toRadians(ThreadNames.clamp(rotated.x * 40.0, -50.0, 50.0));
     }
 
     public void setFlightVelocity(Vec3d targetPos) {
@@ -891,21 +890,21 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         if (this.despawned) {
             GalathMangTracker.updateMangleliePartner(this);
         }else {
-            this.void_P();
+            this.loadCustomModelIfNeeded();
             super.updateAITasks();
             this.watchClosestGirlGoal.isWatching = this.isFlyingIdle();
             if (this.hasMasterOAlgo()) {
-                this.void_ae();
+                this.updateMasterNavigation();
             } else {
-                this.an();
+                this.updateWildNavigation();
             }
         }
     }
 
-    void void_P() {
-        if (!this.bK) {
+    void loadCustomModelIfNeeded() {
+        if (!this.isCustomModelLoaded) {
             this.setCustomModelCode(GirlWorldData.getCustomModelCode(this));
-            this.bK = true;
+            this.isCustomModelLoaded = true;
         }
     }
 
@@ -913,7 +912,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return this.getCurrentAction() == Action.NULL && !(Math.abs(this.motionX) + Math.abs(this.motionZ) > 0.01);
     }
 
-    void aq() {
+    void updatePlayerPitchLook() {
         if (this.world.isRemote) {
             if (this.getRidingPlayer() == null) {
                 EntityPlayer master = this.getMasterPlayer();
@@ -933,7 +932,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         this.rotationPitch = (float)(-(Math.sin(heightDiff / dist) * (180.0 * Math.PI)));
     }
 
-    void void_ae() {
+    void updateMasterNavigation() {
         this.healthBar.setVisible(false);
         if (!GalathMangTracker.isOwnerNearby(this)) {
             GalathMangTracker.updateMangleliePartner(this);
@@ -944,9 +943,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         else {
             this.handleManglelieOwned();
             if (this.getManglelieUUID() == null) {
-                this.aJ();
+                this.updatePetBehavior();
             } else {
-                this.am();
+                this.updateManglelieFollowPath();
             }
         }
     }
@@ -960,14 +959,14 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void am() {
-        if (!this.boolean_ai()) {
-            this.entityDataManager.set(bT, false);
-            this.ao();
+    void updateManglelieFollowPath() {
+        if (!this.processFollowOwnerPath()) {
+            this.entityDataManager.set(IS_SPRINTING, false);
+            this.tickAI();
         }
     }
 
-    boolean boolean_ai() {
+    boolean processFollowOwnerPath() {
         UUID ownerUUID = GalathMangTracker.getManglelieOwnerOf(this);
         if (ownerUUID == null) {
             return false;
@@ -1000,20 +999,20 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             return true;
         }
 
-        if (PathUtils.getPathEnd(this.aq).distanceSq(ownerPos) > 16.0) {
+        if (PathUtils.getPathEnd(this.currentPath).distanceSq(ownerPos) > 16.0) {
             if (!this.onGround) {
                 return true;
             }
 
-            this.aq = this.getPathToPlayer(owner, ownerPos);
-            if (this.aq == null) {
+            this.currentPath = this.getPathToPlayer(owner, ownerPos);
+            if (this.currentPath == null) {
                 this.handlePlayerRide(owner);
             } else {
-                navigator.setPath(this.aq, 1.0);
+                navigator.setPath(this.currentPath, 1.0);
             }
         }
 
-        if (this.aq != null && !this.aq.isFinished()) {
+        if (this.currentPath != null && !this.currentPath.isFinished()) {
             boolean sprinting = owner.isSprinting() || this.getDistance(owner) > 7.0f;
             double speed = sprinting ? (double) 0.55f : 0.5;
             double extra = Math.floor(dist / 5.0f) * 0.2;
@@ -1023,7 +1022,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             }
 
             navigator.setSpeed(speed);
-            this.entityDataManager.set(bT, sprinting);
+            this.entityDataManager.set(IS_SPRINTING, sprinting);
             this.setCurrentAction(null);
             return true;
         } else {
@@ -1061,21 +1060,21 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return navigator.getPathToEntityLiving(player);
     }
 
-    void aJ() {
-        this.at();
-        this.ay();
+    void updatePetBehavior() {
+        this.updateManglelieInteractions();
+        this.updateWandering();
     }
 
     void clearFlightData() {
-        this.bG = null;
-        this.aC = 0;
+        this.targetWanderPos = null;
+        this.wanderIdleTicks = 0;
         if (this.flightData != null) {
             this.flightData.executeStop(this);
             this.flightData = null;
         }
     }
 
-    void at() {
+    void updateManglelieInteractions() {
         if (this.onGround) {
             if (this.getManglelieUUID() == null) {
                 if (this.getCurrentAction() != Action.HUG_MANG) {
@@ -1129,7 +1128,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void ay() {
+    void updateWandering() {
         Action action = this.getCurrentAction();
         if (action != Action.RUN) {
             if (action != Action.HUG_MANG) {
@@ -1140,19 +1139,19 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     if (this.hasMaster() && player != null && player.getDistance(this) < 2.0f && player.getPersistentID().equals(this.getMasterUUID())) {
                         this.getNavigator().clearPath();
                     } else {
-                        if (this.bG == null || this.getDistance(this.bG.getX(), this.bG.getY(), this.bG.getZ()) > this.getFlightRange() || this.aC > 175) {
+                        if (this.targetWanderPos == null || this.getDistance(this.targetWanderPos.getX(), this.targetWanderPos.getY(), this.targetWanderPos.getZ()) > this.getFlightRange() || this.wanderIdleTicks > 175) {
                             int n = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(10);
                             int n2 = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(10);
                             int n3 = this.world.provider.getDimensionType() == DimensionType.NETHER ? (int) Math.ceil(this.posY) : WorldUtils.getHeightAt(this.world, this.getPosition().getX() + n, this.getPosition().getZ() + n2);
-                            this.bG = new BlockPos(this.getPosition().getX() + n, n3, this.getPosition().getZ() + n2);
-                            this.aC = 0;
+                            this.targetWanderPos = new BlockPos(this.getPosition().getX() + n, n3, this.getPosition().getZ() + n2);
+                            this.wanderIdleTicks = 0;
                         }
 
-                        if (Math.sqrt(this.bG.distanceSq(this.getPosition())) > 2.0) {
-                            this.getNavigator().tryMoveToXYZ(this.bG.getX(), this.bG.getY(), this.bG.getZ(), 0.35f);
+                        if (Math.sqrt(this.targetWanderPos.distanceSq(this.getPosition())) > 2.0) {
+                            this.getNavigator().tryMoveToXYZ(this.targetWanderPos.getX(), this.targetWanderPos.getY(), this.targetWanderPos.getZ(), 0.35f);
                             this.tickPathVelocity();
                         } else {
-                            ++this.aC;
+                            ++this.wanderIdleTicks;
                         }
                     }
                 }
@@ -1160,7 +1159,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    BlockPos av() {
+    BlockPos getOwnerPos() {
         UUID ownerID = GalathMangTracker.getManglelieOwnerOf(this);
         if (ownerID == null) {
             return BlockPos.ORIGIN;
@@ -1186,7 +1185,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     @Nullable
-    public UUID ax() {
+    public UUID getRiderUUID() {
         EntityPlayer rider = this.getRidingPlayer();
         return rider == null ? null : rider.getPersistentID();
     }
@@ -1211,7 +1210,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         this.setCurrentAction(null);
     }
 
-    void aB() {
+    void updateRiderYaw() {
         EntityPlayer rider = this.getRidingPlayer();
         if (rider != null) {
             this.prevRenderYawOffset = rider.prevRotationYawHead;
@@ -1219,37 +1218,37 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void an() {
+    void updateWildNavigation() {
         this.healthBar.setVisible(true);
-        this.ao();
-        this.as();
+        this.tickAI();
+        this.tickTargetTracking();
     }
 
-    void ao() {
+    void tickAI() {
         if (!Action.isAnyAction(this, Action.MASTERBATE, Action.HUG_MANG)) {
             if (this.getInteractionPlayerUUID() == null) {
-                this.void_Q();
-                this.void_I();
-                this.D_(); // TODO
+                this.resetTargetIfMasterMissing();
+                this.searchNewAttackTarget();
+                this.updateFlightLogic(); // TODO
                 this.checkFlightFinished();
-                this.void_J();
-                this.void_T();
-                this.void_S();
-                this.handleKnockOut();
-                this.ad_();
-                this.aG();
-                this.aA();
-                this.KillWitherSkeletons();
-                this.void_O();
-                this.Z();
+                this.updateNoClipFlight();
+                this.updateKnockoutState();
+                this.updateKnockoutGroundState();
+                this.updateKnockoutStandUp();
+                this.updateKnockoutVelocity();
+                this.updateKnockoutWaterCollision();
+                this.killWitherSkeletonsOnFlight();
+                this.cleanupDeadSkeletons();
+                this.cleanupFarSkeletons();
+                this.applyRapeCumDamage();
             }
         }
     }
 
-    void void_Q() {
+    void resetTargetIfMasterMissing() {
         if (this.hasMasterOAlgo()) {
             if (this.getAttackTarget() == null) {
-                int n = this.entityDataManager.get(bq);
+                int n = this.entityDataManager.get(ATTACK_TARGET_ID);
                 if (n != -1) {
                     if (this.flightData != null) {
                         this.flightData.executeStop(this);
@@ -1261,13 +1260,13 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void as() {
+    void tickTargetTracking() {
         if (this.getAttackTarget() != null) {
-            this.bG = null;
-            this.aC = 0;
+            this.targetWanderPos = null;
+            this.wanderIdleTicks = 0;
         } else if (!this.entityDataManager.get(HIDE_EFFECTS_FLAG)) {
             if (!this.entityDataManager.get(IS_FLYING_FLAG)) {
-                this.ay();
+                this.updateWandering();
             }
         }
     }
@@ -1284,7 +1283,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                         }
 
                         if (action == Action.CORRUPT_SLOW) {
-                            this.aT = false;
+                            this.isCorruptSoftMode = false;
                             if (currentAction == Action.CORRUPT_INTRO) {
                                 this.setFlying(false);
                             }
@@ -1297,7 +1296,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                             this.GiveCoinToPlayer();
                         }
                         if (currentAction == Action.HUG_MANG && action == Action.NULL) {
-                            this.al();
+                            this.onHugManglelieEnd();
                         }
                         if (currentAction == Action.MORNING_BLOWJOB_CUM && action == Action.NULL) {
                             this.resetGirls();
@@ -1317,7 +1316,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         ResetGirl.EventHandler.resetGirl(this);
     }
 
-    void al() {
+    void onHugManglelieEnd() {
         this.setAnchored(false);
         ManglelieEntity manglelie = this.getManglelieUUID(true);
         if (manglelie != null) {
@@ -1349,21 +1348,21 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_H() {
+    void updateClientPlayerCamera() {
         float yaw;
         Action action = this.getCurrentAction();
-        if (this.ab == Action.CORRUPT_INTRO || action != Action.CORRUPT_INTRO) {
-            this.ab = action;
+        if (this.pendingAction == Action.CORRUPT_INTRO || action != Action.CORRUPT_INTRO) {
+            this.pendingAction = action;
         } else {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             if (!player.getPersistentID().equals(this.getInteractionPlayerUUID())) {
-                this.ab = action;
+                this.pendingAction = action;
             } else {
                 player.rotationYaw = yaw = this.hasMasterOAlgo() ? 0.0f : this.getYawRotation() + 180.0f;
                 player.prevRotationYaw = yaw;
                 player.rotationPitch = 80.0f;
                 player.prevRotationPitch = 80.0f;
-                this.ab = action;
+                this.pendingAction = action;
             }
         }
     }
@@ -1417,17 +1416,17 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return true;
     }
 
-    void Z() {
+    void applyRapeCumDamage() {
         if (!this.hasMasterOAlgo()) {
             Action action = this.getCurrentAction();
             if (action != Action.RAPE_CUM) {
-                this.at = 0;
+                this.rapeCumDrainTimer = 0;
             } else {
                 EntityPlayer player = this.getPlayerEntity();
                 if (player == null) {
-                    this.at = 0;
+                    this.rapeCumDrainTimer = 0;
                 }
-                else if (++this.at == 15) {
+                else if (++this.rapeCumDrainTimer == 15) {
                     player.attackEntityFrom(new CumDrainDamageSource(this), 2.1474836E9f);
                 }
 
@@ -1435,7 +1434,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void void_O() {
+    void cleanupFarSkeletons() {
         EntityLivingBase target = this.getAttackTarget();
         if (target != null) {
             for (EntityWitherSkeleton skeleton : this.witherSkeletons) {
@@ -1448,7 +1447,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void KillWitherSkeletons() {
+    void cleanupDeadSkeletons() {
         if (this.entityDataManager.get(IS_FLYING_FLAG)) {
             for (EntityWitherSkeleton skeleton : this.witherSkeletons) {
                 if (!skeleton.isDead) {
@@ -1471,7 +1470,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void aA() {
+    void killWitherSkeletonsOnFlight() {
         for (EntityWitherSkeleton skeleton : this.witherSkeletons) {
             if (!skeleton.isDead && skeleton.ticksExisted % 10 == 0) {
                 Set<? extends EntityPlayer> players = ((WorldServer) this.world).getEntityTracker().getTrackingPlayers(skeleton);
@@ -1482,7 +1481,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void aG() {
+    void updateKnockoutWaterCollision() {
         ArrayList<EntityWitherSkeleton> deadSkeletons = new ArrayList<>();
         for (EntityWitherSkeleton skeleton : this.witherSkeletons) {
             if (skeleton.isDead) {
@@ -1494,10 +1493,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void ad_() {
+    void updateKnockoutVelocity() {
         if (this.getCurrentAction() == Action.KNOCK_OUT_STAND_UP) {
-            ++this.bY;
-            if ((double) this.bY == 39.0) {
+            ++this.knockoutGroundTicks;
+            if ((double) this.knockoutGroundTicks == 39.0) {
                 this.setNoGravity(true);
                 this.setVelocity(0.0, 0.6f, 0.0);
                 Vec3d pos = this.getPositionVector();
@@ -1521,28 +1520,28 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     }
                 }
             }
-            if (!(this.bY < 58.0)) {
+            if (!(this.knockoutGroundTicks < 58.0)) {
                 this.setVelocity(Vec3d.ZERO);
                 this.entityDataManager.set(IS_FLYING_FLAG, false);
-                this.bY = 0;
+                this.knockoutGroundTicks = 0;
             }
         }
     }
 
-    void handleKnockOut() {
+    void updateKnockoutStandUp() {
         if (this.getCurrentAction() == Action.KNOCK_OUT_GROUND) {
             if (!this.entityDataManager.get(HIDE_EFFECTS_FLAG)) {
                 //this.b3++;
-                if (!(++this.b3 < 50.0)) {
+                if (!(++this.knockoutStandUpTicks < 50.0)) {
                     this.setCurrentAction(Action.KNOCK_OUT_STAND_UP);
-                    this.bY = 0;
-                    this.b3 = 0;
+                    this.knockoutGroundTicks = 0;
+                    this.knockoutStandUpTicks = 0;
                 }
             }
         }
     }
 
-    void void_S() {
+    void updateKnockoutGroundState() {
         Action action = this.getCurrentAction();
         if (action == Action.KNOCK_OUT_GROUND || action == Action.KNOCK_OUT_STAND_UP) {
             this.motionX = 0.0;
@@ -1553,7 +1552,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void void_T() {
+    void updateKnockoutState() {
         if (this.getCurrentAction() == Action.KNOCK_OUT_FLY) {
             BlockPos pos = this.getPosition();
             if (this.world.getBlockState(pos).getBlock() instanceof BlockLiquid) {
@@ -1582,7 +1581,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void void_J() {
+    void updateNoClipFlight() {
         if (this.flightData == GalathFlightData.CHANGE_POSITION) {
             int progress = this.getFlyTicks();
             this.noClip = progress == 0;
@@ -1598,9 +1597,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
     }
 
-    void D_() {
+    void updateFlightLogic() {
         if (this.getAttackTarget() == null) {
-            this.aH();
+            this.clearFlightState();
         } else if (this.flightData == null) {
             this.initFlightData();
         } else {
@@ -1645,7 +1644,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return (!flightData.onlyDoThisOnPlayers || this.getAttackTarget() instanceof EntityPlayer) && flightData.canExecute(this);
     }
 
-    void aH() {
+    void clearFlightState() {
         this.flightData = null;
     }
 
@@ -1653,7 +1652,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     * Searches entities in area, then does something
     */
 
-    void void_I() {
+    void searchNewAttackTarget() {
        // EntityLivingBase target;
         if (!this.hasFlightTarget()) {
             if (this.getInteractionPlayerUUID() == null) {
@@ -1666,7 +1665,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 AxisAlignedBB SearchArea = new AxisAlignedBB(startPos.x, startPos.y, startPos.z, EndPos.x, EndPos.y, EndPos.z);
                 EntityLivingBase target = hasMaster ? this.getMobsInBox(SearchArea) : this.getPlayerNearby(SearchArea);
                 if (target == null) {
-                    this.aI();
+                    this.clearAttackTarget();
                 } else {
                     this.setTargetEntity(target);
                     GirlEntity.girlPlaySound(this, SoundsHandler.GIRLS_GALATH_DIALOG[1], true);
@@ -1720,7 +1719,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         return null;
     }
 
-    void aI() {
+    void clearAttackTarget() {
         if (this.getAttackTarget() != null) {
             this.setTargetEntity(null);
             if (this.flightData != null) {
@@ -1776,14 +1775,14 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     @Override
-    protected boolean processInteract(EntityPlayer entityPlayer, EnumHand enumHand) {
+    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
         if (this.hasMasterOAlgo()) {
-            return this.a(entityPlayer, enumHand);
+            return this.handleMasterInteract(player, hand);
         }
-        return this.processGirlInteract(entityPlayer, enumHand);
+        return this.processGirlInteract(player, hand);
     }
 
-    boolean a(EntityPlayer player, EnumHand hand) {
+    boolean handleMasterInteract(EntityPlayer player, EnumHand hand) {
         if (!player.getPersistentID().equals(this.getMasterUUID())) {
             return false;
         }
@@ -1891,9 +1890,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
 
     public void setTargetEntity(@Nullable EntityLivingBase entity) {
         if (entity == null) {
-            this.entityDataManager.set(bq, -1);
+            this.entityDataManager.set(ATTACK_TARGET_ID, -1);
         } else {
-            this.entityDataManager.set(bq, entity.getEntityId());
+            this.entityDataManager.set(ATTACK_TARGET_ID, entity.getEntityId());
         }
     }
 
@@ -1906,7 +1905,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     }
 
     public EntityLivingBase getAttackTarget() {
-        int targetID = this.entityDataManager.get(bq);
+        int targetID = this.entityDataManager.get(ATTACK_TARGET_ID);
         return -1 == targetID ? null : (EntityLivingBase) this.world.getEntityByID(targetID);
     }
 
@@ -1934,9 +1933,9 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         if (this.world.isRemote) {
             if (!(this.getHealth() - damage <= 0.0f)) {
                 long now = System.currentTimeMillis();
-                if (now >= this.bc + 1000L) {
+                if (now >= this.lastHurtSoundTime + 1000L) {
                     this.playRandomSound(SoundsHandler.GIRLS_GALATH_UUH);
-                    this.bc = now;
+                    this.lastHurtSoundTime = now;
                 }
             }
         }
@@ -1974,11 +1973,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
         }
 
         if (part == this.energyBallHitboxRight) {
-            this.entityDataManager.set(b7, false);
+            this.entityDataManager.set(IS_LEFT_ENERGY_BALL_ACTIVE, false);
             PacketHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(this.energyBallHitboxRight.getPositionVector(), false), this);
         }
         if (part == this.energyBallHitboxLeft) {
-            this.entityDataManager.set(bN, false);
+            this.entityDataManager.set(IS_RIGHT_ENERGY_BALL_ACTIVE, false);
             PacketHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticlesPacket2(this.energyBallHitboxLeft.getPositionVector(), false), this);
         }
         return true;
@@ -1987,7 +1986,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
     @Override
     public void reInitTasks() {
         this.setTargetEntity(null);
-        this.aH();
+        this.clearFlightState();
     }
 
     @Override
@@ -2083,20 +2082,20 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
 
     public void startFastAction() {
         if (this.getCurrentAction() != Action.MASTERBATE_SITTING) {
-            this.bx = true;
+            this.isSittingFastAction = true;
             this.setCurrentAction(Action.MASTERBATE_SITTING);
         }
     }
 
     public void startSlowAction() {
-        this.a5 = true;
+        this.isPussyLickingSlow = true;
         this.setCurrentAction(Action.PUSSY_LICKING);
     }
 
     @Override
     protected boolean handleActionAnimationOverrides(Action action, String animName, boolean flag, AnimationEvent event) {
-        if (action == Action.MASTERBATE_SITTING && this.bx) {
-            this.bx = false;
+        if (action == Action.MASTERBATE_SITTING && this.isSittingFastAction) {
+            this.isSittingFastAction = false;
             this.createAnimation("animation.galath.masterbating_sitting", true, event, true);
             return true;
         }
@@ -2113,8 +2112,8 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             this.setCurrentAction(null);
             return true;
         }
-        if (action == Action.PUSSY_LICKING && this.a5) {
-            this.a5 = false;
+        if (action == Action.PUSSY_LICKING && this.isPussyLickingSlow) {
+            this.isPussyLickingSlow = false;
             this.createAnimation("animation.galath.pussy_licking", true, event, true);
             return true;
         }
@@ -2124,14 +2123,14 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             this.createAnimation("animation.shared.bed_soft", true, event, true);
             return true;
         }
-        if (action == Action.MORNING_BLOWJOB_SLOW && this.bt) {
-            this.bt = false;
+        if (action == Action.MORNING_BLOWJOB_SLOW && this.isBedSlowAnimation) {
+            this.isBedSlowAnimation = false;
             this.createAnimation("animation.shared.bed_slow", true, event, true);
             return true;
         }
         if (action == Action.MORNING_BLOWJOB_FAST && !HandlePlayerMovement.isThrusting) {
             this.setCurrentAction(Action.MORNING_BLOWJOB_SLOW);
-            this.bt = true;
+            this.isBedSlowAnimation = true;
             this.createAnimation("animation.shared.bed_back", true, event, true);
             return true;
         }
@@ -2140,10 +2139,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
 
     public float getSwordAttackProgres(float partialTicks) {
         Action action = this.getCurrentAction();
-        if (action == Action.PUSSY_LICKING && !this.a5) {
+        if (action == Action.PUSSY_LICKING && !this.isPussyLickingSlow) {
             return 0.0f;
         }
-        if (action == Action.MASTERBATE_SITTING && !this.bx) {
+        if (action == Action.MASTERBATE_SITTING && !this.isSittingFastAction) {
             return 1.0f;
         }
         float scale = Action.getActionTimeScale(this, partialTicks);
@@ -2180,7 +2179,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 return PlayState.CONTINUE;
             }
             this.rotationYaw = this.rotationYawHead;
-            this.createAnimation("animation.galath." + (this.entityDataManager.get(bT) ? "run" : "walk"), true, event);
+            this.createAnimation("animation.galath." + (this.entityDataManager.get(IS_SPRINTING) ? "run" : "walk"), true, event);
             return PlayState.CONTINUE;
         }
         switch (this.getCurrentAction()) {
@@ -2192,7 +2191,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 break;
             }
             case SUMMON_SKELETON: {
-                this.createAnimation("animation.galath.summon_skeleton" + (this.entityDataManager.get(ay) ? "Mirrored" : ""), true, event);
+                this.createAnimation("animation.galath.summon_skeleton" + (this.entityDataManager.get(MIRROR_ENERGY_BALLS) ? "Mirrored" : ""), true, event);
                 break;
             }
             case ATTACK_SWORD: {
@@ -2225,7 +2224,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 break;
             }
             case RAPE_ON_GOING: {
-                this.createAnimation("animation.galath.rape" + this.b1, true, event);
+                this.createAnimation("animation.galath.rape" + this.rapeVariantIndex, true, event);
                 break;
             }
             case RAPE_CUM: {
@@ -2237,7 +2236,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 break;
             }
             case CORRUPT_FAST: {
-                this.createAnimation("animation.galath.corrupt_" + (this.aT ? "hard" : "soft"), true, event);
+                this.createAnimation("animation.galath.corrupt_" + (this.isCorruptSoftMode ? "hard" : "soft"), true, event);
                 break;
             }
             case CORRUPT_SLOW: {
@@ -2286,11 +2285,11 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 break;
             }
             case PUSSY_LICKING: {
-                this.createAnimation(this.a5 ? "animation.galath.pussy_licking_forward" : "animation.galath.pussy_licking", true, event);
+                this.createAnimation(this.isPussyLickingSlow ? "animation.galath.pussy_licking_forward" : "animation.galath.pussy_licking", true, event);
                 break;
             }
             case MASTERBATE_SITTING: {
-                this.createAnimation(this.bx ? "animation.galath.pussy_licking_back" : "animation.galath.masterbating_sitting", true, event);
+                this.createAnimation(this.isSittingFastAction ? "animation.galath.pussy_licking_back" : "animation.galath.masterbating_sitting", true, event);
                 break;
             }
             case MASTERBATE_SITTING_CUM: {
@@ -2298,7 +2297,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 break;
             }
             case MORNING_BLOWJOB_SLOW: {
-                this.createAnimation(this.bt ? "animation.shared.bed_back" : "animation.shared.bed_slow", true, event);
+                this.createAnimation(this.isBedSlowAnimation ? "animation.shared.bed_back" : "animation.shared.bed_slow", true, event);
                 break;
             }
             case MORNING_BLOWJOB_FAST: {
@@ -2355,12 +2354,12 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                     break;
                 }
                 case "switchmoan": {
-                    if (this.a6) {
+                    if (this.isMoanAlternate) {
                         this.playRandomSound(SoundsHandler.GIRLS_GALATH_BREATHING);
                     } else {
                         this.playRandomSound(this.getRNG().nextBoolean() ? SoundsHandler.GIRLS_GALATH_MOAN : SoundsHandler.GIRLS_GALATH_AHH);
                     }
-                    this.a6 = !this.a6;
+                    this.isMoanAlternate = !this.isMoanAlternate;
                     break;
                 }
                 case "lightcharge": {
@@ -2399,20 +2398,20 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 }
                 case "startRenderSword": {
                     this.hasSwordEquipped = true;
-                    this.bu = true;
+                    this.isSwordTrailActive = true;
                     break;
                 }
                 case "stopFadeInParticles": {
-                    this.bu = false;
+                    this.isSwordTrailActive = false;
                     break;
                 }
                 case "stopRenderSword": {
                     this.hasSwordEquipped = false;
-                    this.bu = false;
+                    this.isSwordTrailActive = false;
                     break;
                 }
                 case "dontDrawStars": {
-                    this.aL = false;
+                    this.renderStarsFlag = false;
                     break;
                 }
                 case "setNude": {
@@ -2433,10 +2432,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 }
                 case "rape_switch": {
                     Random random = this.getRNG();
-                    int n = this.b1;
+                    int n = this.rapeVariantIndex;
                     do {
-                        this.b1 = random.nextInt(3);
-                    } while (this.b1 == n);
+                        this.rapeVariantIndex = random.nextInt(3);
+                    } while (this.rapeVariantIndex == n);
                     if (this.hasMasterOAlgo() || !this.isControlledByLocalPlayer() || !(0.0f >= Minecraft.getMinecraft().player.getHealth() - 1.0f)) break;
                     this.setCurrentAction(Action.RAPE_CUM);
                     break;
@@ -2486,13 +2485,13 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 }
                 case "corrupt_hard": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
-                    this.aT = true;
+                    this.isCorruptSoftMode = true;
                     this.resetAnimationControllerOffset();
                     break;
                 }
                 case "corrupt_hard_end": {
                     this.setCurrentAction(Action.CORRUPT_SLOW);
-                    this.aT = false;
+                    this.isCorruptSoftMode = false;
                     break;
                 }
                 case "addCum": {
@@ -2651,7 +2650,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             if (mc.gameSettings.keyBindJump.isKeyDown()) {
                 if (GalathFlightUI.canUseCharge()) {
                     for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
-                        if (!girl.world.isRemote || !(girl instanceof GalathEntity) || !mc.player.getPersistentID().equals(((GalathEntity) girl).ax()))
+                        if (!girl.world.isRemote || !(girl instanceof GalathEntity) || !mc.player.getPersistentID().equals(((GalathEntity) girl).getRiderUUID()))
                             continue;
                         GalathFlightUI.consumeCharge();
                         girl.setCurrentAction(Action.BOOST);
@@ -2681,7 +2680,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             if (entity instanceof GalathEntity) {
                 if (!event.getSource().equals(DamageSource.OUT_OF_WORLD)) {
                     GalathEntity galath = (GalathEntity) entity;
-                    if (!galath.bU) {
+                    if (!galath.isDashActive) {
                         if (!entity.world.isRemote) {
                             if (!galath.hasMasterOAlgo()) {
                                 galath.sendTrackingMessage(galath.getCombatTracker().getFighter());
@@ -2689,7 +2688,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                                 GalathCoin.deSummonGalath(galath);
                                 PacketHandler.INSTANCE.sendToAllTracking(new SpawnEnergyBallParticles(galath.girlID(), GalathMangTracker.getManglelieOwnerOf(galath)), galath);
                                 ThreadNames.createDaemonThread(900, () -> GalathMangTracker.updateMangleliePartner(galath));
-                                galath.bU = true;
+                                galath.isDashActive = true;
                             }
                             galath.setHealth(1.0f);
                             event.setCanceled(true);
@@ -2728,10 +2727,10 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                 Vec3d pos;
                 Vec3d offset;
                 double progress;
-                if (girl instanceof GalathEntity && girl.world.isRemote && girl.getCurrentAction() == Action.SUMMON_SKELETON && !((progress = ((GalathEntity) girl).ad) < 9.0) && !(progress > 30.0)) {
+                if (girl instanceof GalathEntity && girl.world.isRemote && girl.getCurrentAction() == Action.SUMMON_SKELETON && !((progress = ((GalathEntity) girl).energyBallChargeTicks) < 9.0) && !(progress > 30.0)) {
                     Vec3d basePos = RotationHelper.LerpVec3d(new Vec3d(girl.lastTickPosX, girl.lastTickPosY, girl.lastTickPosZ), girl.getPositionVector(), partialTicks);
                     double scale = (progress - 9.0) / 21.0;
-                    if (girl.getDataManager().get(bN)) {
+                    if (girl.getDataManager().get(IS_RIGHT_ENERGY_BALL_ACTIVE)) {
                         offset = girl.getCachedBoneOffset("energyBallR");
                         pos = basePos.add(offset);
                         energyBallEntity = new EnergyBallEntity(girl.world, (GalathEntity) girl);
@@ -2741,7 +2740,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
                         energyBallEntity.setPosition(0.0, -500.0, 0.0);
                         energyBallEntity.setDead();
                     }
-                    if (girl.getDataManager().get(b7)) {
+                    if (girl.getDataManager().get(IS_LEFT_ENERGY_BALL_ACTIVE)) {
                         offset = girl.getCachedBoneOffset("energyBallL");
                         pos = basePos.add(offset);
                         energyBallEntity = new EnergyBallEntity(girl.world, (GalathEntity) girl);

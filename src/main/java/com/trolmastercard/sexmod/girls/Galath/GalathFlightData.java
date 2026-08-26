@@ -137,11 +137,11 @@ public enum GalathFlightData {
 
     SUMMON_SKELETON(galath -> {
         galath.setCurrentAction(Action.SUMMON_SKELETON);
-        galath.ad = 0;
+        galath.energyBallChargeTicks = 0;
         EntityDataManager dataManager = galath.getDataManager();
-        dataManager.set(GalathEntity.bN, true);
-        dataManager.set(GalathEntity.b7, true);
-        dataManager.set(GalathEntity.ay, galath.getRNG().nextBoolean());
+        dataManager.set(GalathEntity.IS_RIGHT_ENERGY_BALL_ACTIVE, true);
+        dataManager.set(GalathEntity.IS_LEFT_ENERGY_BALL_ACTIVE, true);
+        dataManager.set(GalathEntity.MIRROR_ENERGY_BALLS, galath.getRNG().nextBoolean());
         GirlEntity.playRandomSound(galath, SoundsHandler.GIRLS_GALATH_STRONGCHARGE, true);
     }, galath -> {
         EnergyBallEntity energyBallEntity;
@@ -149,14 +149,14 @@ public enum GalathFlightData {
         Vec3d aim;
         Vec3d headAnchor;
         galath.setVelocity(Vec3d.ZERO);
-        if ((float) galath.ad == 30.0f) {
+        if ((float) galath.energyBallChargeTicks == 30.0f) {
             GalathEntity.getAimYaw(galath, 0.0f);
             Vec3d pos = galath.getPositionVector();
             Vec3d targetPos = galath.getAttackTarget().getPositionVector();
             Random random = galath.getRNG();
-            boolean bl = galath.getDataManager().get(GalathEntity.ay);
-            if (galath.getDataManager().get(GalathEntity.bN)) {
-                headAnchor = pos.add(VectorMath.rotateByYaw(bl ? VectorMath.MirrorXZ(GalathEntity.bz) : GalathEntity.bz, 180.0f + galath.renderYawOffset));
+            boolean bl = galath.getDataManager().get(GalathEntity.MIRROR_ENERGY_BALLS);
+            if (galath.getDataManager().get(GalathEntity.IS_RIGHT_ENERGY_BALL_ACTIVE)) {
+                headAnchor = pos.add(VectorMath.rotateByYaw(bl ? VectorMath.MirrorXZ(GalathEntity.ENERGY_BALL_OFFSET_LEFT) : GalathEntity.ENERGY_BALL_OFFSET_LEFT, 180.0f + galath.renderYawOffset));
                 aim = targetPos.subtract(headAnchor).normalize();
                 aim = new Vec3d(aim.x + random.nextDouble() * (double) 0.3f, aim.y + random.nextDouble() * (double) 0.3f, aim.z + random.nextDouble() * (double) 0.3f);
                 aim = aim.normalize();
@@ -165,8 +165,8 @@ public enum GalathFlightData {
                 energyBallEntity.setPositionAndUpdate(headAnchor.x, headAnchor.y, headAnchor.z);
                 galath.world.spawnEntity(energyBallEntity);
             }
-            if (galath.getDataManager().get(GalathEntity.b7)) {
-                headAnchor = pos.add(VectorMath.rotateByYaw(bl ? VectorMath.MirrorXZ(GalathEntity.bC) : GalathEntity.bC, 180.0f + galath.renderYawOffset));
+            if (galath.getDataManager().get(GalathEntity.IS_LEFT_ENERGY_BALL_ACTIVE)) {
+                headAnchor = pos.add(VectorMath.rotateByYaw(bl ? VectorMath.MirrorXZ(GalathEntity.ENERGY_BALL_OFFSET_RIGHT) : GalathEntity.ENERGY_BALL_OFFSET_RIGHT, 180.0f + galath.renderYawOffset));
                 aim = targetPos.subtract(headAnchor).normalize();
                 aim = new Vec3d(aim.x + random.nextDouble() * (double) 0.3f, aim.y + random.nextDouble() * (double) 0.3f, aim.z + random.nextDouble() * (double) 0.3f);
                 aim = aim.normalize();
@@ -176,8 +176,8 @@ public enum GalathFlightData {
                 galath.world.spawnEntity(energyBallEntity);
             }
         }
-    }, galath -> galath.ad >= 45, galath -> {
-        galath.ad = 0;
+    }, galath -> galath.energyBallChargeTicks >= 45, galath -> {
+        galath.energyBallChargeTicks = 0;
     }, true, galath -> galath.witherSkeletons.size() < 2, true),
 
     ATTACK_SWORD(galath -> {
@@ -242,8 +242,8 @@ public enum GalathFlightData {
 
     RAPE(galath -> {
         galath.setCurrentAction(Action.RAPE_PREPARE);
-        galath.aF = 0;
-        galath.bd = null;
+        galath.spellCastTimer = 0;
+        galath.lastTargetDashPos = null;
         galath.flightTargetPosition = null;
         galath.getDataManager().set(GalathEntity.SPIN_YAW_FACTOR, 0.0f);
     }, galath -> {
@@ -253,12 +253,12 @@ public enum GalathFlightData {
         Vec3d toPlayer;
         Vec3d playerPos;
         Vec3d dir;
-        if (++galath.aF >= 48) {
+        if (++galath.spellCastTimer >= 48) {
             galath.setCurrentAction(Action.RAPE_CHARGE);
             EntityLivingBase target = galath.getAttackTarget();
-            if (galath.bd == null) {
+            if (galath.lastTargetDashPos == null) {
                 galath.flightTargetPosition = target.getPositionVector().add(0.0, target.getEyeHeight() / 2.0f, 0.0);
-                galath.bd = galath.getPositionVector();
+                galath.lastTargetDashPos = galath.getPositionVector();
                 dir = target.getPositionVector().subtract(galath.getPositionVector()).normalize();
                 galath.setYawRotation((float) (TrigMath.sinDegrees(Math.atan2(dir.z, dir.x)) - 90.0));
             }
@@ -294,7 +294,7 @@ public enum GalathFlightData {
                 }
             }
 
-            Vec3d from = galath.bd;
+            Vec3d from = galath.lastTargetDashPos;
             Vec3d to = galath.flightTargetPosition;
             playerPos = to.subtract(from);
             toPlayer = to.add(playerPos);
@@ -325,7 +325,7 @@ public enum GalathFlightData {
             return true;
         }
 
-        Vec3d from = galath.bd;
+        Vec3d from = galath.lastTargetDashPos;
         Vec3d to = galath.flightTargetPosition;
         if (from == null) {
             return false;
@@ -336,8 +336,8 @@ public enum GalathFlightData {
         return galath.getDistance(newPos.x, newPos.y, newPos.z) < (double)0.1f;
     }, galath -> {
         galath.flightTargetPosition = null;
-        galath.bd = null;
-        galath.aF = 0;
+        galath.lastTargetDashPos = null;
+        galath.spellCastTimer = 0;
         galath.getDataManager().set(GalathEntity.SPIN_YAW_FACTOR, 0.0f);
     }, true, galath -> true, true);
 
