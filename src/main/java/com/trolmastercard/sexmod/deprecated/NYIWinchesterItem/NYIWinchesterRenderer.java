@@ -27,7 +27,7 @@ import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 public class NYIWinchesterRenderer extends GeoItemRenderer<NYIWinchesterItem> {
-    final static Vec3d a = new Vec3d(0.0, 1.0, 0.0);
+    final static Vec3d offset = new Vec3d(0.0, 1.0, 0.0);
 
     public NYIWinchesterRenderer() {
         super(new NYIWinchesterModel());
@@ -61,7 +61,7 @@ public class NYIWinchesterRenderer extends GeoItemRenderer<NYIWinchesterItem> {
             if ((geoCube.size.x == 0.0f || geoCube.size.y == 0.0f) && vector3f.getZ() < 0.0f) {
                 vector3f.z *= -1.0f;
             }
-            Vec3d vec3d = DebugMode.devDebugFloats[0] == 0.0f ? BoneDeformProcessor.calculatePhysicsVector(new Vec3d(f, f2, f3), vector3f, a) : new Vec3d(f, f2, f3);
+            Vec3d vec3d = DebugMode.devDebugFloats[0] == 0.0f ? BoneDeformProcessor.calculatePhysicsVector(new Vec3d(f, f2, f3), vector3f, offset) : new Vec3d(f, f2, f3);
             for (GeoVertex geoVertex : quad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
                 MATRIX_STACK.getModelMatrix().transform((Tuple4f)vector4f);

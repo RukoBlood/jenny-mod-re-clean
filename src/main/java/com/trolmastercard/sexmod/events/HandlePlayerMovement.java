@@ -13,7 +13,6 @@ import com.trolmastercard.sexmod.gui.Sex.SexUI;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.InputUpdateEvent;
@@ -56,24 +55,23 @@ public class HandlePlayerMovement {
         Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
     }
 
-    public static boolean b() {
+    public static boolean isActive() {
         return active;
     }
 
-    public static void setMovementLock(boolean bl) {
-        active = bl;
-        if (!bl) {
-            HandlePlayerMovement.a();
+    public static void setMovementLock(boolean locked) {
+        active = locked;
+        if (!locked) {
+            HandlePlayerMovement.handlePlayerMovementTick();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    static void a() {
+    static void handlePlayerMovementTick() {
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
-        if (!PlayerGirl.isOwnerPlayer(entityPlayerSP)) {
-            return;
+        if (PlayerGirl.isOwnerPlayer(entityPlayerSP)) {
+            entityPlayerSP.sendStatusMessage(new TextComponentString("Jump to get out of the animation"), true);
         }
-        ((EntityPlayer)entityPlayerSP).sendStatusMessage(new TextComponentString("Jump to get out of the animation"), true);
     }
 
     @SubscribeEvent

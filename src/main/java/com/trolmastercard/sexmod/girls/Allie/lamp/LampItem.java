@@ -252,7 +252,7 @@ public class LampItem extends Item implements IAnimatable {
             EnumHand hand = event.getHand();
             ItemStack stack = player.getHeldItem(hand);
             if (!PlayerGirl.isOwnerPlayer(player)) {
-                if (!player.world.isRemote || HandlePlayerMovement.b()) {
+                if (!player.world.isRemote || HandlePlayerMovement.isActive()) {
                     if (!player.world.isRemote) {
                         for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                             if (!girl.isDead && girl instanceof AllieEntity && stack.equals(((AllieEntity) girl).getDataManager().get(AllieEntity.LAMP_ITEM))) {

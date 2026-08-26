@@ -24,7 +24,7 @@ public class EntityAIVillagerJustBangHerWithoutThinking extends EntityAIBase {
     final private EntityVillager villager;
     private EntityVillager targetVillager;
     final private World world;
-    private int b;
+    private int ticks;
 
     public EntityAIVillagerJustBangHerWithoutThinking(EntityVillager villager) {
         this.villager = villager;
@@ -34,7 +34,7 @@ public class EntityAIVillagerJustBangHerWithoutThinking extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if (this.b != 0) {
+        if (this.ticks != 0) {
             return false;
         }
         EntityVillager villagersInArea = this.world.findNearestEntityWithinAABB(EntityVillager.class, this.villager.getEntityBoundingBox().grow(8.0, 3.0, 8.0), this.villager);
@@ -47,7 +47,7 @@ public class EntityAIVillagerJustBangHerWithoutThinking extends EntityAIBase {
 
     @Override
     public void startExecuting() {
-        this.b = 300;
+        this.ticks = 300;
         this.villager.setMating(true);
     }
 
@@ -62,12 +62,12 @@ public class EntityAIVillagerJustBangHerWithoutThinking extends EntityAIBase {
 
     @Override
     public void updateTask() {
-        --this.b;
+        --this.ticks;
         this.villager.getLookHelper().setLookPositionWithEntity(this.targetVillager, 10.0f, 30.0f);
         if (this.villager.getDistanceSq(this.targetVillager) > 2.25) {
             this.villager.getNavigator().tryMoveToEntityLiving(this.targetVillager, 0.25);
         }
-        if (this.b <= 0) {
+        if (this.ticks <= 0) {
             this.spawnBaby();
             this.villager.tasks.removeTask(this);
         }

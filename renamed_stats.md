@@ -1,5 +1,5 @@
-Methods renamed: 95.75% (2704/2824)
-Fields renamed: 77.14% (1232/1597)
+Methods renamed: 95.82% (2706/2824)
+Fields renamed: 77.27% (1234/1597)
 
 ## Synthetic Elements Detailed List
 
@@ -9,9 +9,6 @@ Fields renamed: 77.14% (1232/1597)
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\deprecated\NYIWinchesterItem\NYIWinchesterRenderer.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\events\HandlePlayerMovement.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\events\HandlePlayerMovement.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Method | `a()` |
@@ -20,7 +17,6 @@ Fields renamed: 77.14% (1232/1597)
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Field | `e` |
-| `src\main\java\com\trolmastercard\sexmod\gender_change\hornypotion\EntityAIVillagerJustBangHerWithoutThinking.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Method | `java_lang_String_a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Method | `boolean_c()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Field | `m` |
