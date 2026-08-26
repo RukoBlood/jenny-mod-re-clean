@@ -27,7 +27,7 @@ public class EquipmentSlot extends SlotItemHandler {
     }
 
     public static boolean isSlotValidForItems(ItemStack itemStack, int n) {
-        return EquipmentSlot.isItemValidForSlot(itemStack, GirlEquipmentType.a(n));
+        return EquipmentSlot.isItemValidForSlot(itemStack, GirlEquipmentType.getTypeByIndex(n));
     }
 
     public boolean isItemValid(ItemStack itemStack) {
@@ -74,7 +74,7 @@ public class EquipmentSlot extends SlotItemHandler {
 
         public int id;
 
-        public static GirlEquipmentType a(int index) {
+        public static GirlEquipmentType getTypeByIndex(int index) {
             switch (index) {
                 case 0: {
                     return WEAPON;

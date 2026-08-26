@@ -135,7 +135,7 @@ public class FighterCompanion extends CompanionBase {
                     this.navigator.clearPath();
                     if (!this.girl.downed) {
                         this.navigator.tryMoveToEntityLiving(this.master, 0.5);
-                        this.void_a(); //not in 1.5.2 version of mod
+                        this.addForwardJumpImpulse(); //not in 1.5.2 version of mod
                     }
                 } else {
                     this.tpToPlayer();
@@ -348,14 +348,13 @@ public class FighterCompanion extends CompanionBase {
         this.girl.getDataManager().set(Fighter.ATTACK_MODE, 0);
     }
 
-    void void_a() {
-        if (this.girl.onGround || this.girl.isInWater() || this.girl.motionX + this.girl.motionZ != 0.0 || this.girl.motionY <= 0.0) {
-            return;
+    void addForwardJumpImpulse() {
+        if (!this.girl.onGround && !this.girl.isInWater() && this.girl.motionX + this.girl.motionZ == 0.0 && !(this.girl.motionY <= 0.0)) {
+            Vec3d vec3d = new Vec3d(0.0, 0.0, 0.1f);
+            vec3d = VectorMath.rotateByYaw(vec3d, this.girl.rotationYaw);
+            this.girl.motionX = vec3d.x;
+            this.girl.motionZ = vec3d.z;
         }
-        Vec3d vec3d = new Vec3d(0.0, 0.0, 0.1f);
-        vec3d = VectorMath.rotateByYaw(vec3d, this.girl.rotationYaw);
-        this.girl.motionX = vec3d.x;
-        this.girl.motionZ = vec3d.z;
     }
 
     public static class EventHandler {
