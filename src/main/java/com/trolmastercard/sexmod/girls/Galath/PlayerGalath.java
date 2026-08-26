@@ -44,10 +44,10 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlayerGalath extends PlayerGirl implements IGalath {
-    boolean ap = false;
-    int ar = 0;
-    boolean as = false;
-    boolean aq = false;
+    boolean isNude = false;
+    int rapeVariant = 0;
+    boolean isCorruptHard = false;
+    boolean isCorruptCameraActive = false;
 
     public PlayerGalath(World world) {
         super(world);
@@ -111,7 +111,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
             if (currentAction != Action.RAPE_CUM || action != Action.RAPE_ON_GOING) {
                 if (currentAction != Action.RAPE_CUM || action != Action.RAPE_CUM_IDLE) {
                     if (action == Action.CORRUPT_SLOW) {
-                        this.as = false;
+                        this.isCorruptHard = false;
                     }
                     super.setCurrentAction(action);
                 }
@@ -155,7 +155,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
 
     @Override
     public boolean isWingsAnimated() {
-        return this.getOutfitIndex() == 0 || this.ap;
+        return this.getOutfitIndex() == 0 || this.isNude;
     }
 
     @Override
@@ -203,11 +203,11 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
             case RAPE_CUM:
             case RAPE_CHARGE:
             case RAPE_CUM_IDLE: {
-                this.ap = true;
+                this.isNude = true;
                 return;
             }
             default:
-                this.ap = false;
+                this.isNude = false;
         }
         //this.ap = false;
     }
@@ -275,7 +275,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                         break ;
                     }
                     case RAPE_ON_GOING: {
-                        this.createAnimation("animation.galath.rape" + this.ar, true, event);
+                        this.createAnimation("animation.galath.rape" + this.rapeVariant, true, event);
                         break ;
                     }
                     case RAPE_CUM: {
@@ -287,7 +287,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                         break ;
                     }
                     case CORRUPT_FAST: {
-                        this.createAnimation("animation.galath.corrupt_" + (this.as ? "hard" : "soft"), true, event);
+                        this.createAnimation("animation.galath.corrupt_" + (this.isCorruptHard ? "hard" : "soft"), true, event);
                         break ;
                     }
                     case CORRUPT_SLOW: {
@@ -335,7 +335,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                     break;
                 }
                 case "setNude": {
-                    this.ap = true;
+                    this.isNude = true;
                     Vec3d pos = this.getPositionVector();
                     Vec3d slipRPos = this.getCachedBoneOffset("slipR").add(pos);
                     Vec3d slipLPos = this.getCachedBoneOffset("slipL").add(pos);
@@ -353,11 +353,11 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                 }
                 case "rape_switch": {
                     Random random = this.getRNG();
-                    int oldState = this.ar;
+                    int oldState = this.rapeVariant;
 
                     do {
-                        this.ar = random.nextInt(3);
-                    } while (this.ar == oldState);
+                        this.rapeVariant = random.nextInt(3);
+                    } while (this.rapeVariant == oldState);
 
                     break;
                 }
@@ -391,14 +391,14 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                 }
                 case "corrupt_hard": {
                     if (this.isControlledByLocalPlayer() && HandlePlayerMovement.isThrusting) {
-                        this.as = true;
+                        this.isCorruptHard = true;
                         this.resetAnimationControllerOffset();
                     }
                     break;
                 }
                 case "corrupt_hard_end": {
                     this.setCurrentAction(Action.CORRUPT_SLOW);
-                    this.as = false;
+                    this.isCorruptHard = false;
                     break;
                 }
                 case "addCum": {
@@ -415,7 +415,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                 }
                 case "setCamCorrupt": {
                     if (this.isControlledByLocalPlayer()) {
-                        this.aq = true;
+                        this.isCorruptCameraActive = true;
                         EntityPlayerSP player = Minecraft.getMinecraft().player;
                         float yaw = this.getYawRotation() + 220.0f;
                         Vec3d pos = VectorMath.rotateByYaw(new Vec3d(0.5, 0.5f - player.getEyeHeight(), 0.4f), this.getYawRotation()).add(this.getTargetPosition());
@@ -426,7 +426,7 @@ public class PlayerGalath extends PlayerGirl implements IGalath {
                 }
                 case "enableBoyCam": {
                     if (this.isControlledByLocalPlayer()) {
-                        this.aq = false;
+                        this.isCorruptCameraActive = false;
                     }
                     break;
                 }

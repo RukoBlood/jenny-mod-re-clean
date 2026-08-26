@@ -42,7 +42,7 @@ public class GalathMangTracker extends WorldSavedData {
     final static public String GALATH_OWNERSHIP = "sexmod:galath_owner_ship";
     final static public String OWNERSHIP_DATA = "sexmod:ownershipdata";
     final static public String MANG_OWNERSHIP = "sexmod:mangownershipdata";
-    final static long a = 0L;
+    final static long time = 0L;
     static BiDirectionalMap<UUID, UUID> OwnerAndGalath = new BiDirectionalMap();
     static HashMap<UUID, Long> lastCumTimeMap = new HashMap<>();
     static HashSet<UUID> mangOwnershipSet = new HashSet<>();

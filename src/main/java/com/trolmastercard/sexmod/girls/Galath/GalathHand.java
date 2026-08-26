@@ -27,7 +27,7 @@ public class GalathHand extends ModelBase implements IRenderer {
         this.renderer.render(scale);
     }
 
-    public void a(ModelRenderer modelRenderer, float x, float y, float z) {
+    public void rotate(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;

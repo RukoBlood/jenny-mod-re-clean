@@ -18,43 +18,43 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class SpawnEnergyBallParticlesPacket2 implements IMessage {
-    Vec3d a;
-    boolean c;
-    boolean b = false;
+    Vec3d energyPos;
+    boolean isLeftSide;
+    boolean isValid = false;
 
     public SpawnEnergyBallParticlesPacket2() {
     }
 
     public SpawnEnergyBallParticlesPacket2(Vec3d vec3d, boolean bl) {
-        this.a = vec3d;
-        this.c = bl;
+        this.energyPos = vec3d;
+        this.isLeftSide = bl;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
-        this.c = byteBuf.readBoolean();
-        this.b = true;
+        this.energyPos = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
+        this.isLeftSide = byteBuf.readBoolean();
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeDouble(this.a.x);
-        byteBuf.writeDouble(this.a.y);
-        byteBuf.writeDouble(this.a.z);
-        byteBuf.writeBoolean(this.c);
+        byteBuf.writeDouble(this.energyPos.x);
+        byteBuf.writeDouble(this.energyPos.y);
+        byteBuf.writeDouble(this.energyPos.z);
+        byteBuf.writeBoolean(this.isLeftSide);
     }
 
     public static class Handler implements IMessageHandler<SpawnEnergyBallParticlesPacket2, IMessage> {
 
         @Override
         public IMessage onMessage(SpawnEnergyBallParticlesPacket2 msg, MessageContext ctx) {
-            if (!msg.b || !ctx.side.equals(Side.CLIENT)) {
+            if (!msg.isValid || !ctx.side.equals(Side.CLIENT)) {
                 System.out.println("received an invalid message @SpawnEnergyBallParticles :(");
                 return null;
             }
-            if (msg.c) {
-                EnergyBallEntity.a(msg.a);
+            if (msg.isLeftSide) {
+                EnergyBallEntity.spawnDragonBreath(msg.energyPos);
             } else {
-                EnergyBallEntity.c(msg.a);
+                EnergyBallEntity.spawnDragonBreathRandom(msg.energyPos);
             }
             return null;
         }

@@ -70,8 +70,8 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
     final static Rotation2f WING_UV_OFFSET_2 = new Rotation2f(0.375f, 0.125f);
     final static float WING_UV_SIZE = 0.125f;
     final static ResourceLocation STAR_TEXTURE = new ResourceLocation("sexmod", "textures/star.png");
-    final static int v = 105;
-    final static int A = 125;
+    final static int Value_v = 105;
+    final static int Value_A = 125;
 
     final static float HAIR_THICKNESS_START_R = 0.0296875f;
     final static float HAIR_THICKNESS_MID_R = 0.06484375f;
