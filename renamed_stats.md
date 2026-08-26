@@ -1,5 +1,5 @@
-Methods renamed: 98.09% (2770/2824)
-Fields renamed: 84.37% (1344/1593)
+Methods renamed: 98.41% (2779/2824)
+Fields renamed: 85.94% (1369/1593)
 
 ## Synthetic Elements Detailed List
 
@@ -9,37 +9,6 @@ Fields renamed: 84.37% (1344/1593)
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathHand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathMangTracker.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathRenderer.java` | Field | `v` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\PlayerGalath.java` | Field | `ap` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\PlayerGalath.java` | Field | `ar` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\PlayerGalath.java` | Field | `as` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\PlayerGalath.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Method | `c()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Method | `c()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `e` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `k` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `l` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `j` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `h` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `i` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallEntity.java` | Field | `f` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Field | `e` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Galath\EnergyBall\EnergyBallRenderer.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ab` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `af` |
@@ -272,9 +241,6 @@ Fields renamed: 84.37% (1344/1593)
 | `src\main\java\com\trolmastercard\sexmod\Packets\SexPrompt.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\SpawnEnergyBallParticles.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\SpawnEnergyBallParticles.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\Packets\SpawnEnergyBallParticlesPacket2.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\Packets\SpawnEnergyBallParticlesPacket2.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\Packets\SpawnEnergyBallParticlesPacket2.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\SpawnParticle.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\SpawnParticle.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\Packets\SpawnParticle.java` | Field | `a` |
