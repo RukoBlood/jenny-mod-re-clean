@@ -1,12 +1,10 @@
-Methods renamed: 95.68% (2702/2824)
+Methods renamed: 95.75% (2704/2824)
 Fields renamed: 77.14% (1232/1597)
 
 ## Synthetic Elements Detailed List
 
 | File | Type | Name |
 | --- | --- | --- |
-| `src\main\java\com\trolmastercard\sexmod\companion\fighter\EquipmentSlot.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\companion\fighter\FighterCompanion.java` | Method | `void_a()` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `d` |
