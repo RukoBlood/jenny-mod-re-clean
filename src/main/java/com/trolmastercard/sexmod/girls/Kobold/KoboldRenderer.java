@@ -59,13 +59,13 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
     protected ItemStack getHeldItem(@Nullable ItemStack input) {
         switch (this.renderEntity.getCurrentAction()) {
             case MINE: {
-                if (this.renderEntity.getDataManager().get(KoboldEntity.at)) {
+                if (this.renderEntity.getDataManager().get(KoboldEntity.IS_MINING_WOOD)) {
                     return new ItemStack(Items.IRON_AXE);
                 }
                 return new ItemStack(Items.IRON_PICKAXE);
             }
             case NULL: {
-                if (!this.renderEntity.getDataManager().get(KoboldEntity.aC)) break;
+                if (!this.renderEntity.getDataManager().get(KoboldEntity.IS_IN_COMBAT)) break;
                 return new ItemStack(Items.IRON_SWORD);
             }
             case ATTACK: {
@@ -120,12 +120,12 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
     @Override
     public void doRender(KoboldEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         String string = entity.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION);
-        if (entity.as == null) {
-            entity.as = string;
+        if (entity.customTitle == null) {
+            entity.customTitle = string;
         }
-        if (!entity.as.equals(string)) {
+        if (!entity.customTitle.equals(string)) {
             KoboldRenderer.clearBoneColors();
-            entity.as = string;
+            entity.customTitle = string;
         }
         this.v = new Vector3f((float) x, (float) y, (float) z);
         super.doRender(entity, x, y, z, entityYaw, partialTicks);

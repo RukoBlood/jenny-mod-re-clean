@@ -82,7 +82,7 @@ public class GetTribeUIValues implements IMessage {
             }
             if (ctx.side.isClient()) {
                 DragonStaffUI.isTribeFollowing = msg.isTribeLeader;
-                KoboldEntity.aY = msg.tribeMembers;
+                KoboldEntity.ACTIVE_TRIBE_SCREEN_POSITIONS = msg.tribeMembers;
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {

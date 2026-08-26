@@ -47,7 +47,7 @@ public class KoboldModel extends GirlModel<GirlEntity> {
         }
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
         if (!girl.isLocallyRegistered() && girl instanceof KoboldEntity) {
-            animationProcessor.getBone("crown").setHidden(!girl.getDataManager().get(KoboldEntity.aZ));
+            animationProcessor.getBone("crown").setHidden(!girl.getDataManager().get(KoboldEntity.IS_TRIBE_MEMBER));
             animationProcessor.getBone("egg").setHidden(!((KoboldEntity) girl).isRenderEgg);
         } else {
             animationProcessor.getBone("crown").setHidden(true);

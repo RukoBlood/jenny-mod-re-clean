@@ -134,7 +134,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
     void collectAnimationBones() {
         ArrayList<Integer> particleIds = new ArrayList<Integer>();
         ArrayList<Vec3d> particlePositions = new ArrayList<Vec3d>();
-        for (Vector4d particleData : KoboldEntity.aY) {
+        for (Vector4d particleData : KoboldEntity.ACTIVE_TRIBE_SCREEN_POSITIONS) {
             particleIds.add((int)particleData.getW());
             particlePositions.add(new Vec3d(particleData.getX(), particleData.getY(), particleData.getZ()));
         }

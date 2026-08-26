@@ -117,49 +117,26 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 // ff_class308
 public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInventory, IKobold {
     final static public EyeAndKoboldColor COLOR = EyeAndKoboldColor.PURPLE;
-    final static public float SCALE = 0.25f;
-    final static int ar = 20;
-    final static int ag = 2;
-    final static int aG = 30;
-    final static int ah = 84;
-    final static int a3 = 32;
-    final static int a1 = 5;
-    final static float ae = 1.5f;
-    final static float aW = 20.0f;
-    final static double au = 10.0;
-    final static double ay = 2.0;
-    final static double al = 3.0;
-    final static int aQ = 300;
-    final static int aq = 5;
-    final static int aO = 100;
-    final static int aB = 100;
-    final static int ac = 2;
-    final static float am = 2.0f;
-    final static int aw = 300;
-    final static float aj = 0.2f;
-    final static double aH = 0.7;
-    final static int aa = 142;
     final static public DataParameter<Float> SIZE = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.FLOAT).getSerializer().createKey(122);
     final static public DataParameter<String> KOBOLD_NAME = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.STRING).getSerializer().createKey(123);
-    final static public DataParameter<Boolean> aC = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(124);
-    final static public DataParameter<Boolean> aZ = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(125);
+    final static public DataParameter<Boolean> IS_IN_COMBAT = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(124);
+    final static public DataParameter<Boolean> IS_TRIBE_MEMBER = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(125);
     final static public DataParameter<String> TRIBE_NAME = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.STRING).getSerializer().createKey(126);
-    final static public DataParameter<Boolean> ak = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(127);
-    final static public DataParameter<Boolean> at = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(128);
+    final static public DataParameter<Boolean> IS_TRIBE_ALERTED = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(127);
+    final static public DataParameter<Boolean> IS_MINING_WOOD = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(128);
     final static public DataParameter<Optional<UUID>> TRIBE_ID = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID).getSerializer().createKey(129);
-    final static public int av = 24;
     static public double MAX_HEALTH = 69.0;
-    static public List<Vector4d> aY = new ArrayList<>();
+    static public List<Vector4d> ACTIVE_TRIBE_SCREEN_POSITIONS = new ArrayList<>();
     ItemStackHandler inventory = new ItemStackHandler(27);
-    public String as = null;
-    boolean az = false;
-    int aP = 0;
+    public String customTitle = null;
+    boolean isInteracting = false;
+    int attackCooldownTicks = 0;
     int animationTicks = 0;
-    boolean a2 = false;
-    int aD = 0;
-    int a5 = 0;
+    boolean isAligningWithPlayer = false;
+    int alignmentTicks = 0;
+    int healthRegenTimer = 0;
     float nearestDistance = Float.MAX_VALUE;
-    static long aV = Long.MIN_VALUE;
+    static long lastMasterGreetingTime = Long.MIN_VALUE;
 
     //What the fuck
     String[] DialogueArray = new String[]{
@@ -183,28 +160,28 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     };
 
     IBlockState blockBelowState = null;
-    IBlockState aX = null;
-    BlockPos aF = null;
-    boolean ao = true;
-    Vec3d aS = Vec3d.ZERO;
-    BlockPos aM = null;
-    BlockPos aI = null;
-    int ai = 0;
+    IBlockState savedHomeBlockState = null;
+    BlockPos assignedRestPos = null;
+    boolean isTribeTasksCompleted = true;
+    Vec3d lastTrackedPosition = Vec3d.ZERO;
+    BlockPos targetTribeHomePos = null;
+    BlockPos currentMiningBlockPos = null;
+    int miningTicks = 0;
     int taskTimer = 0;
-    int aK = 0;
-    int a0 = 0;
-    boolean ax = false;
-    BlockPos ap = null;
-    int ab = 0;
-    int aR = 24;
+    int stuckMiningTicks = 0;
+    int chestFullWarningCooldown = 0;
+    boolean isInventoryFullWarningSent = false;
+    BlockPos wanderTargetPos = null;
+    int wanderStuckTicks = 0;
+    int treeBreakingTicksRemaining = 24;
     int cooldownTicks = 0;
-    ItemStack ad = null;
+    ItemStack harvestedSaplingStack = null;
     public boolean editedColorManually = false;
     int actionCooldown = -1;
-    boolean a4 = true;
-    boolean aT = false;
+    boolean blowjobSwitchPosition = true;
+    boolean blowjobSwitchFlag = false;
     public boolean isRenderEgg = false;
-    int aN = 0;
+    int matingTicks = 0;
 
     public KoboldEntity(World world) {
         super(world);
@@ -399,11 +376,11 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         this.entityDataManager.register(TRIBE_ID, Optional.absent());
         this.entityDataManager.register(SIZE, 0.0f);
         this.entityDataManager.register(KOBOLD_NAME, KoboldNames.values()[this.getRNG().nextInt(KoboldNames.values().length)].toString());
-        this.entityDataManager.register(aC, false);
-        this.entityDataManager.register(aZ, false);
+        this.entityDataManager.register(IS_IN_COMBAT, false);
+        this.entityDataManager.register(IS_TRIBE_MEMBER, false);
         this.entityDataManager.register(TRIBE_NAME, "null");
-        this.entityDataManager.register(ak, false);
-        this.entityDataManager.register(at, false);
+        this.entityDataManager.register(IS_TRIBE_ALERTED, false);
+        this.entityDataManager.register(IS_MINING_WOOD, false);
     }
 
     @Override
@@ -450,7 +427,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             return true;
         }
 
-        if (this.entityDataManager.get(aC)) {
+        if (this.entityDataManager.get(IS_IN_COMBAT)) {
             return false;
         }
         if (this.getCurrentAction() == Action.SLEEP) {
@@ -469,7 +446,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             if (!tribeIdOpt.isPresent()) {
                 return true;
             }
-            if (!aY.isEmpty()) {
+            if (!ACTIVE_TRIBE_SCREEN_POSITIONS.isEmpty()) {
                 return true;
             }
             this.openTribeNameScreen(tribeIdOpt.get());
@@ -519,8 +496,8 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     @Override
     @SideOnly(value=Side.CLIENT)
     public void AcSomeUnknownClass() {
-        if (this.az) {
-            this.az = false;
+        if (this.isInteracting) {
+            this.isInteracting = false;
         } else {
             this.setInteractionPlayerUUID(null);
             this.changeDataParameterFromClient("shouldbeattargetpos", "false");
@@ -540,7 +517,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     @Override
     public void doAction(String action, UUID uuid) {
-        this.az = true;
+        this.isInteracting = true;
         if ("oral".equals(action)) {
             this.changeDataParameterFromClient("animationFollowUp", Action.STARTBLOWJOB.toString());
             this.triggerActionSync(true, uuid);
@@ -557,7 +534,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     @Override
     public void setDismounted() {
-        this.a2 = true;
+        this.isAligningWithPlayer = true;
         this.entityDataManager.set(IS_ANCHORED, false);
     }
 
@@ -567,15 +544,15 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     boolean isSitting() {
-        if (!this.a2) {
+        if (!this.isAligningWithPlayer) {
             return false;
         }
-        ++this.aD;
+        ++this.alignmentTicks;
         this.noClip = false;
         this.setNoGravity(false);
-        if (this.aD > 40) {
-            this.a2 = false;
-            this.aD = 0;
+        if (this.alignmentTicks > 40) {
+            this.isAligningWithPlayer = false;
+            this.alignmentTicks = 0;
             EntityPlayer player = this.world.getPlayerEntityByUUID(this.getInteractionPlayerUUID());
             this.setYawRotation(player.rotationYaw + 180.0f);
             this.entityDataManager.set(IS_ANCHORED, true);
@@ -589,7 +566,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         }
         this.rotationYaw = this.getYawRotation();
         this.setNoGravity(false);
-        Vec3d pos = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.aD);
+        Vec3d pos = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.alignmentTicks);
         this.setPosition(pos.x, pos.y, pos.z);
         this.setCurrentAction(Action.NULL);
         Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
@@ -636,7 +613,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     public void updateAITasks() {
         //Object object;
         super.updateAITasks();
-        this.ax = false;
+        this.isInventoryFullWarningSent = false;
         Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
         if (tribeIdOpt.isPresent()) {
             this.handleActionCooldown(tribeIdOpt.get());
@@ -649,14 +626,14 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
         if (!this.isSitting()) {
             if (this.getInteractionPlayerUUID() == null) {
-                if (!this.entityDataManager.get(aC)) {
-                    if (this.getHealth() != this.getMaxHealth() && ++this.a5 >= 100) {
+                if (!this.entityDataManager.get(IS_IN_COMBAT)) {
+                    if (this.getHealth() != this.getMaxHealth() && ++this.healthRegenTimer >= 100) {
                         this.setHealth(this.getHealth() + 2.0f);
-                        this.a5 = 0;
+                        this.healthRegenTimer = 0;
                         PacketHandler.INSTANCE.sendToAllTracking(new SpawnParticle(this.girlID(), EnumParticleTypes.HEART.getParticleName()), this);
                     }
                 } else {
-                    this.a5 = 0;
+                    this.healthRegenTimer = 0;
                 }
 
                 if (!this.entityDataManager.get(IS_ANCHORED)) {
@@ -664,7 +641,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 }
 
                 if (tribeIdOpt.isPresent()) {
-                    --this.aP;
+                    --this.attackCooldownTicks;
                     if (this.getCurrentAction() == Action.ATTACK) {
                         this.getNavigator().clearPath();
                         this.rotationYaw = this.getYawRotation();
@@ -697,9 +674,9 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                         }
                         return;
                     }
-                    this.entityDataManager.set(aC, this.handleTribeCombat(tribeIdOpt.get(), false));
-                    this.entityDataManager.set(aZ, KoboldManager.isTribeMember(tribeIdOpt.get(), this));
-                    this.entityDataManager.set(ak, KoboldManager.isTribeAlerted(tribeIdOpt.get()));
+                    this.entityDataManager.set(IS_IN_COMBAT, this.handleTribeCombat(tribeIdOpt.get(), false));
+                    this.entityDataManager.set(IS_TRIBE_MEMBER, KoboldManager.isTribeMember(tribeIdOpt.get(), this));
+                    this.entityDataManager.set(IS_TRIBE_ALERTED, KoboldManager.isTribeAlerted(tribeIdOpt.get()));
                     this.handleMasterPresence();
                     this.handleModelSync();
                     this.watchClosestGirlGoal.isWatching = this.isIdle();
@@ -720,11 +697,11 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     void handleSleepState() {
         if (this.world.isRemote) {
-            if (this.world.getTotalWorldTime() - 300L >= aV) {
+            if (this.world.getTotalWorldTime() - 300L >= lastMasterGreetingTime) {
                 if (this.hasMaster()) {
                     if (this.getCurrentAction() == Action.NULL) {
                         if (this.entityDataManager.get(GIRL_HAND_STATES).isEmpty()) {
-                            if (!this.entityDataManager.get(ak)) {
+                            if (!this.entityDataManager.get(IS_TRIBE_ALERTED)) {
                                 String string = this.entityDataManager.get(MASTER);
                                 EntityPlayer entityPlayer = this.world.getClosestPlayerToEntity(this, 10.0);
                                 if (entityPlayer == null) {
@@ -734,7 +711,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                                     if (dist < 2.0f && this.nearestDistance > 2.0f) {
                                         this.playSound(SoundsHandler.random(SoundsHandler.GIRLS_KOBOLD_HEYMASTER));
                                         this.sendChatMessage("Hey master!");
-                                        aV = this.world.getTotalWorldTime();
+                                        lastMasterGreetingTime = this.world.getTotalWorldTime();
                                     }
                                     this.nearestDistance = dist;
                                 }
@@ -749,7 +726,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     void handleIdleState() {
         if (this.world.isRemote) {
             if (this.getCurrentAction() != Action.SLEEP) {
-                if (this.entityDataManager.get(ak)) {
+                if (this.entityDataManager.get(IS_TRIBE_ALERTED)) {
                     if (this.hasMaster()) {
                         EntityPlayer player = this.world.getPlayerEntityByUUID(UUID.fromString(this.entityDataManager.get(MASTER)));
                         if (player != null) {
@@ -762,7 +739,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     void handleTribeState() {
-        if (!this.entityDataManager.get(aC)) {
+        if (!this.entityDataManager.get(IS_IN_COMBAT)) {
             if (!this.hasMaster()) {
                 Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
                 if (tribeIdOpt.isPresent()) {
@@ -868,7 +845,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
         if (tribeIdOpt.isPresent()) {
             UUID uUID = tribeIdOpt.get();
-            if (!this.entityDataManager.get(aC) && KoboldManager.isTribeAlerted(uUID)) {
+            if (!this.entityDataManager.get(IS_IN_COMBAT) && KoboldManager.isTribeAlerted(uUID)) {
                 if (this.hasMaster()) {
                     EntityPlayer player = this.getMasterPlayer();
                     if (player != null) {
@@ -914,8 +891,8 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     void teleportToHome(UUID uUID) {
         BlockPos homePos = KoboldManager.getTribeHomePos(uUID);
         if (homePos != null) {
-            if (this.aX != null) {
-                this.world.setBlockState(homePos, this.aX);
+            if (this.savedHomeBlockState != null) {
+                this.world.setBlockState(homePos, this.savedHomeBlockState);
             }
 
             if (this.blockBelowState != null) {
@@ -930,7 +907,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         if (!this.isTribeTaskDone(uUID)) {
             if (!this.hasMaster() && KoboldManager.hasAssignedMaster(uUID)) {
                 this.getNavigator().clearPath();
-                this.aM = null;
+                this.targetTribeHomePos = null;
             } else {
                 TribeState newState = this.getTribeStateForTime();
                 TribeState currentState = KoboldManager.getTribeState(uUID);
@@ -953,7 +930,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
                 switch (newState) {
                     case ACTIVE: {
-                        this.aF = null;
+                        this.assignedRestPos = null;
                         this.handleHomeRelease(uUID);
                         break;
                     }
@@ -1062,20 +1039,20 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         if (homePos == null && KoboldManager.isTribeMember(uUID, this)) {
             BlockPos pos = this.getPosition().add(1, 0, 0);
             this.blockBelowState = this.world.getBlockState(pos.add(0, -1, 0));
-            this.aX = this.world.getBlockState(pos);
+            this.savedHomeBlockState = this.world.getBlockState(pos);
             this.world.setBlockState(pos.add(0, -1, 0), Blocks.NETHERRACK.getDefaultState());
             this.world.setBlockState(pos, SexFire.FIRE.getDefaultState());
             KoboldManager.setTribeHomePos(uUID, pos);
         }
         if (homePos != null) {
-            if (this.aF == null) {
-                this.aF = homePos.add(
+            if (this.assignedRestPos == null) {
+                this.assignedRestPos = homePos.add(
                         (this.getRNG().nextBoolean() ? 1 : -1) * (this.getRNG().nextInt(2) + 1),
                         0,
                         (this.getRNG().nextBoolean() ? 1 : -1) * (this.getRNG().nextInt(2) + 1)
                 );
             }
-            this.getNavigator().tryMoveToXYZ(this.aF.getX(), this.aF.getY(), this.aF.getZ(), 0.35f);
+            this.getNavigator().tryMoveToXYZ(this.assignedRestPos.getX(), this.assignedRestPos.getY(), this.assignedRestPos.getZ(), 0.35f);
             this.tickPathVelocity();
         }
     }
@@ -1087,8 +1064,8 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         } else {
             Collection<KoboldTask> tasks = KoboldManager.getTribeTasks(uUID);
             if (tasks != null) {
-                if (this.ao) {
-                    this.aM = null;
+                if (this.isTribeTasksCompleted) {
+                    this.targetTribeHomePos = null;
                     this.handleTribeTasks(uUID, tasks);
                 } else {
                     this.handleTribeTasksInit(uUID, tasks);
@@ -1099,7 +1076,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     void handleTribeTasks(UUID uUID, Collection<KoboldTask> tasks) {
         if (tasks.isEmpty()) {
-            this.ao = false;
+            this.isTribeTasksCompleted = false;
             this.checkTribeHome(uUID);
             this.sendGirlChatMessage("Lets go somewhere else");
         }
@@ -1111,21 +1088,21 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             this.checkTribeHome(uUID);
         } else {
             if (this.ticksExisted % 40 == 0) {
-                if (this.aS.equals(this.getPositionVector())) {
+                if (this.lastTrackedPosition.equals(this.getPositionVector())) {
                     this.checkTribeHome(uUID);
-                    this.aM = null;
+                    this.targetTribeHomePos = null;
                 }
-                this.aS = this.getPositionVector();
+                this.lastTrackedPosition = this.getPositionVector();
             }
 
-            if (this.aM == null || this.aM.getDistance((int) this.posX, (int) this.posY, (int) this.posZ) < 4.0) {
-                this.aM = this.getTribeHomePos(uUID);
+            if (this.targetTribeHomePos == null || this.targetTribeHomePos.getDistance((int) this.posX, (int) this.posY, (int) this.posZ) < 4.0) {
+                this.targetTribeHomePos = this.getTribeHomePos(uUID);
             }
 
-            this.getNavigator().tryMoveToXYZ(this.aM.getX(), this.aM.getY(), this.aM.getZ(), 0.35f);
+            this.getNavigator().tryMoveToXYZ(this.targetTribeHomePos.getX(), this.targetTribeHomePos.getY(), this.targetTribeHomePos.getZ(), 0.35f);
             this.tickPathVelocity();
             if (!(Math.sqrt(this.getPosition().distanceSq(homePos)) > 5.0)) {
-                this.ao = true;
+                this.isTribeTasksCompleted = true;
                 this.sendGirlChatMessage("Time to work bitches!");
                 int memberCount = KoboldManager.getTribeMemberCount(uUID);
 
@@ -1286,14 +1263,14 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         this.getNavigator().tryMoveToXYZ(standPos.getX(), standPos.getY(), standPos.getZ(), 0.7);
 
         this.tickPathVelocity();
-        if (this.getDistance(closestTarget) > 1.5f || this.aP > 0) {
+        if (this.getDistance(closestTarget) > 1.5f || this.attackCooldownTicks > 0) {
             return true;
         }
 
         float yaw = (float)(Math.atan2(this.posZ - closestTarget.posZ, this.posX - closestTarget.posX) * 57.29577951308232 + 90.0);
         this.setYawRotation(yaw);
         this.setCurrentAction(Action.ATTACK);
-        this.aP = 84;
+        this.attackCooldownTicks = 84;
         return true;
     }
 
@@ -1308,7 +1285,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 break;
             }
             case ACTIVE: {
-                this.aF = null;
+                this.assignedRestPos = null;
                 this.handleHomeTeleport(tribeId); // void
             }
         }
@@ -1317,34 +1294,34 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     void handleHomeTeleport(UUID uUID) {
         BlockPos pos = KoboldManager.getTribeHomePos(uUID);
         if (pos == null) {
-            this.aM = null;
+            this.targetTribeHomePos = null;
             this.handleTaskFollow(uUID);
         } else {
             KoboldEntity leader = KoboldManager.getTribeLeader(uUID);
             if (KoboldManager.hasAssignedMaster(uUID)) {
                 this.getNavigator().clearPath();
-                this.aM = null;
+                this.targetTribeHomePos = null;
                 //return;
             } else if (leader == null) {
                 System.out.println("leader of tribe " + uUID + " is null");
             } else {
                 if (leader.getDistance(this) > 20.0f) {
                     this.setPosition(leader.posX, leader.posY, leader.posZ);
-                    this.aM = null;
+                    this.targetTribeHomePos = null;
                 }
 
                 if (this.ticksExisted % 40 == 0) {
-                    if (this.aS.equals(this.getPositionVector())) {
-                        this.aM = this.getTribeHomePos(uUID);
+                    if (this.lastTrackedPosition.equals(this.getPositionVector())) {
+                        this.targetTribeHomePos = this.getTribeHomePos(uUID);
                     }
-                    this.aS = this.getPositionVector();
+                    this.lastTrackedPosition = this.getPositionVector();
                 }
 
-                if (this.aM == null || this.aM.getDistance((int) this.posX, (int) this.posY, (int) this.posZ) < 4.0) {
-                    this.aM = this.getTribeHomePos(uUID);
+                if (this.targetTribeHomePos == null || this.targetTribeHomePos.getDistance((int) this.posX, (int) this.posY, (int) this.posZ) < 4.0) {
+                    this.targetTribeHomePos = this.getTribeHomePos(uUID);
                 }
 
-                this.getNavigator().tryMoveToXYZ(this.aM.getX(), this.aM.getY(), this.aM.getZ(), 0.35f);
+                this.getNavigator().tryMoveToXYZ(this.targetTribeHomePos.getX(), this.targetTribeHomePos.getY(), this.targetTribeHomePos.getZ(), 0.35f);
                 this.tickPathVelocity();
             }
         }
@@ -1366,11 +1343,11 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     for (KoboldTask task : tasks) {
                         if (!this.hasMaster() || this.assignTaskToKobold(tribeId, task)) {
                             if (!this.canAssignTask(task)) {
-                                this.ax = true;
+                                this.isInventoryFullWarningSent = true;
                             }
                             else if (task.addWorker(this)) {
                                 assignedTask = task;
-                                this.aI = null;
+                                this.currentMiningBlockPos = null;
                                 if (task.getTaskType() == KoboldTask.KoboldTasks.FALL_TREE) {
                                     this.sendGirlChatMessage("Ima fall this tree owo");
                                 } else {
@@ -1409,24 +1386,24 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             this.handleTaskNavigation(tribeId, task);
         } else {
             --this.taskTimer;
-            --this.ai;
-            if (this.ai == 0) {
+            --this.miningTicks;
+            if (this.miningTicks == 0) {
                 //Object object;
-                IBlockState fallingState = this.world.getBlockState(this.aI.up());
+                IBlockState fallingState = this.world.getBlockState(this.currentMiningBlockPos.up());
                 if (!(fallingState.getBlock() instanceof BlockFalling)) {
-                    task.removeBlocks(this.aI);
+                    task.removeBlocks(this.currentMiningBlockPos);
                     EntityPlayer master = this.getMasterPlayer();
                     if (master != null) {
-                        PacketHandler.INSTANCE.sendTo(new SendBlocks(this.aI, false), (EntityPlayerMP) master);
+                        PacketHandler.INSTANCE.sendTo(new SendBlocks(this.currentMiningBlockPos, false), (EntityPlayerMP) master);
                     }
                 }
-                IBlockState blockState = this.world.getBlockState(this.aI);
+                IBlockState blockState = this.world.getBlockState(this.currentMiningBlockPos);
                 this.canExtractItem(new ItemStack(blockState.getBlock().getItemDropped(blockState, this.getRNG(), 0), 1, blockState.getBlock().damageDropped(blockState)));
-                this.world.destroyBlock(this.aI, false);
+                this.world.destroyBlock(this.currentMiningBlockPos, false);
             }
             if (this.taskTimer <= 0) {
                 this.taskTimer = 100;
-                this.ai = 24;
+                this.miningTicks = 24;
                 this.setCurrentAction(Action.NULL);
             }
         }
@@ -1435,26 +1412,26 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     void handleTaskNavigation(UUID uUID, KoboldTask task) {
         PathNavigate navigator = this.getNavigator();
 
-        if (this.aI != null && task.getTargetBlocks().contains(this.aI)) {
-            IBlockState blockState = this.world.getBlockState(this.aI);
+        if (this.currentMiningBlockPos != null && task.getTargetBlocks().contains(this.currentMiningBlockPos)) {
+            IBlockState blockState = this.world.getBlockState(this.currentMiningBlockPos);
             if (!this.canInsertItem(new ItemStack(blockState.getBlock().getItemDropped(blockState, Reference.RANDOM, 0)))) {
-                this.ax = true;
+                this.isInventoryFullWarningSent = true;
                 this.canStoreInventory(uUID, true);
-            } else if (this.motionX != 0.0 || this.motionZ != 0.0 || !this.onGround || this.getDistance(this.aI.getX(), this.aI.getY(), this.aI.getZ()) > 3.0 || ++this.aK < 10) {
-                BlockPos pos = this.aI.add(task.getFacing().getOpposite().getDirectionVec());
+            } else if (this.motionX != 0.0 || this.motionZ != 0.0 || !this.onGround || this.getDistance(this.currentMiningBlockPos.getX(), this.currentMiningBlockPos.getY(), this.currentMiningBlockPos.getZ()) > 3.0 || ++this.stuckMiningTicks < 10) {
+                BlockPos pos = this.currentMiningBlockPos.add(task.getFacing().getOpposite().getDirectionVec());
                 navigator.tryMoveToXYZ(pos.getX(), pos.getY(), pos.getZ(), 0.35f);
             } else {
                 navigator.clearPath();
-                this.aK = 0;
+                this.stuckMiningTicks = 0;
                 this.setCurrentAction(Action.MINE);
-                this.rotationYaw = this.rotationYawHead = (float) (Math.atan2(this.posZ - (double) this.aI.getZ(), this.posX - (double) this.aI.getX()) * 57.29577951308232 + 90.0);
-                this.entityDataManager.set(at, false);
+                this.rotationYaw = this.rotationYawHead = (float) (Math.atan2(this.posZ - (double) this.currentMiningBlockPos.getZ(), this.posX - (double) this.currentMiningBlockPos.getX()) * 57.29577951308232 + 90.0);
+                this.entityDataManager.set(IS_MINING_WOOD, false);
             }
 
         } else {
             BlockPos blockPos;
-            this.aI = this.executeMiningTask(task, uUID);
-            if (this.aI == null) {
+            this.currentMiningBlockPos = this.executeMiningTask(task, uUID);
+            if (this.currentMiningBlockPos == null) {
                 boolean noTargets = task.getTargetBlocks().isEmpty();
                 HashSet<BlockPos> blocks = KoboldManager.removeTaskAndGetBlocks(uUID, task);
                 UUID tribeId = KoboldManager.getTribeMasterUUID(uUID);
@@ -1474,7 +1451,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     this.world.setBlockState(blockPos, Blocks.AIR.getDefaultState());
                     this.syncTribeBlocks(blockPos);
                 }
-                blockPos = this.aI.add(task.getFacing().getOpposite().getDirectionVec());
+                blockPos = this.currentMiningBlockPos.add(task.getFacing().getOpposite().getDirectionVec());
                 navigator.tryMoveToXYZ(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0.35f);
             }
         }
@@ -1974,18 +1951,18 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         if (this.hasMaster() && player != null && player.getDistance(this) < 2.0f && this.entityDataManager.get(MASTER).equals(player.getPersistentID().toString())) {
             this.getNavigator().clearPath();
         } else {
-            if (this.ap == null || this.getDistance(this.ap.getX(), this.ap.getY(), this.ap.getZ()) > this.getWanderRange() || this.ab > 100) {
+            if (this.wanderTargetPos == null || this.getDistance(this.wanderTargetPos.getX(), this.wanderTargetPos.getY(), this.wanderTargetPos.getZ()) > this.getWanderRange() || this.wanderStuckTicks > 100) {
                 int xOffset = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(5);
                 int n2 = (this.getRNG().nextBoolean() ? 1 : -1) * this.getRNG().nextInt(5);
                 int n3 = WorldUtils.getHeightAt(this.world, this.getPosition().getX() + xOffset, this.getPosition().getZ() + n2);
-                this.ap = new BlockPos(this.getPosition().getX() + xOffset, n3, this.getPosition().getZ() + n2);
-                this.ab = 0;
+                this.wanderTargetPos = new BlockPos(this.getPosition().getX() + xOffset, n3, this.getPosition().getZ() + n2);
+                this.wanderStuckTicks = 0;
             }
-            if (Math.sqrt(this.ap.distanceSq(this.getPosition())) > 2.0) {
-                this.getNavigator().tryMoveToXYZ(this.ap.getX(), this.ap.getY(), this.ap.getZ(), 0.35f);
+            if (Math.sqrt(this.wanderTargetPos.distanceSq(this.getPosition())) > 2.0) {
+                this.getNavigator().tryMoveToXYZ(this.wanderTargetPos.getX(), this.wanderTargetPos.getY(), this.wanderTargetPos.getZ(), 0.35f);
                 this.tickPathVelocity();
             } else {
-                ++this.ab;
+                ++this.wanderStuckTicks;
             }
         }
     }
@@ -1999,13 +1976,13 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             return false;
         }
         if (this.isTribeChestOpen(tribeId, checkOpen)) {
-            this.a0 = 0;
+            this.chestFullWarningCooldown = 0;
             return true;
         }
-        if (--this.a0 >= 0 || !this.ax) {
+        if (--this.chestFullWarningCooldown >= 0 || !this.isInventoryFullWarningSent) {
             return false;
         }
-        this.a0 = 300;
+        this.chestFullWarningCooldown = 300;
         EntityPlayer master = this.world.getPlayerEntityByUUID(UUID.fromString(this.entityDataManager.get(MASTER)));
         EyeAndKoboldColor tribeColor = EyeAndKoboldColor.valueOf(this.entityDataManager.get(CURRENT_ACTION));
         if (master != null) {
@@ -2202,8 +2179,8 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     }
 
     void navigateToTask(UUID tribeId, KoboldTask task, BlockPos pos) {
-        if (this.ad == null) {
-            this.aR = 24;
+        if (this.harvestedSaplingStack == null) {
+            this.treeBreakingTicksRemaining = 24;
             this.cooldownTicks = 0;
             this.setCurrentAction(Action.NULL);
             this.entityDataManager.set(IS_ANCHORED, false);
@@ -2215,22 +2192,22 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             KoboldManager.removeWorkerTask(tribeId, this);
             return;
         }
-        switch (this.ad.getMetadata()) {
+        switch (this.harvestedSaplingStack.getMetadata()) {
             case 3: 
             case 5: {
-                this.world.setBlockState(pos, Blocks.SAPLING.getStateForPlacement(this.world, pos, EnumFacing.NORTH, pos.getX(), pos.getY(), pos.getZ(), this.ad.getMetadata(), this, EnumHand.MAIN_HAND));
-                this.world.setBlockState(pos.north(), Blocks.SAPLING.getStateForPlacement(this.world, pos.north(), EnumFacing.NORTH, pos.getX(), pos.getY(), pos.getZ() + 1, this.ad.getMetadata(), this, EnumHand.MAIN_HAND));
-                this.world.setBlockState(pos.west(), Blocks.SAPLING.getStateForPlacement(this.world, pos.west(), EnumFacing.NORTH, pos.getX() + 1, pos.getY(), pos.getZ(), this.ad.getMetadata(), this, EnumHand.MAIN_HAND));
-                this.world.setBlockState(pos.north().west(), Blocks.SAPLING.getStateForPlacement(this.world, pos.north().west(), EnumFacing.NORTH, pos.getX() + 1, pos.getY(), pos.getZ() + 1, this.ad.getMetadata(), this, EnumHand.MAIN_HAND));
+                this.world.setBlockState(pos, Blocks.SAPLING.getStateForPlacement(this.world, pos, EnumFacing.NORTH, pos.getX(), pos.getY(), pos.getZ(), this.harvestedSaplingStack.getMetadata(), this, EnumHand.MAIN_HAND));
+                this.world.setBlockState(pos.north(), Blocks.SAPLING.getStateForPlacement(this.world, pos.north(), EnumFacing.NORTH, pos.getX(), pos.getY(), pos.getZ() + 1, this.harvestedSaplingStack.getMetadata(), this, EnumHand.MAIN_HAND));
+                this.world.setBlockState(pos.west(), Blocks.SAPLING.getStateForPlacement(this.world, pos.west(), EnumFacing.NORTH, pos.getX() + 1, pos.getY(), pos.getZ(), this.harvestedSaplingStack.getMetadata(), this, EnumHand.MAIN_HAND));
+                this.world.setBlockState(pos.north().west(), Blocks.SAPLING.getStateForPlacement(this.world, pos.north().west(), EnumFacing.NORTH, pos.getX() + 1, pos.getY(), pos.getZ() + 1, this.harvestedSaplingStack.getMetadata(), this, EnumHand.MAIN_HAND));
                 break;
             }
             default: {
-                this.world.setBlockState(pos, Blocks.SAPLING.getStateForPlacement(this.world, pos, EnumFacing.NORTH, pos.getX(), pos.getY(), pos.getZ(), this.ad.getMetadata(), this, EnumHand.MAIN_HAND));
+                this.world.setBlockState(pos, Blocks.SAPLING.getStateForPlacement(this.world, pos, EnumFacing.NORTH, pos.getX(), pos.getY(), pos.getZ(), this.harvestedSaplingStack.getMetadata(), this, EnumHand.MAIN_HAND));
             }
         }
-        this.aR = 24;
+        this.treeBreakingTicksRemaining = 24;
         this.cooldownTicks = 0;
-        this.ad = null;
+        this.harvestedSaplingStack = null;
         this.setCurrentAction(Action.NULL);
         this.setAnchored(false);
         EntityPlayer master = this.getMasterPlayer();
@@ -2253,9 +2230,9 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 if (this.world.getBlockState(pos).getBlock() == Blocks.AIR) {
                     this.navigateToTask(tribeId, task, pos);
                 } else {
-                    --this.aR;
-                    if (this.aR < 0) {
-                        this.aR = 24;
+                    --this.treeBreakingTicksRemaining;
+                    if (this.treeBreakingTicksRemaining < 0) {
+                        this.treeBreakingTicksRemaining = 24;
                         this.cooldownTicks = 78;
                         HashSet<BlockPos> hashSet = new HashSet<BlockPos>();
                         EntityPlayer entityPlayer = this.getMasterPlayer();
@@ -2275,7 +2252,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                                     Main.LOGGER.error(e.getMessage());
                                 }
 
-                                this.ad = this.getBlockItem(target);
+                                this.harvestedSaplingStack = this.getBlockItem(target);
                                 this.world.destroyBlock(target, false);
                                 task.removeBlocks(target);
                                 task.removeAllBlocks(hashSet);
@@ -2297,7 +2274,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                             Main.LOGGER.error(e.getMessage());
                         }
 
-                        this.ad = this.getBlockItem(pos);
+                        this.harvestedSaplingStack = this.getBlockItem(pos);
                         this.world.destroyBlock(pos, false);
                         int logCount = 0;
                         for (BlockPos target : task.getTargetBlocks()) {
@@ -2437,7 +2414,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         this.setTargetPosition(new Vec3d((double)bestBlockVec.getX() + 0.5, bestBlockVec.getY(), (double)bestBlockVec.getZ() + 0.5));
         this.setYawRotation(yaw);
         this.entityDataManager.set(IS_ANCHORED, true);
-        this.entityDataManager.set(at, true);
+        this.entityDataManager.set(IS_MINING_WOOD, true);
         this.setCurrentAction(Action.MINE);
         this.world.destroyBlock(((BlockPos)bestBlockVec).up(), false);
     }
@@ -2711,7 +2688,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                                 this.createAnimation("animation.kobold.crouch_walk", true, event);
                                 break;
                             }
-                            if (this.entityDataManager.get(aC)) {
+                            if (this.entityDataManager.get(IS_IN_COMBAT)) {
                                 this.createAnimation("animation.kobold.run_armed", true, event);
                                 break;
                             }
@@ -2729,7 +2706,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                         this.createAnimation("animation.kobold.crouch_idle", true, event);
                         break;
                     }
-                    this.createAnimation(this.entityDataManager.get(aC) ? "animation.kobold.idle_armed" : "animation.kobold.idle", true, event);
+                    this.createAnimation(this.entityDataManager.get(IS_IN_COMBAT) ? "animation.kobold.idle_armed" : "animation.kobold.idle", true, event);
                     break;
                 }
             }
@@ -2761,8 +2738,8 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                         break;
                     }
                     case SUCKBLOWJOB_BLINK: {
-                        String string = this.a4 ? "R" : "L";
-                        String string2 = this.aT ? "Switch" : "";
+                        String string = this.blowjobSwitchPosition ? "R" : "L";
+                        String string2 = this.blowjobSwitchFlag ? "Switch" : "";
                         this.createAnimation("animation.kobold.blowjobSlow" + string + string2, true, event);
                         break;
                     }
@@ -2875,20 +2852,20 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                 }
                 case "blowjobStartDone": {
                     this.setCurrentAction(Action.SUCKBLOWJOB_BLINK);
-                    this.aT = false;
-                    this.a4 = true;
+                    this.blowjobSwitchFlag = false;
+                    this.blowjobSwitchPosition = true;
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.showUI();
                     break;
                 }
                 case "switch": {
-                    this.aT = this.getRNG().nextBoolean();
+                    this.blowjobSwitchFlag = this.getRNG().nextBoolean();
                     this.actionController.clearAnimationCache();
                     break;
                 }
                 case "endSwitch": {
-                    this.aT = false;
-                    this.a4 = !this.a4;
+                    this.blowjobSwitchFlag = false;
+                    this.blowjobSwitchPosition = !this.blowjobSwitchPosition;
                     this.actionController.clearAnimationCache();
                     break;
                 }
@@ -2965,16 +2942,16 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     break;
                 }
                 case "moanMating": {
-                    --this.aN;
-                    if (this.aN > 0) break;
-                    this.aN = 3;
+                    --this.matingTicks;
+                    if (this.matingTicks > 0) break;
+                    this.matingTicks = 3;
                     this.playRandomSounds(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }
                 case "analHardMSG1": {
-                    --this.aN;
-                    if (this.aN > 0) break;
-                    this.aN = 4;
+                    --this.matingTicks;
+                    if (this.matingTicks > 0) break;
+                    this.matingTicks = 4;
                     this.playRandomSounds(SoundsHandler.GIRLS_KOBOLD_MOAN);
                     break;
                 }

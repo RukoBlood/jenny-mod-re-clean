@@ -1,5 +1,5 @@
-Methods renamed: 98.41% (2779/2824)
-Fields renamed: 85.94% (1369/1593)
+Methods renamed: 98.44% (2780/2824)
+Fields renamed: 88.66% (1392/1570)
 
 ## Synthetic Elements Detailed List
 
@@ -21,53 +21,6 @@ Fields renamed: 85.94% (1369/1593)
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\PlayerJenny.java` | Field | `ar` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\PlayerJenny.java` | Field | `aq` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Jenny\PlayerJenny.java` | Field | `as` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ar` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ag` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aG` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ah` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ae` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aW` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `au` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ay` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `al` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aQ` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aO` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aB` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ac` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `am` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aw` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aj` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aH` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aa` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aC` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aZ` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ak` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `at` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `av` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aY` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `as` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `az` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aP` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aD` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aV` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aX` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aF` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ao` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aS` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aM` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aI` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ai` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aK` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ax` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ap` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ab` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aR` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `ad` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aT` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldEntity.java` | Field | `aN` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldHand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldHand.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldModel.java` | Method | `b()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldModel.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldModel.java` | Method | `d()` |
