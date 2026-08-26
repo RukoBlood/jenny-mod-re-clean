@@ -1,5 +1,5 @@
-Methods renamed: 95.08% (2685/2824)
-Fields renamed: 74.80% (1202/1607)
+Methods renamed: 95.15% (2687/2824)
+Fields renamed: 76.17% (1218/1599)
 
 ## Synthetic Elements Detailed List
 
@@ -72,32 +72,6 @@ Fields renamed: 74.80% (1202/1607)
 | `src\main\java\com\trolmastercard\sexmod\girls\Bee\BeeEntity.java` | Method | `b_15()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Bee\BeeLimb.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Bia\BiaHand.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ad` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ao` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ap` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ag` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `as` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ar` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ab` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `an` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ak` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ae` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ac` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `af` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `al` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ai` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `ah` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `am` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieEntity.java` | Field | `aj` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieHand.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieHand.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\EllieHand.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\PlayerEllie.java` | Method | `void_c()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\PlayerEllie.java` | Method | `a_14()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\PlayerEllie.java` | Field | `ar` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\PlayerEllie.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Ellie\PlayerEllie.java` | Field | `ap` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathEntity.java` | Method | `void_aa()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathEntity.java` | Method | `void_X()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathEntity.java` | Method | `void_E()` |

@@ -44,27 +44,27 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class EllieEntity extends Fighter implements IEllie {
-    final static float ad = 10.0f;
-    final static int ao = 16;
-    final static int ap = 79;
-    final static int ag = 109;
-    final static int as = 150;
-    final static int ar = 20;
-    final static int ab = 110;
-    final static int an = 4;
-    int ak = -1;
-    boolean aq = false;
-    boolean ae = false;
-    boolean ac = false;
-    int af = -1;
-    int yFlag = -1;
-    int al = -1;
-    int ai = -1;
-    boolean ah = false;
-    Object[] am;
-    int zFlag = -1;
-    int state = 1;
-    boolean aj = false;
+//    final static float ad = 10.0f;
+//    final static int ao = 16;
+//    final static int ap = 79;
+//    final static int ag = 109;
+//    final static int as = 150;
+//    final static int ar = 20;
+//    final static int ab = 110;
+//    final static int an = 4;
+    int carryIntroTimer = -1;
+    boolean hasPerformAction = false;
+    boolean pendingGuiOpen = false;
+    boolean isPhysicsInitialized = false;
+    int standTransitionTimer = -1;
+    int hugTimer = -1;
+    int sitDownTimer = -1;
+    int sitUpTimer = -1;
+    boolean isBedSearching = false;
+    Object[] bedPoseData;
+    int dashFinishTimer = -1;
+    int carrySlowVariation = 1;
+    boolean skipFastSoundOnce = false;
 
     public EllieEntity(World world) {
         super(world);
@@ -150,7 +150,7 @@ public class EllieEntity extends Fighter implements IEllie {
     @Override
     public void doAction(String action, UUID player) {
         super.doAction(action, player);
-        this.aq = true;
+        this.hasPerformAction = true;
         switch (action) {
             case "action.names.missionary": {
                 this.setCurrentAction(Action.HUGSELECTED);
@@ -183,13 +183,13 @@ public class EllieEntity extends Fighter implements IEllie {
     public void setCurrentAction(Action action) {
         Action currentAction = this.getCurrentAction();
         if (action == Action.HUGSELECTED && !this.world.isRemote) {
-            this.ai = 79;
+            this.sitUpTimer = 79;
         }
         if (currentAction != Action.MISSIONARY_CUM || (action != Action.MISSIONARY_FAST && action != Action.MISSIONARY_SLOW)) {
             if (currentAction != Action.COWGIRLCUM || (action != Action.COWGIRLSLOW && action != Action.COWGIRLFAST)) {
                 if (currentAction != Action.CARRY_CUM || (action != Action.CARRY_SLOW && action != Action.CARRY_FAST)) {
                     if (action == Action.CARRY_INTRO) {
-                        this.ak = 0;
+                        this.carryIntroTimer = 0;
                     }
                     super.setCurrentAction(action);
                 }
@@ -201,9 +201,9 @@ public class EllieEntity extends Fighter implements IEllie {
     @SideOnly(value=Side.CLIENT)
     public void onUpdate() {
         super.onUpdate();
-        if (this.ae) {
+        if (this.pendingGuiOpen) {
             this.canJoinPlayer(Minecraft.getMinecraft().player, true);
-            this.ae = false;
+            this.pendingGuiOpen = false;
         }
         this.handleSitIdle();
         this.showHornyMeter();
@@ -218,9 +218,9 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     void handleSitTimer() {
-        if (this.ak != -1) {
-            if (++this.ak >= 110) {
-                this.ak = -1;
+        if (this.carryIntroTimer != -1) {
+            if (++this.carryIntroTimer >= 110) {
+                this.carryIntroTimer = -1;
                 if (this.getCurrentAction() == Action.CARRY_INTRO) {
                     UUID uUID = this.getInteractionPlayerUUID();
                     if (uUID != null) {
@@ -263,8 +263,8 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     void setFirstSit() {
-        if (!this.ac) {
-            this.ac = true;
+        if (!this.isPhysicsInitialized) {
+            this.isPhysicsInitialized = true;
             this.noClip = false;
             this.setNoGravity(false);
         }
@@ -323,17 +323,17 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     void handleStandTimer() {
-        if (--this.af == 0) {
+        if (--this.standTransitionTimer == 0) {
             this.doSubAction();
         }
     }
 
     void handleSitTransition() {
-        if (this.getCurrentAction() == Action.SITDOWNIDLE && this.af < 0) {
+        if (this.getCurrentAction() == Action.SITDOWNIDLE && this.standTransitionTimer < 0) {
             EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10.0);
             if (player != null) {
                 if (!(this.getDistance(player) > 1.5f)) {
-                    this.af = 20;
+                    this.standTransitionTimer = 20;
                     this.setInteractionPlayerUUID(player.getPersistentID());
                 }
             }
@@ -341,29 +341,29 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     void handleHugTimer() {
-        if (--this.yFlag == 0) {
+        if (--this.hugTimer == 0) {
             this.setCurrentAction(Action.HUGIDLE);
         }
     }
 
     void handleSitDownTimer() {
-        if (--this.al == 0) {
+        if (--this.sitDownTimer == 0) {
             this.setCurrentAction(Action.SITDOWNIDLE);
         }
     }
 
     void handleSitUpTimer() {
-        if (--this.ai == 0 || this.ah) {
-            this.ah = true;
+        if (--this.sitUpTimer == 0 || this.isBedSearching) {
+            this.isBedSearching = true;
             this.entityDataManager.set(IS_ANCHORED, false);
             this.setCurrentAction(Action.NULL);
             this.noClip = false;
             this.setNoGravity(false);
-            if (this.am == null) {
-                this.am = this.getRandomSitPose();
+            if (this.bedPoseData == null) {
+                this.bedPoseData = this.getRandomSitPose();
             }
 
-            if (this.am == null) {
+            if (this.bedPoseData == null) {
                 this.sendGirlChatMessage("no bed in sight...");
                 this.world.playSound(null, this.getPosition(), SoundsHandler.GIRLS_ELLIE_SIGH[0], SoundCategory.NEUTRAL, 6.0f, 1.0f);
                 this.resetGirlState();
@@ -374,8 +374,8 @@ public class EllieEntity extends Fighter implements IEllie {
                     player.setNoGravity(false);
                     player.noClip = false;
                 }
-                Vec3d sitPos = (Vec3d) this.am[0];
-                int yaw = (Integer) this.am[1];
+                Vec3d sitPos = (Vec3d) this.bedPoseData[0];
+                int yaw = (Integer) this.bedPoseData[1];
                 if (sitPos.distanceTo(this.getPositionVector()) > 1.0) {
                     this.getNavigator().tryMoveToXYZ(sitPos.x, sitPos.y, sitPos.z, 0.35f);
                     this.tickPathVelocity();
@@ -384,11 +384,11 @@ public class EllieEntity extends Fighter implements IEllie {
                     this.setYawRotation(yaw);
                     this.setCurrentAction(Action.SITDOWN);
                     this.entityDataManager.set(IS_ANCHORED, true);
-                    this.al = 109;
+                    this.sitDownTimer = 109;
                     this.noClip = true;
                     this.setNoGravity(true);
-                    this.ah = false;
-                    this.am = null;
+                    this.isBedSearching = false;
+                    this.bedPoseData = null;
                 }
             }
         }
@@ -397,7 +397,7 @@ public class EllieEntity extends Fighter implements IEllie {
     @Override
     public void reInitTasks() {
         super.reInitTasks();
-        this.yFlag = -1;
+        this.hugTimer = -1;
     }
 
     Object[] getRandomSitPose() {
@@ -454,7 +454,7 @@ public class EllieEntity extends Fighter implements IEllie {
                 this.setTargetPosition(this.getPositionVector());
                 this.entityDataManager.set(IS_ANCHORED, true);
                 this.setCurrentAction(Action.DASH);
-                this.zFlag = 16;
+                this.dashFinishTimer = 16;
                 this.setNoGravity(true);
                 this.noClip = true;
                 PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), (EntityPlayerMP) player);
@@ -465,7 +465,7 @@ public class EllieEntity extends Fighter implements IEllie {
     }
 
     void handleSitUpFinish() {
-        if (--this.zFlag == 0) {
+        if (--this.dashFinishTimer == 0) {
             UUID uUID = this.getInteractionPlayerUUID();
             if (uUID == null) {
                 this.resetSitScale();
@@ -481,7 +481,7 @@ public class EllieEntity extends Fighter implements IEllie {
                     this.setTargetPosition(vec3d2);
                     this.setYawRotation(entityPlayer.rotationYaw);
                     this.setCurrentAction(Action.HUG);
-                    this.yFlag = 150;
+                    this.hugTimer = 150;
                 }
             }
         }
@@ -493,11 +493,11 @@ public class EllieEntity extends Fighter implements IEllie {
         this.setInteractionPlayerUUID(null);
         this.noClip = false;
         this.setNoGravity(false);
-        this.ah = false;
-        this.yFlag = -1;
-        this.zFlag = -1;
-        this.ai = -1;
-        this.am = null;
+        this.isBedSearching = false;
+        this.hugTimer = -1;
+        this.dashFinishTimer = -1;
+        this.sitUpTimer = -1;
+        this.bedPoseData = null;
     }
 
     @Override
@@ -674,7 +674,7 @@ public class EllieEntity extends Fighter implements IEllie {
                         break ;
                     }
                     case CARRY_SLOW: {
-                        this.createAnimation("animation.ellie.carry_slow" + this.state, true, event);
+                        this.createAnimation("animation.ellie.carry_slow" + this.carrySlowVariation, true, event);
                         break ;
                     }
                     case CARRY_FAST: {
@@ -780,8 +780,8 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "cowgirlfastMSG1": {
-                    if (this.aj) {
-                        this.aj = false;
+                    if (this.skipFastSoundOnce) {
+                        this.skipFastSoundOnce = false;
                     } else {
                         this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 6.0f);
                     }
@@ -934,10 +934,10 @@ public class EllieEntity extends Fighter implements IEllie {
                     break;
                 }
                 case "carry_slowDone": {
-                    int oldstate = this.state;
+                    int oldstate = this.carrySlowVariation;
                     do {
-                        this.state = this.getRNG().nextInt(4) + 1;
-                    } while (this.state == oldstate);
+                        this.carrySlowVariation = this.getRNG().nextInt(4) + 1;
+                    } while (this.carrySlowVariation == oldstate);
                     break;
                 }
                 case "carry_fastDone": {

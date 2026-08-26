@@ -39,11 +39,10 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class PlayerEllie
-extends PlayerGirl {
-    boolean ar = false;
-    boolean aq = false;
-    int ap = 1;
+public class PlayerEllie extends PlayerGirl {
+    boolean flyAnimationAlt = false;
+    boolean skipFastMoan = false;
+    int carrySlowAnimVariant = 1;
 
     protected PlayerEllie(World world) {
         super(world);
@@ -60,7 +59,7 @@ extends PlayerGirl {
 
     @Override
     public float getEyeHeight() {
-        return this.a_14() ? 1.53f : 1.9f;
+        return this.hasNoOwner() ? 1.53f : 1.9f;
     }
 
     @Override
@@ -105,11 +104,10 @@ extends PlayerGirl {
             this.changeDataParameterFromClient("animationFollowUp", "Missionary");
             return;
         }
-        if (!this.entityDataManager.get(OWNER).isPresent()) {
-            return;
+        if (this.entityDataManager.get(OWNER).isPresent()) {
+            PacketHandler.INSTANCE.sendToServer(new SexPrompt(action, player, (UUID) ((Optional) this.entityDataManager.get(OWNER)).get(), this.guiPending));
+            this.guiPending = true;
         }
-        PacketHandler.INSTANCE.sendToServer(new SexPrompt(action, player, (UUID)((Optional)this.entityDataManager.get(OWNER)).get(), this.guiPending));
-        this.guiPending = true;
     }
 
     @Override
@@ -118,8 +116,8 @@ extends PlayerGirl {
         return true;
     }
 
-    void void_c(EntityPlayer entityPlayer) {
-        PlayerEllie.openInventoryGui(entityPlayer, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
+    void openEllieInventory(EntityPlayer player) {
+        PlayerEllie.openInventoryGui(player, this, new String[]{"action.names.cowgirl", "action.names.missionary"}, false);
     }
 
     @Override
@@ -129,14 +127,12 @@ extends PlayerGirl {
 
     @Override
     public void setCurrentAction(Action action) {
-        Action fp_class3243 = this.getCurrentAction();
-        if (fp_class3243 == Action.MISSIONARY_CUM && (action == Action.MISSIONARY_FAST || action == Action.MISSIONARY_SLOW)) {
-            return;
+        Action currentAction = this.getCurrentAction();
+        if (currentAction != Action.MISSIONARY_CUM || (action != Action.MISSIONARY_FAST && action != Action.MISSIONARY_SLOW)) {
+            if (currentAction != Action.COWGIRLCUM || (action != Action.COWGIRLSLOW && action != Action.COWGIRLFAST)) {
+                super.setCurrentAction(action);
+            }
         }
-        if (fp_class3243 == Action.COWGIRLCUM && (action == Action.COWGIRLSLOW || action == Action.COWGIRLFAST)) {
-            return;
-        }
-        super.setCurrentAction(action);
     }
 
     @Override
@@ -206,12 +202,9 @@ extends PlayerGirl {
         }
     }
 
-    boolean a_14() {
-        EntityPlayer entityPlayer = this.getOwnerPlayer();
-        if (entityPlayer == null) {
-            return false;
-        }
-        return this.world.getBlockState(entityPlayer.getPosition().up().up()).getBlock() != Blocks.AIR;
+    boolean hasNoOwner() {
+        EntityPlayer player = this.getOwnerPlayer();
+        return player != null && this.world.getBlockState(player.getPosition().up().up()).getBlock() != Blocks.AIR;
     }
 
     @Override
@@ -235,28 +228,28 @@ extends PlayerGirl {
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
-                    boolean bl = this.ar = !this.ar;
+                    boolean bl = this.flyAnimationAlt = !this.flyAnimationAlt;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.ellie.fly" + (this.ar ? "2" : ""), true, event);
+                    this.createAnimation("animation.ellie.fly" + (this.flyAnimationAlt ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) > 0.0f) {
                     if (this.isPlayerSprinting) {
                         this.movementController.setAnimationSpeed(1.5);
-                        this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.run", true, event);
+                        this.createAnimation(this.hasNoOwner() ? "animation.ellie.crouchwalk" : "animation.ellie.run", true, event);
                         break;
                     }
                     if (this.moveInputVector.y >= -0.1f) {
                         this.movementController.setAnimationSpeed(2.0);
-                        this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.fastwalk", true, event);
+                        this.createAnimation(this.hasNoOwner() ? "animation.ellie.crouchwalk" : "animation.ellie.fastwalk", true, event);
                         break;
                     }
                     this.movementController.setAnimationSpeed(1.5);
-                    this.createAnimation(this.a_14() ? "animation.ellie.crouchwalk" : "animation.ellie.backwards_walk", true, event);
+                    this.createAnimation(this.hasNoOwner() ? "animation.ellie.crouchwalk" : "animation.ellie.backwards_walk", true, event);
                     break;
                 }
-                this.createAnimation(this.a_14() ? "animation.ellie.crouchidle" : "animation.ellie.idle", true, event);
+                this.createAnimation(this.hasNoOwner() ? "animation.ellie.crouchidle" : "animation.ellie.idle", true, event);
                 break;
             }
             case "action": {
@@ -354,7 +347,7 @@ extends PlayerGirl {
                         break;
                     }
                     case CARRY_SLOW: {
-                        this.createAnimation("animation.ellie.carry_slow" + this.ap, true, event);
+                        this.createAnimation("animation.ellie.carry_slow" + this.carrySlowAnimVariant, true, event);
                         break;
                     }
                     case CARRY_FAST: {
@@ -432,7 +425,7 @@ extends PlayerGirl {
                     EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
                     if (!entityPlayerSP.getPersistentID().equals(this.getInteractionPlayerUUID())) break;
                     this.setCurrentAction(Action.HUGIDLE);
-                    this.void_c(entityPlayerSP);
+                    this.openEllieInventory(entityPlayerSP);
                     break;
                 }
                 case "hugselectedMSG1": {
@@ -466,7 +459,7 @@ extends PlayerGirl {
                 case "sitdownDone": {
                     if (!this.hasOwnerUUID()) break;
                     this.setCurrentAction(Action.SITDOWNIDLE);
-                    this.void_c(this.world.getPlayerEntityByUUID(this.getOwnerUserUUID()));
+                    this.openEllieInventory(this.world.getPlayerEntityByUUID(this.getOwnerUserUUID()));
                     break;
                 }
                 case "missionary_startDone": {
@@ -499,8 +492,8 @@ extends PlayerGirl {
                     break;
                 }
                 case "cowgirlfastMSG1": {
-                    if (this.aq) {
-                        this.aq = false;
+                    if (this.skipFastMoan) {
+                        this.skipFastMoan = false;
                     } else {
                         this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.GIRLS_ELLIE_AHH), 3.0f);
                     }
@@ -650,10 +643,10 @@ extends PlayerGirl {
                     break;
                 }
                 case "carry_slowDone": {
-                    int n = this.ap;
+                    int n = this.carrySlowAnimVariant;
                     do {
-                        this.ap = this.getRNG().nextInt(4) + 1;
-                    } while (this.ap == n);
+                        this.carrySlowAnimVariant = this.getRNG().nextInt(4) + 1;
+                    } while (this.carrySlowAnimVariant == n);
                     break;
                 }
                 case "carry_fastDone": {
