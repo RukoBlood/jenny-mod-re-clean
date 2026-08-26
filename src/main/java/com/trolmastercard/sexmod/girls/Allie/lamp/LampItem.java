@@ -69,14 +69,14 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class LampItem extends Item implements IAnimatable {
-    final static String inUse = "sexmodAllieInUse";
-    final static String inUseTicks = "sexmodAllieInUseTicks";
-    final static public String j = "sexmodUses";
-    final static public String h = "sexmodAllieID";
-    final static Integer c = 95;
-    final static Integer k = 50;
-    final static public int a = 150;
-    final static public float f = 0.75f;
+    final static String ALLIE_IN_USE = "sexmodAllieInUse";
+    final static String ALLIE_IN_USE_TICKS = "sexmodAllieInUseTicks";
+    final static public String USES = "sexmodUses";
+    final static public String ALLIE_ID = "sexmodAllieID";
+    final static Integer SUMMON_TICK = 95;
+    final static Integer PARTICLE_START_TICK = 50;
+    final static public int PARTICLE_COUNT = 150;
+    final static public float PARTICLE_SPREAD = 0.75f;
 
     final static public LampItem LAMP_ITEM = new LampItem();
     final private AnimationFactory factory = new AnimationFactory(this);
@@ -101,7 +101,7 @@ public class LampItem extends Item implements IAnimatable {
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public static void registerModel(ModelRegistryEvent modelRegistryEvent) {
-        ModelLoader.setCustomModelResourceLocation((Item) LAMP_ITEM, 0, (ModelResourceLocation)new ModelResourceLocation("sexmod:allies_lamp"));
+        ModelLoader.setCustomModelResourceLocation(LAMP_ITEM, 0, new ModelResourceLocation("sexmod:allies_lamp"));
         LAMP_ITEM.setTileEntityItemStackRenderer(new LampRenderer());
     }
 
@@ -109,7 +109,7 @@ public class LampItem extends Item implements IAnimatable {
     @SubscribeEvent
     public void hideHotbar(RenderGameOverlayEvent.Pre event) {
         NBTTagCompound nBTTagCompound = Minecraft.getMinecraft().player.getEntityData();
-        if (nBTTagCompound.getBoolean(inUse)) {
+        if (nBTTagCompound.getBoolean(ALLIE_IN_USE)) {
             event.setCanceled(true);
         }
     }
@@ -127,7 +127,7 @@ public class LampItem extends Item implements IAnimatable {
                 lootPool = event.getTable().getPool("pool2");
             }
             if (lootPool != null) {
-                lootPool.addEntry(new LootEntryItem((Item) LAMP_ITEM, 5, 0, new LootFunction[0], new LootCondition[0], "sexmod:allies_lamp"));
+                lootPool.addEntry(new LootEntryItem(LAMP_ITEM, 5, 0, new LootFunction[0], new LootCondition[0], "sexmod:allies_lamp"));
             }
         }
     }
@@ -145,7 +145,7 @@ public class LampItem extends Item implements IAnimatable {
         if (nBTTagCompound == null) {
             return;
         }
-        int n = 3 - itemStack.getTagCompound().getInteger(j);
+        int n = 3 - itemStack.getTagCompound().getInteger(USES);
         switch (n) {
             case 2: {
                 list.add("2 wishes left");
@@ -165,7 +165,7 @@ public class LampItem extends Item implements IAnimatable {
     protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         EntityPlayerSP entityPlayerSP = Minecraft.getMinecraft().player;
         NBTTagCompound nBTTagCompound = entityPlayerSP.getEntityData();
-        boolean bl = nBTTagCompound.getBoolean(inUse);
+        boolean bl = nBTTagCompound.getBoolean(ALLIE_IN_USE);
         if (!bl) {
             event.getController().clearAnimationCache();
             return PlayState.STOP;
@@ -185,24 +185,24 @@ public class LampItem extends Item implements IAnimatable {
         if (!itemStack.equals(entityPlayer.getHeldItemMainhand()) && !itemStack.equals(entityPlayer.getHeldItemOffhand())) {
             return;
         }
-        boolean bl2 = nBTTagCompound.getBoolean(inUse);
-        int n2 = nBTTagCompound.getInteger(inUseTicks);
+        boolean bl2 = nBTTagCompound.getBoolean(ALLIE_IN_USE);
+        int n2 = nBTTagCompound.getInteger(ALLIE_IN_USE_TICKS);
         if (!bl2) {
             return;
         }
-        nBTTagCompound.setInteger(inUseTicks, n2 + 1);
-        if (n2 > k && n2 < c) {
-            double d = (float)(n2 - k) / (float)(c - k);
+        nBTTagCompound.setInteger(ALLIE_IN_USE_TICKS, n2 + 1);
+        if (n2 > PARTICLE_START_TICK && n2 < SUMMON_TICK) {
+            double d = (float)(n2 - PARTICLE_START_TICK) / (float)(SUMMON_TICK - PARTICLE_START_TICK);
             d = RotationHelper.smoothStep(d);
             vec3d = new Vec3d(0.0, (double)entityPlayer.eyeHeight * (1.0 - d), 0.0);
-            WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer).add(vec3d), (int)(d * 150.0), d * 0.75, d);
+            WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.getLampOffset(entityPlayer).add(vec3d), (int)(d * 150.0), d * 0.75, d);
         }
-        if (n2 < c) {
+        if (n2 < SUMMON_TICK) {
             return;
         }
-        WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.a(entityPlayer), 150, 0.75, 2.0);
-        nBTTagCompound.setBoolean(inUse, false);
-        nBTTagCompound.setInteger(inUseTicks, 0);
+        WorldUtils.SpawnParticleRing(world, EnumParticleTypes.CRIT_MAGIC, this.getLampOffset(entityPlayer), 150, 0.75, 2.0);
+        nBTTagCompound.setBoolean(ALLIE_IN_USE, false);
+        nBTTagCompound.setInteger(ALLIE_IN_USE_TICKS, 0);
         if (world.isRemote) {
             HandlePlayerMovement.setMovementLock(false);
             return;
@@ -211,27 +211,27 @@ public class LampItem extends Item implements IAnimatable {
         if (nBTTagCompound2 == null) {
             nBTTagCompound2 = new NBTTagCompound();
         }
-        nBTTagCompound2.setInteger(j, nBTTagCompound2.getInteger(j) + 1);
-        AllieEntity ev_class2752 = new AllieEntity(entityPlayer.world, entityPlayer.getHeldItemMainhand());
-        ev_class2752.setInteractionPlayerUUID(entityPlayer.getPersistentID());
-        vec3d = this.a(entityPlayer);
-        ev_class2752.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, entityPlayer.rotationYaw + 180.0f, entityPlayer.rotationPitch);
-        ev_class2752.setTargetPosition(ev_class2752.getPositionVector());
-        ev_class2752.setYawRotation(entityPlayer.rotationYaw + 180.0f);
-        ev_class2752.setAnchored(true);
-        ev_class2752.setNoGravity(true);
-        ev_class2752.noClip = true;
-        entityPlayer.world.spawnEntity(ev_class2752);
-        BlockPos blockPos = ev_class2752.getPosition().add(0, -1, 0);
-        if (ev_class2752.world.getBlockState(blockPos).getBlock().equals(Blocks.SAND)) {
-            ev_class2752.setCurrentAction(Action.SUMMON_SAND);
+        nBTTagCompound2.setInteger(USES, nBTTagCompound2.getInteger(USES) + 1);
+        AllieEntity allie = new AllieEntity(entityPlayer.world, entityPlayer.getHeldItemMainhand());
+        allie.setInteractionPlayerUUID(entityPlayer.getPersistentID());
+        vec3d = this.getLampOffset(entityPlayer);
+        allie.setPositionAndRotation(vec3d.x, vec3d.y, vec3d.z, entityPlayer.rotationYaw + 180.0f, entityPlayer.rotationPitch);
+        allie.setTargetPosition(allie.getPositionVector());
+        allie.setYawRotation(entityPlayer.rotationYaw + 180.0f);
+        allie.setAnchored(true);
+        allie.setNoGravity(true);
+        allie.noClip = true;
+        entityPlayer.world.spawnEntity(allie);
+        BlockPos blockPos = allie.getPosition().add(0, -1, 0);
+        if (allie.world.getBlockState(blockPos).getBlock().equals(Blocks.SAND)) {
+            allie.setCurrentAction(Action.SUMMON_SAND);
         } else {
-            ev_class2752.setCurrentAction(ev_class2752.boolean_f() ? Action.SUMMON : Action.SUMMON_NORMAL);
+            allie.setCurrentAction(allie.hasLampItem() ? Action.SUMMON : Action.SUMMON_NORMAL);
         }
         itemStack.setTagCompound(nBTTagCompound2);
     }
 
-    Vec3d a(EntityPlayer entityPlayer) {
+    Vec3d getLampOffset(EntityPlayer entityPlayer) {
         return entityPlayer.getPositionVector().add(VectorMath.rotateByYaw(new Vec3d(0.0, 0.0, 2.0), entityPlayer.rotationYawHead));
     }
 
@@ -240,46 +240,39 @@ public class LampItem extends Item implements IAnimatable {
         return this.factory;
     }
 
-    public static class a_inner38 {
+    public static class EventHandler {
         @SubscribeEvent
-        public void a(PlayerEvent.PlayerLoggedOutEvent playerLoggedOutEvent) {
-            playerLoggedOutEvent.player.getEntityData().setBoolean(LampItem.inUse, false);
+        public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+            event.player.getEntityData().setBoolean(LampItem.ALLIE_IN_USE, false);
         }
 
         @SubscribeEvent
-        public void a(PlayerInteractEvent.RightClickItem rightClickItem) {
-            EntityPlayer entityPlayer = rightClickItem.getEntityPlayer();
-            EnumHand enumHand = rightClickItem.getHand();
-            ItemStack itemStack = entityPlayer.getHeldItem(enumHand);
-            if (PlayerGirl.isOwnerPlayer(entityPlayer)) {
-                return;
-            }
-            if (entityPlayer.world.isRemote && !HandlePlayerMovement.b()) {
-                return;
-            }
-            if (!entityPlayer.world.isRemote) {
-                for (GirlEntity object2 : GirlEntity.getGirlEntityList()) {
-                    AllieEntity bl;
-                    ItemStack itemStack2;
-                    if (object2.isDead || !(object2 instanceof AllieEntity) || !itemStack.equals(itemStack2 = (bl = (AllieEntity) object2).getDataManager().get(AllieEntity.itemStack)))
-                        continue;
-                    return;
+        public void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+            EntityPlayer player = event.getEntityPlayer();
+            EnumHand hand = event.getHand();
+            ItemStack stack = player.getHeldItem(hand);
+            if (!PlayerGirl.isOwnerPlayer(player)) {
+                if (!player.world.isRemote || HandlePlayerMovement.b()) {
+                    if (!player.world.isRemote) {
+                        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+                            if (!girl.isDead && girl instanceof AllieEntity && stack.equals(((AllieEntity) girl).getDataManager().get(AllieEntity.LAMP_ITEM))) {
+                                return;
+                            }
+                        }
+                    }
+                    if (stack.getItem() == LAMP_ITEM) {
+                        NBTTagCompound nBTTagCompound = stack.getTagCompound();
+                        if (nBTTagCompound == null || nBTTagCompound.getInteger(LampItem.USES) < 3) {
+                            NBTTagCompound nBTTagCompound2 = player.getEntityData();
+                            boolean bl = nBTTagCompound2.getBoolean(LampItem.ALLIE_IN_USE);
+                            if (!bl) {
+                                nBTTagCompound2.setBoolean(LampItem.ALLIE_IN_USE, true);
+                                nBTTagCompound2.setInteger(LampItem.ALLIE_IN_USE_TICKS, 0);
+                            }
+                        }
+                    }
                 }
             }
-            if (itemStack.getItem() != LAMP_ITEM) {
-                return;
-            }
-            NBTTagCompound nBTTagCompound = itemStack.getTagCompound();
-            if (nBTTagCompound != null && nBTTagCompound.getInteger(LampItem.j) >= 3) {
-                return;
-            }
-            NBTTagCompound nBTTagCompound2 = entityPlayer.getEntityData();
-            boolean bl = nBTTagCompound2.getBoolean(LampItem.inUse);
-            if (bl) {
-                return;
-            }
-            nBTTagCompound2.setBoolean(LampItem.inUse, true);
-            nBTTagCompound2.setInteger(LampItem.inUseTicks, 0);
         }
     }
 }

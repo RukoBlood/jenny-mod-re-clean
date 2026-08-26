@@ -9,10 +9,10 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class AllieLimb extends ModelBase implements IRenderer {
+public class AllieHand extends ModelBase implements IRenderer {
     final private ModelRenderer bone;
 
-    public AllieLimb() {
+    public AllieHand() {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.bone = new ModelRenderer(this);

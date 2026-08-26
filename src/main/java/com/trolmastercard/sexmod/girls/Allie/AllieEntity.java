@@ -39,28 +39,27 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class AllieEntity
-extends GirlEntity {
-    final static public int Q = 300;
-    final static public int K = 8;
-    final static public Vec3d O = new Vec3d(0.5, 1.0, 0.0);
-    float U = 1.0f;
-    public boolean P = false;
-    final static public DataParameter<ItemStack> itemStack = EntityDataManager.createKey(AllieEntity.class, DataSerializers.ITEM_STACK).getSerializer().createKey(111);
-    boolean S = true;
-    int T = 1;
-    int L = 1;
-    boolean M = false;
-    boolean R = false;
+public class AllieEntity extends GirlEntity {
+//    final static public int Q = 300;
+//    final static public int K = 8;
+    final static public Vec3d LAMP_OFFSET = new Vec3d(0.5, 1.0, 0.0);
+    float LAMP_SCALE = 1.0f;
+    public boolean isLampActive = false;
+    final static public DataParameter<ItemStack> LAMP_ITEM = EntityDataManager.createKey(AllieEntity.class, DataSerializers.ITEM_STACK).getSerializer().createKey(111);
+    boolean needsSpawnParticleRing = true;
+    int reverseCowgirlSlowAnimVariant = 1;
+    int reverseCowgirlFastAnimVariant = 1;
+    boolean skipFastMoanSound = false;
+    boolean skipLampActivation = false;
 
     public AllieEntity(World world) {
         super(world);
-        this.setSize((float) AllieEntity.O.x, (float) AllieEntity.O.y);
+        this.setSize((float) AllieEntity.LAMP_OFFSET.x, (float) AllieEntity.LAMP_OFFSET.y);
     }
 
     public AllieEntity(World world, ItemStack itemStack) {
         this(world);
-        this.entityDataManager.set(AllieEntity.itemStack, itemStack);
+        this.entityDataManager.set(AllieEntity.LAMP_ITEM, itemStack);
     }
 
     @Override
@@ -76,15 +75,12 @@ extends GirlEntity {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.entityDataManager.register(itemStack, ItemStack.EMPTY);
+        this.entityDataManager.register(LAMP_ITEM, ItemStack.EMPTY);
     }
 
-    public boolean boolean_f() {
-        NBTTagCompound nBTTagCompound = this.entityDataManager.get(itemStack).getTagCompound();
-        if (nBTTagCompound == null) {
-            return true;
-        }
-        return nBTTagCompound.getInteger("sexmodUses") == 1;
+    public boolean hasLampItem() {
+        NBTTagCompound nbt = this.entityDataManager.get(LAMP_ITEM).getTagCompound();
+        return nbt == null || nbt.getInteger("sexmodUses") == 1;
     }
 
     @Override
@@ -94,71 +90,68 @@ extends GirlEntity {
         if (this.getCurrentAction() == Action.NULL) {
             this.world.removeEntity(this);
         }
-        if ((uUID = this.getInteractionPlayerUUID()) == null) {
-            return;
-        }
-        EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(uUID);
-        if (entityPlayer == null) {
-            this.world.removeEntity(this);
+        if ((uUID = this.getInteractionPlayerUUID()) != null) {
+            EntityPlayer player = this.world.getPlayerEntityByUUID(uUID);
+            if (player == null) {
+                this.world.removeEntity(this);
+            }
         }
     }
 
     @Override
     @SideOnly(value=Side.CLIENT)
     public void AcSomeUnknownClass() {
-        if (!this.R) {
-            this.P = true;
+        if (!this.skipLampActivation) {
+            this.isLampActive = true;
         }
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (this.U != 1.0f && this.U != -69.0f && this.U <= 0.0f) {
+        if (this.LAMP_SCALE != 1.0f && this.LAMP_SCALE != -69.0f && this.LAMP_SCALE <= 0.0f) {
             if (this.isControlledByLocalPlayer()) {
                 PacketHandler.INSTANCE.sendToServer(new UploadInventoryToServerAlt(this.girlID()));
                 HandlePlayerMovement.setMovementLock(true);
             }
-            this.U = -69.0f;
+            this.LAMP_SCALE = -69.0f;
         }
-        if (!this.world.isRemote) {
-            return;
+        if (this.world.isRemote) {
+            if (this.isLampActive) {
+                this.openInteraction();
+            }
+            if (this.needsSpawnParticleRing) {
+                this.resetToDefaultState();
+            }
+            this.spawnRandomParticles();
         }
-        if (this.P) {
-            this.void_c();
-        }
-        if (this.S) {
-            this.void_d();
-        }
-        this.b_16();
     }
 
-    void b_16() {
-        if (this.ticksExisted % 10 != 0) {
-            return;
+    void spawnRandomParticles() {
+        if (this.ticksExisted % 10 == 0) {
+            int n = this.getRNG().nextInt(8);
+            Vec3d vec3d = this.getCachedBoneOffset("tail" + n).add(this.getPositionVector());
+            this.world.spawnParticle(EnumParticleTypes.PORTAL, vec3d.x, vec3d.y, vec3d.z, this.getRNG().nextGaussian() * (double) 0.01f, this.getRNG().nextGaussian() * (double) 0.01f, this.getRNG().nextGaussian() * (double) 0.01f);
         }
-        int n = this.getRNG().nextInt(8);
-        Vec3d vec3d = this.getCachedBoneOffset("tail" + n).add(this.getPositionVector());
-        this.world.spawnParticle(EnumParticleTypes.PORTAL, vec3d.x, vec3d.y, vec3d.z, this.getRNG().nextGaussian() * (double)0.01f, this.getRNG().nextGaussian() * (double)0.01f, this.getRNG().nextGaussian() * (double)0.01f);
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_d() {
-        this.S = false;
+    void resetToDefaultState() {
+        this.needsSpawnParticleRing = false;
         WorldUtils.SpawnParticleRing(this.world, EnumParticleTypes.PORTAL, this.getPositionVector(), 300, 0.75, 1.5);
     }
 
     @SideOnly(value=Side.CLIENT)
-    void void_c() {
+    void openInteraction() {
         this.openInteractionMenu(Minecraft.getMinecraft().player);
-        this.P = false;
+        this.isLampActive = false;
     }
 
     @Override
     public boolean openInteractionMenu(EntityPlayer player) {
-        this.R = false;
-        String[] stringArray = new String[]{"action.names.makemerichallie", "action.names.deepthroat", "Reverse cowgirl"};
-        AllieEntity.openInventoryGui(player, this, stringArray, false);
+        this.skipLampActivation = false;
+        String[] options = new String[]{"action.names.makemerichallie", "action.names.deepthroat", "Reverse cowgirl"};
+        AllieEntity.openInventoryGui(player, this, options, false);
         return true;
     }
 
@@ -186,25 +179,22 @@ extends GirlEntity {
 
     @Override
     public void setCurrentAction(Action action) {
-        if (this.getCurrentAction() == Action.DEEPTHROAT_CUM && (action == Action.DEEPTHROAT_FAST || action == Action.DEEPTHROAT_SLOW)) {
-            return;
+        if (this.getCurrentAction() != Action.DEEPTHROAT_CUM || (action != Action.DEEPTHROAT_FAST && action != Action.DEEPTHROAT_SLOW)) {
+            if (this.getCurrentAction() != Action.REVERSE_COWGIRL_CUM || (action != Action.REVERSE_COWGIRL_SLOW && action != Action.REVERSE_COWGIRL_FAST_START && action != Action.REVERSE_COWGIRL_FAST_CONTINUES)) {
+                if (!this.world.isRemote && action == Action.REVERSE_COWGIRL_START) {
+                    this.handleAllieOwner();
+                }
+                super.setCurrentAction(action);
+            }
         }
-        if (this.getCurrentAction() == Action.REVERSE_COWGIRL_CUM && (action == Action.REVERSE_COWGIRL_SLOW || action == Action.REVERSE_COWGIRL_FAST_START || action == Action.REVERSE_COWGIRL_FAST_CONTINUES)) {
-            return;
-        }
-        if (!this.world.isRemote && action == Action.REVERSE_COWGIRL_START) {
-            this.a_();
-        }
-        super.setCurrentAction(action);
     }
 
-    void a_() {
-        EntityPlayer entityPlayer = this.getPlayerEntity();
-        if (entityPlayer == null) {
-            return;
+    void handleAllieOwner() {
+        EntityPlayer player = this.getPlayerEntity();
+        if (player != null) {
+            Vec3d vec3d = this.getTargetPosition();
+            player.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
         }
-        Vec3d vec3d = this.getTargetPosition();
-        entityPlayer.setPositionAndUpdate(vec3d.x, vec3d.y, vec3d.z);
     }
 
     @Override
@@ -281,11 +271,11 @@ extends GirlEntity {
                         break;
                     }
                     case REVERSE_COWGIRL_SLOW: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_slow" + this.T, true, event);
+                        this.createAnimation("animation.allie.reverse_cowgirl_slow" + this.reverseCowgirlSlowAnimVariant, true, event);
                         break;
                     }
                     case REVERSE_COWGIRL_FAST_CONTINUES: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_fastc" + this.L, true, event);
+                        this.createAnimation("animation.allie.reverse_cowgirl_fastc" + this.reverseCowgirlFastAnimVariant, true, event);
                         break;
                     }
                     case REVERSE_COWGIRL_FAST_START: {
@@ -437,7 +427,7 @@ extends GirlEntity {
                     break;
                 }
                 case "summon_normalMSG3": {
-                    if (this.entityDataManager.get(itemStack).getTagCompound().getInteger("sexmodUses") == 2) {
+                    if (this.entityDataManager.get(LAMP_ITEM).getTagCompound().getInteger("sexmodUses") == 2) {
                         this.sendChatMessage(I18n.format("allie.dialogue.2wishes"));
                     } else {
                         this.sendChatMessage(I18n.format("allie.dialogue.1wish"));
@@ -473,7 +463,7 @@ extends GirlEntity {
                     break;
                 }
                 case "disappear": {
-                    this.U = 0.99f;
+                    this.LAMP_SCALE = 0.99f;
                     break;
                 }
                 case "summon_sandMSG1": {
@@ -515,22 +505,22 @@ extends GirlEntity {
                     break;
                 }
                 case "cowgirlSlowDone": {
-                    int n = this.T;
+                    int n = this.reverseCowgirlSlowAnimVariant;
                     do {
-                        this.T = this.getRNG().nextInt(3) + 1;
-                    } while (this.T == n);
+                        this.reverseCowgirlSlowAnimVariant = this.getRNG().nextInt(3) + 1;
+                    } while (this.reverseCowgirlSlowAnimVariant == n);
                     break;
                 }
                 case "fastMoan": {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.M) {
+                    if (!this.skipFastMoanSound) {
                         this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_MOAN));
-                        this.M = true;
+                        this.skipFastMoanSound = true;
                         break;
                     }
-                    this.M = false;
+                    this.skipFastMoanSound = false;
                     break;
                 }
                 case "fastSwitch": {
@@ -541,10 +531,10 @@ extends GirlEntity {
                         break;
                     }
                     this.resetAnimationControllerOffset();
-                    int n = this.L;
+                    int n = this.reverseCowgirlFastAnimVariant;
                     do {
-                        this.L = this.getRNG().nextInt(3) + 1;
-                    } while (this.L == n);
+                        this.reverseCowgirlFastAnimVariant = this.getRNG().nextInt(3) + 1;
+                    } while (this.reverseCowgirlFastAnimVariant == n);
                     break;
                 }
                 case "openSexUi": {
@@ -569,13 +559,13 @@ extends GirlEntity {
 
     @Override
     public void doAction(String string, UUID uUID) {
-        this.R = true;
+        this.skipLampActivation = true;
         if ("action.names.makemerichallie".equals(string)) {
-            this.setCurrentAction(this.boolean_f() ? Action.RICH_FIRST_TIME : Action.RICH_NORMAL);
+            this.setCurrentAction(this.hasLampItem() ? Action.RICH_FIRST_TIME : Action.RICH_NORMAL);
             return;
         }
         this.changeDataParameterFromClient("animationFollowUp", "action.names.deepthroat".equals(string) ? "deepthroat" : "reverse_cowgirl");
-        this.setCurrentAction(this.boolean_f() ? Action.ALLIE_PREPARE_FIRST_TIME : Action.ALLIE_PREPARE_NORMAL);
+        this.setCurrentAction(this.hasLampItem() ? Action.ALLIE_PREPARE_FIRST_TIME : Action.ALLIE_PREPARE_NORMAL);
     }
 }
 

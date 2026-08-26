@@ -11,8 +11,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class AllieRenderer
-extends GirlRenderer {
+public class AllieRenderer extends GirlRenderer {
     public AllieRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel, double d) {
         super(renderManager, animatedGeoModel, d);
     }
@@ -23,7 +22,7 @@ extends GirlRenderer {
         if (entity.getCurrentAction() == Action.NULL && !entity.isLocallyRegistered()) {
             return;
         }
-        a = allieEntity.U = allieEntity.U == 1.0f ? allieEntity.U : allieEntity.U - 0.01f;
+        a = allieEntity.LAMP_SCALE = allieEntity.LAMP_SCALE == 1.0f ? allieEntity.LAMP_SCALE : allieEntity.LAMP_SCALE - 0.01f;
         GlStateManager.scale(a, a, a);
         GlStateManager.translate(0.0f, a == 1.0f ? 0.0f : 3.0f - a * 3.0f, 0.0f);
         super.render(model, entity, partialTicks, r, g, b, a);
@@ -31,19 +30,15 @@ extends GirlRenderer {
 
     @Override
     protected void renderNameTag(double x, double y, double z) {
-        if (this.renderEntity.getCurrentAction() == Action.NULL) {
-            return;
+        if (this.renderEntity.getCurrentAction() != Action.NULL) {
+            if (!this.renderEntity.isLocallyRegistered()) {
+                if (!this.renderEntity.getCurrentAction().hideNameTag) {
+                    if (AllieRenderer.mc.getRenderManager().renderViewEntity != null) {
+                        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText(), x, y + (double) this.renderEntity.getScaleFactor(), z, 300);
+                    }
+                }
+            }
         }
-        if (this.renderEntity.isLocallyRegistered()) {
-            return;
-        }
-        if (this.renderEntity.getCurrentAction().hideNameTag) {
-            return;
-        }
-        if (AllieRenderer.mc.getRenderManager().renderViewEntity == null) {
-            return;
-        }
-        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText(), x, y + (double)this.renderEntity.getScaleFactor(), z, 300);
     }
 }
 

@@ -23,15 +23,15 @@ import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 public class LampRenderer extends GeoItemRenderer<LampItem> {
-    Minecraft a = Minecraft.getMinecraft();
-    static ResourceLocation b = null;
+    Minecraft mc = Minecraft.getMinecraft();
+    static ResourceLocation skin = null;
 
     public LampRenderer() {
         super(new LampModel());
     }
 
     ResourceLocation getSkin() {
-        if (b == null) {
+        if (skin == null) {
             try {
                 URL uRL = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + Minecraft.getMinecraft().player.getPersistentID().toString().replace("-", ""));
                 BufferedReader bufferedReader = new BufferedReader(
@@ -56,7 +56,7 @@ public class LampRenderer extends GeoItemRenderer<LampItem> {
                 }
                 URL uRL2 = new URL(stringBuilder2.toString());
                 BufferedImage bufferedImage = ImageIO.read(uRL2);
-                BufferedImage bufferedImage2 = ImageIO.read(this.a.getResourceManager().getResource(new LampModel().getTextureLocation(new LampItem())).getInputStream());
+                BufferedImage bufferedImage2 = ImageIO.read(this.mc.getResourceManager().getResource(new LampModel().getTextureLocation(new LampItem())).getInputStream());
                 for (int i = 0; i < bufferedImage2.getWidth(); ++i) {
                     for (int j = 0; j < bufferedImage2.getHeight(); ++j) {
                         int n7 = bufferedImage.getRGB(i, j);
@@ -64,63 +64,60 @@ public class LampRenderer extends GeoItemRenderer<LampItem> {
                         bufferedImage2.setRGB(i, j, n7);
                     }
                 }
-                b = Minecraft.getMinecraft().getRenderManager().renderEngine.getDynamicTextureLocation("lamptex", new DynamicTexture(bufferedImage2));
+                skin = Minecraft.getMinecraft().getRenderManager().renderEngine.getDynamicTextureLocation("lamptex", new DynamicTexture(bufferedImage2));
             } catch (Exception exception) {
-                b = new LampModel().getTextureLocation(new LampItem());
+                skin = new LampModel().getTextureLocation(new LampItem());
             }
         }
-        return b;
+        return skin;
     }
 
     @Override
-    public void render(GeoModel geoModel, LampItem ap_class372, float f, float f2, float f3, float f4, float f5) {
+    public void render(GeoModel model, LampItem animatable, float partialTicks, float red, float green, float blue, float alpha) {
         GlStateManager.disableCull();
         GlStateManager.enableRescaleNormal();
-        this.renderEarly(ap_class372, f, f2, f3, f4, f5);
-        this.renderLate(ap_class372, f, f2, f3, f4, f5);
+        this.renderEarly(animatable, partialTicks, red, green, blue, alpha);
+        this.renderLate(animatable, partialTicks, red, green, blue, alpha);
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        for (GeoBone geoBone : geoModel.topLevelBones) {
-            this.a(bufferBuilder, ap_class372, geoBone, f2, f3, f4, f5);
+        for (GeoBone geoBone : model.topLevelBones) {
+            this.renderLampBone(bufferBuilder, animatable, geoBone, red, green, blue, alpha);
         }
         Tessellator.getInstance().draw();
-        this.renderAfter(ap_class372, f, f2, f3, f4, f5);
+        this.renderAfter(animatable, partialTicks, red, green, blue, alpha);
         GlStateManager.disableRescaleNormal();
         GlStateManager.enableCull();
     }
 
-    public void a(BufferBuilder bufferBuilder, LampItem ap_class372, GeoBone geoBone, float f, float f2, float f3, float f4) {
+    public void renderLampBone(BufferBuilder bufferBuilder, LampItem ap_class372, GeoBone geoBone, float f, float f2, float f3, float f4) {
         MATRIX_STACK.push();
         MATRIX_STACK.translate(geoBone);
         MATRIX_STACK.moveToPivot(geoBone);
         MATRIX_STACK.rotate(geoBone);
         MATRIX_STACK.scale(geoBone);
         MATRIX_STACK.moveBackFromPivot(geoBone);
-        this.a.renderEngine.bindTexture(this.getSkin());
-        if (this.a(geoBone.getName())) {
-            this.b(bufferBuilder, ap_class372, geoBone, f, f2, f3, f4);
+        this.mc.renderEngine.bindTexture(this.getSkin());
+        if (this.isNotArmBone(geoBone.getName())) {
+            this.renderLampEffect(bufferBuilder, ap_class372, geoBone, f, f2, f3, f4);
         }
         MATRIX_STACK.pop();
     }
 
-    boolean a(String string) {
-        if (!string.equals("leftArm") && !string.equals("rightArm")) {
-            return true;
-        }
-        return this.a.player.getEntityData().getBoolean("sexmodAllieInUse") && this.a.gameSettings.thirdPersonView == 0;
+    boolean isNotArmBone(String string) {
+        return !string.equals("leftArm") && !string.equals("rightArm") || this.mc.player.getEntityData().getBoolean("sexmodAllieInUse") && this.mc.gameSettings.thirdPersonView == 0;
     }
 
-    void b(BufferBuilder bufferBuilder, LampItem ap_class372, GeoBone geoBone, float f, float f2, float f3, float f4) {
-        if (!geoBone.isHidden) {
-            for (GeoCube object : geoBone.childCubes) {
+    void renderLampEffect(BufferBuilder buffer, LampItem item, GeoBone bone, float r, float g, float b, float a) {
+        if (!bone.isHidden) {
+            for (GeoCube object : bone.childCubes) {
                 MATRIX_STACK.push();
                 GlStateManager.pushMatrix();
-                this.renderCube(bufferBuilder, object, f, f2, f3, f4);
+                this.renderCube(buffer, object, r, g, b, a);
                 GlStateManager.popMatrix();
                 MATRIX_STACK.pop();
             }
-            for (GeoBone geoBone2 : geoBone.childBones) {
-                this.a(bufferBuilder, ap_class372, geoBone2, f, f2, f3, f4);
+            for (GeoBone geoBone2 : bone.childBones) {
+                this.renderLampBone(buffer, item, geoBone2, r, g, b, a);
             }
         }
     }

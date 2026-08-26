@@ -1,5 +1,5 @@
-Methods renamed: 95.15% (2687/2824)
-Fields renamed: 76.17% (1218/1599)
+Methods renamed: 95.68% (2702/2824)
+Fields renamed: 77.14% (1232/1597)
 
 ## Synthetic Elements Detailed List
 
@@ -23,37 +23,6 @@ Fields renamed: 76.17% (1218/1599)
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Field | `e` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\hornypotion\EntityAIVillagerJustBangHerWithoutThinking.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\AllieEntity.java` | Method | `boolean_f()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\AllieEntity.java` | Method | `b_16()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\AllieEntity.java` | Method | `void_d()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\AllieEntity.java` | Method | `void_c()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\AllieEntity.java` | Method | `a_()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllie.java` | Method | `a_9()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllie.java` | Field | `au` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllie.java` | Field | `at` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllie.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllie.java` | Field | `as` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllie.java` | Field | `ap` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllie.java` | Field | `ar` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllie.java` | Field | `av` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllieRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllieRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\PlayerAllieRenderer.java` | Method | `void_a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Field | `j` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Field | `h` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Field | `k` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampItem.java` | Field | `f` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampModel.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampRenderer.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampRenderer.java` | Method | `b()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampRenderer.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Allie\lamp\LampRenderer.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Method | `java_lang_String_a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Method | `boolean_c()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Field | `m` |

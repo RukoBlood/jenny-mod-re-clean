@@ -34,13 +34,13 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlayerAllie
 extends PlayerGirl {
-    final static double au = 4.0;
-    final static double at = 4.0;
-    public float aq = 0.0f;
-    EntityPlayer as = null;
-    boolean ap = false;
-    int ar = 1;
-    int av = 1;
+    final static double MOVEMENT_MIN = 4.0;
+    final static double MOVEMENT_MAX = 4.0;
+    public float scaleOffset = 0.0f;
+    EntityPlayer cachedOwner = null;
+    boolean skipFastMoanSound = false;
+    int reverseCowgirlSlowAnimVariant = 1;
+    int reverseCowgirlFastAnimVariant = 1;
 
     protected PlayerAllie(World world) {
         super(world);
@@ -52,7 +52,7 @@ extends PlayerGirl {
 
     @Override
     public float getScaleFactor() {
-        return 1.9f + this.aq;
+        return 1.9f + this.scaleOffset;
     }
 
     @Override
@@ -67,7 +67,7 @@ extends PlayerGirl {
 
     @Override
     public IRenderer getHandModelRenderer(int index) {
-        return new AllieLimb();
+        return new AllieHand();
     }
 
     @Override
@@ -128,29 +128,28 @@ extends PlayerGirl {
             return;
         }
         EntityPlayer entityPlayer = this.world.getPlayerEntityByUUID(this.getOwnerUserUUID());
-        if (entityPlayer != null && this.as == null) {
+        if (entityPlayer != null && this.cachedOwner == null) {
             this.handleOwnerUUID(true);
         }
-        this.as = entityPlayer;
+        this.cachedOwner = entityPlayer;
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
         if (this.world.isRemote) {
-            this.a_9();
+            this.spawnAllieParticles();
         }
     }
 
     // TODO Rename
     @SideOnly(value=Side.CLIENT)
-    void a_9() {
-        if (this.ticksExisted % 10 != 0) {
-            return;
+    void spawnAllieParticles() {
+        if (this.ticksExisted % 10 == 0) {
+            int n = this.getRNG().nextInt(8);
+            Vec3d vec3d = this.getCachedBoneOffset("tail" + n).add(this.getPositionVector());
+            this.world.spawnParticle(EnumParticleTypes.PORTAL, vec3d.x, vec3d.y, vec3d.z, this.getRNG().nextGaussian() * (double) 0.01f, this.getRNG().nextGaussian() * (double) 0.01f, this.getRNG().nextGaussian() * (double) 0.01f, new int[0]);
         }
-        int n = this.getRNG().nextInt(8);
-        Vec3d vec3d = this.getCachedBoneOffset("tail" + n).add(this.getPositionVector());
-        this.world.spawnParticle(EnumParticleTypes.PORTAL, vec3d.x, vec3d.y, vec3d.z, this.getRNG().nextGaussian() * (double)0.01f, this.getRNG().nextGaussian() * (double)0.01f, this.getRNG().nextGaussian() * (double)0.01f, new int[0]);
     }
 
     @Override
@@ -289,22 +288,22 @@ extends PlayerGirl {
                     break;
                 }
                 case "cowgirlSlowDone": {
-                    int n = this.ar;
+                    int n = this.reverseCowgirlSlowAnimVariant;
                     do {
-                        this.ar = this.getRNG().nextInt(3) + 1;
-                    } while (this.ar == n);
+                        this.reverseCowgirlSlowAnimVariant = this.getRNG().nextInt(3) + 1;
+                    } while (this.reverseCowgirlSlowAnimVariant == n);
                     break;
                 }
                 case "fastMoan": {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.04f);
                     }
-                    if (!this.ap) {
+                    if (!this.skipFastMoanSound) {
                         this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_ALLIE_MOAN));
-                        this.ap = true;
+                        this.skipFastMoanSound = true;
                         break;
                     }
-                    this.ap = false;
+                    this.skipFastMoanSound = false;
                     break;
                 }
                 case "fastSwitch": {
@@ -315,10 +314,10 @@ extends PlayerGirl {
                         break;
                     }
                     this.resetAnimationControllerOffset();
-                    int n = this.av;
+                    int n = this.reverseCowgirlFastAnimVariant;
                     do {
-                        this.av = this.getRNG().nextInt(3) + 1;
-                    } while (this.av == n);
+                        this.reverseCowgirlFastAnimVariant = this.getRNG().nextInt(3) + 1;
+                    } while (this.reverseCowgirlFastAnimVariant == n);
                     break;
                 }
                 case "openSexUi": {
@@ -432,11 +431,11 @@ extends PlayerGirl {
                         break;
                     }
                     case REVERSE_COWGIRL_SLOW: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_slow" + this.ar, true, event);
+                        this.createAnimation("animation.allie.reverse_cowgirl_slow" + this.reverseCowgirlSlowAnimVariant, true, event);
                         break;
                     }
                     case REVERSE_COWGIRL_FAST_CONTINUES: {
-                        this.createAnimation("animation.allie.reverse_cowgirl_fastc" + this.av, true, event);
+                        this.createAnimation("animation.allie.reverse_cowgirl_fastc" + this.reverseCowgirlFastAnimVariant, true, event);
                         break;
                     }
                     case REVERSE_COWGIRL_FAST_START: {

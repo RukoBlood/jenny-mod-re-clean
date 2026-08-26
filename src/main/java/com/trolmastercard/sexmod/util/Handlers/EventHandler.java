@@ -78,7 +78,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register(new GoblinFirstPersonRenderer());
         MinecraftForge.EVENT_BUS.register(new GoblinEntity.EventHandler());
         MinecraftForge.EVENT_BUS.register(new PlayerGoblin.EventHandler());
-        MinecraftForge.EVENT_BUS.register(new LampItem.a_inner38());
+        MinecraftForge.EVENT_BUS.register(new LampItem.EventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugMode());
         MinecraftForge.EVENT_BUS.register(new GalathEntity.EventHandler());
         MinecraftForge.EVENT_BUS.register(new GalathMangTracker());

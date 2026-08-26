@@ -15,17 +15,17 @@ import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class LampModel extends AnimatedGeoModel<LampItem> {
-    ResourceLocation a = null;
+    ResourceLocation playerSkin = null;
 
     @Override
-    public ResourceLocation getModelLocation(LampItem ap_class372) {
+    public ResourceLocation getModelLocation(LampItem item) {
         return new ResourceLocation("sexmod", "geo/allie/lamp.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureLocation(LampItem item) {
-        if (this.a != null) {
-            return this.a;
+        if (this.playerSkin != null) {
+            return this.playerSkin;
         }
         try {
             Minecraft minecraft = Minecraft.getMinecraft();
@@ -37,12 +37,12 @@ public class LampModel extends AnimatedGeoModel<LampItem> {
             graphics.fillRect(2, 0, 1, 2);
             graphics.setColor(new Color(0, 0, 0));
             graphics.fillRect(3, 0, 1, 2);
-            this.a = minecraft.renderEngine.getDynamicTextureLocation("alliesLamp", new DynamicTexture(skin));
+            this.playerSkin = minecraft.renderEngine.getDynamicTextureLocation("alliesLamp", new DynamicTexture(skin));
         } catch (IOException iOException) {
             iOException.printStackTrace();
-            this.a = new ResourceLocation("sexmod", "textures/entity/allie/lamp.png");
+            this.playerSkin = new ResourceLocation("sexmod", "textures/entity/allie/lamp.png");
         }
-        return this.a;
+        return this.playerSkin;
     }
 
     public ResourceLocation getAnimationFileLocation(LampItem ap_class372) {

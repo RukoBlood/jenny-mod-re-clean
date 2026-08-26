@@ -25,26 +25,25 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class PlayerAllieRenderer
-extends PlayerGirlRenderer {
-    final static float E = 8.0f;
-    final static float K = 1.68f;
-    final static float M = 5.0f;
-    static Collection<PlayerAllieRenderer> J = new ArrayList<PlayerAllieRenderer>();
-    double C = 0.0;
-    double z = 0.0;
-    double A = 0.0;
-    double D = 0.0;
-    float F = 0.0f;
-    float B = 0.0f;
-    float G;
-    float I;
-    double H = 0.0;
-    double L = 0.0;
+public class PlayerAllieRenderer extends PlayerGirlRenderer {
+    final static float BOB_SCALE_1 = 8.0f;
+    final static float BOB_SCALE_2 = 1.68f;
+    final static float BOB_SCALE_3 = 5.0f;
+    static Collection<PlayerAllieRenderer> renderers = new ArrayList<>();
+    double currentPosX = 0.0;
+    double currentPosZ = 0.0;
+    double prevPosX = 0.0;
+    double prevPosZ = 0.0;
+    float prevRotX = 0.0f;
+    float prevRotZ = 0.0f;
+    float rotX;
+    float rotZ;
+    double smoothedBob = 0.0;
+    double moveMagnitude = 0.0;
 
-    public PlayerAllieRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel) {
-        super(renderManager, animatedGeoModel);
-        J.add(this);
+    public PlayerAllieRenderer(RenderManager manager, AnimatedGeoModel model) {
+        super(manager, model);
+        renderers.add(this);
     }
 
     @Override
@@ -91,86 +90,79 @@ extends PlayerGirlRenderer {
         if (!isLeftHand && !isActive) {
             GlStateManager.translate(-0.05, -0.125, 0.125);
             GlStateManager.rotate(50.0f, 1.0f, 0.0f, 0.0f);
-            return;
         }
     }
 
     @Override
     protected void onBoneRenderStart(String boneName, GeoBone geoBone) {
-        if (this.currentGirl.getDataManager().get(GirlEntity.IS_ANCHORED).booleanValue()) {
-            return;
-        }
-        if ("tail".equals(boneName)) {
-            this.a(geoBone, 0.0f, 0.0f, 1.0f);
-        }
-        if ("body".equals(boneName)) {
-            this.a(geoBone);
-        }
-        if (this.currentGirl.getCurrentAction() == Action.BOW) {
-            return;
-        }
-        if ("armL".equals(boneName)) {
-            this.a(geoBone, 0.0f, -0.34906584f, 0.15f);
-        }
-        if (this.currentGirl.getCurrentAction() == Action.ATTACK) {
-            return;
-        }
-        if ("armR".equals(boneName)) {
-            this.a(geoBone, 0.0f, 0.34906584f, 0.15f);
+        if (!this.currentGirl.getDataManager().get(GirlEntity.IS_ANCHORED)) {
+            if ("tail".equals(boneName)) {
+                this.applyBoneRotation(geoBone, 0.0f, 0.0f, 1.0f);
+            }
+            if ("body".equals(boneName)) {
+                this.updateBoneBob(geoBone);
+            }
+            if (this.currentGirl.getCurrentAction() != Action.BOW) {
+                if ("armL".equals(boneName)) {
+                    this.applyBoneRotation(geoBone, 0.0f, -0.34906584f, 0.15f);
+                }
+                if (this.currentGirl.getCurrentAction() != Action.ATTACK) {
+                    if ("armR".equals(boneName)) {
+                        this.applyBoneRotation(geoBone, 0.0f, 0.34906584f, 0.15f);
+                    }
+                }
+            }
         }
     }
 
-    void a(GeoBone geoBone, float f, float f2, float f3) {
-        double d = this.C - this.A;
-        double d2 = this.z - this.D;
+    void applyBoneRotation(GeoBone geoBone, float f, float f2, float f3) {
+        double d = this.currentPosX - this.prevPosX;
+        double d2 = this.currentPosZ - this.prevPosZ;
         double d3 = Math.PI / 180 * (double)this.currentGirl.rotationYaw;
         Vec2f vec2f = new Vec2f((float)(d * Math.cos(d3) + d2 * Math.sin(d3)), (float)(-d * Math.sin(d3) + d2 * Math.cos(d3)));
-        this.G = vec2f.y * -8.0f;
-        this.I = vec2f.x * 8.0f;
-        this.G = ThreadNames.clamp(this.G, -1.68f, 1.68f);
-        this.I = ThreadNames.clamp(this.I, -1.68f, 1.68f);
-        this.G = RotationHelper.LerpFloat(this.F, this.G, this.partialTicks);
-        this.I = RotationHelper.LerpFloat(this.B, this.I, this.partialTicks);
-        geoBone.setRotationX(f + this.G * f3);
-        geoBone.setRotationZ(f2 + this.I * f3);
+        this.rotX = vec2f.y * -8.0f;
+        this.rotZ = vec2f.x * 8.0f;
+        this.rotX = ThreadNames.clamp(this.rotX, -1.68f, 1.68f);
+        this.rotZ = ThreadNames.clamp(this.rotZ, -1.68f, 1.68f);
+        this.rotX = RotationHelper.LerpFloat(this.prevRotX, this.rotX, this.partialTicks);
+        this.rotZ = RotationHelper.LerpFloat(this.prevRotZ, this.rotZ, this.partialTicks);
+        geoBone.setRotationX(f + this.rotX * f3);
+        geoBone.setRotationZ(f2 + this.rotZ * f3);
     }
 
-    void a(GeoBone geoBone) {
-        double d = this.C - this.A;
-        double d2 = this.z - this.D;
-        this.L = (Math.abs(d) + Math.abs(d2)) * 5.0;
-        this.L = ThreadNames.clamp((float)this.L, 0.0f, 1.0f);
-        geoBone.setPositionY((float) RotationHelper.lerpAngle(5.0, 0.0, RotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks)));
+    void updateBoneBob(GeoBone geoBone) {
+        double d = this.currentPosX - this.prevPosX;
+        double d2 = this.currentPosZ - this.prevPosZ;
+        this.moveMagnitude = (Math.abs(d) + Math.abs(d2)) * 5.0;
+        this.moveMagnitude = ThreadNames.clamp((float)this.moveMagnitude, 0.0f, 1.0f);
+        geoBone.setPositionY((float) RotationHelper.lerpAngle(5.0, 0.0, RotationHelper.LerpDouble(this.smoothedBob, this.moveMagnitude, this.partialTicks)));
         if (this.currentGirl instanceof PlayerAllie) {
-            ((PlayerAllie)this.currentGirl).aq = (float) RotationHelper.lerpAngle((double)0.3f, 0.0, RotationHelper.LerpDouble(this.H, this.L, (double)this.partialTicks));
+            ((PlayerAllie)this.currentGirl).scaleOffset = (float) RotationHelper.lerpAngle(0.3f, 0.0, RotationHelper.LerpDouble(this.smoothedBob, this.moveMagnitude, this.partialTicks));
         }
     }
 
-    void void_a() {
-        if (this.currentGirl == null) {
-            return;
+    void updateCameraRotations() {
+        if (this.currentGirl != null) {
+            this.prevRotX = this.rotX;
+            this.prevRotZ = this.rotZ;
+            this.smoothedBob = this.moveMagnitude;
+            if (this.currentGirl.getOwnerUserUUID() != null) {
+                EntityPlayer player = this.renderEntity.world.getPlayerEntityByUUID(this.currentGirl.getOwnerUserUUID());
+                if (player != null) {
+                    this.prevPosX = this.currentPosX;
+                    this.prevPosZ = this.currentPosZ;
+                    this.currentPosX = player.posX;
+                    this.currentPosZ = player.posZ;
+                }
+            }
         }
-        this.F = this.G;
-        this.B = this.I;
-        this.H = this.L;
-        if (this.currentGirl.getOwnerUserUUID() == null) {
-            return;
-        }
-        EntityPlayer entityPlayer = this.renderEntity.world.getPlayerEntityByUUID(this.currentGirl.getOwnerUserUUID());
-        if (entityPlayer == null) {
-            return;
-        }
-        this.A = this.C;
-        this.D = this.z;
-        this.C = entityPlayer.posX;
-        this.z = entityPlayer.posZ;
     }
 
     public static class EventHandler {
         @SubscribeEvent
         public void onClientTick(TickEvent.ClientTickEvent event) {
-            for (PlayerAllieRenderer renderer : J) {
-                renderer.void_a();
+            for (PlayerAllieRenderer renderer : renderers) {
+                renderer.updateCameraRotations();
             }
         }
     }

@@ -56,7 +56,7 @@ implements IMessage {
                 if (allie.world.getBlockState(blockPos).getBlock().equals(Blocks.SAND)) {
                     allie.setCurrentAction(Action.SUMMON_SAND);
                 } else {
-                    allie.setCurrentAction(allie.boolean_f() ? Action.SUMMON : Action.SUMMON_NORMAL);
+                    allie.setCurrentAction(allie.hasLampItem() ? Action.SUMMON : Action.SUMMON_NORMAL);
                 }
             });
             return null;
