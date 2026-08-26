@@ -1,5 +1,5 @@
-Methods renamed: 95.82% (2706/2824)
-Fields renamed: 77.27% (1234/1597)
+Methods renamed: 96.28% (2719/2824)
+Fields renamed: 77.46% (1234/1593)
 
 ## Synthetic Elements Detailed List
 
@@ -17,23 +17,6 @@ Fields renamed: 77.27% (1234/1597)
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\gender_change\RenderPlayerGirl.java` | Field | `e` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Method | `java_lang_String_a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Method | `boolean_c()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Field | `m` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Field | `k` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\GirlRenderer.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\EditorWand\EditorWand.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\base\PlayerGirl\PlayerGirlEntity.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Bee\BeeEntity.java` | Method | `b_15()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Bee\BeeLimb.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Bia\BiaHand.java` | Field | `a` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathEntity.java` | Method | `void_aa()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Galath\GalathEntity.java` | Method | `void_X()` |
