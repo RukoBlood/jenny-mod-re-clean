@@ -433,7 +433,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
                 break;
             }
             case "hairDownSideL": {
-                //TODO: If it shoud be like that
+                //If it shoud be like that
                 if (mc.isGamePaused()) break;
                 IBone headBone = this.renderEntity.getAnimationProcessor().getBone("head");
                 float rotX = TrigMath.toDegrees(headBone.getRotationX());

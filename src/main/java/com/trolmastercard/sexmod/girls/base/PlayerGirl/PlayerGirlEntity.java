@@ -57,7 +57,7 @@ public enum PlayerGirlEntity {
         this.playerClass = playerClass;
         this.isNpcOnly = false;
         this.hasSpecifics = hasSpecifics;
-        this.editorID = Reference.b++;
+        this.editorID = Reference.EDITOR_ID++;
     }
 
     private PlayerGirlEntity(Class<? extends GirlEntity> npcClass, int id, Class<? extends PlayerGirl> playerNPCClass, int PlayerID) {
@@ -67,7 +67,7 @@ public enum PlayerGirlEntity {
         this.playerClass = playerNPCClass;
         this.isNpcOnly = false;
         this.hasSpecifics = false;
-        this.editorID = Reference.b++;
+        this.editorID = Reference.EDITOR_ID++;
     }
 
     private PlayerGirlEntity(Class<? extends GirlEntity> npcClass, int id) {
@@ -75,7 +75,7 @@ public enum PlayerGirlEntity {
         this.npcClass = npcClass;
         this.isNpcOnly = true;
         this.hasSpecifics = false;
-        this.editorID = Reference.b++;
+        this.editorID = Reference.EDITOR_ID++;
         this.playerClass = null;
         this.playerID = 0;
     }

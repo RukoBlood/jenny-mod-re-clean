@@ -73,7 +73,7 @@ public class SetPlayerForGirl implements IMessage {
                         continue;
                     }
                     if (girl instanceof JennyEntity) {
-                        ((JennyEntity)girl).af = true;
+                        ((JennyEntity)girl).shouldStartDoggySex = true;
                     }
                     girl.setInteractionPlayerUUID(msg.b);
                 }

@@ -37,7 +37,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class PlayerConnectionEvents {
     final static UUID BIA_PLAYER_UUID = UUID.fromString("b91e6484-8911-4def-ab04-9fa3452fca5f");
@@ -56,8 +55,8 @@ public class PlayerConnectionEvents {
             playerMP.capabilities.isFlying = false;
         }
 
-        PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), playerMP);
-        PacketHandler.INSTANCE.sendTo((IMessage)new InformOfOwnership(GalathMangTracker.hasOwner(playerMP.getPersistentID())), playerMP);
+        PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), playerMP);
+        PacketHandler.INSTANCE.sendTo(new InformOfOwnership(GalathMangTracker.hasOwner(playerMP.getPersistentID())), playerMP);
 
         for (ItemStack stack : playerMP.inventory.mainInventory) {
             if (stack.getItem() != LampItem.LAMP_ITEM || !stack.hasTagCompound()) continue;
@@ -67,14 +66,14 @@ public class PlayerConnectionEvents {
         UUID tribeID = KoboldManager.findTribeIdWith(playerMP.getPersistentID());
         if (tribeID != null) {
             HashSet<BlockPos> tribeBlocks = KoboldManager.getAllTribeBlocks(tribeID);
-            PacketHandler.INSTANCE.sendTo((IMessage)new SendBlocks(tribeBlocks, true), playerMP);
+            PacketHandler.INSTANCE.sendTo(new SendBlocks(tribeBlocks, true), playerMP);
         }
 
         PlayerGirl.rebuildPlayerGirlTableFromWorld();
         PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(event.player.getPersistentID());
 
         World serverWorld = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
-        this.clearDuplicatePlayerGirls(serverWorld, (EntityPlayer)playerMP, playerGirl);
+        this.clearDuplicatePlayerGirls(serverWorld, playerMP, playerGirl);
 
         if (playerGirl != null) {
             playerGirl.setAnchored(false);
@@ -82,7 +81,7 @@ public class PlayerConnectionEvents {
             ResetGirl.EventHandler.resetGirl(playerGirl);
         }
         if ((playerUUID = event.player.getPersistentID()).equals(BIA_PLAYER_UUID)) {
-            this.spawnSpecialBia(serverWorld, (EntityPlayer)playerMP, playerUUID);
+            this.spawnSpecialBia(serverWorld, playerMP, playerUUID);
         }
         if (playerUUID.equals(ELLIE_PLAYER_UUID)) {
             this.spawnSpecialEllie(serverWorld, playerMP, playerUUID);
@@ -138,10 +137,10 @@ public class PlayerConnectionEvents {
             }
             if (!(girl instanceof PlayerGirl) || !((PlayerGirl)girl).getOwnerUserUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID() == null) continue;
             EntityPlayerMP entityPlayerMP = (EntityPlayerMP)event.player.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID());
-            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(true), entityPlayerMP);
+            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), entityPlayerMP);
             ResetGirl.EventHandler.resetGirls(entityPlayerMP);
             player.setInvisible(false);
-            girl.setInteractionPlayerUUID((UUID)null);
+            girl.setInteractionPlayerUUID(null);
         }
     }
 

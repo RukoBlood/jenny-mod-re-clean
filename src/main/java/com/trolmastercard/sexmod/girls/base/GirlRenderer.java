@@ -325,8 +325,8 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     Vec3d getRidingPassengerVector(EntityPlayer owner, float partialTicks) {
         EntityLiving mount = (EntityLiving)owner.getRidingEntity();
         EntityPlayerSP playerClient = GirlRenderer.mc.player;
-        //TODO: is this crashes?
-        assert mount != null;
+        //is this crashes?
+        //assert mount != null;
         Vec3d lookVec = mount.getLookVec();
         Vec3d ownerInterp = RotationHelper.LerpVec3d(new Vec3d(owner.lastTickPosX, owner.lastTickPosY, owner.lastTickPosZ), owner.getPositionVector(), partialTicks);
         Vec3d clientInterp = RotationHelper.LerpVec3d(new Vec3d(playerClient.lastTickPosX, playerClient.lastTickPosY, playerClient.lastTickPosZ), playerClient.getPositionVector(), partialTicks);

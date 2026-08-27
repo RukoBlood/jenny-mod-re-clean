@@ -23,7 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -142,13 +141,13 @@ extends PlayerGirl {
         }
     }
 
-    // TODO Rename
+
     @SideOnly(value=Side.CLIENT)
     void spawnAllieParticles() {
         if (this.ticksExisted % 10 == 0) {
             int n = this.getRNG().nextInt(8);
             Vec3d vec3d = this.getCachedBoneOffset("tail" + n).add(this.getPositionVector());
-            this.world.spawnParticle(EnumParticleTypes.PORTAL, vec3d.x, vec3d.y, vec3d.z, this.getRNG().nextGaussian() * (double) 0.01f, this.getRNG().nextGaussian() * (double) 0.01f, this.getRNG().nextGaussian() * (double) 0.01f, new int[0]);
+            this.world.spawnParticle(EnumParticleTypes.PORTAL, vec3d.x, vec3d.y, vec3d.z, this.getRNG().nextGaussian() * (double) 0.01f, this.getRNG().nextGaussian() * (double) 0.01f, this.getRNG().nextGaussian() * (double) 0.01f);
         }
     }
 
@@ -197,12 +196,12 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_prepareMSG1": {
-                    this.sendChatMessage(I18n.format("allie.dialogue.hihi", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.hihi"));
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
                 case "deepthroat_prepareMSG2": {
-                    this.sendChatMessage(I18n.format("allie.dialogue.boys", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.boys"));
                     this.PlaySound(SoundsHandler.MISC_PLOB[0]);
                     break;
                 }
@@ -214,9 +213,9 @@ extends PlayerGirl {
                 case "deepthroat_prepareDone": {
                     this.setCurrentAction(Action.DEEPTHROAT_START);
                     if (!this.isControlledByLocalPlayer()) break;
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SyncActionPacket(this.girlID(), this.getInteractionPlayerUUID(), false, true));
+                    PacketHandler.INSTANCE.sendToServer(new SyncActionPacket(this.girlID(), this.getInteractionPlayerUUID(), false, true));
                     this.cameraYaw = this.rotationYaw + 180.0f;
-                    this.moveCamera(0.0, 0.0, (double)1.35f, 0.0f, 30.0f);
+                    this.moveCamera(0.0, 0.0, 1.35f, 0.0f, 30.0f);
                     SexUI.resetCumPercentage();
                     break;
                 }
@@ -255,7 +254,7 @@ extends PlayerGirl {
                     break;
                 }
                 case "deepthroat_normal_prepareMSG1": {
-                    this.sendChatMessage(I18n.format("allie.dialogue.alright", new Object[0]));
+                    this.sendChatMessage(I18n.format("allie.dialogue.alright"));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.MISC_PLOB));
                     break;
                 }

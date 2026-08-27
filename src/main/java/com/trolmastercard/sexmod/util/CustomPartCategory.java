@@ -28,9 +28,9 @@ public enum CustomPartCategory {
     private CustomPartCategory(int xPos, String boneName) {
         this.iconXPos = xPos;
         this.boneName = boneName;
-        ++Reference.i;
-        this.buttonIDPlus = Reference.i++;
-        this.buttonIDMinus = Reference.i;
+        ++Reference.BUTTON_ID;
+        this.buttonIDPlus = Reference.BUTTON_ID++;
+        this.buttonIDMinus = Reference.BUTTON_ID;
     }
 
     public static int getCount() {

@@ -23,7 +23,6 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -108,7 +107,7 @@ public class PlayerLuna extends PlayerGirl {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (Action.WAIT_CAT.equals((Object)this.getCurrentAction())) {
+        if (Action.WAIT_CAT.equals(this.getCurrentAction())) {
             this.handleLunaOwner();
         } else {
             this.waitInteractionTicks = 0;
@@ -331,7 +330,7 @@ public class PlayerLuna extends PlayerGirl {
                     break;
                 }
                 case "pearl": {
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "paymentMSG1": {

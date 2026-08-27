@@ -2531,7 +2531,8 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         if (nbt.hasUniqueId("tribeId") && tribeId != null && !this.isDead) {
 
 //            if (tribeId.getLeastSignificantBits() == 0 || tribeId.getMostSignificantBits() == 0) {
-//                // TODO tribeId return a 00000... UUID when missing... super weird
+//                // tribeId return a 00000... UUID when missing... super weird
+                //RukoBlood: it's because you in a obfuscated env
 //                return;
 //            }
 

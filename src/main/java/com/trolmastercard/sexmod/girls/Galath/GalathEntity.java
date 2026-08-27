@@ -1229,7 +1229,7 @@ public class GalathEntity extends GirlEntity implements IEntityMultiPart, IGalat
             if (this.getInteractionPlayerUUID() == null) {
                 this.resetTargetIfMasterMissing();
                 this.searchNewAttackTarget();
-                this.updateFlightLogic(); // TODO
+                this.updateFlightLogic();
                 this.checkFlightFinished();
                 this.updateNoClipFlight();
                 this.updateKnockoutState();

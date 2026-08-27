@@ -87,7 +87,7 @@ public class BlackScreenUI extends GuiScreen {
                 if (step > 69.0) {
                     step = 0.0;
                     active = false;
-                    SexUI.showUI(); //TODO possible bugfix
+                    SexUI.showUI();
                 }
                 GlStateManager.popMatrix();
             }

@@ -31,7 +31,6 @@ import com.trolmastercard.sexmod.world.FakeWorld;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -49,7 +48,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -59,15 +57,15 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
-    public boolean Zflag = false;
-    public boolean ab = false;
-    public boolean af = false;
-    final static public DataParameter<Boolean> Y = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(118);
-    int ac = 0;
-    int ad = 0;
-    boolean aa = false;
-    int ag = 0;
-    boolean ae = false;
+    public boolean isHeadingToBed = false;
+    public boolean isDismounting = false;
+    public boolean shouldStartDoggySex = false;
+    final static public DataParameter<Boolean> IS_HORNY = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(118);
+    int dismountingTicks = 0;
+    int bedNavigationTicks = 0;
+    boolean isHardDoggyThrust = false;
+    int fastThrustCounter = 0;
+    boolean isBoobjobCameraAdjusted = false;
 
     public JennyEntity(World world) {
         super(world);
@@ -78,10 +76,10 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
         this.swordOffsetStab = new Vec3d(0.0, -0.029999997854232782, -0.2);
     }
 
-    public static JennyEntity a(World world) {
-        JennyEntity jennyEntity = new JennyEntity(world);
-        jennyEntity.isSpecialState = true;
-        return jennyEntity;
+    public static JennyEntity setSpecial(World world) {
+        JennyEntity jenny = new JennyEntity(world);
+        jenny.isSpecialState = true;
+        return jenny;
     }
 
     @Override
@@ -97,7 +95,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.entityDataManager.register(Y, false);
+        this.entityDataManager.register(IS_HORNY, false);
     }
 
     @Override
@@ -126,24 +124,24 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
         //Object object;
         super.updateAITasks();
         EntityPlayer player = this.world.getClosestPlayerToEntity(this, 15.0);
-        if (this.af && player != null && player.getPositionVector().distanceTo(this.getPositionVector()) < 0.5) {
-            this.af = false;
+        if (this.shouldStartDoggySex && player != null && player.getPositionVector().distanceTo(this.getPositionVector()) < 0.5) {
+            this.shouldStartDoggySex = false;
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, this.world.getClosestPlayerToEntity(this, 15.0).getPersistentID().toString());
             EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID());
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, object.getPersistentID().toString());
-            ((EntityPlayerMP)object).setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
-            this.alignPlayerToGirl((EntityPlayerMP)object, false);
-            ((Entity)object).moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
+            object.setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
+            this.alignPlayerToGirl(object, false);
+            object.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.cameraOriginPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
-            PacketHandler.INSTANCE.sendTo((IMessage)new SetPlayerMovement(false), (EntityPlayerMP)object);
+            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), object);
         }
-        if (this.Zflag) {
-            if (this.getPositionVector().distanceTo(this.getTargetPosition()) < 0.6 || this.ad > 200) {
-                this.Zflag = false;
+        if (this.isHeadingToBed) {
+            if (this.getPositionVector().distanceTo(this.getTargetPosition()) < 0.6 || this.bedNavigationTicks > 200) {
+                this.isHeadingToBed = false;
                 this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
-                this.ad = 0;
+                this.bedNavigationTicks = 0;
                 this.noClip = true;
                 this.setNoGravity(true);
                 this.motionX = 0.0;
@@ -151,22 +149,22 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.motionZ = 0.0;
                 this.setCurrentAction(Action.STARTDOGGY);
             } else {
-                ++this.ad;
-                if (this.ad == 60 || this.ad == 120) {
+                ++this.bedNavigationTicks;
+                if (this.bedNavigationTicks == 60 || this.bedNavigationTicks == 120) {
                     this.getNavigator().clearPath();
                     this.getNavigator().tryMoveToXYZ(this.getTargetPosition().x, this.getTargetPosition().y, this.getTargetPosition().z, 0.35);
                 }
             }
         }
-        if (this.ab) {
-            ++this.ac;
-            if (this.getPositionVector().equals(GirlEntity.TARGET_POS) || this.ac > 40) {
-                this.ab = false;
-                this.ac = 0;
-                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID((UUID)this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
+        if (this.isDismounting) {
+            ++this.dismountingTicks;
+            if (this.getPositionVector().equals(GirlEntity.TARGET_POS) || this.dismountingTicks > 40) {
+                this.isDismounting = false;
+                this.dismountingTicks = 0;
+                this.setYawRotation(this.world.getMinecraftServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID()).rotationYaw + 180.0f);
                 this.entityDataManager.set(GirlEntity.IS_ANCHORED, true);
                 this.getNavigator().clearPath();
-                if (this.entityDataManager.get(Y)) {
+                if (this.entityDataManager.get(IS_HORNY)) {
                     this.doSubAction();
                     return;
                 }
@@ -175,8 +173,8 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 this.rotationYaw = this.getYawRotation().floatValue();
                 this.setTargetPosition(this.getFrontOffsetVector());
                 this.setNoGravity(false);
-                Vec3d object = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.ac);
-                this.setPosition(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
+                Vec3d object = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.dismountingTicks);
+                this.setPosition(object.x, object.y, object.z);
             }
         }
     }
@@ -187,7 +185,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
             return true;
         }
         if (this.world.isRemote && !this.openInteractionMenu(entityPlayer)) {
-            this.sendChatMessage(I18n.format("jenny.dialogue.busy", new Object[0]));
+            this.sendChatMessage(I18n.format("jenny.dialogue.busy"));
         }
         return true;
     }
@@ -196,19 +194,19 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
     public void onUpdate() {
         super.onUpdate();
         if (!this.world.isRemote) {
-            this.entityDataManager.set(Y, this.isPotionActive(HornyPotion.HORNY_POTION));
+            this.entityDataManager.set(IS_HORNY, this.isPotionActive(HornyPotion.HORNY_POTION));
         }
     }
 
     @Override
     public boolean openInteractionMenu(EntityPlayer player) {
         if (this.getInteractionPlayerUUID() == null && (!this.hasMaster() || this.entityDataManager.get(GirlEntity.MASTER).equals(Minecraft.getMinecraft().player.getPersistentID().toString()))) {
-            String[] stringArray = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
-            if (this.entityDataManager.get(Y).booleanValue()) {
-                GirlEntity.openInventoryGui(player, this, stringArray, true);
+            String[] options = new String[]{"action.names.blowjob", "action.names.boobjob", "action.names.doggy", this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? "action.names.strip" : "action.names.dressup"};
+            if (this.entityDataManager.get(IS_HORNY)) {
+                GirlEntity.openInventoryGui(player, this, options, true);
                 return true;
             }
-            GirlEntity.openInventoryGui(player, this, stringArray, new ItemStack[]{new ItemStack(Items.EMERALD, 3), new ItemStack(Items.ENDER_PEARL, 2), new ItemStack(Items.DIAMOND, 2), this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? new ItemStack(Items.GOLD_INGOT, 1) : new ItemStack(Items.AIR, 0)}, true);
+            GirlEntity.openInventoryGui(player, this, options, new ItemStack[]{new ItemStack(Items.EMERALD, 3), new ItemStack(Items.ENDER_PEARL, 2), new ItemStack(Items.DIAMOND, 2), this.entityDataManager.get(GirlEntity.OUTFIT_INDEX) == 1 ? new ItemStack(Items.GOLD_INGOT, 1) : new ItemStack(Items.AIR, 0)}, true);
             return true;
         }
         return false;
@@ -288,7 +286,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
             }
             if (bestIndex == -1) {
                 this.PlaySound(SoundsHandler.GIRLS_JENNY_HMPH[2]);
-                this.sendChatMessage(I18n.format("jenny.dialogue.bedobscured", new Object[0]));
+                this.sendChatMessage(I18n.format("jenny.dialogue.bedobscured"));
                 return;
             }
 
@@ -299,8 +297,8 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
             this.cameraYaw = this.getYawRotation();
             this.getNavigator().clearPath();
             this.getNavigator().tryMoveToXYZ(bedOffset.x, bedOffset.y, bedOffset.z, 0.35);
-            this.Zflag = true;
-            this.ad = 0;
+            this.isHeadingToBed = true;
+            this.bedNavigationTicks = 0;
         }
     }
 
@@ -348,9 +346,9 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 return Action.DOGGYFAST;
             }
             case PAIZURI_SLOW: {
-                if (this.ae) {
-                    this.ae = false;
-                    this.moveCamera(0.0, 0.0, (double)0.2f, 0.0f, 70.0f);
+                if (this.isBoobjobCameraAdjusted) {
+                    this.isBoobjobCameraAdjusted = false;
+                    this.moveCamera(0.0, 0.0, 0.2f, 0.0f, 70.0f);
                 }
                 return Action.PAIZURI_FAST;
             }
@@ -360,7 +358,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
 
     @Override
     public void setDismounted() {
-        this.ab = true;
+        this.isDismounting = true;
     }
 
     @Override
@@ -503,7 +501,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                         break;
                     }
                     case DOGGYFAST: {
-                        this.createAnimation("animation.jenny.doggyfast_" + (this.aa ? "hard" : "soft"), true, event);
+                        this.createAnimation("animation.jenny.doggyfast_" + (this.isHardDoggyThrust ? "hard" : "soft"), true, event);
                         break;
                     }
                     case DOGGYCUM: {
@@ -594,12 +592,12 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "stripMSG1": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.hihi", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.hihi"));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
                 case "paymentMSG1": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.huh", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.huh"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_HUH[1]);
                     break;
                 }
@@ -608,19 +606,19 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     String string = "<" + Minecraft.getMinecraft().player.getName() + "> ";
                     switch (this.entityDataManager.get(GirlEntity.GIRL_HAND_STATES)) {
                         case "strip": {
-                            this.broadcastChatAround(string + I18n.format("jenny.dialogue.showBobsandveganapls", new Object[0]), true);
+                            this.broadcastChatAround(string + I18n.format("jenny.dialogue.showBobsandveganapls"), true);
                             break;
                         }
                         case "blowjob": {
-                            this.broadcastChatAround(string + I18n.format("jenny.dialogue.giveblowjob", new Object[0]), true);
+                            this.broadcastChatAround(string + I18n.format("jenny.dialogue.giveblowjob"), true);
                             break;
                         }
                         case "doggy": {
-                            this.broadcastChatAround(string + I18n.format("jenny.dialogue.givesex", new Object[0]), true);
+                            this.broadcastChatAround(string + I18n.format("jenny.dialogue.givesex"), true);
                             break;
                         }
                         case "boobjob": {
-                            this.broadcastChatAround(string + I18n.format("jenny.dialogue.givebooba", new Object[0]), true);
+                            this.broadcastChatAround(string + I18n.format("jenny.dialogue.givebooba"), true);
                             break;
                         }
                     }
@@ -628,7 +626,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "paymentMSG3": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.hehe", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.hehe"));
                     this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_GIGGLE));
                     break;
                 }
@@ -646,7 +644,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjiMSG1": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext1", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext1"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_MMM[8]);
                     this.cameraYaw = this.rotationYaw + 180.0f;
                     if (!this.isControlledByLocalPlayer()) break;
@@ -654,12 +652,12 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjiMSG2": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext2", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext2"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG3": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext3", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext3"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_AFTERSESSIONMOAN[0]);
                     break;
                 }
@@ -668,29 +666,29 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "bjiMSG5": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext4", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext4"));
                     this.playSoundAtVolume(SoundsHandler.GIRLS_JENNY_HMPH[1], 0.5f);
                     if (!this.isControlledByLocalPlayer()) break;
                     SexUI.resetCumPercentage();
                     break;
                 }
                 case "bjiMSG6": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext5", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext5"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[8]);
                     break;
                 }
                 case "bjiMSG7": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext6", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext6"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[4]);
                     break;
                 }
                 case "bjiMSG8": {
-                    this.broadcastChatAround("<" + Minecraft.getMinecraft().player.getName() + "> " + I18n.format("jenny.dialogue.blowjobtext7", new Object[0]), true);
+                    this.broadcastChatAround("<" + Minecraft.getMinecraft().player.getName() + "> " + I18n.format("jenny.dialogue.blowjobtext7"), true);
                     this.playSoundAtVolume(SoundsHandler.MISC_PLOB[0], 0.5f);
                     break;
                 }
                 case "bjiMSG9": {
-                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext8", new Object[0]));
+                    this.sendGirlChatMessage(I18n.format("jenny.dialogue.blowjobtext8"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[2]);
                     break;
                 }
@@ -737,7 +735,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 case "doggyfastReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.resetAnimationControllerOffset();
-                    this.aa = true;
+                    this.isHardDoggyThrust = true;
                     break;
                 }
                 case "bjtReady": 
@@ -800,12 +798,12 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "doggyGoOnBedMSG2": {
-                    this.sendChatMessage(I18n.format("jenny.dialogue.doggytext1", new Object[0]));
+                    this.sendChatMessage(I18n.format("jenny.dialogue.doggytext1"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_LIGHTBREATHING[9]);
                     break;
                 }
                 case "doggyGoOnBedMSG3": {
-                    this.sendChatMessage(I18n.format("jenny.dialogue.doggytext2", new Object[0]));
+                    this.sendChatMessage(I18n.format("jenny.dialogue.doggytext2"));
                     this.PlaySound(SoundsHandler.GIRLS_JENNY_GIGGLE[0]);
                     break;
                 }
@@ -814,7 +812,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "doggyGoOnBedDone": {
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
+                    PacketHandler.INSTANCE.sendToServer(new SetPlayerForGirl(this.girlID(), Minecraft.getMinecraft().player.getPersistentID()));
                     this.setCurrentAction(Action.WAITDOGGY);
                     break;
                 }
@@ -876,7 +874,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 //                    break;
                 //                }
                 case "doggyslowMSG1": {
-                    this.aa = false;
+                    this.isHardDoggyThrust = false;
                     this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
@@ -902,8 +900,8 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    ++this.ag;
-                    if (this.ag % 2 == 0) {
+                    ++this.fastThrustCounter;
+                    if (this.fastThrustCounter % 2 == 0) {
                         int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
@@ -916,7 +914,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "doggyfastDone": {
-                    this.aa = false;
+                    this.isHardDoggyThrust = false;
                     this.setCurrentAction(Action.DOGGYSLOW);
                     break;
                 }
@@ -943,16 +941,16 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "pearl": {
-                    PacketHandler.INSTANCE.sendToServer((IMessage)new SendCompanionHome(this.girlID()));
+                    PacketHandler.INSTANCE.sendToServer(new SendCompanionHome(this.girlID()));
                     break;
                 }
                 case "boobjob_camera": {
                     UUID uUID = Minecraft.getMinecraft().player.getPersistentID();
                     if (!uUID.equals(this.world.getClosestPlayerToEntity(this.getSelf(), 2.0).getPersistentID())) break;
-                    this.cameraYaw = this.world.getPlayerEntityByUUID((UUID)uUID).rotationYaw;
+                    this.cameraYaw = this.world.getPlayerEntityByUUID(uUID).rotationYaw;
                     this.setInteractionPlayerUUID(uUID);
-                    if (this.ae) break;
-                    this.ae = true;
+                    if (this.isBoobjobCameraAdjusted) break;
+                    this.isBoobjobCameraAdjusted = true;
                     this.moveCamera(-0.7, -0.6, 0.2, 60.0f, -3.0f);
                     break;
                 }
@@ -983,8 +981,8 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 case "paizuri_fastDone": {
                     this.setCurrentAction(Action.PAIZURI_SLOW);
-                    if (!this.isControlledByLocalPlayer() || this.ae) break;
-                    this.ae = true;
+                    if (!this.isControlledByLocalPlayer() || this.isBoobjobCameraAdjusted) break;
+                    this.isBoobjobCameraAdjusted = true;
                     this.moveCamera(-0.7, -0.6, 0.2, 60.0f, -3.0f);
                     break;
                 }
@@ -994,7 +992,7 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                     break;
                 }
                 case "paizuri_cumStart": {
-                    if (!this.isControlledByLocalPlayer() || this.ae) break;
+                    if (!this.isControlledByLocalPlayer() || this.isBoobjobCameraAdjusted) break;
                     this.moveCamera(-0.7, -0.6, 0.2, 60.0f, -3.0f);
                 }
             }

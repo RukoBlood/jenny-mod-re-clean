@@ -253,7 +253,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
 
     ArmTransformState calculateTargetedArmState(@Nonnull ManglelieEntity manglelie, @Nonnull GalathEntity galath, IBone lowerArmR, IBone lowerArmL, AnimationProcessor processor) {
 
-        //a_inner128 state = new a_inner128(null); // TODO weird synthetic inners...
+        //a_inner128 state = new a_inner128(null); //weird synthetic inners...
         ArmTransformState state = new ArmTransformState();
         //ArmTransformState.access$202(state, new Vector3fSexmodSpecial(RAD_35, 0.0f, lowerArmR.getRotationZ()));
         //ArmTransformState.access$302(state, new Vector3fSexmodSpecial(RAD_140, 0.0f, lowerArmL.getRotationZ()));
@@ -338,7 +338,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
     ArmTransformState calculateIdleArmState(GalathEntity galath, IBone armR, IBone armL, IBone lowerArmL, IBone lowerArmR) {
         float headRotX = galath.cachedHeadRotationX;
         //a_inner128 state = new a_inner128(null);
-        ArmTransformState state = new ArmTransformState(); // TODO weird synthetic inners...
+        ArmTransformState state = new ArmTransformState(); //weird synthetic inners...
 
         if (headRotX > 0.0f) {
             //ArmTransformState.access$002(state, new Vector3fSexmodSpecial(armR.getRotationX() - headRotX, armR.getRotationY() - headRotX * -25.0f / 45.0f, armR.getRotationZ() + headRotX * 12.5f / 45.0f));

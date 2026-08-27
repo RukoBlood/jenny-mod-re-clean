@@ -10,10 +10,10 @@ public class Reference {
     final static public String CLIENT = "com.trolmastercard.sexmod.proxy.ClientProxy"; //unused
     final static public String COMMON = "com.trolmastercard.sexmod.proxy.CommonProxy"; //unused
     final static public Random RANDOM = new Random(); //used everywhere
-    static public int b = 0;
-    static public int i = 0;
-    final static public int a = 0x4752bd; //unured
-    final static public int e = 0x5fda5f; //unused
+    static public int EDITOR_ID = 0;
+    static public int BUTTON_ID = 0;
+    final static public int ENTITY_JENNY_UNUSED = 4674237; //unured
+    final static public int ENTITY_ELLIE_UNUSED = 6281823; //unused
     static public Vec3d cameraPosCurrent = Vec3d.ZERO;
     static public Vec3d cameraPosPrevious = Vec3d.ZERO;
 }

@@ -37,10 +37,10 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class PlayerJenny extends PlayerGirl {
-    boolean ap = false;
-    boolean ar = false;
-    int aq = 0;
-    boolean as = false;
+    boolean isFlyAltAnim = false;
+    boolean isDoggyHardMode = false;
+    int thrustSoundCounter = 0;
+    boolean isPaizuriCameraSet = false;
 
     protected PlayerJenny(World world) {
         super(world);
@@ -148,8 +148,8 @@ public class PlayerJenny extends PlayerGirl {
                 return Action.DOGGYFAST;
             }
             case PAIZURI_SLOW: {
-                if (this.as) {
-                    this.as = false;
+                if (this.isPaizuriCameraSet) {
+                    this.isPaizuriCameraSet = false;
                     this.moveCamera(0.0, 0.0, 0.0, 0.0f, 70.0f);
                 }
                 return Action.PAIZURI_FAST;
@@ -209,10 +209,10 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 if (this.movementController.getCurrentAnimation() != null && this.movementController.getCurrentAnimation().animationName.contains("fly") && this.isPlayerOnGround) {
-                    boolean bl = this.ap = !this.ap;
+                    boolean bl = this.isFlyAltAnim = !this.isFlyAltAnim;
                 }
                 if (!this.isPlayerOnGround) {
-                    this.createAnimation("animation.jenny.fly" + (this.ap ? "2" : ""), true, event);
+                    this.createAnimation("animation.jenny.fly" + (this.isFlyAltAnim ? "2" : ""), true, event);
                     break;
                 }
                 if (Math.abs(this.moveInputVector.x) + Math.abs(this.moveInputVector.y) > 0.0f) {
@@ -280,7 +280,7 @@ public class PlayerJenny extends PlayerGirl {
                         break;
                     }
                     case DOGGYFAST: {
-                        this.createAnimation("animation.jenny.doggyfast_" + (this.ar ? "hard" : "soft"), true, event);
+                        this.createAnimation("animation.jenny.doggyfast_" + (this.isDoggyHardMode ? "hard" : "soft"), true, event);
                         break;
                     }
                     case DOGGYCUM: {
@@ -485,7 +485,7 @@ public class PlayerJenny extends PlayerGirl {
                 case "doggyfastReady": {
                     if (!this.isControlledByLocalPlayer() || !HandlePlayerMovement.isThrusting) break;
                     this.resetAnimationControllerOffset();
-                    this.ar = true;
+                    this.isDoggyHardMode = true;
                     break;
                 }
                 case "bjtReady": 
@@ -592,7 +592,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggyslowMSG1": {
-                    this.ar = false;
+                    this.isDoggyHardMode = false;
                     this.playSoundAtVolume(SoundsHandler.random(SoundsHandler.MISC_POUNDING), 0.33f);
                     int n = Reference.RANDOM.nextInt(4);
                     if (n == 0) {
@@ -618,8 +618,8 @@ public class PlayerJenny extends PlayerGirl {
                     if (this.isControlledByLocalPlayer()) {
                         SexUI.addCumPercentage(0.02);
                     }
-                    ++this.aq;
-                    if (this.aq % 2 == 0) {
+                    ++this.thrustSoundCounter;
+                    if (this.thrustSoundCounter % 2 == 0) {
                         int n = Reference.RANDOM.nextInt(2);
                         if (n == 0) {
                             this.PlaySound(SoundsHandler.random(SoundsHandler.GIRLS_JENNY_MOAN));
@@ -632,7 +632,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "doggyfastDone": {
-                    this.ar = false;
+                    this.isDoggyHardMode = false;
                     this.setCurrentAction(Action.DOGGYSLOW);
                     break;
                 }
@@ -663,8 +663,8 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "boobjob_camera": {
-                    if (!this.isControlledByLocalPlayer() || this.as) break;
-                    this.as = true;
+                    if (!this.isControlledByLocalPlayer() || this.isPaizuriCameraSet) break;
+                    this.isPaizuriCameraSet = true;
                     this.cameraYaw = 180.0f;
                     this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                     break;
@@ -696,8 +696,8 @@ public class PlayerJenny extends PlayerGirl {
                 }
                 case "paizuri_fastDone": {
                     this.setCurrentAction(Action.PAIZURI_SLOW);
-                    if (!this.isControlledByLocalPlayer() || this.as) break;
-                    this.as = true;
+                    if (!this.isControlledByLocalPlayer() || this.isPaizuriCameraSet) break;
+                    this.isPaizuriCameraSet = true;
                     this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                     break;
                 }
@@ -707,7 +707,7 @@ public class PlayerJenny extends PlayerGirl {
                     break;
                 }
                 case "paizuri_cumStart": {
-                    if (!this.isControlledByLocalPlayer() || this.as) break;
+                    if (!this.isControlledByLocalPlayer() || this.isPaizuriCameraSet) break;
                     this.moveCamera(-0.7, -0.6, -0.2, 60.0f, -3.0f);
                 }
             }
