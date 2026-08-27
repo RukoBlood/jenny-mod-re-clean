@@ -1,5 +1,5 @@
-Methods renamed: 98.44% (2780/2824)
-Fields renamed: 88.66% (1392/1570)
+Methods renamed: 98.48% (2781/2824)
+Fields renamed: 89.68% (1408/1570)
 
 ## Synthetic Elements Detailed List
 
@@ -9,18 +9,6 @@ Fields renamed: 88.66% (1392/1570)
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Method | `a()` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ab` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `af` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ac` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ad` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `aa` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ag` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\JennyEntity.java` | Field | `ae` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\PlayerJenny.java` | Field | `ap` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\PlayerJenny.java` | Field | `ar` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\PlayerJenny.java` | Field | `aq` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Jenny\PlayerJenny.java` | Field | `as` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldModel.java` | Method | `b()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldModel.java` | Method | `a()` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldModel.java` | Method | `d()` |
@@ -35,7 +23,6 @@ Fields renamed: 88.66% (1392/1570)
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldModel.java` | Field | `f` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldRenderer.java` | Field | `t` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldRenderer.java` | Field | `u` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldRenderer.java` | Field | `w` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\KoboldRenderer.java` | Field | `v` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\DragonStaff\CrystalModel.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\girls\Kobold\DragonStaff\CrystalModel.java` | Field | `a` |
@@ -223,7 +210,3 @@ Fields renamed: 88.66% (1392/1570)
 | `src\main\java\com\trolmastercard\sexmod\util\FlightUITextureBounds.java` | Field | `v` |
 | `src\main\java\com\trolmastercard\sexmod\util\FlightUITextureBounds.java` | Field | `w` |
 | `src\main\java\com\trolmastercard\sexmod\util\FlightUITextureBounds.java` | Field | `h` |
-| `src\main\java\com\trolmastercard\sexmod\util\Reference.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\util\Reference.java` | Field | `i` |
-| `src\main\java\com\trolmastercard\sexmod\util\Reference.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\util\Reference.java` | Field | `e` |
