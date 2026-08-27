@@ -12,24 +12,33 @@ One guy (RealCrystalNight) fully reverse engineered Jenny mod's code.
 Go check it out: https://github.com/ReverseEngineeringEnthusiasts/Jenny-Mod-Fapcraft
 
 Also found out that This mod was obfuscated with Zelix KlassMaster 13
+
 ## About
 
 Initial goals of this project
-- Reverse engineer the extreme obfuscation that has been applied jar-wide
-- FOSS!
-- Clean up code
+- Reverse engineer the extreme obfuscation that has been applied jar-wide (Done! ZKM has fallen)
+- FOSS! 
+- Clean up code (pretty much done)
 
 ## Tools, AI and mods that i used to reverse engineer this Mod
 
-- Giga IDE CE 2025.1
+- Giga IDE CE 2025.1 
 - Konloch's bytecode viewer 2.13.2
 - Google Gemini (free tier, no antigravity, no ai plus/pro).
 - SchnurriTV's Jenny Mod build v1.5.2 (As unobfuscated bytecode reference for class, field and methods names.)
 
 ## Building and/or running
-gradlew build
+1. Get original fapcraft resources and move it in src/java/resources.
+2. Open this project in IntelliJ IDEA or Giga IDE. 
+3. gradlew build
+4. if successful - gradlew RunClient to test bugs in dev environment
 
-if successful - gradlew RunClient
+
+## Installation:
+After you fully compiled mod with assets, install it as default minecraft mod. 
+
+Don't forget to additionally install geckolib. You can download it from curseforge/'rinth, or get it directly from libs folder.
+
 
 ## Obfuscation
 
@@ -76,7 +85,7 @@ Ordered by severity
         throw a.b(new RuntimeException());
     }
     ```
-- impossible control flow
+- impossible control flow 
     ```
     block71: {
         block73: {
@@ -169,6 +178,7 @@ But some bugs got fixed
   - An example is in the Kobold Damage Listener
     - It prints out tribe stats when a hit is registered. This however seems
     broken in its current state.
+      - RukoBlood: fixed!
 - Other things I've probably forgotten... have been commented out though.
 
 ## TODO (Palkaline)
@@ -176,7 +186,7 @@ But some bugs got fixed
 - fix broken refactors
   - see above...
 - add buttplug.io support and/or proper keyframing to animations to resolve motion
-  - see TODOs (search 'toy' etc...)
+  - see TODOs (search 'toy' etc...) //RukoBlood: there is no buttplug TODOs GEEG.
   - I wrote a tiny proof-of-concept (not pictured in this project) that I managed to get working, 
   but it requires manual copying / pasting across each entity. I hate the design of this project.
   I feel like there is a better supported way to implement this... again, see comments...
