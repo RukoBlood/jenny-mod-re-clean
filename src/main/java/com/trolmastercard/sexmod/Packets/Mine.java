@@ -34,52 +34,52 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class Mine implements IMessage {
     boolean isValid = false;
-    BlockPos a;
-    EnumFacing b;
+    BlockPos targetPos;
+    EnumFacing facing;
 
     public Mine() {
     }
 
-    public Mine(BlockPos blockPos, EnumFacing enumFacing) {
-        this.a = blockPos;
-        this.b = enumFacing;
+    public Mine(BlockPos pos, EnumFacing facing) {
+        this.targetPos = pos;
+        this.facing = facing;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
-        this.b = EnumFacing.byName(ByteBufUtils.readUTF8String(byteBuf));
+        this.targetPos = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
+        this.facing = EnumFacing.byName(ByteBufUtils.readUTF8String(byteBuf));
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeInt(this.a.getX());
-        byteBuf.writeInt(this.a.getY());
-        byteBuf.writeInt(this.a.getZ());
-        ByteBufUtils.writeUTF8String(byteBuf, this.b.getName());
+        byteBuf.writeInt(this.targetPos.getX());
+        byteBuf.writeInt(this.targetPos.getY());
+        byteBuf.writeInt(this.targetPos.getZ());
+        ByteBufUtils.writeUTF8String(byteBuf, this.facing.getName());
     }
 
     public static class Handler implements IMessageHandler<Mine, IMessage> {
-        HashSet<BlockPos> a(BlockPos blockPos, EnumFacing enumFacing) {
-            HashSet<BlockPos> hashSet = new HashSet<BlockPos>();
-            BlockPos blockPos2 = blockPos;
+        HashSet<BlockPos> getMineableBlocks(BlockPos pos, EnumFacing facing) {
+            HashSet<BlockPos> positions = new HashSet<BlockPos>();
+            BlockPos Pos = pos;
             for (int i = 0; i < 30; ++i) {
-                hashSet.add(blockPos2.subtract(this.a(enumFacing)));
-                hashSet.add(blockPos2.subtract(this.a(enumFacing)).up());
-                hashSet.add(blockPos2.subtract(this.a(enumFacing)).up().up());
-                hashSet.add(blockPos2);
-                hashSet.add(blockPos2.up());
-                hashSet.add(blockPos2.up().up());
-                hashSet.add(blockPos2.add(this.a(enumFacing)));
-                hashSet.add(blockPos2.add(this.a(enumFacing)).up());
-                hashSet.add(blockPos2.add(this.a(enumFacing)).up().up());
-                blockPos2 = blockPos2.add(enumFacing.getDirectionVec());
+                positions.add(Pos.subtract(this.getNextBlock(facing)));
+                positions.add(Pos.subtract(this.getNextBlock(facing)).up());
+                positions.add(Pos.subtract(this.getNextBlock(facing)).up().up());
+                positions.add(Pos);
+                positions.add(Pos.up());
+                positions.add(Pos.up().up());
+                positions.add(Pos.add(this.getNextBlock(facing)));
+                positions.add(Pos.add(this.getNextBlock(facing)).up());
+                positions.add(Pos.add(this.getNextBlock(facing)).up().up());
+                Pos = Pos.add(facing.getDirectionVec());
             }
-            return hashSet;
+            return positions;
         }
 
-        BlockPos a(EnumFacing enumFacing) {
-            Vec3i vec3i = enumFacing.getDirectionVec();
-            return new BlockPos(vec3i.getZ(), vec3i.getY(), -vec3i.getX());
+        BlockPos getNextBlock(EnumFacing facing) {
+            Vec3i dirVec = facing.getDirectionVec();
+            return new BlockPos(dirVec.getZ(), dirVec.getY(), -dirVec.getX());
         }
 
         @Override
@@ -101,7 +101,7 @@ public class Mine implements IMessage {
                     entityPlayerMP.sendMessage(new TextComponentString(String.format("%s%d/%d Beds", TextFormatting.YELLOW, n, n2)));
                     return;
                 }
-                HashSet<BlockPos> hashSet = this.a(msg.a, msg.b);
+                HashSet<BlockPos> hashSet = this.getMineableBlocks(msg.targetPos, msg.facing);
                 World world = ctx.getServerHandler().player.world;
                 for (BlockPos blockPos : hashSet) {
                     IBlockState iBlockState = world.getBlockState(blockPos);
@@ -110,8 +110,8 @@ public class Mine implements IMessage {
                         return;
                     }
                 }
-                KoboldTask bs_class972 = new KoboldTask(msg.a, KoboldTask.KoboldTasks.MINE, hashSet, msg.b);
-                KoboldManager.addTaskToTribe(uUID, bs_class972);
+                KoboldTask task = new KoboldTask(msg.targetPos, KoboldTask.KoboldTasks.MINE, hashSet, msg.facing);
+                KoboldManager.addTaskToTribe(uUID, task);
                 PacketHandler.INSTANCE.sendTo(new SendBlocks(hashSet, true), ctx.getServerHandler().player);
             });
             return null;

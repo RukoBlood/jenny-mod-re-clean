@@ -263,7 +263,7 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         float headOffset = galath.cachedHeadRotationX + processor.getBone("upperBody").getRotationX();
         float partialTicks = this.mc.getRenderPartialTicks();
 
-        Vec3d renderPos = ManglelieRenderer.a(galath, partialTicks);
+        Vec3d renderPos = ManglelieRenderer.getEntityLookVector(galath, partialTicks);
         Vec3d armRPos = manglelie.getCachedBoneOffset("armR").add(renderPos);
         Vec3d armLPos = manglelie.getCachedBoneOffset("armL").add(renderPos);
 
@@ -397,8 +397,8 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             head.setRotationX(headRotX * 0.666f);
         }
 
-        float diffY = ThreadNames.getAngleDifferences(manglelie.T, manglelie.targetHeadYaw);
-        float diffX = ThreadNames.getAngleDifferences(manglelie.ai, manglelie.targetHeadPitch);
+        float diffY = ThreadNames.getAngleDifferences(manglelie.offsetY, manglelie.targetHeadYaw);
+        float diffX = ThreadNames.getAngleDifferences(manglelie.offsetX, manglelie.targetHeadPitch);
 
         float fps = Minecraft.getDebugFPS();
         if (fps == 0.0f) {
@@ -408,20 +408,20 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         float stepY = 7.0f * (Math.abs(diffY) < 7.0f ? diffY : (diffY > 0.0f ? 7.0f : -7.0f)) * (1.0f / fps);
         float stepX = 7.0f * (Math.abs(diffX) < 7.0f ? diffX : (diffX > 0.0f ? 7.0f : -7.0f)) * (1.0f / fps);
 
-        float finalY = manglelie.T + stepY;
-        float finalX = manglelie.ai + stepX;
+        float finalY = manglelie.offsetY + stepY;
+        float finalX = manglelie.offsetX + stepX;
 
         head.setRotationY(head.getRotationY() + finalY);
         head.setRotationX(head.getRotationX() + finalX);
-        manglelie.T = finalY;
-        manglelie.ai = finalX;
+        manglelie.offsetY = finalY;
+        manglelie.offsetX = finalX;
     }
 
     public static void updateClothAndCockVisibility(GirlEntity girl, AnimationProcessor processor, float partialTicks) {
         if (ClientProxy.IS_PRELOADING) {
             return;
         }
-        boolean hasSkirt = ManglelieRenderer.a_5(girl);
+        boolean hasSkirt = ManglelieRenderer.isGalathLooking(girl);
         ManglelieModel.setSkirtVisible(processor, hasSkirt);
         ManglelieModel.setSkirtDetailsVisible(processor, hasSkirt);
         ManglelieModel.updateCockStages(girl, processor);

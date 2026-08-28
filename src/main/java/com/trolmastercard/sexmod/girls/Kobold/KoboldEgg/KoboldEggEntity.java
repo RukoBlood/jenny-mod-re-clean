@@ -40,15 +40,13 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-// TODO this might be kobold egg class
-//  TODO perform string search for '"Tribeid", there are 2 spellings: 'Id' / 'ID'
 public class KoboldEggEntity extends EntityLivingBase implements IAnimatable {
-    final static int e = 12000;
-    final private AnimationFactory d = new AnimationFactory(this);
-    public UUID f = null;
-    static AnimationController<KoboldEggEntity> a;
-    final static public DataParameter<String> b;
-    final static public DataParameter<Integer> c;
+    final static int HATCH_TIME = 12000;
+    final private AnimationFactory factory = new AnimationFactory(this);
+    public UUID tribeId = null;
+    static AnimationController<KoboldEggEntity> animationController;
+    final static public DataParameter<String> EGG_COLOR;
+    final static public DataParameter<Integer> EGG_TYPE;
 
     public KoboldEggEntity(World world) {
         super(world);
@@ -58,19 +56,19 @@ public class KoboldEggEntity extends EntityLivingBase implements IAnimatable {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(b, KoboldEntity.COLOR.toString());
-        this.dataManager.register(c, 0);
+        this.dataManager.register(EGG_COLOR, KoboldEntity.COLOR.toString());
+        this.dataManager.register(EGG_TYPE, 0);
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        int n = this.dataManager.get(c);
-        if (n >= 12000) {
-            this.a();
+        int eggType = this.dataManager.get(EGG_TYPE);
+        if (eggType >= HATCH_TIME) {
+            this.spawnHatchExplosion();
         }
         if (!this.world.isRemote) {
-            this.dataManager.set(c, n + 1);
+            this.dataManager.set(EGG_TYPE, eggType + 1);
         }
     }
 
@@ -79,116 +77,116 @@ public class KoboldEggEntity extends EntityLivingBase implements IAnimatable {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float f) {
-        boolean bl = super.attackEntityFrom(damageSource, f);
-        if (!bl) {
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        boolean damaged = super.attackEntityFrom(source, amount);
+        if (!damaged) {
             return false;
+        } else {
+            this.setDead();
+            return true;
         }
-        this.setDead();
-        return true;
     }
 
-    void a() {
+    void spawnHatchExplosion() {
         for (int i = 0; i < 30; ++i) {
-            float f = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
-            float f2 = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
-            float f3 = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
-            this.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 0.5 + this.posX, 0.5 + this.posY, 0.5 + this.posZ, f, f2, f3);
+            float vx = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
+            float vy = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
+            float vz = (float)(Reference.RANDOM.nextBoolean() ? 1 : -1) * Reference.RANDOM.nextFloat();
+            this.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, 0.5 + this.posX, 0.5 + this.posY, 0.5 + this.posZ, vx, vy, vz);
         }
-        if (this.world.isRemote) {
-            return;
+        if (!this.world.isRemote) {
+            if (this.tribeId == null) {
+                this.tribeId = UUID.randomUUID();
+            }
+            KoboldEntity kobold = KoboldEntity.createKobold(this.world, this.tribeId);
+            KoboldManager.addTribeMember(this.tribeId, kobold);
+            UUID masterId = KoboldManager.getTribeMasterUUID(this.tribeId);
+            if (masterId != null) {
+                kobold.getDataManager().set(GirlEntity.MASTER, masterId.toString());
+            }
+
+            List<KoboldEntity> members = KoboldManager.getTribeMembersList(this.tribeId);
+            String masterName = null;
+            for (KoboldEntity member : members) {
+                String name = member.getDataManager().get(KoboldEntity.TRIBE_NAME);
+                if (name.isEmpty()) continue;
+                masterName = name;
+                break;
+            }
+            if (masterName != null) {
+                kobold.getDataManager().set(KoboldEntity.TRIBE_NAME, masterName);
+            }
+            kobold.setPosition(0.5 + this.posX, this.posY, 0.5 + this.posZ);
+            this.world.spawnEntity(kobold);
+            this.hatchEgg(kobold);
+            this.world.playSound(null, this.getPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.5f, 1.0f);
+            this.world.removeEntity(this);
         }
-        if (this.f == null) {
-            this.f = UUID.randomUUID();
-        }
-        KoboldEntity ff_class3082 = KoboldEntity.createKobold(this.world, this.f);
-        KoboldManager.addTribeMember(this.f, ff_class3082);
-        UUID uUID = KoboldManager.getTribeMasterUUID(this.f);
-        if (uUID != null) {
-            ff_class3082.getDataManager().set(GirlEntity.MASTER, uUID.toString());
-        }
-        List<KoboldEntity> list = KoboldManager.getTribeMembersList(this.f);
-        String string = null;
-        for (KoboldEntity ff_class3083 : list) {
-            String string2 = ff_class3083.getDataManager().get(KoboldEntity.TRIBE_NAME);
-            if ("".equals(string2)) continue;
-            string = string2;
-            break;
-        }
-        if (string != null) {
-            ff_class3082.getDataManager().set(KoboldEntity.TRIBE_NAME, string);
-        }
-        ff_class3082.setPosition(0.5 + this.posX, this.posY, 0.5 + this.posZ);
-        this.world.spawnEntity(ff_class3082);
-        this.a(ff_class3082);
-        this.world.playSound(null, this.getPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.5f, 1.0f);
-        this.world.removeEntity(this);
     }
 
-    void a(KoboldEntity ff_class3082) {
-        EntityPlayer entityPlayer = ff_class3082.getMasterPlayer();
-        if (entityPlayer == null) {
-            return;
+    void hatchEgg(KoboldEntity kobold) {
+        EntityPlayer player = kobold.getMasterPlayer();
+        if (player != null) {
+            EntityPlayerMP playerMP = (EntityPlayerMP) player;
+            EyeAndKoboldColor color = KoboldManager.getTribeColor(this.tribeId);
+            player.sendMessage(new TextComponentString(String.format("%s%s %shas become a %snew tribe member%s!", new Object[]{color.getTextColor(), kobold.getGirlName(), TextFormatting.WHITE, TextFormatting.RED, TextFormatting.WHITE})));
+            playerMP.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.NEUTRAL, player.posX, player.posY, player.posZ, 1.0f, 1.0f));
+            playerMP.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_FIREWORK_TWINKLE_FAR, SoundCategory.NEUTRAL, player.posX, player.posY, player.posZ, 1.0f, 1.0f));
         }
-        EntityPlayerMP entityPlayerMP = (EntityPlayerMP)entityPlayer;
-        EyeAndKoboldColor eyeAndKoboldColor_ = KoboldManager.getTribeColor(this.f);
-        entityPlayer.sendMessage(new TextComponentString(String.format("%s%s %shas become a %snew tribe member%s!", new Object[]{eyeAndKoboldColor_.getTextColor(), ff_class3082.getGirlName(), TextFormatting.WHITE, TextFormatting.RED, TextFormatting.WHITE})));
-        entityPlayerMP.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.NEUTRAL, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, 1.0f, 1.0f));
-        entityPlayerMP.connection.sendPacket(new SPacketSoundEffect(SoundEvents.ENTITY_FIREWORK_TWINKLE_FAR, SoundCategory.NEUTRAL, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, 1.0f, 1.0f));
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        a = new AnimationController<KoboldEggEntity>(this, "controller", 5.0f, this::a);
-        animationData.addAnimationController(a);
+        animationController = new AnimationController<KoboldEggEntity>(this, "controller", 5.0f, this::predicate);
+        animationData.addAnimationController(animationController);
     }
 
     @Override
     public AnimationFactory getFactory() {
-        return this.d;
+        return this.factory;
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nBTTagCompound) {
-        if (this.f != null) {
-            nBTTagCompound.setString("tribeID", this.f.toString());
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        if (this.tribeId != null) {
+            nbt.setString("tribeID", this.tribeId.toString());
         }
-        nBTTagCompound.setString("egg_color", this.dataManager.get(b));
-        nBTTagCompound.setInteger("eggAge", this.dataManager.get(c));
-        super.writeEntityToNBT(nBTTagCompound);
+        nbt.setString("egg_color", this.dataManager.get(EGG_COLOR));
+        nbt.setInteger("eggAge", this.dataManager.get(EGG_TYPE));
+        super.writeEntityToNBT(nbt);
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nBTTagCompound) {
-        super.readEntityFromNBT(nBTTagCompound);
-        String string = nBTTagCompound.getString("tribeID");
-        if (!"".equals(string)) {
-            this.f = UUID.fromString(string);
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        String tribeID = nbt.getString("tribeID");
+        if (!tribeID.isEmpty()) {
+            this.tribeId = UUID.fromString(tribeID);
         }
-        this.dataManager.set(b, nBTTagCompound.getString("egg_color"));
-        this.dataManager.set(c, nBTTagCompound.getInteger("eggAge"));
+        this.dataManager.set(EGG_COLOR, nbt.getString("egg_color"));
+        this.dataManager.set(EGG_TYPE, nbt.getInteger("eggAge"));
     }
 
-    protected <E extends IAnimatable> PlayState a(AnimationEvent<E> animationEvent) {
-        int n = this.dataManager.get(c);
-        if (12000 - n < 20) {
+    protected <E extends IAnimatable> PlayState predicate(AnimationEvent<E> animationEvent) {
+        int eggType = this.dataManager.get(EGG_TYPE);
+        if (HATCH_TIME - eggType < 20) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.hatch", true));
             return PlayState.CONTINUE;
         }
-        float f = (float)n / 12000.0f;
-        if ((double)f > 0.98) {
+        float progress = (float)eggType / (float) HATCH_TIME;
+        if ((double)progress > 0.98) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.veryfast", true));
             return PlayState.CONTINUE;
         }
-        if ((double)f > 0.85) {
+        if ((double)progress > 0.85) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.fast", true));
             return PlayState.CONTINUE;
         }
-        if ((double)f > 0.75) {
+        if ((double)progress > 0.75) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.medium", true));
             return PlayState.CONTINUE;
         }
-        if ((double)f > 0.5) {
+        if ((double)progress > 0.5) {
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.model.slow", true));
             return PlayState.CONTINUE;
         }
@@ -215,8 +213,8 @@ public class KoboldEggEntity extends EntityLivingBase implements IAnimatable {
     }
 
     static {
-        b = EntityDataManager.createKey(KoboldEggEntity.class, DataSerializers.STRING).getSerializer().createKey(115);
-        c = EntityDataManager.createKey(KoboldEggEntity.class, DataSerializers.VARINT).getSerializer().createKey(116);
+        EGG_COLOR = EntityDataManager.createKey(KoboldEggEntity.class, DataSerializers.STRING).getSerializer().createKey(115);
+        EGG_TYPE = EntityDataManager.createKey(KoboldEggEntity.class, DataSerializers.VARINT).getSerializer().createKey(116);
     }
 }
 

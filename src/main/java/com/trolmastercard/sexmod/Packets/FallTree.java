@@ -30,57 +30,59 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class FallTree implements IMessage {
     Boolean isVaild = false;
-    BlockPos a;
+    BlockPos treePos;
 
     public FallTree() {
     }
 
     public FallTree(BlockPos blockPos) {
-        this.a = blockPos;
+        this.treePos = blockPos;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
+        this.treePos = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
         this.isVaild = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeInt(this.a.getX());
-        byteBuf.writeInt(this.a.getY());
-        byteBuf.writeInt(this.a.getZ());
+        byteBuf.writeInt(this.treePos.getX());
+        byteBuf.writeInt(this.treePos.getY());
+        byteBuf.writeInt(this.treePos.getZ());
     }
 
     public static class Handler implements IMessageHandler<FallTree, IMessage> {
 
-        BlockPos a(World world, BlockPos blockPos) {
+        BlockPos findGroundPos(World world, BlockPos blockPos) {
             if (world.getBlockState(blockPos.add(0, -1, 0)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(0, -1, 0));
+                return this.findGroundPos(world, blockPos.add(0, -1, 0));
             }
-            if (world.getBlockState(blockPos.add(1, -1, 0)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(1, -1, 0));
+            else if (world.getBlockState(blockPos.add(1, -1, 0)).getBlock() instanceof BlockLog) {
+                return this.findGroundPos(world, blockPos.add(1, -1, 0));
             }
-            if (world.getBlockState(blockPos.add(-1, -1, 0)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(-1, -1, 0));
+            else if (world.getBlockState(blockPos.add(-1, -1, 0)).getBlock() instanceof BlockLog) {
+                return this.findGroundPos(world, blockPos.add(-1, -1, 0));
             }
-            if (world.getBlockState(blockPos.add(0, -1, 1)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(0, -1, 1));
+            else if (world.getBlockState(blockPos.add(0, -1, 1)).getBlock() instanceof BlockLog) {
+                return this.findGroundPos(world, blockPos.add(0, -1, 1));
             }
-            if (world.getBlockState(blockPos.add(0, -1, -1)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(0, -1, -1));
+            else if (world.getBlockState(blockPos.add(0, -1, -1)).getBlock() instanceof BlockLog) {
+                return this.findGroundPos(world, blockPos.add(0, -1, -1));
             }
-            if (world.getBlockState(blockPos.add(-1, -1, -1)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(-1, -1, -1));
+            else if (world.getBlockState(blockPos.add(-1, -1, -1)).getBlock() instanceof BlockLog) {
+                return this.findGroundPos(world, blockPos.add(-1, -1, -1));
             }
-            if (world.getBlockState(blockPos.add(1, -1, 1)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(1, -1, 1));
+            else if (world.getBlockState(blockPos.add(1, -1, 1)).getBlock() instanceof BlockLog) {
+                return this.findGroundPos(world, blockPos.add(1, -1, 1));
             }
-            if (world.getBlockState(blockPos.add(-1, -1, 1)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(-1, -1, 1));
+            else if (world.getBlockState(blockPos.add(-1, -1, 1)).getBlock() instanceof BlockLog) {
+                return this.findGroundPos(world, blockPos.add(-1, -1, 1));
             }
-            if (world.getBlockState(blockPos.add(1, -1, -1)).getBlock() instanceof BlockLog) {
-                return this.a(world, blockPos.add(1, -1, -1));
+            else if (world.getBlockState(blockPos.add(1, -1, -1)).getBlock() instanceof BlockLog) {
+                return this.findGroundPos(world, blockPos.add(1, -1, -1));
             }
-            return blockPos;
+            else {
+                return blockPos;
+            }
         }
 
         @Override
@@ -102,7 +104,7 @@ public class FallTree implements IMessage {
                         player.sendMessage(new TextComponentString(String.format("%s%d/%d Beds", TextFormatting.YELLOW, bedsCount, memberCount)));
                     } else {
                         World world = player.world;
-                        BlockPos blockPos = this.a(world, msg.a);
+                        BlockPos blockPos = this.findGroundPos(world, msg.treePos);
                         HashSet<BlockPos> hashSet = KoboldTask.findConnectedBlocks(world, blockPos, uUID);
                         PacketHandler.INSTANCE.sendTo(new SendBlocks(hashSet, true), ctx.getServerHandler().player);
                     }

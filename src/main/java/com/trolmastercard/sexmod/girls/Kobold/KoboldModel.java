@@ -21,8 +21,8 @@ import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 public class KoboldModel extends GirlModel<GirlEntity> {
-    final static float g = 1.2f;
-    final static float f = 1.0f;
+    final static float swingProgress = 1.2f;
+    final static float legSwing = 1.0f;
 
     @Override
     protected ResourceLocation[] getAnimationResource() {
@@ -42,213 +42,211 @@ public class KoboldModel extends GirlModel<GirlEntity> {
     @Override
     public void setLivingAnimations(GirlEntity girl, Integer instanceID, AnimationEvent event) {
         super.setLivingAnimations(girl, instanceID, event);
-        if (girl.world instanceof FakeWorld) {
-            return;
-        }
-        AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
-        if (!girl.isLocallyRegistered() && girl instanceof KoboldEntity) {
-            animationProcessor.getBone("crown").setHidden(!girl.getDataManager().get(KoboldEntity.IS_TRIBE_MEMBER));
-            animationProcessor.getBone("egg").setHidden(!((KoboldEntity) girl).isRenderEgg);
-        } else {
-            animationProcessor.getBone("crown").setHidden(true);
-            animationProcessor.getBone("egg").setHidden(true);
-        }
-        String[] stringArray = AbstractNpcOnlyEntity.getModelCodeParts(girl);
-        this.b(animationProcessor, stringArray[0]);
-        this.e(animationProcessor, stringArray[1]);
-        this.a(animationProcessor, stringArray[2], 0.75f, 1.35f, "boobL", "boobR", "armorBoobs");
-        this.a(animationProcessor, stringArray[3], 1.0f, 1.2f, "eyeL", "eyeR");
-        this.a(animationProcessor, stringArray[3], 1.0f, 1.2f);
-        this.a(animationProcessor, stringArray[4]);
-        this.d(animationProcessor, stringArray[5]);
-        this.a(girl, animationProcessor, stringArray[6]);
-        switch (girl.getCurrentAction()) {
-            case STARTBLOWJOB: 
-            case SUCKBLOWJOB_BLINK: 
-            case THRUSTBLOWJOB: 
-            case CUMBLOWJOB: {
-                animationProcessor.getBone("tounge").setHidden(false);
-                break;
+        if (!(girl.world instanceof FakeWorld)) {
+            AnimationProcessor<GirlEntity> processor = this.getAnimationProcessor();
+            if (!girl.isLocallyRegistered() && girl instanceof KoboldEntity) {
+                processor.getBone("crown").setHidden(!girl.getDataManager().get(KoboldEntity.IS_TRIBE_MEMBER));
+                processor.getBone("egg").setHidden(!((KoboldEntity) girl).isRenderEgg);
+            } else {
+                processor.getBone("crown").setHidden(true);
+                processor.getBone("egg").setHidden(true);
             }
-            default: {
-                animationProcessor.getBone("tounge").setHidden(true);
+            String[] modelCodeParts = AbstractNpcOnlyEntity.getModelCodeParts(girl);
+            this.getHornsUp(processor, modelCodeParts[0]);
+            this.getHornsDown(processor, modelCodeParts[1]);
+            this.setBoneRotationMulti(processor, modelCodeParts[2], 0.75f, 1.35f, "boobL", "boobR", "armorBoobs");
+            this.setBoneRotationMulti(processor, modelCodeParts[3], 1.0f, 1.2f, "eyeL", "eyeR");
+            this.setBoneRotation(processor, modelCodeParts[3], 1.0f, 1.2f);
+            this.getBoneData(processor, modelCodeParts[4]);
+            this.parseBoneColor(processor, modelCodeParts[5]);
+            this.updateBonePose(girl, processor, modelCodeParts[6]);
+            switch (girl.getCurrentAction()) {
+                case STARTBLOWJOB:
+                case SUCKBLOWJOB_BLINK:
+                case THRUSTBLOWJOB:
+                case CUMBLOWJOB: {
+                    processor.getBone("tounge").setHidden(false);
+                    break;
+                }
+                default: {
+                    processor.getBone("tounge").setHidden(true);
+                }
             }
-        }
-        this.b(girl, animationProcessor);
-    }
-
-    void b(GirlEntity em_class2582, AnimationProcessor<GirlEntity> animationProcessor) {
-        if (em_class2582.actionController.getAnimationState() != AnimationState.Transitioning) {
-            return;
-        }
-        float f = em_class2582.getDataManager().get(KoboldEntity.SIZE);
-        f = 0.25f - f;
-        switch (em_class2582.getCurrentAction()) {
-            case SUCKBLOWJOB_BLINK: 
-            case THRUSTBLOWJOB: 
-            case CUMBLOWJOB: {
-                IBone iBone = animationProcessor.getBone("body");
-                iBone.setPositionZ(11.43f + f * -7.0f);
-                return;
-            }
-            case KOBOLD_ANAL_SLOW: 
-            case ANAL_FAST: 
-            case ANAL_CUM: 
-            case ANAL_START: {
-                IBone iBone = animationProcessor.getBone("body");
-                iBone.setPositionX(1.78f + f * -1.5f);
-                iBone.setPositionY(13.07f + f * -11.0f);
-                iBone.setPositionZ(2.05f + f * -8.0f);
-                return;
-            }
-            case MATING_PRESS_CUM: 
-            case MATING_PRESS_HARD: 
-            case MATING_PRESS_SOFT: 
-            case MATING_PRESS_START: {
-                IBone iBone = animationProcessor.getBone("body");
-                iBone.setPositionX(0.0f);
-                iBone.setPositionY(2.85f);
-                iBone.setPositionZ(-7.0f + f * 4.7f);
-            }
+            this.handleSwingAnimation(girl, processor);
         }
     }
 
-    void a(GirlEntity em_class2582, AnimationProcessor<GirlEntity> animationProcessor, String string) {
-        int n = Integer.parseInt(string);
-        IBone iBone = animationProcessor.getBone("backpack");
-        IBone iBone2 = animationProcessor.getBone("tailpack");
-        switch (n) {
+    void handleSwingAnimation(GirlEntity girl, AnimationProcessor<GirlEntity> processor) {
+        if (girl.actionController.getAnimationState() == AnimationState.Transitioning) {
+            float transititonValue = girl.getDataManager().get(KoboldEntity.SIZE);
+            transititonValue = 0.25f - transititonValue;
+            switch (girl.getCurrentAction()) {
+                case SUCKBLOWJOB_BLINK:
+                case THRUSTBLOWJOB:
+                case CUMBLOWJOB: {
+                    IBone body = processor.getBone("body");
+                    body.setPositionZ(11.43f + transititonValue * -7.0f);
+                    return;
+                }
+                case KOBOLD_ANAL_SLOW:
+                case ANAL_FAST:
+                case ANAL_CUM:
+                case ANAL_START: {
+                    IBone body = processor.getBone("body");
+                    body.setPositionX(1.78f + transititonValue * -1.5f);
+                    body.setPositionY(13.07f + transititonValue * -11.0f);
+                    body.setPositionZ(2.05f + transititonValue * -8.0f);
+                    return;
+                }
+                case MATING_PRESS_CUM:
+                case MATING_PRESS_HARD:
+                case MATING_PRESS_SOFT:
+                case MATING_PRESS_START: {
+                    IBone body = processor.getBone("body");
+                    body.setPositionX(0.0f);
+                    body.setPositionY(2.85f);
+                    body.setPositionZ(-7.0f + transititonValue * 4.7f);
+                }
+            }
+        }
+    }
+
+    void updateBonePose(GirlEntity girl, AnimationProcessor<GirlEntity> processor, String modelCode) {
+        int variant = Integer.parseInt(modelCode);
+        IBone backpack = processor.getBone("backpack");
+        IBone tailpack = processor.getBone("tailpack");
+        switch (variant) {
             case 0: {
-                iBone.setHidden(false);
-                iBone2.setHidden(true);
+                backpack.setHidden(false);
+                tailpack.setHidden(true);
                 break;
             }
             case 1: {
-                iBone.setHidden(false);
-                iBone2.setHidden(false);
+                backpack.setHidden(false);
+                tailpack.setHidden(false);
                 break;
             }
             case 2: {
-                iBone.setHidden(true);
-                iBone2.setHidden(false);
+                backpack.setHidden(true);
+                tailpack.setHidden(false);
                 break;
             }
             case 3: {
-                iBone.setHidden(true);
-                iBone2.setHidden(true);
+                backpack.setHidden(true);
+                tailpack.setHidden(true);
             }
         }
-        if (em_class2582.getCurrentAction() == Action.PAYMENT) {
-            iBone.setHidden(false);
+        if (girl.getCurrentAction() == Action.PAYMENT) {
+            backpack.setHidden(false);
         }
     }
 
-    void d(AnimationProcessor<GirlEntity> animationProcessor, String string) {
-        int n = Integer.parseInt(string);
-        IBone iBone = animationProcessor.getBone("frecklesHR1");
-        IBone iBone2 = animationProcessor.getBone("frecklesHR2");
-        IBone iBone3 = animationProcessor.getBone("frecklesHL1");
-        IBone iBone4 = animationProcessor.getBone("frecklesHL2");
-        iBone3.setHidden(n != 1);
-        iBone.setHidden(n != 1);
-        iBone4.setHidden(n != 2);
-        iBone2.setHidden(n != 2);
+    void parseBoneColor(AnimationProcessor<GirlEntity> processor, String modelCode) {
+        int variant = Integer.parseInt(modelCode);
+        IBone frecklesHR1 = processor.getBone("frecklesHR1");
+        IBone frecklesHR2 = processor.getBone("frecklesHR2");
+        IBone frecklesHL1 = processor.getBone("frecklesHL1");
+        IBone frecklesHL2 = processor.getBone("frecklesHL2");
+        frecklesHL1.setHidden(variant != 1);
+        frecklesHR1.setHidden(variant != 1);
+        frecklesHL2.setHidden(variant != 2);
+        frecklesHR2.setHidden(variant != 2);
     }
 
-    void a(AnimationProcessor<GirlEntity> animationProcessor, String string) {
-        int n = Integer.parseInt(string);
-        IBone iBone = animationProcessor.getBone("frecklesAR1");
-        IBone iBone2 = animationProcessor.getBone("frecklesAR2");
-        IBone iBone3 = animationProcessor.getBone("frecklesAL1");
-        IBone iBone4 = animationProcessor.getBone("frecklesAL2");
-        iBone3.setHidden(n != 1);
-        iBone.setHidden(n != 1);
-        iBone4.setHidden(n != 2);
-        iBone2.setHidden(n != 2);
+    void getBoneData(AnimationProcessor<GirlEntity> animationProcessor, String string) {
+        int variant = Integer.parseInt(string);
+        IBone frecklesAR1 = animationProcessor.getBone("frecklesAR1");
+        IBone frecklesAR2 = animationProcessor.getBone("frecklesAR2");
+        IBone frecklesAL1 = animationProcessor.getBone("frecklesAL1");
+        IBone frecklesAL2 = animationProcessor.getBone("frecklesAL2");
+        frecklesAL1.setHidden(variant != 1);
+        frecklesAR1.setHidden(variant != 1);
+        frecklesAL2.setHidden(variant != 2);
+        frecklesAR2.setHidden(variant != 2);
     }
 
-    void a(AnimationProcessor<GirlEntity> animationProcessor, String string, float f, float f2) {
-        if (Minecraft.getMinecraft().isGamePaused()) {
-            return;
-        }
-        float f3 = Float.parseFloat(string);
-        f3 /= 100.0f;
-        f3 = f + (f2 - f) * f3 - 1.0f;
-        IBone iBone = animationProcessor.getBone("eyeL");
-        iBone.setPositionX(iBone.getPositionX() + f3);
-        IBone iBone2 = animationProcessor.getBone("eyeR");
-        iBone2.setPositionX(iBone2.getPositionX() - f3);
-    }
-
-    void a(AnimationProcessor<GirlEntity> animationProcessor, String string, float f, float f2, String ... stringArray) {
-        float f3 = Float.parseFloat(string);
-        f3 /= 100.0f;
-        f3 = f + (f2 - f) * f3;
-        for (String string2 : stringArray) {
-            IBone iBone = animationProcessor.getBone(string2);
-            if (iBone == null) continue;
-            iBone.setScaleX(f3);
-            iBone.setScaleY(f3);
-            iBone.setScaleZ(f3);
+    void setBoneRotation(AnimationProcessor<GirlEntity> processor, String modelCode, float min, float max) {
+        if (!Minecraft.getMinecraft().isGamePaused()) {
+            float eyeSpacing = Float.parseFloat(modelCode);
+            eyeSpacing /= 100.0f;
+            eyeSpacing = min + (max - min) * eyeSpacing - 1.0f;
+            IBone eyeL = processor.getBone("eyeL");
+            eyeL.setPositionX(eyeL.getPositionX() + eyeSpacing);
+            IBone eyeR = processor.getBone("eyeR");
+            eyeR.setPositionX(eyeR.getPositionX() - eyeSpacing);
         }
     }
 
-    void e(AnimationProcessor<GirlEntity> animationProcessor, String string) {
-        List<IBone> list = this.c(animationProcessor, "hornDL");
-        List<IBone> list2 = this.c(animationProcessor, "hornDR");
-        this.a(list);
-        this.a(list2);
-        int n = new Integer(string);
-        animationProcessor.getBone("hornDL" + n).setHidden(false);
-        animationProcessor.getBone("hornDR" + n).setHidden(false);
-    }
-
-    void b(AnimationProcessor<GirlEntity> animationProcessor, String string) {
-        List<IBone> list = this.c(animationProcessor, "hornUL");
-        List<IBone> list2 = this.c(animationProcessor, "hornUR");
-        this.a(list);
-        this.a(list2);
-        int n = new Integer(string);
-        animationProcessor.getBone("hornUL" + n).setHidden(false);
-        animationProcessor.getBone("hornUR" + n).setHidden(false);
-    }
-
-    List<IBone> c(AnimationProcessor<GirlEntity> animationProcessor, String string) {
-        IBone iBone;
-        ArrayList<IBone> arrayList = new ArrayList<IBone>();
-        int n = 0;
-        while ((iBone = animationProcessor.getBone(string + n)) != null) {
-            arrayList.add(iBone);
-            ++n;
+    void setBoneRotationMulti(AnimationProcessor<GirlEntity> processor, String modelCode, float min, float max, String ... boneNames) {
+        float scale = Float.parseFloat(modelCode);
+        scale /= 100.0f;
+        scale = min + (max - min) * scale;
+        for (String boneName : boneNames) {
+            IBone bone = processor.getBone(boneName);
+            if (bone != null) {
+                bone.setScaleX(scale);
+                bone.setScaleY(scale);
+                bone.setScaleZ(scale);
+            }
         }
-        return arrayList;
     }
 
-    void a(List<IBone> list) {
-        for (IBone iBone : list) {
-            iBone.setHidden(true);
+    void getHornsDown(AnimationProcessor<GirlEntity> processor, String modelCode) {
+        List<IBone> hornDL = this.getHornBones(processor, "hornDL");
+        List<IBone> hornDR = this.getHornBones(processor, "hornDR");
+        this.hideAllBones(hornDL);
+        this.hideAllBones(hornDR);
+        int variant = new Integer(modelCode);
+        processor.getBone("hornDL" + variant).setHidden(false);
+        processor.getBone("hornDR" + variant).setHidden(false);
+    }
+
+    void getHornsUp(AnimationProcessor<GirlEntity> processor, String modelCode) {
+        List<IBone> hornUL = this.getHornBones(processor, "hornUL");
+        List<IBone> hornUR = this.getHornBones(processor, "hornUR");
+        this.hideAllBones(hornUL);
+        this.hideAllBones(hornUR);
+        int variant = new Integer(modelCode);
+        processor.getBone("hornUL" + variant).setHidden(false);
+        processor.getBone("hornUR" + variant).setHidden(false);
+    }
+
+    List<IBone> getHornBones(AnimationProcessor<GirlEntity> processor, String prefix) {
+        IBone bone;
+        ArrayList<IBone> bones = new ArrayList<>();
+        int i = 0;
+        while ((bone = processor.getBone(prefix + i)) != null) {
+            bones.add(bone);
+            ++i;
+        }
+        return bones;
+    }
+
+    void hideAllBones(List<IBone> bones) {
+        for (IBone bone : bones) {
+            bone.setHidden(true);
         }
     }
 
     @Override
     protected void processHeadLookRotation(GirlEntity girl, AnimationProcessor<GirlEntity> processor, AnimationEvent<GirlEntity> event) {
-        if (girl.world instanceof FakeWorld) {
-            return;
-        }
-        switch (girl.getCurrentAction()) {
-            case NULL: {
-                if (Math.abs(girl.prevPosX - girl.posX) + Math.abs(girl.prevPosZ - girl.posZ) < 0.0 || girl.onGround && Math.abs(Math.abs(girl.prevPosY) - Math.abs(girl.posY)) > (double)0.1f || !((IKobold) girl).IsBlockedByCeiling()) break;
+        if (!(girl.world instanceof FakeWorld)) {
+            switch (girl.getCurrentAction()) {
+                case NULL: {
+                    if (Math.abs(girl.prevPosX - girl.posX) + Math.abs(girl.prevPosZ - girl.posZ) < 0.0 || girl.onGround && Math.abs(Math.abs(girl.prevPosY) - Math.abs(girl.posY)) > (double) 0.1f || !((IKobold) girl).IsBlockedByCeiling())
+                        break;
+                }
+                default: {
+                    return;
+                }
             }
-            default: {
-                return;
-            }
+            EntityModelData modelData = event.getExtraDataOfType(EntityModelData.class).get(0);
+            IBone head = processor.getBone("head");
+            head.setRotationY(modelData.netHeadYaw * ((float) Math.PI / 180));
+            head.setRotationX(modelData.headPitch * ((float) Math.PI / 180));
+            IBone body = processor.getBone("body") == null ? processor.getBone("dd") : processor.getBone("body");
+            body.setRotationY(0.0f);
         }
-        EntityModelData entityModelData = event.getExtraDataOfType(EntityModelData.class).get(0);
-        IBone iBone = processor.getBone("head");
-        iBone.setRotationY(entityModelData.netHeadYaw * ((float)Math.PI / 180));
-        iBone.setRotationX(entityModelData.headPitch * ((float)Math.PI / 180));
-        IBone iBone2 = processor.getBone("body") == null ? processor.getBone("dd") : processor.getBone("body");
-        iBone2.setRotationY(0.0f);
     }
 
     @Override

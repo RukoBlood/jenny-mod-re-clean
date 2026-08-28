@@ -16,34 +16,34 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class KoboldEggRenderer
 extends GeoEntityRenderer<KoboldEggEntity> {
-    final static public Color b = new Color(223, 206, 155);
-    KoboldEggEntity a;
+    final static public Color eggColor = new Color(223, 206, 155);
+    KoboldEggEntity eggEntity;
 
-    public KoboldEggRenderer(RenderManager renderManager, AnimatedGeoModel<KoboldEggEntity> animatedGeoModel) {
-        super(renderManager, animatedGeoModel);
+    public KoboldEggRenderer(RenderManager renderManager, AnimatedGeoModel<KoboldEggEntity> model) {
+        super(renderManager, model);
     }
 
     @Override
-    public void render(GeoModel geoModel, KoboldEggEntity i_class4102, float f, float f2, float f3, float f4, float f5) {
-        this.a = i_class4102;
-        super.render(geoModel, i_class4102, f, f2, f3, f4, f5);
+    public void render(GeoModel model, KoboldEggEntity animatable, float partialTicks, float red, float green, float blue, float alpha) {
+        this.eggEntity = animatable;
+        super.render(model, animatable, partialTicks, red, green, blue, alpha);
     }
 
     @Override
-    public void renderRecursively(BufferBuilder bufferBuilder, GeoBone geoBone, float f, float f2, float f3, float f4) {
+    public void renderRecursively(BufferBuilder bufferBuilder, GeoBone geoBone, float r, float g, float b, float alpha) {
         String string = geoBone.getName();
         if ("shell".equals(string)) {
-            f = (float)b.getRed() / 255.0f;
-            f2 = (float)b.getGreen() / 255.0f;
-            f3 = (float)b.getBlue() / 255.0f;
+            r = (float) eggColor.getRed() / 255.0f;
+            g = (float) eggColor.getGreen() / 255.0f;
+            b = (float) eggColor.getBlue() / 255.0f;
         }
         if ("colorSpots".equals(string)) {
-            Vec3i vec3i = EyeAndKoboldColor.safeValueOf(this.a.getDataManager().get(KoboldEggEntity.b)).getMainColor();
-            f = (float)vec3i.getX() / 255.0f;
-            f2 = (float)vec3i.getY() / 255.0f;
-            f3 = (float)vec3i.getZ() / 255.0f;
+            Vec3i vec3i = EyeAndKoboldColor.safeValueOf(this.eggEntity.getDataManager().get(KoboldEggEntity.EGG_COLOR)).getMainColor();
+            r = (float)vec3i.getX() / 255.0f;
+            g = (float)vec3i.getY() / 255.0f;
+            b = (float)vec3i.getZ() / 255.0f;
         }
-        super.renderRecursively(bufferBuilder, geoBone, f, f2, f3, f4);
+        super.renderRecursively(bufferBuilder, geoBone, r, g, b, alpha);
     }
 
     //@Override

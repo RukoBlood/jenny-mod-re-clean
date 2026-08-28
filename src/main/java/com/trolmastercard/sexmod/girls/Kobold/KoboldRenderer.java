@@ -29,13 +29,13 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
-    final static HashSet<String> t = new HashSet<String>(Arrays.asList("colorSpots", "neck", "head", "snout", "midSectionR", "midSectionL", "innerCheekLR", "innerCheekRR", "gayL", "gayR", "legR", "legL", "shinL", "toesL", "kneeL", "curvesL", "shinR", "toesR", "kneeR", "curvesR", "sideL", "sideR", "hip", "torsoL", "torsoR", "armR", "lowerArmR", "ellbowR", "armL", "lowerArmL", "ellbowL", "hornUL", "hornUR", "tail", "tail2", "tail3", "tail4", "tail5", "hornDL2", "hornDR2", "hornDR3M", "hornDL3M", "frecklesAL1", "frecklesAL2", "frecklesAR1", "frecklesAR2", "frecklesHL1", "frecklesHL2", "frecklesHR1", "frecklesHR2"));
-    final static HashSet<String> u = new HashSet<String>(Arrays.asList("boobR", "boobL", "frontNeck", "Rside", "Lside", "frontAndInside", "innerCheekLL", "innerCheekRL", "layer", "layer2", "down", "down2", "down3", "down4", "down5", "fuckhole", "hornDR3S", "hornDL3S", "assholeCoverUp", "assholeCoverUp2"));
+    final static HashSet<String> HIDE_BONES = new HashSet<>(Arrays.asList("colorSpots", "neck", "head", "snout", "midSectionR", "midSectionL", "innerCheekLR", "innerCheekRR", "gayL", "gayR", "legR", "legL", "shinL", "toesL", "kneeL", "curvesL", "shinR", "toesR", "kneeR", "curvesR", "sideL", "sideR", "hip", "torsoL", "torsoR", "armR", "lowerArmR", "ellbowR", "armL", "lowerArmL", "ellbowL", "hornUL", "hornUR", "tail", "tail2", "tail3", "tail4", "tail5", "hornDL2", "hornDR2", "hornDR3M", "hornDL3M", "frecklesAL1", "frecklesAL2", "frecklesAR1", "frecklesAR2", "frecklesHL1", "frecklesHL2", "frecklesHR1", "frecklesHR2"));
+    final static HashSet<String> SHOW_BONES = new HashSet<>(Arrays.asList("boobR", "boobL", "frontNeck", "Rside", "Lside", "frontAndInside", "innerCheekLL", "innerCheekRL", "layer", "layer2", "down", "down2", "down3", "down4", "down5", "fuckhole", "hornDR3S", "hornDL3S", "assholeCoverUp", "assholeCoverUp2"));
     Minecraft mc4 = Minecraft.getMinecraft();
-    Vector3f v;
+    Vector3f leftoverVector;
 
-    public KoboldRenderer(RenderManager renderManager, AnimatedGeoModel animatedGeoModel, double d) {
-        super(renderManager, animatedGeoModel, d);
+    public KoboldRenderer(RenderManager manager, AnimatedGeoModel model, double shadowSize) {
+        super(manager, model, shadowSize);
     }
 
     @Override
@@ -43,10 +43,10 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
         EntityDataManager entityDataManager = this.renderEntity.getDataManager();
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf(entityDataManager.get(KoboldEntity.CURRENT_ACTION));
         BlockPos blockPos = entityDataManager.get(KoboldEntity.ACTION_TARGET_POS);
-        if (t.contains(boneName)) {
+        if (HIDE_BONES.contains(boneName)) {
             return eyeAndKoboldColor_.getMainColor();
         }
-        if (u.contains(boneName)) {
+        if (SHOW_BONES.contains(boneName)) {
             return eyeAndKoboldColor_.getSecondaryColor();
         }
         if ("irisR".equals(boneName) || "irisL".equals(boneName)) {
@@ -119,29 +119,29 @@ public class KoboldRenderer extends GirlRendererBase<KoboldEntity> {
 
     @Override
     public void doRender(KoboldEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        String string = entity.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION);
+        String actionStr = entity.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION);
         if (entity.customTitle == null) {
-            entity.customTitle = string;
+            entity.customTitle = actionStr;
         }
-        if (!entity.customTitle.equals(string)) {
+        if (!entity.customTitle.equals(actionStr)) {
             KoboldRenderer.clearBoneColors();
-            entity.customTitle = string;
+            entity.customTitle = actionStr;
         }
-        this.v = new Vector3f((float) x, (float) y, (float) z);
+        this.leftoverVector = new Vector3f((float) x, (float) y, (float) z);
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
     @Override
     protected void renderNameTag(double x, double y, double z) {
-        EntityDataManager entityDataManager = this.renderEntity.getDataManager();
-        String string = entityDataManager.get(KoboldEntity.TRIBE_NAME);
-        if ("null".equals(string)) {
+        EntityDataManager manager = this.renderEntity.getDataManager();
+        String tribeName = manager.get(KoboldEntity.TRIBE_NAME);
+        if ("null".equals(tribeName)) {
             super.renderNameTag(x, y, z);
             return;
         }
-        EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf(entityDataManager.get(KoboldEntity.CURRENT_ACTION));
-        string = eyeAndKoboldColor_.getTextColor() + " -" + string + "-";
-        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText() + string, x, y + (double) this.renderEntity.getScaleFactor(), z, 300);
+        EyeAndKoboldColor color = EyeAndKoboldColor.valueOf(manager.get(KoboldEntity.CURRENT_ACTION));
+        tribeName = color.getTextColor() + " -" + tribeName + "-";
+        this.renderLivingLabel(this.renderEntity, this.renderEntity.getDisplayNameText() + tribeName, x, y + (double) this.renderEntity.getScaleFactor(), z, 300);
     }
 }
 

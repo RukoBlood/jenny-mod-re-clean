@@ -37,24 +37,16 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
 public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
-    final static private ResourceLocation c = new ResourceLocation("textures/entity/endercrystal/endercrystal.png");
+    final static private ResourceLocation CRYSTAL_TEXTURE = new ResourceLocation("textures/entity/endercrystal/endercrystal.png");
     final private CrystalModel crystalModel = new CrystalModel();
-    final static float p = 10.0f;
-    final static float f = 1.5f;
-    final static float m = 0.175f;
-    final static float r = 0.1f;
-    final static float g = 0.04f;
-    final static float d = 8.0f;
-    final static float i = 6.0f;
-    final static float a = 1.3f;
-    final static Vector2f[] l = new Vector2f[]{new Vector2f(1.0f, 0.0f), new Vector2f(0.0f, 1.0f), new Vector2f(0.0f, 0.0f), new Vector2f(0.5f, 0.5f), new Vector2f(0.75f, 0.25f), new Vector2f(0.25f, 0.75f), new Vector2f(0.25f, 0.75f)};
+    final static Vector2f[] offsets = new Vector2f[]{new Vector2f(1.0f, 0.0f), new Vector2f(0.0f, 1.0f), new Vector2f(0.0f, 0.0f), new Vector2f(0.5f, 0.5f), new Vector2f(0.75f, 0.25f), new Vector2f(0.25f, 0.75f), new Vector2f(0.25f, 0.75f)};
     static boolean isRendering = false;
     Minecraft mc = Minecraft.getMinecraft();
     Vector2f screenPos;
     double animationTicks = 0.0;
     EntityPlayer player;
     ItemStack heldItem;
-    static HashMap<ItemStack, Vector3f> n = new HashMap();
+    static HashMap<ItemStack, Vector3f> itemPositions = new HashMap();
 
     public DragonStaffRenderer() {
         super(new DragonStaffModel());
@@ -107,7 +99,7 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
             Tessellator.getInstance().draw();
             MatrixHelper.bindOpenGLToBone(IGeoRenderer.MATRIX_STACK, bone);
             GlStateManager.translate(0.0, 1.5 + 0.001 * Math.sin(0.005 * this.animationTicks) + 0.001, 0.0);
-            Vector3f vector3f = n.get(this.heldItem);
+            Vector3f vector3f = itemPositions.get(this.heldItem);
             GlStateManager.scale(this.getBobOffset(), this.getBobOffset(), this.getBobOffset());
             if (vector3f == null) {
                 vector3f = new Vector3f(0.0f, 0.0f, 0.0f);
@@ -117,8 +109,8 @@ public class DragonStaffRenderer extends GeoItemRenderer<DragonStaffItem> {
             GlStateManager.rotate(vector3f.x * 10.0f, 0.0f, 1.0f, 0.0f);
             GlStateManager.rotate(-vector3f.y * 10.0f, 0.0f, 0.0f, 1.0f);
             GlStateManager.rotate((float)(this.animationTicks * (double)0.1f), 1.0f, 1.0f, 1.0f);
-            n.put(this.heldItem, vector3f);
-            this.mc.getTextureManager().bindTexture(c);
+            itemPositions.put(this.heldItem, vector3f);
+            this.mc.getTextureManager().bindTexture(CRYSTAL_TEXTURE);
             this.crystalModel.render(Minecraft.getMinecraft().player, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
             GlStateManager.popMatrix();
             if (this.player != null) {

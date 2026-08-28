@@ -72,29 +72,29 @@ extends GirlModel<GirlEntity> {
         if (girl instanceof PlayerGirl) {
             return;
         }
-        this.a(new String[]{"head"}, "hat");
+        this.applyBoneName(new String[]{"head"}, "hat");
     }
 
-    void a(String[] stringArray, String string) {
+    void applyBoneName(String[] bones, String name) {
         AnimationProcessor<GirlEntity> animationProcessor = this.getAnimationProcessor();
-        IBone iBone = animationProcessor.getBone(string);
-        IBone[] iBoneArray = new IBone[stringArray.length];
-        for (int i = 0; i < iBoneArray.length; ++i) {
-            iBoneArray[i] = animationProcessor.getBone(stringArray[i]);
+        IBone bone = animationProcessor.getBone(name);
+        IBone[] bonesCount = new IBone[bones.length];
+        for (int i = 0; i < bonesCount.length; ++i) {
+            bonesCount[i] = animationProcessor.getBone(bones[i]);
         }
-        Vector3f vector3f = new Vector3f(0.0f, 0.0f, 0.0f);
-        Vector3f vector3f2 = new Vector3f(0.0f, 0.0f, 0.0f);
-        for (IBone iBone2 : iBoneArray) {
-            vector3f.add(new Vector3f(iBone2.getRotationX(), iBone2.getRotationY(), iBone2.getRotationZ()));
-            vector3f2.add(new Vector3f(iBone2.getPositionX(), iBone2.getPositionY(), iBone2.getPositionZ()));
+        Vector3f rotSum = new Vector3f(0.0f, 0.0f, 0.0f);
+        Vector3f posSum = new Vector3f(0.0f, 0.0f, 0.0f);
+        for (IBone boner : bonesCount) {
+            rotSum.add(new Vector3f(boner.getRotationX(), boner.getRotationY(), boner.getRotationZ()));
+            posSum.add(new Vector3f(boner.getPositionX(), boner.getPositionY(), boner.getPositionZ()));
         }
-        iBone.setRotationX(vector3f.x);
-        iBone.setRotationY(vector3f.y);
-        iBone.setRotationZ(vector3f.z);
-        iBone.setPositionX(vector3f2.x);
-        iBone.setPositionY(vector3f2.y);
-        iBone.setPositionZ(vector3f2.z);
-        iBone.setPositionZ(vector3f2.z);
+        bone.setRotationX(rotSum.x);
+        bone.setRotationY(rotSum.y);
+        bone.setRotationZ(rotSum.z);
+        bone.setPositionX(posSum.x);
+        bone.setPositionY(posSum.y);
+        bone.setPositionZ(posSum.z);
+        bone.setPositionZ(posSum.z);
     }
 
     @Override

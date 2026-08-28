@@ -72,7 +72,7 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register(new GirlBedInteraction());
         MinecraftForge.EVENT_BUS.register(SexFire.FIRE);
         MinecraftForge.EVENT_BUS.register(new KoboldEntity.EventHandler());
-        MinecraftForge.EVENT_BUS.register(new DragonStaffItem.a_inner408());
+        MinecraftForge.EVENT_BUS.register(new DragonStaffItem.EventHandler());
         MinecraftForge.EVENT_BUS.register(new KoboldManager.KoboldSavedData("tribes"));
         MinecraftForge.EVENT_BUS.register(new KoboldEggItem());
         MinecraftForge.EVENT_BUS.register(new GoblinFirstPersonRenderer());

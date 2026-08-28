@@ -38,69 +38,68 @@ import org.apache.commons.io.FileUtils;
 public class DownloadServerModel
 implements IMessage {
     boolean isValid;
-    List<String> c = new ArrayList<String>();
-    byte[] b;
-    FileTypes f;
-    String e;
-    int a = 0;
+    List<String> modelNames = new ArrayList<>();
+    byte[] modelData;
+    FileTypes packetTypes;
+    String modelName;
+    int modelIndex = 0;
 
     public DownloadServerModel() {
     }
 
     public DownloadServerModel(List<String> list) {
-        this.c = list;
+        this.modelNames = list;
     }
 
-    public DownloadServerModel(byte[] byArray, FileTypes b_inner1482, String string) {
-        this.b = byArray;
-        this.f = b_inner1482;
-        this.e = string;
+    public DownloadServerModel(byte[] modelData, FileTypes types, String name) {
+        this.modelData = modelData;
+        this.packetTypes = types;
+        this.modelName = name;
     }
 
-    public int a() {
-        return this.a;
+    public int getModelIndex() {
+        return this.modelIndex;
     }
 
-    public void a(int n) {
-        this.a = n;
+    public void setModelIndex(int index) {
+        this.modelIndex = index;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
         if (Main.proxy instanceof ClientProxy) {
-            if (!CustomModel.isGlobalRenderingDisabled()) {
+            if (CustomModel.isGlobalRenderingDisabled()) {
+                this.modelName = ByteBufUtils.readUTF8String(byteBuf);
+                this.packetTypes = FileTypes.valueOf(ByteBufUtils.readUTF8String(byteBuf));
+                this.modelIndex = byteBuf.readInt();
+                int n = byteBuf.readInt();
+                this.modelData = new byte[n];
+                for (int i = 0; i < n; ++i) {
+                    this.modelData[i] = byteBuf.readByte();
+                }
+                this.isValid = true;
                 return;
             }
-            this.e = ByteBufUtils.readUTF8String(byteBuf);
-            this.f = FileTypes.valueOf(ByteBufUtils.readUTF8String(byteBuf));
-            this.a = byteBuf.readInt();
-            int n = byteBuf.readInt();
-            this.b = new byte[n];
-            for (int i = 0; i < n; ++i) {
-                this.b[i] = byteBuf.readByte();
-            }
-            this.isValid = true;
-            return;
         }
         int n = byteBuf.readInt();
         for (int i = 0; i < n; ++i) {
-            this.c.add(ByteBufUtils.readUTF8String(byteBuf));
+            this.modelNames.add(ByteBufUtils.readUTF8String(byteBuf));
         }
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         if (Main.proxy instanceof ClientProxy) {
-            byteBuf.writeInt(this.c.size());
-            for (String string : this.c) {
+            byteBuf.writeInt(this.modelNames.size());
+            for (String string : this.modelNames) {
                 ByteBufUtils.writeUTF8String(byteBuf, string);
             }
             return;
         }
-        ByteBufUtils.writeUTF8String(byteBuf, this.e);
-        ByteBufUtils.writeUTF8String(byteBuf, this.f.toString());
-        byteBuf.writeInt(this.a);
-        byteBuf.writeInt(this.b.length);
-        for (byte by : this.b) {
+        ByteBufUtils.writeUTF8String(byteBuf, this.modelName);
+        ByteBufUtils.writeUTF8String(byteBuf, this.packetTypes.toString());
+        byteBuf.writeInt(this.modelIndex);
+        byteBuf.writeInt(this.modelData.length);
+        for (byte by : this.modelData) {
             byteBuf.writeByte(by);
         }
     }
@@ -118,15 +117,15 @@ implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<DownloadServerModel, IMessage> {
-        static int a = 0;
+        static int packetCounter = 0;
 
         @SideOnly(value=Side.CLIENT)
-        void a(String string) {
+        void sendModelMessage(String string) {
             Minecraft.getMinecraft().player.sendMessage(new TextComponentString(string));
         }
 
         @SideOnly(value=Side.CLIENT)
-        void a() {
+        void reloadServerModels() {
             Minecraft.getMinecraft().addScheduledTask(() -> CustomModel.getModelCount(true));
         }
 
@@ -140,9 +139,9 @@ implements IMessage {
                 if (!CustomModel.isGlobalRenderingDisabled()) {
                     return null;
                 }
-                String string = msg.e;
-                FileTypes b_inner1482 = msg.f;
-                byte[] byArray = msg.b;
+                String string = msg.modelName;
+                FileTypes b_inner1482 = msg.packetTypes;
+                byte[] data = msg.modelData;
                 String string2 = CustomModel.getCurrentGroup() + "/" + string;
                 File file = new File(string2);
                 file.mkdirs();
@@ -151,7 +150,7 @@ implements IMessage {
                     FileOutputStream fileOutputStream = new FileOutputStream(file2);
                     Throwable throwable = null;
                     try {
-                        fileOutputStream.write(byArray);
+                        fileOutputStream.write(data);
                     } catch (Throwable throwable2) {
                         throwable = throwable2;
                         throw throwable2;
@@ -178,43 +177,43 @@ implements IMessage {
                     ++n;
                 }
                 if (n == n2) {
-                    this.a(String.format("%sSuccessfully downloaded the custom model '%s%s%s'!", TextFormatting.GREEN, TextFormatting.YELLOW, string, TextFormatting.GREEN));
+                    this.sendModelMessage(String.format("%sSuccessfully downloaded the custom model '%s%s%s'!", TextFormatting.GREEN, TextFormatting.YELLOW, string, TextFormatting.GREEN));
                 } else {
-                    this.a(String.format("%sdownloading custom model '%s%s%s' (%s/%s)...", TextFormatting.GRAY, TextFormatting.YELLOW, string, TextFormatting.GRAY, n, n2));
+                    this.sendModelMessage(String.format("%sdownloading custom model '%s%s%s' (%s/%s)...", TextFormatting.GRAY, TextFormatting.YELLOW, string, TextFormatting.GRAY, n, n2));
                 }
-                if (++a < msg.a) {
+                if (++packetCounter < msg.modelIndex) {
                     return null;
                 }
-                a = 0;
-                this.a();
+                packetCounter = 0;
+                this.reloadServerModels();
                 return null;
             }
-            MinecraftServer minecraftServer = FMLCommonHandler.instance().getMinecraftServerInstance();
-            minecraftServer.addScheduledTask(() -> {
-                List<String> list = msg.c;
+            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+            server.addScheduledTask(() -> {
+                List<String> names = msg.modelNames;
                 ArrayList<DownloadServerModel> arrayList = new ArrayList<DownloadServerModel>();
-                for (String object : list) {
-                    String string = "sexmod_custom_models/" + object;
-                    for (FileTypes b_inner1482 : FileTypes.values()) {
-                        File file = new File(string + "/" + object + b_inner1482.ending);
-                        if (!file.exists()) {
-                            System.out.println(file.getAbsolutePath() + " doesnt exist lol");
+                for (String name : names) {
+                    String serverDir = "sexmod_custom_models/" + name;
+                    for (FileTypes types : FileTypes.values()) {
+                        File modelFile = new File(serverDir + "/" + name + types.ending);
+                        if (!modelFile.exists()) {
+                            System.out.println(modelFile.getAbsolutePath() + " doesnt exist lol");
                             continue;
                         }
-                        byte[] byArray = null;
+                        byte[] fileBytes = null;
                         try {
-                            byArray = FileUtils.readFileToByteArray(file);
+                            fileBytes = FileUtils.readFileToByteArray(modelFile);
                         } catch (IOException iOException) {
                             throw new RuntimeException(iOException);
                         }
-                        if (byArray == null) continue;
-                        arrayList.add(new DownloadServerModel(byArray, b_inner1482, object));
+                        if (fileBytes == null) continue;
+                        arrayList.add(new DownloadServerModel(fileBytes, types, name));
                     }
                 }
                 int n = arrayList.size();
                 for (DownloadServerModel cu_class1463 : arrayList) {
-                    cu_class1463.a(n);
-                    minecraftServer.addScheduledTask(() -> PacketHandler.INSTANCE.sendTo(cu_class1463, ctx.getServerHandler().player));
+                    cu_class1463.setModelIndex(n);
+                    server.addScheduledTask(() -> PacketHandler.INSTANCE.sendTo(cu_class1463, ctx.getServerHandler().player));
                 }
             });
             return null;

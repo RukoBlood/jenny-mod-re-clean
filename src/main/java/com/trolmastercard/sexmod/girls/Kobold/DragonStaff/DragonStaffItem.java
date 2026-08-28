@@ -47,7 +47,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class DragonStaffItem extends Item implements IAnimatable {
     final static public DragonStaffItem DRAGON_STAFF = new DragonStaffItem();
-    final private AnimationFactory animationFactory = new AnimationFactory(this);
+    final private AnimationFactory factory = new AnimationFactory(this);
 
     public DragonStaffItem() {
         this.setCreativeTab(CreativeTabs.TOOLS);
@@ -61,18 +61,18 @@ public class DragonStaffItem extends Item implements IAnimatable {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer entityPlayer, EnumHand enumHand) {
-        return new ActionResult<ItemStack>(EnumActionResult.FAIL, entityPlayer.getHeldItem(enumHand));
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        return new ActionResult<>(EnumActionResult.FAIL, playerIn.getHeldItem(handIn));
     }
 
     @SubscribeEvent
-    public static void a(RegistryEvent.Register<Item> register) {
+    public static void registerItems(RegistryEvent.Register<Item> register) {
         register.getRegistry().register(DRAGON_STAFF);
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
-    public static void a(ModelRegistryEvent modelRegistryEvent) {
+    public static void onModelRegistry(ModelRegistryEvent event) {
         ModelLoader.setCustomModelResourceLocation(DRAGON_STAFF, 0, new ModelResourceLocation("sexmod:dragon_staff"));
         DRAGON_STAFF.setTileEntityItemStackRenderer(new DragonStaffRenderer());
     }
@@ -83,46 +83,43 @@ public class DragonStaffItem extends Item implements IAnimatable {
 
     @Override
     public AnimationFactory getFactory() {
-        return this.animationFactory;
+        return this.factory;
     }
 
-    public static class a_inner408 {
+    public static class EventHandler {
         @SubscribeEvent
-        public void a(PlayerInteractEvent.RightClickItem rightClickItem) {
-            World world = rightClickItem.getWorld();
-            if (!world.isRemote) {
-                return;
+        public void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+            World world = event.getWorld();
+            if (world.isRemote) {
+                EntityPlayer player = event.getEntityPlayer();
+                if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == DRAGON_STAFF || player.getHeldItem(EnumHand.OFF_HAND).getItem() == DRAGON_STAFF) {
+                    if (!KoboldEntity.ACTIVE_TRIBE_SCREEN_POSITIONS.isEmpty()) {
+                        this.openStructureCommand();
+                    }
+                }
             }
-            EntityPlayer entityPlayer = rightClickItem.getEntityPlayer();
-            if (entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() != DRAGON_STAFF && entityPlayer.getHeldItem(EnumHand.OFF_HAND).getItem() != DRAGON_STAFF) {
-                return;
-            }
-            if (KoboldEntity.ACTIVE_TRIBE_SCREEN_POSITIONS.isEmpty()) {
-                return;
-            }
-            this.a();
         }
 
         @SideOnly(value=Side.CLIENT)
-        void a() {
+        void openStructureCommand() {
             Minecraft.getMinecraft().displayGuiScreen(new DragonStaffUI());
             PacketHandler.INSTANCE.sendToServer(new GetTribeUIValues());
         }
 
         @SubscribeEvent
-        public void a(PlayerInteractEvent.RightClickBlock rightClickBlock) {
-            EntityPlayer entityPlayer = rightClickBlock.getEntityPlayer();
-            if (entityPlayer.getHeldItem(EnumHand.MAIN_HAND).getItem() == DRAGON_STAFF || entityPlayer.getHeldItem(EnumHand.OFF_HAND).getItem() == DRAGON_STAFF) {
-                Block block = rightClickBlock.getWorld().getBlockState(rightClickBlock.getPos()).getBlock();
+        public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+            EntityPlayer player = event.getEntityPlayer();
+            if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == DRAGON_STAFF || player.getHeldItem(EnumHand.OFF_HAND).getItem() == DRAGON_STAFF) {
+                Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                 if (block instanceof BlockBed) {
-                    rightClickBlock.setCancellationResult(EnumActionResult.FAIL);
-                    rightClickBlock.setResult(Event.Result.DENY);
-                    rightClickBlock.setCanceled(true);
+                    event.setCancellationResult(EnumActionResult.FAIL);
+                    event.setResult(Event.Result.DENY);
+                    event.setCanceled(true);
                 }
                 if (block instanceof BlockChest) {
-                    rightClickBlock.setCancellationResult(EnumActionResult.FAIL);
-                    rightClickBlock.setResult(Event.Result.DENY);
-                    rightClickBlock.setCanceled(true);
+                    event.setCancellationResult(EnumActionResult.FAIL);
+                    event.setResult(Event.Result.DENY);
+                    event.setCanceled(true);
                 }
             }
         }

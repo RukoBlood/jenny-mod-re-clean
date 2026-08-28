@@ -60,14 +60,6 @@ extends GirlEntity {
     final static public float MAX_ATTACK_DISTANCE = 60.0f;
     final static public float ARROW_SPEED = 4.0f;
     final static public float MOMMY_HEAD_OFFSET_Y = 3.5f;
-    final static public float ah = 28.0f;
-    final static public float ae = 15.0f;
-    final static public float K = 15.0f;
-    final static public float L = 0.65f;
-    final static public float ao = 3.65f;
-    final static public float O = 6.0f;
-    final static public float ak = 80.0f;
-    final static public float X = 700.0f;
     final static public DataParameter<String> MOMMY_UUID_DATA = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.STRING).getSerializer().createKey(111);
     final static public DataParameter<Boolean> IS_RIDING_MOMMY = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(112);
     final static public DataParameter<Integer> TARGET_ENTITY_ID = EntityDataManager.createKey(ManglelieEntity.class, DataSerializers.VARINT).getSerializer().createKey(113);
@@ -84,8 +76,8 @@ extends GirlEntity {
     boolean hasFiredArrow = false;
     public float targetHeadYaw = 0.0f;
     public float targetHeadPitch = 0.0f;
-    public float T = 0.0f;
-    public float ai = 0.0f;
+    public float offsetY = 0.0f;
+    public float offsetX = 0.0f;
     boolean isDespawned = false;
     boolean customModelLoaded = false;
     boolean isThreesomeTransitioning = false;

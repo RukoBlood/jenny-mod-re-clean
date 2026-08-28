@@ -111,7 +111,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
     public HashSet<String> getBlacklistedBoneNames() {
         if (!this.isBlacklistInitialized) {
             BLACKLISTED_BONES.addAll(BoneDeformProcessor.EXCLUDED_MESH_BONES);
-            BLACKLISTED_BONES.addAll(ManglelieRenderer.B);
+            BLACKLISTED_BONES.addAll(ManglelieRenderer.BLACKLISTED_BONES);
             this.isBlacklistInitialized = true;
         }
         return BLACKLISTED_BONES;
@@ -524,7 +524,7 @@ public class GalathRenderer extends GirlRenderer<GalathEntity> implements IGirlR
             }
         }
         if (this.renderEntity.isHuggingManglelie()) {
-            ManglelieRenderer.a(this.renderEntity, boneName, bone, true);
+            ManglelieRenderer.applyBoneTransform(this.renderEntity, boneName, bone, true);
         }
     }
 

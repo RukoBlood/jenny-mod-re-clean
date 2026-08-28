@@ -30,10 +30,10 @@ extends WorkerPlayerRenderer {
         EntityDataManager entityDataManager = this.renderEntity.getDataManager();
         EyeAndKoboldColor eyeAndKoboldColor_ = EyeAndKoboldColor.valueOf((String)entityDataManager.get(KoboldEntity.CURRENT_ACTION));
         BlockPos blockPos = (BlockPos)entityDataManager.get(KoboldEntity.ACTION_TARGET_POS);
-        if (KoboldRenderer.t.contains(name)) {
+        if (KoboldRenderer.HIDE_BONES.contains(name)) {
             return eyeAndKoboldColor_.getMainColor();
         }
-        if (KoboldRenderer.u.contains(name)) {
+        if (KoboldRenderer.SHOW_BONES.contains(name)) {
             return eyeAndKoboldColor_.getSecondaryColor();
         }
         if ("irisR".equals(name) || "irisL".equals(name)) {

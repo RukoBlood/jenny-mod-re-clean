@@ -11,7 +11,7 @@ import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 public class KoboldEggColor extends GeoItemRenderer<KoboldEggItem> {
-    ItemStack a = null;
+    ItemStack eggItem = null;
 
     public KoboldEggColor() {
         super(new KoboldEggModelAlt());
@@ -19,7 +19,7 @@ public class KoboldEggColor extends GeoItemRenderer<KoboldEggItem> {
 
     @Override
     public void render(KoboldEggItem koboldEggItem, ItemStack itemStack) {
-        this.a = itemStack;
+        this.eggItem = itemStack;
         super.render(koboldEggItem, itemStack);
     }
 
@@ -27,12 +27,12 @@ public class KoboldEggColor extends GeoItemRenderer<KoboldEggItem> {
     public void renderRecursively(BufferBuilder builder, GeoBone bone, float red, float green, float blue, float alpha) {
         String boneName = bone.getName();
         if ("shell".equals(boneName)) {
-            red = (float) KoboldEggRenderer.b.getRed() / 255.0f;
-            green = (float) KoboldEggRenderer.b.getGreen() / 255.0f;
-            blue = (float) KoboldEggRenderer.b.getBlue() / 255.0f;
+            red = (float) KoboldEggRenderer.eggColor.getRed() / 255.0f;
+            green = (float) KoboldEggRenderer.eggColor.getGreen() / 255.0f;
+            blue = (float) KoboldEggRenderer.eggColor.getBlue() / 255.0f;
         }
         if ("colorSpots".equals(boneName)) {
-            Vec3i vec3i = this.getColor(this.a).getMainColor();
+            Vec3i vec3i = this.getColor(this.eggItem).getMainColor();
             red = (float)vec3i.getX() / 255.0f;
             green = (float)vec3i.getY() / 255.0f;
             blue = (float)vec3i.getZ() / 255.0f;
