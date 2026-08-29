@@ -14,8 +14,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import javax.vecmath.Tuple3f;
-import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
@@ -54,7 +52,7 @@ public abstract class GirlRendererBase<G extends AbstractNpcOnlyEntity> extends 
 
     protected Vec3i getBoneColor(GeoBone bone) {
         String boneName = bone.getName();
-        int compositeKey = boneName.hashCode() + ((AbstractNpcOnlyEntity)this.renderEntity).getPersistentID().hashCode();
+        int compositeKey = boneName.hashCode() + this.renderEntity.getPersistentID().hashCode();
         Vec3i cachedColor = colorCache.get(compositeKey);
         if (cachedColor != null) {
             return cachedColor;
@@ -78,7 +76,7 @@ public abstract class GirlRendererBase<G extends AbstractNpcOnlyEntity> extends 
 
     @Override
     protected void RenderHeldItem(BufferBuilder buffer, GeoBone bone) {
-        ItemStack heldItem = this.getHeldItem((ItemStack)null);
+        ItemStack heldItem = this.getHeldItem(null);
         float scale = this.getRenderItemScale();
         Vec3d rotation = this.getItemRenderRotation(heldItem);
         if (heldItem == null) {
@@ -129,14 +127,14 @@ public abstract class GirlRendererBase<G extends AbstractNpcOnlyEntity> extends 
 
     @Override
     public void renderCustomBones(BufferBuilder buffer, GeoBone bone, float r, float g, float b, float a, double uOffset) {
-        if (((AbstractNpcOnlyEntity)this.renderEntity).world instanceof FakeWorld) {
+        if (this.renderEntity.world instanceof FakeWorld) {
             return;
         }
         String boneName = bone.getName();
         if (boneName.equals("weapon")) {
             this.RenderHeldItem(buffer, bone);
         }
-        if (boneName.equals("itemRenderer") && ((AbstractNpcOnlyEntity)this.renderEntity).getCurrentAction() == Action.PAYMENT) {
+        if (boneName.equals("itemRenderer") && this.renderEntity.getCurrentAction() == Action.PAYMENT) {
             this.renderTradeOverlay(buffer, bone);
         }
         this.onBoneProcessing(buffer, bone.getName(), bone);
@@ -174,7 +172,7 @@ public abstract class GirlRendererBase<G extends AbstractNpcOnlyEntity> extends 
         for (GeoQuad geoQuad : cube.quads) {
             if (geoQuad == null) continue;
             Vector3f vector3f = new Vector3f((float)geoQuad.normal.getX(), (float)geoQuad.normal.getY(), (float)geoQuad.normal.getZ());
-            MATRIX_STACK.getNormalMatrix().transform((Tuple3f)vector3f);
+            MATRIX_STACK.getNormalMatrix().transform(vector3f);
             if ((cube.size.y == 0.0f || cube.size.z == 0.0f) && vector3f.getX() < 0.0f) {
                 vector3f.x *= -1.0f;
             }
@@ -189,7 +187,7 @@ public abstract class GirlRendererBase<G extends AbstractNpcOnlyEntity> extends 
             Vec3d vec3d = BoneDeformProcessor.applyBoneDeformation(this, bone, new Vec3d((float)vec3i.getX() / 255.0f, (float)vec3i.getY() / 255.0f, (float)vec3i.getZ() / 255.0f), vector3f);
             for (GeoVertex geoVertex : geoQuad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
-                MATRIX_STACK.getModelMatrix().transform((Tuple4f)vector4f);
+                MATRIX_STACK.getModelMatrix().transform(vector4f);
                 buffer.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex((double)geoVertex.textureU + textureOffset, geoVertex.textureV).color((float)vec3d.x, (float)vec3d.y, (float)vec3d.z, a).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
             }
         }

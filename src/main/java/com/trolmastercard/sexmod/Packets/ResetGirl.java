@@ -67,22 +67,22 @@ public class ResetGirl implements IMessage {
 
     public static class EventHandler implements IMessageHandler<ResetGirl, IMessage> {
         public static void resetGirl(GirlEntity girl) {
-            Object object;
-            Object object2;
+            EntityPlayer player;
             girl.reInitTasks();
             if (girl instanceof PlayerGirl && girl.world.getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID()) != null) {
                 PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), (EntityPlayerMP)FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(girl.dimension).getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID()));
                 girl.getDataManager().set(GirlEntity.OUTFIT_INDEX, 1);
-                object2 = girl.world.getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID());
-                ((EntityPlayer)object2).capabilities.isFlying = false;
-                ((Entity)object2).setNoGravity(false);
-                ((EntityPlayer)object2).noClip = false;
+                player = girl.world.getPlayerEntityByUUID(((PlayerGirl)girl).getOwnerUserUUID());
+                player.capabilities.isFlying = false;
+                player.setNoGravity(false);
+                player.noClip = false;
                 girl.setAnchored(false);
                 girl.setCurrentAction(Action.NULL);
-                if (girl.getInteractionPlayerUUID() != null && (object = girl.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID())) != null) {
-                    ((EntityPlayer)object).capabilities.isFlying = false;
-                    ((Entity)object).setNoGravity(false);
-                    ((EntityPlayer)object).noClip = false;
+                EntityPlayer interactor;
+                if (girl.getInteractionPlayerUUID() != null && (interactor = girl.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID())) != null) {
+                    interactor.capabilities.isFlying = false;
+                    interactor.setNoGravity(false);
+                    interactor.noClip = false;
                 }
             }
             girl.setAnchored(false);
@@ -90,12 +90,12 @@ public class ResetGirl implements IMessage {
             girl.cameraOriginPos = null;
             girl.setNoGravity(false);
             girl.noClip = false;
-            object2 = girl.world;
-            object = girl.getPositionVector();
-            while (((World)object2).getBlockState(new BlockPos(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z)).getBlock() != Blocks.AIR) {
-                object = ((Vec3d)object).add(0.0, 1.0, 0.0);
+            World world = girl.world;
+            Vec3d pos = girl.getPositionVector();
+            while (world.getBlockState(new BlockPos(pos.x, pos.y, pos.z)).getBlock() != Blocks.AIR) {
+                pos = pos.add(0.0, 1.0, 0.0);
             }
-            girl.setPositionAndUpdate(((Vec3d)object).x, ((Vec3d)object).y, ((Vec3d)object).z);
+            girl.setPositionAndUpdate(pos.x, pos.y, pos.z);
         }
 
         public static void resetGirls(EntityPlayerMP player) {

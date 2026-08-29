@@ -86,7 +86,6 @@ public class GetTribeUIValues implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                Object object;
                 UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
                 if (uUID == null) {
                     PacketHandler.INSTANCE.sendTo(GetTribeUIValues.createEmptyPacket(), ctx.getServerHandler().player);
@@ -99,6 +98,7 @@ public class GetTribeUIValues implements IMessage {
                 ArrayList<Vector4d> arrayList = new ArrayList<Vector4d>();
                 int koboldColor = KoboldManager.getTribeColor(uUID).getWoolMeta();
                 HashSet<Object> hashSet = new HashSet<Object>();
+                Object object; //TODO
                 for (KoboldEntity koboldEntity : list) {
                     if (koboldEntity.isDead || hashSet.contains(object = koboldEntity.girlID())) continue;
                     if (koboldEntity.editedColorManually) {

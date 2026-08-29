@@ -1,5 +1,5 @@
 Methods renamed: 100.00% (2824/2824)
-Fields renamed: 92.70% (1436/1549)
+Fields renamed: 93.40% (1444/1546)
 
 ## Synthetic Elements Detailed List
 
@@ -9,17 +9,6 @@ Fields renamed: 92.70% (1436/1549)
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\FishingRod\LunaHookRenderer.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\FishingRod\LunaHookRenderer.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Luna\FishingRod\LunaHookRenderer.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Pyrocynical\PyrocynicalRenderer.java` | Field | `j` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Pyrocynical\PyrocynicalRenderer.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Pyrocynical\PyrocynicalRenderer.java` | Field | `h` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Slime\friendlySlime\FriendlySlimeModel.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Slime\friendlySlime\FriendlySlimeModel.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Slime\friendlySlime\FriendlySlimeModel.java` | Field | `e` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Slime\friendlySlime\FriendlySlimeModel.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\girls\Slime\friendlySlime\FriendlySlimeModel.java` | Field | `b` |
 | `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `f` |
 | `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `e` |
 | `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `d` |

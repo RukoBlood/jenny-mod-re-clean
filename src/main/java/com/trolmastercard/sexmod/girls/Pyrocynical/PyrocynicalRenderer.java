@@ -31,9 +31,6 @@ public class PyrocynicalRenderer extends Render<PyrocynicalEntity> {
     final static ResourceLocation PYRO_WALKINGANIM_F1 = new ResourceLocation("sexmod", "textures/entity/pyrocinical/walking1.png");
     final static ResourceLocation PYRO_WALINGANIM_F2 = new ResourceLocation("sexmod", "textures/entity/pyrocinical/walking2.png");
     final static String PYRO_FAT_ANIM_FRAMES = "textures/entity/pyrocinical/fat/";
-    final static int j = 30;
-    final static float c = 1.4f;
-    final static float h = 0.75f;
     Minecraft mc = Minecraft.getMinecraft();
     ResourceLocation cachedTexture = null;
     long lastTextureSwitchTime = 0L;

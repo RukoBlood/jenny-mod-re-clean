@@ -414,7 +414,6 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     void handleFishingIdle() {
-        Object object;
         if (this.hasMaster() || this.getInteractionPlayerUUID() != null || this.hasEatenFishToBed) {
             if (this.entityDataManager.get(IS_FISHING)) {
                 this.clearFishingState();
@@ -428,9 +427,9 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.fishEntity != null && this.fishEntity.lureTimer == 15) {
             ((LunaRod)this.lunaRod.getItem()).onItemRightClick(this.world, this, EnumHand.MAIN_HAND);
             this.fishCatchRemoveTime = this.world.getTotalWorldTime() + 20L;
-            object = this.entityDataManager.get(CAUGHT_ITEM);
-            if (object != ItemStack.EMPTY) {
-                if (((ItemStack)object).getItem() instanceof ItemFood) {
+            ItemStack stack = this.entityDataManager.get(CAUGHT_ITEM);
+            if (stack != ItemStack.EMPTY) {
+                if (stack.getItem() instanceof ItemFood) {
                     this.setCurrentAction(Action.FISHING_EAT);
                 } else {
                     this.setCurrentAction(Action.FISHING_THROW_AWAY);
