@@ -11,36 +11,31 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class GirlCombatProtection {
     @SubscribeEvent
     public void onGirlAttack(LivingAttackEvent event) {
-        if (event.getSource() == DamageSource.OUT_OF_WORLD) {
-            return;
-        }
-        if (!(event.getEntity() instanceof GirlEntity)) {
-            return;
-        }
-        GirlEntity girl = (GirlEntity)event.getEntity();
-        if (girl instanceof PlayerGirl) {
-            event.setCanceled(true);
-        } else {
-            event.setCanceled(girl.getInteractionPlayerUUID() != null);
+        if (event.getSource() != DamageSource.OUT_OF_WORLD) {
+            if (event.getEntity() instanceof GirlEntity) {
+                GirlEntity girl = (GirlEntity) event.getEntity();
+                if (girl instanceof PlayerGirl) {
+                    event.setCanceled(true);
+                } else {
+                    event.setCanceled(girl.getInteractionPlayerUUID() != null);
+                }
+            }
         }
     }
 
     @SubscribeEvent
     public void onPlayerAttack(LivingAttackEvent event) {
         DamageSource damageSource = event.getSource();
-        if (damageSource == DamageSource.OUT_OF_WORLD || damageSource instanceof CumDrainDamageSource) {
-            return;
-        }
-        if (!(event.getEntity() instanceof EntityPlayer)) {
-            return;
-        }
-        EntityPlayer player = (EntityPlayer)event.getEntity();
-        GirlEntity activeGirl = GirlEntity.getGirlByUUID(player.getPersistentID());
-        if (activeGirl == null) {
-            return;
-        }
-        if (activeGirl.getDistance(player) < 1.0f) {
-            event.setCanceled(true);
+        if (damageSource != DamageSource.OUT_OF_WORLD && !(damageSource instanceof CumDrainDamageSource)) {
+            if (event.getEntity() instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) event.getEntity();
+                GirlEntity activeGirl = GirlEntity.getGirlByUUID(player.getPersistentID());
+                if (activeGirl != null) {
+                    if (activeGirl.getDistance(player) < 1.0f) {
+                        event.setCanceled(true);
+                    }
+                }
+            }
         }
     }
 }

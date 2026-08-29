@@ -28,23 +28,21 @@ public class GirlBedInteraction {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent breakEvent) {
         Block block = breakEvent.getState().getBlock();
-        if (block != Blocks.BED) {
-            return;
+        if (block == Blocks.BED) {
+            BlockPos pos = breakEvent.getPos();
+            AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() - 3, pos.getY() - 3, pos.getZ() - 3, pos.getX() + 3, pos.getY() + 3, pos.getZ() + 3);
+            List<GirlEntity> girlsNearby = breakEvent.getWorld().getEntitiesWithinAABB(GirlEntity.class, aabb);
+            boolean isBedOccupied = false;
+            for (GirlEntity girl : girlsNearby) {
+                if (girl.isDead || !girl.getDataManager().get(GirlEntity.IS_ANCHORED)) continue;
+                isBedOccupied = true;
+                break;
+            }
+            if (isBedOccupied) {
+                breakEvent.getPlayer().sendStatusMessage(new TextComponentString("this bed is currently used by a girl.. pls don't disturb okay? ... you are kinda mean rn"), true);
+                breakEvent.setCanceled(true);
+            }
         }
-        BlockPos pos = breakEvent.getPos();
-        AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() - 3, pos.getY() - 3, pos.getZ() - 3, pos.getX() + 3, pos.getY() + 3, pos.getZ() + 3);
-        List<GirlEntity> girlsNearby = breakEvent.getWorld().getEntitiesWithinAABB(GirlEntity.class, aabb);
-        boolean isBedOccupied = false;
-        for (GirlEntity girl : girlsNearby) {
-            if (girl.isDead || !girl.getDataManager().get(GirlEntity.IS_ANCHORED)) continue;
-            isBedOccupied = true;
-            break;
-        }
-        if (!isBedOccupied) {
-            return;
-        }
-        breakEvent.getPlayer().sendStatusMessage(new TextComponentString("this bed is currently used by a girl.. pls don't disturb okay? ... you are kinda mean rn"), true);
-        breakEvent.setCanceled(true);
     }
 
     @SubscribeEvent

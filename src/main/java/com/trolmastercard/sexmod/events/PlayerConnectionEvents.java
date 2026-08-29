@@ -117,8 +117,9 @@ public class PlayerConnectionEvents {
         Predicate<PlayerGirl> filter = girl -> true;
         List<PlayerGirl> loadedGirls = world.getEntities(PlayerGirl.class, filter::test);
         for (PlayerGirl girl : loadedGirls) {
-            if (!girl.getOwnerUserUUID().equals(player.getPersistentID()) || playerGirl != null && girl.getEntityId() == playerGirl.getEntityId()) continue;
-            world.removeEntity(girl);
+            if (girl.getOwnerUserUUID().equals(player.getPersistentID()) && (playerGirl == null || girl.getEntityId() != playerGirl.getEntityId())) {
+                world.removeEntity(girl);
+            }
         }
     }
 
@@ -129,18 +130,20 @@ public class PlayerConnectionEvents {
             if (girl instanceof PlayerGirl) {
                 ((PlayerGirl)girl).onOwnerInteract(player);
             }
-            if (girl.getInteractionPlayerUUID() == null) continue;
-            if (girl.getInteractionPlayerUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID().equals(player.getUniqueID())) {
-                ResetGirl.EventHandler.resetGirl(girl);
-                girl.setAnchored(false);
-                girl.setCurrentAction(Action.NULL);
+            if (girl.getInteractionPlayerUUID() != null) {
+                if (girl.getInteractionPlayerUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID().equals(player.getUniqueID())) {
+                    ResetGirl.EventHandler.resetGirl(girl);
+                    girl.setAnchored(false);
+                    girl.setCurrentAction(Action.NULL);
+                }
+                if (girl instanceof PlayerGirl && ((PlayerGirl) girl).getOwnerUserUUID().equals(player.getPersistentID()) && girl.getInteractionPlayerUUID() != null) {
+                    EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID());
+                    PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), entityPlayerMP);
+                    ResetGirl.EventHandler.resetGirls(entityPlayerMP);
+                    player.setInvisible(false);
+                    girl.setInteractionPlayerUUID(null);
+                }
             }
-            if (!(girl instanceof PlayerGirl) || !((PlayerGirl)girl).getOwnerUserUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID() == null) continue;
-            EntityPlayerMP entityPlayerMP = (EntityPlayerMP)event.player.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID());
-            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), entityPlayerMP);
-            ResetGirl.EventHandler.resetGirls(entityPlayerMP);
-            player.setInvisible(false);
-            girl.setInteractionPlayerUUID(null);
         }
     }
 

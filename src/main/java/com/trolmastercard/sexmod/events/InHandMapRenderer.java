@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -48,55 +47,54 @@ public class InHandMapRenderer {
         //Object object;
         PlayerGirl.rebuildPlayerGirlTableFromWorld();
         PlayerGirl state = PlayerGirl.getUUIDHashtable(Minecraft.getMinecraft().player.getPersistentID());
-        if (state == null) {
-            return;
-        }
-        int activeHandIndex = state.getOutfitIndex();
-        this.handModelRenderer = state.getHandModelRenderer(activeHandIndex);
-        this.texture = new ResourceLocation("sexmod", state.getHandTexture(activeHandIndex));
-        this.handColor = state.getHandColor(activeHandIndex);
-        if (this.handModelRenderer == null) {
-            System.out.println("HAND IS NULL uwu did you forget to assign this girl a hand owo?");
-            return;
-        }
-        this.mc = Minecraft.getMinecraft();
-        float prevEquippedProgress = 0.0f;
-        float currentEquippedProgress = 0.0f;
-
-        try {
-            ItemRenderer itemRenderer = this.mc.getItemRenderer();
-            prevEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "prevEquippedProgressMainHand");
-            currentEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "equippedProgressMainHand");
-            this.equippedProgressInverse = 2.0f - (prevEquippedProgress + (currentEquippedProgress - prevEquippedProgress) * event.getPartialTicks());
-        } catch (Exception e) {
-            System.out.println("couldnt do the reflection thingy");
-            StringWriter stringWriter = new StringWriter();
-            e.printStackTrace(new PrintWriter(stringWriter));
-            Minecraft.getMinecraft().player.sendChatMessage(stringWriter.toString());
-        }
-
-        EntityPlayerSP player = this.mc.player;
-        float swingProgress = ((EntityLivingBase)player).getSwingProgress(event.getPartialTicks());
-        ItemStack heldItemMainhand = this.mc.player.getHeldItemMainhand();
-        GlStateManager.color((float)this.handColor.getX() / 255.0f, (float)this.handColor.getY() / 255.0f, (float)this.handColor.getZ() / 255.0f);
-        if (event.getHand() == EnumHand.MAIN_HAND) {
-            if (heldItemMainhand.isEmpty() || heldItemMainhand.getItem() instanceof ItemMap) {
-                event.setCanceled(true);
-                this.renderHandOrMapStack(heldItemMainhand, event.getPartialTicks(), (AbstractClientPlayer)player, this.equippedProgressInverse, swingProgress);
-                this.isRenderingCustomHand = true;
-            } else if (currentEquippedProgress < prevEquippedProgress) {
-                if (this.isRenderingCustomHand) {
-                    event.setCanceled(true);
-                    this.renderHandOrMapStack(heldItemMainhand, event.getPartialTicks(), (AbstractClientPlayer)player, this.equippedProgressInverse, swingProgress);
-                }
+        if (state != null) {
+            int activeHandIndex = state.getOutfitIndex();
+            this.handModelRenderer = state.getHandModelRenderer(activeHandIndex);
+            this.texture = new ResourceLocation("sexmod", state.getHandTexture(activeHandIndex));
+            this.handColor = state.getHandColor(activeHandIndex);
+            if (this.handModelRenderer == null) {
+                System.out.println("HAND IS NULL uwu did you forget to assign this girl a hand owo?");
             } else {
-                this.isRenderingCustomHand = false;
+                this.mc = Minecraft.getMinecraft();
+                float prevEquippedProgress = 0.0f;
+                float currentEquippedProgress = 0.0f;
+
+                try {
+                    ItemRenderer itemRenderer = this.mc.getItemRenderer();
+                    prevEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "prevEquippedProgressMainHand");
+                    currentEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "equippedProgressMainHand");
+                    this.equippedProgressInverse = 2.0f - (prevEquippedProgress + (currentEquippedProgress - prevEquippedProgress) * event.getPartialTicks());
+                } catch (Exception e) {
+                    System.out.println("couldnt do the reflection thingy");
+                    StringWriter stringWriter = new StringWriter();
+                    e.printStackTrace(new PrintWriter(stringWriter));
+                    Minecraft.getMinecraft().player.sendChatMessage(stringWriter.toString());
+                }
+
+                EntityPlayerSP player = this.mc.player;
+                float swingProgress = player.getSwingProgress(event.getPartialTicks());
+                ItemStack heldItemMainhand = this.mc.player.getHeldItemMainhand();
+                GlStateManager.color((float) this.handColor.getX() / 255.0f, (float) this.handColor.getY() / 255.0f, (float) this.handColor.getZ() / 255.0f);
+                if (event.getHand() == EnumHand.MAIN_HAND) {
+                    if (heldItemMainhand.isEmpty() || heldItemMainhand.getItem() instanceof ItemMap) {
+                        event.setCanceled(true);
+                        this.renderHandOrMapStack(heldItemMainhand, event.getPartialTicks(), player, this.equippedProgressInverse, swingProgress);
+                        this.isRenderingCustomHand = true;
+                    } else if (currentEquippedProgress < prevEquippedProgress) {
+                        if (this.isRenderingCustomHand) {
+                            event.setCanceled(true);
+                            this.renderHandOrMapStack(heldItemMainhand, event.getPartialTicks(), player, this.equippedProgressInverse, swingProgress);
+                        }
+                    } else {
+                        this.isRenderingCustomHand = false;
+                    }
+                } else if (this.mc.player.getHeldItemOffhand().getItem() instanceof ItemMap) {
+                    event.setCanceled(true);
+                    this.renderOneHandedMap(EnumHandSide.LEFT, this.equippedProgressInverse - 1.0f, swingProgress, this.mc.player.getHeldItemOffhand());
+                }
+                GlStateManager.resetColor();
             }
-        } else if (this.mc.player.getHeldItemOffhand().getItem() instanceof ItemMap) {
-            event.setCanceled(true);
-            this.renderOneHandedMap(EnumHandSide.LEFT, this.equippedProgressInverse - 1.0f, swingProgress, this.mc.player.getHeldItemOffhand());
         }
-        GlStateManager.resetColor();
     }
 
     void renderHandOrMapStack(ItemStack stack, float partialTicks, AbstractClientPlayer player, float equipProgress, float swingProgress) {

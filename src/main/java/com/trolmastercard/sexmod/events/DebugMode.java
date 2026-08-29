@@ -57,73 +57,65 @@ public class DebugMode {
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void onChatResetColors(ClientChatEvent event) {
-        if (!DebugMode.GetEnv()) {
-            return;
+        if (DebugMode.GetEnv()) {
+            if ("resetcolor".equalsIgnoreCase(event.getMessage())) {
+                KoboldRenderer.clearBoneColors();
+                PlayerKoboldRenderer.ResetColors();
+                GoblinRenderer.clearBoneColors();
+                PlayerGoblinRenderer.ResetColors();
+            }
         }
-        if (!"resetcolor".equalsIgnoreCase(event.getMessage())) {
-            return;
-        }
-        KoboldRenderer.clearBoneColors();
-        PlayerKoboldRenderer.ResetColors();
-        GoblinRenderer.clearBoneColors();
-        PlayerGoblinRenderer.ResetColors();
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void onChatSendDebugValue(ClientChatEvent event) {
-        float newValue;
         int index;
-        if (!DebugMode.GetEnv()) {
-            return;
-        }
-        String originalMessage = event.getOriginalMessage();
-        String[] args = originalMessage.split(" ");
-        if (args.length != 3) {
-            return;
-        }
-        if (!"set".equalsIgnoreCase(args[0])) {
-            return;
-        }
-        try {
-            index = Integer.parseInt(args[1]);
-            newValue = Float.parseFloat(args[2]);
-            if (devDebugFloats.length - 1 < index) {
-                return;
+        if (DebugMode.GetEnv()) {
+            String originalMessage = event.getOriginalMessage();
+            String[] args = originalMessage.split(" ");
+            if (args.length == 3) {
+                if ("set".equalsIgnoreCase(args[0])) {
+                    float newValue;
+                    try {
+                        index = Integer.parseInt(args[1]);
+                        newValue = Float.parseFloat(args[2]);
+                        if (devDebugFloats.length - 1 < index) {
+                            return;
+                        }
+                    } catch (Exception e) {
+                        return;
+                    }
+                    Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("%sSet dev float N.%s from %s to %s", TextFormatting.GRAY, index, Float.valueOf(devDebugFloats[index]), Float.valueOf(newValue))));
+                    DebugMode.devDebugFloats[index] = newValue;
+                    event.setCanceled(true);
+                }
             }
-        } catch (Exception e) {
-            return;
         }
-        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("%sSet dev float N.%s from %s to %s", TextFormatting.GRAY, index, Float.valueOf(devDebugFloats[index]), Float.valueOf(newValue))));
-        DebugMode.devDebugFloats[index] = newValue;
-        event.setCanceled(true);
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void onChatGetDebugValue(ClientChatEvent event) {
         int index;
-        if (!DebugMode.GetEnv()) {
-            return;
-        }
-        String originalMessage = event.getOriginalMessage();
-        String[] args = originalMessage.split(" ");
-        if (args.length != 2) {
-            return;
-        }
-        if (!"get".equalsIgnoreCase(args[0])) {
-            return;
-        }
-        try {
-            index = Integer.parseInt(args[1]);
-            if (devDebugFloats.length - 1 < index) {
-                return;
+        if (DebugMode.GetEnv()) {
+            String originalMessage = event.getOriginalMessage();
+            String[] args = originalMessage.split(" ");
+            if (args.length == 2) {
+                if ("get".equalsIgnoreCase(args[0])) {
+                    try {
+                        index = Integer.parseInt(args[1]);
+                        if (devDebugFloats.length - 1 < index) {
+                            return;
+                        }
+                    } catch (Exception e) {
+                        return;
+                    }
+                    Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("%sdev float N.%s is %s", TextFormatting.YELLOW, index, devDebugFloats[index])));
+                    event.setCanceled(true);
+                }
             }
-        } catch (Exception e) {
-            return;
         }
-        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(String.format("%sdev float N.%s is %s", TextFormatting.YELLOW, index, devDebugFloats[index])));
-        event.setCanceled(true);
     }
 
     @SideOnly(value=Side.CLIENT)
@@ -226,7 +218,7 @@ public class DebugMode {
                     UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
 
                     if (tribeID == null) {
-                        System.out.println("[DebugMode] Tribe not found for player: " + player.getName());
+                        System.out.println("[DebugMode] Tribe not found for player: " + player.getName()); //Offline player crashed game before fix
                     } else {
                         Collection<KoboldTask> tribeTasks = KoboldManager.getTribeTasks(tribeID);
                         if (tribeTasks != null && !tribeTasks.isEmpty()) {
@@ -310,8 +302,8 @@ public class DebugMode {
             if ("girls".equals(message)) {
                 List<GirlEntity> activeGirls = player.world.getEntities(GirlEntity.class, entity -> true);
                 player.sendMessage(new TextComponentString(String.valueOf(activeGirls.size())));
-                for (GirlEntity object : activeGirls) {
-                    System.out.printf("%s at %s %s %s\n", object, object.posX, object.posY, object.posZ);
+                for (GirlEntity girl : activeGirls) {
+                    System.out.printf("%s at %s %s %s\n", girl, girl.posX, girl.posY, girl.posZ);
                 }
             }
 

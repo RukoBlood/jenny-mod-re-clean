@@ -34,17 +34,13 @@ public class GirlRenderEvent {
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
-            if (girl.isDead || girl.getInteractionPlayerUUID() == null || girl.getCurrentAction() == Action.NULL)
-                continue;
-
-            EntityPlayer player = event.getEntityPlayer();
-
-            if (!girl.getCurrentAction().hasPlayer || !girl.getInteractionPlayerUUID().equals(player.getPersistentID()) && !girl.getInteractionPlayerUUID().equals(player.getUniqueID()))
-                continue;
-
-            event.setCanceled(true);
-
-            return;
+            if (!girl.isDead && girl.getInteractionPlayerUUID() != null && girl.getCurrentAction() != Action.NULL) {
+                EntityPlayer player = event.getEntityPlayer();
+                if (girl.getCurrentAction().hasPlayer && (girl.getInteractionPlayerUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID().equals(player.getUniqueID()))) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
         }
     }
 
@@ -56,63 +52,54 @@ public class GirlRenderEvent {
 
         if (playerGirl != null && playerGirl.isAnchored()) {
             event.setCanceled(true);
-            return;
+        } else {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+                UUID girlID = girl.getInteractionPlayerUUID();
+                Action currentAction = girl.getCurrentAction();
+                if (!girl.isDead && girlID != null && currentAction != null && currentAction.hasPlayer && (girlID.equals(player.getUniqueID()) || girlID.equals(player.getPersistentID()))) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
         }
 
-        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
-            UUID girlID = girl.getInteractionPlayerUUID();
-            Action currentAction = girl.getCurrentAction();
-
-            if (girl.isDead || girlID == null || currentAction == null || !currentAction.hasPlayer || !girlID.equals(player.getUniqueID()) && !girlID.equals(player.getPersistentID()))
-                continue;
-            event.setCanceled(true);
-
-            return;
-        }
     }
 
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void OnRenderTick(TickEvent.RenderTickEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.player == null) {
-            return;
-        }
-        if (event.phase == TickEvent.Phase.END) {
-            if (this.origPos != null) {
-                mc.player.setPosition(this.origPos.x, this.origPos.y, this.origPos.z);
-                mc.player.lastTickPosX = this.origLastTickPos.x;
-                mc.player.lastTickPosY = this.origLastTickPos.y;
-                mc.player.lastTickPosZ = this.origLastTickPos.z;
-                this.origPos = null;
-                this.origLastTickPos = null;
+        if (mc.player != null) {
+            if (event.phase == TickEvent.Phase.END) {
+                if (this.origPos != null) {
+                    mc.player.setPosition(this.origPos.x, this.origPos.y, this.origPos.z);
+                    mc.player.lastTickPosX = this.origLastTickPos.x;
+                    mc.player.lastTickPosY = this.origLastTickPos.y;
+                    mc.player.lastTickPosZ = this.origLastTickPos.z;
+                    this.origPos = null;
+                    this.origLastTickPos = null;
+                }
+                return;
             }
-            return;
+            if (mc.gameSettings.thirdPersonView == 0) {
+                GirlEntity girlEntity = GirlEntity.getGirlByUUID(mc.player.getPersistentID(), false);
+                if (girlEntity != null) {
+                    if (girlEntity.getCurrentAction().useBoyCam) {
+                        if (!girlEntity.isCustomType()) {
+                            this.origPos = mc.player.getPositionVector();
+                            this.origLastTickPos = new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ);
+                            Vec3d targetCameraPos = girlEntity.isAnchored() ? girlEntity.getCachedBoneOffset("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.getCachedBoneOffset("boyCam").add(RotationHelper.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double) event.renderTickTime));
+                            mc.player.posX = targetCameraPos.x;
+                            mc.player.posY = targetCameraPos.y - (double) mc.player.getEyeHeight();
+                            mc.player.posZ = targetCameraPos.z;
+                            mc.player.lastTickPosX = targetCameraPos.x;
+                            mc.player.lastTickPosY = targetCameraPos.y - (double) mc.player.getEyeHeight();
+                            mc.player.lastTickPosZ = targetCameraPos.z;
+                        }
+                    }
+                }
+            }
         }
-
-        if (mc.gameSettings.thirdPersonView != 0) {
-            return;
-        }
-
-        GirlEntity girlEntity = GirlEntity.getGirlByUUID(mc.player.getPersistentID(), false);
-        if (girlEntity == null) {
-            return;
-        }
-        if (!girlEntity.getCurrentAction().useBoyCam) {
-            return;
-        }
-        if (girlEntity.isCustomType()) {
-            return;
-        }
-        this.origPos = mc.player.getPositionVector();
-        this.origLastTickPos = new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ);
-        Vec3d targetCameraPos = girlEntity.isAnchored() ? girlEntity.getCachedBoneOffset("boyCam").add(girlEntity.getTargetPosition()) : girlEntity.getCachedBoneOffset("boyCam").add(RotationHelper.LerpVec3d(new Vec3d(girlEntity.lastTickPosX, girlEntity.lastTickPosY, girlEntity.lastTickPosZ), girlEntity.getPositionVector(), (double)event.renderTickTime));
-        mc.player.posX = targetCameraPos.x;
-        mc.player.posY = targetCameraPos.y - (double)mc.player.getEyeHeight();
-        mc.player.posZ = targetCameraPos.z;
-        mc.player.lastTickPosX = targetCameraPos.x;
-        mc.player.lastTickPosY = targetCameraPos.y - (double)mc.player.getEyeHeight();
-        mc.player.lastTickPosZ = targetCameraPos.z;
     }
 }
 

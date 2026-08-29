@@ -32,27 +32,26 @@ public class HandlePlayerMovement {
         movement = event.getMovementInput();
         isThrusting = HandlePlayerMovement.movement.sneak;
         isCumming = HandlePlayerMovement.movement.jump;
-        if (active) {
-            return;
+        if (!active) {
+            if (HandlePlayerMovement.movement.jump) {
+                PlayerGirl.resetPlayerGirlCamera();
+            }
+            if (HandlePlayerMovement.movement.sneak) {
+                GirlEntity.triggerFastSexAction(Minecraft.getMinecraft().player.getPersistentID());
+            }
+            if (HandlePlayerMovement.movement.jump && SexUI.cumPercentage >= 1.0) {
+                GirlEntity.triggerCumAction(Minecraft.getMinecraft().player.getPersistentID());
+            }
+            HandlePlayerMovement.movement.backKeyDown = false;
+            HandlePlayerMovement.movement.forwardKeyDown = false;
+            HandlePlayerMovement.movement.leftKeyDown = false;
+            HandlePlayerMovement.movement.rightKeyDown = false;
+            HandlePlayerMovement.movement.sneak = false;
+            HandlePlayerMovement.movement.jump = false;
+            HandlePlayerMovement.movement.moveForward = 0.0f;
+            HandlePlayerMovement.movement.moveStrafe = 0.0f;
+            Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
         }
-        if (HandlePlayerMovement.movement.jump) {
-            PlayerGirl.resetPlayerGirlCamera();
-        }
-        if (HandlePlayerMovement.movement.sneak) {
-            GirlEntity.triggerFastSexAction(Minecraft.getMinecraft().player.getPersistentID());
-        }
-        if (HandlePlayerMovement.movement.jump && SexUI.cumPercentage >= 1.0) {
-            GirlEntity.triggerCumAction(Minecraft.getMinecraft().player.getPersistentID());
-        }
-        HandlePlayerMovement.movement.backKeyDown = false;
-        HandlePlayerMovement.movement.forwardKeyDown = false;
-        HandlePlayerMovement.movement.leftKeyDown = false;
-        HandlePlayerMovement.movement.rightKeyDown = false;
-        HandlePlayerMovement.movement.sneak = false;
-        HandlePlayerMovement.movement.jump = false;
-        HandlePlayerMovement.movement.moveForward = 0.0f;
-        HandlePlayerMovement.movement.moveStrafe = 0.0f;
-        Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
     }
 
     public static boolean isActive() {

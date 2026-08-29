@@ -18,11 +18,10 @@ public class PornWarning extends JFrame {
 
     @SubscribeEvent
     public void PornWarning(TickEvent.ClientTickEvent event) {
-        if (this.didIt) {
-            return;
+        if (!this.didIt) {
+            this.didIt = true;
+            PornWarningWindow.Launch();
         }
-        this.didIt = true;
-        PornWarningWindow.Launch();
     }
 }
 

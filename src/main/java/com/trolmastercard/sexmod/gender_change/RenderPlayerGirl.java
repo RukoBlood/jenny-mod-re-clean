@@ -79,10 +79,10 @@ public class RenderPlayerGirl {
             playerGirl.isPlayerRiding = player.isRiding();
             playerGirl.isPlayerOnGround = player.onGround;
             playerGirl.isUsingItem = player.getItemInUseCount() != 0;
-            double d4 = player.lastTickPosX - player.posX;
-            double d5 = player.posZ - player.lastTickPosZ;
-            double d6 = Math.PI / 180 * (double) player.rotationYaw;
-            playerGirl.moveInputVector = new Vector2f((float) (d4 * Math.cos(d6) + d5 * Math.sin(d6)), (float) (d4 * Math.sin(d6) + d5 * Math.cos(d6)));
+            double delta = player.lastTickPosX - player.posX;
+            double deltaZ = player.posZ - player.lastTickPosZ;
+            double yaw = Math.PI / 180 * (double) player.rotationYaw;
+            playerGirl.moveInputVector = new Vector2f((float) (delta * Math.cos(yaw) + deltaZ * Math.sin(yaw)), (float) (delta * Math.sin(yaw) + deltaZ * Math.cos(yaw)));
             float f2 = playerGirl.isRidingSomething() ? RenderPlayerGirl.manageActions(playerGirl, player) : 0.0f;
             PlayerGirlRenderer.forceRenderNextFrame = true;
             renderManager.renderEntity(playerGirl, d, d2 + (double) f2, d3, 90.0f, f, false);
@@ -113,57 +113,56 @@ public class RenderPlayerGirl {
     @SideOnly(value=Side.CLIENT)
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event) {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        if (minecraft.player == null) {
-            return;
-        }
-        if (event.phase == TickEvent.Phase.END) {
-            if (this.savedPlayerPos != null) {
-                minecraft.player.setPosition(this.savedPlayerPos.x, this.savedPlayerPos.y, this.savedPlayerPos.z);
-                minecraft.player.lastTickPosX = this.savedPlayerLastTickPos.x;
-                minecraft.player.lastTickPosY = this.savedPlayerLastTickPos.y;
-                minecraft.player.lastTickPosZ = this.savedPlayerLastTickPos.z;
-                this.savedPlayerPos = null;
-                this.savedPlayerLastTickPos = null;
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.player != null) {
+            if (event.phase == TickEvent.Phase.END) {
+                if (this.savedPlayerPos != null) {
+                    mc.player.setPosition(this.savedPlayerPos.x, this.savedPlayerPos.y, this.savedPlayerPos.z);
+                    mc.player.lastTickPosX = this.savedPlayerLastTickPos.x;
+                    mc.player.lastTickPosY = this.savedPlayerLastTickPos.y;
+                    mc.player.lastTickPosZ = this.savedPlayerLastTickPos.z;
+                    this.savedPlayerPos = null;
+                    this.savedPlayerLastTickPos = null;
+                }
+                return;
             }
-            return;
-        }
-        if (minecraft.gameSettings.thirdPersonView == 0) {
-            PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(minecraft.player.getPersistentID());
-            if (playerGirl != null) {
-                if (playerGirl.isSceneActive()) {
-                    this.savedPlayerPos = minecraft.player.getPositionVector();
-                    this.savedPlayerLastTickPos = new Vec3d(minecraft.player.lastTickPosX, minecraft.player.lastTickPosY, minecraft.player.lastTickPosZ);
-                    Vec3d vec3d = playerGirl.getCachedBoneOffset("girlCam");
-                    vec3d = playerGirl.getOwnerAimVector(vec3d, event.renderTickTime);
-                    vec3d = vec3d.add(RotationHelper.LerpVec3d(this.savedPlayerLastTickPos, this.savedPlayerPos, (double) event.renderTickTime));
-                    minecraft.player.posX = vec3d.x;
-                    minecraft.player.posY = vec3d.y - (double) minecraft.player.getEyeHeight();
-                    minecraft.player.posZ = vec3d.z;
-                    minecraft.player.lastTickPosX = vec3d.x;
-                    minecraft.player.lastTickPosY = vec3d.y - (double) minecraft.player.getEyeHeight();
-                    minecraft.player.lastTickPosZ = vec3d.z;
-                    Action action = playerGirl.getCurrentAction();
-                    float yaw = playerGirl.getYawRotation();
-                    if (!playerGirl.canPerformAction(action, minecraft.player)) {
-                        if (action.flipGirlYaw) {
-                            yaw += 180.0f;
-                        }
-                        if (minecraft.player.rotationPitch > action.maxGirlPitch) {
-                            minecraft.player.rotationPitch = action.maxGirlPitch;
-                            minecraft.player.prevRotationPitch = action.maxGirlPitch;
-                        }
-                        if (minecraft.player.rotationPitch < action.minGirlPitch) {
-                            minecraft.player.rotationPitch = action.minGirlPitch;
-                            minecraft.player.prevRotationPitch = action.minGirlPitch;
-                        }
-                        if (minecraft.player.rotationYaw > yaw + 90.0f) {
-                            minecraft.player.rotationYaw = yaw + 90.0f;
-                            minecraft.player.prevRotationYaw = yaw + 90.0f;
-                        }
-                        if (minecraft.player.rotationYaw < yaw - 90.0f) {
-                            minecraft.player.rotationYaw = yaw - 90.0f;
-                            minecraft.player.prevRotationYaw = yaw - 90.0f;
+            if (mc.gameSettings.thirdPersonView == 0) {
+                PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(mc.player.getPersistentID());
+                if (playerGirl != null) {
+                    if (playerGirl.isSceneActive()) {
+                        this.savedPlayerPos = mc.player.getPositionVector();
+                        this.savedPlayerLastTickPos = new Vec3d(mc.player.lastTickPosX, mc.player.lastTickPosY, mc.player.lastTickPosZ);
+                        Vec3d vec3d = playerGirl.getCachedBoneOffset("girlCam");
+                        vec3d = playerGirl.getOwnerAimVector(vec3d, event.renderTickTime);
+                        vec3d = vec3d.add(RotationHelper.LerpVec3d(this.savedPlayerLastTickPos, this.savedPlayerPos, event.renderTickTime));
+                        mc.player.posX = vec3d.x;
+                        mc.player.posY = vec3d.y - (double) mc.player.getEyeHeight();
+                        mc.player.posZ = vec3d.z;
+                        mc.player.lastTickPosX = vec3d.x;
+                        mc.player.lastTickPosY = vec3d.y - (double) mc.player.getEyeHeight();
+                        mc.player.lastTickPosZ = vec3d.z;
+                        Action action = playerGirl.getCurrentAction();
+                        float yaw = playerGirl.getYawRotation();
+                        if (!playerGirl.canPerformAction(action, mc.player)) {
+                            if (action.flipGirlYaw) {
+                                yaw += 180.0f;
+                            }
+                            if (mc.player.rotationPitch > action.maxGirlPitch) {
+                                mc.player.rotationPitch = action.maxGirlPitch;
+                                mc.player.prevRotationPitch = action.maxGirlPitch;
+                            }
+                            if (mc.player.rotationPitch < action.minGirlPitch) {
+                                mc.player.rotationPitch = action.minGirlPitch;
+                                mc.player.prevRotationPitch = action.minGirlPitch;
+                            }
+                            if (mc.player.rotationYaw > yaw + 90.0f) {
+                                mc.player.rotationYaw = yaw + 90.0f;
+                                mc.player.prevRotationYaw = yaw + 90.0f;
+                            }
+                            if (mc.player.rotationYaw < yaw - 90.0f) {
+                                mc.player.rotationYaw = yaw - 90.0f;
+                                mc.player.prevRotationYaw = yaw - 90.0f;
+                            }
                         }
                     }
                 }
@@ -198,7 +197,7 @@ public class RenderPlayerGirl {
                 PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(mc.player.getPersistentID());
                 if (playerGirl != null) {
                     Vec3d vec3d = mc.player.getPositionVector();
-                    Vec3d vec3d2 = RotationHelper.LerpVec3d(this.savedPlayerLastTickPos, this.savedPlayerPos, (double) event.getPartialTicks());
+                    Vec3d vec3d2 = RotationHelper.LerpVec3d(this.savedPlayerLastTickPos, this.savedPlayerPos, event.getPartialTicks());
                     Vec3d vec3d3 = vec3d2.subtract(vec3d);
                     RenderPlayerGirl.renderPlayerAsGirl(playerGirl, mc.player, vec3d3.x, vec3d3.y, vec3d3.z, event.getPartialTicks());
                     GlStateManager.enableLighting();

@@ -37,11 +37,7 @@ public class TargetNearestKoboldGoal extends EntityAINearestAttackableTarget<Kob
 
     @Override
     public boolean shouldExecute() {
-        float brightness;
-        if (this.attackOnlyInDark && (brightness = this.taskOwner.getBrightness()) >= 0.5f) {
-            return false;
-        }
-        if (this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0) {
+        if (this.attackOnlyInDark && this.taskOwner.getBrightness() >= 0.5f || this.targetChance > 0 && this.taskOwner.getRNG().nextInt(this.targetChance) != 0) {
             return false;
         }
         List<KoboldEntity> targets = this.taskOwner.world.getEntitiesWithinAABB(this.targetClass, this.getTargetableArea(this.getTargetDistance()), this.targetEntitySelector);
