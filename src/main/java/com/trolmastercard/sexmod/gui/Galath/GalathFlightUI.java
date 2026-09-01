@@ -27,8 +27,8 @@ public class GalathFlightUI extends Gui {
     final static FlightUITextureBounds CHARGE_ACTIVE_BOUNDS = new FlightUITextureBounds(0, 0, 23, 36);
     final static FlightUITextureBounds CHARGE_BLINK_BOUNDS = new FlightUITextureBounds(0, 36, 23, 36);
     final static FlightUITextureBounds ICON_SHADOWS_BOUNDS = new FlightUITextureBounds(23, 2, 20, 31);
-    static long y = 3000L;
-    static long n = 5000L;
+    static long CHARGE_USAGE_TICKS = 3000L;
+    static long TICKS_TO_ADD_CHARGE = 5000L;
     final static long FADE_DURATION = 500L;
     final static float ANIMATION_SPEED = 150.0f;
     final static float[] X_OFFSET_SPENT = new float[]{-14.25f, -15.5f, -16.875f};
@@ -43,10 +43,7 @@ public class GalathFlightUI extends Gui {
     static long uiFadeOutStartTime = 9223372036854775307L;
 
     public static boolean canUseCharge() {
-        if (availableCharges <= 0) {
-            return false;
-        }
-        return System.currentTimeMillis() - lastChargeUsedTime > y;
+        return availableCharges > 0 && System.currentTimeMillis() - lastChargeUsedTime > CHARGE_USAGE_TICKS;
     }
 
     public static void consumeCharge() {
@@ -55,54 +52,51 @@ public class GalathFlightUI extends Gui {
     }
 
     void updateRegen() {
-        if (availableCharges == 3) {
-            return;
+        if (availableCharges != 3) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - Math.max(lastChargeUsedTime, lastRegenTime) >= TICKS_TO_ADD_CHARGE) {
+                ++availableCharges;
+                lastRegenTime = currentTime;
+            }
         }
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - Math.max(lastChargeUsedTime, lastRegenTime) < n) {
-            return;
-        }
-        ++availableCharges;
-        lastRegenTime = currentTime;
     }
 
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent event) {
         this.updateRegen();
-        if (!isUIVisible) {
-            return;
+        if (isUIVisible) {
+            ScaledResolution resolution = event.getResolution();
+            int screenW = resolution.getScaledWidth();
+            int screenH = resolution.getScaledHeight();
+            int centerX = screenW / 2;
+            long curTime = System.currentTimeMillis();
+            if (curTime - uiFadeOutStartTime > FADE_DURATION) {
+                GalathFlightUI.hideUIImmediately();
+            } else {
+                mc.getTextureManager().bindTexture(UI_TEXTURE);
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+                GlStateManager.enableAlpha();
+
+                float alpha = curTime < uiFadeInStartTime + FADE_DURATION
+                        ? (float) (curTime - uiFadeInStartTime) / (float) FADE_DURATION
+                        : (curTime < uiFadeOutStartTime + FADE_DURATION ? 1.0f + (float) (uiFadeOutStartTime - curTime) / (float) FADE_DURATION : 1.0f);
+
+                alpha = ThreadNames.clamp(alpha, 0.0f, 1.0f);
+                GlStateManager.color(1.0f, 1.0f, 1.0f, alpha);
+
+                this.drawElement(BACKGROUND_BOUNDS, centerX - GalathFlightUI.BACKGROUND_BOUNDS.w / 2, screenH - UI_Y_OFFSET);
+                this.drawElement(ICON_SHADOWS_BOUNDS, (int) ((float) centerX - 1.5f * (float) GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w + 1.0f), screenH - UI_Y_OFFSET + 3);
+                this.drawElement(ICON_SHADOWS_BOUNDS, centerX - GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2 + 1, screenH - UI_Y_OFFSET + 3);
+                this.drawElement(ICON_SHADOWS_BOUNDS, centerX + GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2 + 1, screenH - UI_Y_OFFSET + 3);
+
+                float spentProgress = (float) RotationHelper.EaseOutSine(Math.min(1.0f, (float) (curTime - lastChargeUsedTime) / ANIMATION_SPEED));
+                float regenProgress = spentProgress == 1.0f ? ThreadNames.clamp(1.0f - (float) (curTime - GalathFlightUI.lastRegenTime) / 500.0f, 0.0f, 1.0f) : 0.0f;
+                this.renderDynamicChargeIcon(1, -1.5f * (float) GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w, regenProgress, spentProgress, centerX, screenH, alpha);
+                this.renderDynamicChargeIcon(2, (float) (-GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w) / 2.0f, regenProgress, spentProgress, centerX, screenH, alpha);
+                this.renderDynamicChargeIcon(3, (float) GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2.0f, regenProgress, spentProgress, centerX, screenH, alpha);
+            }
         }
-        ScaledResolution resolution = event.getResolution();
-        int screenW = resolution.getScaledWidth();
-        int screenH = resolution.getScaledHeight();
-        int centerX = screenW / 2;
-        long curTime = System.currentTimeMillis();
-        if (curTime - uiFadeOutStartTime > FADE_DURATION) {
-            GalathFlightUI.hideUIImmediately();
-            return;
-        }
-        mc.getTextureManager().bindTexture(UI_TEXTURE);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.enableAlpha();
-
-        float alpha = curTime < uiFadeInStartTime + FADE_DURATION
-                ? (float)(curTime - uiFadeInStartTime) / (float) FADE_DURATION
-                : (curTime < uiFadeOutStartTime + FADE_DURATION ? 1.0f + (float)(uiFadeOutStartTime - curTime) / (float) FADE_DURATION : 1.0f);
-
-        alpha = ThreadNames.clamp(alpha, 0.0f, 1.0f);
-        GlStateManager.color(1.0f, 1.0f, 1.0f, alpha);
-
-        this.drawElement(BACKGROUND_BOUNDS, centerX - GalathFlightUI.BACKGROUND_BOUNDS.w / 2, screenH - UI_Y_OFFSET);
-        this.drawElement(ICON_SHADOWS_BOUNDS, (int)((float)centerX - 1.5f * (float) GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w + 1.0f), screenH - UI_Y_OFFSET + 3);
-        this.drawElement(ICON_SHADOWS_BOUNDS, centerX - GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2 + 1, screenH - UI_Y_OFFSET + 3);
-        this.drawElement(ICON_SHADOWS_BOUNDS, centerX + GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2 + 1, screenH - UI_Y_OFFSET + 3);
-
-        float spentProgress = (float) RotationHelper.EaseOutSine(Math.min(1.0f, (float)(curTime - lastChargeUsedTime) / ANIMATION_SPEED));
-        float regenProgress = spentProgress == 1.0f ? ThreadNames.clamp(1.0f - (float)(curTime - GalathFlightUI.lastRegenTime) / 500.0f, 0.0f, 1.0f) : 0.0f;
-        this.renderDynamicChargeIcon(1, -1.5f * (float) GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w, regenProgress, spentProgress, centerX, screenH, alpha);
-        this.renderDynamicChargeIcon(2, (float)(-GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w) / 2.0f, regenProgress, spentProgress, centerX, screenH, alpha);
-        this.renderDynamicChargeIcon(3, (float) GalathFlightUI.CHARGE_ACTIVE_BOUNDS.w / 2.0f, regenProgress, spentProgress, centerX, screenH, alpha);
     }
 
     void renderDynamicChargeIcon(int index, float xOffset, float regenProgress, float spentProgress, int centerX, int screenHeight, float globalAlpha) {
@@ -122,12 +116,11 @@ public class GalathFlightUI extends Gui {
     }
 
     public static void showUI() {
-        if (isUIVisible) {
-            return;
+        if (!isUIVisible) {
+            isUIVisible = true;
+            uiFadeInStartTime = System.currentTimeMillis();
+            uiFadeOutStartTime = Long.MAX_VALUE;
         }
-        isUIVisible = true;
-        uiFadeInStartTime = System.currentTimeMillis();
-        uiFadeOutStartTime = Long.MAX_VALUE;
     }
 
     public static void startFadeOutTimer() {

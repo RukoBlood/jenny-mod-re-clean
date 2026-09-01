@@ -17,9 +17,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
 public class TribeNameScreen extends GuiScreen {
-    final static int b = 15;
-    final static int w = 100;
-    final static int h = 20;
+    final static int MAX_LETTERS = 15;
+    final static int TEXT_WIDTH = 100;
+    final static int TEXT_HEIGHT = 20;
     UUID koboldID;
     GuiTextField nameField;
 
@@ -35,9 +35,9 @@ public class TribeNameScreen extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        this.nameField = new GuiTextField(0, this.mc.fontRenderer, this.width / 2 - 50, this.height / 2 - 10, w, h);
+        this.nameField = new GuiTextField(0, this.mc.fontRenderer, this.width / 2 - 50, this.height / 2 - 10, TEXT_WIDTH, TEXT_HEIGHT);
         this.nameField.setFocused(true);
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 25, this.height / 2 + 20, 50, h, "set"));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 25, this.height / 2 + 20, 50, TEXT_HEIGHT, "set"));
     }
 
     @Override
@@ -54,21 +54,21 @@ public class TribeNameScreen extends GuiScreen {
     }
 
     @Override
-    protected void keyTyped(char c, int n) throws IOException {
-        this.nameField.textboxKeyTyped(c, n);
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        this.nameField.textboxKeyTyped(typedChar, keyCode);
         String string = this.nameField.getText();
-        if (string.length() > 15) {
-            this.nameField.setText(string.substring(0, 15));
+        if (string.length() > MAX_LETTERS) {
+            this.nameField.setText(string.substring(0, MAX_LETTERS));
         }
-        super.keyTyped(c, n);
+        super.keyTyped(typedChar, keyCode);
     }
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
-        String string = this.nameField.getText().trim();
-        if (!string.isEmpty()) {
-            PacketHandler.INSTANCE.sendToServer(new ClaimTribe(this.koboldID, Minecraft.getMinecraft().player.getPersistentID(), string));
+        String trimmed = this.nameField.getText().trim();
+        if (!trimmed.isEmpty()) {
+            PacketHandler.INSTANCE.sendToServer(new ClaimTribe(this.koboldID, Minecraft.getMinecraft().player.getPersistentID(), trimmed));
             Minecraft.getMinecraft().player.closeScreen();
         }
     }

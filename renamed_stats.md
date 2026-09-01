@@ -1,5 +1,5 @@
 Methods renamed: 100.00% (2824/2824)
-Fields renamed: 93.40% (1444/1546)
+Fields renamed: 94.35% (1453/1540)
 
 ## Synthetic Elements Detailed List
 
@@ -9,21 +9,6 @@ Fields renamed: 93.40% (1444/1546)
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `c` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `d` |
 | `src\main\java\com\trolmastercard\sexmod\deprecated\UselessShit.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `f` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `e` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `d` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `g` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GirlGUIContainer.java` | Field | `a` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GoblinUI.java` | Field | `j` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GoblinUI.java` | Field | `c` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GoblinUI.java` | Field | `k` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GoblinUI.java` | Field | `l` |
-| `src\main\java\com\trolmastercard\sexmod\gui\GoblinUI.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\gui\TribeNameScreen.java` | Field | `b` |
-| `src\main\java\com\trolmastercard\sexmod\gui\TribeNameScreen.java` | Field | `w` |
-| `src\main\java\com\trolmastercard\sexmod\gui\TribeNameScreen.java` | Field | `h` |
 | `src\main\java\com\trolmastercard\sexmod\gui\CustomModel\CustomPartListScrollList.java` | Field | `g` |
 | `src\main\java\com\trolmastercard\sexmod\gui\CustomModel\CustomPartListScrollList.java` | Field | `g` |
 | `src\main\java\com\trolmastercard\sexmod\gui\Galath\GalathFlightUI.java` | Field | `n` |

@@ -41,7 +41,6 @@ public class CustomPartListScrollList extends GuiListExtended {
     private final List<PartListEntry> entries = new ArrayList<PartListEntry>();
     public ClothingGui parentGUI;
     boolean needsScrollToBottom = false;
-    float g = 0.0f;
 
     public CustomPartListScrollList(Minecraft mc, ClothingGui parentGui) {
         super(mc, parentGui.width / 2, parentGui.height, 0, parentGui.height, 30);
@@ -69,15 +68,13 @@ public class CustomPartListScrollList extends GuiListExtended {
 
     @Override
     public void handleMouseInput() {
-        if (!this.isMouseYWithinSlotBounds(this.mouseY)) {
-            return;
+        if (this.isMouseYWithinSlotBounds(this.mouseY)) {
+            int wheelDelta = Mouse.getEventDWheel();
+            if (wheelDelta != 0) {
+                wheelDelta = wheelDelta > 0 ? -1 : 1;
+                this.amountScrolled += (float) (wheelDelta * this.slotHeight / 2);
+            }
         }
-        int wheelDelta = Mouse.getEventDWheel();
-        if (wheelDelta == 0) {
-            return;
-        }
-        wheelDelta = wheelDelta > 0 ? -1 : 1;
-        this.amountScrolled += (float)(wheelDelta * this.slotHeight / 2);
     }
 
     @Override
@@ -88,10 +85,10 @@ public class CustomPartListScrollList extends GuiListExtended {
         int totalContentHeight = this.entries.size() * this.slotHeight;
         if (totalContentHeight > this.height) {
             this.top = 0;
-            return;
+        } else {
+            int remainingSpace = this.height - totalContentHeight;
+            this.top = remainingSpace / 2;
         }
-        int remainingSpace = this.height - totalContentHeight;
-        this.top = remainingSpace / 2;
     }
 
     @Override
@@ -104,8 +101,9 @@ public class CustomPartListScrollList extends GuiListExtended {
             Map.Entry<List<String>, Integer> modelData = entry.getValue();
             this.entries.add(new PartListEntry(category, modelData.getKey(), modelData.getValue()));
 
-            if (!CustomPartCategory.CUSTOM_BONE.equals(entry.getKey())) continue;
-            customBoneCount++;
+            if (CustomPartCategory.CUSTOM_BONE.equals(entry.getKey())) {
+                customBoneCount++;
+            }
         }
 
         this.entries.sort(Comparator.comparingInt(entry -> CATEGORY_ORDER.indexOf(entry.category)));
@@ -114,86 +112,84 @@ public class CustomPartListScrollList extends GuiListExtended {
         this.entries.add(new PartListEntry(customBoneCount > 1));
         this.updateTopPadding();
         this.renderListContent(mouseXIn, mouseYIn, partialTicks);
-        if (!this.needsScrollToBottom) {
-            return;
+        if (this.needsScrollToBottom) {
+            this.scrollBy(999999);
+            this.needsScrollToBottom = false;
         }
-        this.scrollBy(999999);
-        this.needsScrollToBottom = false;
     }
 
     void renderListContent(int mouseX, int mouseY, float partialTicks) {
-        if (!this.visible) {
-            return;
-        }
+        if (this.visible) {
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
+            this.drawBackground();
 
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
-        this.drawBackground();
+            int scrollBarLeft = this.getScrollBarX();
+            int scrollBarRight = scrollBarLeft + 6;
+            this.bindAmountScrolled();
 
-        int scrollBarLeft = this.getScrollBarX();
-        int scrollBarRight = scrollBarLeft + 6;
-        this.bindAmountScrolled();
+            GlStateManager.disableLighting();
+            GlStateManager.disableFog();
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder bufferBuilder = tessellator.getBuffer();
 
-        GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
+            this.drawContainerBackground(tessellator);
 
-        this.drawContainerBackground(tessellator);
-
-        int contentX = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
-        int contentY = this.top + 4 - (int)this.amountScrolled;
-        if (this.hasListHeader) {
-            this.drawListHeader(contentX, contentY, tessellator);
-        }
-
-        this.drawSelectionBox(contentX, contentY, mouseX, mouseY, partialTicks);
-        GlStateManager.disableDepth();
-        this.overlayBackground(0, this.top, 255, 255);
-        this.overlayBackground(this.bottom, this.height, 255, 255);
-
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
-        GlStateManager.disableAlpha();
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        GlStateManager.disableTexture2D();
-
-        int maxScroll = this.getMaxScroll();
-        if (maxScroll > 0) {
-            int scrollBarHeight = (this.bottom - this.top) * (this.bottom - this.top) / this.getContentHeight();
-            int scrollBarTop = (int)this.amountScrolled * (this.bottom - this.top - (scrollBarHeight = MathHelper.clamp(scrollBarHeight, 32, this.bottom - this.top - 8))) / maxScroll + this.top;
-            if (scrollBarTop < this.top) {
-                scrollBarTop = this.top;
+            int contentX = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
+            int contentY = this.top + 4 - (int) this.amountScrolled;
+            if (this.hasListHeader) {
+                this.drawListHeader(contentX, contentY, tessellator);
             }
 
-            bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-            bufferBuilder.pos(scrollBarLeft, this.bottom, 0.0).tex(0.0, 1.0).color(0, 0, 0, 255).endVertex();
-            bufferBuilder.pos(scrollBarRight, this.bottom, 0.0).tex(1.0, 1.0).color(0, 0, 0, 255).endVertex();
-            bufferBuilder.pos(scrollBarRight, this.top, 0.0).tex(1.0, 0.0).color(0, 0, 0, 255).endVertex();
-            bufferBuilder.pos(scrollBarLeft, this.top, 0.0).tex(0.0, 0.0).color(0, 0, 0, 255).endVertex();
-            tessellator.draw();
+            this.drawSelectionBox(contentX, contentY, mouseX, mouseY, partialTicks);
+            GlStateManager.disableDepth();
+            this.overlayBackground(0, this.top, 255, 255);
+            this.overlayBackground(this.bottom, this.height, 255, 255);
 
-            bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-            bufferBuilder.pos(scrollBarLeft, scrollBarTop + scrollBarHeight, 0.0).tex(0.0, 1.0).color(128, 128, 128, 255).endVertex();
-            bufferBuilder.pos(scrollBarRight, scrollBarTop + scrollBarHeight, 0.0).tex(1.0, 1.0).color(128, 128, 128, 255).endVertex();
-            bufferBuilder.pos(scrollBarRight, scrollBarTop, 0.0).tex(1.0, 0.0).color(128, 128, 128, 255).endVertex();
-            bufferBuilder.pos(scrollBarLeft, scrollBarTop, 0.0).tex(0.0, 0.0).color(128, 128, 128, 255).endVertex();
-            tessellator.draw();
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
+            GlStateManager.disableAlpha();
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+            GlStateManager.disableTexture2D();
 
-            bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-            bufferBuilder.pos(scrollBarLeft, scrollBarTop + scrollBarHeight - 1, 0.0).tex(0.0, 1.0).color(192, 192, 192, 255).endVertex();
-            bufferBuilder.pos(scrollBarRight - 1, scrollBarTop + scrollBarHeight - 1, 0.0).tex(1.0, 1.0).color(192, 192, 192, 255).endVertex();
-            bufferBuilder.pos(scrollBarRight - 1, scrollBarTop, 0.0).tex(1.0, 0.0).color(192, 192, 192, 255).endVertex();
-            bufferBuilder.pos(scrollBarLeft, scrollBarTop, 0.0).tex(0.0, 0.0).color(192, 192, 192, 255).endVertex();
-            tessellator.draw();
+            int maxScroll = this.getMaxScroll();
+            if (maxScroll > 0) {
+                int scrollBarHeight = (this.bottom - this.top) * (this.bottom - this.top) / this.getContentHeight();
+                int scrollBarTop = (int) this.amountScrolled * (this.bottom - this.top - (scrollBarHeight = MathHelper.clamp(scrollBarHeight, 32, this.bottom - this.top - 8))) / maxScroll + this.top;
+                if (scrollBarTop < this.top) {
+                    scrollBarTop = this.top;
+                }
 
+                bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                bufferBuilder.pos(scrollBarLeft, this.bottom, 0.0).tex(0.0, 1.0).color(0, 0, 0, 255).endVertex();
+                bufferBuilder.pos(scrollBarRight, this.bottom, 0.0).tex(1.0, 1.0).color(0, 0, 0, 255).endVertex();
+                bufferBuilder.pos(scrollBarRight, this.top, 0.0).tex(1.0, 0.0).color(0, 0, 0, 255).endVertex();
+                bufferBuilder.pos(scrollBarLeft, this.top, 0.0).tex(0.0, 0.0).color(0, 0, 0, 255).endVertex();
+                tessellator.draw();
+
+                bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                bufferBuilder.pos(scrollBarLeft, scrollBarTop + scrollBarHeight, 0.0).tex(0.0, 1.0).color(128, 128, 128, 255).endVertex();
+                bufferBuilder.pos(scrollBarRight, scrollBarTop + scrollBarHeight, 0.0).tex(1.0, 1.0).color(128, 128, 128, 255).endVertex();
+                bufferBuilder.pos(scrollBarRight, scrollBarTop, 0.0).tex(1.0, 0.0).color(128, 128, 128, 255).endVertex();
+                bufferBuilder.pos(scrollBarLeft, scrollBarTop, 0.0).tex(0.0, 0.0).color(128, 128, 128, 255).endVertex();
+                tessellator.draw();
+
+                bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+                bufferBuilder.pos(scrollBarLeft, scrollBarTop + scrollBarHeight - 1, 0.0).tex(0.0, 1.0).color(192, 192, 192, 255).endVertex();
+                bufferBuilder.pos(scrollBarRight - 1, scrollBarTop + scrollBarHeight - 1, 0.0).tex(1.0, 1.0).color(192, 192, 192, 255).endVertex();
+                bufferBuilder.pos(scrollBarRight - 1, scrollBarTop, 0.0).tex(1.0, 0.0).color(192, 192, 192, 255).endVertex();
+                bufferBuilder.pos(scrollBarLeft, scrollBarTop, 0.0).tex(0.0, 0.0).color(192, 192, 192, 255).endVertex();
+                tessellator.draw();
+
+            }
+
+            this.renderDecorations(mouseX, mouseY);
+            GlStateManager.enableTexture2D();
+            GlStateManager.shadeModel(GL11.GL_FLAT);
+            GlStateManager.enableAlpha();
+            GlStateManager.disableBlend();
         }
 
-        this.renderDecorations(mouseX, mouseY);
-        GlStateManager.enableTexture2D();
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.enableAlpha();
-        GlStateManager.disableBlend();
     }
 
     @Override
@@ -203,21 +199,19 @@ public class CustomPartListScrollList extends GuiListExtended {
     }
 
     void dispatchItemClick(int mouseX, int mouseY, int mouseEvent) {
-        if (mouseX > this.width) {
-            return;
+        if (mouseX <= this.width) {
+            int scrolled = this.getAmountScrolled();
+            float relativeY = scrolled + mouseY - 5 - this.top;
+
+            int selectedIndex = Math.round((float) Math.floor(relativeY / (float) this.slotHeight));
+            int slotClickY = (int) Math.round(((double) (relativeY / (float) this.slotHeight) - Math.floor(relativeY / (float) this.slotHeight)) * (double) this.slotHeight);
+            if (selectedIndex >= 0) {
+                if (selectedIndex < this.entries.size()) {
+                    this.entries.get(selectedIndex).handleEntryClick(mouseX, slotClickY, mouseEvent, selectedIndex);
+                }
+            }
         }
 
-        int scrolled = this.getAmountScrolled();
-        float relativeY = scrolled + mouseY - 5 - this.top;
-
-        int selectedIndex = Math.round((float)Math.floor(relativeY / (float)this.slotHeight));
-        int slotClickY = (int)Math.round(((double)(relativeY / (float)this.slotHeight) - Math.floor(relativeY / (float)this.slotHeight)) * (double)this.slotHeight);
-        if (selectedIndex < 0) {
-            return;
-        }
-        if (selectedIndex < this.entries.size()) {
-            this.entries.get(selectedIndex).handleEntryClick(mouseX, slotClickY, mouseEvent, selectedIndex);
-        }
     }
 
     /*Gay java optimization. CFR did bad job cleaning.*/
@@ -257,7 +251,7 @@ public class CustomPartListScrollList extends GuiListExtended {
 
     @SideOnly(value=Side.CLIENT)
     public class PartListEntry implements GuiListExtended.IGuiListEntry {
-        final static int g = 4;
+        //final static int g = 4;
         public CustomPartCategory category;
         public List<String> modelList;
         public int selectedIndex;
@@ -435,17 +429,16 @@ public class CustomPartListScrollList extends GuiListExtended {
                         PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f)
                 );
 
-                ArrayList<String> arrayList = new ArrayList<String>();
-                arrayList.add("cross");
-                arrayList.addAll(CustomModel.getModelTypes(CustomPartListScrollList.this.parentGUI.previewGirl).get(CustomPartCategory.CUSTOM_BONE));
+                ArrayList<String> customBones = new ArrayList<>();
+                customBones.add("cross");
+                customBones.addAll(CustomModel.getModelTypes(CustomPartListScrollList.this.parentGUI.previewGirl).get(CustomPartCategory.CUSTOM_BONE));
                 ClothingGui.activeCategories.add(ClothingGui.createCustomBoneEntry(CustomPartListScrollList.this.parentGUI.previewGirl));
             }
-            if (!this.canRemoveBone) {
-                return;
-            }
-            if (relativeX > (buttonX += 40) && relativeX < buttonX + 20) {
-                CustomPartListScrollList.this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
-                ClothingGui.activeCategories.remove(ClothingGui.activeCategories.size() - 1);
+            if (this.canRemoveBone) {
+                if (relativeX > (buttonX += 40) && relativeX < buttonX + 20) {
+                    CustomPartListScrollList.this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    ClothingGui.activeCategories.remove(ClothingGui.activeCategories.size() - 1);
+                }
             }
         }
 
@@ -465,21 +458,16 @@ public class CustomPartListScrollList extends GuiListExtended {
         }
 
         public void handleEntryClick(int mouseX, int relativeY, int mouseButton, int globalIndex) {
-            if (mouseButton != 0) {
-                return;
-            }
-            if (relativeY < 5) {
-                return;
-            }
-            if (relativeY > 25) {
-                return;
-            }
-            if (this.isBoneControlButton) {
-                this.handleBoneControlClick(mouseX);
-            } else if (this.category == CustomPartCategory.GIRL_SPECIFIC) {
-                this.handleGirlSpecificClick(mouseX, globalIndex);
-            } else {
-                this.handleCategoryCycleClick(mouseX, globalIndex);
+            if (mouseButton == 0) {
+                if (relativeY >= 5 && relativeY <= 25) {
+                    if (this.isBoneControlButton) {
+                        this.handleBoneControlClick(mouseX);
+                    } else if (this.category == CustomPartCategory.GIRL_SPECIFIC) {
+                        this.handleGirlSpecificClick(mouseX, globalIndex);
+                    } else {
+                        this.handleCategoryCycleClick(mouseX, globalIndex);
+                    }
+                }
             }
         }
 

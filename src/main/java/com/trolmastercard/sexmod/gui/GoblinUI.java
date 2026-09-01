@@ -25,11 +25,6 @@ import org.lwjgl.opengl.GL11;
 //ea.class
 //goblin related UI
 public class GoblinUI extends GuiScreen {
-    final static float j = 100.0f;
-    final static float c = 15.0f;
-    final static float k = 5.0f;
-    final static float l = 0.5f;
-    final static float b = 0.5f;
     final static ResourceLocation GUI_TEXTURE = new ResourceLocation("sexmod", "textures/gui/command.png");
     float animProgress = 0.0f;
     float animLeft = 0.0f;

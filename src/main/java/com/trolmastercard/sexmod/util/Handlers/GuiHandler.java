@@ -8,7 +8,7 @@ package com.trolmastercard.sexmod.util.Handlers;
 
 import java.util.UUID;
 
-import com.trolmastercard.sexmod.gui.GirlGUIContainer;
+import com.trolmastercard.sexmod.gui.GirlChestContainer;
 import com.trolmastercard.sexmod.gui.GirlInventory;
 import com.trolmastercard.sexmod.gui.Menu.*;
 import com.trolmastercard.sexmod.girls.base.GirlEntity;
@@ -99,7 +99,7 @@ public class GuiHandler implements IGuiHandler {
             for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                 if (!girl.world.isRemote || !(girl instanceof IInventory) || girl.getPosition().getX() != x || girl.getPosition().getY() != y || girl.getPosition().getZ() != z)
                     continue;
-                return new GirlGUIContainer(player, girl, UUID.randomUUID());
+                return new GirlChestContainer(player, girl, UUID.randomUUID());
             }
         }
         return null;

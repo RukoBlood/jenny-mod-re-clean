@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 
 public class GenderChangeUI extends GuiScreen {
     List<EntityLivingBase> entities = new ArrayList<>();
-    int i = 0;
+    int index = 0;
     static float rot = 0.0f;
 
     public GenderChangeUI(HashMap<PlayerGirlEntity, String> hashMap) {
@@ -56,7 +56,7 @@ public class GenderChangeUI extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.buttonList.clear();
-        GenderChangeUI.drawEntityOnScreen(this.width / 2, this.height / 2 + 20, 30, this.entities.get(this.i));
+        GenderChangeUI.drawEntityOnScreen(this.width / 2, this.height / 2 + 20, 30, this.entities.get(this.index));
         this.buttonList.add(new GuiButton(1, this.width / 2 + 30, this.height / 2 - 10, 20, 20, ">"));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 50, this.height / 2 - 10, 20, 20, "<"));
         this.buttonList.add(new GuiButton(0, this.width / 2 - 30, this.height / 2 + 30, 60, 20, "pick"));
@@ -64,14 +64,14 @@ public class GenderChangeUI extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (">".equals(button.displayString) && ++this.i >= this.entities.size()) {
-            this.i = 0;
+        if (">".equals(button.displayString) && ++this.index >= this.entities.size()) {
+            this.index = 0;
         }
-        if ("<".equals(button.displayString) && --this.i < 0) {
-            this.i = this.entities.size() - 1;
+        if ("<".equals(button.displayString) && --this.index < 0) {
+            this.index = this.entities.size() - 1;
         }
         if (button.id == 0) {
-            PacketHandler.INSTANCE.sendToServer(new UpdatePlayerModel(PlayerGirlEntity.getGirlType(this.entities.get(this.i))));
+            PacketHandler.INSTANCE.sendToServer(new UpdatePlayerModel(PlayerGirlEntity.getGirlType(this.entities.get(this.index))));
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             player.closeScreen();
             player.eyeHeight = player.getDefaultEyeHeight();
