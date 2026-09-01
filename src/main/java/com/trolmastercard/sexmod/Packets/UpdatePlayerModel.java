@@ -31,26 +31,26 @@ import net.minecraftforge.fml.relauncher.Side;
 public class UpdatePlayerModel
 implements IMessage {
     boolean isValid = false;
-    PlayerGirlEntity a;
+    PlayerGirlEntity type;
 
     public UpdatePlayerModel() {
     }
 
-    public UpdatePlayerModel(PlayerGirlEntity fy_class3352) {
-        this.a = fy_class3352;
+    public UpdatePlayerModel(PlayerGirlEntity type) {
+        this.type = type;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        String string = ByteBufUtils.readUTF8String(byteBuf);
-        this.a = "player".equals(string) ? null : PlayerGirlEntity.valueOf(string);
+        String typeStr = ByteBufUtils.readUTF8String(byteBuf);
+        this.type = "player".equals(typeStr) ? null : PlayerGirlEntity.valueOf(typeStr);
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        if (this.a == null) {
+        if (this.type == null) {
             ByteBufUtils.writeUTF8String(byteBuf, "player");
         } else {
-            ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+            ByteBufUtils.writeUTF8String(byteBuf, this.type.toString());
         }
     }
 
@@ -64,21 +64,21 @@ implements IMessage {
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 PlayerGirl playerGirl;
                 PlayerGirlEntity pgEntity;
-                EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
-                World world = entityPlayerMP.world;
+                EntityPlayerMP player = ctx.getServerHandler().player;
+                World world = player.world;
                 UUID uUID = ctx.getServerHandler().player.getPersistentID();
-                PlayerGirl ei_class2513 = PlayerGirl.getUUIDHashtable(uUID);
-                if (ei_class2513 != null) {
-                    for (GirlEntity object2 : GirlEntity.getGirlEntityList()) {
-                        if (object2.world.isRemote || !object2.girlID().equals(ei_class2513.girlID())) continue;
-                        world.removeEntity(object2);
+                PlayerGirl pg = PlayerGirl.getUUIDHashtable(uUID);
+                if (pg != null) {
+                    for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+                        if (girl.world.isRemote || !girl.girlID().equals(pg.girlID())) continue;
+                        world.removeEntity(girl);
                     }
-                    ei_class2513.onTickClient();
+                    pg.onTickClient();
                     PlayerGirl.playerGirlUUIDHashtable.remove(uUID);
-                    GirlEntity.getGirlEntityList().remove(ei_class2513);
-                    ei_class2513.setOwnerId(Optional.absent());
+                    GirlEntity.getGirlEntityList().remove(pg);
+                    pg.setOwnerId(Optional.absent());
                 }
-                if ((pgEntity = msg.a) == null) {
+                if ((pgEntity = msg.type) == null) {
                     return;
                 }
                 try {
@@ -93,7 +93,7 @@ implements IMessage {
                 playerGirl.motionX = 0.0;
                 playerGirl.motionY = 0.0;
                 playerGirl.motionZ = 0.0;
-                playerGirl.setPosition(entityPlayerMP.posX, entityPlayerMP.posY + 69.0, entityPlayerMP.posZ);
+                playerGirl.setPosition(player.posX, player.posY + 69.0, player.posZ);
                 world.spawnEntity(playerGirl);
                 playerGirl.spawnHitboxHelper();
             });

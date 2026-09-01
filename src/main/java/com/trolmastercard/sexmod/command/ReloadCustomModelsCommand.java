@@ -35,10 +35,10 @@ public class ReloadCustomModelsCommand extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] stringArray) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         CustomModel.getModelCount(false);
-        for (EntityPlayerMP entityPlayerMP : minecraftServer.getPlayerList().getPlayers()) {
-            minecraftServer.addScheduledTask(() -> PacketHandler.INSTANCE.sendTo((IMessage)new RequestServerModelAvailability(CustomModel.getModelScales()), entityPlayerMP));
+        for (EntityPlayerMP playerMP : server.getPlayerList().getPlayers()) {
+            server.addScheduledTask(() -> PacketHandler.INSTANCE.sendTo(new RequestServerModelAvailability(CustomModel.getModelScales()), playerMP));
         }
     }
 }

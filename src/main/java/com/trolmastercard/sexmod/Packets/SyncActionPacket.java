@@ -27,37 +27,37 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class SyncActionPacket implements IMessage {
     boolean isValid;
-    UUID a;
-    boolean b;
-    boolean d;
-    UUID e = null;
+    UUID girlId;
+    boolean param1;
+    boolean param2;
+    UUID playerId = null;
 
     public SyncActionPacket() {
         this.isValid = false;
     }
 
     public SyncActionPacket(UUID uUID, UUID uUID2, boolean bl, boolean bl2) {
-        this.a = uUID;
-        this.b = bl;
-        this.e = uUID2;
-        this.d = bl2;
+        this.girlId = uUID;
+        this.param1 = bl;
+        this.playerId = uUID2;
+        this.param2 = bl2;
         this.isValid = true;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.b = byteBuf.readBoolean();
-        this.d = byteBuf.readBoolean();
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.param1 = byteBuf.readBoolean();
+        this.param2 = byteBuf.readBoolean();
         String string = ByteBufUtils.readUTF8String(byteBuf);
-        this.e = string.equals("null") ? null : UUID.fromString(string);
+        this.playerId = string.equals("null") ? null : UUID.fromString(string);
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
-        byteBuf.writeBoolean(this.b);
-        byteBuf.writeBoolean(this.d);
-        ByteBufUtils.writeUTF8String(byteBuf, this.e == null ? "null" : this.e.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
+        byteBuf.writeBoolean(this.param1);
+        byteBuf.writeBoolean(this.param2);
+        ByteBufUtils.writeUTF8String(byteBuf, this.playerId == null ? "null" : this.playerId.toString());
     }
 
     public static class Handler implements IMessageHandler<SyncActionPacket, IMessage> {
@@ -91,7 +91,7 @@ public class SyncActionPacket implements IMessage {
         @Override
         public IMessage onMessage(SyncActionPacket msg, MessageContext ctx) {
             if (msg.isValid && ctx.side == Side.SERVER) {
-                FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> Handler.execute(msg.a, msg.e, msg.b, msg.d));
+                FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> Handler.execute(msg.girlId, msg.playerId, msg.param1, msg.param2));
             }
             return null;
         }

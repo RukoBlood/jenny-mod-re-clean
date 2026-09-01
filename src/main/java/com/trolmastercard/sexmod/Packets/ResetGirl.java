@@ -18,7 +18,7 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.UUID;
-import net.minecraft.entity.Entity;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ResetGirl implements IMessage {
     boolean isValid;
     UUID girlId;
-    boolean a;
+    boolean reset;
 
     public ResetGirl() {
         this.isValid = false;
@@ -43,25 +43,25 @@ public class ResetGirl implements IMessage {
 
     public ResetGirl(UUID uUID) {
         this.girlId = uUID;
-        this.a = false;
+        this.reset = false;
         this.isValid = true;
     }
 
     public ResetGirl(UUID uUID, boolean bl) {
         this.girlId = uUID;
-        this.a = bl;
+        this.reset = bl;
         this.isValid = true;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
         this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.a = byteBuf.readBoolean();
+        this.reset = byteBuf.readBoolean();
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
-        byteBuf.writeBoolean(this.a);
+        byteBuf.writeBoolean(this.reset);
         this.isValid = true;
     }
 
@@ -127,7 +127,7 @@ public class ResetGirl implements IMessage {
                         if (girl.getInteractionPlayerUUID() != null) {
                             EventHandler.resetGirls(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(girl.getInteractionPlayerUUID()));
                         }
-                        if (!msg.a) {
+                        if (!msg.reset) {
                             EventHandler.resetGirl(girl);
                         }
                     }

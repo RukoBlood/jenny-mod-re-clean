@@ -26,52 +26,52 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class SexPrompt implements IMessage {
-    boolean e = false;
-    String c;
-    UUID b;
-    UUID a;
-    boolean d;
+    boolean isValid = false;
+    String action;
+    UUID player;
+    UUID ownerId;
+    boolean isGuiPending;
 
     public SexPrompt() {
     }
 
     public SexPrompt(String string, UUID uUID, UUID uUID2, boolean bl) {
-        this.c = string;
-        this.b = uUID;
-        this.a = uUID2;
-        this.d = bl;
+        this.action = string;
+        this.player = uUID;
+        this.ownerId = uUID2;
+        this.isGuiPending = bl;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = ByteBufUtils.readUTF8String(byteBuf);
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.d = byteBuf.readBoolean();
-        this.e = true;
+        this.action = ByteBufUtils.readUTF8String(byteBuf);
+        this.player = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.ownerId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.isGuiPending = byteBuf.readBoolean();
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.c);
-        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
-        byteBuf.writeBoolean(this.d);
+        ByteBufUtils.writeUTF8String(byteBuf, this.action);
+        ByteBufUtils.writeUTF8String(byteBuf, this.player.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.ownerId.toString());
+        byteBuf.writeBoolean(this.isGuiPending);
     }
 
     public static class Handler implements IMessageHandler<SexPrompt, IMessage> {
         @Override
         public IMessage onMessage(SexPrompt msg, MessageContext ctx) {
-            if (!msg.e) {
+            if (!msg.isValid) {
                 System.out.println("received an invalid message @SexPrompt :(");
                 return null;
             }
             if (ctx.side.equals(Side.CLIENT)) {
-                SexPromptManager.INSTANCE.setNewActivePrompt(new SexPromptManager.SexPrompt(msg.c, msg.b, msg.a, msg.d));
+                SexPromptManager.INSTANCE.setNewActivePrompt(new SexPromptManager.SexPrompt(msg.action, msg.player, msg.ownerId, msg.isGuiPending));
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 World world = ctx.getServerHandler().player.world;
-                EntityPlayer entityPlayer = world.getPlayerEntityByUUID(msg.a);
-                EntityPlayer entityPlayer2 = world.getPlayerEntityByUUID(msg.b);
+                EntityPlayer entityPlayer = world.getPlayerEntityByUUID(msg.ownerId);
+                EntityPlayer entityPlayer2 = world.getPlayerEntityByUUID(msg.player);
                 if (entityPlayer == null) {
                     System.out.println("Sex prompt invalid -> female player not found");
                     return;
@@ -80,7 +80,7 @@ public class SexPrompt implements IMessage {
                     System.out.println("Sex prompt invalid -> male player not found");
                     return;
                 }
-                PacketHandler.INSTANCE.sendTo(new SexPrompt(msg.c, msg.b, msg.a, msg.d), (EntityPlayerMP)(msg.d ? entityPlayer : entityPlayer2));
+                PacketHandler.INSTANCE.sendTo(new SexPrompt(msg.action, msg.player, msg.ownerId, msg.isGuiPending), (EntityPlayerMP)(msg.isGuiPending ? entityPlayer : entityPlayer2));
             });
             return null;
         }

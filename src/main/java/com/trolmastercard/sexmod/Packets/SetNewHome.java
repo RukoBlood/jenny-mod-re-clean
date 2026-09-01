@@ -22,47 +22,46 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class SetNewHome
-implements IMessage {
-    boolean b;
-    UUID c;
-    Vec3d a;
+public class SetNewHome implements IMessage {
+    boolean valid;
+    UUID girlId;
+    Vec3d pos;
 
     public SetNewHome() {
     }
 
     public SetNewHome(UUID uUID, Vec3d vec3d) {
-        this.c = uUID;
-        this.a = vec3d;
+        this.girlId = uUID;
+        this.pos = vec3d;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.a = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
-        this.b = true;
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.pos = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
+        this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
-        byteBuf.writeDouble(this.a.x);
-        byteBuf.writeDouble(this.a.y);
-        byteBuf.writeDouble(this.a.z);
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
+        byteBuf.writeDouble(this.pos.x);
+        byteBuf.writeDouble(this.pos.y);
+        byteBuf.writeDouble(this.pos.z);
     }
 
     public static class Handler implements IMessageHandler<SetNewHome, IMessage> {
         @Override
         public IMessage onMessage(SetNewHome msg, MessageContext ctx) {
-            if (!msg.b) {
+            if (!msg.valid) {
                 System.out.println("received an invalid message @SetNewHome :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.c);
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.girlId);
                 if (arrayList.isEmpty()) {
                     return;
                 }
-                for (GirlEntity em_class2582 : arrayList) {
-                    em_class2582.homeCoords = new Vec3d(msg.a.x, Math.floor(msg.a.y), msg.a.z);
+                for (GirlEntity girl : arrayList) {
+                    girl.homeCoords = new Vec3d(msg.pos.x, Math.floor(msg.pos.y), msg.pos.z);
                 }
             });
             return null;

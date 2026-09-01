@@ -24,44 +24,44 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class UpdateVelocity implements IMessage {
-    boolean c = false;
-    Vec3d b;
-    UUID a;
+    boolean isValid = false;
+    Vec3d delta;
+    UUID girlId;
 
     public UpdateVelocity(Vec3d vec3d, UUID uUID) {
-        this.b = vec3d;
-        this.a = uUID;
+        this.delta = vec3d;
+        this.girlId = uUID;
     }
 
     public UpdateVelocity() {
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.c = true;
+        this.delta = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeDouble(this.b.x);
-        byteBuf.writeDouble(this.b.y);
-        byteBuf.writeDouble(this.b.z);
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+        byteBuf.writeDouble(this.delta.x);
+        byteBuf.writeDouble(this.delta.y);
+        byteBuf.writeDouble(this.delta.z);
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
     }
 
     public static class Handler implements IMessageHandler<UpdateVelocity, IMessage> {
         @Override
         public IMessage onMessage(UpdateVelocity msg, MessageContext ctx) {
-            if (!msg.c || !ctx.side.equals(Side.SERVER)) {
+            if (!msg.isValid || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid message @UpdateVelocity :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                GirlEntity girl = GirlEntity.getServerGirlEntity(msg.a);
+                GirlEntity girl = GirlEntity.getServerGirlEntity(msg.girlId);
                 if (girl instanceof GalathEntity) {
                     GalathEntity galath = (GalathEntity) girl;
                     if (ctx.getServerHandler().player.equals(galath.getRidingPlayer())) {
-                        galath.applyVelocityDelta(msg.b);
+                        galath.applyVelocityDelta(msg.delta);
                     }
                 }
             });

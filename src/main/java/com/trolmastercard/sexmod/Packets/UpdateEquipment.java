@@ -14,26 +14,26 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class UpdateEquipment implements IMessage {
     boolean valid;
-    UUID c;
-    NBTTagCompound b;
+    UUID girlId;
+    NBTTagCompound nbt;
 
     public UpdateEquipment() {
     }
 
     public UpdateEquipment(UUID uUID, NBTTagCompound nbt) {
-        this.c = uUID;
-        this.b = nbt;
+        this.girlId = uUID;
+        this.nbt = nbt;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.b = ByteBufUtils.readTag(byteBuf);
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.nbt = ByteBufUtils.readTag(byteBuf);
         this.valid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
-        ByteBufUtils.writeTag(byteBuf, this.b);
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
+        ByteBufUtils.writeTag(byteBuf, this.nbt);
     }
 
     public static class Handler implements IMessageHandler<UpdateEquipment, IMessage> {
@@ -44,10 +44,10 @@ public class UpdateEquipment implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.c);
+                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.girlId);
                 for (GirlEntity girl : girls) {
                     if (girl instanceof Fighter) {
-                        ((Fighter) girl).inventory.deserializeNBT(msg.b);
+                        ((Fighter) girl).inventory.deserializeNBT(msg.nbt);
                     }
                 }
             });

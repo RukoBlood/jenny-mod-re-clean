@@ -29,35 +29,35 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class SendBlocks implements IMessage {
     boolean isValid = false;
-    HashSet<BlockPos> c = new HashSet();
-    boolean a;
+    HashSet<BlockPos> blocks = new HashSet();
+    boolean shouldMark;
 
     public SendBlocks() {
     }
 
     public SendBlocks(HashSet<BlockPos> hashSet, boolean bl) {
-        this.c = hashSet;
-        this.a = bl;
+        this.blocks = hashSet;
+        this.shouldMark = bl;
     }
 
     public SendBlocks(BlockPos blockPos, boolean bl) {
-        this.c.add(blockPos);
-        this.a = bl;
+        this.blocks.add(blockPos);
+        this.shouldMark = bl;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = byteBuf.readBoolean();
+        this.shouldMark = byteBuf.readBoolean();
         int n = byteBuf.readInt();
         for (int i = 0; i < n; ++i) {
-            this.c.add(new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt()));
+            this.blocks.add(new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt()));
         }
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeBoolean(this.a);
-        byteBuf.writeInt(this.c.size());
-        for (BlockPos blockPos : this.c) {
+        byteBuf.writeBoolean(this.shouldMark);
+        byteBuf.writeInt(this.blocks.size());
+        for (BlockPos blockPos : this.blocks) {
             byteBuf.writeInt(blockPos.getX());
             byteBuf.writeInt(blockPos.getY());
             byteBuf.writeInt(blockPos.getZ());
@@ -72,69 +72,68 @@ public class SendBlocks implements IMessage {
                 return null;
             }
             if (ctx.side.isClient()) {
-                if (msg.a) {
-                    StructureMarkerRenderer.addMarkers(msg.c);
+                if (msg.shouldMark) {
+                    StructureMarkerRenderer.addMarkers(msg.blocks);
                 } else {
-                    StructureMarkerRenderer.removeMarkers(msg.c);
+                    StructureMarkerRenderer.removeMarkers(msg.blocks);
                 }
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 UUID uUID = ctx.getServerHandler().player.getPersistentID();
                 UUID uUID2 = KoboldManager.findTribeIdWith(uUID);
-                if (uUID2 == null) {
-                    return;
-                }
-                if (msg.c.size() != 1) {
-                    return;
-                }
-                World world = ctx.getServerHandler().player.world;
-                for (BlockPos blockPos : msg.c) {
-                    Object object;
-                    IBlockState iBlockState = world.getBlockState(blockPos);
-                    BlockPos blockPos2 = null;
-                    if (iBlockState.getBlock() instanceof BlockBed) {
-                        blockPos2 = WorldUtils.getBedPairPosition(blockPos, iBlockState);
-                    }
-                    if (iBlockState.getBlock() instanceof BlockChest) {
-                        object = ((BlockChest)iBlockState.getBlock()).chestType;
-                        if (world.getBlockState(blockPos.north()).getBlock() instanceof BlockChest && object.equals(((BlockChest)world.getBlockState(blockPos.north()).getBlock()).chestType)) {
-                            blockPos2 = blockPos.north();
+                if (uUID2 != null) {
+                    if (msg.blocks.size() == 1) {
+                        World world = ctx.getServerHandler().player.world;
+                        for (BlockPos blockPos : msg.blocks) {
+                            BlockChest.Type chestType;
+                            IBlockState iBlockState = world.getBlockState(blockPos);
+                            BlockPos blockPos2 = null;
+                            if (iBlockState.getBlock() instanceof BlockBed) {
+                                blockPos2 = WorldUtils.getBedPairPosition(blockPos, iBlockState);
+                            }
+                            if (iBlockState.getBlock() instanceof BlockChest) {
+                                chestType = ((BlockChest) iBlockState.getBlock()).chestType;
+                                if (world.getBlockState(blockPos.north()).getBlock() instanceof BlockChest && chestType.equals(((BlockChest) world.getBlockState(blockPos.north()).getBlock()).chestType)) {
+                                    blockPos2 = blockPos.north();
+                                }
+                                if (world.getBlockState(blockPos.east()).getBlock() instanceof BlockChest && chestType.equals(((BlockChest) world.getBlockState(blockPos.east()).getBlock()).chestType)) {
+                                    blockPos2 = blockPos.east();
+                                }
+                                if (world.getBlockState(blockPos.south()).getBlock() instanceof BlockChest && chestType.equals(((BlockChest) world.getBlockState(blockPos.south()).getBlock()).chestType)) {
+                                    blockPos2 = blockPos.south();
+                                }
+                                if (world.getBlockState(blockPos.west()).getBlock() instanceof BlockChest && chestType.equals(((BlockChest) world.getBlockState(blockPos.west()).getBlock()).chestType)) {
+                                    blockPos2 = blockPos.west();
+                                }
+                            }
+                            if (blockPos2 != null || !(iBlockState.getBlock() instanceof BlockBed)) {
+                                if (msg.shouldMark) {
+                                    if (iBlockState.getBlock() instanceof BlockBed) {
+                                        KoboldManager.registerBed(uUID2, blockPos);
+                                        KoboldManager.registerBed(uUID2, blockPos2);
+                                    } else {
+                                        KoboldManager.registerChest(uUID2, blockPos);
+                                        KoboldManager.registerChest(uUID2, blockPos2);
+                                    }
+                                } else if (iBlockState.getBlock() instanceof BlockBed) {
+                                    KoboldManager.unregisterBed(uUID2, blockPos);
+                                    KoboldManager.unregisterBed(uUID2, blockPos2);
+                                } else {
+                                    KoboldManager.unregisterChest(uUID2, blockPos);
+                                    KoboldManager.unregisterChest(uUID2, blockPos2);
+                                }
+                                HashSet<BlockPos> positions = new HashSet<>();
+                                positions.add(blockPos);
+                                if (blockPos2 != null) {
+                                    positions.add(blockPos2);
+                                }
+                                PacketHandler.INSTANCE.sendTo(new SendBlocks(positions, msg.shouldMark), ctx.getServerHandler().player);
+                            } else {
+                                return;
+                            }
                         }
-                        if (world.getBlockState(blockPos.east()).getBlock() instanceof BlockChest && object.equals(((BlockChest)world.getBlockState(blockPos.east()).getBlock()).chestType)) {
-                            blockPos2 = blockPos.east();
-                        }
-                        if (world.getBlockState(blockPos.south()).getBlock() instanceof BlockChest && object.equals(((BlockChest)world.getBlockState(blockPos.south()).getBlock()).chestType)) {
-                            blockPos2 = blockPos.south();
-                        }
-                        if (world.getBlockState(blockPos.west()).getBlock() instanceof BlockChest && object.equals(((BlockChest)world.getBlockState(blockPos.west()).getBlock()).chestType)) {
-                            blockPos2 = blockPos.west();
-                        }
                     }
-                    if (blockPos2 == null && iBlockState.getBlock() instanceof BlockBed) {
-                        return;
-                    }
-                    if (msg.a) {
-                        if (iBlockState.getBlock() instanceof BlockBed) {
-                            KoboldManager.registerBed(uUID2, blockPos);
-                            KoboldManager.registerBed(uUID2, blockPos2);
-                        } else {
-                            KoboldManager.registerChest(uUID2, blockPos);
-                            KoboldManager.registerChest(uUID2, blockPos2);
-                        }
-                    } else if (iBlockState.getBlock() instanceof BlockBed) {
-                        KoboldManager.unregisterBed(uUID2, blockPos);
-                        KoboldManager.unregisterBed(uUID2, blockPos2);
-                    } else {
-                        KoboldManager.unregisterChest(uUID2, blockPos);
-                        KoboldManager.unregisterChest(uUID2, blockPos2);
-                    }
-                    object = new HashSet();
-                    ((HashSet)object).add(blockPos);
-                    if (blockPos2 != null) {
-                        ((HashSet)object).add(blockPos2);
-                    }
-                    PacketHandler.INSTANCE.sendTo(new SendBlocks((HashSet<BlockPos>)object, msg.a), ctx.getServerHandler().player);
                 }
             });
             return null;

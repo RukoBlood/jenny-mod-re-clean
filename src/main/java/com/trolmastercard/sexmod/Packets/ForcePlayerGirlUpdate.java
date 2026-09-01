@@ -23,30 +23,30 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class ForcePlayerGirlUpdate implements IMessage {
     boolean isValid = false;
-    UUID c;
-    int b;
-    Action a;
+    UUID id;
+    int outfitIndex;
+    Action action;
 
     public ForcePlayerGirlUpdate() {
     }
 
     public ForcePlayerGirlUpdate(UUID uUID, int n, Action action) {
-        this.c = uUID;
-        this.b = n;
-        this.a = action;
+        this.id = uUID;
+        this.outfitIndex = n;
+        this.action = action;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.b = byteBuf.readInt();
-        this.a = Action.valueOf(ByteBufUtils.readUTF8String(byteBuf));
+        this.id = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.outfitIndex = byteBuf.readInt();
+        this.action = Action.valueOf(ByteBufUtils.readUTF8String(byteBuf));
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
-        byteBuf.writeInt(this.b);
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.id.toString());
+        byteBuf.writeInt(this.outfitIndex);
+        ByteBufUtils.writeUTF8String(byteBuf, this.action.toString());
     }
 
     public static class Handler implements IMessageHandler<ForcePlayerGirlUpdate, IMessage> {
@@ -57,12 +57,12 @@ public class ForcePlayerGirlUpdate implements IMessage {
                 System.out.println("received an invalid message @ForcePlayerGirlUpdate :(");
                 return null;
             }
-            PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(msg.c);
+            PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(msg.id);
             if (playerGirl == null) {
                 return null;
             }
-            playerGirl.getDataManager().set(GirlEntity.CUR_ACTION, msg.a.toString());
-            playerGirl.getDataManager().set(GirlEntity.OUTFIT_INDEX, msg.b);
+            playerGirl.getDataManager().set(GirlEntity.CUR_ACTION, msg.action.toString());
+            playerGirl.getDataManager().set(GirlEntity.OUTFIT_INDEX, msg.outfitIndex);
             return null;
         }
     }

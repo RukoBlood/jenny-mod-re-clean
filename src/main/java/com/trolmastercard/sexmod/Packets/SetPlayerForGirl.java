@@ -27,28 +27,28 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class SetPlayerForGirl implements IMessage {
     boolean isValid;
-    UUID c;
-    UUID b;
+    UUID girlId;
+    UUID playerId;
 
     public SetPlayerForGirl() {
         this.isValid = false;
     }
 
     public SetPlayerForGirl(UUID uUID, UUID uUID2) {
-        this.c = uUID;
-        this.b = uUID2;
+        this.girlId = uUID;
+        this.playerId = uUID2;
         this.isValid = true;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.playerId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
-        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.playerId.toString());
     }
 
     public static class Handler implements IMessageHandler<SetPlayerForGirl, IMessage> {
@@ -59,13 +59,13 @@ public class SetPlayerForGirl implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.c);
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.girlId);
                 for (GirlEntity girl : arrayList) {
                     PlayerList playerList = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
                     try {
-                        playerList.getPlayerByUUID(msg.b).getName();
+                        playerList.getPlayerByUUID(msg.playerId).getName();
                     } catch (NullPointerException nullPointerException) {
-                        System.out.println("couldn't find player with UUID: " + msg.b);
+                        System.out.println("couldn't find player with UUID: " + msg.playerId);
                         System.out.println("could only find players with thsese UUID's:");
                         for (EntityPlayerMP entityPlayerMP : playerList.getPlayers()) {
                             System.out.println(entityPlayerMP.getName() + " " + entityPlayerMP.getUniqueID());
@@ -75,7 +75,7 @@ public class SetPlayerForGirl implements IMessage {
                     if (girl instanceof JennyEntity) {
                         ((JennyEntity)girl).shouldStartDoggySex = true;
                     }
-                    girl.setInteractionPlayerUUID(msg.b);
+                    girl.setInteractionPlayerUUID(msg.playerId);
                 }
             });
             return null;

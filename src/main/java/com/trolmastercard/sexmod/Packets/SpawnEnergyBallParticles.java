@@ -23,34 +23,34 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class SpawnEnergyBallParticles implements IMessage {
     boolean isValid = false;
-    UUID a;
-    UUID b;
+    UUID galath;
+    UUID manglelie;
 
     public SpawnEnergyBallParticles() {
     }
 
     public SpawnEnergyBallParticles(UUID uUID, UUID uUID2) {
-        this.a = uUID;
-        this.b = uUID2;
+        this.galath = uUID;
+        this.manglelie = uUID2;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
         try {
-            this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+            this.galath = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         } catch (Exception exception) {
-            this.a = null;
+            this.galath = null;
         }
         try {
-            this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+            this.manglelie = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         } catch (Exception exception) {
-            this.b = null;
+            this.manglelie = null;
         }
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.a == null ? "trol was here" : this.a.toString());
-        ByteBufUtils.writeUTF8String(byteBuf, this.b == null ? "trol was here" : this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.galath == null ? "trol was here" : this.galath.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.manglelie == null ? "trol was here" : this.manglelie.toString());
     }
 
     public static class Handler implements IMessageHandler<SpawnEnergyBallParticles, IMessage> {
@@ -60,9 +60,9 @@ public class SpawnEnergyBallParticles implements IMessage {
                 System.out.println("received an invalid message @SpawnEnergyBallParticles :(");
                 return null;
             }
-            GirlEntity girl = GirlEntity.getClientGirlEntity(msg.a);
+            GirlEntity girl = GirlEntity.getClientGirlEntity(msg.galath);
             if (girl instanceof GalathEntity) {
-                GalathCoin.summonGalathFor(msg.b, (GalathEntity) girl);
+                GalathCoin.summonGalathFor(msg.manglelie, (GalathEntity) girl);
             } else {
                 System.out.println("doesnt exit");
             }

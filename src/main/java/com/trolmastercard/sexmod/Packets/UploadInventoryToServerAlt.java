@@ -24,37 +24,38 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class UploadInventoryToServerAlt
 implements IMessage {
-    boolean a;
-    UUID b;
+    boolean isValid;
+    UUID allieId;
 
     public UploadInventoryToServerAlt() {
     }
 
     public UploadInventoryToServerAlt(UUID uUID) {
-        this.b = uUID;
+        this.allieId = uUID;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.a = true;
+        this.allieId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.allieId.toString());
     }
 
     public static class Handler implements IMessageHandler<UploadInventoryToServerAlt, IMessage> {
         @Override
         public IMessage onMessage(UploadInventoryToServerAlt msg, MessageContext ctx) {
-            if (!msg.a || ctx.side != Side.SERVER) {
+            if (!msg.isValid || ctx.side != Side.SERVER) {
                 System.out.println("received an invalid message @UploadInventoryToServer :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.b);
+                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.allieId);
                 for (GirlEntity girl : arrayList) {
-                    if (girl.world.isRemote) continue;
-                    girl.world.removeEntity(girl);
+                    if (!girl.world.isRemote) {
+                        girl.world.removeEntity(girl);
+                    }
                 }
             });
             return null;

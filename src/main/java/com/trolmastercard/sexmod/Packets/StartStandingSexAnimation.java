@@ -25,30 +25,30 @@ import net.minecraftforge.fml.relauncher.Side;
 public class StartStandingSexAnimation
 implements IMessage {
     boolean isValid;
-    UUID a;
-    UUID b;
-    String d;
+    UUID receiver;
+    UUID sender;
+    String animationId;
 
     public StartStandingSexAnimation() {
     }
 
     public StartStandingSexAnimation(UUID uUID, UUID uUID2, String string) {
-        this.a = uUID;
-        this.b = uUID2;
-        this.d = string;
+        this.receiver = uUID;
+        this.sender = uUID2;
+        this.animationId = string;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.d = ByteBufUtils.readUTF8String(byteBuf);
+        this.receiver = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.sender = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.animationId = ByteBufUtils.readUTF8String(byteBuf);
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
-        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
-        ByteBufUtils.writeUTF8String(byteBuf, this.d);
+        ByteBufUtils.writeUTF8String(byteBuf, this.receiver.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.sender.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.animationId);
     }
 
     public static class Handler implements IMessageHandler<StartStandingSexAnimation, IMessage> {
@@ -59,19 +59,19 @@ implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(msg.a);
+                PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(msg.receiver);
                 if (playerGirl != null) {
                     if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer()) {
                         for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
                             if (girl instanceof PlayerGirl) {
                                 playerGirl = (PlayerGirl) girl;
-                                if (!playerGirl.world.isRemote && playerGirl.getOwnerUserUUID().equals(msg.a)) {
+                                if (!playerGirl.world.isRemote && playerGirl.getOwnerUserUUID().equals(msg.receiver)) {
                                     break;
                                 }
                             }
                         }
                     }
-                    playerGirl.handleOwnerCommand(msg.d, msg.b);
+                    playerGirl.handleOwnerCommand(msg.animationId, msg.sender);
                 }
             });
             return null;

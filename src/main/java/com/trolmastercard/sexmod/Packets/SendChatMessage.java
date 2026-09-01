@@ -27,20 +27,20 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class SendChatMessage implements IMessage {
-    boolean b;
-    String a;
-    int d;
-    UUID c;
+    boolean isValid;
+    String message;
+    int dimension;
+    UUID girlId;
 
     public SendChatMessage(String string, int n, UUID uUID) {
-        this.a = string;
-        this.d = n;
-        this.c = uUID;
-        this.b = true;
+        this.message = string;
+        this.dimension = n;
+        this.girlId = uUID;
+        this.isValid = true;
     }
 
     public SendChatMessage() {
-        this.b = false;
+        this.isValid = false;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
@@ -50,37 +50,37 @@ public class SendChatMessage implements IMessage {
             for (int i = 0; i < n; ++i) {
                 byArray[i] = byteBuf.readByte();
             }
-            this.a = new String(byArray);
-            this.d = byteBuf.readInt();
-            this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-            this.b = true;
+            this.message = new String(byArray);
+            this.dimension = byteBuf.readInt();
+            this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+            this.isValid = true;
         } catch (IndexOutOfBoundsException e) {
-            this.b = false;
+            this.isValid = false;
             System.out.println("couldn't read bytes @SendChatMessage :(");
         }
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeInt(this.a.getBytes().length);
-        byteBuf.writeBytes(this.a.getBytes());
-        byteBuf.writeInt(this.d);
-        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
+        byteBuf.writeInt(this.message.getBytes().length);
+        byteBuf.writeBytes(this.message.getBytes());
+        byteBuf.writeInt(this.dimension);
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
     }
 
 
     public static class Handler implements IMessageHandler<SendChatMessage, IMessage> {
         @Override
         public IMessage onMessage(SendChatMessage msg, MessageContext ctx) {
-            if (!msg.b) {
+            if (!msg.isValid) {
                 System.out.println("recieved an unvalid message @SendChatMessage :(");
                 return null;
             }
             if (ctx.side.isClient()) {
-                Minecraft.getMinecraft().player.sendMessage(new TextComponentString(msg.a));
+                Minecraft.getMinecraft().player.sendMessage(new TextComponentString(msg.message));
             } else {
                 FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                    Vec3d vec3d = GirlEntity.girlList(msg.c).get(0).getPreviousPosition();
-                    PacketHandler.INSTANCE.sendToAllAround(new SendChatMessage(msg.a, msg.d, msg.c), new NetworkRegistry.TargetPoint(msg.d, vec3d.x, vec3d.y, vec3d.z, 40.0));
+                    Vec3d vec3d = GirlEntity.girlList(msg.girlId).get(0).getPreviousPosition();
+                    PacketHandler.INSTANCE.sendToAllAround(new SendChatMessage(msg.message, msg.dimension, msg.girlId), new NetworkRegistry.TargetPoint(msg.dimension, vec3d.x, vec3d.y, vec3d.z, 40.0));
                 });
             }
             return null;

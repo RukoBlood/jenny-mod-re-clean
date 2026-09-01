@@ -23,50 +23,50 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class ResetController implements IMessage {
-    final static public int b = 100;
-    boolean d;
-    UUID a;
-    UUID c;
+    final static public int SOME_SHIT = 100;
+    boolean point;
+    UUID girlId;
 
     public ResetController() {
-        this.d = false;
+        this.point = false;
     }
 
     public ResetController(UUID uUID) {
-        this.a = uUID;
-        this.d = true;
+        this.girlId = uUID;
+        this.point = true;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.d = true;
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.point = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
     }
 
     public static class Handler implements IMessageHandler<ResetController, IMessage> {
         @Override
         public IMessage onMessage(ResetController msg, MessageContext ctx) {
-            if (!msg.d) {
+            if (!msg.point) {
                 System.out.println("received an invalid message @ResetController :(");
                 return null;
             }
             if (ctx.side.isServer()) {
-                GirlEntity girl = GirlEntity.getServerGirlEntity(msg.a);
+                GirlEntity girl = GirlEntity.getServerGirlEntity(msg.girlId);
                 if (girl == null) {
                     return null;
                 }
                 UUID uUID = ctx.getServerHandler().player.getPersistentID();
                 girl.getCurrentAction().ticksPlaying = new int[]{0, 0};
                 for (EntityPlayerMP entityPlayerMP : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-                    if (uUID.equals(entityPlayerMP.getPersistentID()) || !(entityPlayerMP.getDistance(girl) < 100.0f)) continue;
-                    PacketHandler.INSTANCE.sendTo(new ResetController(msg.a), entityPlayerMP);
+                    if (!uUID.equals(entityPlayerMP.getPersistentID()) && entityPlayerMP.getDistance(girl) < 100.0f) {
+                        PacketHandler.INSTANCE.sendTo(new ResetController(msg.girlId), entityPlayerMP);
+                    }
                 }
                 return null;
             }
-            GirlEntity girlEntity = GirlEntity.getClientGirlEntity(msg.a);
+            GirlEntity girlEntity = GirlEntity.getClientGirlEntity(msg.girlId);
             if (girlEntity != null) {
                 girlEntity.resetAnimationControllerTicks();
             }

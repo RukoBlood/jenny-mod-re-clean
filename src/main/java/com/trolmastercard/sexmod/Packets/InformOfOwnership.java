@@ -18,33 +18,33 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class InformOfOwnership
 implements IMessage {
-    boolean a = false;
-    boolean b;
+    boolean isValid = false;
+    boolean isDebugEnabled;
 
     public InformOfOwnership() {
     }
 
     public InformOfOwnership(boolean bl) {
-        this.b = bl;
+        this.isDebugEnabled = bl;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = byteBuf.readBoolean();
-        this.a = true;
+        this.isDebugEnabled = byteBuf.readBoolean();
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeBoolean(this.b);
+        byteBuf.writeBoolean(this.isDebugEnabled);
     }
 
     public static class Handler implements IMessageHandler<InformOfOwnership, IMessage> {
         @Override
         public IMessage onMessage(InformOfOwnership msg, MessageContext ctx) {
-            if (!msg.a || !ctx.side.equals(Side.CLIENT)) {
+            if (!msg.isValid || !ctx.side.equals(Side.CLIENT)) {
                 System.out.println("received an invalid message @InformOfOwnership :(");
                 return null;
             }
-            GalathMangTracker.debugEnabled = msg.b;
+            GalathMangTracker.debugEnabled = msg.isDebugEnabled;
             return null;
         }
     }

@@ -785,8 +785,8 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.actionController == null) {
             this.initAnimationControllers();
         }
-        ISoundListener iSoundListener = soundKeyframeEvent -> {
-            switch (soundKeyframeEvent.sound) {
+        ISoundListener soundListener = sound -> {
+            switch (sound.sound) {
                 case "attackSound": {
                     this.PlaySound(SoundEvents.ENTITY_PLAYER_ATTACK_STRONG);
                     break;
@@ -1084,7 +1084,7 @@ public class LunaEntity extends Fighter implements IEllie, IBeddableSexGirl {
             }
         };
         this.movementController.transitionLengthTicks = 10.0;
-        this.actionController.registerSoundListener(iSoundListener);
+        this.actionController.registerSoundListener(soundListener);
         data.addAnimationController(this.actionController);
         data.addAnimationController(this.movementController);
         data.addAnimationController(this.eyesController);

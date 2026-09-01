@@ -25,22 +25,21 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class RequestServerModelAvailability
-implements IMessage {
-    boolean a = false;
-    HashMap<String, Float> b = new HashMap();
+public class RequestServerModelAvailability implements IMessage {
+    boolean isValid = false;
+    HashMap<String, Float> modelScales = new HashMap();
 
     public RequestServerModelAvailability() {
     }
 
     public RequestServerModelAvailability(HashMap<String, Float> hashMap) {
-        this.b = hashMap;
+        this.modelScales = hashMap;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
         int n;
         if (!(Main.proxy instanceof ClientProxy)) {
-            this.a = true;
+            this.isValid = true;
             return;
         }
         if (!CustomModel.isGlobalRenderingDisabled()) {
@@ -49,21 +48,21 @@ implements IMessage {
         try {
             n = byteBuf.readInt();
         } catch (IndexOutOfBoundsException e) {
-            this.a = true;
+            this.isValid = true;
             return;
         }
         for (int i = 0; i < n; ++i) {
-            this.b.put(ByteBufUtils.readUTF8String(byteBuf), byteBuf.readFloat());
+            this.modelScales.put(ByteBufUtils.readUTF8String(byteBuf), byteBuf.readFloat());
         }
-        this.a = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
         if (Main.proxy instanceof ClientProxy) {
             return;
         }
-        byteBuf.writeInt(this.b.size());
-        for (Map.Entry<String, Float> entry : this.b.entrySet()) {
+        byteBuf.writeInt(this.modelScales.size());
+        for (Map.Entry<String, Float> entry : this.modelScales.entrySet()) {
             ByteBufUtils.writeUTF8String(byteBuf, entry.getKey());
             byteBuf.writeFloat(entry.getValue());
         }
@@ -72,7 +71,7 @@ implements IMessage {
     public static class Handler implements IMessageHandler<RequestServerModelAvailability, IMessage> {
         @Override
         public IMessage onMessage(RequestServerModelAvailability msg, MessageContext ctx) {
-            if (!msg.a) {
+            if (!msg.isValid) {
                 System.out.println("received an invalid Message @RequestServerModelAvailability :(");
                 return null;
             }
@@ -81,7 +80,7 @@ implements IMessage {
                     return null;
                 }
                 ArrayList<String> arrayList = new ArrayList<>();
-                for (Map.Entry<String, Float> entry : msg.b.entrySet()) {
+                for (Map.Entry<String, Float> entry : msg.modelScales.entrySet()) {
                     String string = entry.getKey();
                     if (!CustomModel.isModelDisabled(string)) {
                         arrayList.add(string);

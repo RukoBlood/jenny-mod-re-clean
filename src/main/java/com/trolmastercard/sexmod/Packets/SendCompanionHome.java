@@ -29,22 +29,22 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class SendCompanionHome implements IMessage {
     boolean isValid;
-    UUID a;
+    UUID girlId;
 
     public SendCompanionHome() {
     }
 
     public SendCompanionHome(UUID uUID) {
-        this.a = uUID;
+        this.girlId = uUID;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
     }
 
     public static class Handler implements IMessageHandler<SendCompanionHome, IMessage> {
@@ -55,33 +55,34 @@ public class SendCompanionHome implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> arrayList = GirlEntity.girlList(msg.a);
-                for (GirlEntity girlEntity : arrayList) {
-                    if (girlEntity.world.isRemote) continue;
-                    if (girlEntity.getCurrentAction() != Action.THROW_PEARL) {
-                        girlEntity.setCurrentAction(Action.THROW_PEARL);
-                        girlEntity.setYawRotation((float)Math.atan2(girlEntity.posZ - girlEntity.homeCoords.z, girlEntity.posX - girlEntity.homeCoords.x) * 57.29578f + 90.0f);
-                        girlEntity.setTargetPosition(girlEntity.getPositionVector());
-                        girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, true);
-                        girlEntity.activePearl = null;
-                        continue;
+                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.girlId);
+                for (GirlEntity girl : girls) {
+                    if (!girl.world.isRemote) {
+                        if (girl.getCurrentAction() != Action.THROW_PEARL) {
+                            girl.setCurrentAction(Action.THROW_PEARL);
+                            girl.setYawRotation((float) Math.atan2(girl.posZ - girl.homeCoords.z, girl.posX - girl.homeCoords.x) * 57.29578f + 90.0f);
+                            girl.setTargetPosition(girl.getPositionVector());
+                            girl.getDataManager().set(GirlEntity.IS_ANCHORED, true);
+                            girl.activePearl = null;
+                            continue;
+                        }
+                        if (girl.activePearl == null) {
+                            float f = (float) girl.getPositionVector().distanceTo(girl.homeCoords);
+                            girl.activePearl = new CompanionPearl(girl.world, girl);
+                            girl.activePearl.shoot(girl.homeCoords.x - girl.posX, girl.homeCoords.y - girl.posY, girl.homeCoords.z - girl.posZ, Math.min(4.0f, f * 0.1f), 0.0f);
+                            girl.world.spawnEntity(girl.activePearl);
+                            continue;
+                        }
+                        WorldServer worldServer = (WorldServer) girl.world;
+                        for (int i = 0; i < 32; ++i) {
+                            worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girl.posX, girl.posY + Reference.RANDOM.nextDouble() * 2.0, girl.posZ, 32, 0.2, 0.2, 0.2, Reference.RANDOM.nextGaussian());
+                        }
+                        girl.setPosition(girl.homeCoords.x, girl.homeCoords.y, girl.homeCoords.z);
+                        girl.activePearl = null;
+                        girl.setCurrentAction(Action.NULL);
+                        girl.getDataManager().set(GirlEntity.IS_ANCHORED, false);
+                        girl.goHome();
                     }
-                    if (girlEntity.activePearl == null) {
-                        float f = (float)girlEntity.getPositionVector().distanceTo(girlEntity.homeCoords);
-                        girlEntity.activePearl = new CompanionPearl(girlEntity.world, girlEntity);
-                        girlEntity.activePearl.shoot(girlEntity.homeCoords.x - girlEntity.posX, girlEntity.homeCoords.y - girlEntity.posY, girlEntity.homeCoords.z - girlEntity.posZ, Math.min(4.0f, f * 0.1f), 0.0f);
-                        girlEntity.world.spawnEntity(girlEntity.activePearl);
-                        continue;
-                    }
-                    WorldServer worldServer = (WorldServer)girlEntity.world;
-                    for (int i = 0; i < 32; ++i) {
-                        worldServer.spawnParticle(EnumParticleTypes.PORTAL, false, girlEntity.posX, girlEntity.posY + Reference.RANDOM.nextDouble() * 2.0, girlEntity.posZ, 32, 0.2, 0.2, 0.2, Reference.RANDOM.nextGaussian());
-                    }
-                    girlEntity.setPosition(girlEntity.homeCoords.x, girlEntity.homeCoords.y, girlEntity.homeCoords.z);
-                    girlEntity.activePearl = null;
-                    girlEntity.setCurrentAction(Action.NULL);
-                    girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, false);
-                    girlEntity.goHome();
                 }
             });
             return null;

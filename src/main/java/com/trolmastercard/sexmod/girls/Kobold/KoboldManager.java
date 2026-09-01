@@ -512,9 +512,9 @@ public class KoboldManager {
         KoboldSavedData.KoboldTribe tribe = tribesMap.get(uUID);
         if (tribe == null) {
             System.out.println("tribe of UUID " + uUID.toString() + " not found uwu");
-            return;
+        } else {
+            tribe.isAlerted = alerted;
         }
-        tribe.isAlerted = alerted;
     }
 
     @Nullable

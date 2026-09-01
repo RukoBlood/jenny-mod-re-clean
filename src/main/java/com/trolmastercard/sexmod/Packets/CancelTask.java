@@ -25,24 +25,24 @@ import net.minecraftforge.fml.relauncher.Side;
 public class CancelTask
 implements IMessage {
     boolean isValid = false;
-    BlockPos b;
+    BlockPos taskPos;
 
     public CancelTask() {
     }
 
     public CancelTask(BlockPos blockPos) {
-        this.b = blockPos;
+        this.taskPos = blockPos;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
+        this.taskPos = new BlockPos(byteBuf.readInt(), byteBuf.readInt(), byteBuf.readInt());
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeInt(this.b.getX());
-        byteBuf.writeInt(this.b.getY());
-        byteBuf.writeInt(this.b.getZ());
+        byteBuf.writeInt(this.taskPos.getX());
+        byteBuf.writeInt(this.taskPos.getY());
+        byteBuf.writeInt(this.taskPos.getZ());
     }
 
     public static class handler implements IMessageHandler<CancelTask, IMessage> {
@@ -53,15 +53,13 @@ implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
-                if (uUID == null) {
-                    return;
+                UUID tribeId = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
+                if (tribeId != null) {
+                    HashSet<BlockPos> hashSet = KoboldManager.removeTaskByBlockPos(tribeId, msg.taskPos);
+                    if (!hashSet.isEmpty()) {
+                        PacketHandler.INSTANCE.sendTo(new SendBlocks(hashSet, false), ctx.getServerHandler().player);
+                    }
                 }
-                HashSet<BlockPos> hashSet = KoboldManager.removeTaskByBlockPos(uUID, msg.b);
-                if (hashSet.isEmpty()) {
-                    return;
-                }
-                PacketHandler.INSTANCE.sendTo(new SendBlocks(hashSet, false), ctx.getServerHandler().player);
             });
             return null;
         }

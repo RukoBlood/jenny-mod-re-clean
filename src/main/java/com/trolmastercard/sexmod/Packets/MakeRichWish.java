@@ -25,24 +25,24 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class MakeRichWish implements IMessage {
     boolean isValid;
-    Vec3d a;
+    Vec3d pos;
 
     public MakeRichWish() {
     }
 
     public MakeRichWish(Vec3d vec3d) {
-        this.a = vec3d;
+        this.pos = vec3d;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
+        this.pos = new Vec3d(byteBuf.readDouble(), byteBuf.readDouble(), byteBuf.readDouble());
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeDouble(this.a.x);
-        byteBuf.writeDouble(this.a.y);
-        byteBuf.writeDouble(this.a.z);
+        byteBuf.writeDouble(this.pos.x);
+        byteBuf.writeDouble(this.pos.y);
+        byteBuf.writeDouble(this.pos.z);
     }
 
     public static class Handler implements IMessageHandler<MakeRichWish, IMessage> {
@@ -54,12 +54,12 @@ public class MakeRichWish implements IMessage {
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 World world = ctx.getServerHandler().player.world;
-                EntityItem entityItem = new EntityItem(world, msg.a.x, msg.a.y, msg.a.z, new ItemStack(Items.DIAMOND, Reference.RANDOM.nextInt(2) + 1));
-                EntityItem entityItem2 = new EntityItem(world, msg.a.x, msg.a.y, msg.a.z, new ItemStack(Items.EMERALD, Reference.RANDOM.nextInt(2) + 1));
-                EntityItem entityItem3 = new EntityItem(world, msg.a.x, msg.a.y, msg.a.z, new ItemStack(Items.GOLD_INGOT, Reference.RANDOM.nextInt(2) + 1));
-                world.spawnEntity(entityItem);
-                world.spawnEntity(entityItem2);
-                world.spawnEntity(entityItem3);
+                EntityItem firstItem = new EntityItem(world, msg.pos.x, msg.pos.y, msg.pos.z, new ItemStack(Items.DIAMOND, Reference.RANDOM.nextInt(2) + 1));
+                EntityItem secondItem = new EntityItem(world, msg.pos.x, msg.pos.y, msg.pos.z, new ItemStack(Items.EMERALD, Reference.RANDOM.nextInt(2) + 1));
+                EntityItem thirdItem = new EntityItem(world, msg.pos.x, msg.pos.y, msg.pos.z, new ItemStack(Items.GOLD_INGOT, Reference.RANDOM.nextInt(2) + 1));
+                world.spawnEntity(firstItem);
+                world.spawnEntity(secondItem);
+                world.spawnEntity(thirdItem);
             });
             return null;
         }

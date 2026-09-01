@@ -25,10 +25,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class SendEgg implements IMessage {
-    boolean a;
+    boolean isValid;
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
@@ -38,25 +38,24 @@ public class SendEgg implements IMessage {
 
         @Override
         public IMessage onMessage(SendEgg msg, MessageContext ctx) {
-            if (!msg.a || !ctx.side.equals(Side.SERVER)) {
+            if (!msg.isValid || !ctx.side.equals(Side.SERVER)) {
                 System.out.println("received an invalid Message @SendEgg :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
                 UUID uUID = KoboldManager.findTribeIdWith(entityPlayerMP.getPersistentID());
-                if (uUID == null) {
-                    return;
+                if (uUID != null) {
+                    EyeAndKoboldColor color = KoboldManager.getTribeColor(uUID);
+                    ItemStack itemStack = new ItemStack(KoboldEggItem.KOBOLD_EGG, 1, color.getWoolMeta());
+                    NBTTagCompound nBTTagCompound = itemStack.getTagCompound();
+                    if (nBTTagCompound == null) {
+                        nBTTagCompound = new NBTTagCompound();
+                    }
+                    nBTTagCompound.setString("tribeID", uUID.toString());
+                    itemStack.setTagCompound(nBTTagCompound);
+                    entityPlayerMP.inventory.addItemStackToInventory(itemStack);
                 }
-                EyeAndKoboldColor color = KoboldManager.getTribeColor(uUID);
-                ItemStack itemStack = new ItemStack(KoboldEggItem.KOBOLD_EGG, 1, color.getWoolMeta());
-                NBTTagCompound nBTTagCompound = itemStack.getTagCompound();
-                if (nBTTagCompound == null) {
-                    nBTTagCompound = new NBTTagCompound();
-                }
-                nBTTagCompound.setString("tribeID", uUID.toString());
-                itemStack.setTagCompound(nBTTagCompound);
-                entityPlayerMP.inventory.addItemStackToInventory(itemStack);
             });
             return null;
         }

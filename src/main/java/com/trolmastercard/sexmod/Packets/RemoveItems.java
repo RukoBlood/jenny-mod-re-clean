@@ -24,26 +24,26 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class RemoveItems implements IMessage {
     boolean isValid = false;
-    UUID a;
-    ItemStack b;
+    UUID playerId;
+    ItemStack requiredItem;
 
     public RemoveItems() {
     }
 
     public RemoveItems(UUID uUID, ItemStack itemStack) {
-        this.a = uUID;
-        this.b = itemStack;
+        this.playerId = uUID;
+        this.requiredItem = itemStack;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.b = ByteBufUtils.readItemStack(byteBuf);
+        this.playerId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.requiredItem = ByteBufUtils.readItemStack(byteBuf);
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
-        ByteBufUtils.writeItemStack(byteBuf, this.b);
+        ByteBufUtils.writeUTF8String(byteBuf, this.playerId.toString());
+        ByteBufUtils.writeItemStack(byteBuf, this.requiredItem);
     }
 
     public static class Handler implements IMessageHandler<RemoveItems, IMessage> {
@@ -54,11 +54,11 @@ public class RemoveItems implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                InventoryPlayer inventoryPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(msg.a).inventory;
+                InventoryPlayer inventoryPlayer = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(msg.playerId).inventory;
                 for (int i = 0; i < inventoryPlayer.getSizeInventory(); ++i) {
                     ItemStack itemStack = inventoryPlayer.getStackInSlot(i);
-                    if (!itemStack.getItem().equals(msg.b.getItem())) continue;
-                    itemStack.shrink(msg.b.getCount());
+                    if (!itemStack.getItem().equals(msg.requiredItem.getItem())) continue;
+                    itemStack.shrink(msg.requiredItem.getCount());
                     break;
                 }
             });

@@ -30,36 +30,36 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class UploadInventoryToServer implements IMessage {
     boolean isValid = false;
-    ItemStack[] d;
-    UUID a;
-    UUID c;
+    ItemStack[] stacks;
+    UUID girlId;
+    UUID playerId;
 
     public UploadInventoryToServer() {
     }
 
     public UploadInventoryToServer(UUID uUID, UUID uUID2, ItemStack[] itemStackArray) {
-        this.a = uUID;
-        this.d = itemStackArray;
-        this.c = uUID2;
+        this.girlId = uUID;
+        this.stacks = itemStackArray;
+        this.playerId = uUID2;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.a = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
-        this.c = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.girlId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.playerId = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         int n = byteBuf.readInt();
-        this.d = new ItemStack[n];
+        this.stacks = new ItemStack[n];
         for (int i = 0; i < n; ++i) {
-            this.d[i] = ByteBufUtils.readItemStack(byteBuf);
+            this.stacks[i] = ByteBufUtils.readItemStack(byteBuf);
         }
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.a.toString());
-        ByteBufUtils.writeUTF8String(byteBuf, this.c.toString());
-        byteBuf.writeInt(this.d.length);
-        for (ItemStack itemStack : this.d) {
-            ByteBufUtils.writeItemStack(byteBuf, itemStack);
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlId.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.playerId.toString());
+        byteBuf.writeInt(this.stacks.length);
+        for (ItemStack stack : this.stacks) {
+            ByteBufUtils.writeItemStack(byteBuf, stack);
         }
     }
 
@@ -71,37 +71,37 @@ public class UploadInventoryToServer implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.a);
+                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.girlId);
                 for (GirlEntity girl : girls) {
                     if (!girl.world.isRemote) {
-                        EntityPlayer player = girl.world.getPlayerEntityByUUID(msg.c);
+                        EntityPlayer player = girl.world.getPlayerEntityByUUID(msg.playerId);
                         if (player != null) {
                             InventoryPlayer inventory = player.inventory;
                             for (int i = 0; i < 36; ++i) {
-                                inventory.setInventorySlotContents(i, msg.d[i]);
+                                inventory.setInventorySlotContents(i, msg.stacks[i]);
                             }
                             if (girl instanceof LunaEntity) {
                                 Fighter fighter = (Fighter) girl;
-                                fighter.inventory.setStackInSlot(0, msg.d[36]);
-                                fighter.inventory.setStackInSlot(1, msg.d[37]);
-                                fighter.inventory.setStackInSlot(2, msg.d[38]);
-                                fighter.inventory.setStackInSlot(3, msg.d[39]);
-                                fighter.inventory.setStackInSlot(4, msg.d[40]);
-                                fighter.inventory.setStackInSlot(5, msg.d[41]);
-                                fighter.inventory.setStackInSlot(6, msg.d[42]);
+                                fighter.inventory.setStackInSlot(0, msg.stacks[36]);
+                                fighter.inventory.setStackInSlot(1, msg.stacks[37]);
+                                fighter.inventory.setStackInSlot(2, msg.stacks[38]);
+                                fighter.inventory.setStackInSlot(3, msg.stacks[39]);
+                                fighter.inventory.setStackInSlot(4, msg.stacks[40]);
+                                fighter.inventory.setStackInSlot(5, msg.stacks[41]);
+                                fighter.inventory.setStackInSlot(6, msg.stacks[42]);
                             } else if (girl instanceof Fighter) {
-                                Fighter e2_class2183 = (Fighter) girl;
-                                e2_class2183.inventory.setStackInSlot(0, msg.d[36]);
-                                e2_class2183.inventory.setStackInSlot(1, msg.d[37]);
-                                e2_class2183.inventory.setStackInSlot(2, msg.d[38]);
-                                e2_class2183.inventory.setStackInSlot(3, msg.d[39]);
-                                e2_class2183.inventory.setStackInSlot(4, msg.d[40]);
-                                e2_class2183.inventory.setStackInSlot(5, msg.d[41]);
+                                Fighter fighter = (Fighter) girl;
+                                fighter.inventory.setStackInSlot(0, msg.stacks[36]);
+                                fighter.inventory.setStackInSlot(1, msg.stacks[37]);
+                                fighter.inventory.setStackInSlot(2, msg.stacks[38]);
+                                fighter.inventory.setStackInSlot(3, msg.stacks[39]);
+                                fighter.inventory.setStackInSlot(4, msg.stacks[40]);
+                                fighter.inventory.setStackInSlot(5, msg.stacks[41]);
                             }
                             if (girl instanceof Supporter) {
                                 Supporter supporter = (Supporter) girl;
                                 for (int i = 0; i < 27; ++i) {
-                                    supporter.invHandler.setStackInSlot(i, msg.d[i + 36]);
+                                    supporter.invHandler.setStackInSlot(i, msg.stacks[i + 36]);
                                 }
                             }
                         }

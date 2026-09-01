@@ -20,22 +20,22 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class SetTribeFollowMode implements IMessage {
     boolean isValid = false;
-    boolean b;
+    boolean isTribeFollowing;
 
     public SetTribeFollowMode() {
     }
 
     public SetTribeFollowMode(boolean bl) {
-        this.b = bl;
+        this.isTribeFollowing = bl;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = byteBuf.readBoolean();
+        this.isTribeFollowing = byteBuf.readBoolean();
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeBoolean(this.b);
+        byteBuf.writeBoolean(this.isTribeFollowing);
     }
 
     public static class Handler implements IMessageHandler<SetTribeFollowMode, IMessage> {
@@ -48,10 +48,9 @@ public class SetTribeFollowMode implements IMessage {
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
                 UUID uUID = KoboldManager.findTribeIdWith(ctx.getServerHandler().player.getPersistentID());
-                if (uUID == null) {
-                    return;
+                if (uUID != null) {
+                    KoboldManager.setTribeAlerted(uUID, msg.isTribeFollowing);
                 }
-                KoboldManager.setTribeAlerted(uUID, msg.b);
             });
             return null;
         }

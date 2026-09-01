@@ -25,31 +25,31 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class ChangeDataParameter
 implements IMessage {
-    boolean b;
-    UUID d;
+    boolean isValid;
+    UUID girlServerTarget;
     String actionKey;
     String actionValue;
 
     public ChangeDataParameter() {
-        this.b = false;
+        this.isValid = false;
     }
 
     public ChangeDataParameter(UUID uUID, String key, String value) {
-        this.d = uUID;
+        this.girlServerTarget = uUID;
         this.actionKey = key;
         this.actionValue = value;
-        this.b = true;
+        this.isValid = true;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.d = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.girlServerTarget = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.actionKey = ByteBufUtils.readUTF8String(byteBuf);
         this.actionValue = ByteBufUtils.readUTF8String(byteBuf);
-        this.b = true;
+        this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.d.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlServerTarget.toString());
         ByteBufUtils.writeUTF8String(byteBuf, this.actionKey);
         ByteBufUtils.writeUTF8String(byteBuf, this.actionValue == null ? "null" : this.actionValue);
     }
@@ -58,57 +58,57 @@ implements IMessage {
 
         @Override
         public IMessage onMessage(ChangeDataParameter msg, MessageContext ctx) {
-            if (!msg.b) {
+            if (!msg.isValid) {
                 System.out.println("received an invalid message @ChangeDataParameter :(");
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                GirlEntity girlEntity = GirlEntity.getServerGirlEntity(msg.d);
-                if (girlEntity == null) {
-                    return;
-                }
-                switch (msg.actionKey) {
-                    case "pregnant": {
-                        girlEntity.getDataManager().set(SlimeEntity.TicksUntilBirth, Integer.valueOf(msg.actionValue));
-                        break;
-                    }
-                    case "currentModel": {
-                        girlEntity.getDataManager().set(GirlEntity.OUTFIT_INDEX, Integer.valueOf(msg.actionValue));
-                        break;
-                    }
-                    case "currentAction": {
-                        if (Action.valueOf(msg.actionValue) == Action.ATTACK && girlEntity.getCurrentAction() != Action.NULL) break;
-                        girlEntity.setCurrentAction(Action.valueOf(msg.actionValue));
-                        break;
-                    }
-                    case "animationFollowUp": {
-                        girlEntity.getDataManager().set(GirlEntity.GIRL_HAND_STATES, msg.actionValue);
-                        break;
-                    }
-                    case "playerSheHasSexWith": {
-                        if (msg.actionValue.equals("null")) {
-                            girlEntity.setInteractionPlayerUUID(null);
+                GirlEntity girl = GirlEntity.getServerGirlEntity(msg.girlServerTarget);
+                if (girl != null) {
+                    switch (msg.actionKey) {
+                        case "pregnant": {
+                            girl.getDataManager().set(SlimeEntity.TicksUntilBirth, Integer.valueOf(msg.actionValue));
                             break;
                         }
-                        girlEntity.setInteractionPlayerUUID(UUID.fromString(msg.actionValue));
-                        break;
-                    }
-                    case "targetPos": {
-                        String[] stringArray = msg.actionValue.split("f");
-                        Vec3d vec3d = new Vec3d(Double.parseDouble(stringArray[0]), Double.parseDouble(stringArray[1]), Double.parseDouble(stringArray[2]));
-                        girlEntity.setTargetPosition(vec3d);
-                        break;
-                    }
-                    case "master": {
-                        girlEntity.getDataManager().set(GirlEntity.MASTER, msg.actionValue);
-                        break;
-                    }
-                    case "walk speed": {
-                        girlEntity.getDataManager().set(GirlEntity.WALK_SPEED, msg.actionValue);
-                        break;
-                    }
-                    case "shouldbeattargetpos": {
-                        girlEntity.getDataManager().set(GirlEntity.IS_ANCHORED, Boolean.valueOf(msg.actionValue));
+                        case "currentModel": {
+                            girl.getDataManager().set(GirlEntity.OUTFIT_INDEX, Integer.valueOf(msg.actionValue));
+                            break;
+                        }
+                        case "currentAction": {
+                            if (Action.valueOf(msg.actionValue) == Action.ATTACK && girl.getCurrentAction() != Action.NULL)
+                                break;
+                            girl.setCurrentAction(Action.valueOf(msg.actionValue));
+                            break;
+                        }
+                        case "animationFollowUp": {
+                            girl.getDataManager().set(GirlEntity.GIRL_HAND_STATES, msg.actionValue);
+                            break;
+                        }
+                        case "playerSheHasSexWith": {
+                            if (msg.actionValue.equals("null")) {
+                                girl.setInteractionPlayerUUID(null);
+                                break;
+                            }
+                            girl.setInteractionPlayerUUID(UUID.fromString(msg.actionValue));
+                            break;
+                        }
+                        case "targetPos": {
+                            String[] posStrArray = msg.actionValue.split("f");
+                            Vec3d targetPos = new Vec3d(Double.parseDouble(posStrArray[0]), Double.parseDouble(posStrArray[1]), Double.parseDouble(posStrArray[2]));
+                            girl.setTargetPosition(targetPos);
+                            break;
+                        }
+                        case "master": {
+                            girl.getDataManager().set(GirlEntity.MASTER, msg.actionValue);
+                            break;
+                        }
+                        case "walk speed": {
+                            girl.getDataManager().set(GirlEntity.WALK_SPEED, msg.actionValue);
+                            break;
+                        }
+                        case "shouldbeattargetpos": {
+                            girl.getDataManager().set(GirlEntity.IS_ANCHORED, Boolean.valueOf(msg.actionValue));
+                        }
                     }
                 }
             });

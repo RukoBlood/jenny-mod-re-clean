@@ -26,22 +26,22 @@ import net.minecraftforge.fml.relauncher.Side;
 public class CatThrowAwayItem
 implements IMessage {
     boolean isValid = false;
-    UUID b;
+    UUID girlIds;
 
     public CatThrowAwayItem() {
     }
 
     public CatThrowAwayItem(UUID uUID) {
-        this.b = uUID;
+        this.girlIds = uUID;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
-        this.b = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
+        this.girlIds = UUID.fromString(ByteBufUtils.readUTF8String(byteBuf));
         this.isValid = true;
     }
 
     public void toBytes(ByteBuf byteBuf) {
-        ByteBufUtils.writeUTF8String(byteBuf, this.b.toString());
+        ByteBufUtils.writeUTF8String(byteBuf, this.girlIds.toString());
     }
 
     public static class Handler implements IMessageHandler<CatThrowAwayItem, IMessage> {
@@ -53,7 +53,7 @@ implements IMessage {
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {
-                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.b);
+                ArrayList<GirlEntity> girls = GirlEntity.girlList(msg.girlIds);
                 for (GirlEntity girl : girls) {
                     if (!girl.world.isRemote && girl instanceof LunaEntity) {
                         LunaEntity luna = (LunaEntity) girl;
