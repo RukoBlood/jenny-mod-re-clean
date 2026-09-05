@@ -21,5 +21,6 @@ build
 eclipse
 run
 /gradle/wrapper/gradle-wrapper.jar
-/src/main/resources/logo.png
-/src/main/resources/assets/sexmod/*
+#/src/main/resources/logo.png
+#/src/main/resources/assets/sexmod/*
+#TODO push assets on github
