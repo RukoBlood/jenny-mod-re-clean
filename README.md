@@ -2,7 +2,7 @@
 
 **This project is a fork of https://github.com/palkaline/jenny-mod-re**
 ---
-# Jenny mod reverse engineering (And Cleaning up) (TMC 1.1.0 version)
+# Jenny Mod Deobfuscation and Remapping project (Based on Trolmastercard's Fapcraft 1.1.0)
 
 Created by Palkaline, Remapped by Rukoblood
 
@@ -14,11 +14,14 @@ Go check it out: https://github.com/ReverseEngineeringEnthusiasts/Jenny-Mod-Fapc
 Also found out that This mod was obfuscated with Zelix KlassMaster 13
 
 ## About
+jenny-mod-re-clean (or JMRC) is a project about a deobfuscation and remapping a one long dead mod originally made by SchnurriTV, and then trolmastercard.
 
-Initial goals of this project
+Initial goals of this project:
 - Reverse engineer the extreme obfuscation that has been applied jar-wide (Done! ZKM has fallen)
 - FOSS! 
-- Clean up code (pretty much done)
+- Simple SDK for pasters. 
+- Remap all the classes, fields and methods.
+- Fix the bugs from decompiling, commented out code if needed.
 
 ## Tools, AI and mods that i used to reverse engineer this Mod
 
