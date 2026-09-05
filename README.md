@@ -31,7 +31,7 @@ Initial goals of this project:
 - SchnurriTV's Jenny Mod build v1.5.2 (As unobfuscated bytecode reference for class, field and methods names.)
 
 ## Building and/or running
-1. Get original fapcraft resources and move it in src/java/resources.
+1. Git clone this repo.
 2. Open this project in IntelliJ IDEA or Giga IDE. 
 3. gradlew build
 4. if successful - gradlew RunClient to test bugs in dev environment
@@ -44,93 +44,7 @@ Don't forget to additionally install geckolib. You can download it from cursefor
 
 
 ## Obfuscation
-
-Fapcraft uses Zelix KlassMaster obfuscation.
-
-Ordered by severity
-- exception pass-and-return wrapping
-    ```
-    try {
-        // code ...
-    } catch (RuntimeException runtimeException) {
-        // see here... exceptions are wrapped, passed, and returned (identity)
-        throw a(new RuntimeException(runtimeException));
-    }
-    
-    public static RuntimeException a(RuntimeException runtimeException) {
-        return runtimeException;
-    }
-    ```
-
-- exception table mashing
-    ```
-    try {
-        try {
-            try {
-                // ... real code
-            } catch (RuntimeException runtimeException) {
-                throw a(new RuntimeException(runtimeException));
-            }
-            // code ... or fallthrough
-        } catch (RuntimeException runtimeException) {
-            throw a(new RuntimeException(runtimeException));
-        }
-        // code ... or fallthrough
-    } catch (RuntimeException runtimeException) {
-        throw a(new RuntimeException(runtimeException));
-    }
-    ```
-- dangling catch blocks
-    ```
-    int a = 5 + z;
-    // some code ...
-    catch { // dangling catch without prior try
-        throw a.b(new RuntimeException());
-    }
-    ```
-- impossible control flow 
-    ```
-    block71: {
-        block73: {
-            block75: {
-                // some code...
-                *** goto label69 *** // impossible to track
-            }
-        }
-    }
-    ```
-- local reuse
-    ```
-    Object z = new Integer(5);
-    // some code...
-    z = new HashMap<Integer, Double>();
-    ```
-- duplicate identifiers
-    ```
-    class a {
-        int a;
-        Aa a;
-        A a();
-        public class a {
-        
-        }
-    }
-    ```
-- synthetic(s) <sub>deserves a whole subtopic of its own</sub>
-  - generic "fill-all" wrappers
-  - inner class helpers
-- generic stripping
-  - `class A<B>` --> `class A`, across classes, methods, params...
-- clashing signature
-    ``` 
-    int a()
-    
-    float a()
-    
-    a a()
-    ```
-- Other CFR failures not included above...
-
+Moved to Obfuscation.md (check docs)
 ## Regex
 
 Useful patterns below:
@@ -158,7 +72,7 @@ I 110% guarantee there are bugs that were created during the deobfuscation proce
 
 The most likely bugs are:
 - Dangling overrides I failed to rename 
-  - a to doRender, getResourceLocation, getTexture, getModelFileLocation
+  - a to doRender, getResourceLocation, getTexture, getModelFileLocation (done!)
   - so, these might fallback to defaults from the parent class.
 - Referencing incorrect method, same signature.
   - Static method resolution is strange to me... you learn something new!
