@@ -418,31 +418,5 @@ extends GirlRenderer<ManglelieEntity> {
     public static Vec3d getEntityLookVector(GalathEntity galath, float partialTicks) {
         return EntityLookVectorHelper.getInterpolatedPosition(galath, partialTicks).add(galath.getCachedBoneOffset("mangPos"));
     }
-
-    // gay synthetics
-
-    //public void doRender(GirlEntity em_class2582, double d, double d2, double d3, float f, float f2) {
-    //    this.doRender((ManglelieEntity)em_class2582, d, d2, d3, f, f2);
-    //}
-
-    //@Override
-    //protected Vec3d a(GirlEntity em_class2582, float f, Vec3d vec3d) {
-    //    return this.a((ManglelieEntity)em_class2582, f, vec3d);
-    //}
-
-    //@Override
-    //protected void a(GeoModel geoModel, BufferBuilder bufferBuilder, GirlEntity em_class2582, float f, float f2, float f3, float f4, float f5) {
-    //    this.a(geoModel, bufferBuilder, (ManglelieEntity)em_class2582, f, f2, f3, f4, f5);
-    //}
-
-    //@Override
-    //public void doRender(EntityLivingBase entityLivingBase, double d, double d2, double d3, float f, float f2) {
-    //    this.doRender((ManglelieEntity)entityLivingBase, d, d2, d3, f, f2);
-    //}
-
-    //@Override
-    //public void doRender(Entity entity, double d, double d2, double d3, float f, float f2) {
-    //    this.doRender((ManglelieEntity)entity, d, d2, d3, f, f2);
-    //}
 }
 

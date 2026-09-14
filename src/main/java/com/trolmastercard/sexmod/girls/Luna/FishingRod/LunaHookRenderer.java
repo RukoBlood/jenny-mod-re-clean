@@ -149,15 +149,5 @@ extends Render<LunaHookEntity> {
         return particles;
     }
 
-    //@Override
-    //@Nullable
-    //protected ResourceLocation getEntityTexture(Entity entity) {
-    //    return this.a((gi_class370)entity);
-    //}
-
-    //@Override
-    //public void doRender(Entity entity, double d, double d2, double d3, float f, float f2) {
-    //    this.a((gi_class370)entity, d, d2, d3, f, f2);
-    //}
 }
 

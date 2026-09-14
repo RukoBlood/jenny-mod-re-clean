@@ -84,6 +84,8 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         this.updateCorruptedAnimation(girl);
     }
 
+
+    //old getCorruptedAnimation Code
     /*
     void e(GirlEntity em_class2582) {
         if (this.a.isGamePaused()) {
@@ -109,41 +111,33 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
     }*/
 
     void updateCorruptedAnimation(GirlEntity girl) {
-        if (this.mc.isGamePaused()) {
-            return;
-        }
-        if (!(girl instanceof ManglelieEntity)) {
-            return;
-        }
+        if (!this.mc.isGamePaused()) {
+            if (girl instanceof ManglelieEntity) {
+                ManglelieEntity manglelie = (ManglelieEntity) girl;
+                GalathEntity galath = manglelie.getMommyGalath(false);
 
-        ManglelieEntity manglelie = (ManglelieEntity) girl;
-        GalathEntity galath = manglelie.getMommyGalath(false);
+                if (galath != null) {// Проверяем, находится ли Галат в состоянии анимации осквернения
+                    if (Action.isAnyAction(galath, Action.CORRUPT_CUM, Action.CARRY_FAST, Action.CORRUPT_INTRO, Action.CORRUPT_SLOW)) {
+                        AnimationProcessor processor = this.getAnimationProcessor();
+                        IBone legR = processor.getBone("legR");
+                        if (legR != null) {
+                            legR.setRotationY(legR.getRotationY() + RAD_NEGA_45);
+                        }
 
-        if (galath == null) {
-            return;
-        }
+                        IBone lowerArmR = processor.getBone("lowerArmR");
+                        if (lowerArmR != null) {
+                            lowerArmR.setRotationX(lowerArmR.getRotationX() + RAD_NEGA_45);
+                        }
 
-        // Проверяем, находится ли Галат в состоянии анимации осквернения
-        if (!Action.isAnyAction(galath, Action.CORRUPT_CUM, Action.CARRY_FAST, Action.CORRUPT_INTRO, Action.CORRUPT_SLOW)) {
-            return;
-        }
-
-        AnimationProcessor processor = this.getAnimationProcessor();
-
-        IBone legR = processor.getBone("legR");
-        if (legR != null) {
-            legR.setRotationY(legR.getRotationY() + RAD_NEGA_45);
-        }
-
-        IBone lowerArmR = processor.getBone("lowerArmR");
-        if (lowerArmR != null) {
-            lowerArmR.setRotationX(lowerArmR.getRotationX() + RAD_NEGA_45);
+                        IBone lowerArmL = processor.getBone("lowerArmL");
+                        if (lowerArmL != null) {
+                            lowerArmL.setRotationX(lowerArmL.getRotationX() + RAD_NEGA_45);
+                        }
+                    }
+                }
+            }
         }
 
-        IBone lowerArmL = processor.getBone("lowerArmL");
-        if (lowerArmL != null) {
-            lowerArmL.setRotationX(lowerArmL.getRotationX() + RAD_NEGA_45);
-        }
     }
 
     void updateBodySync(GirlEntity girl) {
@@ -289,11 +283,6 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
 
         boolean isRightHandDominant = manglelie.isVectorRightOfMommy(manglelie.ikTargetPos, partialTicks);
         if (isRightHandDominant) {
-            //ArmTransformState.access$002(state, new Vector3fSexmodSpecial(-headOffset + lookR.yaw + TrigMath.toRadians(90.0f), lookR.pitch, 0.0f));
-            //ArmTransformState.access$102(state, new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.toRadians(90.0f), (float)((double)lookL.pitch + (double) TrigMath.toRadians(-20.0f) * Math.cos(lookR.pitch + radYawHead * 1.0f) + (double) Reference.LerpFloat(lerpedRot / 2.0f, 0.0f, f9)), 0.0f));
-            //ArmTransformState.access$402(state, 1.0f + Math.abs(Math.abs(lookR.pitch) - Math.abs(radYawHead)) * 0.1909f);
-            //ArmTransformState.access$702(state, TrigMath.toRadians(90.0f));
-            //ArmTransformState.access$200((ArmTransformState)state).z = Reference.LerpFloat(lerpedRot, 0.0f, f9);
 
             state.armRRot = new Vector3fSexmodSpecial(-headOffset + lookR.yaw + TrigMath.wrapDegrees(90.0f), lookR.pitch, 0.0f);
             state.armLRot = new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.wrapDegrees(90.0f), (float) (lookL.pitch + TrigMath.wrapDegrees(-20.0f) * Math.cos(lookR.pitch + radYawHead) + RotationHelper.LerpFloat(lerpedRot / 2.0f, 0.0f, f9)), 0.0f);
@@ -309,11 +298,6 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
                 state.lowerArmLRot.x = RAD_35 + (float) RotationHelper.LerpDouble(0.0, RAD_45, RotationHelper.smoothStep(factor * 2.0f));
             }
         } else {
-//            ArmTransformState.access$102(state, new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.toRadians(90.0f), lookL.pitch, 0.0f));
-//            ArmTransformState.access$002(state, new Vector3fSexmodSpecial(-headOffset + lookR.yaw + TrigMath.toRadians(90.0f), (float)((double)lookR.pitch + (double) TrigMath.toRadians(20.0f) * Math.cos(lookL.pitch + radYawHead * 1.0f)) - Reference.LerpFloat(lerpedRot / 2.0f, 0.0f, f9), 0.0f));
-//            ArmTransformState.access$502(state, 1.0f + Math.abs(Math.abs(lookL.pitch) - Math.abs(radYawHead)) * 0.1909f);
-//            ArmTransformState.access$602(state, TrigMath.toRadians(90.0f));
-//            ArmTransformState.access$300((ArmTransformState)state).z = -Reference.LerpFloat(lerpedRot, 0.0f, f9);
             state.armLRot = new Vector3fSexmodSpecial(-headOffset + lookL.yaw + TrigMath.wrapDegrees(90.0f), lookL.pitch, 0.0f);
             state.armRRot = new Vector3fSexmodSpecial(-headOffset + lookR.yaw + TrigMath.wrapDegrees(90.0f), (float) (lookR.pitch + TrigMath.wrapDegrees(20.0f) * Math.cos(lookL.pitch + radYawHead)) - RotationHelper.LerpFloat(lerpedRot / 2.0f, 0.0f, f9), 0.0f);
             state.armRScaleY = 1.0f + Math.abs(Math.abs(lookL.pitch) - Math.abs(radYawHead)) * 0.1909f;
@@ -328,8 +312,6 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
                 state.lowerArmRRot.x = RAD_140 + (float) RotationHelper.LerpDouble(0.0, RAD_45, RotationHelper.smoothStep(factor * 2.0f));
             }
         }
-        //ArmTransformState.access$000((ArmTransformState)state).y += radYawHead;
-        //ArmTransformState.access$100((ArmTransformState)state).y += radYawHead;
         state.armRRot.y += radYawHead;
         state.armLRot.y += radYawHead;
         return state;
@@ -341,10 +323,6 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         ArmTransformState state = new ArmTransformState(); //weird synthetic inners...
 
         if (headRotX > 0.0f) {
-            //ArmTransformState.access$002(state, new Vector3fSexmodSpecial(armR.getRotationX() - headRotX, armR.getRotationY() - headRotX * -25.0f / 45.0f, armR.getRotationZ() + headRotX * 12.5f / 45.0f));
-            //ArmTransformState.access$102(state, new Vector3fSexmodSpecial(armL.getRotationX() - headRotX, armL.getRotationY() + headRotX * 15.0f / 45.0f, armL.getRotationZ()));
-            //ArmTransformState.access$202(state, new Vector3fSexmodSpecial(lowerArmL.getRotationX(), lowerArmL.getRotationY(), lowerArmL.getRotationZ()));
-            //ArmTransformState.access$302(state, new Vector3fSexmodSpecial(lowerArmR.getRotationX(), lowerArmR.getRotationY(), lowerArmR.getRotationZ()));
             state.armRRot = new Vector3fSexmodSpecial(armR.getRotationX() - headRotX, armR.getRotationY() - headRotX * -25.0f / 45.0f, armR.getRotationZ() + headRotX * 12.5f / 45.0f);
             state.armLRot = new Vector3fSexmodSpecial(armL.getRotationX() - headRotX, armL.getRotationY() + headRotX * 15.0f / 45.0f, armL.getRotationZ());
             state.lowerArmLRot = new Vector3fSexmodSpecial(lowerArmL.getRotationX(), lowerArmL.getRotationY(), lowerArmL.getRotationZ());
@@ -352,10 +330,6 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             return state;
         }
 
-        //ArmTransformState.access$302(state, new Vector3fSexmodSpecial(lowerArmR.getRotationX() + 2.0f * headRotX, lowerArmR.getRotationY(), lowerArmR.getRotationZ()));
-        //ArmTransformState.access$202(state, new Vector3fSexmodSpecial(lowerArmL.getRotationX() + 2.2222223f * headRotX, lowerArmL.getRotationY(), lowerArmL.getRotationZ()));
-        //ArmTransformState.access$002(state, new Vector3fSexmodSpecial(armR.getRotationX() - headRotX, armR.getRotationY(), armR.getRotationZ() + headRotX * 5.0f / 45.0f));
-        //ArmTransformState.access$102(state, new Vector3fSexmodSpecial(armL.getRotationX() - headRotX, armL.getRotationY(), armL.getRotationZ() - headRotX * 5.0f / 45.0f));
         state.lowerArmRRot = new Vector3fSexmodSpecial(lowerArmR.getRotationX() + 2.0f * headRotX, lowerArmR.getRotationY(), lowerArmR.getRotationZ());
         state.lowerArmLRot = new Vector3fSexmodSpecial(lowerArmL.getRotationX() + 2.2222223f * headRotX, lowerArmL.getRotationY(), lowerArmL.getRotationZ());
         state.armRRot = new Vector3fSexmodSpecial(armR.getRotationX() - headRotX, armR.getRotationY(), armR.getRotationZ() + headRotX * 5.0f / 45.0f);
@@ -364,67 +338,62 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
     }
 
     void updateHeadRotation(GirlEntity girl) {
-        if (ClientProxy.IS_PRELOADING) {
-            return;
+        if (!ClientProxy.IS_PRELOADING) {
+            if (!this.mc.isGamePaused()) {
+                ManglelieEntity manglelie = (ManglelieEntity) girl;
+
+                if (ManglelieRenderer.hasValidModel(manglelie)) {
+                    GalathEntity galath = manglelie.getMommyGalath(false);
+                    if (galath != null) {
+                        AnimationProcessor processor = this.getAnimationProcessor();
+                        float headRotX = galath.cachedHeadRotationX;
+
+                        processor.getBone("rotationTool").setRotationX(headRotX);
+                        IBone head = processor.getBone("head");
+                        IBone upperBody = processor.getBone("upperBody");
+                        IBone boobs = processor.getBone("boobs");
+
+                        if (headRotX > 0.0f) {
+                            upperBody.setRotationX(-1.1111112f * headRotX);
+                            head.setRotationX(0.1333f * headRotX);
+                            boobs.setRotationX(headRotX * 22.5f / 45.0f);
+                        } else {
+                            upperBody.setRotationX(-1.6666666f * headRotX);
+                            head.setRotationX(headRotX * 0.666f);
+                        }
+
+                        float diffY = ThreadNames.getAngleDifferences(manglelie.offsetY, manglelie.targetHeadYaw);
+                        float diffX = ThreadNames.getAngleDifferences(manglelie.offsetX, manglelie.targetHeadPitch);
+
+                        float fps = Minecraft.getDebugFPS();
+                        if (fps == 0.0f) {
+                            fps = 1.0f;
+                        }
+
+                        float stepY = 7.0f * (Math.abs(diffY) < 7.0f ? diffY : (diffY > 0.0f ? 7.0f : -7.0f)) * (1.0f / fps);
+                        float stepX = 7.0f * (Math.abs(diffX) < 7.0f ? diffX : (diffX > 0.0f ? 7.0f : -7.0f)) * (1.0f / fps);
+
+                        float finalY = manglelie.offsetY + stepY;
+                        float finalX = manglelie.offsetX + stepX;
+
+                        head.setRotationY(head.getRotationY() + finalY);
+                        head.setRotationX(head.getRotationX() + finalX);
+                        manglelie.offsetY = finalY;
+                        manglelie.offsetX = finalX;
+                    }
+                }
+            }
         }
-        if (this.mc.isGamePaused()) {
-            return;
-        }
-        ManglelieEntity manglelie = (ManglelieEntity)girl;
 
-        if (!ManglelieRenderer.hasValidModel(manglelie)) {
-            return;
-        }
-        GalathEntity galath = manglelie.getMommyGalath(false);
-        if (galath == null) {
-            return;
-        }
-
-        AnimationProcessor processor = this.getAnimationProcessor();
-        float headRotX = galath.cachedHeadRotationX;
-
-        processor.getBone("rotationTool").setRotationX(headRotX);
-        IBone head = processor.getBone("head");
-        IBone upperBody = processor.getBone("upperBody");
-        IBone boobs = processor.getBone("boobs");
-
-        if (headRotX > 0.0f) {
-            upperBody.setRotationX(-1.1111112f * headRotX);
-            head.setRotationX(0.1333f * headRotX);
-            boobs.setRotationX(headRotX * 22.5f / 45.0f);
-        } else {
-            upperBody.setRotationX(-1.6666666f * headRotX);
-            head.setRotationX(headRotX * 0.666f);
-        }
-
-        float diffY = ThreadNames.getAngleDifferences(manglelie.offsetY, manglelie.targetHeadYaw);
-        float diffX = ThreadNames.getAngleDifferences(manglelie.offsetX, manglelie.targetHeadPitch);
-
-        float fps = Minecraft.getDebugFPS();
-        if (fps == 0.0f) {
-            fps = 1.0f;
-        }
-
-        float stepY = 7.0f * (Math.abs(diffY) < 7.0f ? diffY : (diffY > 0.0f ? 7.0f : -7.0f)) * (1.0f / fps);
-        float stepX = 7.0f * (Math.abs(diffX) < 7.0f ? diffX : (diffX > 0.0f ? 7.0f : -7.0f)) * (1.0f / fps);
-
-        float finalY = manglelie.offsetY + stepY;
-        float finalX = manglelie.offsetX + stepX;
-
-        head.setRotationY(head.getRotationY() + finalY);
-        head.setRotationX(head.getRotationX() + finalX);
-        manglelie.offsetY = finalY;
-        manglelie.offsetX = finalX;
     }
 
     public static void updateClothAndCockVisibility(GirlEntity girl, AnimationProcessor processor, float partialTicks) {
-        if (ClientProxy.IS_PRELOADING) {
-            return;
+        if (!ClientProxy.IS_PRELOADING) {
+            boolean hasSkirt = ManglelieRenderer.isGalathLooking(girl);
+            ManglelieModel.setSkirtVisible(processor, hasSkirt);
+            ManglelieModel.setSkirtDetailsVisible(processor, hasSkirt);
+            ManglelieModel.updateCockStages(girl, processor);
         }
-        boolean hasSkirt = ManglelieRenderer.isGalathLooking(girl);
-        ManglelieModel.setSkirtVisible(processor, hasSkirt);
-        ManglelieModel.setSkirtDetailsVisible(processor, hasSkirt);
-        ManglelieModel.updateCockStages(girl, processor);
     }
 
     static void updateCockStages(GirlEntity girl, AnimationProcessor processor) {
@@ -450,10 +419,6 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
         processor.getBone("sideLNoSkirt").setHidden(visible);
         processor.getBone("sideLSkirt").setHidden(!visible);
     }
-
-//    private static RuntimeException a(RuntimeException runtimeException) {
-//        return runtimeException;
-//    }
 
     private static class ArmTransformState {
         private Vector3fSexmodSpecial armRRot;
@@ -482,81 +447,6 @@ public class ManglelieModel extends GirlModel<GirlEntity> {
             return result;
         }
 
-//        static Vector3fSexmodSpecial access$000(ArmTransformState state) {
-//            return state.armRRot;
-//        }
-
-//        static Vector3fSexmodSpecial access$100(ArmTransformState state) {
-//            return state.armLRot;
-//        }
-
-//        static Vector3fSexmodSpecial access$200(ArmTransformState a_inner1282) {
-//            return a_inner1282.lowerArmLRot;
-//        }
-
-//        static Vector3fSexmodSpecial access$300(ArmTransformState a_inner1282) {
-//            return a_inner1282.lowerArmRRot;
-//        }
-
-//        static float access$400(ArmTransformState a_inner1282) {
-//            return a_inner1282.armLScaleY;
-//        }
-
-//        static float access$500(ArmTransformState a_inner1282) {
-//            return a_inner1282.armRScaleY;
-//        }
-
-//        static float access$600(ArmTransformState a_inner1282) {
-//            return a_inner1282.elbowRRotY;
-//        }
-
-//        static float access$700(ArmTransformState a_inner1282) {
-//            return a_inner1282.elbowLRotY;
-//        }
-
-        //a_inner128(b_inner129 b_inner1292) {
-        //    this();
-        //}
-
-//        static Vector3fSexmodSpecial access$202(ArmTransformState a_inner1282, Vector3fSexmodSpecial f7_class2922) {
-//            a_inner1282.lowerArmLRot = f7_class2922;
-//            return a_inner1282.lowerArmLRot;
-//        }
-
-//        static Vector3fSexmodSpecial access$302(ArmTransformState a_inner1282, Vector3fSexmodSpecial f7_class2922) {
-//            a_inner1282.lowerArmRRot = f7_class2922;
-//            return a_inner1282.lowerArmRRot;
-//        }
-
-//        static Vector3fSexmodSpecial access$002(ArmTransformState a_inner1282, Vector3fSexmodSpecial f7_class2922) {
-//            a_inner1282.armRRot = f7_class2922;
-//            return a_inner1282.armRRot;
-//        }
-
-//        static Vector3fSexmodSpecial access$102(ArmTransformState a_inner1282, Vector3fSexmodSpecial f7_class2922) {
-//            a_inner1282.armLRot = f7_class2922;
-//            return a_inner1282.armLRot;
-//        }
-
-//        static float access$402(ArmTransformState a_inner1282, float f) {
-//            a_inner1282.armLScaleY = f;
-//            return a_inner1282.armLScaleY;
-//        }
-
-//        static float access$702(ArmTransformState a_inner1282, float f) {
-//            a_inner1282.elbowLRotY = f;
-//            return a_inner1282.elbowLRotY;
-//        }
-
-//        static float access$502(ArmTransformState a_inner1282, float f) {
-//            a_inner1282.armRScaleY = f;
-//            return a_inner1282.armRScaleY;
-//        }
-
-//        static float access$602(ArmTransformState a_inner1282, float f) {
-//            a_inner1282.elbowRRotY = f;
-//            return a_inner1282.elbowRRotY;
-//        }
     }
 }
 

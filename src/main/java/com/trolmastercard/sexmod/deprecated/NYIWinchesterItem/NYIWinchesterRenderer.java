@@ -70,9 +70,5 @@ public class NYIWinchesterRenderer extends GeoItemRenderer<NYIWinchesterItem> {
         }
     }
 
-    //@Override
-    //public void render(Item item, ItemStack itemStack) {
-    //    this.a((aj_class31)item, itemStack);
-    //}
 }
 

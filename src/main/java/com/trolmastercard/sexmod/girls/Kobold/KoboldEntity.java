@@ -93,7 +93,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -1295,7 +1294,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
         BlockPos pos = KoboldManager.getTribeHomePos(uUID);
         if (pos == null) {
             this.targetTribeHomePos = null;
-            this.handleTaskFollow(uUID);
+            this.handleTaskFollow(uUID); //TODO crash 5
         } else {
             KoboldEntity leader = KoboldManager.getTribeLeader(uUID);
             if (KoboldManager.hasAssignedMaster(uUID)) {
@@ -1365,7 +1364,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
                     this.handleNearbyPlayerTick(tribeId);
                 } else {
                     if (assignedTask.getTaskType() == KoboldTask.KoboldTasks.FALL_TREE) {
-                        this.startMiningTask(tribeId, assignedTask.getOriginPos(), assignedTask);
+                        this.startMiningTask(tribeId, assignedTask.getOriginPos(), assignedTask); //TODO stacktrace 3
                     }
                     if (assignedTask.getTaskType() == KoboldTask.KoboldTasks.MINE) {
                         this.handleTribeTasks(tribeId, assignedTask);
@@ -1461,183 +1460,6 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     /*
      * WARNING - void declaration
      */
-    /*
-    @Deprecated
-    BlockPos a___(bs_class97 bs_class972, UUID uUID) {
-        //void var14_33;
-        //Object object;
-        //Object object2;
-        BlockPos blockPos;
-        HashSet<BlockPos> hashSet = bs_class972.g();
-        EnumFacing enumFacing = bs_class972.f();
-        ArrayList<BlockPos> arrayList2 = new ArrayList<BlockPos>();
-        Integer n = null;
-        if (hashSet.isEmpty()) {
-            return null;
-        }
-        for (BlockPos arrayList3 : hashSet) {
-            switch (enumFacing) {
-                case NORTH: {
-                    if (n != null && arrayList3.getZ() < n) break;
-                    n = arrayList3.getZ();
-                    arrayList2.add(arrayList3);
-                    break;
-                }
-                case SOUTH: {
-                    if (n != null && arrayList3.getZ() > n) break;
-                    n = arrayList3.getZ();
-                    arrayList2.add(arrayList3);
-                    break;
-                }
-                case EAST: {
-                    if (n != null && arrayList3.getX() > n) break;
-                    n = arrayList3.getX();
-                    arrayList2.add(arrayList3);
-                    break;
-                }
-                case WEST: {
-                    if (n != null && arrayList3.getX() < n) break;
-                    n = arrayList3.getX();
-                    arrayList2.add(arrayList3);
-                }
-            }
-        }
-        ArrayList arrayList4 = new ArrayList();
-        for (BlockPos blockPos2 : arrayList2) {
-            if ((enumFacing == EnumFacing.NORTH || enumFacing == EnumFacing.SOUTH) && blockPos2.getZ() == n.intValue()) {
-                arrayList4.add(blockPos2);
-            }
-            if (enumFacing != EnumFacing.EAST && enumFacing != EnumFacing.WEST || blockPos2.getX() != n.intValue()) continue;
-            arrayList4.add(blockPos2);
-        }
-        if (arrayList4.isEmpty()) {
-            return null;
-        }
-        ArrayList<BlockPos> arrayList = new ArrayList<BlockPos>();
-        EnumFacing enumFacing2 = bs_class972.f();
-        BlockPos blockPos3 = bs_class972.b();
-        if (enumFacing2.getAxis() == EnumFacing.Axis.Z) {
-            blockPos = new BlockPos(blockPos3.getX(), blockPos3.getY(), ((BlockPos)arrayList4.get(0)).getZ());
-            blockPos = enumFacing2 == EnumFacing.NORTH ? blockPos.north() : blockPos.south();
-            arrayList.add(blockPos.down());
-            arrayList.add(blockPos.down().east());
-            arrayList.add(blockPos.down().west());
-            arrayList.add(blockPos);
-            arrayList.add(blockPos.up());
-            arrayList.add(blockPos.up().up());
-            arrayList.add(blockPos.up().up().up());
-            arrayList.add(blockPos.west());
-            arrayList.add(blockPos.west().up());
-            arrayList.add(blockPos.west().up().up());
-            arrayList.add(blockPos.west().up().up().up());
-            arrayList.add(blockPos.west().west());
-            arrayList.add(blockPos.west().west().up());
-            arrayList.add(blockPos.west().west().up().up());
-            arrayList.add(blockPos.east());
-            arrayList.add(blockPos.east().up());
-            arrayList.add(blockPos.east().up().up());
-            arrayList.add(blockPos.east().up().up().up());
-            arrayList.add(blockPos.east().east());
-            arrayList.add(blockPos.east().east().up());
-            arrayList.add(blockPos.east().east().up().up());
-        } else {
-            blockPos = new BlockPos(((BlockPos)arrayList4.get(0)).getX(), blockPos3.getY(), blockPos3.getZ());
-            blockPos = enumFacing2 == EnumFacing.EAST ? blockPos.east() : blockPos.west();
-            arrayList.add(blockPos.down());
-            arrayList.add(blockPos.down().north());
-            arrayList.add(blockPos.down().south());
-            arrayList.add(blockPos);
-            arrayList.add(blockPos.up());
-            arrayList.add(blockPos.up().up());
-            arrayList.add(blockPos.up().up().up());
-            arrayList.add(blockPos.south());
-            arrayList.add(blockPos.south().up());
-            arrayList.add(blockPos.south().up().up());
-            arrayList.add(blockPos.south().up().up().up());
-            arrayList.add(blockPos.south().south());
-            arrayList.add(blockPos.south().south().up());
-            arrayList.add(blockPos.south().south().up().up());
-            arrayList.add(blockPos.north());
-            arrayList.add(blockPos.north().up());
-            arrayList.add(blockPos.north().up().up());
-            arrayList.add(blockPos.north().up().up().up());
-            arrayList.add(blockPos.north().north());
-            arrayList.add(blockPos.north().north().up());
-            arrayList.add(blockPos.north().north().up().up());
-        }
-        HashSet<BlockPos> hashSet2 = new HashSet<BlockPos>();
-        for (BlockPos blockPos4 : arrayList) {
-            if (!this.world.getBlockState(blockPos4).getMaterial().isLiquid()) continue;
-            this.world.setBlockState(blockPos4, Blocks.COBBLESTONE.getDefaultState(), 2);
-            if (!arrayList4.contains(blockPos4)) continue;
-            hashSet2.add(blockPos4);
-        }
-        if (!hashSet2.isEmpty()) {
-            bs_class972.a(hashSet2);
-            EntityPlayer object2 = this.net_minecraft_entity_player_EntityPlayer_z();
-            if (object2 != null) {
-                ge_class363.b.sendTo((IMessage)new SendBlocks(hashSet2, true), (EntityPlayerMP)object2);
-            }
-        }
-        arrayList.clear();
-        arrayList.add(blockPos.down());
-        if (enumFacing2.getAxis() == EnumFacing.Axis.Z) {
-            arrayList.add(blockPos.down().west());
-            arrayList.add(blockPos.down().east());
-        } else {
-            arrayList.add(blockPos.down().north());
-            arrayList.add(blockPos.down().south());
-        }
-        for (BlockPos blockPos5 : arrayList) {
-            if (!this.world.getBlockState(blockPos5).getBlock().isPassable(this.world, blockPos5)) continue;
-            this.world.setBlockState(blockPos5, Blocks.COBBLESTONE.getDefaultState());
-        }
-        HashSet<BlockPos> object2 = new HashSet();
-        Iterator iterator = arrayList4.iterator();
-        while (iterator.hasNext()) {
-            BlockPos object = (BlockPos)iterator.next();
-            Block block = this.world.getBlockState((BlockPos)object).getBlock();
-            if (block != Blocks.AIR) continue;
-            ((HashSet)object2).add(object);
-        }
-        if (!((HashSet)object2).isEmpty()) {
-            arrayList4.removeAll((Collection<?>)object2);
-            bs_class972.b((HashSet<BlockPos>)object2);
-            UUID uUID2 = ax_class48.b(uUID);
-            if (uUID2 != null && (object = this.world.getPlayerEntityByUUID(uUID2)) != null) {
-                ge_class363.b.sendTo((IMessage)new SendBlocks((HashSet<BlockPos>)object2, false), (EntityPlayerMP)object);
-            }
-        }
-        if (arrayList4.isEmpty()) {
-            return this.a(bs_class972, uUID);
-        }
-        Object var14_23 = null;
-        List<KoboldEntity> object = bs_class972.c();
-        for (int i = 0; i < object.size(); ++i) {
-            BlockPos blockPos6;
-            if (((KoboldEntity)object.get(i)).getEntityId() != this.getEntityId()) continue;
-            if (i == 0) {
-                BlockPos blockPos7;
-                BlockPos blockPos8 = this.a(arrayList4, -1, bs_class972.f(), bs_class972.b());
-                if (blockPos8 != null || (blockPos7 = this.a(arrayList4, 0, bs_class972.f(), bs_class972.b())) != null) break;
-                BlockPos blockPos9 = this.a(arrayList4, 1, bs_class972.f(), bs_class972.b());
-                break;
-            }
-            if (i == 1) {
-                BlockPos blockPos10;
-                BlockPos blockPos11 = this.a(arrayList4, 1, bs_class972.f(), bs_class972.b());
-                if (blockPos11 != null || (blockPos10 = this.a(arrayList4, 0, bs_class972.f(), bs_class972.b())) != null) break;
-                BlockPos blockPos12 = this.a(arrayList4, -1, bs_class972.f(), bs_class972.b());
-                break;
-            }
-            if (i != 2) continue;
-            BlockPos blockPos13 = this.a(arrayList4, 0, bs_class972.f(), bs_class972.b());
-            if (blockPos13 != null || (blockPos6 = this.a(arrayList4, 1, bs_class972.f(), bs_class972.b())) != null) break;
-            BlockPos blockPos14 = this.a(arrayList4, -1, bs_class972.f(), bs_class972.b());
-            break;
-        }
-        return var14_33;
-    }*/
 
     BlockPos executeMiningTask(KoboldTask task, UUID tribeId) {
         HashSet<BlockPos> miningTargets = task.getTargetBlocks();
@@ -1995,77 +1817,6 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
      * Enabled force condition propagation
      * Lifted jumps to return sites
      */
-    /*
-    @Deprecated
-    boolean a__(UUID uUID, boolean bl) {
-        Object object;
-        int n;
-        Object object2;
-        BlockPos blockPos2;
-        HashSet<BlockPos> hashSet = ax_class48.q(uUID);
-        if (hashSet == null) {
-            return false;
-        }
-        Vec3i vec3i = null;
-        for (BlockPos blockPos2 : hashSet) {
-            TileEntityChest tileEntityChest = (TileEntityChest)this.world.getTileEntity(blockPos2);
-            object2 = tileEntityChest.getSingleChestHandler();
-            n = 0;
-            for (int i = 0; i < this.X.getSlots(); ++i) {
-                ItemStack itemStack = this.X.getStackInSlot(i);
-                if (itemStack.isEmpty()) continue;
-                for (int j = 0; j < object2.getSlots(); ++j) {
-                    ItemStack itemStack2 = object2.insertItem(j, itemStack, true);
-                    if (itemStack2.getCount() == itemStack.getCount()) continue;
-                    n = 1;
-                    break;
-                }
-                if (n != 0) break;
-            }
-            if (n == 0) continue;
-            if (vec3i == null) {
-                vec3i = blockPos2;
-                continue;
-            }
-            if (!(this.getDistanceSq((BlockPos)vec3i) > this.getDistanceSq(blockPos2))) continue;
-            vec3i = blockPos2;
-        }
-        if (vec3i == null) {
-            return false;
-        }
-        if (this.getDistance(vec3i.getX(), vec3i.getY(), vec3i.getZ()) < 2.0) {
-            object = (TileEntityChest)this.world.getTileEntity((BlockPos)vec3i);
-            blockPos2 = object.getSingleChestHandler();
-            block3: for (int i = 0; i < this.X.getSlots(); ++i) {
-                object2 = this.X.getStackInSlot(i);
-                if (((ItemStack)object2).isEmpty()) continue;
-                for (n = 0; n < blockPos2.getSlots(); ++n) {
-                    ItemStack itemStack = blockPos2.insertItem(n, (ItemStack)object2, false);
-                    if (itemStack.getCount() <= 0) {
-                        this.X.setStackInSlot(i, ItemStack.EMPTY);
-                        continue;
-                    }
-                    this.X.setStackInSlot(i, itemStack);
-                    object2 = itemStack;
-                }
-            }
-            this.world.playSound(null, (BlockPos)vec3i, SoundEvents.BLOCK_CHEST_LOCKED, SoundCategory.BLOCKS, 1.0f, 1.0f);
-            return true;
-        }
-        if (Math.abs(vec3i.getY() - this.getPosition().getY()) > 4) {
-            if (!bl) return false;
-            this.b((BlockPos)vec3i);
-            return true;
-        } else {
-            object = this.getNavigator();
-            blockPos2 = this.c((BlockPos)vec3i);
-            ((PathNavigate)object).tryMoveToXYZ(blockPos2.getX(), blockPos2.getY(), blockPos2.getZ(), 0.35f);
-            if (((PathNavigate)object).getPath() != null) return true;
-            if (!bl) return false;
-            this.b((BlockPos)vec3i);
-        }
-        return true;
-    }*/
 
     @CheckReturnValue
     boolean isTribeChestOpen(UUID tribeId, boolean checkOpen) {
@@ -2220,7 +1971,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     void startMiningTask(UUID tribeId, BlockPos pos, KoboldTask task) {
         if (this.getCurrentAction() != Action.MINE) {
-            this.mineBlockAt(pos, tribeId);
+            this.mineBlockAt(pos, tribeId); //TODO stacktrace 2
         } else {
             --this.cooldownTicks;
             if (this.cooldownTicks <= 0) {
@@ -2350,7 +2101,8 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     void mineBlockAt(BlockPos pos, UUID tribeId) {
         //Object object; My beloved.
         BlockPos bestBlock;
-        Vec3i bestBlockVec = null;
+        BlockPos bestBlockVec = null;
+        //BlockPos bestBlockVec = new BlockPos(0,0,0);
         ArrayList<BlockPos> neighbours = new ArrayList<>();
 
         if (this.world.getBlockState(pos.north().down()).isFullCube() && !this.world.getBlockState(pos.north()).isFullBlock()) {
@@ -2387,45 +2139,50 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             }
         }
 
-        if (this.getPosition().getDistance(bestBlockVec.getX(), bestBlockVec.getY(), bestBlockVec.getZ()) > 1.0) {
-            if (Math.abs(this.getPosition().getY() - bestBlockVec.getY()) > 4) {
-                this.syncTribeBlocks((BlockPos)bestBlockVec);
-                return;
-            }
-            bestBlock = this.findStandPos((BlockPos)bestBlockVec);
-            this.getNavigator().tryMoveToXYZ((double) bestBlock.getX() + 0.5, bestBlock.getY(), (double) bestBlock.getZ() + 0.5, 0.35);
-            this.tickPathVelocity();
-            return;
-        }
-        float yaw = 0.0f;
-        if (((BlockPos)bestBlockVec).subtract(pos).equals(new BlockPos(0, 0, -1))) {
-            yaw = 0.0f;
-        }
-        if (((BlockPos)bestBlockVec).subtract(pos).equals(new BlockPos(1, 0, 0))) {
-            yaw = 90.0f;
-        }
-        if (((BlockPos)bestBlockVec).subtract(pos).equals(new BlockPos(0, 0, 1))) {
-            yaw = 180.0f;
-        }
-        if (((BlockPos)bestBlockVec).subtract(pos).equals(new BlockPos(-1, 0, 0))) {
-            yaw = -90.0f;
-        }
+        try {
+            //assert bestBlockVec != null; //TODO
+            if (this.getPosition().getDistance(bestBlockVec.getX(), bestBlockVec.getY(), bestBlockVec.getZ()) > 1.0) { // TODO stacktrace 1
+                if (Math.abs(this.getPosition().getY() - bestBlockVec.getY()) > 4) {
+                    this.syncTribeBlocks(bestBlockVec);
+                } else {
+                    bestBlock = this.findStandPos(bestBlockVec);
+                    this.getNavigator().tryMoveToXYZ((double) bestBlock.getX() + 0.5, bestBlock.getY(), (double) bestBlock.getZ() + 0.5, 0.35);
+                    this.tickPathVelocity();
+                }
+            } else {
+                float yaw = 0.0f;
+                if (bestBlockVec.subtract(pos).equals(new BlockPos(0, 0, -1))) {
+                    yaw = 0.0f;
+                }
+                if (bestBlockVec.subtract(pos).equals(new BlockPos(1, 0, 0))) {
+                    yaw = 90.0f;
+                }
+                if (bestBlockVec.subtract(pos).equals(new BlockPos(0, 0, 1))) {
+                    yaw = 180.0f;
+                }
+                if (bestBlockVec.subtract(pos).equals(new BlockPos(-1, 0, 0))) {
+                    yaw = -90.0f;
+                }
 
-        this.setTargetPosition(new Vec3d((double)bestBlockVec.getX() + 0.5, bestBlockVec.getY(), (double)bestBlockVec.getZ() + 0.5));
-        this.setYawRotation(yaw);
-        this.entityDataManager.set(IS_ANCHORED, true);
-        this.entityDataManager.set(IS_MINING_WOOD, true);
-        this.setCurrentAction(Action.MINE);
-        this.world.destroyBlock(((BlockPos)bestBlockVec).up(), false);
+                this.setTargetPosition(new Vec3d((double) bestBlockVec.getX() + 0.5, bestBlockVec.getY(), (double) bestBlockVec.getZ() + 0.5));
+                this.setYawRotation(yaw);
+                this.entityDataManager.set(IS_ANCHORED, true);
+                this.entityDataManager.set(IS_MINING_WOOD, true);
+                this.setCurrentAction(Action.MINE);
+                this.world.destroyBlock(bestBlockVec.up(), false);
+            }
+        } catch (Exception e) {
+            System.out.printf("Otyeb po bestBlockVec. %s po prichine togo chto bestBlockVec raven %s%n", e, bestBlockVec);
+            e.printStackTrace();
+        }
     }
 
     void handleModelSync() {
-        if (this.editedColorManually) {
-            return;
-        }
-        Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
-        if (tribeIdOpt.isPresent()) {
-            this.entityDataManager.set(CURRENT_ACTION, KoboldManager.getTribeColor(tribeIdOpt.get()).toString());
+        if (!this.editedColorManually) {
+            Optional<UUID> tribeIdOpt = this.entityDataManager.get(TRIBE_ID);
+            if (tribeIdOpt.isPresent()) {
+                this.entityDataManager.set(CURRENT_ACTION, KoboldManager.getTribeColor(tribeIdOpt.get()).toString());
+            }
         }
     }
 
@@ -2532,7 +2289,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
 //            if (tribeId.getLeastSignificantBits() == 0 || tribeId.getMostSignificantBits() == 0) {
 //                // tribeId return a 00000... UUID when missing... super weird
-                //RukoBlood: it's because you in a obfuscated env
+                //RukoBlood: it's because you in an obfuscated env
 //                return;
 //            }
 

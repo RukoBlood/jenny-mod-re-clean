@@ -174,21 +174,21 @@ public class KoboldTask {
         HashSet<BlockPos> connectedLogs = findConnectedLogs(world, basePos);
         HashSet<BlockPos> logsToRemove = new HashSet<>();
         for (BlockPos pos : connectedLogs) {
-            if (pos.getX() != basePos.getX() || pos.getZ() != basePos.getZ()) {
-                continue;
+            if (pos.getX() == basePos.getX() && pos.getZ() == basePos.getZ()) {
+                logsToRemove.add(pos);
             }
-            logsToRemove.add(pos);
         }
         connectedLogs.removeAll(logsToRemove);
         treeBlocks.addAll(connectedLogs);
 
         // Фильтрация блоков, которые уже задействованы в других задачах племени
         HashSet<BlockPos> alreadyClaimedBlocks = new HashSet<>();
-        Collection<com.trolmastercard.sexmod.girls.Kobold.KoboldTask> existingTasks = KoboldManager.getTribeTasks(tribeUUID);
+        //Collection<KoboldTask> existingTasks = KoboldManager.getTribeTasks(tribeUUID);
+        Collection<KoboldTask> existingTasks = KoboldManager.getTribeTasks(tribeUUID);
 
         if (existingTasks != null) {
             for (BlockPos pos : treeBlocks) {
-                for (com.trolmastercard.sexmod.girls.Kobold.KoboldTask task : existingTasks) {
+                for (KoboldTask task : existingTasks) {
                     if (task.getTargetBlocks().contains(pos)) {
                         alreadyClaimedBlocks.add(pos);
                         break;
@@ -198,8 +198,8 @@ public class KoboldTask {
         }
         treeBlocks.removeAll(alreadyClaimedBlocks);
 
-        // Регистрируем новую задачу в менеджер племени
-        com.trolmastercard.sexmod.girls.Kobold.KoboldTask newTask = new com.trolmastercard.sexmod.girls.Kobold.KoboldTask(basePos, KoboldTasks.FALL_TREE, treeBlocks);
+        // Регистрируем новую задачу в менеджере племени
+        KoboldTask newTask = new KoboldTask(basePos, KoboldTasks.FALL_TREE, treeBlocks);
         KoboldManager.addTaskToTribe(tribeUUID, newTask);
 
         return treeBlocks;
@@ -216,64 +216,64 @@ public class KoboldTask {
     }
 
     static HashSet<BlockPos> findConnectedLogs(World world, BlockPos blockPos) {
-        return com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos, new HashSet<BlockPos>());
+        return KoboldTask.findConnectedLogsRecursive(world, blockPos, new HashSet<BlockPos>());
     }
 
     static HashSet<BlockPos> findConnectedLogsRecursive(World world, BlockPos blockPos, HashSet<BlockPos> visited) {
         if (visited.contains(blockPos)) {
-            return new HashSet<BlockPos>();
+            return new HashSet<>();
         }
         visited.add(blockPos);
         if (world.getBlockState(blockPos.add(1, 0, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, 0), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, 0), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 0), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 0), visited));
         }
         if (world.getBlockState(blockPos.add(0, 0, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 0, 1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 0, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 0, -1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 0, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, 1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, -1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 0, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 0, 1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 0, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, -1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 0, -1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, 0), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, 0), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, 0)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 0), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 0), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, 1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(0, 1, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, -1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(0, 1, -1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, 1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, -1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, -1), visited));
         }
         if (world.getBlockState(blockPos.add(-1, 1, 1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(-1, 1, 1), visited));
         }
         if (world.getBlockState(blockPos.add(1, 1, -1)).getBlock() instanceof BlockLog) {
-            visited.addAll(com.trolmastercard.sexmod.girls.Kobold.KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, -1), visited));
+            visited.addAll(KoboldTask.findConnectedLogsRecursive(world, blockPos.add(1, 1, -1), visited));
         }
         return visited;
     }

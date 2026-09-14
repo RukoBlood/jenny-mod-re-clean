@@ -309,7 +309,8 @@ public class DebugMode {
 
             if ("kobs".equals(message)) {
                 UUID tribeID = KoboldManager.findTribeIdWith(player.getPersistentID());
-                int totalMembersCount = KoboldManager.getTribeMemberCount(tribeID);
+                int totalMembersCount; //TODO Crashes
+                totalMembersCount = KoboldManager.getTribeMemberCount(tribeID);
                 List<KoboldEntity> aliveMembers = KoboldManager.getTribeMembersList(tribeID);
 
                 for (KoboldEntity members : aliveMembers) {

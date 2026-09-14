@@ -116,60 +116,119 @@ public class Main {
         GeckoLib.initialize();
     }
 
+//    public static void setConfigs() throws IOException {
+//        //Appendable writer;
+//        FileWriter writer;
+//
+//        File configDir = new File("config");
+//        if (!configDir.exists()) {
+//            configDir.mkdir();
+//        }
+//
+//        File configFile = new File("config/sexmod.json");
+//        if (!configFile.exists()) {
+//            configFile.createNewFile();
+//            writer = new FileWriter(configFile);
+//            writer.write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
+//            writer.close();
+//        }
+//
+//        StringBuilder strBuilder = new StringBuilder();
+//        Object todo_pleaseDeObjectIt = new BufferedReader(new FileReader(configFile));
+//        Object writer2 = null;
+//        try {
+//            String line;
+//            while ((line = ((BufferedReader)todo_pleaseDeObjectIt).readLine()) != null) {
+//                strBuilder.append(line);
+//            }
+//        } catch (Throwable e) {
+//            //writer2 = e;
+//            //throw e;
+//        } finally {
+//            if (todo_pleaseDeObjectIt != null) {
+//                if (writer2 != null) {
+//                    try {
+//                        ((BufferedReader)todo_pleaseDeObjectIt).close();
+//                    } catch (Throwable throwable) {
+//                        ((Throwable)writer2).addSuppressed(throwable);
+//                    }
+//                } else {
+//                    ((BufferedReader)todo_pleaseDeObjectIt).close();
+//                }
+//            }
+//        }
+//        todo_pleaseDeObjectIt = strBuilder.toString();
+//
+//        if (!((String)todo_pleaseDeObjectIt).contains("shouldGenBuildings")) {
+//            configFile.delete();
+//            configFile = new File("config/sexmod.json");
+//            configFile.createNewFile();
+//            writer2 = new FileWriter(configFile);
+//            ((Writer)writer2).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
+//            ((OutputStreamWriter)writer2).close();
+//            ConfigWorldGenHandler.GENERATION_ENABLED = true;
+//            GirlModel.enableModelCache = false;
+//            PlayerGirl.ALLOW_FLIGHT_SYNC_ENABLED = true;
+//            return;
+//        }
+//        int genIdx = ((String)todo_pleaseDeObjectIt).indexOf("shouldGenBuildings");
+//        int n2 = ((String)todo_pleaseDeObjectIt).indexOf("shouldLoadOtherSkins");
+//        int n3 = ((String)todo_pleaseDeObjectIt).indexOf("allowFlying");
+//        ConfigWorldGenHandler.GENERATION_ENABLED = 't' == ((String)todo_pleaseDeObjectIt).charAt(genIdx + 20);
+//        GirlModel.enableModelCache = 't' == ((String)todo_pleaseDeObjectIt).charAt(n2 + 22);
+//        PlayerGirl.ALLOW_FLIGHT_SYNC_ENABLED = 't' == ((String)todo_pleaseDeObjectIt).charAt(n3 + 13);
+//    }
+
+    //Gemini 3.6 flash generated code
     public static void setConfigs() throws IOException {
-        Appendable jsonBuilder;
         File configDir = new File("config");
-        configDir.mkdir();
-        File configFile = new File("config/sexmod.json");
-        if (!configFile.exists()) {
-            configFile.createNewFile();
-            jsonBuilder = new FileWriter(configFile);
-            ((Writer)jsonBuilder).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
-            ((OutputStreamWriter)jsonBuilder).close();
+        if (!configDir.exists()) {
+            configDir.mkdir();
         }
-        jsonBuilder = new StringBuilder();
-        Object json = new BufferedReader(new FileReader(configFile));
-        Object writer2 = null;
-        try {
-            String line;
-            while ((line = ((BufferedReader)json).readLine()) != null) {
-                ((StringBuilder)jsonBuilder).append(line);
-            }
-        } catch (Throwable e) {
-            //writer2 = e;
-            //throw e;
-        } finally {
-            if (json != null) {
-                if (writer2 != null) {
-                    try {
-                        ((BufferedReader)json).close();
-                    } catch (Throwable throwable) {
-                        ((Throwable)writer2).addSuppressed(throwable);
-                    }
-                } else {
-                    ((BufferedReader)json).close();
+
+        File configFile = new File("config/sexmod.json");
+
+        // Если файла нет, создаем с дефолтным содержимым
+        if (!configFile.exists()) {
+            if (configFile.createNewFile()) {
+                try (FileWriter writer = new FileWriter(configFile)) {
+                    writer.write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
                 }
             }
         }
-        json = ((StringBuilder)jsonBuilder).toString();
-        if (!((String)json).contains("shouldGenBuildings")) {
-            configFile.delete();
-            configFile = new File("config/sexmod.json");
-            configFile.createNewFile();
-            writer2 = new FileWriter(configFile);
-            ((Writer)writer2).write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
-            ((OutputStreamWriter)writer2).close();
+
+        // Чтение содержимого файла
+        StringBuilder jsonBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+        }
+
+        String jsonContent = jsonBuilder.toString();
+
+        // Проверка корректности структуры JSON (пересоздание при валидации)
+        if (!jsonContent.contains("shouldGenBuildings")) {
+            if (configFile.delete() && configFile.createNewFile()) {
+                try (FileWriter writer = new FileWriter(configFile)) {
+                    writer.write("{\"shouldGenBuildings\":true,\"shouldLoadOtherSkins\":false,\"allowFlying\":true}");
+                }
+            }
             ConfigWorldGenHandler.GENERATION_ENABLED = true;
             GirlModel.enableModelCache = false;
             PlayerGirl.ALLOW_FLIGHT_SYNC_ENABLED = true;
             return;
         }
-        int genIdx = ((String)json).indexOf("shouldGenBuildings");
-        int n2 = ((String)json).indexOf("shouldLoadOtherSkins");
-        int n3 = ((String)json).indexOf("allowFlying");
-        ConfigWorldGenHandler.GENERATION_ENABLED = 't' == ((String)json).charAt(genIdx + 20);
-        GirlModel.enableModelCache = 't' == ((String)json).charAt(n2 + 22);
-        PlayerGirl.ALLOW_FLIGHT_SYNC_ENABLED = 't' == ((String)json).charAt(n3 + 13);
+
+        // Парсинг значений ключей
+        int genIdx = jsonContent.indexOf("shouldGenBuildings");
+        int skinIdx = jsonContent.indexOf("shouldLoadOtherSkins");
+        int flyIdx = jsonContent.indexOf("allowFlying");
+
+        ConfigWorldGenHandler.GENERATION_ENABLED = jsonContent.charAt(genIdx + 20) == 't';
+        GirlModel.enableModelCache = jsonContent.charAt(skinIdx + 22) == 't';
+        PlayerGirl.ALLOW_FLIGHT_SYNC_ENABLED = jsonContent.charAt(flyIdx + 13) == 't';
     }
 
     static {

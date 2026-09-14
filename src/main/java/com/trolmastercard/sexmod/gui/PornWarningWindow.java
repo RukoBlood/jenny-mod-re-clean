@@ -23,7 +23,6 @@ import javax.swing.border.EmptyBorder;
 import net.minecraft.client.resources.I18n;
 
 public class PornWarningWindow extends JFrame {
-    private final JPanel panel;
     static PornWarningWindow window;
     static public boolean isAdult;
 
@@ -42,25 +41,25 @@ public class PornWarningWindow extends JFrame {
     public PornWarningWindow() {
         this.setResizable(false);
         this.setBounds(100, 100, 600, 260);
-        this.panel = new JPanel();
-        this.panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        this.panel.setLayout(new BorderLayout(0, 0));
-        this.setContentPane(this.panel);
+        JPanel panel = new JPanel();
+        panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        panel.setLayout(new BorderLayout(0, 0));
+        this.setContentPane(panel);
         JPanel jPanel = new JPanel();
-        this.panel.add(jPanel, "North");
+        panel.add(jPanel, "North");
         JTextPane jTextPane = new JTextPane();
         jTextPane.setFont(new Font("Tahoma", 0, 16));
         jTextPane.setBackground(SystemColor.control);
         jTextPane.setText(I18n.format("window.pornwarning.title"));
         jPanel.add(jTextPane);
         JPanel jPanel2 = new JPanel();
-        this.panel.add(jPanel2, "South");
-        JCheckBox jCheckBox = new JCheckBox(I18n.format("window.pornwarning.dontaskagain"));
-        jPanel2.add(jCheckBox);
-        JButton iamnotminor = new JButton(I18n.format("window.pornwarning.am18"));
-        iamnotminor.addActionListener(actionEvent -> {
+        panel.add(jPanel2, "South");
+        JCheckBox dontAskAgain = new JCheckBox(I18n.format("window.pornwarning.dontaskagain"));
+        jPanel2.add(dontAskAgain);
+        JButton iamNotMinor = new JButton(I18n.format("window.pornwarning.am18"));
+        iamNotMinor.addActionListener(actionEvent -> {
             isAdult = false;
-            if (jCheckBox.isSelected()) {
+            if (dontAskAgain.isSelected()) {
                 File file = new File("sexmod");
                 file.mkdir();
                 File file2 = new File("sexmod/dontAskAgain");
@@ -72,7 +71,7 @@ public class PornWarningWindow extends JFrame {
             }
             window.dispose();
         });
-        jPanel2.add(iamnotminor);
+        jPanel2.add(iamNotMinor);
         JButton iamminor = new JButton(I18n.format("window.pornwarning.not18"));
         iamminor.addActionListener(actionEvent -> {
             isAdult = false;
@@ -99,7 +98,7 @@ public class PornWarningWindow extends JFrame {
         });
         jPanel2.add(iamminor);
         JPanel jPanel3 = new JPanel();
-        this.panel.add(jPanel3, "Center");
+        panel.add(jPanel3, "Center");
         jPanel3.setLayout(new BoxLayout(jPanel3, 0));
         JTextPane jTextPane2 = new JTextPane();
         jTextPane2.setContentType("text/html");

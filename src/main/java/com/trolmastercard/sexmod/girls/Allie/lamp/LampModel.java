@@ -49,19 +49,5 @@ public class LampModel extends AnimatedGeoModel<LampItem> {
         return new ResourceLocation("sexmod", "animations/allie/lamp.animation.json");
     }
 
-    //@Override
-    //public ResourceLocation getAnimationFileLocation(Object object) {
-    //    return this.a((LampItem)object);
-    //}
-
-    //@Override
-    //public ResourceLocation getTextureLocation(Object object) {
-    //    return this.c((LampItem)object);
-    //}
-
-    //@Override
-    //public ResourceLocation getModelLocation(Object object) {
-    //    return this.b((LampItem)object);
-    //}
 }
 
