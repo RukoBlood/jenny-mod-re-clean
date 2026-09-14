@@ -47,10 +47,7 @@ public class WorldUtils {
         float diff = Math.abs(angleA - angleB);
         float wrappedDiff = 360.0f - diff;
         float shortestDist = Math.min(diff, wrappedDiff);
-        if (angleA > angleB) {
-            return -shortestDist;
-        }
-        return shortestDist;
+        return angleA > angleB ? -shortestDist : shortestDist;
     }
 
     public static Vec3d getLightDirectionVector(EntityLivingBase entity, float partialTicks) {
@@ -76,11 +73,11 @@ public class WorldUtils {
         for (Map.Entry entry : lightMap.entrySet()) {
             if ((Integer)entry.getValue() != maxLightValue) continue;
             if (targetDirection == null) {
-                targetDirection = (Vec3d)entry.getKey();
-                continue;
+                targetDirection = (Vec3d) entry.getKey();
+            } else {
+                targetDirection = null;
+                break;
             }
-            targetDirection = null;
-            break;
         }
         if (targetDirection == null) {
             targetDirection = new Vec3d(0.2, 0.8, 0.0);
@@ -112,21 +109,21 @@ public class WorldUtils {
     }
 
     public static boolean checkBedBlock(World world, BlockPos pos, Vec3d hitVec, EnumFacing facing, EntityPlayer player) {
-        Object name;
+        String name;
         IBlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         if (block.isBed(state, world, pos, null)) {
             return true;
         }
         TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity != null && (name = tileEntity.getDisplayName()) != null && (name.toString().contains(" bed") || name.toString().contains("bed "))) {
+        if (tileEntity != null && (name = String.valueOf(tileEntity.getDisplayName())) != null && (name.contains(" bed") || name.contains("bed "))) {
             return true;
         }
         if (facing == null || hitVec == null) {
             return false;
         }
         name = block.getPickBlock(state, new RayTraceResult(hitVec, facing), world, pos, player).getDisplayName().toLowerCase();
-        return ((String)name).contains(" bed") || ((String)name).contains("bed ");
+        return name.contains(" bed") || name.contains("bed ");
     }
 
     public static void SpawnParticleRing(World world, EnumParticleTypes particleTypes, Vec3d center, int count, double radius, double speedY) {
@@ -135,7 +132,7 @@ public class WorldUtils {
             double angle = Math.PI * 2 * (double)progress;
             double posX = Math.sin(angle);
             double posZ = Math.cos(angle);
-            world.spawnParticle(particleTypes, center.x + (posX *= radius), center.y, center.z + (posZ *= radius), 0.0, (double) Reference.RANDOM.nextFloat() * speedY, 0.0, new int[0]);
+            world.spawnParticle(particleTypes, center.x + (posX *= radius), center.y, center.z + (posZ *= radius), 0.0, (double) Reference.RANDOM.nextFloat() * speedY, 0.0);
         }
     }
 
@@ -145,11 +142,11 @@ public class WorldUtils {
         BlockBed.EnumPartType partType = null;
         for (Map.Entry entry : properties.entrySet()) {
             if (entry.getKey() instanceof PropertyDirection) {
-                facing = (EnumFacing)entry.getValue();
-                continue;
+                facing = (EnumFacing) entry.getValue();
+            } else {
+                if (!(entry.getKey() instanceof PropertyEnum)) continue;
+                partType = (BlockBed.EnumPartType) entry.getValue();
             }
-            if (!(entry.getKey() instanceof PropertyEnum)) continue;
-            partType = (BlockBed.EnumPartType)entry.getValue();
         }
         if (facing == null) {
             System.out.println("bed is fucked up - it has no facing value");
@@ -195,10 +192,7 @@ public class WorldUtils {
     }
 
     public static Set<? extends EntityPlayer> getPlayersTrackingEntity(Entity entity) {
-        if (entity == null) {
-            return Collections.emptySet();
-        }
-        return FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(entity.dimension).getEntityTracker().getTrackingPlayers(entity);
+        return entity == null ? Collections.emptySet() : FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(entity.dimension).getEntityTracker().getTrackingPlayers(entity);
     }
 }
 

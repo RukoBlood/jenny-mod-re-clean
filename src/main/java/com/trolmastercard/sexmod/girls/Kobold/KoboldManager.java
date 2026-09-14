@@ -697,53 +697,51 @@ public class KoboldManager {
 
         @SubscribeEvent
         public void onBlockBreak(BlockEvent.BreakEvent event) {
-            Object masterPlayer;
-            Object masterUUID;
+            EntityPlayerMP masterPlayer;
+            UUID masterUUID;
             KoboldTribe tribe;
 
             BlockPos pos = event.getPos();
             World world = event.getWorld();
-            if (world.isRemote) {
-                return;
-            }
-            IBlockState state = world.getBlockState(pos);
-            Block block = state.getBlock();
+            if (!world.isRemote) {
+                IBlockState state = world.getBlockState(pos);
+                Block block = state.getBlock();
 
-            if (block instanceof BlockChest) {
-                //Map.Entry<UUID, a_inner49> entry
-                //for (Map.Entry entry : ax_class48.access$000().entrySet()) {
-                for (Map.Entry<UUID, KoboldTribe> entry : KoboldManager.tribesMap.entrySet()) {
-                    tribe = entry.getValue();
-                    if (!tribe.chests.contains(pos)) continue;
+                if (block instanceof BlockChest) {
+                    //Map.Entry<UUID, a_inner49> entry
+                    //for (Map.Entry entry : ax_class48.access$000().entrySet()) {
+                    for (Map.Entry<UUID, KoboldTribe> entry : KoboldManager.tribesMap.entrySet()) {
+                        tribe = entry.getValue();
+                        if (tribe.chests.contains(pos)) {
+                            tribe.chests.remove(pos);
+                            masterUUID = KoboldManager.getTribeMasterUUID(entry.getKey());
 
-                    tribe.chests.remove(pos);
-                    masterUUID = KoboldManager.getTribeMasterUUID(entry.getKey());
-
-                    if (masterUUID == null || (masterPlayer = world.getPlayerEntityByUUID((UUID) masterUUID)) == null)
-                        continue;
-                    PacketHandler.INSTANCE.sendTo(new SendBlocks(pos, false), (EntityPlayerMP) masterPlayer);
+                            if (masterUUID != null && (masterPlayer = (EntityPlayerMP) world.getPlayerEntityByUUID(masterUUID)) != null) {
+                                PacketHandler.INSTANCE.sendTo(new SendBlocks(pos, false), masterPlayer);
+                            }
+                        }
+                    }
                 }
-            }
 
-            if (block instanceof BlockBed) {
-                //for (Map.Entry entry : ax_class48.access$000().entrySet()) {
-                for (Map.Entry<UUID, KoboldTribe> entry : KoboldManager.tribesMap.entrySet()) {
-                    EntityPlayerMP masterPlayerMessed;
-                    tribe = entry.getValue();
-                    if (!tribe.beds.contains(pos)) continue;
+                if (block instanceof BlockBed) {
+                    //for (Map.Entry entry : ax_class48.access$000().entrySet()) {
+                    for (Map.Entry<UUID, KoboldTribe> entry : KoboldManager.tribesMap.entrySet()) {
+                        EntityPlayerMP masterById;
+                        tribe = entry.getValue();
+                        if (tribe.beds.contains(pos)) {
+                            BlockPos bedPositions = WorldUtils.getBedPairPosition(pos, state);
+                            tribe.beds.remove(pos);
+                            tribe.beds.remove(bedPositions);
 
-                    masterUUID = WorldUtils.getBedPairPosition(pos, state);
-                    tribe.beds.remove(pos);
-                    tribe.beds.remove(masterUUID);
-
-                    masterPlayer = KoboldManager.getTribeMasterUUID(entry.getKey());
-                    if (masterPlayer == null || (masterPlayerMessed = (EntityPlayerMP) world.getPlayerEntityByUUID((UUID) masterPlayer)) == null)
-                        continue;
-
-                    HashSet<BlockPos> removedBeds = new HashSet<BlockPos>();
-                    removedBeds.add(pos);
-                    removedBeds.add((BlockPos) masterUUID);
-                    PacketHandler.INSTANCE.sendTo(new SendBlocks(removedBeds, false), masterPlayerMessed);
+                            UUID masterId = KoboldManager.getTribeMasterUUID(entry.getKey());
+                            if (masterId != null && (masterById = (EntityPlayerMP) world.getPlayerEntityByUUID(masterId)) != null) {
+                                HashSet<BlockPos> removedBeds = new HashSet<>();
+                                removedBeds.add(pos);
+                                removedBeds.add(bedPositions);
+                                PacketHandler.INSTANCE.sendTo(new SendBlocks(removedBeds, false), masterById);
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -127,15 +127,15 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
         if (this.shouldStartDoggySex && player != null && player.getPositionVector().distanceTo(this.getPositionVector()) < 0.5) {
             this.shouldStartDoggySex = false;
             this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, this.world.getClosestPlayerToEntity(this, 15.0).getPersistentID().toString());
-            EntityPlayerMP object = this.getServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID());
-            this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, object.getPersistentID().toString());
-            object.setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
-            this.alignPlayerToGirl(object, false);
-            object.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
+            EntityPlayerMP playerMP = this.getServer().getPlayerList().getPlayerByUUID(this.getInteractionPlayerUUID());
+            this.entityDataManager.set(GirlEntity.INTERACTION_PARTNER_UUID, playerMP.getPersistentID().toString());
+            playerMP.setPositionAndUpdate(this.getPositionVector().x, this.getPositionVector().y, this.getPositionVector().z);
+            this.alignPlayerToGirl(playerMP, false);
+            playerMP.moveRelative(0.0f, 0.0f, 0.0f, 0.0f);
             this.moveCamera(0.0, 0.0, 0.4, 0.0f, 60.0f);
             this.cameraOriginPos = null;
             this.setCurrentAction(Action.DOGGYSTART);
-            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), object);
+            PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(false), playerMP);
         }
         if (this.isHeadingToBed) {
             if (this.getPositionVector().distanceTo(this.getTargetPosition()) < 0.6 || this.bedNavigationTicks > 200) {
@@ -170,21 +170,21 @@ public class JennyEntity extends Fighter implements IEllie, IBeddableSexGirl {
                 }
                 this.setCurrentAction(Action.PAYMENT);
             } else {
-                this.rotationYaw = this.getYawRotation().floatValue();
+                this.rotationYaw = this.getYawRotation();
                 this.setTargetPosition(this.getFrontOffsetVector());
                 this.setNoGravity(false);
-                Vec3d object = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.dismountingTicks);
-                this.setPosition(object.x, object.y, object.z);
+                Vec3d dismountPos = RotationHelper.lerpVec3d(this.getPositionVector(), this.getTargetPosition(), 40 - this.dismountingTicks);
+                this.setPosition(dismountPos.x, dismountPos.y, dismountPos.z);
             }
         }
     }
 
     @Override
-    public boolean processInteract(EntityPlayer entityPlayer, EnumHand enumHand) {
-        if (super.processInteract(entityPlayer, enumHand)) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+        if (super.processInteract(player, hand)) {
             return true;
         }
-        if (this.world.isRemote && !this.openInteractionMenu(entityPlayer)) {
+        if (this.world.isRemote && !this.openInteractionMenu(player)) {
             this.sendChatMessage(I18n.format("jenny.dialogue.busy"));
         }
         return true;
