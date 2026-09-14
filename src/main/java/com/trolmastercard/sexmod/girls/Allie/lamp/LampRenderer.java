@@ -109,10 +109,10 @@ public class LampRenderer extends GeoItemRenderer<LampItem> {
 
     void renderLampEffect(BufferBuilder buffer, LampItem item, GeoBone bone, float r, float g, float b, float a) {
         if (!bone.isHidden) {
-            for (GeoCube object : bone.childCubes) {
+            for (GeoCube cube : bone.childCubes) {
                 MATRIX_STACK.push();
                 GlStateManager.pushMatrix();
-                this.renderCube(buffer, object, r, g, b, a);
+                this.renderCube(buffer, cube, r, g, b, a);
                 GlStateManager.popMatrix();
                 MATRIX_STACK.pop();
             }

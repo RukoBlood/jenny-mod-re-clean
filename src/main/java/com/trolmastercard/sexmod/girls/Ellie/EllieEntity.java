@@ -61,7 +61,7 @@ public class EllieEntity extends Fighter implements IEllie {
     int sitDownTimer = -1;
     int sitUpTimer = -1;
     boolean isBedSearching = false;
-    Object[] bedPoseData;
+    Object[] bedPoseData; /* This is a shitty implementation of Pair<Vec3d, Integer>*/
     int dashFinishTimer = -1;
     int carrySlowVariation = 1;
     boolean skipFastSoundOnce = false;
