@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import com.trolmastercard.sexmod.command.LocateGoblinLairCommand;
 import com.trolmastercard.sexmod.command.ReloadCustomModelsCommand;
@@ -40,7 +38,6 @@ import com.trolmastercard.sexmod.girls.base.PlayerGirl.PlayerGirl;
 import com.trolmastercard.sexmod.proxy.CommonProxy;
 import com.trolmastercard.sexmod.world.ConfigWorldGenHandler;
 import com.trolmastercard.sexmod.world.GirlWorldData;
-import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -100,8 +97,8 @@ public class Main {
 
     @Mod.EventHandler
     public static void onWorldStart(FMLServerStartingEvent event) {
-        event.registerServerCommand((ICommand) LocateGoblinLairCommand.LOCATE_GOBLIN_LAIR_COMMAND);
-        event.registerServerCommand((ICommand) ReloadCustomModelsCommand.RELOAD_CUSTOM_MODELS_COMMAND);
+        event.registerServerCommand(LocateGoblinLairCommand.LOCATE_GOBLIN_LAIR_COMMAND);
+        event.registerServerCommand(ReloadCustomModelsCommand.RELOAD_CUSTOM_MODELS_COMMAND);
     }
 
     @SideOnly(value=Side.CLIENT)

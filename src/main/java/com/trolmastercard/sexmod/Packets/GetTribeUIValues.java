@@ -40,12 +40,12 @@ public class GetTribeUIValues implements IMessage {
 
     public GetTribeUIValues() {
         this.isTribeLeader = false;
-        this.tribeMembers = new ArrayList<Vector4d>();
+        this.tribeMembers = new ArrayList<>();
     }
 
-    public GetTribeUIValues(boolean bl, List<Vector4d> list) {
+    public GetTribeUIValues(boolean bl, List<Vector4d> members) {
         this.isTribeLeader = bl;
-        this.tribeMembers = list;
+        this.tribeMembers = members;
     }
 
     static GetTribeUIValues createEmptyPacket() {
@@ -72,8 +72,7 @@ public class GetTribeUIValues implements IMessage {
         }
     }
 
-    public static class Handler
-    implements IMessageHandler<GetTribeUIValues, IMessage> {
+    public static class Handler implements IMessageHandler<GetTribeUIValues, IMessage> {
         @Override
         public IMessage onMessage(GetTribeUIValues msg, MessageContext ctx) {
             if (!msg.isValid) {
@@ -91,28 +90,49 @@ public class GetTribeUIValues implements IMessage {
                     PacketHandler.INSTANCE.sendTo(GetTribeUIValues.createEmptyPacket(), ctx.getServerHandler().player);
                     return;
                 }
-                boolean bl = KoboldManager.isTribeAlerted(uUID);
-                EntityPlayerMP entityPlayerMP = ctx.getServerHandler().player;
-                HashMap<UUID, BlockPos> hashMap = KoboldManager.getUnloadedMembersMap(uUID, entityPlayerMP.world);
-                List<KoboldEntity> list = KoboldManager.getTribeMembersList(uUID);
-                ArrayList<Vector4d> arrayList = new ArrayList<Vector4d>();
+                boolean tribeAlerted = KoboldManager.isTribeAlerted(uUID);
+                EntityPlayerMP player = ctx.getServerHandler().player;
+                HashMap<UUID, BlockPos> unloadedMembersMap = KoboldManager.getUnloadedMembersMap(uUID, player.world);
+                List<KoboldEntity> kobolds = KoboldManager.getTribeMembersList(uUID);
+                ArrayList<Vector4d> arrayList = new ArrayList<>();
                 int koboldColor = KoboldManager.getTribeColor(uUID).getWoolMeta();
-                HashSet<Object> hashSet = new HashSet<Object>();
-                Object object; //TODO
-                for (KoboldEntity koboldEntity : list) {
-                    if (koboldEntity.isDead || hashSet.contains(object = koboldEntity.girlID())) continue;
-                    if (koboldEntity.editedColorManually) {
-                        koboldColor = EyeAndKoboldColor.safeValueOf(koboldEntity.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION)).getWoolMeta();
+
+//                HashSet<Object> hashSet = new HashSet<>();
+//                Object object; //TODO
+//                for (KoboldEntity koboldEntity : list) {
+//                    if (!koboldEntity.isDead && !hashSet.contains(object = koboldEntity.girlID())) {
+//                        if (koboldEntity.editedColorManually) {
+//                            koboldColor = EyeAndKoboldColor.safeValueOf(koboldEntity.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION)).getWoolMeta();
+//                        }
+//                        arrayList.add(new Vector4d(koboldEntity.posX, koboldEntity.posY, koboldEntity.posZ, koboldColor));
+//                        hashSet.add(object);
+//                    }
+//                }
+//                for (Map.Entry entry : hashMap.entrySet()) {
+//                    if (hashSet.contains(entry.getKey())) continue;
+//                    object = entry.getValue();
+//                    arrayList.add(new Vector4d(((Vec3i)object).getX(), ((Vec3i)object).getY(), ((Vec3i)object).getZ(), koboldColor));
+//                }
+
+                HashSet<UUID> hashSet = new HashSet<>();
+
+                for (KoboldEntity kobold : kobolds) {
+                    if (!kobold.isDead && !hashSet.contains(kobold.girlID())) {
+                        if (kobold.editedColorManually) {
+                            koboldColor = EyeAndKoboldColor.safeValueOf(kobold.getDataManager().get(AbstractNpcOnlyEntity.CURRENT_ACTION)).getWoolMeta();
+                        }
+                        arrayList.add(new Vector4d(kobold.posX, kobold.posY, kobold.posZ, koboldColor));
+                        hashSet.add(kobold.girlID());
                     }
-                    arrayList.add(new Vector4d(koboldEntity.posX, koboldEntity.posY, koboldEntity.posZ, koboldColor));
-                    hashSet.add(object);
                 }
-                for (Map.Entry entry : hashMap.entrySet()) {
-                    if (hashSet.contains(entry.getKey())) continue;
-                    object = entry.getValue();
-                    arrayList.add(new Vector4d(((Vec3i)object).getX(), ((Vec3i)object).getY(), ((Vec3i)object).getZ(), koboldColor));
+
+                for (Map.Entry<UUID, BlockPos> posEntry : unloadedMembersMap.entrySet()) {
+                    if (!hashSet.contains(posEntry.getKey())) {
+                        BlockPos pos = posEntry.getValue();
+                        arrayList.add(new Vector4d(pos.getX(), pos.getY(), pos.getZ(), koboldColor));
+                    }
                 }
-                PacketHandler.INSTANCE.sendTo(new GetTribeUIValues(bl, arrayList), entityPlayerMP);
+                PacketHandler.INSTANCE.sendTo(new GetTribeUIValues(tribeAlerted, arrayList), player);
             });
             return null;
         }
