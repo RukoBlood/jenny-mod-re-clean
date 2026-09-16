@@ -4,8 +4,10 @@ Fapcraft uses Zelix KlassMaster obfuscation. Although ZKM can make even more obf
 
 
 Ordered by severity
+
+## ZKM transformations
 - exception pass-and-return wrapping
-    ```
+    ```java
     try {
         // code ...
     } catch (RuntimeException runtimeException) {
@@ -19,7 +21,7 @@ Ordered by severity
     ```
 
 - exception table mashing
-    ```
+    ```java
     try {
         try {
             try {
@@ -37,7 +39,7 @@ Ordered by severity
     }
     ```
 - dangling catch blocks
-    ```
+    ```java
     int a = 5 + z;
     // some code ...
     catch { // dangling catch without prior try
@@ -45,7 +47,7 @@ Ordered by severity
     }
     ```
 - impossible control flow (ZKM Heavy-duty protection)
-    ```
+    ```java 
     block71: {
         block73: {
             block75: {
@@ -56,8 +58,9 @@ Ordered by severity
     }
     ```
   Killer feature of ZKM. You can't handle goto spaghetti manually, but things like ZKM-FlowDeobf and similar tools are designed specifically to deobfuscate flow.
+
 - local reuse
-    ```
+    ```java 
     Object z = new Integer(5);
     // some code...
     z = new HashMap<Integer, Double>();
@@ -86,6 +89,9 @@ Ordered by severity
     
     a a(){}
     ```
+
+## Decompilation bugs
+
 - Inner Classes stripping.
     ```java
     final ClassName this$0;
@@ -94,3 +100,30 @@ Ordered by severity
     }
     ```
   This is not ZKM obfuscation. It's a CFR bug.
+  - try-with-resources reconstruction.
+    ```java
+    try {
+      FileWriter writer = new FileWriter(file); //or other things
+      Throwable throwable = null;
+      try {
+          //some code, usually foreach loop with writing things
+      } catch (Throwable caughtThrowable) {
+          throwable = caughtThrowable;
+          throw caughtThrowable;
+      } finally {
+          if (throwable != null) {
+              try {
+                  writer.close();
+              } catch (Throwable suppressed) {
+                  throwable.addSuppressed(suppressed);
+              }
+          } else {
+              writer.close();
+          }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    ```
+    CFR may incorrectly decompile a try-with-resources statement into an expanded `try/catch/finally` structure with `Throwable` variables, explicit `close()` calls, and `addSuppressed()`. 
+    This can be reconstructed back into the original try-with-resources syntax.
