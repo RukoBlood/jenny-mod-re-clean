@@ -61,7 +61,7 @@ public class BoneDeformProcessor {
     public static Vec3d calculatePhysicsVector(Vec3d origin, Vector3f rotation, Vec3d influende) {
         double d = VectorMath.dotProduct(rotation, influende);
         double d2 = RotationHelper.EaseOutQuart(Math.abs(d));
-        return RotationHelper.LerpVec3d(origin, d > 0.0 ? MASS_CENTER_MODIFIER : COMPENSATE_VECTOR, d2 *= (double)ELASTICITY_FACTOR);
+        return RotationHelper.LerpVec3d(origin, d > 0.0 ? MASS_CENTER_MODIFIER : COMPENSATE_VECTOR, d2 *= ELASTICITY_FACTOR);
     }
 
     public static void updateGlobalInfluence(EntityLivingBase entity, float partialTicks) {
@@ -69,14 +69,13 @@ public class BoneDeformProcessor {
     }
 
     public static void preWarmFilterCache(List<IBone> boneList, HashSet<String> blacklistedBones, IGirlRenderer filter) {
-        if (filterResultCache.get(filter) != null) {
-            return;
+        if (filterResultCache.get(filter) == null) {
+            HashMap<String, Boolean> preWarmedMap = new HashMap<String, Boolean>();
+            for (IBone iBone : boneList) {
+                preWarmedMap.put(iBone.getName(), filter.isBoneAllowed(blacklistedBones, (GeoBone) iBone));
+            }
+            filterResultCache.put(filter, preWarmedMap);
         }
-        HashMap<String, Boolean> preWarmedMap = new HashMap<String, Boolean>();
-        for (IBone iBone : boneList) {
-            preWarmedMap.put(iBone.getName(), filter.isBoneAllowed(blacklistedBones, (GeoBone)iBone));
-        }
-        filterResultCache.put(filter, preWarmedMap);
     }
 }
 
