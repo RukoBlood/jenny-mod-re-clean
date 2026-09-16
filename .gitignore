@@ -12,7 +12,6 @@ out
 *.iws
 *.iml
 .idea
-.gigaide/gigaide.properties
 
 # gradle
 build
@@ -25,3 +24,4 @@ run
 #/src/main/resources/logo.png
 #/src/main/resources/assets/sexmod/*
 #TODO push assets on github
+/.gigaide/
