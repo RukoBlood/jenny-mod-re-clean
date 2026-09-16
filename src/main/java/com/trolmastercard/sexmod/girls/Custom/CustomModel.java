@@ -116,26 +116,9 @@ public class CustomModel {
         whitelist.add(serverName);
         file.delete();
         file = new File(WHITELIST_FILE);
-        try {
-            FileWriter writer = new FileWriter(file);
-            Throwable throwable = null;
-            try {
-                for (String server : whitelist) {
-                    writer.write(server + "\n");
-                }
-            } catch (Throwable caughtThrowable) {
-                throwable = caughtThrowable;
-                throw caughtThrowable;
-            } finally {
-                if (throwable != null) {
-                    try {
-                        writer.close();
-                    } catch (Throwable suppressed) {
-                        throwable.addSuppressed(suppressed);
-                    }
-                } else {
-                    writer.close();
-                }
+        try (FileWriter writer = new FileWriter(file)){
+            for (String server : whitelist) {
+                writer.write(server + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -151,37 +134,24 @@ public class CustomModel {
 
         try {
             file.createNewFile();
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        HashSet<String> hashSet = new HashSet<String>();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            Throwable throwable = null;
-            try {
-                String string;
-                while ((string = bufferedReader.readLine()) != null) {
-                    hashSet.add(string);
-                }
-            } catch (Throwable t) {
-                throwable = t;
-                throw t;
-            } finally {
-                if (throwable != null) {
-                    try {
-                        bufferedReader.close();
-                    } catch (Throwable supressed) {
-                        throwable.addSuppressed(supressed);
-                    }
-                } else {
-                    bufferedReader.close();
-                }
+
+        HashSet<String> whitelistedServers = new HashSet<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                whitelistedServers.add(line);
             }
-        } catch (IOException iOException) {
-            iOException.printStackTrace();
-            return new HashSet<String>();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new HashSet<>();
         }
-        return hashSet;
+
+        return whitelistedServers;
     }
 
     public static float getModelZOffset(String modelName) {
@@ -302,27 +272,11 @@ public class CustomModel {
     @SideOnly(value=Side.CLIENT)
     static RawGeoModel loadGeoModel(File file) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        Throwable throwable = null;
-        try {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
             String string;
             while ((string = reader.readLine()) != null) {
                 stringBuilder.append(string);
-            }
-        } catch (Throwable throwable2) {
-            throwable = throwable2;
-            throw throwable2;
-        } finally {
-            if (reader != null) {
-                if (throwable != null) {
-                    try {
-                        reader.close();
-                    } catch (Throwable throwable3) {
-                        throwable.addSuppressed(throwable3);
-                    }
-                } else {
-                    reader.close();
-                }
             }
         }
         String json = stringBuilder.toString();

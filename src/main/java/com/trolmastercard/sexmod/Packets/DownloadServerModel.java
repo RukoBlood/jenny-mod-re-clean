@@ -139,47 +139,31 @@ implements IMessage {
                 if (!CustomModel.isGlobalRenderingDisabled()) {
                     return null;
                 }
-                String string = msg.modelName;
-                FileTypes b_inner1482 = msg.packetTypes;
+                String name = msg.modelName;
+                FileTypes types = msg.packetTypes;
                 byte[] data = msg.modelData;
-                String string2 = CustomModel.getCurrentGroup() + "/" + string;
-                File file = new File(string2);
+                String groupName = CustomModel.getCurrentGroup() + "/" + name;
+                File file = new File(groupName);
                 file.mkdirs();
-                File file2 = new File(string2 + "/" + string + b_inner1482.ending);
-                try {
-                    FileOutputStream fileOutputStream = new FileOutputStream(file2);
-                    Throwable throwable = null;
-                    try {
-                        fileOutputStream.write(data);
-                    } catch (Throwable throwable2) {
-                        throwable = throwable2;
-                        throw throwable2;
-                    } finally {
-                        if (fileOutputStream != null) {
-                            if (throwable != null) {
-                                try {
-                                    fileOutputStream.close();
-                                } catch (Throwable throwable3) {
-                                    throwable.addSuppressed(throwable3);
-                                }
-                            } else {
-                                fileOutputStream.close();
-                            }
-                        }
-                    }
+                File pathToModel = new File(groupName + "/" + name + types.ending);
+
+                try (FileOutputStream fileOutputStream = new FileOutputStream(pathToModel)) {
+                    fileOutputStream.write(data);
                 } catch (IOException iOException) {
                     iOException.printStackTrace();
                 }
+
                 int n = 0;
                 int n2 = FileTypes.values().length;
-                for (FileTypes b_inner1483 : FileTypes.values()) {
-                    if (!new File(string2 + "/" + string + b_inner1483.ending).exists()) continue;
-                    ++n;
+                for (FileTypes fileTypes : FileTypes.values()) {
+                    if (new File(groupName + "/" + name + fileTypes.ending).exists()) {
+                        ++n;
+                    }
                 }
                 if (n == n2) {
-                    this.sendModelMessage(String.format("%sSuccessfully downloaded the custom model '%s%s%s'!", TextFormatting.GREEN, TextFormatting.YELLOW, string, TextFormatting.GREEN));
+                    this.sendModelMessage(String.format("%sSuccessfully downloaded the custom model '%s%s%s'!", TextFormatting.GREEN, TextFormatting.YELLOW, name, TextFormatting.GREEN));
                 } else {
-                    this.sendModelMessage(String.format("%sdownloading custom model '%s%s%s' (%s/%s)...", TextFormatting.GRAY, TextFormatting.YELLOW, string, TextFormatting.GRAY, n, n2));
+                    this.sendModelMessage(String.format("%sdownloading custom model '%s%s%s' (%s/%s)...", TextFormatting.GRAY, TextFormatting.YELLOW, name, TextFormatting.GRAY, n, n2));
                 }
                 if (++packetCounter < msg.modelIndex) {
                     return null;
@@ -188,32 +172,34 @@ implements IMessage {
                 this.reloadServerModels();
                 return null;
             }
+
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
             server.addScheduledTask(() -> {
                 List<String> names = msg.modelNames;
-                ArrayList<DownloadServerModel> arrayList = new ArrayList<DownloadServerModel>();
+                ArrayList<DownloadServerModel> models = new ArrayList<DownloadServerModel>();
                 for (String name : names) {
                     String serverDir = "sexmod_custom_models/" + name;
                     for (FileTypes types : FileTypes.values()) {
                         File modelFile = new File(serverDir + "/" + name + types.ending);
-                        if (!modelFile.exists()) {
+                        if (modelFile.exists()) {
+                            byte[] fileBytes;
+                            try {
+                                fileBytes = FileUtils.readFileToByteArray(modelFile);
+                            } catch (IOException iOException) {
+                                throw new RuntimeException(iOException);
+                            }
+                            if (fileBytes != null) {
+                                models.add(new DownloadServerModel(fileBytes, types, name));
+                            }
+                        } else {
                             System.out.println(modelFile.getAbsolutePath() + " doesnt exist lol");
-                            continue;
                         }
-                        byte[] fileBytes = null;
-                        try {
-                            fileBytes = FileUtils.readFileToByteArray(modelFile);
-                        } catch (IOException iOException) {
-                            throw new RuntimeException(iOException);
-                        }
-                        if (fileBytes == null) continue;
-                        arrayList.add(new DownloadServerModel(fileBytes, types, name));
                     }
                 }
-                int n = arrayList.size();
-                for (DownloadServerModel cu_class1463 : arrayList) {
-                    cu_class1463.setModelIndex(n);
-                    server.addScheduledTask(() -> PacketHandler.INSTANCE.sendTo(cu_class1463, ctx.getServerHandler().player));
+                int modelsSize = models.size();
+                for (DownloadServerModel model : models) {
+                    model.setModelIndex(modelsSize);
+                    server.addScheduledTask(() -> PacketHandler.INSTANCE.sendTo(model, ctx.getServerHandler().player));
                 }
             });
             return null;
