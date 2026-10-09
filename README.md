@@ -66,7 +66,7 @@ It runs in dev environment, but shits itself on real client (Packets crashes and
 - Fix girls bugs, including critical ones
 - Rename methods and fields in classes
 - Fix code that palkaline didn't fixed, because he abandoned this project.
-- Make it run on 
+- Make it run on real client
   
 ## References
 
