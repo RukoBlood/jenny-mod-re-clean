@@ -155,7 +155,7 @@ public class ClothingGui extends GuiScreen {
         ArrayList<String> arrayList = new ArrayList<String>();
         arrayList.add("cross");
         arrayList.addAll(CustomModel.getModelTypes(girl).get(CustomPartCategory.CUSTOM_BONE));
-        return new AbstractMap.SimpleEntry<CustomPartCategory, Map.Entry<List<String>, Integer>>(CustomPartCategory.CUSTOM_BONE, new AbstractMap.SimpleEntry<>(arrayList, 0));
+        return new AbstractMap.SimpleEntry<>(CustomPartCategory.CUSTOM_BONE, new AbstractMap.SimpleEntry<>(arrayList, 0));
     }
 
     void initPartCategories() {
@@ -386,56 +386,50 @@ public class ClothingGui extends GuiScreen {
             this.scrollList.mouseClicked(mouseX, mouseY, mouseButton);
         }
 
-        if (mouseButton != 0) {
-            return;
-        }
+        if (mouseButton == 0) {
+            this.isClickHeld = true;
+            this.isMouseDragging = true;
+            this.lastMouseX = mouseX;
 
-        this.isClickHeld = true;
-        this.isMouseDragging = true;
-        this.lastMouseX = mouseX;
+            int btnX = this.guiCenterX - this.getPercentWidth(15.0f);
+            int btnY = this.guiCenterY - 20;
 
-        int btnX = this.guiCenterX - this.getPercentWidth(15.0f);
-        int btnY = this.guiCenterY - 20;
-
-        if (this.isHovered(mouseX, mouseY, btnX, btnY, btnX + 20, btnY + 20)) {
-            this.saveAndClose();
-        }
-
-        if (CustomModel.getCustomModelsKey() != null) {
-            return;
-        }
-
-        btnY = this.guiCenterY - 40;
-        if (this.isHovered(mouseX, mouseY, btnX, btnY, btnX + 20, btnY + 20)) {
-            this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
-            this.mc.player.closeScreen();
-            int errCode = CustomModel.getModelCount(true);
-
-            if (errCode != 0) {
-                CustomModel.isGlobalRenderingDisabled = true;
-                return;
+            if (this.isHovered(mouseX, mouseY, btnX, btnY, btnX + 20, btnY + 20)) {
+                this.saveAndClose();
             }
-            GirlEntity girl = GirlEntity.getClientGirlEntity(this.ID);
-            if (girl != null) {
-                ClothingGui.openGuiForGirl(girl);
-            }
-            return;
-        }
 
-        if (this.isHovered(mouseX, mouseY, btnX, btnY -= 20, btnX + 20, btnY + 20)) {
-            Desktop.getDesktop().open(new File(CustomModel.getGlobalModelOverride()));
-            return;
-        }
+            if (CustomModel.getCustomModelsKey() == null) {
+                btnY = this.guiCenterY - 40;
+                if (this.isHovered(mouseX, mouseY, btnX, btnY, btnX + 20, btnY + 20)) {
+                    this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    this.mc.player.closeScreen();
+                    int errCode = CustomModel.getModelCount(true);
 
-        if (this.isHovered(mouseX, mouseY, btnX, btnY -= 20, btnX + 20, btnY + 20)) {
-            try {
-                //Desktop.getDesktop().browse(new URI("http://fapcraft.org/assets/video/tutorial/girl_wand.mp4"));
-                //This fucking throws 404
-            } catch (Exception uRISyntaxException) {
-                throw new RuntimeException(uRISyntaxException);
+                    if (errCode != 0) {
+                        CustomModel.isGlobalRenderingDisabled = true;
+                    } else {
+                        GirlEntity girl = GirlEntity.getClientGirlEntity(this.ID);
+                        if (girl != null) {
+                            ClothingGui.openGuiForGirl(girl);
+                        }
+                        return;
+                    }
+                }
+
+                if (this.isHovered(mouseX, mouseY, btnX, btnY -= 20, btnX + 20, btnY + 20)) {
+                    Desktop.getDesktop().open(new File(CustomModel.getGlobalModelOverride()));
+                } else {
+                    if (this.isHovered(mouseX, mouseY, btnX, btnY -= 20, btnX + 20, btnY + 20)) {
+                        try {
+                            //Desktop.getDesktop().browse(new URI("http://fapcraft.org/assets/video/tutorial/girl_wand.mp4"));
+                            //This fucking throws 404
+                        } catch (Exception uRISyntaxException) {
+                            throw new RuntimeException(uRISyntaxException);
+                        }
+                    }
+                }
             }
         }
-
     }
 
     @Override
@@ -565,17 +559,14 @@ public class ClothingGui extends GuiScreen {
 
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (mc.currentScreen instanceof ClothingGui) {
-            return;
+        if (!(mc.currentScreen instanceof ClothingGui)) {
+            boolean canOpen = CustomModel.getCustomModelsKey() == null || CustomModel.isGlobalRenderingDisabled();
+            if (canOpen) {
+                mc.addScheduledTask(() -> mc.displayGuiScreen(new ClothingGui(girl)));
+            } else {
+                mc.player.sendStatusMessage(new TextComponentString("You have to whitelist the server to use its custom models. " + TextFormatting.YELLOW + "/whitelistserver"), true);
+            }
         }
-
-        boolean canOpen = CustomModel.getCustomModelsKey() == null || CustomModel.isGlobalRenderingDisabled();
-
-        if (!canOpen) {
-            mc.player.sendStatusMessage(new TextComponentString("You have to whitelist the server to use its custom models. " + TextFormatting.YELLOW + "/whitelistserver"), true);
-            return;
-        }
-        mc.addScheduledTask(() -> mc.displayGuiScreen(new ClothingGui(girl)));
     }
 
 

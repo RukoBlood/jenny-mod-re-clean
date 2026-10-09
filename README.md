@@ -1,4 +1,11 @@
-**18+ Alert! Bad code Alert!** 
+**18+ Alert! Bad code Alert!**
+
+<p align="center">
+  <img src="./img/deobf3.jpg" alt="1" width="258">
+  <img src="./img/jongun-deobf.jpg" alt="2" width="247">
+  <img src="img/atomov%20deobf.png" alt="3" width="258">
+  <img src="img/ZKM.png" alt="4" width="258">
+</p>
 
 **This project is a fork of https://github.com/palkaline/jenny-mod-re**
 ---
@@ -38,6 +45,10 @@ Initial goals of this project:
 
 
 ## Installation:
+<p>
+  <img src="img/img.png" alt="ишак">
+</p>
+
 After you fully compiled mod with assets, install it as default minecraft mod. 
 
 Don't forget to additionally install geckolib. You can download it from curseforge/'rinth, or get it directly from libs folder.
@@ -45,73 +56,17 @@ Don't forget to additionally install geckolib. You can download it from cursefor
 
 ## Obfuscation
 Moved to Obfuscation.md (check docs)
-## Regex
 
-Useful patterns below:
-- Finding calls to arbitrary method, ie `ad`:
-  - `(void |\.)ad\(\)`
-- <details>
-  <summary>Finding censored words:</summary>
-  
-    ```
-    cock|pussy|dick|sex|trol|(?<!cl)ass|anal|butt|booty|sex|jenny|girl|nude|bee|ellie|slime|galath|fap
-    ```
-  </details>
+## Bugs
+It's broken.
 
-No longer needed: 
-- Exception wrapping obfuscation (pass-and-return)
-    - Find: `throw ([\w\d]+)\.([\w\d]+)\(([\w\d]+)\);`
-    - Replace: `throw $3;`
-- Generic stripped onMessage repopulation:
-  - Find: `((?:public|protected|private)?\s*IMessage\s+onMessage\s*\(\s*)IMessage(\s+\w+\s*,\s*MessageContext\s+\w+\s*\)\s*\{\s*return\s+[\w.]+\s*\(\s*\(\s*)([\w.]+)(\s*\)\s*\w+\s*,\s*\w+\s*\)\s*;\s*\})`
-  - Replace: `@Override\n$1$3$2$3$4`
+It runs in dev environment, but shits itself on real client (Packets crashes and freezes the entire game)
 
-## Bugs (Palkaline)
-
-I 110% guarantee there are bugs that were created during the deobfuscation process. Many steps are likely to result in many bugs, with each step compounding bugs before them.
-
-The most likely bugs are:
-- Dangling overrides I failed to rename 
-  - a to doRender, getResourceLocation, getTexture, getModelFileLocation (done!)
-  - so, these might fallback to defaults from the parent class.
-- Referencing incorrect method, same signature.
-  - Static method resolution is strange to me... you learn something new!
-
-## Bugs (ME)
-
-Current state of the mod - still broken stuff.
-
-But some bugs got fixed
-
-
-## Modifications from source jar
-
-- I have edited some code portions that I believe are a bit anti-user:
-  - The mod .jar and cwd deletion in /mods when age check fails
-    - Filesystem manipulation seems dangerous to me
-    - I find this check screen to be quite a bit ugly (javax...), I swear there used to 
-    be an embedded in-game age-ask GUI button(s)... maybe I am too old...
-- Commenting out of broken code:
-  - An example is in the Kobold Damage Listener
-    - It prints out tribe stats when a hit is registered. This however seems
-    broken in its current state.
-      - RukoBlood: fixed!
-- Other things I've probably forgotten... have been commented out though.
-
-## TODO (Palkaline)
-
-- fix broken refactors
-  - see above...
-- add buttplug.io support and/or proper keyframing to animations to resolve motion
-  - see TODOs (search 'toy' etc...) //RukoBlood: there is no buttplug TODOs GEEG.
-  - I wrote a tiny proof-of-concept (not pictured in this project) that I managed to get working, 
-  but it requires manual copying / pasting across each entity. I hate the design of this project.
-  I feel like there is a better supported way to implement this... again, see comments...
-
-## TODO (ME)
+## TODO
 - Fix girls bugs, including critical ones
 - Rename methods and fields in classes
 - Fix code that palkaline didn't fixed, because he abandoned this project.
+- Make it run on 
   
 ## References
 

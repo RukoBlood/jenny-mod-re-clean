@@ -42,6 +42,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Locale;
+
 public class EditorWand extends Item {
     final static public EditorWand EDITOR_WAND = new EditorWand();
 
@@ -59,30 +61,31 @@ public class EditorWand extends Item {
     }
 
     @SideOnly(value=Side.CLIENT)
-    void applyEditor(Entity entity, ItemStack itemStack) {
+    void applyEditor(Entity entity, ItemStack stack) {
         if (entity instanceof EntityPlayer) {
             EntityPlayer entityPlayer = (EntityPlayer) entity;
-            if (!itemStack.equals(entityPlayer.getHeldItemMainhand()) && !itemStack.equals(entityPlayer.getHeldItemOffhand())) {
-                itemStack.setItemDamage(0);
+            if (!stack.equals(entityPlayer.getHeldItemMainhand()) && !stack.equals(entityPlayer.getHeldItemOffhand())) {
+                stack.setItemDamage(0);
                 return;
             }
             RayTraceResult rayTraceResult = Minecraft.getMinecraft().objectMouseOver;
-            itemStack.setItemDamage(rayTraceResult != null && GirlEntity.isValidGirl(rayTraceResult.entityHit) ? 1 : 0);
+            stack.setItemDamage(rayTraceResult != null && GirlEntity.isValidGirl(rayTraceResult.entityHit) ? 1 : 0);
         }
     }
 
     @SubscribeEvent
     public void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
-        Entity entity = event.getTarget();
-        if (entity instanceof GirlEntity) {
-            if (GirlEntity.isValidGirl(entity)) {
+        Entity target = event.getTarget();
+        if (target instanceof GirlEntity) {
+            if (GirlEntity.isValidGirl(target)) {
                 EntityPlayer player = event.getEntityPlayer();
                 if (player != null) {
-                    ItemStack itemStack = player.getHeldItemMainhand();
-                    if (itemStack.getItem() != EDITOR_WAND) {
-                        itemStack = player.getHeldItemOffhand();
+                    ItemStack stack = player.getHeldItemMainhand();
+                    if (stack.getItem() != EDITOR_WAND) {
+                        stack = player.getHeldItemOffhand();
                     }
-                    if (itemStack.getItem() == EDITOR_WAND) {
+
+                    if (stack.getItem() == EDITOR_WAND) {
                         event.setCanceled(true);
                         if (event.getWorld().isRemote) {
                             if (CustomModel.isGlobalRenderingDisabled) {
@@ -91,7 +94,7 @@ public class EditorWand extends Item {
                                     return;
                                 }
                             }
-                            ClothingGui.openGuiForGirl(((GirlEntity) entity).asGirl());
+                            ClothingGui.openGuiForGirl(((GirlEntity) target).asGirl());
                         }
                     }
                 }
@@ -142,11 +145,11 @@ public class EditorWand extends Item {
         if (entityPlayer == null) {
             return false;
         }
-        ItemStack itemStack = entityPlayer.getHeldItemMainhand();
-        if (itemStack.getItem() != EDITOR_WAND) {
-            itemStack = entityPlayer.getHeldItemOffhand();
+        ItemStack stack = entityPlayer.getHeldItemMainhand();
+        if (stack.getItem() != EDITOR_WAND) {
+            stack = entityPlayer.getHeldItemOffhand();
         }
-        if (itemStack.getItem() != EDITOR_WAND) {
+        if (stack.getItem() != EDITOR_WAND) {
             return false;
         }
         if (!world.isRemote) {
@@ -155,13 +158,13 @@ public class EditorWand extends Item {
         PlayerGirl playerGirl = PlayerGirl.getUUIDHashtable(entityPlayer.getPersistentID());
         if (playerGirl == null) {
             entityPlayer.sendStatusMessage(new TextComponentString("you gotta turn into the girl, you want to copy the model-code off"), true);
-            return true;
+        } else {
+            String code = playerGirl.getCustomModelCode();
+            String parts = GirlEntity.encodePartIdList(GirlEntity.getAllPartIdsForGirl(playerGirl.girlID()));
+            entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", ThreadNames.CapitalizeString(PlayerGirlEntity.getGirlType(playerGirl).toString()), TextFormatting.YELLOW, code, parts)));
+            entityPlayer.sendMessage(new TextComponentString(TextFormatting.ITALIC + "copied to clipboard"));
+            ThreadNames.copyToClipboard(String.format("%s$%s", code, parts));
         }
-        String string = playerGirl.getCustomModelCode();
-        String string2 = GirlEntity.encodePartIdList(GirlEntity.getAllPartIdsForGirl(playerGirl.girlID()));
-        entityPlayer.sendMessage(new TextComponentString(String.format("%s's model-code: %s%s$%s", ThreadNames.CapitalizeString(PlayerGirlEntity.getGirlType(playerGirl).toString()), TextFormatting.YELLOW, string, string2)));
-        entityPlayer.sendMessage(new TextComponentString(TextFormatting.ITALIC + "copied to clipboard"));
-        ThreadNames.copyToClipboard(String.format("%s$%s", string, string2));
         return true;
     }
 

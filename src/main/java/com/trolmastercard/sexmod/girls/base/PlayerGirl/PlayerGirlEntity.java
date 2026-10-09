@@ -99,8 +99,9 @@ public enum PlayerGirlEntity {
             if (girlEntityClass.equals(playerGirlEntity.npcClass)) {
                 return playerGirlEntity;
             }
-            if (!girlEntityClass.equals(playerGirlEntity.playerClass)) continue;
-            return playerGirlEntity;
+            if (girlEntityClass.equals(playerGirlEntity.playerClass)) {
+                return playerGirlEntity;
+            }
         }
         return null;
     }
