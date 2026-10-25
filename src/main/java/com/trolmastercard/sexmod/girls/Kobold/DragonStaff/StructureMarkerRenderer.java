@@ -10,6 +10,7 @@
  */
 package com.trolmastercard.sexmod.girls.Kobold.DragonStaff;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 
 import com.trolmastercard.sexmod.util.RotationHelper;
@@ -69,10 +70,15 @@ public class StructureMarkerRenderer {
         GlStateManager.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-        for (BlockPos pos : markers) {
-            Vec3i color = getBlockColor(pos);
-            drawMarkerFace(buffer, pos, color.getX(), color.getY(), color.getZ());
+        try {
+            for (BlockPos pos : markers) {
+                Vec3i color = getBlockColor(pos);
+                drawMarkerFace(buffer, pos, color.getX(), color.getY(), color.getZ());
+            }
+        } catch (ConcurrentModificationException e) {
+            throw new RuntimeException("АНША ЗЕЛИКС ОТЪЁБ СЛУЧИЛСЯ ПО StructureMarkerRenderer.renderMarkers по причине %s",e);
         }
+
         tessellator.draw();
         GlStateManager.enableDepth();
         GlStateManager.enableCull();

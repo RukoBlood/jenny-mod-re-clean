@@ -10,6 +10,7 @@
  */
 package com.trolmastercard.sexmod.events;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -55,12 +56,13 @@ public class PlayerConnectionEvents {
             playerMP.capabilities.isFlying = false;
         }
 
-        PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), playerMP);
+        PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), playerMP); //this does not works on real client.
         PacketHandler.INSTANCE.sendTo(new InformOfOwnership(GalathMangTracker.hasOwner(playerMP.getPersistentID())), playerMP);
 
         for (ItemStack stack : playerMP.inventory.mainInventory) {
-            if (stack.getItem() != LampItem.LAMP_ITEM || !stack.hasTagCompound()) continue;
-            stack.getTagCompound().setUniqueId("user", UUID.randomUUID());
+            if (stack.getItem() == LampItem.LAMP_ITEM && stack.hasTagCompound()) {
+                stack.getTagCompound().setUniqueId("user", UUID.randomUUID());
+            }
         }
 
         UUID tribeID = KoboldManager.findTribeIdWith(playerMP.getPersistentID());
@@ -126,24 +128,28 @@ public class PlayerConnectionEvents {
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         EntityPlayer player = event.player;
-        for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
-            if (girl instanceof PlayerGirl) {
-                ((PlayerGirl)girl).onOwnerInteract(player);
-            }
-            if (girl.getInteractionPlayerUUID() != null) {
-                if (girl.getInteractionPlayerUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID().equals(player.getUniqueID())) {
-                    ResetGirl.EventHandler.resetGirl(girl);
-                    girl.setAnchored(false);
-                    girl.setCurrentAction(Action.NULL);
+        try {
+            for (GirlEntity girl : GirlEntity.getGirlEntityList()) {
+                if (girl instanceof PlayerGirl) {
+                    ((PlayerGirl)girl).onOwnerInteract(player);
                 }
-                if (girl instanceof PlayerGirl && ((PlayerGirl) girl).getOwnerUserUUID().equals(player.getPersistentID()) && girl.getInteractionPlayerUUID() != null) {
-                    EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID());
-                    PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), entityPlayerMP);
-                    ResetGirl.EventHandler.resetGirls(entityPlayerMP);
-                    player.setInvisible(false);
-                    girl.setInteractionPlayerUUID(null);
+                if (girl.getInteractionPlayerUUID() != null) {
+                    if (girl.getInteractionPlayerUUID().equals(player.getPersistentID()) || girl.getInteractionPlayerUUID().equals(player.getUniqueID())) {
+                        ResetGirl.EventHandler.resetGirl(girl);
+                        girl.setAnchored(false);
+                        girl.setCurrentAction(Action.NULL);
+                    }
+                    if (girl instanceof PlayerGirl && ((PlayerGirl) girl).getOwnerUserUUID().equals(player.getPersistentID()) && girl.getInteractionPlayerUUID() != null) {
+                        EntityPlayerMP entityPlayerMP = (EntityPlayerMP) event.player.world.getPlayerEntityByUUID(girl.getInteractionPlayerUUID());
+                        PacketHandler.INSTANCE.sendTo(new SetPlayerMovement(true), entityPlayerMP);
+                        ResetGirl.EventHandler.resetGirls(entityPlayerMP);
+                        player.setInvisible(false);
+                        girl.setInteractionPlayerUUID(null);
+                    }
                 }
             }
+        } catch (ConcurrentModificationException e) {
+            throw new RuntimeException("АНША ЗЕЛИКС",e);
         }
     }
 

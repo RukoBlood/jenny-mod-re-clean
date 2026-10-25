@@ -90,13 +90,13 @@ public class EllieEntity extends Fighter implements IEllie {
         return LootTableHandler.ELLIE_LOOT_TABLE;
     }
 
-    boolean isBedBlocked() {
+    boolean hasCeilingAbove() {
         return !this.isLocallyRegistered() && this.world.getBlockState(this.getPosition().add(0, 2, 0)).getBlock() != Blocks.AIR;
     }
 
     @Override
     public float getEyeHeight() {
-        return this.isBedBlocked() ? 1.53f : 1.9f;
+        return this.hasCeilingAbove() ? 1.53f : 1.9f;
     }
 
     @Override
@@ -559,22 +559,27 @@ public class EllieEntity extends Fighter implements IEllie {
                 } else {
                     double moved = Math.abs(this.prevPosX - this.posX) + Math.abs(this.prevPosZ - this.posZ);
                     if (moved == 0.0) {
-                        this.createAnimation(this.isBedBlocked() ? "animation.ellie.crouchidle" : "animation.ellie.idle", true, event);
+                        this.createAnimation(this.hasCeilingAbove() ? "animation.ellie.crouchidle" : "animation.ellie.idle", true, event);
+                        break; //TODO check if this fixes anims.
                     }
-                    if (this.isBedBlocked()) {
+                    if (this.hasCeilingAbove()) {
                         this.createAnimation("animation.ellie.crouchwalk", true, event);
+                        break;
                     }
                     switch (this.getWalkType()) {
                         case RUN: {
                             this.createAnimation("animation.ellie.run", true, event);
-                            return PlayState.CONTINUE;
+                            //return PlayState.CONTINUE;
+                            break;
                         }
                         case FAST_WALK: {
                             this.createAnimation("animation.ellie.fastwalk", true, event);
-                            return PlayState.CONTINUE;
+                            //return PlayState.CONTINUE;
+                            break;
                         }
                         case WALK: {
                             this.createAnimation("animation.ellie.walk", true, event);
+                            break;
                         }
                     }
                 }

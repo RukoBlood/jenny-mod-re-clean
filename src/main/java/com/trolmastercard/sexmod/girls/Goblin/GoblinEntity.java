@@ -121,7 +121,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
     final static int HOLD_COOLDOWN_MAX = 20;
     final static float GOBLIN_TYPE = 0.825f;
     final static Vector2f ENTITY_SIZE = new Vector2f(0.5f, 0.99f);
-    final static HashSet<Item> TOOLS_LIST = new HashSet<>(Arrays.asList(Items.GOLDEN_HOE, Items.GOLDEN_HORSE_ARMOR, Items.GOLD_INGOT, Items.GOLDEN_APPLE, Items.GOLDEN_AXE, Items.GOLDEN_SHOVEL, Items.GOLDEN_PICKAXE, Items.GOLDEN_SWORD, Items.GOLDEN_CARROT, Items.GOLDEN_HELMET, Items.GOLDEN_BOOTS, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLD_INGOT, Items.GOLD_NUGGET, Item.getItemFromBlock(Blocks.GOLD_BLOCK), Item.getItemFromBlock(Blocks.GOLD_ORE)));
+    final static HashSet<Item> GOLD_STEAL_LIST = new HashSet<>(Arrays.asList(Items.GOLDEN_HOE, Items.GOLDEN_HORSE_ARMOR, Items.GOLD_INGOT, Items.GOLDEN_APPLE, Items.GOLDEN_AXE, Items.GOLDEN_SHOVEL, Items.GOLDEN_PICKAXE, Items.GOLDEN_SWORD, Items.GOLDEN_CARROT, Items.GOLDEN_HELMET, Items.GOLDEN_BOOTS, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLD_INGOT, Items.GOLD_NUGGET, Item.getItemFromBlock(Blocks.GOLD_BLOCK), Item.getItemFromBlock(Blocks.GOLD_ORE)));
 
     final static public DataParameter<String> OWNER_UUID = EntityDataManager.createKey(GoblinEntity.class, DataSerializers.STRING).getSerializer().createKey(122);
     final static public DataParameter<String> QUEEN_UUID = EntityDataManager.createKey(GoblinEntity.class, DataSerializers.STRING).getSerializer().createKey(123);
@@ -131,7 +131,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
 
     public boolean isQueen = false;
     public float throneRotation = 0.0f;
-    public long impreginationTick = -1L;
+    public long impregnationTick = -1L;
     public Vec3d thronePosition = Vec3d.ZERO;
     List<UUID> guardUUIDs = new ArrayList<>();
     int robTicks = 31520;
@@ -444,7 +444,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
             nbt.setDouble("thronePosX", this.thronePosition.x);
             nbt.setDouble("thronePosY", this.thronePosition.y);
             nbt.setDouble("thronePosZ", this.thronePosition.z);
-            nbt.setLong("impregnationTick", this.impreginationTick);
+            nbt.setLong("impregnationTick", this.impregnationTick);
             for (int i = 0; i < this.guardUUIDs.size(); ++i) {
                 nbt.setString("guard" + i, this.guardUUIDs.get(i).toString());
             }
@@ -478,7 +478,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
             ++n;
         }
         this.entityDataManager.set(IS_PREGNANT, nbt.getBoolean("preggo"));
-        this.impreginationTick = nbt.getLong("impregnationTick");
+        this.impregnationTick = nbt.getLong("impregnationTick");
     }
 
     @Override
@@ -505,7 +505,6 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                 this.motionY = 0.0;
                 this.motionZ = 0.0;
             }
-            return true;
         } else {
             if (GoblinEntity.hasGoblinWithUUID(player.getPersistentID())) {
                 player.sendStatusMessage(new TextComponentString("you are already carrying a Goblin"), true);
@@ -517,8 +516,8 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                 this.entityDataManager.set(IS_TAMED, true);
                 this.getNavigator().clearPath();
             }
-            return true;
         }
+        return true;
     }
 
     public static boolean hasGoblinWithUUID(UUID uUID) {
@@ -657,7 +656,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
     void handleHeldThrow() {
         if (this.isQueen) {
             if (this.entityDataManager.get(IS_PREGNANT)) {
-                if (this.impreginationTick + 8400L < this.world.getTotalWorldTime()) {
+                if (this.impregnationTick + 8400L < this.world.getTotalWorldTime()) {
                     this.entityDataManager.set(IS_PREGNANT, false);
                 }
             }
@@ -1055,7 +1054,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                             if (player != null) {
                                 if (player.onGround) {
                                     if (!player.isAirBorne) {
-                                        Integer slotIndex = this.findThrowTarget(player);
+                                        Integer slotIndex = this.checkForStealable(player);
                                         if (slotIndex != null) {
                                             Vec3d playerPos = player.getPositionVector();
                                             Vec3d selfPos = this.getPositionVector();
@@ -1089,13 +1088,14 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
     }
 
     @Nullable
-    Integer findThrowTarget(EntityPlayer player) {
+    Integer checkForStealable(EntityPlayer player) {
         NonNullList<ItemStack> inventory = player.inventory.mainInventory;
         ArrayList<Integer> validSlots = new ArrayList<Integer>();
         for (int i = 0; i < inventory.size(); ++i) {
             ItemStack stack = inventory.get(i);
-            if (stack == ItemStack.EMPTY || !TOOLS_LIST.contains(stack.getItem())) continue;
-            validSlots.add(i);
+            if (stack != ItemStack.EMPTY && GOLD_STEAL_LIST.contains(stack.getItem())) {
+                validSlots.add(i);
+            }
         }
         return validSlots.isEmpty() ? null : validSlots.get(this.getRNG().nextInt(validSlots.size()));
     }
@@ -1241,7 +1241,7 @@ public class GoblinEntity extends AbstractNpcOnlyEntity implements IGoblin {
                     }
                     if (action == Action.BREEDING_CUM_0) {
                         this.entityDataManager.set(IS_PREGNANT, true);
-                        this.impreginationTick = this.world.getTotalWorldTime();
+                        this.impregnationTick = this.world.getTotalWorldTime();
                         this.lastPregnancyMsgTick = this.world.getTotalWorldTime();
                     }
                     if (action == Action.BREEDING_CUM_0) {

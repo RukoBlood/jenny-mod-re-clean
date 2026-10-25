@@ -53,11 +53,11 @@ public class EditorWand extends Item {
     }
 
     @Override
-    public void onUpdate(ItemStack itemStack, World world, Entity entity, int n, boolean bl) {
-        if (world.isRemote) {
-            this.applyEditor(entity, itemStack);
+    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+        if (worldIn.isRemote) {
+            this.applyEditor(entityIn, stack);
         }
-        super.onUpdate(itemStack, world, entity, n, bl);
+        super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
     }
 
     @SideOnly(value=Side.CLIENT)

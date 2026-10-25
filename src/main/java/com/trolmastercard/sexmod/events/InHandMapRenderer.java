@@ -59,13 +59,35 @@ public class InHandMapRenderer {
                 float prevEquippedProgress = 0.0f;
                 float currentEquippedProgress = 0.0f;
 
+//                try {
+//                    ItemRenderer itemRenderer = this.mc.getItemRenderer();
+//                    prevEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "prevEquippedProgressMainHand");
+//                    currentEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "equippedProgressMainHand");
+//                    this.equippedProgressInverse = 2.0f - (prevEquippedProgress + (currentEquippedProgress - prevEquippedProgress) * event.getPartialTicks());
+//                } catch (Exception e) {
+//                    System.out.println("couldnt do the reflection thingy");
+//                    ///e.printStackTrace();
+//                    //StringWriter stringWriter = new StringWriter();
+//                    //e.printStackTrace(new PrintWriter(stringWriter));
+//                    //Minecraft.getMinecraft().player.sendChatMessage(stringWriter.toString());
+//                }
+
+                /*
+                * Greatest hotfix of all time
+                */
                 try {
                     ItemRenderer itemRenderer = this.mc.getItemRenderer();
-                    prevEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "prevEquippedProgressMainHand");
-                    currentEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "equippedProgressMainHand");
+
+                    if (DebugMode.GetEnv()) {
+                        prevEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "prevEquippedProgressMainHand");
+                        currentEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "equippedProgressMainHand");
+                    } else {
+                        prevEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "field_187470_g");
+                        currentEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "field_187469_f");
+                    }
                     this.equippedProgressInverse = 2.0f - (prevEquippedProgress + (currentEquippedProgress - prevEquippedProgress) * event.getPartialTicks());
                 } catch (Exception e) {
-                    System.out.println("couldnt do the reflection thingy");
+                    System.out.println("Can't read reflection fields.");
                     StringWriter stringWriter = new StringWriter();
                     e.printStackTrace(new PrintWriter(stringWriter));
                     Minecraft.getMinecraft().player.sendChatMessage(stringWriter.toString());

@@ -49,7 +49,16 @@ public class SetPlayerMovement implements IMessage {
                 return null;
             }
             HandlePlayerMovement.setMovementLock(msg.setActive);
-            Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
+
+            try {
+                Minecraft.getMinecraft().player.setVelocity(0.0, 0.0, 0.0);
+            } catch (Exception e) {
+                //throw new RuntimeException("О БОЖЕ БЛЯЯЯТЬ СЛУЧИЛСЯ %s АНША ЗЕЛИКС", e);
+
+                System.out.printf("Critical error happened in SetPlayerMovement packet. Error: %s%n", e);
+                e.printStackTrace();
+            }
+
             if (msg.setActive) {
                 SexUI.hide();
             }

@@ -91,12 +91,12 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register(new ManglelieEntity.EventHandler());
         MinecraftForge.EVENT_BUS.register(new NameTagInteractHandler());
         if (showDebug) {
-            RegisterIfAllowed();
+            registerClientHandlers();
         }
     }
 
     @SideOnly(value=Side.CLIENT)
-    static void RegisterIfAllowed() {
+    static void registerClientHandlers() {
         if (needsPornWarning()) {
             MinecraftForge.EVENT_BUS.register(new PornWarning());
         } else {

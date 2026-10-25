@@ -13,13 +13,6 @@
 
 Created by Palkaline, Remapped by Rukoblood
 
-## Fortunate news.
-One guy (RealCrystalNight) fully reverse engineered Jenny mod's code.
-
-Go check it out: https://github.com/ReverseEngineeringEnthusiasts/Jenny-Mod-Fapcraft
-
-Also found out that This mod was obfuscated with Zelix KlassMaster 13
-
 ## About
 jenny-mod-re-clean (or JMRC) is a project about a deobfuscation and remapping a one long dead mod originally made by SchnurriTV, and then trolmastercard.
 
@@ -31,7 +24,6 @@ Initial goals of this project:
 - Fix the bugs from decompiling, commented out code if needed.
 
 ## Tools, AI and mods that i used to reverse engineer this Mod
-
 - Giga IDE CE 2025.1 
 - Konloch's bytecode viewer 2.13.2
 - Google Gemini (free tier, no antigravity, no ai plus/pro).
@@ -72,3 +64,4 @@ It runs in dev environment, but shits itself on real client (Packets crashes and
 
 - See: https://github.com/hfgufjkgjkfbg/Minecraft-Sex-Mod-Jenny-1.12.2-Forge
 - See: https://github.com/ReverseEngineeringEnthusiasts/Jenny-Mod-Fapcraft
+- See: https://github.com/whatimdoingwithmylife-sudo/fapcraft-fully-cleaned

@@ -82,14 +82,14 @@ public class RequestServerModelAvailability implements IMessage {
                 ArrayList<String> arrayList = new ArrayList<>();
                 for (Map.Entry<String, Float> entry : msg.modelScales.entrySet()) {
                     String string = entry.getKey();
-                    if (!CustomModel.isModelDisabled(string)) {
+                    if (CustomModel.isModelDisabled(string)) {
+                        float f = CustomModel.getModelZOffset(string);
+                        float f2 = entry.getValue();
+                        if (!(f2 > f)) continue;
                         arrayList.add(string);
-                        continue;
+                    } else {
+                        arrayList.add(string);
                     }
-                    float f = CustomModel.getModelZOffset(string);
-                    float f2 = entry.getValue();
-                    if (!(f2 > f)) continue;
-                    arrayList.add(string);
                 }
                 return new DownloadServerModel(arrayList);
             }
