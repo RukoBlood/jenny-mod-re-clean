@@ -25,8 +25,8 @@ public class SetTribeFollowMode implements IMessage {
     public SetTribeFollowMode() {
     }
 
-    public SetTribeFollowMode(boolean bl) {
-        this.isTribeFollowing = bl;
+    public SetTribeFollowMode(boolean isFollowing) {
+        this.isTribeFollowing = isFollowing;
     }
 
     public void fromBytes(ByteBuf byteBuf) {
@@ -39,7 +39,6 @@ public class SetTribeFollowMode implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<SetTribeFollowMode, IMessage> {
-
         @Override
         public IMessage onMessage(SetTribeFollowMode msg, MessageContext ctx) {
             if (!msg.isValid || ctx.side.isClient()) {

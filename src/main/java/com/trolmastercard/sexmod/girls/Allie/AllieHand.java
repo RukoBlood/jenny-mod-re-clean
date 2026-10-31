@@ -21,14 +21,14 @@ public class AllieHand extends ModelBase implements IRenderer {
     }
 
     @Override
-    public void render(Entity entity, float f, float f2, float f3, float f4, float f5, float Scale) {
+    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float Scale) {
         this.bone.render(Scale);
     }
 
-    public void setRotationAngles(ModelRenderer modelRenderer, float f, float f2, float f3) {
-        modelRenderer.rotateAngleX = f;
-        modelRenderer.rotateAngleY = f2;
-        modelRenderer.rotateAngleZ = f3;
+    public void setRotationAngles(ModelRenderer modelRenderer, float x, float y, float v) {
+        modelRenderer.rotateAngleX = x;
+        modelRenderer.rotateAngleY = y;
+        modelRenderer.rotateAngleZ = v;
     }
 
     @Override

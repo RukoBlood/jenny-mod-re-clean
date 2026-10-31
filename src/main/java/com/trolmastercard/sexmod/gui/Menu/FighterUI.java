@@ -77,7 +77,7 @@ public class FighterUI extends GuiScreen {
     @SideOnly(value=Side.CLIENT)
     public void onGuiClosed() {
         super.onGuiClosed();
-        this.girl.AcSomeUnknownClass();
+        this.girl.onInteractionMenuClose();
     }
 
     @Override

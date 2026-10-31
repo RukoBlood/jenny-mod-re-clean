@@ -10,7 +10,7 @@ import software.bernie.geckolib3.core.processor.AnimationProcessor;
 import software.bernie.geckolib3.core.processor.IBone;
 
 public class CachedAnimationProcessor<T extends IAnimatable> extends AnimationProcessor<T> {
-    HashMap<String, IBone> boneCache = new HashMap();
+    HashMap<String, IBone> boneCache = new HashMap<>();
 
     public CachedAnimationProcessor(IAnimatableModel animatableModel) {
         super(animatableModel);

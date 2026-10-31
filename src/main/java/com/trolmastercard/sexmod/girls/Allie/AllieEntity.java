@@ -100,7 +100,7 @@ public class AllieEntity extends GirlEntity {
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void AcSomeUnknownClass() {
+    public void onInteractionMenuClose() {
         if (!this.skipLampActivation) {
             this.isLampActive = true;
         }

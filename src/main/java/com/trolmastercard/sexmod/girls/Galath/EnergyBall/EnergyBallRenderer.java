@@ -24,9 +24,9 @@ import org.lwjgl.opengl.GL11;
 
 public class EnergyBallRenderer extends Render<EnergyBallEntity> {
     static public EnergyBallRenderer instance;
-    final static ColorRGBA COLOR_CYAN;
-    final static ColorRGBA COLOR_MAGENTA;
-    final static ColorRGBA COLOR_WHITE_ALPHA;
+    final static ColorRGBA COLOR_CYAN = new ColorRGBA(0, 255, 251, 255);
+    final static ColorRGBA COLOR_MAGENTA = new ColorRGBA(255, 0, 236, 255);
+    final static ColorRGBA COLOR_WHITE_ALPHA = new ColorRGBA(255, 255, 255, 0);
     Minecraft mc = Minecraft.getMinecraft();
 
     public EnergyBallRenderer(RenderManager renderManager) {
@@ -36,7 +36,7 @@ public class EnergyBallRenderer extends Render<EnergyBallEntity> {
 
     //a
     @Override
-    protected ResourceLocation getEntityTexture(EnergyBallEntity c4_class1132) {
+    protected ResourceLocation getEntityTexture(EnergyBallEntity entity) {
         return new ResourceLocation("sexmod", "textures/entity/galath/energy_ball.png");
     }
 
@@ -89,23 +89,6 @@ public class EnergyBallRenderer extends Render<EnergyBallEntity> {
         buf.pos(0.25, 0.0, z).tex(1.0, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
         buf.pos(0.25, 0.5, z).tex(1.0, 1.0).color(color.r, color.g, color.b, color.a).endVertex();
         buf.pos(-0.25, 0.5, z).tex(0.0, 1.0).color(color.r, color.g, color.b, color.a).endVertex();
-    }
-
-    //@Override
-    //@Nullable
-    //protected ResourceLocation getEntityTexture(Entity entity) {
-    //    return this.a((c4_class113)entity);
-    //}
-
-    //@Override
-    //public void doRender(Entity entity, double d, double d2, double d3, float f, float f2) {
-    //    this.a((c4_class113)entity, d, d2, d3, f, f2);
-    //}
-
-    static {
-        COLOR_CYAN = new ColorRGBA(0, 255, 251, 255);
-        COLOR_MAGENTA = new ColorRGBA(255, 0, 236, 255);
-        COLOR_WHITE_ALPHA = new ColorRGBA(255, 255, 255, 0);
     }
 }
 

@@ -27,7 +27,6 @@ import java.util.UUID;
 import javax.vecmath.Vector4d;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -81,7 +80,7 @@ public class GetTribeUIValues implements IMessage {
             }
             if (ctx.side.isClient()) {
                 DragonStaffUI.isTribeFollowing = msg.isTribeLeader;
-                KoboldEntity.ACTIVE_TRIBE_SCREEN_POSITIONS = msg.tribeMembers;
+                KoboldEntity.TRIBE_MEMBERS = msg.tribeMembers;
                 return null;
             }
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> {

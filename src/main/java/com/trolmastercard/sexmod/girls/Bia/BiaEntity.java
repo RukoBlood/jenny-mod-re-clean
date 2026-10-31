@@ -205,7 +205,7 @@ public class BiaEntity extends Fighter implements IEllie, IBeddableSexGirl {
     }
 
     @Override
-    public void AcSomeUnknownClass() {
+    public void onInteractionMenuClose() {
         if (this.isAnchored() && !this.supressCameraReset) {
             this.resetCameraAndPhysics();
         }

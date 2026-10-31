@@ -1,11 +1,3 @@
-/*
- * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
- * 
- * Could not load the following classes:
- *  net.minecraftforge.client.event.RenderSpecificHandEvent
- *  net.minecraftforge.fml.common.ObfuscationReflectionHelper
- *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
- */
 package com.trolmastercard.sexmod.events;
 
 import java.io.PrintWriter;
@@ -33,6 +25,14 @@ import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * Custom renderer for the player's hand and in-hand maps.
+ *
+ * <p>This event handler replaces the vanilla first-person hand rendering with
+ * a custom hand model when the player has a corresponding {@link PlayerGirl}
+ * state. It also renders maps in the custom hand, including one-handed and
+ * two-handed map poses.</p>
+ */
 public class InHandMapRenderer {
     Minecraft mc;
     float equippedProgressInverse = 2.0f;
@@ -42,6 +42,18 @@ public class InHandMapRenderer {
     ResourceLocation texture;
     Vec3i handColor;
 
+    /**
+     * Handles the {@link RenderSpecificHandEvent} and renders a custom hand
+     * and/or map instead of the vanilla hand when appropriate.
+     *
+     * <p>The method retrieves the {@link PlayerGirl} state for the local player,
+     * resolves the hand model, texture, and color for the active outfit, then
+     * reads vanilla item equip progress through reflection. Depending on the
+     * held item and hand, the event may be canceled and custom rendering is
+     * performed.</p>
+     *
+     * @param event the hand rendering event
+     */
     @SubscribeEvent
     public void onRenderingSpecificHandEvent(RenderSpecificHandEvent event) {
         //Object object;
@@ -59,22 +71,13 @@ public class InHandMapRenderer {
                 float prevEquippedProgress = 0.0f;
                 float currentEquippedProgress = 0.0f;
 
-//                try {
-//                    ItemRenderer itemRenderer = this.mc.getItemRenderer();
-//                    prevEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "prevEquippedProgressMainHand");
-//                    currentEquippedProgress = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "equippedProgressMainHand");
-//                    this.equippedProgressInverse = 2.0f - (prevEquippedProgress + (currentEquippedProgress - prevEquippedProgress) * event.getPartialTicks());
-//                } catch (Exception e) {
-//                    System.out.println("couldnt do the reflection thingy");
-//                    ///e.printStackTrace();
-//                    //StringWriter stringWriter = new StringWriter();
-//                    //e.printStackTrace(new PrintWriter(stringWriter));
-//                    //Minecraft.getMinecraft().player.sendChatMessage(stringWriter.toString());
-//                }
-
                 /*
-                * Greatest hotfix of all time
-                */
+                 * Greatest hotfix of all time
+                 *
+                 * Vanilla ItemRenderer equip progress fields are private and have
+                 * different names depending on whether the game is running in a
+                 * development environment or in an obfuscated production environment.
+                 */
                 try {
                     ItemRenderer itemRenderer = this.mc.getItemRenderer();
 
@@ -119,6 +122,19 @@ public class InHandMapRenderer {
         }
     }
 
+    /**
+     * Renders either a held map or an empty custom hand.
+     *
+     * <p>If the stack is a map, the method chooses a two-handed map pose when
+     * the offhand is empty, otherwise a one-handed right-hand map pose. If the
+     * stack is not a map, an empty custom hand is rendered.</p>
+     *
+     * @param stack the item stack in the main hand
+     * @param partialTicks the current frame partial tick time
+     * @param player the client player
+     * @param equipProgress the inverse equip progress
+     * @param swingProgress the current swing progress
+     */
     void renderHandOrMapStack(ItemStack stack, float partialTicks, AbstractClientPlayer player, float equipProgress, float swingProgress) {
         if (stack.getItem() instanceof ItemMap) {
             if (player.getHeldItemOffhand().isEmpty()) {
@@ -131,6 +147,17 @@ public class InHandMapRenderer {
         }
     }
 
+    /**
+     * Renders a map held in one hand.
+     *
+     * <p>The custom hand is rendered first unless the player is invisible, then
+     * the map canvas is rendered with swing and equip offsets.</p>
+     *
+     * @param handSide the hand side used for rendering
+     * @param equipProgress the equip progress offset
+     * @param swingProgress the current swing progress
+     * @param mapStack the map item stack
+     */
     void renderOneHandedMap(EnumHandSide handSide, float equipProgress, float swingProgress, ItemStack mapStack) {
         float sideSign = handSide == EnumHandSide.RIGHT ? 1.0f : -1.0f;
         GlStateManager.translate(sideSign * 0.125f, -0.125f, 0.0f);
@@ -164,6 +191,17 @@ public class InHandMapRenderer {
         GlStateManager.popMatrix();
     }
 
+    /**
+     * Renders a map held with both hands.
+     *
+     * <p>Both custom hands are rendered holding the map, and the map canvas is
+     * tilted based on the player's pitch and swing progress.</p>
+     *
+     * @param mapStack the map item stack
+     * @param player the client player
+     * @param swingProgress the current swing progress
+     * @param PartialTicks the current frame partial tick time
+     */
     void renderTwoHandedMap(ItemStack mapStack, AbstractClientPlayer player, float swingProgress, float PartialTicks) {
         float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * PartialTicks;
         float sqrtSwing = MathHelper.sqrt(swingProgress);
@@ -187,6 +225,11 @@ public class InHandMapRenderer {
         GlStateManager.enableLighting();
     }
 
+    /**
+     * Renders the map canvas, including the map background and map data.
+     *
+     * @param mapStack the map item stack
+     */
     void renderMapCanvas(ItemStack mapStack) {
         GlStateManager.resetColor();
         GlStateManager.rotate(180.0f, 0.0f, 1.0f, 0.0f);
@@ -211,6 +254,11 @@ public class InHandMapRenderer {
         GlStateManager.color((float)this.handColor.getX() / 255.0f, (float)this.handColor.getY() / 255.0f, (float)this.handColor.getZ() / 255.0f);
     }
 
+    /**
+     * Renders one custom hand in the two-handed map pose.
+     *
+     * @param handSide the hand side to render
+     */
     private void renderMapHoldingHand(EnumHandSide handSide) {
         GlStateManager.pushMatrix();
         float sideSign = handSide == EnumHandSide.RIGHT ? 1.0f : -1.0f;
@@ -228,6 +276,12 @@ public class InHandMapRenderer {
         GlStateManager.popMatrix();
     }
 
+    /**
+     * Calculates the map pitch offset based on the player's pitch.
+     *
+     * @param pitch the player's pitch
+     * @return a clamped and eased pitch offset used for map rendering
+     */
     private float calculateMapPitchOffset(float pitch) {
         float offset = 1.0f - pitch / 45.0f + 0.1f;
         offset = MathHelper.clamp(offset, 0.0f, 1.0f);
@@ -235,6 +289,12 @@ public class InHandMapRenderer {
         return offset;
     }
 
+    /**
+     * Renders an empty custom hand.
+     *
+     * @param swingProgress the current swing progress
+     * @param partialTicks the current frame partial tick time
+     */
     void renderEmptyHand(float swingProgress, float partialTicks) {
         GlStateManager.disableCull();
         GlStateManager.pushMatrix();
@@ -246,6 +306,14 @@ public class InHandMapRenderer {
         GlStateManager.popMatrix();
     }
 
+    /**
+     * Applies a vanilla-like first-person hand transformation for the custom
+     * hand model.
+     *
+     * @param equipProgress the equip progress offset
+     * @param swingProgress the current swing progress
+     * @param handSide the hand side to transform
+     */
     private void applyHandTransformation(float equipProgress, float swingProgress, EnumHandSide handSide) {
         boolean isRightHand = handSide != EnumHandSide.LEFT;
         float sideSign = isRightHand ? 1.0f : -1.0f;

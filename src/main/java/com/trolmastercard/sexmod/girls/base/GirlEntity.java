@@ -1,15 +1,3 @@
-/*
- * Decompiled with CFR 0.153-SNAPSHOT (11e700f-dirty).
- * 
- * Could not load the following classes:
- *  com.mojang.realmsclient.util.Pair
- *  javax.annotation.Nonnull
- *  javax.annotation.Nullable
- *  net.minecraftforge.fml.common.FMLCommonHandler
- *  net.minecraftforge.fml.common.network.NetworkRegistry$TargetPoint
- *  net.minecraftforge.fml.common.network.simpleimpl.IMessage
- *  org.apache.logging.log4j.Level
- */
 package com.trolmastercard.sexmod.girls.base;
 
 import com.mojang.realmsclient.util.Pair;
@@ -113,6 +101,18 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.util.MatrixStack;
 
 // em_class258
+/**
+ * Base class for all animated "girl" NPCs in the mod.
+ *
+ * <p>Provides a shared data model (via {@link EntityDataManager}), animation
+ * controllers, AI tasks, interaction state, chat/sound helpers, structure
+ * search utilities, custom model part management and bone tracking helpers
+ * that concrete girl implementations build upon.</p>
+ *
+ * <p>Data is synchronized to the client through the entity data manager; on
+ * the client side, setters often route through {@link ChangeDataParameter}
+ * packets to keep the server authoritative.</p>
+ */
 public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     static public int maxAgeInTicks = 22;
     final static protected long TICK_RATE = 20L;
@@ -131,18 +131,18 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     private boolean isRegisteredLocally = false;
 
     HashMap<String, Vec3d> boneTransformCache = new HashMap();
-    final static public DataParameter<String> MASTER;
-    final static public DataParameter<Boolean> IS_ANCHORED;
-    final static public DataParameter<String> TARGET_POS;
-    final static public DataParameter<Float> YAW_ROTATION;
-    final static public DataParameter<String> GIRL_ID;
-    final static public DataParameter<Integer> OUTFIT_INDEX;
-    final static public DataParameter<String> CUR_ACTION;
-    final static public DataParameter<String> GIRL_HAND_STATES;
-    final static public DataParameter<String> INTERACTION_PARTNER_UUID;
-    final static public DataParameter<String> WALK_SPEED;
-    final static public DataParameter<String> CUSTOM_MODEL_KEY;
-    final static public DataParameter<String> CUSTOM_NAME;
+    final static public DataParameter<String> MASTER = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(110);
+    final static public DataParameter<Boolean> IS_ANCHORED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(109);
+    final static public DataParameter<String> TARGET_POS = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(108);
+    final static public DataParameter<Float> YAW_ROTATION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.FLOAT).getSerializer().createKey(107);
+    final static public DataParameter<String> GIRL_ID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(106);
+    final static public DataParameter<Integer> OUTFIT_INDEX = EntityDataManager.createKey(GirlEntity.class, DataSerializers.VARINT).getSerializer().createKey(105);
+    final static public DataParameter<String> CUR_ACTION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(104);
+    final static public DataParameter<String> GIRL_HAND_STATES = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(103);
+    final static public DataParameter<String> INTERACTION_PARTNER_UUID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
+    final static public DataParameter<String> WALK_SPEED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
+    final static public DataParameter<String> CUSTOM_MODEL_KEY = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(100);
+    final static public DataParameter<String> CUSTOM_NAME = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(99);
 
     final static protected List<Item> TEMPTATION_ITEMS = Arrays.asList(Items.EMERALD, Items.DIAMOND, Items.GOLD_INGOT, Items.ENDER_PEARL);
 
@@ -154,35 +154,42 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     public List<String> boneTrackingList = new ArrayList<>();
     protected List<Map.Entry<CustomPartCategory, Map.Entry<List<String>, Integer>>> customPartsData = null;
 
-    static {
-        MASTER = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(110);
-        IS_ANCHORED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(109);
-        TARGET_POS = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(108);
-        YAW_ROTATION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.FLOAT).getSerializer().createKey(107);
-        GIRL_ID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(106);
-        OUTFIT_INDEX = EntityDataManager.createKey(GirlEntity.class, DataSerializers.VARINT).getSerializer().createKey(105);
-        CUR_ACTION = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(104);
-        GIRL_HAND_STATES = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(103);
-        INTERACTION_PARTNER_UUID = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(102);
-        WALK_SPEED = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(101);
-        CUSTOM_MODEL_KEY = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(100);
-        CUSTOM_NAME = EntityDataManager.createKey(GirlEntity.class, DataSerializers.STRING).getSerializer().createKey(99);
-    }
-
+    /**
+     * Sets the entity's walk speed.
+     *
+     * @param walkSpeed the new walk speed
+     */
     public void setWalkSpeed(WalkSpeed walkSpeed) {
         this.entityDataManager.set(WALK_SPEED, walkSpeed.toString());
     }
 
+    /**
+     * Returns the entity's current walk speed.
+     *
+     * @return the current walk speed
+     */
     public WalkSpeed getWalkType() {
         return WalkSpeed.valueOf(this.entityDataManager.get(WALK_SPEED));
     }
 
+    /**
+     * Sends a data parameter change to the server from the client.
+     *
+     * @param paramKey the data parameter key
+     * @param paramValue the new value
+     */
     @SideOnly(value=Side.CLIENT)
     protected void changeDataParameterFromClient(String paramKey, String paramValue) {
         PacketHandler.INSTANCE.sendToServer(new ChangeDataParameter(this.girlID(), paramKey, paramValue));
     }
 
     //f
+    /**
+     * Returns the entity's persistent UUID, generating and storing one if it is
+     * missing or malformed.
+     *
+     * @return the entity's UUID
+     */
     public UUID girlID() {
         try {
             return UUID.fromString(this.entityDataManager.get(GIRL_ID));
@@ -193,10 +200,24 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
+    /**
+     * Returns the entity's current action.
+     *
+     * @return the current action
+     */
     public Action getCurrentAction() {
         return Action.valueOf(this.entityDataManager.get(CUR_ACTION));
     }
 
+    /**
+     * Sets the entity's current action.
+     *
+     * <p>On the client the change is forwarded to the server; on the server the
+     * synchronized action is updated directly. Attacking from a non-null action
+     * is ignored.</p>
+     *
+     * @param action the new action, or {@code null} for {@link Action#NULL}
+     */
     public void setCurrentAction(Action action) {
         Action previousAction = this.getCurrentAction();
         if (previousAction != action) {
@@ -213,10 +234,20 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
+    /**
+     * Returns the index of the currently selected outfit.
+     *
+     * @return the outfit index
+     */
     public int getOutfitIndex() {
         return this.entityDataManager.get(OUTFIT_INDEX);
     }
 
+    /**
+     * Sets the outfit index, forwarding to the server when on the client.
+     *
+     * @param index the new outfit index
+     */
     public void setOutfitIndex(int index) {
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("currentModel", "0");
@@ -225,10 +256,21 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
+    /**
+     * Returns whether this entity is of the custom model type.
+     *
+     * @return {@code false} by default
+     */
     public boolean isCustomType() {
         return false;
     }
 
+    /**
+     * Returns the player currently interacting with this entity, or {@code null}
+     * if there is no interaction or the player is not loaded.
+     *
+     * @return the interacting player, or {@code null}
+     */
     @Nullable
     public EntityPlayer getPlayerEntity() {
         UUID uUID = this.getInteractionPlayerUUID();
@@ -238,12 +280,27 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return this.world.getPlayerEntityByUUID(uUID);
     }
 
+    /**
+     * Sends a chat message to every player tracking this entity.
+     *
+     * @param girl the entity the message originates from
+     * @param message the message to send
+     */
     public static void sendMessageToTrackingPlayers(GirlEntity girl, String message) {
         for (EntityPlayer player : WorldUtils.getPlayersTrackingEntity(girl)) {
             player.sendMessage(new TextComponentString(message));
         }
     }
 
+    /**
+     * Plays a sound for every player tracking the given girl.
+     *
+     * @param girl the entity emitting the sound
+     * @param sound the sound event
+     * @param atPlayer whether the sound should be played at the player's
+     *                 position (in the direction of the girl) rather than at
+     *                 the girl's position
+     */
     public static void girlPlaySound(GirlEntity girl, SoundEvent sound, boolean atPlayer) {
         Vec3d origin = girl.getPositionVector();
         for (EntityPlayer player : WorldUtils.getPlayersTrackingEntity(girl)) {
@@ -259,18 +316,43 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
+    /**
+     * Plays a sound at the girl's position for all tracking players.
+     *
+     * @param girl the entity emitting the sound
+     * @param sounds the sound event
+     */
     public static void girlPlaySound(GirlEntity girl, SoundEvent sounds) {
         GirlEntity.girlPlaySound(girl, sounds, false);
     }
 
-    public static void playRandomSound(GirlEntity em_class2582, SoundEvent[] sounds) {
-        GirlEntity.girlPlaySound(em_class2582, SoundsHandler.random(sounds));
+    /**
+     * Plays a random sound from the given array for all tracking players.
+     *
+     * @param girl the entity emitting the sound
+     * @param sounds the array of sound events
+     */
+    public static void playRandomSound(GirlEntity girl, SoundEvent[] sounds) {
+        GirlEntity.girlPlaySound(girl, SoundsHandler.random(sounds));
     }
 
+    /**
+     * Plays a random sound from the given array for all tracking players, with
+     * optional positional playback.
+     *
+     * @param girl the entity emitting the sound
+     * @param sounds the array of sound events
+     * @param positional whether to play the sound at the player's position
+     */
     public static void playRandomSound(GirlEntity girl, SoundEvent[] sounds, boolean positional) {
         GirlEntity.girlPlaySound(girl, SoundsHandler.random(sounds), positional);
     }
 
+    /**
+     * Returns a point in the direction from the local player toward this entity.
+     *
+     * @return the point one unit away from the local player toward this entity
+     */
     @SideOnly(value=Side.CLIENT)
     public Vec3d getVectorTowardPlayer() {
         Vec3d playerPos = Minecraft.getMinecraft().player.getPositionVector();
@@ -279,15 +361,26 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return playerPos.add(direction);
     }
 
+    /**
+     * Returns the UUID of the player currently interacting with this entity,
+     * or {@code null} if there is no interaction.
+     *
+     * @return the interacting player's UUID, or {@code null}
+     */
     @Nullable
     public UUID getInteractionPlayerUUID() {
         String uuidStr = this.entityDataManager.get(INTERACTION_PARTNER_UUID);
-        if (uuidStr.equals("null")) {
-            return null;
-        }
-        return UUID.fromString(uuidStr);
+        return uuidStr.equals("null") ? null : UUID.fromString(uuidStr);
     }
 
+    /**
+     * Sets the UUID of the player interacting with this entity.
+     *
+     * <p>On the client the change is forwarded to the server; on the server the
+     * synchronized value is updated directly.</p>
+     *
+     * @param uuid the interacting player's UUID, or {@code null} to clear it
+     */
     public void setInteractionPlayerUUID(UUID uuid) {
         if (this.world.isRemote) {
             this.changeDataParameterFromClient("playerSheHasSexWith", uuid == null ? null : uuid.toString());
@@ -296,68 +389,126 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.set(INTERACTION_PARTNER_UUID, uuid == null ? "null" : uuid.toString());
     }
 
+    /**
+     * Sets the interacting player using the player's persistent UUID.
+     *
+     * @param player the interacting player
+     */
     public void setInteractionPlayer(@Nonnull EntityPlayer player) {
         this.setInteractionPlayerUUID(player.getPersistentID());
     }
 
+    /**
+     * Returns the target position this entity is anchored to.
+     *
+     * @return the target position
+     */
     public Vec3d getTargetPosition() {
         String[] coords = this.entityDataManager.get(TARGET_POS).split("\\|");
         return new Vec3d(Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), Double.parseDouble(coords[2]));
     }
 
+    /**
+     * Sets the target position this entity is anchored to.
+     *
+     * <p>On the client the change is forwarded to the server; on the server the
+     * synchronized value is updated directly.</p>
+     *
+     * @param pos the new target position
+     */
     public void setTargetPosition(Vec3d pos) {
-        if (this.world.isRemote) {
+        if (!this.world.isRemote) {
+            this.entityDataManager.set(TARGET_POS, pos.x + "|" + pos.y + "|" + pos.z);
+        } else {
             String formatted = pos.x + "f" + pos.y + "f" + pos.z + "f";
             this.changeDataParameterFromClient("targetPos", formatted);
-            return;
         }
-        this.entityDataManager.set(TARGET_POS, pos.x + "|" + pos.y + "|" + pos.z);
     }
-    //end of reversing #1
 
+    /**
+     * Sets the target position directly in the data manager without network
+     * forwarding.
+     *
+     * @param pos the new target position
+     */
     public void setTargetPositionDirect(Vec3d pos) {
         this.entityDataManager.set(TARGET_POS, pos.x + "|" + pos.y + "|" + pos.z);
     }
 
+    /**
+     * Returns the yaw the entity is anchored to.
+     *
+     * @return the anchored yaw
+     */
     public Float getYawRotation() {
         return this.entityDataManager.get(YAW_ROTATION);
     }
 
+    /**
+     * Sets the yaw the entity is anchored to.
+     *
+     * @param yaw the new yaw
+     */
     public void setYawRotation(float yaw) {
         this.entityDataManager.set(YAW_ROTATION, yaw);
     }
 
+    /**
+     * Sets whether the entity is anchored to its target position.
+     *
+     * <p>On the client the change is forwarded to the server; on the server the
+     * synchronized value is updated directly.</p>
+     *
+     * @param anchored whether the entity should be anchored
+     */
     public void setAnchored(boolean anchored) {
-        if (this.world.isRemote) {
+        if (!this.world.isRemote) {
+            this.entityDataManager.set(IS_ANCHORED, anchored);
+        } else {
             this.changeDataParameterFromClient("shouldbeattargetpos", String.valueOf(anchored));
-            return;
         }
-        this.entityDataManager.set(IS_ANCHORED, anchored);
     }
 
+    /**
+     * Returns whether the entity is anchored to its target position.
+     *
+     * @return {@code true} if anchored
+     */
     public boolean isAnchored() {
         return this.entityDataManager.get(IS_ANCHORED);
     }
 
+    /**
+     * Girls never despawn naturally.
+     *
+     * @return always {@code false}
+     */
     @Override
     protected boolean canDespawn() {
         return false;
     }
 
+    /**
+     * Creates a new girl entity.
+     *
+     * @param world the world the entity belongs to
+     */
     protected GirlEntity(World world) {
         super(world);
         if (world.isRemote) {
             this.initAnimationControllers();
         }
-        if (world.isRemote && world instanceof FakeWorld) {
-            return;
-        }
-        PathNavigate nav = this.getNavigator();
-        if (nav instanceof PathNavigateGround) {
-            ((PathNavigateGround)nav).setBreakDoors(true);
+        if (!world.isRemote || !(world instanceof FakeWorld)) {
+            PathNavigate nav = this.getNavigator();
+            if (nav instanceof PathNavigateGround) {
+                ((PathNavigateGround) nav).setBreakDoors(true);
+            }
         }
     }
 
+    /**
+     * Initializes the client-side animation controllers.
+     */
     @SideOnly(value=Side.CLIENT)
     protected void initAnimationControllers() {
         this.actionController = new AnimationController<>(this, "action", 0.0f, this::predicate);
@@ -365,6 +516,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.eyesController = new AnimationController<>(this, "eyes", 10.0f, this::predicate);
     }
 
+    /**
+     * Registers synchronized data parameters and caches navigator/data manager
+     * references.
+     */
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -384,6 +539,12 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.entityDataManager.register(CUSTOM_NAME, "");
     }
 
+    /**
+     * Marks this entity as locally registered and adds/removes it from the
+     * {@link GirlID} list accordingly.
+     *
+     * @param registered whether the entity is now locally registered
+     */
     public void setLocallyRegistered(boolean registered) {
         this.isRegisteredLocally = registered;
         if (registered) {
@@ -393,10 +554,23 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
+    /**
+     * Returns whether this entity is locally registered.
+     *
+     * @return {@code true} if locally registered
+     */
     public boolean isLocallyRegistered() {
         return this.isRegisteredLocally;
     }
 
+    /**
+     * Returns all loaded girl entities, side-aware.
+     *
+     * <p>On the server this iterates all server worlds; on the client it reads
+     * from the current client world.</p>
+     *
+     * @return a list of all loaded girl entities
+     */
     public static List<GirlEntity> getGirlEntityList() {
         if (!ClientServerCheck.getInstance()) {
             return GirlEntity.getClientGirls();
@@ -413,6 +587,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return girls;
     }
 
+    /**
+     * Returns all girl entities loaded in the client world.
+     *
+     * @return a list of client-side girl entities
+     */
     @SideOnly(value=Side.CLIENT)
     private static List<GirlEntity> getClientGirls() {
         WorldClient clientWorld = Minecraft.getMinecraft().world;
@@ -422,10 +601,18 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         return clientWorld.getEntities(GirlEntity.class, girl -> true);
     }
 
+    /**
+     * Returns whether the entity can be interacted with.
+     *
+     * @return {@code true} by default
+     */
     public boolean canBeInteractedWith() {
         return true;
     }
 
+    /**
+     * Applies base entity attribute values (health, speed, follow range).
+     */
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
@@ -434,6 +621,9 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(30.0);
     }
 
+    /**
+     * Registers the entity's AI tasks.
+     */
     @Override
     protected void initEntityAI() {
         this.aiWander = new EntityAIWanderAvoidWater(this, 0.35);
@@ -445,6 +635,11 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.tasks.addTask(5, this.aiWander);
     }
 
+    /**
+     * Writes the entity's persistent state to NBT.
+     *
+     * @param nbt the NBT compound to write to
+     */
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         nbt.setDouble("homeX", this.homeCoords.x);
@@ -461,10 +656,21 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         super.writeEntityToNBT(nbt);
     }
 
+    /**
+     * Returns whether the entity supports custom model parts.
+     *
+     * @return {@code true} if the entity is a valid girl
+     */
     protected boolean supportsCustomModels() {
         return GirlEntity.isValidGirl(this);
     }
 
+    /**
+     * Reads the entity's persistent state from NBT, including duplicate
+     * detection to remove conflicting copies of the same girl.
+     *
+     * @param nbt the NBT compound to read from
+     */
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         String uuidStr;
@@ -495,10 +701,22 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
+    /**
+     * Returns whether the entity is interactable.
+     *
+     * @return {@code true} by default
+     */
     public boolean isInteractable() {
         return true;
     }
 
+    /**
+     * Sets the entity's velocity from raw coordinates.
+     *
+     * @param x the x velocity
+     * @param y the y velocity
+     * @param z the z velocity
+     */
     @Override
     public void setVelocity(double x, double y, double z) {
         this.motionX = x;
@@ -506,16 +724,31 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.motionZ = z;
     }
 
+    /**
+     * Sets the entity's velocity from a vector.
+     *
+     * @param motion the velocity vector
+     */
     public void setVelocity(Vec3d motion) {
         this.motionX = motion.x;
         this.motionY = motion.y;
         this.motionZ = motion.z;
     }
 
+    /**
+     * Returns the entity's position at the previous tick.
+     *
+     * @return the previous tick position
+     */
     public Vec3d getLastTickPosition() {
         return new Vec3d(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ);
     }
 
+    /**
+     * Updates AI tasks. When anchored, snaps the entity to its target position
+     * and yaw. Also initializes home coordinates and refreshes custom model
+     * parts.
+     */
     @Override
     public void updateAITasks() {
         if (this.entityDataManager.get(IS_ANCHORED)) {
@@ -529,12 +762,19 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         this.updateCustomModelParts();
     }
 
+    /**
+     * Ticks the entity and its follow-up action transitions.
+     */
     @Override
     public void onUpdate() {
         super.onUpdate();
         this.tickFollowUpTransitions();
     }
 
+    /**
+     * Removes custom model parts that are no longer valid for the current
+     * custom model group and updates the stored model code accordingly.
+     */
     protected void updateCustomModelParts() {
         if (CustomModel.isLoaded) {
             HashSet<String> activeParts = this.getCustomPartsSet();
@@ -542,27 +782,29 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
             HashSet<String> partsToRemove = new HashSet<String>();
             String currentGroup = CustomModel.getCurrentGroup();
             for (String part : activeParts) {
-                if (!CustomModel.getPartName(part, currentGroup).isEmpty()) {
+                if (CustomModel.getPartName(part, currentGroup).isEmpty()) {
+                    HashSet<PlayerGirlEntity> allowedEntities = CustomModel.getAllowedEntities(part);
+                    if (allowedEntities != null) {
+                        if (allowedEntities.isEmpty() || allowedEntities.contains(playerGirl)) continue;
+                        partsToRemove.add(part);
+                    } else {
+                        partsToRemove.add(part);
+                    }
+                } else {
                     partsToRemove.add(part);
-                    continue;
                 }
-                HashSet<PlayerGirlEntity> allowedEntities = CustomModel.getAllowedEntities(part);
-                if (allowedEntities == null) {
-                    partsToRemove.add(part);
-                    continue;
-                }
-                if (allowedEntities.isEmpty() || allowedEntities.contains(playerGirl)) continue;
-                partsToRemove.add(part);
             }
-            if (partsToRemove.isEmpty()) {
-                return;
+            if (!partsToRemove.isEmpty()) {
+                activeParts.removeAll(partsToRemove);
+                this.setCustomModelCode(GirlEntity.serializePartsSet(activeParts));
             }
-            activeParts.removeAll(partsToRemove);
-            this.setCustomModelCode(GirlEntity.serializePartsSet(activeParts));
         }
     }
-    //end of deobfuscation #2
 
+    /**
+     * Advances the current action's tick counter and switches to the follow-up
+     * action when the action finishes.
+     */
     protected void tickFollowUpTransitions() {
         Action action = this.getCurrentAction();
         int sideIndex = this.world.isRemote ? 1 : 0;
@@ -576,6 +818,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
         }
     }
 
+    /**
+     * Applies a simplified path-following velocity when the entity is airborne
+     * and has a valid path.
+     */
     protected void tickPathVelocity() {
         Path path = this.getNavigator().getPath();
         if (path != null && !this.onGround && !this.isInWater()) {
@@ -593,14 +839,29 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
 
     }
 
+    /**
+     * Re-initializes AI tasks. Intended to be overridden by subclasses.
+     */
     public void reInitTasks() {
     }
 
+    /**
+     * Opens the interaction menu for the given player. Client-side only.
+     *
+     * @param player the interacting player
+     * @return {@code false} by default
+     */
     @SideOnly(value=Side.CLIENT)
     public boolean openInteractionMenu(EntityPlayer player) {
         return false;
     }
 
+    /**
+     * Opens the fighter UI for the given girl and player.
+     *
+     * @param player the interacting player
+     * @param girl the girl whose inventory is shown
+     */
     @SideOnly(value=Side.CLIENT)
     protected static void openInventoryGui(EntityPlayer player, GirlEntity girl) {
         Minecraft.getMinecraft().displayGuiScreen(new FighterUI(girl, player));
@@ -972,9 +1233,10 @@ public abstract class GirlEntity extends EntityCreature implements IAnimatable {
     }
 
     @SideOnly(value=Side.CLIENT)
-    public void AcSomeUnknownClass() {
-    }//TODO Ask gemini to rename this
+    public void onInteractionMenuClose() {
+    }//Ask gemini to rename this
     //Or Atomov
+    //Thanks Napoleon
 
     public void resetCameraAndPhysics() {
         //System.out.printf("resetCameraAndPhysics %s (remote=%s, action=%s, anchored=%s)%n", this.getDisplayNameText(), this.world.isRemote, this.getCurrentAction(), this.isAnchored());

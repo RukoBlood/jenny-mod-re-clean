@@ -93,7 +93,7 @@ public class DragonStaffItem extends Item implements IAnimatable {
             if (world.isRemote) {
                 EntityPlayer player = event.getEntityPlayer();
                 if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == DRAGON_STAFF || player.getHeldItem(EnumHand.OFF_HAND).getItem() == DRAGON_STAFF) {
-                    if (!KoboldEntity.ACTIVE_TRIBE_SCREEN_POSITIONS.isEmpty()) {
+                    if (!KoboldEntity.TRIBE_MEMBERS.isEmpty()) {
                         this.openStructureCommand();
                     }
                 }

@@ -230,8 +230,9 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
         HashSet<String> validatedBones = new HashSet<String>();
         for (String partKey : rawParts) {
             CustomModel.ModelData modelPart = CustomModel.getModelDataForGirl(partKey);
-            if (modelPart == null || !modelPart.isDisabled() && isDressed) continue;
-            validatedBones.addAll(modelPart.getCustomPartBones());
+            if (modelPart != null && (modelPart.isDisabled() || !isDressed)) {
+                validatedBones.addAll(modelPart.getCustomPartBones());
+            }
         }
         return validatedBones;
     }
@@ -240,30 +241,25 @@ public abstract class GirlRenderer<T extends GirlEntity & IAnimatable> extends G
     //render
     @Override
     public void render(GeoModel model, T entity, float partialTicks, float r, float g, float b, float a) {
-        if (GirlRenderer.mc.player != null
-                && !entity.isLocallyRegistered()
-                && entity.isInteractable()
-                && !this.isVisibleToPlayer(entity, GirlRenderer.mc.player)
-        ) {
-            return;
+        if (GirlRenderer.mc.player == null || entity.isLocallyRegistered() || !entity.isInteractable() || this.isVisibleToPlayer(entity, GirlRenderer.mc.player)) {
+            GlStateManager.enableRescaleNormal();
+            this.renderEarly(entity, partialTicks, r, g, b, a);
+            this.renderLate(entity, partialTicks, r, g, b, a);
+            BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+            buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+            this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
+            this.activeCustomPartBones.clear();
+            this.activeCustomPartBones = this.queryCustomModelParts(entity.isLocallyRegistered(), entity.getOutfitIndex() == 0);
+            this.onRenderSetup();
+            BoneDeformProcessor.preWarmFilterCache(entity.getAnimationProcessor().getModelRendererList(), this.getBlacklistedBoneNames(), this);
+            BoneDeformProcessor.updateGlobalInfluence(entity, partialTicks);
+            this.renderModelBuffer(model, buffer, entity, r, g, b, a, partialTicks);
+            this.renderAfter(entity, partialTicks, r, g, b, a);
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.enableCull();
+            GL20.glUseProgram(0);
         }
 
-        GlStateManager.enableRescaleNormal();
-        this.renderEarly(entity, partialTicks, r, g, b, a);
-        this.renderLate(entity, partialTicks, r, g, b, a);
-        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        this.bindTexture(Objects.requireNonNull(this.getEntityTexture(this.renderEntity)));
-        this.activeCustomPartBones.clear();
-        this.activeCustomPartBones = this.queryCustomModelParts(entity.isLocallyRegistered(), entity.getOutfitIndex() == 0);
-        this.onRenderSetup();
-        BoneDeformProcessor.preWarmFilterCache(entity.getAnimationProcessor().getModelRendererList(), this.getBlacklistedBoneNames(), this);
-        BoneDeformProcessor.updateGlobalInfluence(entity, partialTicks);
-        this.renderModelBuffer(model, buffer, entity, r, g, b, a, partialTicks);
-        this.renderAfter(entity, partialTicks, r, g, b, a);
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.enableCull();
-        GL20.glUseProgram(0);
     }
 
 

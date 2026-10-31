@@ -32,12 +32,16 @@ public class FutaCommand extends CommandBase implements IClientCommand {
 
     public FutaCommand() {
         String line = "";
-        try {
-            new BufferedReader(new FileReader(CONFIG_FILE_PATH)).readLine().toLowerCase();
+
+        //Reimpl from whatimdoingwithmylife-sudo/fapcraft-fully-cleaned
+        //Proper try-with-resources instead of cfr/zelix klassmaster bullshittery.
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(CONFIG_FILE_PATH))){
+            bufferedReader.readLine().toLowerCase();
         } catch (Exception e) {
             System.out.println("FutaCommand.class: Error reading config.");
             e.printStackTrace();
         }
+
         if (!line.isEmpty()) {
             if ("true".equals(line)) {
                 ENABLED = true;

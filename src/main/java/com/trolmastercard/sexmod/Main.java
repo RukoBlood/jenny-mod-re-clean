@@ -84,7 +84,7 @@ public class Main {
     public static void onWorldClosed(FMLServerStoppedEvent event) {
         GirlEntity.getGirlEntityList().clear();
         KoboldManager.clearAll();
-        KoboldEntity.ACTIVE_TRIBE_SCREEN_POSITIONS.clear();
+        KoboldEntity.TRIBE_MEMBERS.clear();
         GalathMangTracker.clear();
         ConfigWorldGenHandler.Generate().clear();
         GirlID.ClearGirlList();

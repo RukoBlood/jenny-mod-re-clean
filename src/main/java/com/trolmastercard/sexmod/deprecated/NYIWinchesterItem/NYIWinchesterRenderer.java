@@ -44,28 +44,28 @@ public class NYIWinchesterRenderer extends GeoItemRenderer<NYIWinchesterItem> {
     }
 
     @Override
-    public void renderCube(BufferBuilder bufferBuilder, GeoCube geoCube, float f, float f2, float f3, float f4) {
-        MATRIX_STACK.moveToPivot(geoCube);
-        MATRIX_STACK.rotate(geoCube);
-        MATRIX_STACK.moveBackFromPivot(geoCube);
-        for (GeoQuad quad : geoCube.quads) {
+    public void renderCube(BufferBuilder buffer, GeoCube cube, float red, float green, float blue, float alpha) {
+        MATRIX_STACK.moveToPivot(cube);
+        MATRIX_STACK.rotate(cube);
+        MATRIX_STACK.moveBackFromPivot(cube);
+        for (GeoQuad quad : cube.quads) {
             if (quad == null) continue;
-            Vector3f vector3f = new Vector3f((float)quad.normal.getX(), (float)quad.normal.getY(), (float)quad.normal.getZ());
-            MATRIX_STACK.getNormalMatrix().transform((Tuple3f)vector3f);
-            if ((geoCube.size.y == 0.0f || geoCube.size.z == 0.0f) && vector3f.getX() < 0.0f) {
-                vector3f.x *= -1.0f;
+            Vector3f normalVec = new Vector3f((float)quad.normal.getX(), (float)quad.normal.getY(), (float)quad.normal.getZ());
+            MATRIX_STACK.getNormalMatrix().transform(normalVec);
+            if ((cube.size.y == 0.0f || cube.size.z == 0.0f) && normalVec.getX() < 0.0f) {
+                normalVec.x *= -1.0f;
             }
-            if ((geoCube.size.x == 0.0f || geoCube.size.z == 0.0f) && vector3f.getY() < 0.0f) {
-                vector3f.y *= -1.0f;
+            if ((cube.size.x == 0.0f || cube.size.z == 0.0f) && normalVec.getY() < 0.0f) {
+                normalVec.y *= -1.0f;
             }
-            if ((geoCube.size.x == 0.0f || geoCube.size.y == 0.0f) && vector3f.getZ() < 0.0f) {
-                vector3f.z *= -1.0f;
+            if ((cube.size.x == 0.0f || cube.size.y == 0.0f) && normalVec.getZ() < 0.0f) {
+                normalVec.z *= -1.0f;
             }
-            Vec3d vec3d = DebugMode.devDebugFloats[0] == 0.0f ? BoneDeformProcessor.calculatePhysicsVector(new Vec3d(f, f2, f3), vector3f, offset) : new Vec3d(f, f2, f3);
+            Vec3d vec3d = DebugMode.devDebugFloats[0] == 0.0f ? BoneDeformProcessor.calculatePhysicsVector(new Vec3d(red, green, blue), normalVec, offset) : new Vec3d(red, green, blue);
             for (GeoVertex geoVertex : quad.vertices) {
                 Vector4f vector4f = new Vector4f(geoVertex.position.getX(), geoVertex.position.getY(), geoVertex.position.getZ(), 1.0f);
-                MATRIX_STACK.getModelMatrix().transform((Tuple4f)vector4f);
-                bufferBuilder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex(geoVertex.textureU, geoVertex.textureV).color((float)vec3d.x, (float)vec3d.y, (float)vec3d.z, f4).normal(vector3f.getX(), vector3f.getY(), vector3f.getZ()).endVertex();
+                MATRIX_STACK.getModelMatrix().transform(vector4f);
+                buffer.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex(geoVertex.textureU, geoVertex.textureV).color((float)vec3d.x, (float)vec3d.y, (float)vec3d.z, alpha).normal(normalVec.getX(), normalVec.getY(), normalVec.getZ()).endVertex();
             }
         }
     }

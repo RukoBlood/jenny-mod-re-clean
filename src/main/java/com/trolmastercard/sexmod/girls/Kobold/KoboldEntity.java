@@ -125,7 +125,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
     final static public DataParameter<Boolean> IS_MINING_WOOD = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.BOOLEAN).getSerializer().createKey(128);
     final static public DataParameter<Optional<UUID>> TRIBE_ID = EntityDataManager.createKey(KoboldEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID).getSerializer().createKey(129);
     static public double MAX_HEALTH = 69.0;
-    static public List<Vector4d> ACTIVE_TRIBE_SCREEN_POSITIONS = new ArrayList<>();
+    static public List<Vector4d> TRIBE_MEMBERS = new ArrayList<>();
     ItemStackHandler inventory = new ItemStackHandler(27);
     public String customTitle = null;
     boolean isInteracting = false;
@@ -445,7 +445,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
             if (!tribeIdOpt.isPresent()) {
                 return true;
             }
-            if (!ACTIVE_TRIBE_SCREEN_POSITIONS.isEmpty()) {
+            if (!TRIBE_MEMBERS.isEmpty()) {
                 return true;
             }
             this.openTribeNameScreen(tribeIdOpt.get());
@@ -494,7 +494,7 @@ public class KoboldEntity extends AbstractNpcOnlyEntity implements IEllie, IInve
 
     @Override
     @SideOnly(value=Side.CLIENT)
-    public void AcSomeUnknownClass() {
+    public void onInteractionMenuClose() {
         if (this.isInteracting) {
             this.isInteracting = false;
         } else {
