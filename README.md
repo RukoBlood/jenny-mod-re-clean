@@ -52,7 +52,7 @@ Moved to Obfuscation.md (check docs)
 ## Bugs
 It's broken.
 
-It runs in dev environment, but shits itself on real client (Packets crashes and freezes the entire game)
+It runs in dev environment, ~~but shits itself on real client (Packets crashes and freezes the entire game)~~ Fixed. It runs on real client.
 
 ## TODO
 - Fix girls bugs, including critical ones
